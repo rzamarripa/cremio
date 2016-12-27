@@ -1,4 +1,4 @@
-angular.module("formulas").run(function ($rootScope, $state, toastr) {
+angular.module("creditoMio").run(function ($rootScope, $state, toastr) {
   $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
     // We can catch the error thrown when the $requireUser promise is rejected
     // and redirect the user back to the main page
@@ -24,7 +24,7 @@ angular.module("formulas").run(function ($rootScope, $state, toastr) {
   });
 });
 
-angular.module('formulas').config(['$injector', function ($injector) {
+angular.module('creditoMio').config(['$injector', function ($injector) {
   var $stateProvider = $injector.get('$stateProvider');
   var $urlRouterProvider = $injector.get('$urlRouterProvider');
   var $locationProvider = $injector.get('$locationProvider');

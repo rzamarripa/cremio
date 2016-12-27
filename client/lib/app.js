@@ -1,4 +1,4 @@
-angular.module('formulas',
+angular.module('creditoMio',
   [
     'angular-meteor',    
     'ngAnimate',
