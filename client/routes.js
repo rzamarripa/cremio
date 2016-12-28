@@ -82,6 +82,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	        return $meteor.requireUser();
 	      }]
 	    }
+    })
+    .state('root.documentos', {
+      url: '/documentos',
+      templateUrl: 'client/documentos/documentos.ng.html',
+      controller: 'DocumentosCtrl as doc',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
     }); 
 }]);
  
