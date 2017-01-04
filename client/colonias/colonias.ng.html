@@ -9,7 +9,13 @@
 			<form name="form" class="form-horizontal" role="form">
 		  	<div class="well">	    
 			    <div class="row">
-			    	<div class="col-sm-12">					    
+			    	<div class="col-sm-12">
+				    	<div class="col-sm-4">
+								<label for="seccion_id">Ciudades</label>
+								<select class="form-control select2" placeholder="Seleccione" ng-model="col.objeto.ciudad_id">
+									<option ng-repeat="ciudad in col.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
+								</select>
+							</div>	
               <div class="col-sm-4" valida>
 						    <label>Nombre *</label>
 					    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="col.objeto.nombre" required>
@@ -36,6 +42,7 @@
 		<table class="table table-bordered">
 			<thead>
 				<tr>
+					<th width="30%"><div class="text-center">Ciudad</div></th>
 					<th width="30%"><div class="text-center">Nombre</div></th>
 					<th width="30%">
 						<div class="text-center">
@@ -51,6 +58,7 @@
 			</thead>
 			<tbody>
 		    <tr ng-repeat="objeto in col.colonias">
+			    <td>{{objeto.ciudad.nombre}}</td>
 			    <td>{{objeto.nombre}}</td>
 			    <td>
 				    <div class="text-center">

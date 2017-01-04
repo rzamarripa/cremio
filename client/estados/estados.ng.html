@@ -10,6 +10,12 @@
 		  	<div class="well">	    
 			    <div class="row">
 			    	<div class="col-sm-12">					    
+				    	<div class="col-sm-4">
+								<label for="seccion_id">País</label>
+								<select class="form-control select2" placeholder="Seleccione" ng-model="edo.objeto.pais_id">
+									<option ng-repeat="pais in edo.paises" value="{{pais._id}}">{{pais.nombre}}</option>
+								</select>
+							</div>
               <div class="col-sm-4" valida>
 						    <label>Nombre *</label>
 					    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="edo.objeto.nombre" required>
@@ -36,13 +42,14 @@
 		<table class="table table-bordered">
 			<thead>
 				<tr>
+					<th width="30%"><div class="text-center">Pais</div></th>
 					<th width="30%"><div class="text-center">Nombre</div></th>
-					<th width="30%">
+					<th width="20%">
 						<div class="text-center">
 							Estatus
 						</div>
 					</th>
-					<th width="30%">
+					<th width="20%">
 						<div class="text-center">
 							Acciones
 						</div>
@@ -51,6 +58,7 @@
 			</thead>
 			<tbody>
 		    <tr ng-repeat="objeto in edo.estados">
+			    <td>{{objeto.pais.nombre}}</td>
 			    <td>{{objeto.nombre}}</td>
 			    <td>
 				    <div class="text-center">

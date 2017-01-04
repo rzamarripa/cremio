@@ -2,7 +2,7 @@ angular.module("creditoMio")
 .controller("EstadosCtrl", EstadosCtrl);
  function EstadosCtrl($scope, $meteor, $reactive, $state, toastr){
  	
- 	$reactive(this).attach($scope);
+ 	let rc = $reactive(this).attach($scope);
   this.action = true;
   this.nuevo = true;	 
   this.objeto = {}; 
@@ -12,11 +12,26 @@ angular.module("creditoMio")
 			
 		}]
 	 });
+	this.subscribe('paises',()=>{
+		return [{
+			
+		}]
+	 });
 	 
 	this.helpers({
 	  estados : () => {
 		  return Estados.find();
-	  }
+	  },
+		paises : () => {
+		 var paises = Paises.find().fetch();
+		  	if (paises) {
+		  		_.each(rc.estados, function(estado){
+		  			estado.pais = Paises.findOne(estado.pais_id)
+		  	});
+	  	}
+	  	console.log(paises);
+		  return paises;
+	  },
   }); 
   
   this.Nuevo = function()
