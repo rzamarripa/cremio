@@ -2,22 +2,37 @@ angular.module("creditoMio")
 .controller("CiudadesCtrl", CiudadesCtrl);
  function CiudadesCtrl($scope, $meteor, $reactive, $state, toastr){
  	
- 	$reactive(this).attach($scope);
+ 	let rc = $reactive(this).attach($scope);
   this.action = true;
   this.nuevo = true;	 
   this.objeto = {}; 
   
 	this.subscribe('ciudades',()=>{
 		return [{
-			
+
+		}]
+	 });
+	this.subscribe('estados',()=>{
+		return [{
+
 		}]
 	 });
 	 
 	this.helpers({
 	  ciudades : () => {
 		  return Ciudades.find();
+	  },
+		estados : () => {
+		 var estados = Estados.find().fetch();
+		  	if (estados) {
+		  		_.each(rc.ciudades, function(ciudad){
+		  			ciudad.estado = Estados.findOne(ciudad.estado_id)
+		  	});
+	  	}
+	  	console.log(estados);
+		  return estados;
 	  }
-  }); 
+  });
   
   this.Nuevo = function()
   {

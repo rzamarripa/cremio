@@ -2,7 +2,7 @@ angular.module("creditoMio")
 .controller("ColoniasCtrl", ColoniasCtrl);
  function ColoniasCtrl($scope, $meteor, $reactive, $state, toastr){
  	
- 	$reactive(this).attach($scope);
+ let rc = $reactive(this).attach($scope);
   this.action = true;
   this.nuevo = true;	 
   this.objeto = {}; 
@@ -12,12 +12,27 @@ angular.module("creditoMio")
 			
 		}]
 	 });
+	this.subscribe('ciudades',()=>{
+		return [{
+			
+		}]
+	 });
 	 
 	this.helpers({
 	  colonias : () => {
 		  return Colonias.find();
+	  },
+		ciudades : () => {
+		 var ciudades = Ciudades.find().fetch();
+		  	if (ciudades) {
+		  		_.each(rc.colonias, function(colonia){
+		  			colonia.ciudad = Ciudades.findOne(colonia.ciudad_id)
+		  	});
+	  	}
+	  	console.log(ciudades);
+		  return ciudades;
 	  }
-  }); 
+  });
   
   this.Nuevo = function()
   {
