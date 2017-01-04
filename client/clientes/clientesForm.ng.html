@@ -1,0 +1,298 @@
+<div class="row">
+	<div class="col-sm-12">
+		<form name="form" class="form-horizontal" role="form" novalidate>		
+			<h4>Información de Contacto</h4>
+			<div class="well">	    
+		    <div class="row">
+		    	<div class="col-sm-4"> 					    
+			    	<label>Folio</label>
+			    	<input name="folio" type="text" class="form-control" placeholder="Folio" ng-model="cli.objeto.objeto" disabled="true">
+		    	</div>
+		    	<div class="col-sm-4">					    
+			    	<label>Fecha</label>
+			    	<input name="fecha" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="cli.objeto.fecha" disabled="true">
+		    	</div>	
+		    	<div class="col-sm-4">
+						<label for="zona">Zona</label>
+						<select name="zona" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.zona_id" disabled="true">
+								<option  value="{{zona._id}}" ng-repeat="zona in cli.zonas">
+									{{zona.nombre}}
+								</option>
+							</select>
+					</div>			    				    	    
+		    </div>
+			</div>
+			<h4>Particulares</h4>
+			<div class="well">
+		    <div class="row">
+					<div class="col-sm-4">					    
+			    	<label>Nombre</label>
+			    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cli.objeto.nombre" disabled="true">
+		    	</div>
+		    	<div class="col-sm-2">					    
+			    	<label>Teléfono del Cliente</label>
+			    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.telefono" disabled="true">
+		    	</div>
+		    	<div class="col-sm-2">					    
+			    	<label>Plan</label>
+			    	<input type="text" class="form-control" placeholder="Plan" ng-model="cli.objeto.plan" disabled=""> 
+		    	</div>
+		    	<div class="col-sm-4">
+						<label for="zona">Zona</label>
+						<select name="zona" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.zona_id" disabled="true">
+								<option  value="{{zona._id}}" ng-repeat="zona in cli.zonas">
+									{{zona.nombre}}
+								</option>
+							</select>
+				    
+					</div>			
+		    </div>
+		    <div class="row">
+		    	<div class="col-sm-6">					    
+			    	<label>Domicilio</label>
+			    	<input name="domicilio" type="text" class="form-control" placeholder="Domicilio" ng-model="cli.objeto.domicilio" disabled="true">
+		    	</div>
+		    	<div class="col-sm-6">					    
+			    	<label>Refencia de Ubicación</label>
+			    	<input name="referencia" type="text" class="form-control" placeholder="Referencia de ubicación" ng-model="cli.objeto.referencia" disabled="true">	
+		    	</div>	    	
+		    </div>	
+		    <div class="row">	
+		    	<div class="col-sm-10">					    
+			    	<label>Comentarios</label>
+			    	<input type="textarea" class="form-control" placeholder="Comentarios" ng-model="cli.objeto.comentarios" disabled="true">
+		    	</div>
+		    </div>	
+			</div>  
+			<div ng-if="!cli.objeto.plan">
+				<h4>Datos de la Tarjeta</h4>
+			</div>
+			<div class="well" ng-if="!cli.objeto.plan">	    
+		    <div class="row">
+			    <div class="col-sm-4" valida>
+				    <label for="tarjeta">tarjeta *</label>
+				    <select name="tarjeta" ng-model="cli.objeto.numeroTarjeta" data-placeholder="Seleccione" class="form-control" required>
+						    <option value=""></option>
+						    <option value="entrega">Se Entrega Tarjeta</option>
+						    <option value="entregaNoActiva">Se Entrega Tarjeta (Pero no se activa) </option>
+						    <option value="Noentrega">No Se Entrega Tarjeta (condiciones Bajas)</option>
+						</select>
+		    	</div>
+		    	<div class="col-sm-2"> 	
+						<div class="text-left">
+					    	<span ng-if="cli.objeto.prioridad == 'NORMAL'" class="label label-success">
+								  ENTREGA NORMAL
+								</span>
+								<span ng-if="cli.objeto.prioridad == 'DIFERIDA'" class="label label-danger">
+								  VALIDAR ENTREGA
+								</span>
+					  </div>
+		    	</div>
+		    </div>
+			</div>  	
+			<h4>Dirección</h4>
+			<div class="well">
+		    <div class="row">
+					<div class="col-sm-4" ng-class="form.fechavisita.$invalid == true && cli.validation == true ? 'has-error':''" valida>
+						<label for="fecha">Fecha Visita *</label>
+						<input name="fechavisita" date-time format="dd/MM/yyyy" class="form-control" view="year" max-view="year" min-view="date" ng-model="cli.fechavisita" required="" ng-disabled="(cli.objeto.verificacionEstatus=='No Visitó')" />
+					</div>	
+					<div class="col-sm-4" valida>					    
+			    	<label>Quíen Atendio *</label>
+			    	<input name="atendio" type="text" class="form-control" placeholder="Atendió" ng-model="cli.objeto.atendio" required="" ng-disabled="(cli.objeto.estatus=='No Visitó')">
+		    	</div>
+					<div class="col-sm-4" valida>					    
+			    	<label>Parentesco *</label>
+			    	<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="cli.objeto.parentesco" required="">
+		    	</div>
+		    </div>
+		    <div class="row">
+		    	<div class="col-sm-4" valida>					    
+			    	<label>Identificación *</label>
+			    	<input name="identificacion" type="text" class="form-control" placeholder="Identificación" ng-model="cli.objeto.identificacion" required="">
+		    	</div>
+		    	<div class="col-sm-4" valida>					    
+			    	<label>Medidor CFE *</label>
+			    	<input name="medidor" type="text" class="form-control" placeholder="Identificación" ng-model="cli.objeto.medidor" required="">
+		    	</div>
+		    	<div class="col-sm-4">					    
+			    	<label>Vivienda *</label>	
+			    	<br />		    	
+			      <label>
+		          <input type="radio" name="vivienda" value="baja" ng-model="cli.objeto.vivienda">
+		             Baja
+		        </label>
+		        <label>
+		            <input type="radio" name="vivienda" value="media" ng-model="cli.objeto.vivienda">
+									 Media
+			      </label>
+			      <label>
+			        <input type="radio" name="vivienda" value="mediaalta" ng-model="cli.objeto.vivienda">
+			  	       Media Alta
+			      </label>
+			      <label>
+			        <input type="radio" name="vivienda" value="alta" ng-model="cli.objeto.vivienda">
+			           Alta
+			      </label>
+		    	</div>
+		    </div>
+		    <div class="row">
+		    	<div class="col-sm-2" valida>					    
+			    	<label>Color Casa *</label>
+			    	<input name="colorcasa" type="text" class="form-control" placeholder="Color Casa" ng-model="cli.objeto.colorcasa" required="">
+		    	</div>
+		    	<div class="col-sm-2" valida>					    
+			    	<label>Pisos *</label>
+			    	<input name="pisos" type="number" min="0" class="form-control" placeholder="Pisos" ng-model="cli.objeto.pisos" required="">
+		    	</div>
+		    	<div class="col-sm-2" valida>					    
+			    	<label>Puerta Color *</label>
+			    	<input name="puertacolor" type="text" class="form-control" placeholder="Puerta Color" ng-model="cli.objeto.puertacolor" required="">
+		    	</div>
+		    	<div class="col-sm-2">					    
+			    	<label>Cochera *</label>	
+			    	<br />		    	
+			      <label>
+		          <input type="radio" name="cochera" value="baja" ng-model="cli.objeto.cochera">
+		             Si
+		        </label>
+		        <label>
+		            <input type="radio" name="cochera" value="media" ng-model="cli.objeto.cochera">
+									 No
+			      </label>
+		    	</div>
+		    	<div class="col-sm-2">					    
+			    	<label>Barandal Color</label>
+			    	<input name="barandalcolor" type="text" class="form-control" placeholder="Barandal Color" ng-model="cli.objeto.barandalcolor" required="">
+		    	</div>
+		    </div>
+		    <div class="row">
+		    	<div class="col-sm-2">					    
+			    	<label>Calle Pavimentada *</label>	
+			    	<br />		    	
+			      <label>
+		          <input type="radio" name="pavimentada" value="baja" ng-model="cli.objeto.pavimentada">
+		             Si
+		        </label>
+		        <label>
+		            <input type="radio" name="pavimentada" value="media" ng-model="cli.objeto.pavimentada">
+									 No
+			      </label>
+		    	</div>
+		    	<div class="col-sm-2" valida>					    
+			    	<label>Personas Habitan *</label>
+			    	<input name="personashabitan" type="number" min="0" class="form-control" ng-model="cli.objeto.personashabitan" required="">
+		    	</div>
+		    	<div class="col-sm-2" valida>					    
+			    	<label>Años viviendo *</label>
+			    	<input name="aniosviviendo" type="number" min="0" class="form-control" ng-model="cli.objeto.aniosviviendo" required="">
+		    	</div>
+		    	<div class="col-sm-4">					    
+			    	<label>Zona Colonia *</label>	
+			    	<br />		    	
+			      <label>
+		          <input type="radio" name="zonacolonia" value="baja" ng-model="cli.objeto.zonacolonia">
+		             Baja
+		        </label>
+		        <label>
+		            <input type="radio" name="zonacolonia" value="media" ng-model="cli.objeto.zonacolonia">
+									 Media
+			      </label>
+			      <label>
+			        <input type="radio" name="zonacolonia" value="mediaalta" ng-model="cli.objeto.zonacolonia">
+			  	       Media Alta
+			      </label>
+			      <label>
+			        <input type="radio" name="zonacolonia" value="alta" ng-model="cli.objeto.zonacolonia">
+			           Alta
+			      </label>
+		    	</div>
+		    	<div class="col-sm-2">					    
+			    	<label>Casa *</label>	
+			    	<br />		    	
+			      <label>
+		          <input type="radio" name="casa" value="baja" ng-model="cli.objeto.casa">
+		             Propia
+		        </label>
+		        <label>
+		            <input type="radio" name="casa" value="media" ng-model="cli.objeto.casa">
+									 Renta
+			      </label>
+		    	</div>
+		    </div>
+		    <div class="row">
+		    	<div class="col-sm-8">					    
+			    	<label>Referencia Vecinales</label>
+			    	<input name="referenciaVecinales" type="text" class="form-control" placeholder="Domicilio" ng-model="cli.objeto.referenciaVecinales">
+		    	</div>
+		    	<div class="col-sm-8">					    
+			    	<label>Comentarios</label>
+			    	<input name="comentariosvisita" type="text" class="form-control" placeholder="Comentarios" ng-model="cli.objeto.comentariovisita">
+		    	</div>
+		    </div>
+		    <div class="row">
+		    	<div class="col-sm-4">
+						<label for="verificacionEstatus">Verificación Estatus</label>
+						<select ng-model="cli.objeto.verificacionEstatus" class="form-control" ng-change="cli.getRazones(cli.objeto)">
+							<option ng-repeat="folio in cli.objetos" value="{{folio.id}}" ng-selected="cli.objeto.verificacionEstatus == folio.id">{{folio.nombre}}</option>
+				    </select>
+					</div>
+					<div class="col-sm-4">
+						<label for="verificacionRazon">Razón</label>
+		    		<select name="verificacionRazon" ng-model="cli.objeto.verificacionRazon" class="form-control" required="" >
+			    		<option ng-repeat="razon in cli.razones" value="{{razon.nombre}}">{{razon.nombre}}</option>
+		    		</select>
+					</div>		
+		    </div>
+			</div> 	
+			<h4>Información Laboral</h4>
+			<div class="well">
+				<div class="row">
+					<div class="col-sm-4">
+						<label>Evidencia 1</label>
+						<div>
+							Agregar Imagen 1: 
+							<input type="file" id="fileInput1">
+							<div id="fileDisplayArea1" style="display: none;" ></div>
+						</div>
+						<img class="thumbnail" src="{{cli.objeto.Imagen1}}" width="200" height="200" ng-click="cli.mostrarImagen(cli.objeto.Imagen1)"/>
+					</div>
+					<div class="col-sm-4">
+						<label>Evidencia 2</label>
+						<div>
+							Agregar Imagen 2: 
+							<input type="file" id="fileInput2">
+							<div id="fileDisplayArea2" style="display: none;" ></div>
+						</div>
+						<img class="thumbnail" src="{{cli.objeto.Imagen2}}" width="200" height="200" ng-click="cli.mostrarImagen(cli.objeto.Imagen2)"/>
+					</div>
+					<div class="col-sm-4" ng-show ="!cli.objeto.plan">
+						<label>Tarjeta</label>
+						<div>
+							Agregar Imagen Tarjeta: 
+							<input type="file" id="fileInput">
+							<div id="fileDisplayArea" style="display: none;" ></div>
+						</div>
+						<img class="thumbnail" src="{{cli.objeto.tarjetaImagen}}" width="200" height="200" ng-click="cli.mostrarImagen(cli.objeto.tarjetaImagen)"/>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<a class="btn btn-primary" role="button" ng-click="cli.resetCanvas()">
+				  Limpiar Firma
+				</a>
+				<div class="col-sm-8 col-sm-offset-2">
+					<canvas id="myCanvas" style="width: 600px; height: 300px; border:1px solid #000000;">
+							Sorry, your browser does not support HTML5 canvas technology.
+						</canvas>	
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<input type="submit" ng-click="cli.actualizar(cli.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="cli.op==1" valida-form formulario="form"/>	
+					<input type="submit" ng-click="cli.finalizar(cli.objeto._id)" value="Finalizar" class="btn btn-primary" ng-show="cli.op==2" valida-form formulario="form"/>
+				</div>
+			</div>	  
+		</form>
+	</div>
+</div>

@@ -1,6 +1,6 @@
 angular.module("creditoMio")
-.controller("DocumentosCtrl", DocumentosCtrl);
- function DocumentosCtrl($scope, $meteor, $reactive, $state, toastr){
+.controller("ClientesFormCtrl", ClientesFormCtrl);
+ function ClientesFormCtrl($scope, $meteor, $reactive, $state, toastr){
  	
  	$reactive(this).attach($scope);
   this.action = true;
@@ -8,10 +8,8 @@ angular.module("creditoMio")
   this.objeto = {}; 
   
 	this.subscribe('documentos',()=>{
-		return [{
-			
-		}]
-	 });
+		return [{}]
+	});
 	 
 	this.helpers({
 	  documentos : () => {

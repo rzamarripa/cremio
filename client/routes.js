@@ -223,4 +223,24 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	      }]
 	    }
     })
+    .state('root.clientesLista', {
+      url: '/clientes',
+      templateUrl: 'client/clientes/clientesLista.ng.html',
+      controller: 'ClientesListaCtrl as lcli',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
+    .state('root.clientesForm', {
+      url: '/clientesForm',
+      templateUrl: 'client/clientes/clientesForm.ng.html',
+      controller: 'ClientesFormCtrl as cli',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
 }]);
