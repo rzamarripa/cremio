@@ -23,26 +23,34 @@
 					  </div>
 					</div>
 				</div>
-		  	<div class="well">	    
-			    <div class="row">
-						<div class="col-sm-12">
+				<div class="col-sm-12">
 							<input type="submit" ng-click="edo.guardar(edo.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="edo.action" valida-form formulario="form">
 							<input type="submit" ng-click="edo.actualizar(edo.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!edo.action" valida-form formulario="form">	
-						</div>
-					</div>
-		  	</div>  
+				</div>  
 		  </form>
 		</div>
 	</div>
 </div>
-<br/>
+<!--------------------------------------->
+<div class="well">	    
+	<div class="row">
+		<div class="col-sm-4">
+			<label >Pais</label>
+				<select name="pais" class="form-control select2" placeholder="Seleccione" ng-model="edo.objeto.buscarPais_id">
+					<option  value="{{pais._id}}" ng-repeat="pais in edo.paises">
+						{{pais.nombre}}
+					</option>
+				</select>
+	  </div>
+	</div>
+</div>
+<!--------------------------------------->
 <!-- List -->
 <div class="row">
 	<div class="col-sm-12">
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th width="30%"><div class="text-center">Pais</div></th>
 					<th width="30%"><div class="text-center">Nombre</div></th>
 					<th width="20%">
 						<div class="text-center">
@@ -58,7 +66,6 @@
 			</thead>
 			<tbody>
 		    <tr ng-repeat="objeto in edo.estados">
-			    <td>{{objeto.pais.nombre}}</td>
 			    <td>{{objeto.nombre}}</td>
 			    <td>
 				    <div class="text-center">

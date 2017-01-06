@@ -1,23 +1,41 @@
 angular.module("creditoMio")
-.controller("RolesCtrl", RolesCtrl);
- function RolesCtrl($scope, $meteor, $reactive, $state, toastr){
+.controller("MunicipiosCtrl", MunicipiosCtrl);
+ function MunicipiosCtrl($scope, $meteor, $reactive, $state, toastr){
  	
- 	$reactive(this).attach($scope);
+ 	let rc = $reactive(this).attach($scope);
   this.action = true;
   this.nuevo = true;	 
-  this.objeto = {}; 
+  this.objeto = {};
+  this.buscar = {};
   
-	this.subscribe('roles',()=>{
-		return [{
-			
-		}]
-	 });
+	this.subscribe('municipios',()=>{
+		return [{pais_id: this.getReactively('buscar.pais_id')? this.getReactively('buscar.pais_id'):""
+						,estado_id: this.getReactively('buscar.estado_id')? this.getReactively('buscar.estado_id'):""
+					 }]
+	});
+	
+	this.subscribe('estados',()=>{
+		return [{estatus: true}]
+	});
+	
+	this.subscribe('paises',()=>{
+		return [{estatus: true}]
+	});
 	 
 	this.helpers({
-	  roles : () => {
-		  return Roles.find();
-	  }
-  }); 
+	  municipios : () => {
+		  return Municipios.find();
+	  },
+		paises : () => {
+		  return Paises.find();
+	  },
+	  estadosBuscar : () => {
+		  return Estados.find({pais_id: this.getReactively('buscar.pais_id')? this.getReactively('buscar.pais_id'):""});
+	  },
+	  estados : () => {
+		  return Estados.find({pais_id: this.getReactively('objeto.pais_id')? this.getReactively('objeto.pais_id'):""});
+	  },
+  });
   
   this.Nuevo = function()
   {
@@ -32,22 +50,21 @@ angular.module("creditoMio")
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
-			console.log(objeto);
 			objeto.estatus = true;
 			objeto.usuarioInserto = Meteor.userId();
-			Roles.insert(objeto);
+			Municipios.insert(objeto);
 			toastr.success('Guardado correctamente.');
 			this.objeto = {}; 
 			$('.collapse').collapse('hide');
 			this.nuevo = true;
 			form.$setPristine();
 	    form.$setUntouched();
-		
+	
 	};
 
 	this.editar = function(id)
 	{
-	    this.objeto = Roles.findOne({_id:id});
+	    this.objeto = Municipios.findOne({_id:id});
 	    this.action = false;
 	    $('.collapse').collapse('show');
 	    this.nuevo = false;
@@ -62,7 +79,7 @@ angular.module("creditoMio")
 			var idTemp = objeto._id;
 			delete objeto._id;		
 			objeto.usuarioActualizo = Meteor.userId(); 
-			Roles.update({_id:idTemp},{$set : objeto});
+			Municipios.update({_id:idTemp},{$set : objeto});
 			toastr.success('Actualizado correctamente.');
 			$('.collapse').collapse('hide');
 			this.nuevo = true;
@@ -72,12 +89,12 @@ angular.module("creditoMio")
 
 	this.cambiarEstatus = function(id)
 	{
-			var objeto = Roles.findOne({_id:id});
+			var objeto = Municipios.findOne({_id:id});
 			if(objeto.estatus == true)
 				objeto.estatus = false;
 			else
 				objeto.estatus = true;
 			
-			Roles.update({_id: id},{$set :  {estatus : objeto.estatus}});
+			Municipios.update({_id: id},{$set :  {estatus : objeto.estatus}});
   };	
 };

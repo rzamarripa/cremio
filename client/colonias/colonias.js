@@ -2,42 +2,62 @@ angular.module("creditoMio")
 .controller("ColoniasCtrl", ColoniasCtrl);
  function ColoniasCtrl($scope, $meteor, $reactive, $state, toastr){
  	
- let rc = $reactive(this).attach($scope);
+ 	let rc = $reactive(this).attach($scope);
+ 	window = rc;
+ 
   this.action = true;
   this.nuevo = true;	 
   this.objeto = {}; 
+  this.buscar = {};
+  
+  this.subscribe('paises',()=>{
+		return [{estatus: true}]
+	});
+	this.subscribe('estados',()=>{
+		return [{estatus: true}]
+	});
+	this.subscribe('municipios',()=>{
+		return [{estatus: true}]
+	});
+	this.subscribe('ciudades',()=>{
+		return [{estatus: true}]
+	});
   
 	this.subscribe('colonias',()=>{
-		return [{
-			
-		}]
-	 });
-	this.subscribe('ciudades',()=>{
-		return [{
-			
-		}]
-	 });
+		return [{ciudad_id: this.getReactively('buscar.ciudad_id')? this.getReactively('buscar.ciudad_id'):""}]
+	});
 	 
 	this.helpers({
 	  colonias : () => {
 		  return Colonias.find();
 	  },
-		ciudades : () => {
-		 var ciudades = Ciudades.find().fetch();
-		  	if (ciudades) {
-		  		_.each(rc.colonias, function(colonia){
-		  			colonia.ciudad = Ciudades.findOne(colonia.ciudad_id)
-		  	});
-	  	}
-	  	console.log(ciudades);
-		  return ciudades;
-	  }
+	  paises : () => {
+		  return Paises.find();
+	  },
+	  estadosBuscar : () => {
+		  return Estados.find({pais_id: this.getReactively('buscar.pais_id')? this.getReactively('buscar.pais_id'):""});
+	  },
+	  estados : () => {
+		  return Estados.find({pais_id: this.getReactively('objeto.pais_id')? this.getReactively('objeto.pais_id'):""});
+	  },
+	  municipiosBuscar : () => {
+		  return Municipios.find({estado_id: this.getReactively('buscar.estado_id')? this.getReactively('buscar.estado_id'):""});
+	  },
+	  municipios : () => {
+		  return Municipios.find({estado_id:this.getReactively('objeto.estado_id')? this.getReactively('objeto.estado_id'):""});
+	  },
+	  ciudadesBuscar : () => {
+		  return Ciudades.find({municipio_id: this.getReactively('buscar.municipio_id')? this.getReactively('buscar.municipio_id'):""});
+	  },
+	  ciudades : () => {
+		  return Ciudades.find({municipio_id: this.getReactively('objeto.municipio_id')? this.getReactively('objeto.municipio_id'):""});
+	  },
   });
   
   this.Nuevo = function()
   {
     this.action = true;
-    this.nuevo = false;
+    this.nuevo = !this.nuevo;
     this.objeto = {};		
   };
 
@@ -47,7 +67,6 @@ angular.module("creditoMio")
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
-			console.log(objeto);
 			objeto.estatus = true;
 			objeto.usuarioInserto = Meteor.userId();
 			Colonias.insert(objeto);

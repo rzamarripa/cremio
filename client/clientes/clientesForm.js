@@ -7,14 +7,63 @@ angular.module("creditoMio")
   this.nuevo = true;	 
   this.objeto = {}; 
   
-	this.subscribe('documentos',()=>{
-		return [{}]
+	this.subscribe('estadoCivil',()=>{
+		return [{estatus: true}]
+	});
+	
+	this.subscribe('nacionalidades',()=>{
+		return [{estatus: true}]
+	});
+	
+	this.subscribe('ocupaciones',()=>{
+		return [{estatus: true}]
+	});
+	
+	this.subscribe('paises',()=>{
+		return [{estatus: true}]
+	});
+	
+	this.subscribe('estados',()=>{
+		return [{pais_id: this.getReactively("objeto.pais_id"), estatus: true}]
+	});
+	
+	this.subscribe('municipios',()=>{
+		return [{municipio_id: this.getReactively("objeto.municipio_id"), estatus: true}]
+	});
+	
+	this.subscribe('ciudades',()=>{
+		return [{estado_id: this.getReactively("objeto.estado_id"), estatus: true}]
+	});
+	
+	this.subscribe('colonias',()=>{
+		return [{ciudad_id: this.getReactively("objeto.ciudad_id"), estatus: true}]
 	});
 	 
 	this.helpers({
-	  documentos : () => {
-		  return Documentos.find();
-	  }
+	  estadosCiviles : () => {
+		  return EstadoCivil.find();
+	  },
+	  nacionalidades : () => {
+		  return Nacionalidades.find();
+	  },
+	  ocupaciones : () => {
+		  return Ocupaciones.find();
+	  },
+	  paises : () => {
+		  return Paises.find();
+	  },
+	  estados : () => {
+		  return Estados.find();
+	  },
+	  municipios : () => {
+		  return Municipios.find();
+	  },
+	  ciudades : () => {
+		  return Ciudades.find();
+	  },
+	  colonias : () => {
+		  return Colonias.find();
+	  },
   }); 
   
   this.Nuevo = function()
@@ -30,33 +79,28 @@ angular.module("creditoMio")
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
-			objeto.estatus = true;
-			objeto.usuarioInserto = Meteor.userId();
-			objeto.fechaCreacion = new Date();
-			Documentos.insert(objeto);
+			
+			objeto.profile.estatus = true;
+			objeto.profile.usuarioInserto = Meteor.userId();
+			Meteor.call('createUsuario', objeto, "Cliente");
 			toastr.success('Guardado correctamente.');
-			this.objeto = {}; 
+			this.usuario = {};
 			$('.collapse').collapse('hide');
 			this.nuevo = true;
 			form.$setPristine();
 	    form.$setUntouched();
+			$state.go('root.clientesLista');
 		
 	};
 
-	this.editar = function(id)
-	{
-	    this.objeto = Documentos.findOne({_id:id});
-	    this.action = false;
-	    $('.collapse').collapse('show');
-	    this.nuevo = false;
-	};
-	
 	this.actualizar = function(objeto,form)
 	{
 			if(form.$invalid){
 		        toastr.error('Error al actualizar los datos.');
 		        return;
 		  }
+		  
+		  /*
 			var idTemp = objeto._id;
 			delete objeto._id;		
 			objeto.usuarioActualizo = Meteor.userId(); 
@@ -67,16 +111,8 @@ angular.module("creditoMio")
 			this.nuevo = true;
 			form.$setPristine();
       form.$setUntouched();
+      
+      */
 	};
 
-	this.cambiarEstatus = function(id)
-	{
-			var objeto = Documentos.findOne({_id:id});
-			if(objeto.estatus == true)
-				objeto.estatus = false;
-			else
-				objeto.estatus = true;
-			
-			Documentos.update({_id: id},{$set :  {estatus : objeto.estatus}});
-  };	
 };

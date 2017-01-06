@@ -9,10 +9,29 @@
 			<form name="form" class="form-horizontal" role="form">
 		  	<div class="well">	    
 			    <div class="row">
-			    	<div class="col-sm-12">
-				    	<div class="col-sm-4">
+					    <div class="col-sm-4" valida>
+								<label >Pais</label>
+									<select name="pais" class="form-control select2" placeholder="Seleccione" ng-model="col.objeto.pais_id" required>
+										<option  value="{{pais._id}}" ng-repeat="pais in col.paises">{{pais.nombre}}</option>
+									</select>
+						  </div>
+				    	<div class="col-sm-4" valida>
+								<label for="seccion_id">Estado</label>
+								<select name="estado" class="form-control select2" placeholder="Seleccione" ng-model="col.objeto.estado_id" required>
+									<option ng-repeat="estado in col.estados" value="{{estado._id}}">{{estado.nombre}}</option>
+								</select>
+							</div>	
+							<div class="col-sm-4" valida>
+								<label >Municipio</label>
+									<select name="municipio" class="form-control select2" placeholder="Seleccione" ng-model="col.objeto.municipio_id" required>
+										<option  value="{{municipio._id}}" ng-repeat="municipio in col.municipios">{{municipio.nombre}}</option>
+									</select>
+						  </div>
+					</div>
+					<div class="row">
+							<div class="col-sm-4" valida>
 								<label for="seccion_id">Ciudades</label>
-								<select class="form-control select2" placeholder="Seleccione" ng-model="col.objeto.ciudad_id">
+								<select name="ciudad" class="form-control select2" placeholder="Seleccione" ng-model="col.objeto.ciudad_id" required>
 									<option ng-repeat="ciudad in col.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
 								</select>
 							</div>	
@@ -20,8 +39,7 @@
 						    <label>Nombre *</label>
 					    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="col.objeto.nombre" required>
 					    </div>
-					  </div>
-					</div>
+					</div>	
 				</div>
 		  	<div class="well">	    
 			    <div class="row">
@@ -35,14 +53,53 @@
 		</div>
 	</div>
 </div>
-<br/>
+<!--------------------------------------->
+<div class="well">	    
+	<div class="row">
+		<div class="col-sm-4">
+			<label >Pais</label>
+				<select name="pais" class="form-control select2" placeholder="Seleccione" ng-model="col.buscar.pais_id">
+					<option  value="{{pais._id}}" ng-repeat="pais in col.paises">
+						{{pais.nombre}}
+					</option>
+				</select>
+	  </div>
+	  <div class="col-sm-4">
+			<label >Estado</label>
+				<select name="estado" class="form-control select2" placeholder="Seleccione" ng-model="col.buscar.estado_id">
+					<option  value="{{estado._id}}" ng-repeat="estado in col.estadosBuscar">
+						{{estado.nombre}}
+					</option>
+				</select>
+	  </div>
+	  <div class="col-sm-4">
+			<label >Municipio</label>
+				<select name="municipio" class="form-control select2" placeholder="Seleccione" ng-model="col.buscar.municipio_id">
+					<option  value="{{municipio._id}}" ng-repeat="municipio in col.municipiosBuscar">
+						{{municipio.nombre}}
+					</option>
+				</select>
+	  </div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<label >Ciudades</label>
+				<select name="ciudad" class="form-control select2" placeholder="Seleccione" ng-model="col.buscar.ciudad_id">
+					<option  value="{{ciudad._id}}" ng-repeat="ciudad in col.ciudadesBuscar">
+						{{ciudad.nombre}}
+					</option>
+				</select>
+	  </div>
+	</div>
+</div>
+<!--------------------------------------->
+
 <!-- List -->
 <div class="row">
 	<div class="col-sm-12">
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th width="30%"><div class="text-center">Ciudad</div></th>
 					<th width="30%"><div class="text-center">Nombre</div></th>
 					<th width="30%">
 						<div class="text-center">
@@ -58,7 +115,6 @@
 			</thead>
 			<tbody>
 		    <tr ng-repeat="objeto in col.colonias">
-			    <td>{{objeto.ciudad.nombre}}</td>
 			    <td>{{objeto.nombre}}</td>
 			    <td>
 				    <div class="text-center">

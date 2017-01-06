@@ -22,7 +22,7 @@ angular.module("creditoMio")
   this.Nuevo = function()
   {
     this.action = true;
-    this.nuevo = false;
+    this.nuevo = !this.nuevo;
     this.objeto = {};		
   };
 

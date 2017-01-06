@@ -183,6 +183,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	      }]
 	    }
     })
+    .state('root.municipios', {
+      url: '/municipios',
+      templateUrl: 'client/municipios/municipios.ng.html',
+      controller: 'MunicipiosCtrl as mun',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
     .state('root.parentesco', {
       url: '/parentesco',
       templateUrl: 'client/parentesco/parentesco.ng.html',

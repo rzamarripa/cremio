@@ -1,15 +1,9 @@
 Meteor.methods({
   createUsuario: function (usuario, rol, grupo) {
 		var usuario_id = Accounts.createUser({
-			username: usuario.nombreUsuario,
-			password: usuario.contrasena,			
-			profile: {
-				email: usuario.correo,
-				nombre: usuario.nombre,
-				apellidos: usuario.apPaterno + " " + usuario.apMaterno,
-				nombreCompleto : usuario.nombre  + " " + usuario.apPaterno + " " + usuario.apMaterno,
-				fotografia : usuario.fotografia
-			}
+			username: usuario.username,
+			password: usuario.password,			
+			profile: usuario.profile
 		});
 		
 		Roles.addUsersToRoles(usuario_id, rol, grupo);

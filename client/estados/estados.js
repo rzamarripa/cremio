@@ -3,41 +3,32 @@ angular.module("creditoMio")
  function EstadosCtrl($scope, $meteor, $reactive, $state, toastr){
  	
  	let rc = $reactive(this).attach($scope);
+ 	windows = rc;
   this.action = true;
   this.nuevo = true;	 
   this.objeto = {}; 
   
 	this.subscribe('estados',()=>{
-		return [{
-			
-		}]
+		return [{pais_id: this.getReactively('objeto.buscarPais_id')? this.getReactively('objeto.buscarPais_id'):""}]
 	 });
+	 
 	this.subscribe('paises',()=>{
-		return [{
-			
-		}]
-	 });
+		return [{estatus: true}]
+	});
 	 
 	this.helpers({
 	  estados : () => {
 		  return Estados.find();
 	  },
 		paises : () => {
-		 var paises = Paises.find().fetch();
-		  	if (paises) {
-		  		_.each(rc.estados, function(estado){
-		  			estado.pais = Paises.findOne(estado.pais_id)
-		  	});
-	  	}
-	  	console.log(paises);
-		  return paises;
+			return Paises.find();
 	  },
   }); 
   
   this.Nuevo = function()
   {
     this.action = true;
-    this.nuevo = false;
+    this.nuevo = !this.nuevo;
     this.objeto = {};		
   };
 
@@ -47,7 +38,7 @@ angular.module("creditoMio")
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
-			console.log(objeto);
+			//console.log(objeto);
 			objeto.estatus = true;
 			objeto.usuarioInserto = Meteor.userId();
 			Estados.insert(objeto);

@@ -6,38 +6,45 @@ angular.module("creditoMio")
   this.action = true;
   this.nuevo = true;	 
   this.objeto = {}; 
+  this.buscar = {};
   
-	this.subscribe('ciudades',()=>{
-		return [{
-
-		}]
-	 });
+	this.subscribe('paises',()=>{
+		return [{estatus: true}]
+	});
 	this.subscribe('estados',()=>{
-		return [{
-
-		}]
-	 });
-	 
+		return [{estatus: true}]
+	});
+	this.subscribe('municipios',()=>{
+		return [{estatus: true}]
+	});
+	this.subscribe('ciudades',()=>{
+		return [{municipio_id: this.getReactively('buscar.municipio_id')? this.getReactively('buscar.municipio_id'):""}]
+	});	 
 	this.helpers({
 	  ciudades : () => {
 		  return Ciudades.find();
 	  },
-		estados : () => {
-		 var estados = Estados.find().fetch();
-		  	if (estados) {
-		  		_.each(rc.ciudades, function(ciudad){
-		  			ciudad.estado = Estados.findOne(ciudad.estado_id)
-		  	});
-	  	}
-	  	console.log(estados);
-		  return estados;
-	  }
+		paises : () => {
+		  return Paises.find();
+	  },
+	  estadosBuscar : () => {
+		  return Estados.find({pais_id: this.getReactively('buscar.pais_id')? this.getReactively('buscar.pais_id'):""});
+	  },
+	  estados : () => {
+		  return Estados.find({pais_id: this.getReactively('objeto.pais_id')? this.getReactively('objeto.pais_id'):""});
+	  },
+	  municipiosBuscar : () => {
+		  return Municipios.find({estado_id: this.getReactively('buscar.estado_id')? this.getReactively('buscar.estado_id'):""});
+	  },
+	  municipios : () => {
+		  return Municipios.find({estado_id:this.getReactively('objeto.estado_id')? this.getReactively('objeto.estado_id'):""});
+	  },
   });
   
   this.Nuevo = function()
   {
     this.action = true;
-    this.nuevo = false;
+    this.nuevo = !this.nuevo;
     this.objeto = {};		
   };
 
@@ -47,7 +54,6 @@ angular.module("creditoMio")
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
-			console.log(objeto);
 			objeto.estatus = true;
 			objeto.usuarioInserto = Meteor.userId();
 			Ciudades.insert(objeto);

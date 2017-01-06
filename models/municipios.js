@@ -1,5 +1,5 @@
-Clientes 						= new Mongo.Collection("clientes");
-Clientes.allow({
+Municipios 						= new Mongo.Collection("municipios");
+Municipios.allow({
   insert: function () { return true; },
   update: function () { return true; },
   remove: function () { return true; }
