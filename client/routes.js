@@ -233,6 +233,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	      }]
 	    }
     })
+    .state('root.sucursales', {
+      url: '/sucursales',
+      templateUrl: 'client/sucursales/sucursales.ng.html',
+      controller: 'SucursalesCtrl as suc',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
     .state('root.clientesLista', {
       url: '/clientes',
       templateUrl: 'client/clientes/clientesLista.ng.html',
