@@ -263,4 +263,78 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	      }]
 	    }
     })
+    .state('root.editarCliente', {
+      url: '/editarCliente/:objeto_id',
+      templateUrl: 'client/clientes/clientesForm.ng.html',
+      controller: 'ClientesFormCtrl as cli',
+      resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 	
+         });
+       }]
+    	}
+    })
+    .state('root.clienteDetalle', {
+      url: '/clientes/:objeto_id',
+      templateUrl: 'client/clientes/clientesDetalle.html',
+      controller: 'ClientesDetalleCtrl as cd',
+      resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 	
+         });
+       }]
+    	}
+    })
+    .state('root.generadorPlan', {
+      url: '/generadorPlan/:objeto_id',
+      templateUrl: 'client/planPagos/generadorPlan/generadorPlan.html',
+      controller: 'GeneradorPlanCtrl as ge',
+      resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 	
+					});
+				}]
+			}
+    })
+    .state('root.verPlanPagos', {
+      url: '/verPlanPagos/:cliente_id/:credito_id',
+      templateUrl: 'client/planPagos/verPlanPagos/verPlanPagos.html',
+      controller: 'VerPlanPagosCtrl as vpp',
+      resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 	
+					});
+				}]
+			}
+    })
+    .state('root.tiposCredito', {
+      url: '/tiposCredito',
+      templateUrl: 'client/tiposCredito/tiposCredito.ng.html',
+      controller: 'TiposCreditoCtrl as tc',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
 }]);

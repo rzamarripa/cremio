@@ -25,6 +25,11 @@
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
+  
+.txt-white {
+	color: white;
+}
+
 .animated {
   -webkit-animation-duration: 1s;
   -moz-animation-duration: 1s;
@@ -11334,7 +11339,7 @@ nav ul ul > li:hover b {
 }
 .onoffswitch {
   position: relative;
-  width: 50px;
+  width: 60px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -11406,7 +11411,7 @@ nav ul ul > li:hover b {
   position: absolute;
   top: 0;
   bottom: 0;
-  right: 32px;
+  right: 50px;
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
@@ -13390,7 +13395,7 @@ img.away {
 .bootstrapWizard li {
   display: block;
   float: left;
-  width: 25%;
+  width: 20%;
   text-align: center;
   padding-left: 0;
 }
@@ -15395,6 +15400,9 @@ label:hover input[type="checkbox"][disabled].checkbox:checked + span:before {
 .txt-color-redLight {
   color: #a65858 !important;
 }
+.txt-color-white {
+  color: #ffffff !important;
+}
 /*
 	 * BACKGROUNDS
 	 */
@@ -16462,7 +16470,7 @@ label:hover input[type="checkbox"][disabled].checkbox:checked + span:before {
   width: 100%;
 }
 .menu-on-top .menu-item-parent {
-  max-width: 72px;
+  max-width: 150px;
   min-width: 50px;
   white-space: nowrap;
   overflow: hidden;

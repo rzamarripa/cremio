@@ -58,7 +58,7 @@
 		    <div class="row">
 					<div class="col-sm-3" valida>
 				    <label for="sexo">Sexo *</label>
-				    <select name="sexo" ng-model="cli.objeto.sexo" data-placeholder="Seleccione" class="form-control" required>
+				    <select name="sexo" ng-model="cli.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" required>
 						    <option value=""></option>
 						    <option value="Masculino">Masculino</option>
 						    <option value="Feminino">Feminino</option>
@@ -75,7 +75,7 @@
 						
 		    	<div class="col-sm-3">					    
 			    	<label>Fecha Nacimiento *</label>
-			    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="vd.folio.profile.fechaNacimiento" required="">
+			    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="cli.objeto.profile.fechaNacimiento" required="">
 		    	</div>	
 					
 					<div class="col-sm-3">
@@ -194,6 +194,7 @@
 			    <div class="row">
 						<div class="col-sm-12">
 							<input type="submit" ng-click="cli.guardar(cli.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="cli.action" valida-form formulario="form">
+							<input type="submit" ng-click="cli.actualizar(cli.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!cli.action" valida-form formulario="form">
 						</div>
 					</div>
 		  	</div>    

@@ -1,19 +1,22 @@
 angular.module("creditoMio")
 .controller("ClientesFormCtrl", ClientesFormCtrl);
- function ClientesFormCtrl($scope, $meteor, $reactive, $state, toastr){
+ function ClientesFormCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams){
  	
- 	$reactive(this).attach($scope);
+ 	let rc = $reactive(this).attach($scope);
+ 	window.rc = rc;
   this.action = true;
   this.nuevo = true;	 
   this.objeto = {}; 
   this.objeto.profile = {};
   this.objeto.profile.empresa_id = "";
   this.empresa = {}; 
+  this.objeto_id = ""
   
   this.pais_id = "";
   this.estado_id = "";
   this.municipio_id = "";
   this.ciudad_id = "";
+  this.empresa_id = "";
   
 	this.subscribe('empresas',()=>{
 		return [{estatus: true}]
@@ -51,6 +54,16 @@ angular.module("creditoMio")
 	this.subscribe('colonias',()=>{
 		return [{ciudad_id: this.getReactively("ciudad_id"), estatus: true}]
 	});
+	
+	if($stateParams.objeto_id != undefined){
+		this.action = false;
+		rc.objeto_id = $stateParams.objeto_id
+		this.subscribe('cliente', () => {
+			return [{
+				id : $stateParams.objeto_id
+			}];
+		});
+	}
 	 
 	this.helpers({
 	  estadosCiviles : () => {
@@ -80,6 +93,11 @@ angular.module("creditoMio")
 	  empresas : () => {
 		  return Empresas.find();
 	  },
+	  objeto : () => {
+		  var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
+		  rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
+		  return objeto;
+	  }
   }); 
   
   this.Nuevo = function()
@@ -111,6 +129,11 @@ angular.module("creditoMio")
 			objeto.profile.usuarioInserto = Meteor.userId();
 			objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
 			objeto.profile.fechaCreacion = new Date();
+			var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
+			var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
+			var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
+			objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
+			console.log(objeto.profile.nombreCompleto);
 			Meteor.call('createUsuario', objeto, "Cliente");
 			toastr.success('Guardado correctamente.');
 			this.usuario = {};
@@ -120,6 +143,35 @@ angular.module("creditoMio")
 	    form.$setUntouched();
 			$state.go('root.clientesLista');
 		
+	};
+	
+	this.actualizar = function(objeto,form){
+
+		console.log(objeto);
+/*
+		var objetoTemp = Meteor.users.findOne({_id : objeto._id});
+		this.objeto.password = objetoTemp.password;
+		this.objeto.repeatPassword = objetoTemp.password;
+		console.log(this.objeto.password)
+		//document.getElementById("contra").value = this.objeto.password;
+		console.log(form);
+		if(form.$invalid){
+			toastr.error('Error al actualizar los datos.');
+			return;
+		}
+		var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
+		var apPaterno = objeto.profile.apPaterno != undefined ? objeto.profile.apPaterno + " " : "";
+		var apMaterno = objeto.profile.apMaterno != undefined ? objeto.profile.apMaterno : "";
+		objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
+		delete objeto.profile.repeatPassword;
+		Meteor.call('updateGerenteVenta', rc.objeto, "Cliente");
+		toastr.success('Actualizado correctamente.');
+		$('.collapse').collapse('hide');
+		this.nuevo = true;
+		form.$setPristine();
+		form.$setUntouched();
+		$state.go('root.clientes');
+*/
 	};
 	
 	this.guardarEmpresa = function(empresa, objeto,form)
