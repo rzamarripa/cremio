@@ -7,15 +7,6 @@ angular.module("creditoMio")
   this.nuevo = true;	 
   this.objeto = {}; 
   
-	this.subscribe('clientes',()=>{
-		return [{}]
-	});
-	 
-	this.helpers({
-	  clientes : () => {
-		  return Clientes.find();
-	  }
-  }); 
   
   
 };
