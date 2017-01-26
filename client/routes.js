@@ -337,4 +337,55 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	      }]
 	    }
     })
+    .state('root.ventanillasLista', {
+      url: '/ventanillas',
+      templateUrl: 'client/ventanillas/ventanillasLista.ng.html',
+      controller: 'VentanillasListaCtrl as lven',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
+    .state('root.ventanillasForm', {
+      url: '/ventanillasForm',
+      templateUrl: 'client/ventanillas/ventanillasForm.ng.html',
+      controller: 'VentanillasFormCtrl as ven',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
+    .state('root.verificadoresLista', {
+      url: '/verificadores',
+      templateUrl: 'client/verificadores/verificadoresLista.ng.html',
+      controller: 'VentanillasListaCtrl as lver',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
+    .state('root.verificadoresForm', {
+      url: '/verificadoresForm',
+      templateUrl: 'client/verificadores/verificadoresForm.ng.html',
+      controller: 'VerificadoresFormCtrl as ver',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
+    .state('root.cobranzapordia', {
+      url: '/cobranzapordia',
+      templateUrl: 'client/cobranza/cobranzapordia.ng.html',
+      controller: 'CobranzapordiaCtrl as cdia',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
+
 }]);

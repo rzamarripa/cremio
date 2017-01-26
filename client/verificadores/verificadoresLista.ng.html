@@ -1,0 +1,52 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Verificadores &gt; Buscar
+		</h1>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="input-group">
+			<div class="input-group-btn">
+				<a href="./verificadoresForm" class="btn btn-default btn-primary">
+					<i class="fa fa-plus"></i> Nuevo
+				</a>
+			</div>
+			<input class="form-control" type="text" placeholder="Buscar..." ng-model="lven.buscar.nombre">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-3" ng-repeat="verificador in lven.verificadores">
+      <div class="contact-box center-version">
+
+          <a href="/verificadors/{{verificador._id}}" style="text-decoration: none;">
+
+              <img alt="image" class="img-circle" ng-src="{{lven.tieneFoto(verificador.profile.sexo, verificador.profile.fotografia)}}">
+
+
+              <p class="lead font-xs text-center"><strong>{{verificador.profile.nombre}} <br/> {{verificador.profile.apPaterno}} {{verificador.profile.apMaterno}}</strong></p>
+
+              <div class="font-bold">{{verificador.username}}</div>
+              <address class="font-xs">
+                  <strong>Cliente</strong><br>
+                  {{verificador.profile.call}} {{verificador.profile.numero}}<br>
+                  {{verificador.profile.colonia}}<br>
+                  <abbr title="Teléfono">T1:</abbr> {{verificador.profile.telefono}}<br/>
+                  <abbr title="Celular">C2:</abbr> {{verificador.profile.celular}}
+              </address>
+
+          </a>
+          <div class="contact-box-footer">
+              <div class="m-t-xs btn-group">
+                  <a href="/verificadors/{{verificador._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
+                  <a href="/editarVerificador/{{verificador._id}}" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Editar</a>
+              </div>
+          </div>
+
+      </div>
+  </div>
+</div>
