@@ -14,9 +14,11 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.cliente_id = "";
 	this.planPagos = [];
 	this.credito = {};
+	this.pago = {};
 	window.rc = rc;
+
 	
-  this.subscribe("planPagos", ()=>{
+  	this.subscribe("planPagos", ()=>{
 		return [{ cliente_id : $stateParams.objeto_id }]
 	});
 	
@@ -27,16 +29,30 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.subscribe('cliente', () => {
 		return [{ id : $stateParams.objeto_id }];
 	});
+	this.subscribe('pagos', () => {
+		return [{ estatus:true}];
+	});
 	
 	this.helpers({
 		cliente : () => {
 			return Meteor.users.findOne({roles : ["Cliente"]});
 		},
 		planPagosViejo : () => {
-			 return PlanPagos.find().fetch();
+			 
+			 pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
+		// 	 _.each(pagos, function(p){
+		// 	 p.pagoSeleccionado =  false
+		// 	 //console.log(p)
+		// })
+			
+
+			 return pagos
 		},
 		tiposCredito : () => {
 			return TiposCredito.find();
+		},
+		pagos : () => {
+			return Pagos.find();
 		}
 	});
 	
@@ -254,5 +270,103 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 				}
 			}			
 		}
+	};
+
+
+	this.mostrarPagar = function()
+	{
+		this.checkPagar = !this.checkPagar;
+		rc.credito.pagoSeleccionado = false;
+	};
+
+	
+	this.seleccionarPago = function(pago)
+	{ 
+		//console.log("entra pagada",pago)
+ 		pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
+		_.each(pagos, function(p){
+			p.pagoSeleccionado =  false
+			//console.log("prmer each",p)
+		})
+
+total = 0;
+		_.each(rc.planPagosViejo, function(p){
+			//console.log("segundo each",p)
+			if (pago.numeroPago >= p.numeroPago)
+			{ 				
+				p.pagoSeleccionado = true
+				total += p.importeRegular
+				p.estatus = 0;	
+				p.totalPago = total;
+				rc.pago.totalPago = total;
+				console.log(pago.pagoSeleccionado)
+				console.log(total,p.totalPago)
+				console.log("entro", pago.pagoSeleccionado, pago.numeroPago, p.pagoSeleccionado, p.numeroPago)
+			}else{
+				p.pagoSeleccionado = false;
+				total -= p.importeRegular;
+				p.estatus = 0;
+
+			}
+
+	
+	});
+		//console.log("HELPER",rc.planPagosViejo)
 	}
+
+	this.guardarPago = function(pago,credito)
+	{
+		
+		console.log(pago)
+		pago.fechaPago = new Date()
+		pago.usuario_id = Meteor.userId()
+		pago.sucursalPago_id = Meteor.user().profile.sucursal_id
+		pago.estatus = true;
+		var pago_id =  Pagos.insert(pago);
+
+        _.each(rc.planPagosViejo, function(p){
+        	delete p.$$hashKey;
+        	_.each(p, function(nota){
+			delete nota.$$hashKey;
+			});	
+        	if (p.pagoSeleccionado == true) {
+        		var idTemp = p._id;
+		        delete p._id;
+		        var diaSemana = moment(new Date()).weekday();
+			    p.pago_id = pago_id
+				p.cambio =  pago.pagar - pago.totalPago
+				p.fechaPago = new Date()
+				p.sucursalPago_id = Meteor.user().profile.sucursal_id
+				p.usuarioCobro_id = Meteor.userId()
+				p.diaPago = diaSemana
+				if (p.fechaLimite > new Date()) 
+				{
+					pago.tiempoPago = 0
+				}else{
+					pago.tiempoPago = 1
+				}	
+				console.log(p)
+	        		PlanPagos.update({_id:idTemp},{$set:p});
+	        }
+	        this.pago = {}
+        })
+
+		// this.credito = PlanPagos.findOne({_id:id});
+		// var idTemp = credito._id;
+		// delete credito._id;	
+	
+
+		
+		
+
+
+
+		
+	};
+
+
+
+
+
+
 };
