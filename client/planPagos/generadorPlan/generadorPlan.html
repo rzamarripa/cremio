@@ -299,11 +299,11 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fecha < ge.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in ge.planPagosViejo">
+						<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < ge.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in ge.planPagosViejo">
 
-							<td ><a ng-model="pago.pagoSeleccionado" ng-click="ge.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'success' : 'danger'}}" >{{pago.pagoSeleccionado == true ? 'Pagado' : 'Por pagar'}}</a> </td>
+							<td ><a ng-model="pago.pagoSeleccionado" ng-click="ge.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'success' : 'danger'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'Pagado' : 'Por pagar'}}</a> </td>
 							<td class="text-center">{{$index + 1}}</td>	
-							<td class="text-center">{{pago.fecha | date:"dd-MM-yyyy"}}</td>
+							<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 							<td class="text-center">{{pago.numeroPago}} - {{ge.planPagos.length}}</td>
 							<td class="text-right">{{pago.importeRegular | currency}}</td>
 							<td >{{pago.descripcion}}</td>
@@ -322,13 +322,14 @@
 			</div>
 			<br/>
 			<div class="col-sm-4">
-				<caption><h4>Total a pagar: {{ge.pago.totalPago | currency }}</h4></caption>
-			</div>
-			<div class="col-sm-3"><br/>
+				<h4>Total a pagar: {{ge.pago.totalPago | currency }}</h4>
+				<br/>
 				<caption>Monto a pagar: </caption> <input  type="number" class="form-control" placeholder="Pagar" ng-model="ge.pago.pagar">
+				<br/>
+				<h4>Cambio: {{  ge.pago.pagar  - ge.pago.totalPago | currency }}</h4>
+				<br/>
+				<a class="btn btn-primary pull-right" ng-click="ge.guardarPago(ge.pago,ge.credito)">Guardar</a>
 			</div>
-			<div class="col-sm-3"><br/><caption><h4>Cambio: {{  ge.pago.pagar  - ge.pago.totalPago | currency }}</h4></caption></div>
-			<div><br/><a class="btn btn-primary" ng-click="ge.guardarPago(ge.pago,ge.credito)">Guardar</a></div>
 		</div>
 	</div>
 </div>
