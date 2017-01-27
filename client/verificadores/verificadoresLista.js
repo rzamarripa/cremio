@@ -1,6 +1,6 @@
 angular.module("creditoMio")
-.controller("ClientesListaCtrl", ClientesListaCtrl);
- function ClientesListaCtrl($scope, $meteor, $reactive, $state, toastr){
+.controller("verificadoresLista", verificadoresLista);
+ function verificadoresLista($scope, $meteor, $reactive, $state, toastr){
  	
  	let rc = $reactive(this).attach($scope);
   this.action = true;
@@ -10,11 +10,11 @@ angular.module("creditoMio")
   this.buscar.nombre = "";
   window.rc = rc;
   
-  this.subscribe('buscarClientes', () => {
+  this.subscribe('buscarVerificadores', () => {
 		if(this.getReactively("buscar.nombre").length > 0){
 			console.log(rc.buscar.nombre);
 			return [{
-		    options : { limit: 20 },
+		    options : { limit: 51 },
 		    where : { 
 					nombreCompleto : this.getReactively('buscar.nombre')
 				} 		   
