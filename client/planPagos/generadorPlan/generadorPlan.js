@@ -323,6 +323,7 @@ total = 0;
 		pago.sucursalPago_id = Meteor.user().profile.sucursal_id
 		pago.estatus = true;
 		var pago_id =  Pagos.insert(pago);
+		this.pago = {}
 
         _.each(rc.planPagosViejo, function(p){
         	delete p.$$hashKey;
@@ -348,7 +349,7 @@ total = 0;
 				console.log(p)
 	        		PlanPagos.update({_id:idTemp},{$set:p});
 	        }
-	        this.pago = {}
+	        
         })
 
 		// this.credito = PlanPagos.findOne({_id:id});
