@@ -177,7 +177,51 @@
 		    	</div>
 						
 		    </div>
-			</div>  	
+			</div> 
+			<h4>Referencias Personales</h4>
+			<div class="well">	    
+		    <div class="row">
+		    	<div class="col-sm-3"> 					    
+			    	<label>Nombre</label>
+			    	<input name="nombreParentesco" type="text" class="form-control" placeholder="Nombre" ng-model="cli.parentesco.nombre">
+		    	</div>
+		    	<div class="col-sm-3">					    
+			    	<label>Parentesco</label>
+			    	<input name="celular" type="text" class="form-control" placeholder="Parentesco" ng-model="cli.parentesco.parentesco">
+		    	</div>
+		    	<div class="col-sm-3">					    
+			    	<label>Tiempo</label>
+			    	<input name="otroTelefono" type="text" class="form-control" placeholder="Tiempo" ng-model="cli.parentesco.tiempo">
+		    	</div>
+		    	<div class="col-sm-3">
+				   	<input type="button" ng-click="cli.agregarReferencia()" value="Agregar" class="btn btn-primary"> 		   				
+					</div>
+		    </div>
+			</div>
+			<div class="well">				 
+				<div class="row">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>Número</th>
+								<th>Nombre</th>
+								<th>Parentesco</th>
+								<th>Tiempo</th>
+								<th>Quitar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="p in cli.referenciasPersonales">
+								<td>{{p.num}}</td>
+								<td>{{p.nombre}}</td>
+								<td>{{p.parentesco}}</td>
+								<td>{{p.tiempo}}</td>
+								<td><a href="#" ng-click="cli.quitar(p.num)"><i class="fa fa-trash"></i></a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+		  	</div>	
 			<h4>Empresa</h4>			
 			<div class="well">	    
 		    <div class="row">

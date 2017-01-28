@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Quicksand:400,300);
+
 .desactivado {
     z-index: 1000;
     background-color: lightgrey;
@@ -5,7 +7,7 @@
     pointer-events: none;
 }
 
-@import url(https://fonts.googleapis.com/css?family=Quicksand:400,300);
+
 body{
 	font-family: 'Quicksand', sans-serif;
 }
