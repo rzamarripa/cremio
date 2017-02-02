@@ -293,6 +293,52 @@
 						<div class="tab-pane fade padding-10 no-padding-bottom {{($index == 0 ? 'active in' : '')}}" id="s{{$index +1}}" ng-repeat="credito in vpp.creditos track by $index">
 							<div class="row no-space">
 								<div class="col-sm-12">
+
+
+
+
+								<div class="col-sm-8">
+							<div>
+								<i class="fa fa-chevron-circle-right"><a class="btn btn-link" role="button" data-toggle="collapse" 
+								 href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+								 Detalles de la Solicitud</a></i>
+								 <br/>
+
+								<p>Tipo de Credito:&nbsp;&nbsp; <strong> {{credito.nombreTipoCredito.descripcion}}</strong></p>
+								<p>Periodo de Pago:&nbsp;&nbsp; <strong> pendiente</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Capital Solicitado: <strong>{{credito.capitalSolicitado}}</strong> <p/>
+
+								<p>Duración:&nbsp;&nbsp; <strong> pendiente</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								 Moneda: <strong> Pendiente </strong> <p/>
+
+						   </div>
+						   <div>
+								<i class="fa fa-chevron-circle-right"><a class="btn btn-link" role="button" data-toggle="collapse" 
+								 href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+								 Avales</a></i>
+								 <br/>
+								 <div></div>
+
+						   </div>
+						    <div>
+								<i class="fa fa-chevron-circle-right"><a class="btn btn-link" role="button" data-toggle="collapse" 
+								 href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+								 Garantias</a></i>
+								 <br/>
+
+						   </div>
+						    <div>
+								<i class="fa fa-chevron-circle-right"><a class="btn btn-link" role="button" data-toggle="collapse" 
+								 href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+								 Tablá de amortización</a></i>
+								 <br/>
+								 
+						   </div>
+						 
+
+									
+								</div>
+
+
 									<div class="row" ng-show="vpp.planPagosViejo.length > 0">
 										<div class="col-sm-8">
 											<table class="table table-striped table-bordered table-condensed font-xs">
