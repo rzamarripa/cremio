@@ -4,5 +4,7 @@ Meteor.startup(function () {
       username: 'admin',
       password: '123qwe',
     });
+    
+    
   }
 });
