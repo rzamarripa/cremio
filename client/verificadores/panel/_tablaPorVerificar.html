@@ -1,0 +1,31 @@
+<!-- Tabla de Visitados Analistas -->
+<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="15%"><div class="text-center">Nombre del Cliente</div></th>
+					<th width="10%"><div class="text-center">Fecha </div></th>
+					<th width="10%"><div class="text-center">Acción</div></th>
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="credito in pver.creditos">
+			    <td>{{credito.nombreCliente}}</td>
+			    <td>{{credito.fechaSolicito.getUTCDate() +"/"+ (credito.fechaSolicito.getUTCMonth()+1) +"/"+ credito.fechaSolicito.getUTCFullYear()}} </td>
+			    <td>
+				    <div class="text-center">
+					    <div class="btn-group">
+							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							  </button>
+							  <ul class="dropdown-menu text-left">
+							    <li><a href="#" ng-click="pver.finalizarFolio(credito._id)"><i class="fa fa-trash"></i> Verificar</a></li>
+							  </ul>
+							</div>
+				    </div>	
+				    	
+			    </td>
+		    </tr>
+			</tbody>
+</table>
+		

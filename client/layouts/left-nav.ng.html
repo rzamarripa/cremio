@@ -155,16 +155,22 @@
 					<span class="menu-item-parent">Clientes</span>
 			  </a>
 		</li>
-		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'">
+		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
 				<a ui-sref="root.ventanillasLista" tilte="Credito Mio">
 		    	<i class="fa fa-lg fa-fw fa-group"></i>
 					<span class="menu-item-parent">Ventanillas</span>
 			  </a>
 		</li>
-		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Verificador'">
+		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
 				<a ui-sref="root.verificadoresLista" tilte="Credito Mio">
 		    	<i class="fa fa-lg fa-fw fa-group"></i>
 					<span class="menu-item-parent">Verificadores</span>
+			  </a>
+		</li>
+		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Verificador'">
+				<a ui-sref="root.panelVerificador" tilte="Credito Mio">
+		    	<i class="fa fa-lg fa-fw fa-group"></i>
+					<span class="menu-item-parent">Panel Verificadores</span>
 			  </a>
 		</li>
 	</ul>

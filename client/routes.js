@@ -388,5 +388,15 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	      }]
 	    }
     })
+    .state('root.panelVerificador', {
+      url: '/panelverificador',
+      templateUrl: 'client/verificadores/panel/panelVerificador.ng.html',
+      controller: 'panelVerificadorCtrl as pver',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
 
 }]);

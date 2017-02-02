@@ -17,10 +17,9 @@ angular.module("creditoMio")
   this.municipio_id = "";
   this.ciudad_id = "";
   this.empresa_id = "";
+  
   this.con = 0;
-  
   this.num = 0;
-  
   this.referenciasPersonales = [];
   this.parentezco = {};
   
@@ -215,11 +214,6 @@ angular.module("creditoMio")
 					
 	};
 	
-	
-	
-	
-	
-
 	this.actualizar = function(objeto,form)
 	{
 			if(form.$invalid){
@@ -269,53 +263,35 @@ angular.module("creditoMio")
 			this.parentezco={};
 	};
 	
-	this.actualizarReferencia = function()
+	this.actualizarReferencia = function(p)
 	{
+			p.num = this.num;
+			console.log(p);
 			console.log(this.referenciasPersonales);
+			console.log(this.num);
+			_.each(this.referenciasPersonales, function(rp){
+							if (rp.num == p.num)
+							{
+									console.log("entro");
+									rp.nombre = p.nombre;
+									rp.apellidoPaterno = p.apellidoPaterno;
+									rp.apellidoMaterno = p.apellidoMaterno;			
+									rp.parentezco = p.parentezco;
+									rp.direccion = p.direccion;
+									rp.telefono = p.telefono;
+									rp.tiempo = p.tiempo;
+							}
+			})
 			
-			this.parentezco.num = this.num;
-			console.log(this.parentezco);
-			
-			this.referenciasPersonales.splice(this.num-1, this.num-1, this.parentezco);
-			console.log(this.referenciasPersonales);
-			
-			/*
-			for (i = 0; i < this.referenciasPersonales.length; i++) 
-			{
-					
-		     if (this.referenciasPersonales[i].num == this.num) 
-		     {
-			     	console.log(i);
-		       	this.referenciasPersonales[i].nombre = this.nombre;
-						this.referenciasPersonales[i].apellidoPaterno = this.apellidoPaterno;
-						this.referenciasPersonales[i].apellidoMaterno = this.apellidoMaterno;			
-						this.referenciasPersonales[i].parentezco = this.parentezco;
-						this.referenciasPersonales[i].direccion = this.direccion;
-						this.referenciasPersonales[i].telefono = this.telefono;
-						this.referenciasPersonales[i].tiempo = this.tiempo; 
-		        break; 
-		     }
-		   }		
-		   
-		   */
-			
+			this.parentezco={};
 			this.num=0;
 			this.action = true;
-			
 	};
 	
 	this.cancelarReferencia = function()
 	{
-			this.parentezco.nombre = "";
-			this.parentezco.apellidoPaterno = "";
-			this.parentezco.apellidoMaterno = "";
-			this.parentezco.parentezco = "";
-			this.parentezco.direccion = "";
-			this.parentezco.telefono = "";
-			this.parentezco.tiempo = "";
-			
+			this.parentezco={};
 			this.num = -1;
-			
 			this.action = true;
 	};
 	
@@ -330,7 +306,6 @@ angular.module("creditoMio")
 	
 	this.editarReferencia = function(p)
 	{
-			
 			this.parentezco.nombre = p.nombre;
 			this.parentezco.apellidoPaterno = p.apellidoPaterno;
 			this.parentezco.apellidoMaterno = p.apellidoMaterno;			
@@ -340,16 +315,6 @@ angular.module("creditoMio")
 			this.parentezco.tiempo = p.tiempo;
 			
 			this.num = p.num;
-			
-			/*
-			pos = functiontofindIndexByKeyValue(this.referenciasPersonales, "num", numero);
-	    this.referenciasPersonales.splice(pos, 1);
-	    if (this.referenciasPersonales.length == 0) this.con = 0;
-	    //reorganiza el consecutivo     
-	    functiontoOrginiceNum(this.referenciasPersonales, "num");
-	    
-	    */
-	    
 	    this.action = false;
 	};
 	
