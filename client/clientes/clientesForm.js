@@ -302,13 +302,6 @@ angular.module("creditoMio")
 			this.num=0;
 			this.action = true;
 			
-			this.parentezco.nombre = "";
-			this.parentezco.apellidoPaterno = "";
-			this.parentezco.apellidoMaterno = "";
-			this.parentezco.parentezco = "";
-			this.parentezco.direccion = "";
-			this.parentezco.telefono = "";
-			this.parentezco.tiempo = "";
 	};
 	
 	this.cancelarReferencia = function()

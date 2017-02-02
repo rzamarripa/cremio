@@ -229,39 +229,39 @@
 			    <div class="row">
 			    	<div class="col-sm-4" valida>
 				    	<label>Fecha Inicial *</label>
-				    	<input date-time format="dd-MM-yyyy" class="form-control" view="year" max-view="year" min-view="date" ng-model="cpp.cambioSemanasPlanPagos.fechaInicial" name="fechacambioSemanasPlanPagos" required/>
+				    	<input date-time format="dd-MM-yyyy" class="form-control" view="year" max-view="year" min-view="date" ng-model="vpp.cambioSemanasPlanPagos.fechaInicial" name="fechacambioSemanasPlanPagos" required/>
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>Total de Pagos *</label>
-				    	<input name="totalPagosCambioSemanasPlanPagos" type="number" class="form-control" ng-model="cpp.cambioSemanasPlanPagos.totalPagos" required="">
+				    	<input name="totalPagosCambioSemanasPlanPagos" type="number" class="form-control" ng-model="vpp.cambioSemanasPlanPagos.totalPagos" required="">
 			    	</div>
 			    </div>
 			    <div class="row">
 			    	<div class="col-sm-4" valida>
 				    	<label>Importe *</label>
-				    	<input name="importeRegularCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Nuevo costo colegiatura" ng-model="cpp.cambioSemanasPlanPagos.importeRegular" required="">
+				    	<input name="importeRegularCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Nuevo costo colegiatura" ng-model="vpp.cambioSemanasPlanPagos.importeRegular" required="">
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>Importe Recargo *</label>
-				    	<input name="importeRecargoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto recargo" ng-model="cpp.cambioSemanasPlanPagos.importeRecargo" required="">
+				    	<input name="importeRecargoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto recargo" ng-model="vpp.cambioSemanasPlanPagos.importeRecargo" required="">
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>Importe Descuento *</label>
-				    	<input name="importeDescuentoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto descuento" ng-model="cpp.cambioSemanasPlanPagos.importeDescuento" required="">
+				    	<input name="importeDescuentoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto descuento" ng-model="vpp.cambioSemanasPlanPagos.importeDescuento" required="">
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>Días Recargo *</label>
-				    	<input name="diasRecargoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="cpp.cambioSemanasPlanPagos.diasRecargo" required="">
+				    	<input name="diasRecargoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="vpp.cambioSemanasPlanPagos.diasRecargo" required="">
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>Días Descuento *</label>
-				    	<input name="diasDescuentoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="cpp.cambioSemanasPlanPagos.diasDescuento" required="">
+				    	<input name="diasDescuentoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="vpp.cambioSemanasPlanPagos.diasDescuento" required="">
 			    	</div>
 			    </div> 
 				</div>
 				<div class="row">
 					<div class="col-sm-12">
-						<button class="btn btn-info" ng-click="cpp.planPagosSemana(cpp.cambioSemanasPlanPagos, formMasivoSemanas)" valida-form formulario="formMasivoSemanas">Calcular Plan de Pagos</button>
+						<button class="btn btn-info" ng-click="vpp.planPagosSemana(vpp.cambioSemanasPlanPagos, formMasivoSemanas)" valida-form formulario="formMasivoSemanas">Calcular Plan de Pagos</button>
 					</div>
 				</div>	  
 		  </form>
@@ -269,43 +269,110 @@
 	</div>
 </div>
 <!-- Tabla para mostrar los pagos -->
-<h2> Yo creo que esto si lo pueden hacer (cambiar el estatus de los pagos o la información)</h2>
+
+
 <div class="row">
-	<div class="col-sm-12">
-		<table class="table table-striped table-bordered table-condensed font-xs">
-			<caption>
-				<h4>Plan Actual</h4>
-			</caption>
-			<thead class="thead">
-				<tr>
-					<th class="text-center" width="5%">No.</th>
-					<th class="text-center" width="20%">Fecha de Pago</th>
-					<th class="text-center" width="15%">Pagos</th>
-					<th class="text-center" width="10%">Importe</th>
-					<th class="text-center" width="10%">Recargo</th>
-					<th class="text-center" width="20%">Descripción</th>
-					<th class="text-center" width="20%">Acciones</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fecha < vpp.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in vpp.planPagos">
-					<td class="text-center">{{$index + 1}}</td>	
-					<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-					<td class="text-center">{{pago.numeroPago}} - {{vpp.planPagos.length}}</td>
-					<td class="text-right">{{pago.importeRegular | currency}}</td>
-					<td class="text-right">{{pago.importeRecargo | currency}}</td>
-					<td >{{pago.descripcion}}</td>
-					<td class="text-center">
-						<span ng-if="pago.estatus == 0">
-							<button class="btn btn-warning btn-xs" ng-click="vpp.editar(pago)"><i class="fa fa-pencil"></i></button>
-							<button class="btn btn-danger  btn-xs" ng-click="vpp.cambiarEstatus(pago, 2, 'eliminar')"><i class="fa fa-trash"></i></button>
-						</span>
-						<span ng-if="pago.estatus == 2">
-							<button class="btn btn-success btn-xs" ng-click="vpp.cambiarEstatus(pago, 0, 'activar')"><i class="fa fa-check"></i></button>
-						</span>
-					</td>
-				</tr>
-			</tbody>
-		</table>	
+	<article class="col-sm-12 sortable-grid ui-sortable">
+		<!-- new widget -->
+		<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+	
+
+<header role="heading">
+				<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+				<h2>Live Feeds </h2>
+
+				<ul class="nav nav-tabs pull-right" id="myTab">
+					<li ng-click="vpp.mostrarPagos(credito._id)" class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in vpp.creditos track by $index">
+						<a data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado}}</span></a>
+					</li>
+				</ul>
+
+			<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+<div class="no-padding" role="content">
+				<!-- widget edit box -->
+				<div class="jarviswidget-editbox">
+
+					test
+				</div>
+<div class="widget-body">
+					<!-- content -->
+<div id="myTabContent" class="tab-content">
+<div class="tab-pane fade padding-10 no-padding-bottom {{($index == 0 ? 'active in' : '')}}" id="s{{$index +1}}" ng-repeat="credito in vpp.creditos track by $index">
+	<div class="row no-space">
+		
+		<div class="col-sm-12">
+
+<div class="row">
+		<div class="col-sm-12">
+		<div class="row" ng-show="vpp.planPagosViejo.length > 0">
+			<div class="col-sm-8">
+				<table class="table table-striped table-bordered table-condensed font-xs">
+					<caption>
+						<h4>Plan Actual</h4>
+					</caption>
+					<thead class="thead">
+						<tr>
+							<th class="text-center" width="5%"></th>
+							<th class="text-center" width="5%">No.</th>
+							<th class="text-center" width="20%">Fecha de Pago</th>
+							<th class="text-center" width="15%">Pago</th>
+							<th class="text-center" width="10%">Importe</th>
+							<th class="text-center" width="20%">Descripción</th>
+							<th class="text-center" width="20%">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < vpp.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in vpp.planPagosViejo">
+
+							<td ><a ng-model="pago.pagoSeleccionado" ng-click="vpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'success' : 'danger'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'Pendiente' : 'Por pagar'}}</a> </td>
+							<td class="text-center">{{$index + 1}}</td>	
+							<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+							<td class="text-center">{{pago.numeroPago || pago.numeroPagoMulta}} - {{vpp.planPagos.length}}</td>
+							<td class="text-right">{{pago.importeRegular  | currency}}</td>
+							<td >{{pago.descripcion}}</td>
+							<td class="text-center">
+								<span ng-if="pago.estatus == 0">
+									<button class="btn btn-warning btn-xs" ng-click="vpp.editar(pago)"><i class="fa fa-pencil"></i></button>
+									<button class="btn btn-danger  btn-xs" ng-click="vpp.cambiarEstatus(pago, 2, 'eliminar')"><i class="fa fa-trash"></i></button>
+								</span>
+								<span ng-if="pago.estatus == 2">
+									<button class="btn btn-success btn-xs" ng-click="vpp.cambiarEstatus(pago, 0, 'activar')"><i class="fa fa-check"></i></button>
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>	
+			</div>
+			<br/>
+				<div class="col-sm-4">
+					<h4>Total a pagar: {{vpp.pago.totalPago | currency }}</h4>
+					<br/>
+					<caption>Monto a pagar: </caption> <input  type="number" class="form-control" placeholder="Pagar" ng-model="vpp.pago.pagar">
+					<br/>
+					<h4>Cambio: {{vpp.pago.pagar - vpp.pago.totalPago | currency }}</h4>
+					<br/>
+					<a class="btn btn-primary pull-right" ng-click="vpp.guardarPago(vpp.pago,vpp.credito)">Guardar</a>
+				</div>
+		</div>
 	</div>
 </div>
+
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<!-- end content -->
+				</div>
+		</div>
+
+		</div>
+		<!-- end widget -->
+
+	</article>
+
+	</div>
+
+
+

@@ -124,6 +124,10 @@
 										    	<label>Importe Recargo *</label>
 										    	<input name="importeRecargoCreditoNuevo" type="number" class="form-control" placeholder="Monto recargo" ng-model="ge.credito.importeRecargo" required="">
 									    	</div>
+									    	<div class="col-sm-4">					    
+										    	<label>Requiere Verificación</label>
+										    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ge.credito.requiereVerificacion">
+									    	</div>
 									    </div> 
 										</div>
 										<div class="row">
@@ -280,7 +284,7 @@
 		<a class="btn btn-{{ge.checkPagar == true ? 'primary' : 'danger'}}" ng-click="ge.mostrarPagar()"> {{ge.checkPagar == true ? 'Seleccionar pago' : 'Ocultar'}}</a>
 		</div> -->
 	
-	<div class="col-sm-{{(ge.nuevoBotonReestructuracion == true) ? 12 : 6}}">
+	<div class="col-sm-{{(ge.nuevoBotonReestructuracion == true) ? 12 : 12}}">
 		<div class="row" ng-show="ge.planPagosViejo.length > 0">
 			<div class="col-sm-8">
 				<table class="table table-striped table-bordered table-condensed font-xs">
@@ -289,25 +293,25 @@
 					</caption>
 					<thead class="thead">
 						<tr>
-							<th class="text-center" width="5%"></th>
+						<!-- 	<th class="text-center" width="5%"></th> -->
 							<th class="text-center" width="5%">No.</th>
 							<th class="text-center" width="20%">Fecha de Pago</th>
 							<th class="text-center" width="15%">Pago</th>
 							<th class="text-center" width="10%">Importe</th>
 							<th class="text-center" width="20%">Descripción</th>
-							<th class="text-center" width="20%">Acciones</th>
+						<!-- 	<th class="text-center" width="20%">Acciones</th> -->
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < ge.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in ge.planPagosViejo">
 
-							<td ><a ng-model="pago.pagoSeleccionado" ng-click="ge.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'success' : 'danger'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'Pagado' : 'Por pagar'}}</a> </td>
+							<!-- <td ><a ng-model="pago.pagoSeleccionado" ng-click="ge.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'success' : 'danger'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'Pagado' : 'Por pagar'}}</a> </td> -->
 							<td class="text-center">{{$index + 1}}</td>	
 							<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 							<td class="text-center">{{pago.numeroPago}} - {{ge.planPagos.length}}</td>
 							<td class="text-right">{{pago.importeRegular | currency}}</td>
 							<td >{{pago.descripcion}}</td>
-							<td class="text-center">
+							<!-- <td class="text-center">
 								<span ng-if="pago.estatus == 0">
 									<button class="btn btn-warning btn-xs" ng-click="ge.editar(pago)"><i class="fa fa-pencil"></i></button>
 									<button class="btn btn-danger  btn-xs" ng-click="ge.cambiarEstatus(pago, 2, 'eliminar')"><i class="fa fa-trash"></i></button>
@@ -315,13 +319,13 @@
 								<span ng-if="pago.estatus == 2">
 									<button class="btn btn-success btn-xs" ng-click="ge.cambiarEstatus(pago, 0, 'activar')"><i class="fa fa-check"></i></button>
 								</span>
-							</td>
+							</td> -->
 						</tr>
 					</tbody>
 				</table>	
 			</div>
 			<br/>
-			<div class="col-sm-4">
+		<!-- 	<div class="col-sm-4">
 				<h4>Total a pagar: {{ge.pago.totalPago | currency }}</h4>
 				<br/>
 				<caption>Monto a pagar: </caption> <input  type="number" class="form-control" placeholder="Pagar" ng-model="ge.pago.pagar">
@@ -329,7 +333,7 @@
 				<h4>Cambio: {{  ge.pago.pagar  - ge.pago.totalPago | currency }}</h4>
 				<br/>
 				<a class="btn btn-primary pull-right" ng-click="ge.guardarPago(ge.pago,ge.credito)">Guardar</a>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </div>

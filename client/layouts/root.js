@@ -1,6 +1,7 @@
 angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', function ($scope, $meteor)
 {
-  $scope.isLoggedIn = function(){
+
+  isLoggedIn = function(){
 	  return Meteor.user();
-  } 
+  }
 }]);
