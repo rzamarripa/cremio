@@ -19,8 +19,10 @@ angular.module("creditoMio")
   this.empresa_id = "";
   this.con = 0;
   
+  this.num = 0;
+  
   this.referenciasPersonales = [];
-  this.parentesco = {};
+  this.parentezco = {};
   
 	this.subscribe('empresas',()=>{
 		return [{estatus: true}]
@@ -153,6 +155,8 @@ angular.module("creditoMio")
 	this.actualizar = function(objeto,form){
 
 		console.log(objeto);
+		
+	
 /*
 		var objetoTemp = Meteor.users.findOne({_id : objeto._id});
 		this.objeto.password = objetoTemp.password;
@@ -239,7 +243,7 @@ angular.module("creditoMio")
 	};
 	
 	
-	this.agregarReferencia = function()
+	this.insertarReferencia = function()
 	{
 			/*
 			//Validar que no venga vacio
@@ -259,19 +263,101 @@ angular.module("creditoMio")
 			
 			//incremeneto
 			this.con = this.con + 1;
-			this.parentesco.num = this.con;
+			this.parentezco.num = this.con;
 			
-			this.referenciasPersonales.push(this.parentesco);	
-			this.parentesco={};
+			this.referenciasPersonales.push(this.parentezco);	
+			this.parentezco={};
 	};
 	
-	this.quitar = function(numero)
+	this.actualizarReferencia = function()
+	{
+			console.log(this.referenciasPersonales);
+			
+			this.parentezco.num = this.num;
+			console.log(this.parentezco);
+			
+			this.referenciasPersonales.splice(this.num-1, this.num-1, this.parentezco);
+			console.log(this.referenciasPersonales);
+			
+			/*
+			for (i = 0; i < this.referenciasPersonales.length; i++) 
+			{
+					
+		     if (this.referenciasPersonales[i].num == this.num) 
+		     {
+			     	console.log(i);
+		       	this.referenciasPersonales[i].nombre = this.nombre;
+						this.referenciasPersonales[i].apellidoPaterno = this.apellidoPaterno;
+						this.referenciasPersonales[i].apellidoMaterno = this.apellidoMaterno;			
+						this.referenciasPersonales[i].parentezco = this.parentezco;
+						this.referenciasPersonales[i].direccion = this.direccion;
+						this.referenciasPersonales[i].telefono = this.telefono;
+						this.referenciasPersonales[i].tiempo = this.tiempo; 
+		        break; 
+		     }
+		   }		
+		   
+		   */
+			
+			this.num=0;
+			this.action = true;
+			
+			this.parentezco.nombre = "";
+			this.parentezco.apellidoPaterno = "";
+			this.parentezco.apellidoMaterno = "";
+			this.parentezco.parentezco = "";
+			this.parentezco.direccion = "";
+			this.parentezco.telefono = "";
+			this.parentezco.tiempo = "";
+	};
+	
+	this.cancelarReferencia = function()
+	{
+			this.parentezco.nombre = "";
+			this.parentezco.apellidoPaterno = "";
+			this.parentezco.apellidoMaterno = "";
+			this.parentezco.parentezco = "";
+			this.parentezco.direccion = "";
+			this.parentezco.telefono = "";
+			this.parentezco.tiempo = "";
+			
+			this.num = -1;
+			
+			this.action = true;
+	};
+	
+	this.quitarReferencia = function(numero)
 	{
 			pos = functiontofindIndexByKeyValue(this.referenciasPersonales, "num", numero);
 	    this.referenciasPersonales.splice(pos, 1);
 	    if (this.referenciasPersonales.length == 0) this.con = 0;
 	    //reorganiza el consecutivo     
 	    functiontoOrginiceNum(this.referenciasPersonales, "num");
+	};
+	
+	this.editarReferencia = function(p)
+	{
+			
+			this.parentezco.nombre = p.nombre;
+			this.parentezco.apellidoPaterno = p.apellidoPaterno;
+			this.parentezco.apellidoMaterno = p.apellidoMaterno;			
+			this.parentezco.parentezco = p.parentezco;
+			this.parentezco.direccion = p.direccion;
+			this.parentezco.telefono = p.telefono;
+			this.parentezco.tiempo = p.tiempo;
+			
+			this.num = p.num;
+			
+			/*
+			pos = functiontofindIndexByKeyValue(this.referenciasPersonales, "num", numero);
+	    this.referenciasPersonales.splice(pos, 1);
+	    if (this.referenciasPersonales.length == 0) this.con = 0;
+	    //reorganiza el consecutivo     
+	    functiontoOrginiceNum(this.referenciasPersonales, "num");
+	    
+	    */
+	    
+	    this.action = false;
 	};
 	
 	//busca un elemento en el arreglo
