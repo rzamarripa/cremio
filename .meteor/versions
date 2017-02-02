@@ -1,14 +1,9 @@
 accounts-base@1.2.14
 accounts-password@1.3.3
 alanning:roles@1.2.15
-aldeed:autoform@5.8.1
-aldeed:collection2@2.10.0
-aldeed:collection2-core@1.2.0
-aldeed:schema-deny@1.1.0
-aldeed:schema-index@1.1.1
-aldeed:simple-schema@1.5.3
 allow-deny@1.0.5
 angular@1.3.11
+angular-meteor-auth@1.1.1
 angular-meteor-data@1.3.11
 angular-templates@1.0.9
 angular:angular@1.5.3_1
@@ -17,7 +12,13 @@ angular:angular-cookies@1.5.3_1
 angular:angular-sanitize@1.5.3_1
 angularui:angular-ui-bootstrap@0.13.0
 angularui:angular-ui-router@0.2.15
+<<<<<<< HEAD
 angularui:ui-select@0.12.0
+=======
+angularui:ui-calendar@1.0.1
+angularui:ui-select@0.12.0
+angularutils:pagination@0.9.1_2
+>>>>>>> 1409829571f390578f37b210cb34e9c6a7085d90
 autoupdate@1.3.12
 babel-compiler@6.13.0
 babel-runtime@1.0.1
@@ -31,6 +32,7 @@ caching-compiler@1.1.9
 caching-html-compiler@1.0.7
 callback-hook@1.0.10
 check@1.2.4
+danialfarid:ng-file-upload@5.0.9
 dburles:mongo-collection-instances@0.3.5
 ddp@1.2.5
 ddp-client@1.3.2
@@ -44,7 +46,6 @@ ecmascript@0.6.1
 ecmascript-runtime@0.3.15
 ejson@1.0.13
 email@1.1.18
-es5-shim@4.6.15
 fastclick@1.0.13
 fourseven:scss@3.13.0
 geojson-utils@1.0.10
@@ -52,8 +53,8 @@ hot-code-push@1.0.4
 html-tools@1.0.11
 htmljs@1.0.11
 http@1.2.10
+huei90:angular-validation@1.3.2
 id-map@1.0.9
-insecure@1.0.7
 jquery@1.11.10
 lai:collection-extensions@0.2.1_1
 launch-screen@1.1.0
@@ -62,9 +63,10 @@ livedata@1.0.18
 localstorage@1.0.12
 logging@1.1.16
 mdg:camera@1.4.1
-mdg:validation-error@0.5.1
 meteor@1.6.0
 meteor-base@1.0.4
+meteorhacks:aggregate@1.3.0
+meteorhacks:collection-utils@1.2.0
 minifier-css@1.2.15
 minifier-js@1.2.15
 minimongo@1.0.19
@@ -77,14 +79,21 @@ modules-runtime@0.7.8
 momentjs:moment@2.17.1
 mongo@1.1.14
 mongo-id@1.0.6
+<<<<<<< HEAD
+=======
+mongo-livedata@1.0.12
+>>>>>>> 1409829571f390578f37b210cb34e9c6a7085d90
 natestrauser:select2@4.0.3
 npm-bcrypt@0.9.2
 npm-mongo@2.2.16_1
 observe-sequence@1.0.14
 ordered-dict@1.0.9
 pbastowski:angular-babel@1.3.7
+peerlibrary:assert@0.2.5
+peerlibrary:blocking@0.5.2
+peerlibrary:fs@0.1.7
+planettraining:jquery-fullcalendar@2.6.1
 promise@0.8.8
-raix:eventemitter@0.1.3
 random@1.0.10
 rate-limit@1.0.6
 reactive-dict@1.1.8
@@ -93,7 +102,9 @@ reload@1.1.11
 retry@1.0.9
 reywood:bootstrap3-sass@3.3.5_3
 reywood:font-awesome-sass@4.5.0_2
+reywood:publish-composite@1.4.2
 routepolicy@1.0.12
+rshashkov:angular-meteor-breadcrumb@0.0.1
 s2corp:angular-ui-grid@3.1.0_2
 service-configuration@1.0.11
 session@1.1.7
@@ -105,10 +116,12 @@ srp@1.0.10
 standard-minifier-css@1.3.2
 standard-minifier-js@1.2.1
 stevezhu:lodash@3.10.1
+summernote:standalone@0.8.1
 templating@1.2.15
 templating-compiler@1.2.15
 templating-runtime@1.2.15
 templating-tools@1.0.5
+tmeasday:publish-counts@0.8.0
 tracker@1.1.1
 ui@1.0.12
 underscore@1.0.10
@@ -117,3 +130,4 @@ url@1.0.11
 vishalm:angular-toastr@1.5.0
 webapp@1.3.12
 webapp-hashing@1.0.9
+zuuk:stale-session@1.0.8

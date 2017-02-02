@@ -1,9 +1,6 @@
 angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reactive', function ($scope, $meteor, $reactive)
 {
 	let self = $reactive(this).attach($scope);
-	
-	window.self = self;
-	
 	self.buscarRoot = "";
 	
 	$(document).ready(function() {
@@ -35,5 +32,5 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	self.isLoggedIn = function(){
 	  return Meteor.user();
   }
-  
+   
 }])
