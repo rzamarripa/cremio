@@ -3,8 +3,8 @@ angular.module('creditoMio',
     'angular-meteor',    
     'ngAnimate',
     'ngCookies',
-    'ui.select',
-    'ngSanitize',    
+    'ngSanitize',
+    'ui.select',    
     'toastr',
     'ui.router',
     'ui.grid',
@@ -14,3 +14,4 @@ angular.module('creditoMio',
     'ui.bootstrap'
   ]
 );
+

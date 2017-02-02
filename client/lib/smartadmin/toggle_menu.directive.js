@@ -3,7 +3,7 @@ angular.module('smartadmin').directive('toggleMenu', [function () {
     restrict: 'A',
     link: function (scope, element) {
       var $body = $('body');
-
+			
       var toggleMenu = function(){
         if (!$body.hasClass("menu-on-top")){
           $('html').toggleClass("hidden-menu-mobile-lock");
