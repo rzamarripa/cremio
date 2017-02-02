@@ -6,6 +6,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	let rc = $reactive(this).attach($scope);
 	this.nuevoBotonPago = true;
 	this.action = false;
+	this.actionAval = true;
+	this.actionGarantia = true;
 	this.fechaActual = new Date();
 	this.nuevoBotonReestructuracion = true;
 	this.nuevoBotonCredito = true;
@@ -17,6 +19,14 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.pago = {};
 	window.rc = rc;
 
+	this.con = 0;
+	this.num = 0;
+  this.avales = [];
+  this.aval = {};
+  this.conG = 0;
+	this.numG = 0;
+  this.garantias = [];
+  this.garantia = {};
 	
 	this.subscribe("planPagos", ()=>{
 		return [{ cliente_id : $stateParams.objeto_id }]
@@ -252,10 +262,14 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			requiereVerificacion: this.credito.requiereVerificacion
 			
 		};
+		credito.avales = angular.copy(this.avales);
+		credito.garantias = angular.copy(this.garantias);
+
 		Meteor.apply('generarCredito', [this.cliente._id, credito, this.planPagos], function(error, result){
 		  if(result == "hecho"){
 			  toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');
 			  rc.planPagos = [];
+			  this.avales = [];
 			  $state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
 		  }
 	    $scope.$apply();
@@ -361,5 +375,190 @@ total = 0;
 
         })		
 	};
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	this.insertarAval = function()
+	{
+			/*
+			//Validar que no venga vacio
+			if (this.mes==null) 
+			{
+				toastr.error('Seleccionar Mes.');
+				return;
+			}	
+			//validar que vengan mes y cantidad
+			if (this.mes.nombre == null || this.mes.cantidad == null) 
+			{
+				toastr.error('Seleccionar Mes y Cantidad');
+				return;
+			}	
+			
+			*/
+			
+			//incremeneto
+			this.con = this.con + 1;
+			this.aval.num = this.con;
+			
+			this.avales.push(this.aval);	
+			this.aval={};
+	};
+	
+	this.actualizarAval = function(a)
+	{
+			a.num = this.num;
+
+			_.each(this.avales, function(av){
+							if (av.num == a.num)
+							{
+									av.nombre = a.nombre;
+									av.estadoCivil = a.estadoCivil;
+									av.ocupacion = a.ocupacion;			
+									av.direccion = a.direccion;
+									av.empresa = a.empresa;
+									av.puesto = a.puesto;
+									av.antiguedad = a.antiguedad;
+									av.direccionEmpresa = a.direccionEmpresa;
+									av.parentezco = a.parentezco;
+									av.tiempoConocerlo = a.tiempoConocerlo;
+							}
+			})
+		
+			this.aval={};
+			this.num=0;
+			this.actionAval = true;
+	};
+	
+	this.cancelarAval = function()
+	{
+			this.aval={};
+			this.num = -1;
+			this.actionAval = true;
+	};
+	
+	this.quitarAval = function(numero)
+	{
+			pos = functiontofindIndexByKeyValue(this.avales, "num", numero);
+	    this.avales.splice(pos, 1);
+	    if (this.avales.length == 0) this.con = 0;
+	    //reorganiza el consecutivo     
+	    functiontoOrginiceNum(this.avales, "num");
+	};
+	
+	this.editarAval = function(a)
+	{
+			this.aval.nombre = a.nombre;
+			this.aval.estadoCivil = a.estadoCivil;
+			this.aval.ocupacion = a.ocupacion;			
+			this.aval.direccion = a.direccion;
+			this.aval.empresa = a.empresa;
+			this.aval.antiguedad = a.antiguedad;
+			this.aval.direccionEmpresa = a.direccionEmpresa;
+			this.aval.parentezco = a.parentezco;
+			this.aval.tiempoConocerlo = a.tiempoConocerlo;
+			
+			this.num = a.num;
+	    this.actionAval = false;
+	};
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	this.insertarGarantia = function()
+	{
+			/*
+			//Validar que no venga vacio
+			if (this.mes==null) 
+			{
+				toastr.error('Seleccionar Mes.');
+				return;
+			}	
+			//validar que vengan mes y cantidad
+			if (this.mes.nombre == null || this.mes.cantidad == null) 
+			{
+				toastr.error('Seleccionar Mes y Cantidad');
+				return;
+			}	
+			
+			*/
+			
+			//incremeneto
+			this.conG = this.conG + 1;
+			this.garantia.num = this.conG;
+			
+			this.garantias.push(this.garantia);	
+			this.garantia={};
+	};
+	
+	this.actualizarGarantia = function(a)
+	{
+			a.num = this.numG;
+
+			_.each(this.garantias, function(av){
+							if (av.num == a.num)
+							{
+									av.tipo = a.tipo;
+									av.marca = a.marca;
+									av.modelo = a.modelo;			
+									av.serie = a.serie;
+									av.color = a.color;
+									av.estadoActual = a.estadoActual;
+							}
+			})
+		
+			this.garantia = {};
+			this.numG = 0;
+			this.actionGarantia = true;
+	};
+	
+	this.cancelarGarantia = function()
+	{
+			this.garantia={};
+			this.numG = -1;
+			this.actionGarantia = true;
+	};
+	
+	this.quitarGarantia = function(numero)
+	{
+			pos = functiontofindIndexByKeyValue(this.garantias, "num", numero);
+	    this.garantias.splice(pos, 1);
+	    if (this.garantias.length == 0) this.con = 0;
+	    //reorganiza el consecutivo     
+	    functiontoOrginiceNum(this.garantias, "num");
+	};
+	
+	this.editarGarantia = function(a)
+	{
+			this.garantia.tipo = a.tipo;
+			this.garantia.marca = a.marca;
+			this.garantia.modelo = a.modelo;			
+			this.garantia.serie = a.serie;
+			this.garantia.color = a.color;
+			this.garantia.estadoActual = a.estadoActual;
+			
+			this.numG = a.num;
+	    this.actionGarantia = false;
+	};
+	
+	//busca un elemento en el arreglo
+	function functiontofindIndexByKeyValue(arraytosearch, key, valuetosearch) {
+	    for (var i = 0; i < arraytosearch.length; i++) {
+	    	if (arraytosearch[i][key] == valuetosearch) {
+				return i;
+			}
+	    
+	  }
+	    return null;
+  };
+    
+    //Obtener el mayor
+	function functiontoOrginiceNum(arraytosearch, key) {
+		var mayor = 0;
+	    for (var i = 0; i < arraytosearch.length; i++) {
+	    	arraytosearch[i][key] = i + 1;	
+	    }
+  };
+	
+	
+	
 
 };
