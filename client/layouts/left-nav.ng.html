@@ -1,34 +1,9 @@
-<!--
-EJEMPLO DE COMO AGREGAR ELEMENTOS
-A LA BARRA LATERAL
-<ul data-smart-menu>
-  <li data-ui-sref-active="active">
-    <a data-ui-sref="app.dashboard" title="Dashboard">
-      <i class="fa fa-lg fa-fw fa-home"></i>
-      <span class="menu-item-parent">Dashboard</span>
-    </a>
-  </li>
-  <li data-menu-collapse>
-    <a href="#">
-      <i class="fa fa-lg fa-fw fa-bar-chart-o"></i>
-      <span class="menu-item-parent">Graphs</span>
-    </a>
-    <ul>
-      <li data-ui-sref-active="active">
-         <a data-ui-sref="app.graphs.flot">Flot Chart</a>
-      </li>
-      <li data-ui-sref-active="active">
-          <a data-ui-sref="app.graphs.morris">Morris Charts</a>
-      </li>
-    </ul>
-  </li>
-</ul>
--->
 <nav>
 	<ul data-smart-menu>
-
+		
+		<!--Gerente-->
 		<li data-menu-collapse>
-		    <a href="#">
+		    <a href="#" ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'">
 		      	<i class="fa fa-lg fa-fw fa-tags"></i>
 		      	<span class="menu-item-parent">Catálogos</span>
 		    </a>
@@ -133,7 +108,7 @@ A LA BARRA LATERAL
 					</li>
 		    </ul>
 	  </li>
-	  <li data-menu-collapse>
+	  <li data-menu-collapse ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla' || currentUser.roles[0] == 'Cobranza'">
 		    <a href="#">
 		      	<i class="fa fa-lg fa-fw fa-tags"></i>
 		      	<span class="menu-item-parent">Cobranza</span>
@@ -174,25 +149,23 @@ A LA BARRA LATERAL
 		    </ul>
 	  </li>   			
 	  
-		<li data-ui-sref-active="active">
+		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" >
 				<a ui-sref="root.clientesLista" tilte="Credito Mio">
 		    	<i class="fa fa-lg fa-fw fa-group"></i>
 					<span class="menu-item-parent">Clientes</span>
 			  </a>
 		</li>
-		<li data-ui-sref-active="active">
+		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'">
 				<a ui-sref="root.ventanillasLista" tilte="Credito Mio">
 		    	<i class="fa fa-lg fa-fw fa-group"></i>
 					<span class="menu-item-parent">Ventanillas</span>
 			  </a>
 		</li>
-		<li data-ui-sref-active="active">
+		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Verificador'">
 				<a ui-sref="root.verificadoresLista" tilte="Credito Mio">
 		    	<i class="fa fa-lg fa-fw fa-group"></i>
 					<span class="menu-item-parent">Verificadores</span>
 			  </a>
 		</li>
-
-		
 	</ul>
 </nav>
