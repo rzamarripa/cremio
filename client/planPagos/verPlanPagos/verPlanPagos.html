@@ -275,26 +275,14 @@
 	<article class="col-sm-12 sortable-grid ui-sortable">
 		<!-- new widget -->
 		<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-			<!-- widget options:
-			usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-			data-widget-colorbutton="false"
-			data-widget-editbutton="false"
-			data-widget-togglebutton="false"
-			data-widget-deletebutton="false"
-			data-widget-fullscreenbutton="false"
-			data-widget-custombutton="false"
-			data-widget-collapsed="true"
-			data-widget-sortable="false"
-
-			-->
+	
 
 <header role="heading">
 				<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
 				<h2>Live Feeds </h2>
 
 				<ul class="nav nav-tabs pull-right" id="myTab">
-					<li class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in vpp.creditos track by $index">
+					<li ng-click="vpp.mostrarPagos(credito._id)" class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in vpp.creditos track by $index">
 						<a data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado}}</span></a>
 					</li>
 				</ul>
@@ -336,11 +324,11 @@
 					<tbody>
 						<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < vpp.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in vpp.planPagosViejo">
 
-							<td ><a ng-model="pago.pagoSeleccionado" ng-click="vpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'success' : 'danger'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'Pagado' : 'Por pagar'}}</a> </td>
+							<td ><a ng-model="pago.pagoSeleccionado" ng-click="vpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'success' : 'danger'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'Pendiente' : 'Por pagar'}}</a> </td>
 							<td class="text-center">{{$index + 1}}</td>	
 							<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-							<td class="text-center">{{pago.numeroPago}} - {{vpp.planPagos.length}}</td>
-							<td class="text-right">{{pago.importeRegular | currency}}</td>
+							<td class="text-center">{{pago.numeroPago || pago.numeroPagoMulta}} - {{vpp.planPagos.length}}</td>
+							<td class="text-right">{{pago.importeRegular  | currency}}</td>
 							<td >{{pago.descripcion}}</td>
 							<td class="text-center">
 								<span ng-if="pago.estatus == 0">
@@ -361,7 +349,7 @@
 					<br/>
 					<caption>Monto a pagar: </caption> <input  type="number" class="form-control" placeholder="Pagar" ng-model="vpp.pago.pagar">
 					<br/>
-					<h4>Cambio: {{  vpp.pago.pagar  - vpp.pago.totalPago | currency }}</h4>
+					<h4>Cambio: {{vpp.pago.pagar - vpp.pago.totalPago | currency }}</h4>
 					<br/>
 					<a class="btn btn-primary pull-right" ng-click="vpp.guardarPago(vpp.pago,vpp.credito)">Guardar</a>
 				</div>

@@ -200,7 +200,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			var importeParcial = this.credito.importeRegular / this.credito.totalPagos;
 			var pago = {
 				semana 			    		: mfecha.isoWeek(),
-				fechaLimite 			  : new Date(mfecha.toDate().getTime()).setHours(23,59,59),
+				fechaLimite 			  : new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
 				diaSemana						: mfecha.weekday(),
 				tipoPlan 		    		: 'Mensual',
 				numeroPago 	        : i + 1,
@@ -236,7 +236,9 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	
 	this.generarCredito = function(){
 		console.log(this.credito);
+		
 		var credito = {
+			
 			cliente_id : this.cliente._id,
 			tipoCredito_id : this.credito.tipoCredito_id,
 			fechaSolicito : new Date(),
@@ -246,7 +248,9 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			multasPendientes : 0,
 			saldoMultas : 0.00,
 			saldoRecibo : 0.00,
-			estatus : 1
+			estatus : 1,
+			requiereVerificacion: false,
+
 		};
 		Meteor.apply('generarCredito', [this.cliente._id, credito, this.planPagos], function(error, result){
 		  if(result == "hecho"){
