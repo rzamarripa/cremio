@@ -16,6 +16,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.cliente_id = "";
 	this.planPagos = [];
 	this.credito = {};
+	this.credito.primerAbono = moment().add(1, "weeks");
 	this.pago = {};
 	window.rc = rc;
 
@@ -46,17 +47,6 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.helpers({
 		cliente : () => {
 			return Meteor.users.findOne({roles : ["Cliente"]});
-		},
-		planPagosViejo : () => {
-			 
-			 pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
-		// 	 _.each(pagos, function(p){
-		// 	 p.pagoSeleccionado =  false
-		// 	 //console.log(p)
-		// })
-			
-
-			 return pagos
 		},
 		tiposCredito : () => {
 			return TiposCredito.find();
@@ -189,34 +179,37 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	  document.getElementById('buscar').focus();
   }; 
   
-  this.planPagos = function(credito, form){
+  this.generarPlanPagos = function(credito, form){
 	  if(form.$invalid){
       toastr.error('Error al calcular el nuevo plan de pagos, llene todos los campos.');
       return;
 	  }
 	  rc.planPagos = [];
-		var dia = 1;
-		console.log("original",this.credito.fechaInicial)
-		var mfecha = moment(this.credito.fechaInicial);
+		console.log("original",this.credito.primerAbono);
+		var mfecha = moment(this.credito.primerAbono);
 		console.log("moment", mfecha);
-		//mfecha = mfecha.day(dia);
 		console.log("day", mfecha);
 		var inicio = mfecha.toDate();
 		console.log("inicio", inicio);
-		
+		var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 		console.log("1 month", mfecha);
+		var totalPagos = 0;
+		if(this.credito.periodoPago == "Semanal"){
+			totalPagos = this.credito.duracionMeses * 4;
+		}else if(this.credito.periodoPago == "Mensual"){
+			totalPagos = this.credito.duracionMeses;
+		}
+		var importeParcial = (this.credito.capitalSolicitado / totalPagos) * (1 + (tipoCredito.tasa / 100));
 		var plan = [];
-		for (var i = 0; i < this.credito.totalPagos; i++) {
-			var importeParcial = this.credito.importeRegular / this.credito.totalPagos;
+		for (var i = 0; i < totalPagos; i++) {
+			
 			var pago = {
 				semana 			    		: mfecha.isoWeek(),
 				fechaLimite 			  : new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
 				diaSemana						: mfecha.weekday(),
-				tipoPlan 		    		: 'Mensual',
+				tipoPlan 		    		: this.credito.periodoPago,
 				numeroPago 	        : i + 1,
 				importeRegular      : importeParcial,
-				importeRecargo      : (this.credito.importeRecargo / this.credito.totalPagos),
-				diasRecargo         : this.credito.diasRecargo,
 				cliente_id					: this.cliente._id,
 				fechaPago           : undefined,
 				semanaPago          : undefined,
@@ -228,12 +221,11 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 				mes									: mfecha.get('month') + 1,
 				anio								: mfecha.get('year')
 			}
-			
+			console.log(pago);
 			rc.planPagos.push(angular.copy(pago));
-			
-			if(credito.periodoPago == "Semanal"){
-		  	mfecha = mfecha.day(8);
-		  }else if(credito.periodoPago == "Mensual"){
+			if(this.credito.periodoPago == "Semanal"){
+		  	mfecha = mfecha.add(7, 'days');
+		  }else if(this.credito.periodoPago == "Mensual"){
 			  var siguienteMes = moment(mfecha).add(1, 'M');
 				var finalSiguienteMes = moment(siguienteMes).endOf('month');
 				
@@ -242,7 +234,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 				}
 				
 				mfecha = siguienteMes;
-		  }			
+		  }	
 		}
 	  return plan;
   }
