@@ -27,7 +27,7 @@
     <form class="header-search pull-right">
 	    <div class="form-group" style="width: 300px; margin-top: 9px;">
 				<input ng-model="ro.buscarRoot" class="form-control"/>
-				<select ng-model="ro.buscarRoot" class="js-example-basic-single select2" style="width: 100%">
+				<select ng-model="ro.buscarRoot" class="select2" style="width: 100%">
 					<option ng-repeat="cliente in ro.clientesRoot" ng-value="cliente._id">{{cliente.profile.nombreCompleto}}</option>
 				</select>
 	    </div>

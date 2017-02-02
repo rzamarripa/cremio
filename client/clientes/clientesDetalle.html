@@ -2,7 +2,7 @@
 	<div class="col-sm-12">
 		<div class="well well-sm">
 			<div class="row">
-				<div class="col-sm-12 col-md-12 col-lg-12">
+				<div class="col-sm-12 col-md-6 col-lg-6">
 					<div class="well well-light well-sm no-margin no-padding">
 						<div class="row">
 							<div class="col-sm-12">
@@ -208,107 +208,105 @@
 						</div>
 					</div>
 				</div>
+				<article class="col-sm-12 col-md-6 col-lg-6 sortable-grid ui-sortable">
+					<!-- new widget -->
+					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+						<!-- widget options:
+						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+			
+						data-widget-colorbutton="false"
+						data-widget-editbutton="false"
+						data-widget-togglebutton="false"
+						data-widget-deletebutton="false"
+						data-widget-fullscreenbutton="false"
+						data-widget-custombutton="false"
+						data-widget-collapsed="true"
+						data-widget-sortable="false"
+			
+						-->
+						<header role="heading">
+							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+							<h2>Créditos Pendientes</h2>
+			
+							<ul class="nav nav-tabs pull-right" id="myTab">
+								<li class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in cd.creditos track by $index">
+									<a data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado}}</span></a>
+								</li>
+							</ul>
+			
+						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+			
+						<!-- widget div-->
+						<div class="no-padding" role="content">
+							<!-- widget edit box -->
+							<div class="jarviswidget-editbox">
+			
+								test
+							</div>
+							<!-- end widget edit box -->
+			
+							<div class="widget-body">
+								<!-- content -->
+								<div id="myTabContent" class="tab-content">
+									<div class="tab-pane fade padding-10 no-padding-bottom {{($index == 0 ? 'active in' : '')}}" id="s{{$index +1}}" ng-repeat="credito in cd.creditos track by $index">
+										<div class="row no-space">
+											<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+												<fieldset>
+													<section class="col-sm-2" ng-click="cd.seleccionarSemana(cobro, al.planPagos[curso._id], curso)" ng-repeat="cobro in credito.planPagos" style="margin-left: 15px; margin-bottom: 5px;">
+														<label class="input">
+															<input class="font-xs text-center" ng-class="cd.obtenerEstatus(cobro)" type="text" value="{{cobro.numeroPago}}" disabled="" title="Cobro {{cobro.importeRegular}}&#10;Fecha de corte:{{cobro.fechaLimite|date:'dd/MM/yyyy'}}">
+														</label>
+													</section>
+												</fieldset>
+											</div>
+											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 show-stats">
+			
+												<div class="row">
+													<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> Pagos <span class="pull-right">{{credito.pagados}}/{{credito.planPagos.length}}</span> </span>
+														<div class="progress">
+															<div class="progress-bar bg-color-blueDark" style="width: {{(credito.pagados / credito.planPagos.length) * 100}}%;"></div>
+														</div> </div>
+													<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> Abonos <span class="pull-right">{{credito.capitalSolicitado - saldoActual | currency}} pesos</span> </span>
+														<div class="progress">
+															<div class="progress-bar bg-color-blue" style="width: {{credito.pagados%;"></div>
+														</div> </div>
+													<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> Abonado con retraso<span class="pull-right">{{(credito.tiempoPago / credito.planPagos.length) * 100}}%</span> </span>
+														<div class="progress">
+															<div class="progress-bar bg-color-blue" style="width: {{(credito.tiempoPago / credito.planPagos.length) * 100}}%;"></div>
+														</div> </div>
+													<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> User Testing <span class="pull-right">7 Days</span> </span>
+														<div class="progress">
+															<div class="progress-bar bg-color-greenLight" style="width: 84%;"></div>
+														</div> </div>
+			
+													<span class="show-stat-buttons"> 
+														<span class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> 
+															<a href="#" ui-sref="root.verPlanPagos({objeto_id : credito.cliente_id, credito_id : credito._id})" class="btn btn-default btn-block hidden-xs">Ver Detalle</a> 
+														</span> 
+														<span class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> 
+															<a href="javascript:void(0);" class="btn btn-default btn-block hidden-xs">Report a bug</a> 
+														</span> 
+													</span>
+			
+												</div>
+			
+											</div>
+										</div>
+									</div>
+			
+								</div>
+			
+								<!-- end content -->
+							</div>
+			
+						</div>
+						<!-- end widget div -->
+					</div>
+					<!-- end widget -->
+			
+				</article>
 			</div>
 		</div>
 	</div>
-</div>
-<div class="row">
-	<article class="col-sm-12 sortable-grid ui-sortable">
-		<!-- new widget -->
-		<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-			<!-- widget options:
-			usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-			data-widget-colorbutton="false"
-			data-widget-editbutton="false"
-			data-widget-togglebutton="false"
-			data-widget-deletebutton="false"
-			data-widget-fullscreenbutton="false"
-			data-widget-custombutton="false"
-			data-widget-collapsed="true"
-			data-widget-sortable="false"
-
-			-->
-			<header role="heading">
-				<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-				<h2>Live Feeds </h2>
-
-				<ul class="nav nav-tabs pull-right" id="myTab">
-					<li class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in cd.creditos track by $index">
-						<a data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado}}</span></a>
-					</li>
-				</ul>
-
-			<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-
-			<!-- widget div-->
-			<div class="no-padding" role="content">
-				<!-- widget edit box -->
-				<div class="jarviswidget-editbox">
-
-					test
-				</div>
-				<!-- end widget edit box -->
-
-				<div class="widget-body">
-					<!-- content -->
-					<div id="myTabContent" class="tab-content">
-						<div class="tab-pane fade padding-10 no-padding-bottom {{($index == 0 ? 'active in' : '')}}" id="s{{$index +1}}" ng-repeat="credito in cd.creditos track by $index">
-							<div class="row no-space">
-								<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-									<fieldset>
-										<section class="col-sm-2" ng-click="cd.seleccionarSemana(cobro, al.planPagos[curso._id], curso)" ng-repeat="cobro in credito.planPagos" style="margin-left: 15px; margin-bottom: 5px;">
-											<label class="input">
-												<input class="font-xs text-center" ng-class="cd.obtenerEstatus(cobro)" type="text" value="{{cobro.numeroPago}}" disabled="" title="Cobro {{cobro.importeRegular}}&#10;Fecha de corte:{{cobro.fechaLimite|date:'dd/MM/yyyy'}}">
-											</label>
-										</section>
-									</fieldset>
-								</div>
-								<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 show-stats">
-
-									<div class="row">
-										<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> Pagos <span class="pull-right">{{credito.pagados}}/{{credito.planPagos.length}}</span> </span>
-											<div class="progress">
-												<div class="progress-bar bg-color-blueDark" style="width: {{(credito.pagados / credito.planPagos.length) * 100}}%;"></div>
-											</div> </div>
-										<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> Abonos <span class="pull-right">{{credito.capitalSolicitado - saldoActual | currency}} pesos</span> </span>
-											<div class="progress">
-												<div class="progress-bar bg-color-blue" style="width: {{credito.pagados%;"></div>
-											</div> </div>
-										<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> Abonado con retraso<span class="pull-right">{{(credito.tiempoPago / credito.planPagos.length) * 100}}%</span> </span>
-											<div class="progress">
-												<div class="progress-bar bg-color-blue" style="width: {{(credito.tiempoPago / credito.planPagos.length) * 100}}%;"></div>
-											</div> </div>
-										<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> User Testing <span class="pull-right">7 Days</span> </span>
-											<div class="progress">
-												<div class="progress-bar bg-color-greenLight" style="width: 84%;"></div>
-											</div> </div>
-
-										<span class="show-stat-buttons"> 
-											<span class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> 
-												<a href="#" ui-sref="root.verPlanPagos({objeto_id : credito.cliente_id, credito_id : credito._id})" class="btn btn-default btn-block hidden-xs">Ver Detalle</a> 
-											</span> 
-											<span class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> 
-												<a href="javascript:void(0);" class="btn btn-default btn-block hidden-xs">Report a bug</a> 
-											</span> 
-										</span>
-
-									</div>
-
-								</div>
-							</div>
-						</div>
-
-					</div>
-
-					<!-- end content -->
-				</div>
-
-			</div>
-			<!-- end widget div -->
-		</div>
-		<!-- end widget -->
-
-	</article>
 </div>
 
