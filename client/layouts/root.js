@@ -32,10 +32,5 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	self.isLoggedIn = function(){
 	  return Meteor.user();
   }
-  
-  $scope.$watch('buscarRoot', function (newVal, oldVal) {
-    if (oldVal == newVal) return;
-    alert('here');
-}, true);
-  
+   
 }])
