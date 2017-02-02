@@ -31,11 +31,10 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 						   {	
 								 		cliente = result;
 										credito.nombreCliente = cliente.nombreCompleto;
+										//$scope.$apply();
 							 }
 						});
-						
 				})
-				console.log(rc.creditos);
 			}
 	  }
   });

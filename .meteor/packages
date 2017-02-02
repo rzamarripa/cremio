@@ -37,3 +37,5 @@ angularui:angular-ui-bootstrap
 standard-minifier-css
 standard-minifier-js
 shell-server
+angularui:ui-select
+natestrauser:select2
