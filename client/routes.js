@@ -311,8 +311,9 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
     })
+    // /:credito_id
     .state('root.verPlanPagos', {
-      url: '/verPlanPagos/:cliente_id/:credito_id',
+      url: '/verPlanPagos/:objeto_id',
       templateUrl: 'client/planPagos/verPlanPagos/verPlanPagos.html',
       controller: 'VerPlanPagosCtrl as vpp',
       resolve: {

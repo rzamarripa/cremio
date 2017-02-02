@@ -17,6 +17,10 @@ angular.module("creditoMio")
   this.municipio_id = "";
   this.ciudad_id = "";
   this.empresa_id = "";
+  this.con = 0;
+  
+  this.referenciasPersonales = [];
+  this.parentesco = {};
   
 	this.subscribe('empresas',()=>{
 		return [{estatus: true}]
@@ -129,6 +133,7 @@ angular.module("creditoMio")
 			objeto.profile.usuarioInserto = Meteor.userId();
 			objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
 			objeto.profile.fechaCreacion = new Date();
+			objeto.profile.referenciasPersonales = angular.copy(this.referenciasPersonales);
 			var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
 			var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
 			var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
@@ -183,6 +188,7 @@ angular.module("creditoMio")
 			empresa.estatus = true;
 			empresa.usuarioInserto = Meteor.userId();
 			
+			
 			Empresas.insert(empresa, function(error, result)
 															 {
 																	if (error){
@@ -204,7 +210,11 @@ angular.module("creditoMio")
 											);
 					
 	};
-
+	
+	
+	
+	
+	
 
 	this.actualizar = function(objeto,form)
 	{
@@ -227,5 +237,61 @@ angular.module("creditoMio")
       
       */
 	};
+	
+	
+	this.agregarReferencia = function()
+	{
+			/*
+			//Validar que no venga vacio
+			if (this.mes==null) 
+			{
+				toastr.error('Seleccionar Mes.');
+				return;
+			}	
+			//validar que vengan mes y cantidad
+			if (this.mes.nombre == null || this.mes.cantidad == null) 
+			{
+				toastr.error('Seleccionar Mes y Cantidad');
+				return;
+			}	
+			
+			*/
+			
+			//incremeneto
+			this.con = this.con + 1;
+			this.parentesco.num = this.con;
+			
+			this.referenciasPersonales.push(this.parentesco);	
+			this.parentesco={};
+	};
+	
+	this.quitar = function(numero)
+	{
+			pos = functiontofindIndexByKeyValue(this.referenciasPersonales, "num", numero);
+	    this.referenciasPersonales.splice(pos, 1);
+	    if (this.referenciasPersonales.length == 0) this.con = 0;
+	    //reorganiza el consecutivo     
+	    functiontoOrginiceNum(this.referenciasPersonales, "num");
+	};
+	
+	//busca un elemento en el arreglo
+	function functiontofindIndexByKeyValue(arraytosearch, key, valuetosearch) {
+	    for (var i = 0; i < arraytosearch.length; i++) {
+	    	if (arraytosearch[i][key] == valuetosearch) {
+				return i;
+			}
+	    
+	  }
+	    return null;
+  };
+    
+    //Obtener el mayor
+	function functiontoOrginiceNum(arraytosearch, key) {
+		var mayor = 0;
+	    for (var i = 0; i < arraytosearch.length; i++) {
+	    	arraytosearch[i][key] = i + 1;	
+	    }
+  };
+
 
 };

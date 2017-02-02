@@ -7,6 +7,8 @@ Meteor.methods({
 			  console.log(result);
 			  _.each(planPagos, function(pago){
 				  delete pago.$$hashKey;
+				    pago.multa = 0;
+				    pago.abono = 0;
 					pago.credito_id = result;
 					PlanPagos.insert(pago)
 				})
