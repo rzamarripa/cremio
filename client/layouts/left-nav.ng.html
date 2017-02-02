@@ -3,7 +3,7 @@
 		
 		<!--Gerente-->
 		<li data-menu-collapse>
-		    <a href="#" ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'">
+		    <a href="#" ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla' || currentUser.username == 'admin'">
 		      	<i class="fa fa-lg fa-fw fa-tags"></i>
 		      	<span class="menu-item-parent">Catálogos</span>
 		    </a>
@@ -49,7 +49,7 @@
 					<li data-ui-sref-active="active">
 						<a ui-sref="root.paises" tilte="Credito Mio">
 			      	<i class="fa fa-lg fa-fw fa-folder-o"></i>
-			      	<span class="menu-item-parent">Paises</span>
+			      	<span class="menu-item-parent">Países</span>
 			    	</a>
 					</li>
 					<li data-ui-sref-active="active">
@@ -149,7 +149,7 @@
 		    </ul>
 	  </li>   			
 	  
-		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" >
+		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla' || currentUser.username == 'admin'" >
 				<a ui-sref="root.clientesLista" tilte="Credito Mio">
 		    	<i class="fa fa-lg fa-fw fa-group"></i>
 					<span class="menu-item-parent">Clientes</span>

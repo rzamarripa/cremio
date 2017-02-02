@@ -11,7 +11,7 @@
     <div class="btn-header pull-right">
       <span>
         <a ui-sref="anon.logout" title="Cerrar Sesión">
-          <i class="fa fa-sign-{{ro.isLoggedIn() ? 'out' : 'in'}}"></i>
+          <i class="fa fa-sign-{{isLoggedIn() ? 'out' : 'in'}}"></i>
         </a>
       </span>
     </div>
@@ -23,20 +23,12 @@
         </a>
       </span>
     </div>
-    
-    <form class="header-search pull-right">
-	    <div class="form-group" style="width: 300px; margin-top: 9px;">
-				<select class="form-control select2" ng-model="ro.buscar.nombre">
-					<option ng-repeat="cliente in ro.clientes">{{cliente.nombreCompleto}}</option>
-				</select>
-	    </div>
-		</form>
   </div>
 </header>
 
 <aside id="left-panel">
   <div class="login-info">
-		<span ng-show="{{ro.isLoggedIn()}}"> <!-- User image size is adjusted inside CSS, it should stay as it --> 
+		<span ng-show="{{isLoggedIn()}}"> <!-- User image size is adjusted inside CSS, it should stay as it --> 
 			
 			<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
 				<img ng-src="{{currentUser.profile.fotografia}}" alt="me" class="online"> 

@@ -249,8 +249,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			saldoMultas : 0.00,
 			saldoRecibo : 0.00,
 			estatus : 1,
-			requiereVerificacion: false,
-
+			requiereVerificacion: this.credito.requiereVerificacion
+			
 		};
 		Meteor.apply('generarCredito', [this.cliente._id, credito, this.planPagos], function(error, result){
 		  if(result == "hecho"){
