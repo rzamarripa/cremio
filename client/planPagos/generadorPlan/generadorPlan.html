@@ -178,49 +178,51 @@
 							   	<input type="button" ng-click="ge.cancelarAval()" value="Cancelar" ng-show="!ge.actionAval" class="btn btn-danger">	   				
 								</div>
 					    </div>
-						</div>
-						<div class="well">				 
-							<div class="row">
-								<table class="table table-bordered">
-									<thead>
-										<tr>
-											<th width="5%">Número</th>
-											<th width="15%">Nombre</th>
-											<th width="5%">Estado Civil</th>
-											<th width="5%">Ocupación</th>
-											<th width="15%">Dirección</th>
-											<th width="10%">Empresa</th>
-											<th width="5%">Puesto</th>
-											<th width="5%">Antiguedad</th>
-											<th width="15%">Dirección Empresa</th>
-											<th width="10%">Parentezco</th>
-											<th width="10%">Tiempo Conocerlo</th>
-											<th width="5%">Quitar</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-repeat="aval in ge.avales">
-											<td>{{aval.num}}</td>
-											<td>{{aval.nombre}}</td>
-											<td>{{aval.estadoCivil}}</td>
-											<td>{{aval.ocupacion}}</td>
-											<td>{{aval.direccion}}</td>
-											<td>{{aval.empresa}}</td>
-											<td>{{aval.puesto}}</td>
-											<td>{{aval.antiguedad}}</td>
-											<td>{{aval.direccionEmpresa}}</td>
-											<td>{{aval.parentezco}}</td>
-											<td>{{aval.tiempoConocerlo}}</td>
-											<td>
-													<a href="#" ng-click="ge.quitarAval(aval.num)"><i class="fa fa-trash"></i></a>
-													<a href="#" ng-click="ge.editarAval(aval)"><i class="fa fa-pencil"></i></a>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+					    <br/>
+					    <div class="row">
+								<div class="col-sm-12">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th width="5%">Número</th>
+												<th width="15%">Nombre</th>
+												<th width="5%">Estado Civil</th>
+												<th width="5%">Ocupación</th>
+												<th width="15%">Dirección</th>
+												<th width="10%">Empresa</th>
+												<th width="5%">Puesto</th>
+												<th width="5%">Antiguedad</th>
+												<th width="15%">Dirección Empresa</th>
+												<th width="10%">Parentezco</th>
+												<th width="10%">Tiempo Conocerlo</th>
+												<th width="5%">Quitar</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="aval in ge.avales">
+												<td>{{aval.num}}</td>
+												<td>{{aval.nombre}}</td>
+												<td>{{aval.estadoCivil}}</td>
+												<td>{{aval.ocupacion}}</td>
+												<td>{{aval.direccion}}</td>
+												<td>{{aval.empresa}}</td>
+												<td>{{aval.puesto}}</td>
+												<td>{{aval.antiguedad}}</td>
+												<td>{{aval.direccionEmpresa}}</td>
+												<td>{{aval.parentezco}}</td>
+												<td>{{aval.tiempoConocerlo}}</td>
+												<td>
+														<a href="#" ng-click="ge.quitarAval(aval.num)"><i class="fa fa-trash"></i></a>
+														<a href="#" ng-click="ge.editarAval(aval)"><i class="fa fa-pencil"></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
-					  </div>	
+						</div>
 						
+												
 						<h4>Garantias</h4>
 						<div class="well">	    
 					    <div class="row">
@@ -258,9 +260,9 @@
 							   	<input type="button" ng-click="ge.cancelarGarantia()" value="Cancelar" ng-show="!ge.actionGarantia" class="btn btn-danger">	   				
 								</div>
 					    </div>
-						</div>
-						<div class="well">				 
-							<div class="row">
+						</div>		 
+						<div class="row">
+							<div class="col-sm-12">
 								<table class="table table-bordered">
 									<thead>
 										<tr>
@@ -291,7 +293,7 @@
 									</tbody>
 								</table>
 							</div>
-					  </div>
+						</div>
 						
 						<div class="row">
 							<div class="col-sm-12">

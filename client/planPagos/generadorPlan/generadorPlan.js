@@ -16,7 +16,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.cliente_id = "";
 	this.planPagos = [];
 	this.credito = {};
-	this.credito.primerAbono = moment().add(1, "weeks");
+	this.credito.primerAbono = new Date(moment().add(1, "weeks"));
 	this.pago = {};
 	window.rc = rc;
 
@@ -201,6 +201,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		}
 		var importeParcial = (this.credito.capitalSolicitado / totalPagos) * (1 + (tipoCredito.tasa / 100));
 		var plan = [];
+		
 		for (var i = 0; i < totalPagos; i++) {
 			
 			var pago = {
@@ -247,9 +248,12 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			cliente_id : this.cliente._id,
 			tipoCredito_id : this.credito.tipoCredito_id,
 			fechaSolicito : new Date(),
-			capitalSolicitado : this.credito.importeRegular,
-			adeudoInicial : this.credito.importeRegular,
-			saldoActual : this.credito.importeRegular,
+			duracionMeses : this.credito.duracionMeses,
+			capitalSolicitado : this.credito.capitalSolicitado,
+			adeudoInicial : this.credito.capitalSolicitado,
+			saldoActual : this.credito.capitalSolicitado,
+			periodoPago : this.credito.periodoPago,
+			fechaPrimerAbono : this.credito.primerAbono,
 			multasPendientes : 0,
 			saldoMultas : 0.00,
 			saldoRecibo : 0.00,
