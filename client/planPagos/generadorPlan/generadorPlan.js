@@ -265,7 +265,10 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		credito.garantias = angular.copy(this.garantias);
 
 		Meteor.apply('generarCredito', [this.cliente._id, credito, this.planPagos], function(error, result){
+			console.log("generé")
+			console.log(result);
 		  if(result == "hecho"){
+			  console.log("")
 			  toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');
 			  rc.planPagos = [];
 			  this.avales = [];

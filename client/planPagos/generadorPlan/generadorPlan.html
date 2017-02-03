@@ -260,40 +260,42 @@
 							   	<input type="button" ng-click="ge.cancelarGarantia()" value="Cancelar" ng-show="!ge.actionGarantia" class="btn btn-danger">	   				
 								</div>
 					    </div>
-						</div>		 
-						<div class="row">
-							<div class="col-sm-12">
-								<table class="table table-bordered">
-									<thead>
-										<tr>
-											<th width="5%">Número</th>
-											<th width="15%">Tipo</th>
-											<th width="15%">Marca</th>
-											<th width="15%">Modelo</th>
-											<th width="15%">Serie</th>
-											<th width="15%">Color</th>
-											<th width="15%">Estado Actual</th>
-											<th width="5%">Quitar</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-repeat="garantia in ge.garantias">
-											<td>{{garantia.num}}</td>
-											<td>{{garantia.tipo}}</td>
-											<td>{{garantia.marca}}</td>
-											<td>{{garantia.modelo}}</td>
-											<td>{{garantia.serie}}</td>
-											<td>{{garantia.color}}</td>
-											<td>{{garantia.estadoActual}}</td>
-											<td>
-													<a href="#" ng-click="ge.quitarGarantia(garantia.num)"><i class="fa fa-trash"></i></a>
-													<a href="#" ng-click="ge.editarGarantia(garantia)"><i class="fa fa-pencil"></i></a>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+					    <br/>
+					    <div class="row">
+								<div class="col-sm-12">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th width="5%">Número</th>
+												<th width="15%">Tipo</th>
+												<th width="15%">Marca</th>
+												<th width="15%">Modelo</th>
+												<th width="15%">Serie</th>
+												<th width="15%">Color</th>
+												<th width="15%">Estado Actual</th>
+												<th width="5%">Quitar</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="garantia in ge.garantias">
+												<td>{{garantia.num}}</td>
+												<td>{{garantia.tipo}}</td>
+												<td>{{garantia.marca}}</td>
+												<td>{{garantia.modelo}}</td>
+												<td>{{garantia.serie}}</td>
+												<td>{{garantia.color}}</td>
+												<td>{{garantia.estadoActual}}</td>
+												<td>
+														<a href="#" ng-click="ge.quitarGarantia(garantia.num)"><i class="fa fa-trash"></i></a>
+														<a href="#" ng-click="ge.editarGarantia(garantia)"><i class="fa fa-pencil"></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
-						</div>
+						</div>		 
+						
 						
 						<div class="row">
 							<div class="col-sm-12">
