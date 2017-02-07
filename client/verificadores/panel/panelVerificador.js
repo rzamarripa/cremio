@@ -9,7 +9,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	
   //this.action = true;
 	let Cred = this.subscribe('creditos',()=>{
-			return [{requiereVerificacion : true , estatus: "0"}]
+			return [{requiereVerificacion : true , estatus: 1}]
 	});
 		
   this.helpers({
@@ -31,7 +31,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 						   {	
 								 		cliente = result;
 										credito.nombreCliente = cliente.nombreCompleto;
-										//$scope.$apply();
+										$scope.$apply();
 							 }
 						});
 				})

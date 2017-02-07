@@ -55,20 +55,15 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			objeto.garantias = angular.copy(this.garantias);
 			
 			Verificaciones.insert(objeto);
-			Creditos.update({_id: objeto.credito_id}, {$set:{estatus: "1"}})
-			
-			
-			var idTemp = objeto.credito_id;
-			delete objeto.credito_id;		
-			Creditos.update({_id:idTemp},{$set : objeto});
-			
-			
+			Creditos.update({_id: objeto.credito_id}, {$set:{estatus: 2}})
+						
 			toastr.success('Guardado correctamente.');
 			this.objeto = {}; 
 			$('.collapse').collapse('hide');
 			this.nuevo = true;
 			form.$setPristine();
 	    form.$setUntouched();
+	    $state.go('root.panelVerificador');
 			
 			
 			
