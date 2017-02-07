@@ -376,6 +376,10 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 							if (p.descripcion == "Multa" && p.estatus == 1) {
 								p.importeRegular = 0;
 							}
+							if (pago.pagar > p.importeRegular) {
+	 							p.importeRegular = 0
+
+	 						}
 							
 							PlanPagos.insert(p);
 							console.log("despues del insert y del update",p,rc.planPagosViejo)
@@ -401,6 +405,11 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 							if (isNaN(p.importeRegular)) {
 								p.importeRegular = 0;
 	 						}
+	 						if (pago.pagar > p.importeRegular) {
+	 							p.importeRegular = 0
+
+	 						}
+
 	 						PlanPagos.update({_id:idTemporal},{$set:p});
 
 

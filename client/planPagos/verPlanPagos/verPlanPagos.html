@@ -41,7 +41,7 @@
 											<small>Amigos</small></h4>
 										</div>
 									</div>
-									<div class="col-sm-6">
+									<div class="col-sm-2">
 										<h1>{{vpp.cliente.profile.nombre}} <span class="semi-bold">{{vpp.cliente.profile.apellidoPaterno}} {{vpp.cliente.profile.apellidoMaterno}}</span>
 										
 										<small> (Cliente)</small></h1>
@@ -78,29 +78,115 @@
 											{{vpp.cliente.profile.observacionesGenerales}}
 										</p>
 										<br>
+										
+
 									</div>
-									<!--																
-									<div class="col-sm-3">
-										<h1><small>Amigos</small></h1>
-										<ul class="list-inline friends-list">
-											<li><img src="img/avatars/1.png" alt="friend-1">
-											</li>
-											<li><img src="img/avatars/2.png" alt="friend-2">
-											</li>
-											<li><img src="img/avatars/3.png" alt="friend-3">
-											</li>
-											<li><img src="img/avatars/4.png" alt="friend-4">
-											</li>
-											<li><img src="img/avatars/5.png" alt="friend-5">
-											</li>
-											<li><img src="img/avatars/male.png" alt="friend-6">
-											</li>
-											<li>
-												<a href="javascript:void(0);">413 more</a>
-											</li>
-										</ul>
+									<div class="col-sm-7">
+
+									<div   role="widget"><!-- class="jarviswidget" id="wid-id-6" -->
+							
+		
+				
+								<!-- widget div-->
+								<div role="content">
+									<div class="widget-body">
+										<div class="tabs-right">
+											<ul class="nav nav-tabs">
+												<li class="active"  role="button" data-toggle="collapse" 
+								 					href="#collapseInfoContacto" aria-expanded="false" aria-controls="collapseInfoContacto">
+													<a href="#tab1" data-toggle="tab">Información del contacto </a>
+												</li>
+												<li data-toggle="collapse" 
+								 					href="#collapseParticulares" aria-expanded="false" aria-controls="collapseParticulares">
+													<a href="#tab2" data-toggle="tab">Particulares</a>
+												</li>
+												<li data-toggle="collapse" 
+								 					href="#collapseParticulares" aria-expanded="false" aria-controls="collapseParticulares">
+													<a href="#tab3" data-toggle="tab">Dirección</a>
+												</li>
+												<li>
+													<a href="#tab4" data-toggle="tab">Información laboral</a>
+												</li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane active" id="tab1">
+
+													<div  class="collapse" id="collapseInfoContacto">										
+														<dl class="dl-horizontal">
+														  <dt>Particular:</dt>
+														  <dd>?</dd>
+														  <dt>Oficina:</dt>
+														  <dd>?</dd>
+														  <dt>e-mail:</dt>
+														  <dd>{{Meteor.User().profile[1].correo}}</dd>
+														  <dt>Movil:</dt>
+														  <dd>{{Meteor.User().profile[1].telefono}}</dd>
+														  <dt>Alternativo:</dt>
+														  <dd>{{Meteor.User().profile[1].otroTelefono}}</dd>
+														
+														</dl>
+
+													 </div>
+
+
+													
+
+												</div>
+												<div class="tab-pane" id="tab2">
+													<div  class="collapse" id="collapseParticulares">										
+														<dl class="dl-horizontal">
+														  <dt>Sexo:</dt>
+														  <dd>{{Meteor.User().profile[1].sexo}}</dd>
+														  <dt>Nacimiento:</dt>
+														  <dd>{{Meteor.User().profile[1].fechaNacimiento}}</dd>
+														  <dt>Ocupación:</dt>
+														  <dd>{{Meteor.User().profile[1].ocupacion}}</dd>
+														  <dt>Estado civil:</dt>
+														  <dd>estadocivil_id</dd>
+														  <dt>Nacionalidad:</dt>
+														  <dd>nacionalidad_id</dd>
+														
+														</dl>
+
+													 </div>
+												</div>
+												<div class="tab-pane" id="tab3">
+													<div  class="collapse" id="collapseParticulares">										
+														<dl class="dl-horizontal">
+														  <dt>Calle:</dt>
+														  <dd>{{Meteor.User().profile[1].calle}}</dd>
+														  <dt>Colonia:</dt>
+														  <dd>{{Meteor.User().profile[1].colonia}}</dd>
+														  <dt>Estado:</dt>
+														  <dd>Estado_id</dd>
+														  <dt>Codigo Postal</dt>
+														  <dd>{{Meteor.User().profile[1].codigoPostal}}</dd>
+														  <dt>Señas:</dt>
+														  <dd>?</dd>
+														  <dt>Localidad:</dt>
+														  <dd>nacionalidad_id</dd>
+														  <dt>País:</dt>
+														  <dd>nacionalidad_id</dd>
+														  <dt>Tiempo:</dt>
+														  <dd></dd>
+														
+														</dl>
+
+													 </div>
+												</div>
+											</div>
+										</div>
+				
 									</div>
-									-->
+									<!-- end widget content -->
+				
+								</div>
+								<!-- end widget div -->
+				
+							</div>
+									</div>
+
+						
 								</div>
 								<div class="row">
 									<div class="col-sm-12">
@@ -295,81 +381,10 @@
 								<div class="col-sm-12">
 
 
-
-							<!-- 	<div class="col-sm-8"> -->
-						<!-- 	<div>
-								<i class="fa fa-chevron-circle-right"><a class="btn btn-link" role="button" data-toggle="collapse" 
-								 href="#collapseExampleDetalles" aria-expanded="false" aria-controls="collapseExampleDetalles">
-								 Detalles de la Solicitud</a></i>
-								 <br/>
-								 <div class="collapse" id="collapseExampleDetalles">
-									<div><h8>Tipo de Credito:&nbsp;&nbsp; <strong> {{credito.nombreTipoCredito.nombre}}</strong></h8></div>
-									<div><h8>Periodo de Pago:&nbsp;&nbsp; <strong> {{credito.periodoPago}}</strong></h8></div>
-									<div><h8>Capital Solicitado: <strong>{{credito.capitalSolicitado}}</strong> <h8/></div>
-									<div><h8>Duración:&nbsp;&nbsp; <strong> {{credito.duracionMeses}}</h8></div>
-								</div>
+								<div><div role="widget">
 								
 
-						   </div> -->
-						 <!--   <div>
-								<i class="fa fa-chevron-circle-right"><a class="btn btn-link" role="button" data-toggle="collapse" 
-								 href="#collapseExampleAvales" aria-expanded="false" aria-controls="collapseExampleAvales">
-								 Avales</a></i>
-								 <br/> -->
-								<!--  <div  class="collapse" id="collapseExampleAvales">
-
-									<div><h8>Nombre:&nbsp;&nbsp; <strong>{{credito.avales[0].nombre}}</h8></strong></div>
-									<div><h8>Estado Civil:&nbsp;&nbsp;<strong> {{credito.avales[0].estadoCivil}}</strong> </h8></div>
-									<div><h8>Capital Solicitado: <strong>{{credito.avales[0].ocupacion}}</strong> <h8/></div>
-									<div><h8>Empresa:&nbsp;&nbsp;<strong>{{credito.avales[0].empresa}}</strong></h8></div>
-									<div><h8>Puesto:&nbsp;&nbsp;<strong>{{credito.avales[0].puesto}}</strong></h8></div>
-									<div><h8>Antiguedad:&nbsp;&nbsp;<strong>{{credito.avales[0].antiguedad}}</strong></h8></div>
-									<div><h8>Dirección:&nbsp;&nbsp;<strong>{{credito.avales[0].direccion}}</strong></h8></div>
-									<div><h8>Parentezco:&nbsp;&nbsp;<strong>{{credito.avales[0].parentezco}}</strong></h8></div>
-									<div><h8>Tiempo de Conocerlo:&nbsp;&nbsp;<strong>{{credito.avales[0].tiempoConocerlo}}</strong></h8></div>
-
-									 </div> -->
-<!-- 
-						   </div> -->
-						   <!--  <div>
-								<i class="fa fa-chevron-circle-right"><a class="btn btn-link" role="button" data-toggle="collapse" 
-								 href="#collapseExampleGarantias" aria-expanded="false" aria-controls="collapseExampleGarantias">
-								 Garantias</a></i>
-								 <br/> -->
-							<!-- 	 <div  class="collapse" id="collapseExampleGarantias">
-
-									<div><h8>Tipo:&nbsp;&nbsp; <strong>{{credito.garantias[0].tipo}}</strong></h8></div>
-									<div><h8 style="margin-right: 20%">Marca:&nbsp;&nbsp; <strong>{{credito.garantias[0].marca}}</strong> </h8></div>
-									<div><h8>Capital Solicitado: <strong>{{credito.garantias[0].modelo}}</strong></strong> <h8/></div>
-									<div><h8>Empresa:&nbsp;&nbsp;<strong>{{credito.garantias[0].num}}</strong></h8></div>
-									
-									<div><h8>Antiguedad:&nbsp;&nbsp;<strong>{{credito.garantias[0].serie}}</strong></h8></div>
-									<div><h8>Dirección:&nbsp;&nbsp;<strong>{{credito.garantias[0].color}}</strong></h8></div>
-									<div><h8>Parentezco:&nbsp;&nbsp;<strong>{{credito.garantias[0].estadoActual}}</strong></h8></div>
-
-									 </div>
-
-
-						   </div> -->
-						  <!--   <div>
-								<i class="fa fa-chevron-circle-right"><a class="btn btn-link" role="button" data-toggle="collapse" 
-								 href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-								 Tablá de amortización</a></i>
-								 <br/>
-								 
-						   </div> -->
-						 									
-							<!-- 	</div> -->
-
-
-
-								<div><div class="jarviswidget" id="wid-id-5" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false" role="widget">
 								
-
-								<header role="heading"><div class="jarviswidget-ctrls" role="menu">   <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus "></i></a>  <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Delete"><i class="fa fa-times"></i></a></div>
-							
-							
-								<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
 				
 								<!-- widget div-->
 								<div role="content">
@@ -387,15 +402,15 @@
 											<ul class="nav nav-tabs tabs-left" id="demo-pill-nav">
 												<li class="active" role="button" data-toggle="collapse" 
 								 					href="#collapseExampleDetalles" aria-expanded="false" aria-controls="collapseExampleDetalles">
-													<a href="#tab-r1" data-toggle="tab"><span class="badge bg-color-blue txt-color-white">12</span> Detalles de la Solicitud </a>
+													<a href="#tab-r1" data-toggle="tab"> Detalles de la Solicitud </a>
 												</li>
 												<li ole="button" data-toggle="collapse" 
 								 					href="#collapseExampleAvales" aria-expanded="false" aria-controls="collapseExampleAvales">
-													<a href="#tab-r2" data-toggle="tab"><span class="badge bg-color-blueDark txt-color-white">3</span> Avales</a>
+													<a href="#tab-r2" data-toggle="tab"> Avales</a>
 												</li>
 												<li>
-													<a href="#tab-r3" data-toggle="tab"><span class="badge bg-color-greenLight txt-color-white" data-toggle="collapse" 
-								 					href="#collapseExampleGarantias" aria-expanded="false" aria-controls="collapseExampleGarantias">0</span>Garantias</a>
+													<a href="#tab-r3" data-toggle="tab" data-toggle="collapse" 
+								 					href="#collapseExampleGarantias" aria-expanded="false" aria-controls="collapseExampleGarantias">Garantias</a>
 												</li>
 											</ul>
 											<div class="tab-content">
@@ -503,9 +518,9 @@
 							</div></div>
 
 
-
-
-									<div class="row" ng-show="vpp.planPagosViejo.length > 0">
+							<br/>
+							<br/>
+									<div class="row" ng-show="vpp.planPagosViejo.length > 0"><br/>
 										<div class="col-sm-8">
 											<table class="table table-striped table-bordered table-condensed font-xs">
 												<thead class="thead">
@@ -551,7 +566,8 @@
 											<br/>
 											<a class="btn btn-primary pull-right" ng-click="vpp.guardarPago(vpp.pago,vpp.credito)">Guardar</a>
 										</div>
-									</div>	
+									</div>
+									
 								</div>
 							</div>
 						</div>
