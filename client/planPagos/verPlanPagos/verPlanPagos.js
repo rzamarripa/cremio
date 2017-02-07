@@ -392,7 +392,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 							{
 								console.log("0")
 								p.tiempoPago = 0
-								p.estatus = 1
+
 							}else{
 								console.log("1")
 								p.tiempoPago = 1
@@ -407,8 +407,9 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 							if (isNaN(p.importeRegular)) {
 								p.importeRegular = 0;
 	 						}
-	 						if (pago.pagar > p.importeRegular) {
+	 						if ( p.importeRegular < 0) {
 	 							p.importeRegular = 0
+	 							p.estatus = 1
 
 	 						}
 

@@ -12,6 +12,9 @@
 										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.editarCliente({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
+	 									<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.editarCliente({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
+	 										<i class="fa fa-pencil"></i> Historial de Creditos
+	 									</a> 
 									</div>
 									<div class="air air-top-left padding-10">
 										<h4 class="txt-color-white font-md"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{vpp.fechaActual | date:'dd-MM-yyyy'}}</h4>
@@ -80,66 +83,77 @@
 										
 
 									</div>
-									<div class="col-sm-7">
+									<div class="col-sm-7" style="margin-top: 0;">
 
-									<div   role="widget"><!-- class="jarviswidget" id="wid-id-6" -->
+									<div  role="widget"><!-- class="jarviswidget" id="wid-id-6" -->
 							
 		
 				
 								<!-- widget div-->
+								<br/>
+
+
+
+
+
 								<div role="content">
 									<div class="widget-body">
 										<div class="tabs-right">
 											<ul class="nav nav-tabs">
 												<li class="active"  role="button" data-toggle="collapse" 
 								 					href="#collapseInfoContacto" aria-expanded="false" aria-controls="collapseInfoContacto">
-													<a href="#tab1" data-toggle="tab">Información del contacto </a>
+													<a  aria-expanded="false" href="#tab1" data-toggle="tab">Información del contacto </a>
 												</li>
 												<li data-toggle="collapse" 
 								 					href="#collapseParticulares" aria-expanded="false" aria-controls="collapseParticulares">
-													<a href="#tab2" data-toggle="tab">Particulares</a>
+													<a  aria-expanded="false" href="#tab2" data-toggle="tab">Particulares</a>
 												</li>
 												<li data-toggle="collapse" 
-								 					href="#collapseParticulares" aria-expanded="false" aria-controls="collapseParticulares">
-													<a href="#tab3" data-toggle="tab">Dirección</a>
+								 					href="#collapseDirecciones" aria-expanded="false" aria-controls="collapseDirecciones">
+													<a  aria-expanded="false" href="#tab3" data-toggle="tab">Dirección</a>
 												</li>
-												<li>
-													<a href="#tab4" data-toggle="tab">Información laboral</a>
+												<li data-toggle="collapse" 
+								 					href="#collapseInfoLaboral" aria-expanded="false" aria-controls="collapseInfoLaboral">
+													<a aria-expanded="false" href="#tab4" data-toggle="tab">Información laboral</a>
 												</li>
 											</ul>
 											<div class="tab-content">
-												<div class="tab-pane active" id="tab1">
+												<div class="tab-pane active" id="tab1" style="margin-right: 10%;">
 
-													<div  class="collapse" id="collapseInfoContacto">										
-														<dl class="dl-horizontal">
+														<div class="table-responsive">	
+														<div  class="collapse" id="collapseInfoContacto">	
+														<dl class="dl-horizontal" >
+
 														  <dt>Particular:</dt>
-														  <dd>?</dd>
+														  <dd>Particular</dd>
 														  <dt>Oficina:</dt>
-														  <dd>?</dd>
+														  <dd>Oficina</dd>
 														  <dt>e-mail:</dt>
-														  <dd>{{Meteor.User().profile[1].correo}}</dd>
+														  <dd>{{currentUser.profile[1].correo}}</dd>
 														  <dt>Movil:</dt>
-														  <dd>{{Meteor.User().profile[1].telefono}}</dd>
+														  <dd>{{currentUser.profile[1].telefono}}</dd>
 														  <dt>Alternativo:</dt>
-														  <dd>{{Meteor.User().profile[1].otroTelefono}}</dd>
+														  <dd>{{currentUser.profile[1].otroTelefono}}</dd>
 														
 														</dl>
-
-													 </div>
-
 
 													
 
 												</div>
+													
+
+												</div>
+												</div>
 												<div class="tab-pane" id="tab2">
-													<div  class="collapse" id="collapseParticulares">										
+													<div  class="collapse" id="collapseParticulares">
+													<div class="table-responsive">										
 														<dl class="dl-horizontal">
 														  <dt>Sexo:</dt>
-														  <dd>{{Meteor.User().profile[1].sexo}}</dd>
+														  <dd>{{currentUser.profile[1].sexo}}</dd>
 														  <dt>Nacimiento:</dt>
-														  <dd>{{Meteor.User().profile[1].fechaNacimiento}}</dd>
+														  <dd>{{currentUser.profile[1].fechaNacimiento}}</dd>
 														  <dt>Ocupación:</dt>
-														  <dd>{{Meteor.User().profile[1].ocupacion}}</dd>
+														  <dd>{{currentUser.profile[1].ocupacion}}</dd>
 														  <dt>Estado civil:</dt>
 														  <dd>estadocivil_id</dd>
 														  <dt>Nacionalidad:</dt>
@@ -148,18 +162,20 @@
 														</dl>
 
 													 </div>
+													 </div>
 												</div>
 												<div class="tab-pane" id="tab3">
-													<div  class="collapse" id="collapseParticulares">										
+													<div  class="collapse" id="collapseDirecciones">	
+													<div class="table-responsive">									
 														<dl class="dl-horizontal">
 														  <dt>Calle:</dt>
-														  <dd>{{Meteor.User().profile[1].calle}}</dd>
+														  <dd>{{currentUser.profile[1].calle}}</dd>
 														  <dt>Colonia:</dt>
-														  <dd>{{Meteor.User().profile[1].colonia}}</dd>
+														  <dd>{{currentUser.profile[1].colonia}}</dd>
 														  <dt>Estado:</dt>
 														  <dd>Estado_id</dd>
 														  <dt>Codigo Postal</dt>
-														  <dd>{{Meteor.User().profile[1].codigoPostal}}</dd>
+														  <dd>{{currentUser.profile[1].codigoPostal}}</dd>
 														  <dt>Señas:</dt>
 														  <dd>?</dd>
 														  <dt>Localidad:</dt>
@@ -171,6 +187,40 @@
 														
 														</dl>
 
+													 </div>
+													 </div>
+												</div>
+												<div class="tab-pane" id="tab4">
+													<div  class="collapse" id="collapseInfoLaboral">						<div class="table-responsive">				
+														<dl class="dl-horizontal">
+														  <dt>Empresa:</dt>
+														  <dd>{{Meteor.User().profile[1].calle}}</dd>
+														  <dt>Calle:</dt>
+														  <dd>{{Meteor.User().profile[1].colonia}}</dd>
+														  <dt>Colonia:</dt>
+														  <dd>colonia_id</dd>
+														  <dt>Estado</dt>
+														  <dd>{{Meteor.User().profile[1].codigoPostal}}</dd>
+														  <dt>Código Postal:</dt>
+														  <dd>cp</dd>
+														  <dt>Telefono:</dt>
+														  <dd>34343443</dd>
+														  <dt>Departamento:</dt>
+														  <dd>departamento_id</dd>
+														  <dt>Jefe inmediato:</dt>
+														  <dd></dd>
+														  <dt>Localidad:</dt>
+														  <dd></dd>
+														  <dt>País:</dt>
+														  <dd></dd>
+														  <dt>Antiguedad:</dt>
+														  <dd></dd>
+														  <dt>Numero:</dt>
+														  <dd></dd>
+														
+														</dl>
+
+													 </div>
 													 </div>
 												</div>
 											</div>
@@ -397,8 +447,10 @@
 									<!-- widget content -->
 									<div class="widget-body">
 				
-										<div class="tabs-left">
+										<div class="tabs-left ">
+									
 											<ul class="nav nav-tabs tabs-left" id="demo-pill-nav">
+											
 												<li class="active" role="button" data-toggle="collapse" 
 								 					href="#collapseExampleDetalles" aria-expanded="false" aria-controls="collapseExampleDetalles">
 													<a href="#tab-r1" data-toggle="tab"> Detalles de la Solicitud </a>
@@ -407,20 +459,19 @@
 								 					href="#collapseExampleAvales" aria-expanded="false" aria-controls="collapseExampleAvales">
 													<a href="#tab-r2" data-toggle="tab"> Avales</a>
 												</li>
-												<li>
-													<a href="#tab-r3" data-toggle="tab" data-toggle="collapse" 
-								 					href="#collapseExampleGarantias" aria-expanded="false" aria-controls="collapseExampleGarantias">Garantias</a>
+												<li  data-toggle="collapse" 
+								 					href="#collapseExampleGarantias" aria-expanded="false" aria-controls="collapseExampleGarantias">
+													<a href="#tab-r3" data-toggle="tab" >Garantias</a>
 												</li>
+												
 											</ul>
+											
+
 											<div class="tab-content">
-												<div class="tab-pane active" id="tab-r1">
-												<div>
-										
+												<div class="tab-pane active" id="tab-r1">										
 													 <div class="collapse" id="collapseExampleDetalles">
 
-
 														<div class="table-responsive">
-													
 		
 														<dl class="dl-horizontal">
 														  <dt>Tipo de Credito</dt>
@@ -431,18 +482,17 @@
 														  <dd>{{credito.capitalSolicitado}}</dd>
 														  <dt>Duración</dt>
 														  <dd>{{credito.duracionMeses}}</dd>
-														
-
 														</dl>
 														
+														</div>
 													</div>
-										</div>
-									</div>
+									
 
 											
 												<div class="tab-pane" id="tab-r2">
 													
-													<div  class="collapse" id="collapseExampleAvales">										
+													<div  class="collapse" id="collapseExampleAvales">	
+													<div class="table-responsive">									
 														<dl class="dl-horizontal">
 														  <dt>Nombre:</dt>
 														  <dd>{{credito.avales[0].nombre}}</dd>
@@ -463,44 +513,37 @@
 														</dl>
 
 													 </div>
+													 </div>
 												</div>
 												<div class="tab-pane" id="tab-r3">
 
 													 <div  class="collapse" id="collapseExampleGarantias">
-
-														
-										
-														
-														<div><h8>Dirección:&nbsp;&nbsp;<strong>{{credito.garantias[0].color}}</strong></h8></div>
-														<div><h8>Parentezco:&nbsp;&nbsp;<strong>{{credito.garantias[0].estadoActual}}</strong></h8></div>
-
-
+													 <div class="table-responsive">
 
 														<dl class="dl-horizontal">
-														  <dt>Tipo</dt>
+														  <dt>Tipo:</dt>
 														  <dd>{{credito.garantias[0].tipo}}</dd>
-														  <dt>Marca</dt>
+														  <dt>Marca:</dt>
 														  <dd>{{credito.garantias[0].marca}}</dd>
-														  <dt>Modelo</dt>
+														  <dt>Modelo:</dt>
 														  <dd>{{credito.garantias[0].modelo}}</dd>
-														  <dt>Duración</dt>
+														  <dt>Duración:</dt>
 														  <dd>{{credito.garantias[0].duracionMeses}}</dd>
-														  <dt>Num</dt>
+														  <dt>Num:</dt>
 														  <dd>{{credito.garantias[0].num}}</dd>
-														  <dt>serie</dt>
+														  <dt>serie:</dt>
 														  <dd>{{credito.garantias[0].serie}}</dd>
-														  <dt>Color</dt>
+														  <dt>Color:</dt>
 														  <dd>{{credito.garantias[0].color}}</dd>
-														   <dt>Estado actual</dt>
+														   <dt>Estado actual:</dt>
 														  <dd>{{credito.garantias[0].estadoActual}}</dd>
-														
 
 														</dl>
 
 									 				</div>
+									 				</div>
 
-
-						   </div>
+												</div>
 													
 
 
