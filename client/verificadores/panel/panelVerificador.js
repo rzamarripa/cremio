@@ -9,7 +9,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	
   //this.action = true;
 	let Cred = this.subscribe('creditos',()=>{
-			return [{requiereVerificacion : true , estatus: 1}]
+			return [{requiereVerificacion : true , estatus: 0}]
 	});
 		
   this.helpers({
