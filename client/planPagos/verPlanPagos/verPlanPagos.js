@@ -435,7 +435,59 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		this.credito_id = id;
 	};
 
-
+	this.download = function(participantes) 
+  {
+	  	
+				
+		$( "#certificacionPatrimonial" ).prop( "disabled", true );
+		Meteor.call('getcertificacionPatrimonial', function(error, response) {
+		   if(error)
+		   {
+		    console.log('ERROR :', error);
+		    $( "#certificacionPatrimonial" ).prop( "disabled", false );
+		    return;
+		   }
+		   else
+		   {
+			   
+			 				function b64toBlob(b64Data, contentType, sliceSize) {
+								  contentType = contentType || '';
+								  sliceSize = sliceSize || 512;
+								
+								  var byteCharacters = atob(b64Data);
+								  var byteArrays = [];
+								
+								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+								    var slice = byteCharacters.slice(offset, offset + sliceSize);
+								
+								    var byteNumbers = new Array(slice.length);
+								    for (var i = 0; i < slice.length; i++) {
+								      byteNumbers[i] = slice.charCodeAt(i);
+								    }
+								
+								    var byteArray = new Uint8Array(byteNumbers);
+								
+								    byteArrays.push(byteArray);
+								  }
+								    
+								  var blob = new Blob(byteArrays, {type: contentType});
+								  return blob;
+							}
+							
+							var blob = b64toBlob(response, "application/docx");
+						  var url = window.URL.createObjectURL(blob);
+						  
+						  //console.log(url);
+						  var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CertificacionPatrimonial.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+						  $( "#certificacionPatrimonial" ).prop( "disabled", false );
+  
+		   }
+		});
+	};
 
 
 

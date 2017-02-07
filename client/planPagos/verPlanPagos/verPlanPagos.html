@@ -8,9 +8,7 @@
 							<div class="col-sm-12">
 								<div id="myCarousel" class="carousel profile-carousel">
 									<div class="air air-bottom-right padding-10">
-										<a ng-if="currentUser.roles[0] == 'Gerente'" ui-sref="root.generadorPlan({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm">
-											<i class="fa fa-cogs"></i> Generador
-										</a>&nbsp;
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
 										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.editarCliente({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
@@ -40,6 +38,7 @@
 											<br>
 											<small>Amigos</small></h4>
 										</div>
+										<input id="certificacionPatrimonial" class="btn btn-primary" type="button" ng-click="vpp.download()" value="Certificación Patrimonial" />
 									</div>
 									<div class="col-sm-2">
 										<h1>{{vpp.cliente.profile.nombre}} <span class="semi-bold">{{vpp.cliente.profile.apellidoPaterno}} {{vpp.cliente.profile.apellidoMaterno}}</span>
@@ -577,6 +576,8 @@
 		</div>
 	</article>
 </div>
+
+<a id='dwnldLnk' href="#" download='archivo.docx' style="display:none;" hidden="true"></a>  
 
 
 
