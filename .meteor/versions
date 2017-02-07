@@ -12,13 +12,9 @@ angular:angular-cookies@1.5.3_1
 angular:angular-sanitize@1.5.3_1
 angularui:angular-ui-bootstrap@0.13.0
 angularui:angular-ui-router@0.2.15
-<<<<<<< HEAD
-angularui:ui-select@0.12.0
-=======
 angularui:ui-calendar@1.0.1
 angularui:ui-select@0.12.0
 angularutils:pagination@0.9.1_2
->>>>>>> 1409829571f390578f37b210cb34e9c6a7085d90
 autoupdate@1.3.12
 babel-compiler@6.13.0
 babel-runtime@1.0.1
@@ -79,10 +75,7 @@ modules-runtime@0.7.8
 momentjs:moment@2.17.1
 mongo@1.1.14
 mongo-id@1.0.6
-<<<<<<< HEAD
-=======
 mongo-livedata@1.0.12
->>>>>>> 1409829571f390578f37b210cb34e9c6a7085d90
 natestrauser:select2@4.0.3
 npm-bcrypt@0.9.2
 npm-mongo@2.2.16_1
