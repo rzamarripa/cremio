@@ -55,7 +55,7 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			objeto.garantias = angular.copy(this.garantias);
 			
 			Verificaciones.insert(objeto);
-			Creditos.update({_id: objeto.credito_id}, {$set:{estatus: 2}})
+			Creditos.update({_id: objeto.credito_id}, {$set:{estatus: 1}})
 						
 			toastr.success('Guardado correctamente.');
 			this.objeto = {}; 
