@@ -1,7 +1,7 @@
 angular
 .module("creditoMio")
-.controller("VerPlanPagosCtrl", VerPlanPagosCtrl);
-function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
+.controller("HistorialPagosCtrl", HistorialPagosCtrl);
+function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
 	
 	let rc = $reactive(this).attach($scope);
 	this.action = false;
@@ -13,7 +13,6 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.credito = {};
 	this.pago = {};
 	this.pago.totalPago = 0;
-	this.pago.totalito = 0
 	this.creditos = [];
 	this.creditos_id = []
 	this.total = 0;
@@ -34,9 +33,6 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	
 	this.subscribe('creditos', () => {
 		return [{ cliente_id : $stateParams.objeto_id, estatus : 1 }];
-	});
-	this.subscribe('pagos', () => {
-		return [{  }];
 	});
 	
 	this.helpers({
@@ -119,9 +115,6 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			console.log("hola credito",creditos)
 			return creditos;
 		},
-		pagos : () =>{
-			return Pagos.find().fetch()
-		}
 	});
 	  
   this.guardar = function(convenio,form)
@@ -319,11 +312,9 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		_.each(rc.planPagosViejo, function(p){
 			if(p.pagoSeleccionado != undefined){
 				if(p.pagoSeleccionado == true){
-					//console.log("mas");
-					//console.log(p.pagoSeleccionado, p.numeroPago);
+					console.log("mas");
+					console.log(p.pagoSeleccionado, p.numeroPago);
 					rc.pago.totalPago += p.importeRegular;	
-					//var totalito = rc.pago.totalPago 
-
 				}
 				
 			}
@@ -334,19 +325,16 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 	this.guardarPago = function(pago,credito)
 	{
-		//rc.pago.totalPago = 0;
 		
+		//console.log(pago)
 		pago.fechaPago = new Date()
 		pago.usuario_id = Meteor.userId()
 		pago.sucursalPago_id = Meteor.user().profile.sucursal_id
 		pago.estatus = true;
 		var pago_id = Pagos.insert(pago);
-		console.log(pago)
 		this.pago = {}
 
         _.each(rc.planPagosViejo, function(p){
-
-        	
                 if(p.estatus != 1){
 		        delete p.$$hashKey;
 
@@ -356,10 +344,8 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 
 	        	if (p.pagoSeleccionado == true) {
-	        		console.log("mi importe regular",p.importeRegular);
-	        		rc.pago.totalPago += p.importeRegular;
 	        		//plan = PlanPagos.find({credito_id: p.credito_id,estatus:0})
-	        
+
 	        		var idTemporal = p._id;
 			        delete p._id;
 
@@ -374,7 +360,6 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 					if (p.pagoSeleccionado == true) 
 					{
-						
 						if (p.descripcion == "Multa") {
 							console.log("entro aqui a la multa")
 							planPago = PlanPagos.findOne({numeroPago:p.numeroPago,credito_id: p.credito_id})
@@ -396,21 +381,6 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	 							p.estatus = 1
 
 	 						}
-	 						 var totalP = 0;
-	 						if (p.pagoSeleccionado) {
-
-	 						}
-
-
-
-
-	 						// var cuenta = 0;
-		 					//  if (pago.pagar < p.importeRegular) {
-		 					//  	cuenta = p.importeRegular - pago.pagar
-		 					//  	console.log(cuenta)
-		 					//  }
-
-	 						
 							
 							PlanPagos.insert(p);
 							console.log("despues del insert y del update",p,rc.planPagosViejo)
@@ -427,7 +397,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 								console.log("1")
 								p.tiempoPago = 1
 							}
-							
+							p.importeRegular= (pago.totalPago - pago.pagar)	
 							if (p.importeRegular == 0) {
 						
 								p.estatus = 1;
@@ -443,37 +413,6 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 	 						}
 
-	 						var cuenta = 0;
-	 						console.log("total pagos",pago.totalPago)
-
-	 						
-
-	 							if (  pago.pagar  >= p.importeRegular ) {
-	 								console.log("entro al if ")
-
-	 							
-	 									p.importeRegular= (pago.totalPago - pago.pagar)	
-	 									pago.totalPago = p.importeRegular
-	 							
-
-		 					 	
-		 					   
-
-		 					    if ( p.importeRegular < 0) {
-	 							p.importeRegular = 0
-	 							p.estatus = 1
-
-	 							}
-		 					 }else{
-		 					 	console.log("entro al else mannn")
-
-		 					 	p.importeRegular =  p.importeRegular -pago.pagar
-		 					 	pago.pagar = 0
-
-		 					 }
-		 									
-		 					 
-
 	 						PlanPagos.update({_id:idTemporal},{$set:p});
 
 
@@ -486,7 +425,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			
 		        		
 	        }
-	        
+
 		         
         })	
        

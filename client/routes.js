@@ -408,5 +408,15 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	      }]
 	    }
     })
+    .state('root.historialPagos', {
+      url: '/historialPagos/:objeto_id',
+      templateUrl: 'client/historialPagos/historialPagos.ng.html',
+      controller: 'HistorialPagosCtrl as hp',
+      resolve: {
+        "currentUser": ["$meteor", function($meteor){
+          return $meteor.requireUser();
+        }]
+      }
+    })
 
 }]);

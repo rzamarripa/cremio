@@ -12,7 +12,7 @@
 										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.editarCliente({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
-	 									<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.editarCliente({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
+	 									<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.historialPagos({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 	 										<i class="fa fa-pencil"></i> Historial de Creditos
 	 									</a> 
 									</div>
@@ -136,8 +136,6 @@
 														  <dd>{{currentUser.profile[1].otroTelefono}}</dd>
 														
 														</dl>
-
-													
 
 												</div>
 													
