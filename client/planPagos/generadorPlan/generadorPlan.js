@@ -38,7 +38,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	});
 	
 	this.subscribe('cliente', () => {
-		return [{ id : $stateParams.objeto_id }];
+		return [{ _id : $stateParams.objeto_id }];
 	});
 	this.subscribe('pagos', () => {
 		return [{ estatus:true}];

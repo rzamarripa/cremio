@@ -8,7 +8,7 @@
 							<div class="col-sm-12">
 								<div id="myCarousel" class="carousel profile-carousel">
 									<div class="air air-bottom-right padding-10">
-										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.clienteDetalle({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
 										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.editarCliente({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
@@ -404,8 +404,8 @@
 				<h2>Créditos Activos </h2>
 	
 				<ul class="nav nav-tabs pull-right" id="myTab">
-					<li ng-click="vpp.mostrarPagos(credito._id)" class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in vpp.creditos track by $index">
-						<a data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado}}</span></a>
+					<li class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in vpp.creditos track by $index">
+						<a data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado | currency}}</span></a>
 					</li>
 				</ul>
 	
@@ -458,7 +458,7 @@
 
 											<div class="tab-content">
 												<div class="tab-pane active" id="tab-r1">										
-													 <div class="collapse" id="collapseExampleDetalles">
+													 <div class="collapse in" id="collapseExampleDetalles">
 
 														<div class="table-responsive">
 		
@@ -551,7 +551,7 @@
 
 							<br/>
 							<br/>
-									<div class="row" ng-show="vpp.planPagosViejo.length > 0"><br/>
+									<div class="row"><br/>
 										<div class="col-sm-8">
 											<table class="table table-striped table-bordered table-condensed font-xs">
 												<thead class="thead">
@@ -569,11 +569,11 @@
 													<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < vpp.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in vpp.planPagosViejo">
 							
 														<td ><a ng-model="pago.pagoSeleccionado" ng-click="vpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'success' : 'danger'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'Pendiente' : 'Por pagar'}}</a> </td>
-														<td class="text-center">{{$index + 1}}</td>	
-														<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-														<td class="text-center">{{pago.numeroPago || pago.numeroPagoMulta}} - {{vpp.planPagos.length}}</td>
-														<td class="text-right">{{pago.importeRegular  | currency}}</td>
-														<td >{{pago.descripcion}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{$index + 1}}</td>	
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{vpp.planPagos.length}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-center'">{{pago.importeRegular  | currency}}</td>
+														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger' : ''">{{pago.descripcion }}</td>
 														<td class="text-center">
 															<span ng-if="pago.estatus == 0">
 																<button class="btn btn-warning btn-xs" ng-click="vpp.editar(pago)"><i class="fa fa-pencil"></i></button>

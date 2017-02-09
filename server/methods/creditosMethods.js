@@ -12,6 +12,7 @@ Meteor.methods({
 	    pago.multa = 0;
 	    pago.abono = 0;
 			pago.credito_id = credito_id;
+			pago.descripcion = "Abono";
 			PlanPagos.insert(pago)
 		});
 		return "hecho";

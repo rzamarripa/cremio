@@ -19,5 +19,5 @@ Meteor.publish("buscarRootClientes",function(options){
 });
 
 Meteor.publish("cliente",function(options){
-  return Meteor.users.find(options.id);
+  return Meteor.users.find(options);
 });

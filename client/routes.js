@@ -313,7 +313,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
     })
     // /:credito_id
     .state('root.verPlanPagos', {
-      url: '/verPlanPagos/:objeto_id',
+      url: '/verPlanPagos/:objeto_id/:credito_id',
       templateUrl: 'client/planPagos/verPlanPagos/verPlanPagos.html',
       controller: 'VerPlanPagosCtrl as vpp',
       resolve: {
