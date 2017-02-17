@@ -108,6 +108,15 @@
 					</li>
 		    </ul>
 	  </li>
+	  
+	  <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla' || currentUser.username == 'admin'" >
+				<a ui-sref="root.cobranza" tilte="Credito Mio">
+		    	<i class="fa fa-lg fa-fw fa-money"></i>
+					<span class="menu-item-parent">Cobranza</span>
+			  </a>
+		</li>
+	  
+	  <!--
 	  <li data-menu-collapse ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla' || currentUser.roles[0] == 'Cobranza'">
 		    <a href="#">
 		      	<i class="fa fa-lg fa-fw fa-tags"></i>
@@ -115,12 +124,12 @@
 		    </a>
 		    <ul>
 					<li data-ui-sref-active="active">
-					 	<a ui-sref="root.cobranzapordia" tilte="Credito Mio">
+					 	<a ui-sref="root.cobranza" tilte="Credito Mio">
 			      	<i class="fa fa-lg fa-fw fa-folder-o"></i>
 			      	<span class="menu-item-parent">Por día</span>
 			    	</a>
 					</li>
-					<!--
+					
 					<li data-ui-sref-active="active">
 						<a ui-sref="" tilte="Credito Mio">
 			      	<i class="fa fa-lg fa-fw fa-folder-o"></i>
@@ -145,10 +154,10 @@
 			      	<span class="menu-item-parent">Vencida por cliente</span>
 			    	</a>
 					</li>
-					-->
+					
 		    </ul>
 	  </li>   			
-	  
+	  -->
 		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla' || currentUser.username == 'admin'" >
 				<a ui-sref="root.clientesLista" tilte="Credito Mio">
 		    	<i class="fa fa-lg fa-fw fa-group"></i>

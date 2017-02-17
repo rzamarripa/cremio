@@ -1,0 +1,52 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Cobranza
+		</h1>
+	</div>
+</div>
+<br>
+<div class="well">
+	<div class="row">
+		<div class="col-sm-8">
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(0);" style="width: 150px"><i class="fa fa-table"></i> Vencido Hoy</a>	
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(1);" style="width: 150px"><i class="fa fa-table"></i> Día</a>
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(2);" style="width: 150px"><i class="fa fa-table"></i> Semana</a>
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(3);" style="width: 150px"><i class="fa fa-table"></i> Mes</a>
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(4);" style="width: 150px"><i class="fa fa-table"></i> Siguiente Mes</a>
+		</div>	
+		<div class="col-sm-2" align="right">
+				<label for="fechaFinal">Fecha:</label>
+		</div>	
+		<div class="col-sm-2">
+				<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="year" max-view="year" min-view="date" ng-model="cob.fechaInicial"/>
+			</div>
+	</div>	
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="5%"><div class="text-center">credito_id</div></th>
+					<th width="5%"><div class="text-center">Recibo</div></th>
+					<th width="10%"><div class="text-center">Vencimiento</div></th>
+					<th width="15%"><div class="text-center">cliente_id</div></th>
+					<th width="10%"><div class="text-center">Importe</div></th>
+					<th width="10%"><div class="text-center">Saldo</div></th>
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="objeto in cob.cobranza">
+			    <td>{{objeto.credito_id}}</td>
+			    <td><!--{{objeto.numeroPago}}--></td>
+			    <td><!--{{objeto.fechaLimite.getUTCDate() +"/"+ (objeto.fechaLimite.getUTCMonth()+1) +"/"+ objeto.fechaLimite.getUTCFullYear()}}--> </td>
+			    <td>{{objeto.nombreCliente}}</td>
+			    <td>{{objeto.importe}}</td>
+			    <td>0</td>
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>

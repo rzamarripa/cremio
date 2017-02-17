@@ -378,10 +378,10 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	      }]
 	    }
     })
-    .state('root.cobranzapordia', {
-      url: '/cobranzapordia',
-      templateUrl: 'client/cobranza/cobranzapordia.ng.html',
-      controller: 'CobranzapordiaCtrl as cdia',
+    .state('root.cobranza', {
+      url: '/cobranza',
+      templateUrl: 'client/cobranza/cobranza.ng.html',
+      controller: 'CobranzaCtrl as cob',
       resolve: {
 	      "currentUser": ["$meteor", function($meteor){
 	        return $meteor.requireUser();
