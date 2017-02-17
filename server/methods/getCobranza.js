@@ -34,16 +34,18 @@ Meteor.methods({
 				 				arreglo[credito._id].credito_id = credito._id;
 				 				arreglo[credito._id].cliente_id = cliente._id;
 				 				arreglo[credito._id].nombreCliente = cliente.profile.nombreCompleto;
-				 				arreglo[credito._id].pagos = [];
+				 				arreglo[credito._id].pagos = {};
+				 				arreglo[credito._id].pagos[planPago._id] = planPago.numeroPago;
 				 				
 				 				
+				 				console.log("importe:", planPago.importeRegular);
 				 				if (arreglo[credito._id].importe == undefined)				 				
 				 					  arreglo[credito._id].importe = planPago.importeRegular;
 				 				else
 				 		 			  arreglo[credito._id].importe = arreglo[credito._id].importe + planPago.importeRegular;
 				 				
 				 				
-				 				arreglo[credito._id].pagos.push(planPago.numeroPago);
+				 				
 				 				
 				 				console.log("Arreglo:", arreglo);
 				 				
