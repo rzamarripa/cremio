@@ -313,7 +313,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
     })
     // /:credito_id
     .state('root.verPlanPagos', {
-      url: '/verPlanPagos/:objeto_id',
+      url: '/verPlanPagos/:objeto_id/:credito_id',
       templateUrl: 'client/planPagos/verPlanPagos/verPlanPagos.html',
       controller: 'VerPlanPagosCtrl as vpp',
       resolve: {
@@ -407,6 +407,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	        return $meteor.requireUser();
 	      }]
 	    }
+    })
+    .state('root.historialPagos', {
+      url: '/historialPagos/:objeto_id',
+      templateUrl: 'client/historialPagos/historialPagos.ng.html',
+      controller: 'HistorialPagosCtrl as hp',
+      resolve: {
+        "currentUser": ["$meteor", function($meteor){
+          return $meteor.requireUser();
+        }]
+      }
     })
 
 }]);

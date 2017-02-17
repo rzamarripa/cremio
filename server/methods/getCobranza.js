@@ -28,7 +28,7 @@ Meteor.methods({
 
 				 				//cobranza.recibos.push()
 				 				
-				 				arreglo.push(cobranza);
+				 				//arreglo[grupo._id].
 			 			}
 			 			/*
 			 			else if()

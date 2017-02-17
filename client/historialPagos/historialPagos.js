@@ -1,29 +1,26 @@
 angular
 .module("creditoMio")
-.controller("VerPlanPagosCtrl", VerPlanPagosCtrl);
-function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
+.controller("HistorialPagosCtrl", HistorialPagosCtrl);
+function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
 	
 	let rc = $reactive(this).attach($scope);
 	this.action = false;
 	this.fechaActual = new Date();
-	
+	console.log($stateParams)
 	window.rc = rc;
 	this.credito_id = "";
 
 	this.credito = {};
 	this.pago = {};
 	this.pago.totalPago = 0;
-	this.pago.totalito = 0
 	this.creditos = [];
 	this.creditos_id = []
 	this.total = 0;
-	
-	console.log($stateParams)
 
 	// this.informacionContacto = tr; 
 	
-  this.subscribe("planPagos", ()=>{
-		return [{ credito_id : this.getReactively("credito_id") }]
+ this.subscribe("planPagos", ()=>{
+		return [{ cliente_id : this.getReactively("cliente_id") }]
 	});
 	
 	this.subscribe("tiposCredito", ()=>{
@@ -31,15 +28,16 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	});
 	
 	this.subscribe('cliente', () => {
-		return [{ _id : $stateParams.objeto_id }];
+		return [{ _id : $stateParams.cliente_id }];
 	});
 	
 	this.subscribe('creditos', () => {
-		return [{ _id : $stateParams.credito_id}];
+		return [{ cliente_id : $stateParams.objeto_id, estatus : 1 }];
 	});
 	this.subscribe('pagos', () => {
 		return [{estatus:true  }];
 	});
+
 	
 	this.helpers({
 		cliente : () => {
@@ -51,7 +49,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		tiposCredito : () => {
 			return TiposCredito.find();
 		},
-		planPagosViejo : () => {
+planPagosViejo : () => {
 			//var diferentes = c_ids.diff(p_ids)
 		//	var fechaPago = moment(pago.fecha).add(-1, "days");
 
@@ -59,6 +57,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			var fechaActual = moment();
 			 pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
 			 _.each(pagos, function(p){
+
 
 			 	
 
@@ -101,6 +100,8 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			  }
 
 
+
+
 			  });
 			}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,6 +141,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			  
 			   // if (true) {}
 			}
+			 // console.log("hola",pagos)
 		});
 
 		
@@ -169,24 +171,94 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 			 return pagos
 		},
+		pagos : () =>{
+			return Pagos.find().fetch()
+		},
+
+
 		creditos : () => {
+
 			var creditos = Creditos.find().fetch();
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
 				_.each(creditos, function(credito){
 					credito.planPagos = PlanPagos.find({credito_id : credito._id},{sort : {numeroPago : 1}}).fetch();
-			
 			  			credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
-			  			//producto.unidad = TiposCredito.findOne(producto.unidad_id)
-
-			  				  				
-				})
+			  		});
 			}
-			console.log("hola credito",creditos)
+			///console.log("hola credito",creditos)
 			return creditos;
 		},
-		pagos : () =>{
-			return Pagos.find().fetch()
+
+		historial : () => {
+			arreglo = [];
+			var saldoPago = 0; 
+			var pagoSuma = 0;
+			var SumaPago = 0;
+
+			_.each(rc.getReactively("creditos"), function(credito){
+				_.each(rc.getReactively("planPagosViejo"), function(planPago, index){
+					var saldo = 0;
+					console.log(saldo)
+				
+			  				
+			  					planPago.capitalSolicitado =  saldo;
+
+			  				if(index == 0){
+			  					console.log("primero", index)
+			  					saldo = credito.capitalSolicitado ;
+			  				}else{
+			  					console.log("más", index);
+			  					saldo = saldoPago; 
+			  					//console.log("saldoPago", saldoPago);
+			  				}
+			  					
+
+					arreglo.push({saldo:saldo , numeroPago : planPago.numeroPago,fechaSolicito : credito.fechaSolicito,
+			  				fecha:planPago.fechaPago,pago:planPago.importeRegular, cargo:planPago.cargo,movimiento:"Recibo",
+			  				planPago_id:planPago._id
+			  				 })
+					
+
+			
+						
+						// console.log(saldoPago,"ppo")
+			  				_.each(rc.pagos, function(pago){
+			  						pagoSuma += pago.pagar;
+			  						console.log("pagosuma",pagoSuma)
+			  					if (planPago.pago_id == pago._id) {
+
+			  						SumaPago += pago.pagar;
+			  						saldoPago = (saldo - pagoSuma);
+			  						// pago.cargo = (planPago.cargo - planPago.pago)
+			  						planPago.saldoPay = pago.paºgar
+
+
+			  						arreglo.push({fecha:pago.fechaPago,pago:pago,numeroPago : planPago.numeroPago,cargo:pago.cargo,
+			  							movimiento:"Abono",pago:SumaPago,saldo:saldoPago,planPago_id:planPago._id,pago_id:pago._id
+			  						})
+			  					}
+			  					 		_.each(arreglo, function(array){
+										if (array.fecha == undefined) {
+									  	    array.saldo = 0
+									  	    }
+								  	    if (array.saldo <= 0) {
+								  	    array.saldo = 0
+								  	    }
+							  					
+									});
+
+			  					});
+			  				
+			  				
+						});
+				});
+
+			
+
+
+			console.log("el ARREGLO del helper historial",arreglo)
+			return arreglo;
 		}
 	});
 	  
@@ -206,7 +278,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		$('.collapse').collapse('hide');
 		this.nuevo = true;
 		form.$setPristine();
-    form.$setUntouched();
+  		form.$setUntouched();
 		
 	};
 	
@@ -385,11 +457,9 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		_.each(rc.planPagosViejo, function(p){
 			if(p.pagoSeleccionado != undefined){
 				if(p.pagoSeleccionado == true){
-					//console.log("mas");
-					//console.log(p.pagoSeleccionado, p.numeroPago);
+					console.log("mas");
+					console.log(p.pagoSeleccionado, p.numeroPago);
 					rc.pago.totalPago += p.importeRegular;	
-					//var totalito = rc.pago.totalPago 
-
 				}
 				
 			}
@@ -400,19 +470,17 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 	this.guardarPago = function(pago,credito)
 	{
-		//rc.pago.totalPago = 0;
 		
+		//console.log(pago)
 		pago.fechaPago = new Date()
 		pago.usuario_id = Meteor.userId()
 		pago.sucursalPago_id = Meteor.user().profile.sucursal_id
 		pago.estatus = true;
 		var pago_id = Pagos.insert(pago);
-		console.log("el pago",pago)
+
 		this.pago = {}
 
         _.each(rc.planPagosViejo, function(p){
-
-        	
                 if(p.estatus != 1){
 		        delete p.$$hashKey;
 
@@ -422,10 +490,8 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 
 	        	if (p.pagoSeleccionado == true) {
-	        		console.log("mi importe regular",p.importeRegular);
-	        		rc.pago.totalPago += p.importeRegular;
 	        		//plan = PlanPagos.find({credito_id: p.credito_id,estatus:0})
-	        
+
 	        		var idTemporal = p._id;
 			        delete p._id;
 
@@ -440,40 +506,32 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 					if (p.pagoSeleccionado == true) 
 					{
-						
 						if (p.descripcion == "Multa") {
 							console.log("entro aqui a la multa")
 							planPago = PlanPagos.findOne({numeroPago:p.numeroPago,credito_id: p.credito_id})
-							//console.log("aca abajo",planPago)
 							var idTemp = p._id;
 	        				//delete planPago._id;
-	        				p.cargo = p.importeRegular;
-					
+							//console.log("el id ",planPago)
+							//console.log("idTemp ",idTemp)
+							
+
 							PlanPagos.update({_id:planPago._id},
 								 { $set : { multa : 1}});
-							// PlanPagos.update({_id:planPago._id},
-							// 	 { $set : { abono:1}});
+
 							p.estatus = 1
 							if (p.descripcion == "Multa" && p.estatus == 1) {
 								p.importeRegular = 0;
 							}
-
 							if (pago.pagar > p.importeRegular) {
 	 							p.importeRegular = 0
 	 							p.estatus = 1
 
 	 						}
-
-							if (p.importeRegular == 0) {
-						
-								p.estatus = 1;
-							}
 							
 							PlanPagos.insert(p);
 							console.log("despues del insert y del update",p,rc.planPagosViejo)
 
 						}else{
-							p.cargo = p.importeRegular;
 							console.log("entro al else")
 
 							if (p.fechaLimite > p.fechaPago) 
@@ -485,7 +543,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 								console.log("1")
 								p.tiempoPago = 1
 							}
-							
+							p.importeRegular= (pago.totalPago - pago.pagar)	
 							if (p.importeRegular == 0) {
 						
 								p.estatus = 1;
@@ -501,31 +559,6 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 	 						}
 
-	 						var cuenta = 0;
-	 						console.log("total pagos",pago.totalPago)
-
-	 						
-
-	 							if (  pago.pagar  >= p.importeRegular ) {
-	 								console.log("entro al if ")
-	 							
- 									p.importeRegular= (pago.totalPago - pago.pagar)	
- 									pago.totalPago = p.importeRegular
-			 					    if ( p.importeRegular <= 0) {
-		 							p.importeRegular = 0
-		 							p.estatus = 1
-
-	 							}
-		 					 }else{
-		 					 	console.log("entro al else mannn")
-		 					 	p.importeRegular =  p.importeRegular -pago.pagar
-		 					 	pago.pagar = 0
-		 					 } 
-
-
-		 								
-		 					 
-
 	 						PlanPagos.update({_id:idTemporal},{$set:p});
 
 
@@ -538,10 +571,17 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			
 		        		
 	        }
-	        
+
 		         
         })	
        
+	};
+
+	
+
+	this.mostrarPagos = function(id){
+		console.log(id)
+		this.credito_id = id;
 	};
 
 	this.download = function(participantes) 
@@ -597,4 +637,11 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		   }
 		});
 	};
+
+
+
+
+
+
+
 };

@@ -19,7 +19,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.subscribe('cliente', () => {
 		return [{
-			id : $stateParams.objeto_id
+			_id : $stateParams.objeto_id
 		}];
 	});
 	
