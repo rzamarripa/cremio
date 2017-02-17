@@ -42,6 +42,9 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	});
 	
 	this.helpers({
+		creditos : () => {
+			return Creditos.findOne({_id : $stateParams.credito_id})
+		},
 		cliente : () => {
 			return Meteor.users.findOne({roles : ["Cliente"]});
 		},
@@ -170,7 +173,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			 return pagos
 		},
 		creditos : () => {
-			var creditos = Creditos.find().fetch();
+			var creditos = Creditos.find($stateParams.credito_id).fetch();
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
 				_.each(creditos, function(credito){
@@ -182,7 +185,6 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			  				  				
 				})
 			}
-			console.log("hola credito",creditos)
 			return creditos;
 		},
 		pagos : () =>{
@@ -247,11 +249,11 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.tieneFoto = function(sexo, foto){
 		if(foto === undefined){
 			if(sexo === "masculino")
-				return "img/badmenprofile.jpeg";
+				return "img/badmenprofile.png";
 			else if(sexo === "femenino"){
-				return "img/badgirlprofile.jpeg";
+				return "img/badgirlprofile.png";
 			}else{
-				return "img/badprofile.jpeg";
+				return "img/badprofile.png";
 			}
 		}else{
 			return foto;

@@ -1,0 +1,38 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Clientes &gt; Buscar
+		</h1>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-lg-12" ng-repeat="credito in cpa.creditosPorAutorizar">
+    <table class="table table-bordered">
+      <thead>
+	      <tr>
+		      <th class="text-center">No.</th>
+		      <th class="text-center">Folio</th>
+		      <th class="text-center">Cliente</th>
+		      <th class="text-center">Capital Solicitado</th>
+		      <th class="text-center">Fecha Solicitud</th>
+		      <th class="text-center">Acciones</th>
+	      </tr>
+      </thead>
+      <tbody>
+	      <tr>
+		      <td class="text-center">{{$index + 1}}</td>
+		      <td class="text-center">{{credito.folio}}</td>
+		      <td>{{credito.cliente.profile.nombreCompleto}}</td>
+		      <td class="text-center">{{credito.capitalSolicitado | currency}}</td>
+		      <td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy hh:mm:sss"}}</td>
+		      <td class="text-center">
+			      <button ng-click="cpa.autorizar" class="btn btn-primary">Autorizar</button>
+			      <button ng-click="cpa.autorizar" class="btn btn-warning">Rechazar</button>
+		      </td>
+	      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -10,7 +10,7 @@ angular.module("creditoMio")
   this.fechaFinal = new Date();
   this.fechaFinal.setHours(23,0,0,0);
   
-  this.cobranza = {};
+  rc.cobranza = {};
   
   /*
   this.subscribe('planPagos', () => {
@@ -45,6 +45,8 @@ angular.module("creditoMio")
 	    var simple = new Date(y, 0, 1 + (w - 1) * 7);
 	    rc.fechaInicial = new Date(simple);
 	    rc.fechaFinal = new Date(moment(simple).add(7,"days"));
+	    
+	    rc.fechaFinal.setHours(23,59,59,0);
 	}
 	
 	this.calcularMes = function(m, y) 
@@ -53,6 +55,7 @@ angular.module("creditoMio")
 			var endDate = moment(startDate).endOf('month');
 	    rc.fechaInicial = startDate.toDate();
 	    rc.fechaFinal = endDate.toDate();
+	    rc.fechaFinal.setHours(23,59,59,0);
 	}
 	
 	this.AsignaFecha = function(op)
@@ -63,7 +66,7 @@ angular.module("creditoMio")
 					this.fechaInicial = new Date();
 				  this.fechaInicial.setHours(0,0,0,0);
 				  this.fechaFinal = new Date();
-				  this.fechaFinal.setHours(23,0,0,0);
+				  this.fechaFinal.setHours(23,59,59,0);
 				  console.log("FI:",rc.fechaInicial);
 					console.log("FF:",rc.fechaFinal);
 			}	
