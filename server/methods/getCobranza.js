@@ -8,12 +8,24 @@ Meteor.methods({
 			
 			var cobranza = {credito_id:"", cliente_id:"",nombreCliente:"",recibos:{},importe:0.00,saldo:0.00}
 			_.each(planPagos, function(planPago){
-			 			
+			 			if(arreglo[planPago.credito_id] == undefined){
+				 			arreglo[planPago.credito_id] = {};
+				 			arreglo[planPago.credito_id].credito = Creditos.findOne({_id: planPago.credito_id});
+				 			arreglo[planPago.credito_id].cliente = Meteor.users.findOne({_id: planPago.cliente_id});
+				 			arreglo[planPago.credito_id].importe = 0.00;
+				 			arreglo[planPago.credito_id].importe = planPago.importeRegular;
+				 			arreglo[planPago.credito_id].planPagos = [];
+				 			arreglo[planPago.credito_id].planPagos.push(planPago);
+			 			}else{
+				 			arreglo[planPago.credito_id].importe += planPago.importeRegular;
+				 			arreglo[planPago.credito_id].planPagos.push(planPago);
+			 			}
 			 			//Buscar si esta el Credito en el arreglo
 			 			//var buscarCredito = arreglo.indexOf(planPago.credito_id);
 			 			//console.log(arreglo.length);
 			 			//if (arreglo.length === undefined)
 			 			//{
+/*
 				 				var credito = Creditos.findOne({_id: planPago.credito_id});
 				 				//console.log("Credito:",credito);
 				 				var cliente = Meteor.users.findOne({_id: planPago.cliente_id});
@@ -43,11 +55,12 @@ Meteor.methods({
 				 					  arreglo[credito._id].importe = planPago.importeRegular;
 				 				else
 				 		 			  arreglo[credito._id].importe = arreglo[credito._id].importe + planPago.importeRegular;
+*/
 				 				
 				 				
 				 				
 				 				
-				 				console.log("Arreglo:", arreglo);
+				 				console.log("Arreglo:", _.toArray(arreglo));
 				 				
 				 				
 			 			//}
@@ -70,7 +83,7 @@ Meteor.methods({
 			
 			//console.log(planPagos);
 			
-			return arreglo;
+			return _.toArray(arreglo);
 	},
 	
 });	
