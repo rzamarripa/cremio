@@ -1,36 +1,61 @@
 angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reactive', function ($scope, $meteor, $reactive)
 {
-	let self = $reactive(this).attach($scope);
-	self.buscarRoot = "";
+	let root = $reactive(this).attach($scope);
+	this.buscar = {};
+	this.buscar.nombre = "";
+	this.buscando = false;
+	this.clientesRoot = [];
+	this.clientes_ids = [];
+	this.hoy = new Date();
 	
-	$(document).ready(function() {
-	  $(".select2").select2();
-	});
+	this.subscribe('creditos', () => {
+		return [{cliente_id : { $in : this.getReactively("clientes_ids")}}];
+	})
 	
-	self.subscribe('buscarRootClientes', () => {
-		console.log(self.getReactively("buscarRoot"));
-		if(self.getReactively("buscarRoot").length > 0){
-			console.log(self.buscarRoot.nombre);
+	this.subscribe('buscarClientes', () => {
+		if(this.getReactively("buscar.nombre").length > 3){
+			console.log(root.buscar.nombre);
+			root.buscando = true;
 			return [{
 		    options : { limit: 20 },
-		    where : {
-					nombreCompleto : self.getReactively('buscarRoot')
-				}
+		    where : { 
+					nombreCompleto : this.getReactively('buscar.nombre')
+				} 		   
 	    }];
 		}
   });
   
-  self.helpers({
+  this.helpers({
 		clientesRoot : () => {
-			return Meteor.users.find({
-		  	"profile.nombreCompleto": { '$regex' : '.*' + self.getReactively('buscarRoot') || '' + '.*', '$options' : 'i' },
+			var clientes = Meteor.users.find({
+		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
 		  	roles : ["Cliente"]
-			}, { sort : {"profile.nombreCompleto" : 1 }});
-		},
+			}, { sort : {"profile.nombreCompleto" : 1 }}).fetch();
+			if(clientes){
+				this.clientes_ids = _.pluck(clientes, "_id");
+			
+				_.each(clientes, function(cliente){
+					cliente.profile.creditos = Creditos.find({cliente_id : cliente._id}).fetch();
+				})
+			}
+						
+			return clientes;
+			
+		}
 	});
-	
-	self.isLoggedIn = function(){
-	  return Meteor.user();
-  }
-   
+
+	this.tieneFoto = function(foto, sexo){
+		
+	  if(foto === undefined){
+		  if(sexo === "masculino")
+			  return "img/badmenprofile.png";
+			else if(sexo === "femenino"){
+				return "img/badgirlprofile.png";
+			}else{
+				return "img/badprofile.png";
+			}
+	  }else{
+		  return foto;
+	  }
+  }    
 }])

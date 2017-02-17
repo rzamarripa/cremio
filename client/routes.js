@@ -418,5 +418,15 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
         }]
       }
     })
+    .state('root.creditosPorAutorizar', {
+      url: '/creditosPorAutorizar',
+      templateUrl: 'client/creditos/creditosPorAutorizar/creditosPorAutorizar.html',
+      controller: 'CreditosPorAutorizarCtrl as cpa',
+      resolve: {
+        "currentUser": ["$meteor", function($meteor){
+          return $meteor.requireUser();
+        }]
+      }
+    })
 
 }]);

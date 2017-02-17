@@ -1,0 +1,44 @@
+<div class="input-group"> 
+	<input type="text" class="form-control" ng-model="ro.buscar.nombre">
+	<span class="input-group-btn">
+		<button class="btn btn-default" type="button" style="height: 34px;">
+			<i class="fa fa-search"></i>
+		</button> 
+	</span>
+</div>
+<div class="ajax-dropdown" ng-show="ro.buscando" style="display: block; width: 100% !important;">
+	<div class="ajax-notifications custom-scroll">
+		
+		<div class="alert alert-transparent">
+			<div class="tab-pane fade active in" id="a2">
+
+				<div class="alert alert-info fade in">
+					<button class="close" data-dismiss="alert">
+						×
+					</button>
+					<i class="fa-fw fa fa-info"></i>
+					<strong>{{ro.clientesRoot.length}} encontrados </strong>!
+				</div>
+
+				<div class="user well" title="{{cliente.profile.nombreCompleto}}" ng-repeat="cliente in ro.clientesRoot" style="width: 100%">
+					<div class="row">
+						<div class="col-sm-1">
+							<img class="online" src="{{ro.tieneFoto(cliente.profile.fotografia, cliente.profile.sexo)}}">
+						</div>
+						<div class="col-sm-8">
+							<a href="javascript:void(0);" ui-sref="root.clienteDetalle({objeto_id : cliente._id})" ng-click="ro.buscando = false;"> {{cliente.profile.nombreCompleto}}</a>
+							<div class="btn-group btn-xs btn-group-justified">
+								<a href="javascript:void(0);" class="btn btn-default" ng-repeat="credito in cliente.profile.creditos"  ui-sref="root.verPlanPagos({objeto_id : cliente._id, credito_id : credito._id})">{{credito.capitalSolicitado | currency}}</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<span> Última actualización: {{ro.hoy | date:"dd-MM-yyyy HH:mm a"}}
+		<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="ro.buscando = false; ro.buscar.nombre = ''">
+			<i class="fa fa-times"></i>
+		</button> 
+	</span>
+</div>
