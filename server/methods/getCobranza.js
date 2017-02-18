@@ -4,6 +4,8 @@ Meteor.methods({
 			var arreglo = {};
 			var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial,$lt: fechaFinal}, estatus: 0}).fetch();
 			
+			
+			
 			_.each(planPagos, function(planPago){
 			 			if(arreglo[planPago.credito_id] == undefined){
 				 			
