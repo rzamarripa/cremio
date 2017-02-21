@@ -40,13 +40,49 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.subscribe('pagos', () => {
 		return [{estatus:true  }];
 	});
-	
+	this.subscribe('ocupaciones', () => {
+		return [{estatus:true  }];
+	});
+	this.subscribe('nacionalidades', () => {
+		return [{estatus:true  }];
+	});
+	this.subscribe('estadoCivil', () => {
+		return [{estatus:true  }];
+	});
+	this.subscribe('estados', () => {
+		return [{estatus:true  }];
+	});
+	this.subscribe('paises', () => {
+		return [{estatus:true  }];
+	});
+	this.subscribe('empresas', () => {
+		return [{estatus:true  }];
+	});
 	this.helpers({
 		creditos : () => {
 			return Creditos.findOne({_id : $stateParams.credito_id})
 		},
 		cliente : () => {
-			return Meteor.users.findOne({roles : ["Cliente"]});
+
+				var clientes = Meteor.users.findOne({roles : ["Cliente"]});
+		  	if (clientes) {
+		  		_.each(clientes, function(cliente){
+		  			console.log("cliente",cliente)
+		  			cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
+		  			cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
+		  			cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
+		  			cliente.estado = Estados.findOne(cliente.estado_id)
+		  			cliente.pais = Paises.findOne(cliente.pais_id)
+		  			cliente.empresa = Empresas.findOne(cliente.empresa_id)
+
+
+		  	});
+	  	}
+
+
+
+
+			return clientes;
 		},
 		planPagos : () => {
 			return PlanPagos.find();
@@ -63,15 +99,15 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			 pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
 			 _.each(pagos, function(p){
 
-			 	
 
 
 			 	if (p.estatus == 0 && p.multa == 0 ) {
-			 		console.log("epaaaa")
+			 		//console.log("epaaaa")
 			 	_.each(rc.creditos, function(c){
 			 	//console.log(p)
 			 	var fechaLimite = moment(p.fechaLimite);
 			 	var dias = fechaActual.diff(fechaLimite, "days");
+			 	console
 			 	
 			 	if (fechaActual > p.fechaLimite) {
 

@@ -5,8 +5,10 @@ Meteor.methods({
 	  }else if(credito.requiereVerificacion == false){
 		  credito.estatus = 1;
 	  }
+	  var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
+  	credito.folio = sucursal.folio + 1;
+  	Sucursales.update({_id : sucursal._id}, { $set : { folio : credito.folio}});
 	  var credito_id = Creditos.insert(credito);
-	  console.log(planPagos.length);
 	  _.each(planPagos, function(pago){
 		  delete pago.$$hashKey;
 	    pago.multa = 0;

@@ -9,19 +9,21 @@
 <br>
 <div class="well">
 	<div class="row">
-		<div class="col-sm-8">
-			<a class="btn btn-primary" ng-click="cob.AsignaFecha(0);" style="width: 150px"><i class="fa fa-table"></i> Vencido Hoy</a>	
-			<a class="btn btn-primary" ng-click="cob.AsignaFecha(1);" style="width: 150px"><i class="fa fa-table"></i> Día</a>
-			<a class="btn btn-primary" ng-click="cob.AsignaFecha(2);" style="width: 150px"><i class="fa fa-table"></i> Semana</a>
-			<a class="btn btn-primary" ng-click="cob.AsignaFecha(3);" style="width: 150px"><i class="fa fa-table"></i> Mes</a>
-			<a class="btn btn-primary" ng-click="cob.AsignaFecha(4);" style="width: 150px"><i class="fa fa-table"></i> Siguiente Mes</a>
+		<div class="col-sm-9">
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(0);" style="width: 130px"><i class="fa fa-table"></i> Vencido Hoy</a>	
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(1);" style="width: 130px"><i class="fa fa-table"></i> Día</a>
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(2);" style="width: 130px"><i class="fa fa-table"></i> Semana</a>
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(3);" style="width: 130px"><i class="fa fa-table"></i> Mes</a>
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(4);" style="width: 130px"><i class="fa fa-table"></i> Siguiente Mes</a>
 		</div>	
-		<div class="col-sm-2" align="right">
-				<label for="fechaFinal">Fecha:</label>
-		</div>	
-		<div class="col-sm-2">
-				<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="year" max-view="year" min-view="date" ng-model="cob.fechaInicial"/>
-			</div>
+		<div class="col-sm-3">
+			<form class="form-inline">
+				<div class="form-group">
+					<label for="fechaFinal">Fecha:</label>
+					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="cob.fechaInicial"/>
+				</div>
+			</form>
+		</div>
 	</div>	
 </div>
 <div class="row">
@@ -29,23 +31,27 @@
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th width="5%"><div class="text-center">Folio crédito</div></th>
-					<th width="5%"><div class="text-center">Recibo</div></th>
+					<th width="5%">No.</th>
+					<th width="15%"><div class="text-center">Folio crédito</div></th>
+					<th width="25%"><div class="text-center">Recibo</div></th>
 					<!--<th width="10%"><div class="text-center">Vencimiento</div></th>-->
-					<th width="15%"><div class="text-center">cliente_id</div></th>
+					<th ><div class="text-center">Cliente</div></th>
 					<th width="10%"><div class="text-center">Importe</div></th>
+					<th width="10%"><div class="text-center">Multas</div></th>
 					<th width="10%"><div class="text-center">Saldo</div></th>
 				</tr>
 			</thead>
 			<tbody>
 		    <tr ng-repeat="objeto in cob.cobranza">
-			    <td>{{objeto.credito.folio}}</td>
+			    <td>{{ $index + 1 }}</td>
+			    <td class="text-center">{{objeto.credito.folio}}</td>
 			    <td>
-				    <span ng-repeat="numeroPago in objeto.planPagos">| {{numeroPago}} | </span>
+				    <span ng-class="planPago.classPago" title="{{planPago.fechaLimite | date:'dd-MM-yyyy'}}" ng-repeat="planPago in objeto.planPagos">| {{planPago.numeroPago}} </span>
 				  </td>
 			    <!--<td>{{objeto.fechaLimite.getUTCDate() +"/"+ (objeto.fechaLimite.getUTCMonth()+1) +"/"+ objeto.fechaLimite.getUTCFullYear()}} </td>-->
 			    <td>{{objeto.cliente.profile.nombreCompleto}}</td>
-			    <td>{{objeto.importe}}</td>
+			    <td>{{objeto.cliente.profile.nombreCompleto}}</td>
+			    <td class="text-right">{{objeto.importe | currency}}</td>
 			    <td>0</td>
 		    </tr>
 			</tbody>
