@@ -14,7 +14,9 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr  ng-repeat="credito in hp.historial">
+				<tr  ng-repeat-start="credito in hp.historial" 
+				ng-class="(credito.descripcion == 'Multa') ? 'danger' : 'info'">
+				<!-- btn btn-{{edocivil.nuevo == true ? 'primary' : 'danger'}} -->
 
 				
 					<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{hp.planPagos.length}}</td>	
@@ -25,16 +27,17 @@
 					<td >{{credito.saldo | currency}}</td>
 					<td >0</td>
 					<td >0</td>
-				
-				<!-- 	<td class="text-center">
-						<span >
-							<button class="btn btn-warning btn-xs" ng-click="hp.editar(pago)"><i class="fa fa-pencil"></i></button>
-							<button class="btn btn-danger  btn-xs" ng-click="hp.cambiarEstatus(pago, 2, 'eliminar')"><i class="fa fa-trash"></i></button>
-						</span>
-						<span>
-							<button class="btn btn-success btn-xs" ng-click="hp.cambiarEstatus(pago, 0, 'activar')"><i class="fa fa-check"></i></button>
-						</span>
-					</td> -->
+		
+				</tr>
+				<tr ng-repeat-end  ng-repeat="pago in credito.pagos" >
+					<td  class="text-center">{{pago.numeroPago || pago.numeroPagoMulta}} - {{hp.planPagos.length}}</td>	
+					<td class="text-center">{{pago.movimiento}}</td>	
+					<td class="text-center">{{pago.fechaPago | date:"dd-MM-yyyy"}}</td>
+					<td class="text-center">{{pago.cargo | currency}}</td>
+					<td class="text-right">{{pago.totalPago | currency}}</td>
+					<td >{{pago.saldo | currency}}</td>
+					<td >0</td>
+					<td >0</td >
 				</tr>
 			</tbody>
 		</table>	

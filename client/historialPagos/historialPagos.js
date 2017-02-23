@@ -15,6 +15,7 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	this.pago.totalPago = 0;
 	this.creditos = [];
 	this.creditos_id = []
+
 	this.total = 0;
 
 	// this.informacionContacto = tr; 
@@ -35,7 +36,7 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		return [{ cliente_id : $stateParams.objeto_id, estatus : 1 }];
 	});
 	this.subscribe('pagos', () => {
-		return [{estatus:true  }];
+		return [{estatus:1  }];
 	});
 
 	
@@ -56,118 +57,118 @@ planPagosViejo : () => {
 			rc.credito_id = $stateParams.credito_id;
 			var fechaActual = moment();
 			 pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
-			 _.each(pagos, function(p){
+// 			 _.each(pagos, function(p){
 
 
 			 	
 
 
-			 	if (p.estatus == 0 && p.multa == 0 ) {
-			 		console.log("epaaaa")
-			 	_.each(rc.creditos, function(c){
-			 	//console.log(p)
-			 	var fechaLimite = moment(p.fechaLimite);
-			 	var dias = fechaActual.diff(fechaLimite, "days");
+// 			 	if (p.estatus == 0 && p.multa == 0 ) {
+// 			 		console.log("epaaaa")
+// 			 	_.each(rc.creditos, function(c){
+// 			 	//console.log(p)
+// 			 	var fechaLimite = moment(p.fechaLimite);
+// 			 	var dias = fechaActual.diff(fechaLimite, "days");
 			 	
-			 	if (fechaActual > p.fechaLimite) {
+// 			 	if (fechaActual > p.fechaLimite) {
 
 
-			 		//console.log("dif ", fechaLimite, fechaActual)
-			 		var multaCosto = 0;
-			 		console.log("los dias",dias)
-			 		var multas = (dias/100) * c.capitalSolicitado 
-			 		console.log(c.capitalSolicitado)
-			 		console.log("las multas",multas)
-			 		pagos.push({credito_id:p.credito_id,fechaLimite:p.fechaLimite,numeroPago:p.numeroPago, importeRegular:multas,
-			 		descripcion:"Multa",estatus:0,multa:multaCosto,movimiento:"Multa"})
-			 	}	
+// 			 		//console.log("dif ", fechaLimite, fechaActual)
+// 			 		var multaCosto = 0;
+// 			 		console.log("los dias",dias)
+// 			 		var multas = (dias/100) * c.capitalSolicitado 
+// 			 		console.log(c.capitalSolicitado)
+// 			 		console.log("las multas",multas)
+// 			 		pagos.push({planPago_id:p._id,credito_id:p.credito_id,fechaLimite:p.fechaLimite,numeroPago:p.numeroPago, importeRegular:multas,
+// 			 		descripcion:"Multa",estatus:0,multa:multaCosto,movimiento:"Multa"})
+// 			 	}	
 			 		
-				});
-			   }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			  if (p.estatus == 1  && p.tiempoPago == 1 && p.multa == 0  ) {
-			  	_.each(rc.creditos, function(c){
-			  	var multaCosto = 0;
-			    var fechaLimite = moment(p.fechaLimite);
-			  	console.log("entro al segundo if",p)
-			  	var fechaPago = moment(p.fechaPago);
-			  	var diasMulta = fechaPago.diff(fechaLimite, "days");
-			  	var multasVencidas = (diasMulta/100) * c.capitalSolicitado 
-			  	console.log(diasMulta)
-			  	if (p.descripcion != "Multa") {
-			  	pagos.push({credito_id:p.credito_id,fechaLimite:p.fechaLimite,numeroPago:p.numeroPago, importeRegular:multasVencidas,
-			 		descripcion:"Multa",multa: 0,movimiento:"Multa"})
-			  }
+// 				});
+// 			   }
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 			  if (p.estatus == 1  && p.tiempoPago == 1 && p.multa == 0  ) {
+// 			  	_.each(rc.creditos, function(c){
+// 			  	var multaCosto = 0;
+// 			    var fechaLimite = moment(p.fechaLimite);
+// 			  	console.log("entro al segundo if",p)
+// 			  	var fechaPago = moment(p.fechaPago);
+// 			  	var diasMulta = fechaPago.diff(fechaLimite, "days");
+// 			  	var multasVencidas = (diasMulta/100) * c.capitalSolicitado 
+// 			  	console.log(diasMulta)
+// 			  	if (p.descripcion != "Multa") {
+// 			  	pagos.push({planPago_id:p._id,credito_id:p.credito_id,fechaLimite:p.fechaLimite,numeroPago:p.numeroPago, importeRegular:multasVencidas,
+// 			 		descripcion:"Multa",multa: 0,movimiento:"Multa"})
+// 			  }
 
 
 
 
-			  });
-			}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			  if (p.estatus == 1 && p.multa == 0 && p.descripcion == "Multa" ) {
-			  	console.log("entro al if  3")
+// 			  });
+// 			}
+// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 			  if (p.estatus == 1 && p.multa == 0 && p.descripcion == "Multa" ) {
+// 			  	console.log("entro al if  3")
 			 		
-			  	planPago = PlanPagos.findOne({numeroPago:p.numeroPago,credito_id: p.credito_id})
-				console.log("planPagos",planPago)
+// 			  	planPago = PlanPagos.findOne({numeroPago:p.numeroPago,credito_id: p.credito_id})
+// 				console.log("planPagos",planPago)
 
-				var fechaLimite = moment(p.fechaLimite);
-				var hoy = new Date();
-				ultimoPago = PlanPagos.findOne({numeroPago : p.numeroPago},{ sort : { fechaPago : -1 }});
-				console.log(ultimoPago)
-			 	var fechaPago = moment(p.fechaPago);
+// 				var fechaLimite = moment(p.fechaLimite);
+// 				var hoy = new Date();
+// 				ultimoPago = PlanPagos.findOne({numeroPago : p.numeroPago},{ sort : { fechaPago : -1 }});
+// 				console.log(ultimoPago)
+// 			 	var fechaPago = moment(p.fechaPago);
 			 	
 			 	
-			 	if (fechaActual > p.fechaLimite && planPago.multa == 1 && planPago.estatus == 0 && p.recargo != 1 ) {
-			 		_.each(rc.creditos, function(c){
+// 			 	if (fechaActual > p.fechaLimite && planPago.multa == 1 && planPago.estatus == 0 && p.recargo != 1 ) {
+// 			 		_.each(rc.creditos, function(c){
 
-			 		console.log("entro al if para la multa ")
+// 			 		console.log("entro al if para la multa ")
 			 
 			 	
-			 	var dias = fechaActual.diff(ultimoPago.fechaPago, "days");
-			 	console.log("oie papu estos son los dias",dias)
+// 			 	var dias = fechaActual.diff(ultimoPago.fechaPago, "days");
+// 			 	console.log("oie papu estos son los dias",dias)
 
-			  	var multaCosto = 0;
+// 			  	var multaCosto = 0;
 			  	
-			  	var diasMulta = fechaActual.diff(ultimoPago.fechaPago, "days");
-			  	var multasVencidas = (diasMulta/100) * c.capitalSolicitado 
-			  	console.log("tercer if",diasMulta)
-			  	pagos.push({credito_id:p.credito_id,fechaLimite:hoy,numeroPago:p.numeroPago, importeRegular:multasVencidas,
-			 		descripcion:"Multa",multa: 0,recargo:1,movimiento:"Multa"})
+// 			  	var diasMulta = fechaActual.diff(ultimoPago.fechaPago, "days");
+// 			  	var multasVencidas = (diasMulta/100) * c.capitalSolicitado 
+// 			  	console.log("tercer if",diasMulta)
+// 			  	pagos.push({planPago_id:p._id,credito_id:p.credito_id,fechaLimite:hoy,numeroPago:p.numeroPago, importeRegular:multasVencidas,
+// 			 		descripcion:"Multa",multa: 0,recargo:1,movimiento:"Multa"})
 			 
-			 	});
-			   }
+// 			 	});
+// 			   }
 
 			  
-			   // if (true) {}
-			}
-			 // console.log("hola",pagos)
-		});
+// 			   // if (true) {}
+// 			}
+// 			 // console.log("hola",pagos)
+// 		});
 
 		
 
-//			pagos.sort(function(a,b) {return (a.numeroPago > b.numeroPago) ? 1 : ((b.numeroPago > a.numeroPago) ? -1 : 0);} );
-			pagos.sort(fieldSorter(['numeroPago', 'descripcion']));
-			//console.log("helpers",pagos)
+// //			pagos.sort(function(a,b) {return (a.numeroPago > b.numeroPago) ? 1 : ((b.numeroPago > a.numeroPago) ? -1 : 0);} );
+// 			pagos.sort(fieldSorter(['numeroPago', 'descripcion']));
+// 			//console.log("helpers",pagos)
 			
-			function fieldSorter(fields) {
-			    return function (a, b) {
-			        return fields
-			            .map(function (o) {
-			                var dir = 1;
-			                if (o[0] === '-') {
-			                   dir = -1;
-			                   o=o.substring(1);
-			                }
-			                if (a[o] > b[o]) return dir;
-			                if (a[o] < b[o]) return -(dir);
-			                return 0;
-			            })
-			            .reduce(function firstNonZeroValue (p,n) {
-			                return p ? p : n;
-			            }, 0);
-			    };
-			}
+// 			function fieldSorter(fields) {
+// 			    return function (a, b) {
+// 			        return fields
+// 			            .map(function (o) {
+// 			                var dir = 1;
+// 			                if (o[0] === '-') {
+// 			                   dir = -1;
+// 			                   o=o.substring(1);
+// 			                }
+// 			                if (a[o] > b[o]) return dir;
+// 			                if (a[o] < b[o]) return -(dir);
+// 			                return 0;
+// 			            })
+// 			            .reduce(function firstNonZeroValue (p,n) {
+// 			                return p ? p : n;
+// 			            }, 0);
+// 			    };
+// 			}
 
 			 return pagos
 		},
@@ -192,59 +193,84 @@ planPagosViejo : () => {
 
 		historial : () => {
 			arreglo = [];
-			var saldoPago = 0; 
-			var pagoSuma = 0;
-			var SumaPago = 0;
+			var saldoPago = 0;
+			var saldoActual = 0; 
+			
+			
+			
 
 			_.each(rc.getReactively("creditos"), function(credito){
 				_.each(rc.getReactively("planPagosViejo"), function(planPago, index){
 					var saldo = 0;
-					console.log(saldo)
+					//console.log(saldo)
 				
 			  				
 			  					planPago.capitalSolicitado =  saldo;
 
 			  				if(index == 0){
-			  					console.log("primero", index)
+			  					//console.log("primero", index)
 			  					saldo = credito.capitalSolicitado ;
 			  				}else{
 			  					console.log("más", index);
 			  					saldo = saldoPago; 
-			  					//console.log("saldoPago", saldoPago);
+			  					console.log("saldoPago", saldoPago);
 			  				}
-			  					
 
 					arreglo.push({saldo:saldo , numeroPago : planPago.numeroPago,fechaSolicito : credito.fechaSolicito,
 			  				fecha:planPago.fechaPago,pago:planPago.importeRegular, cargo:planPago.cargo,movimiento:"Recibo",
-			  				planPago_id:planPago._id
+			  				planPago_id:planPago._id,descripcion:planPago.descripcion,importe:planPago.importeRegular,pagos:planPago.pagos
 			  				 })
+											
 					
+						var pagoSuma = 0;
+			  				_.each(planPago.pagos, function(pago){
+			  						
+			  						var SumaPago = 0;
 
-			
-						
-						// console.log(saldoPago,"ppo")
-			  				_.each(rc.pagos, function(pago){
-			  						pagoSuma += pago.pagar;
 			  						console.log("pagosuma",pagoSuma)
-			  					if (planPago.pago_id == pago._id) {
 
-			  						SumaPago += pago.pagar;
+			  						if (planPago.descripcion == "Multa" && planPago._id == planPago.planPago_id) {
+			  							p.cargo += p.cargo.totalPago 
+			  							saldo = saldoPago + planPago.importe
+			  							console.log("el saldo ya con la multa",saldo)
+			  						}
+
+			  						if (pago.planPago_id == planPago._id) {
+			  						pagoSuma += pago.totalPago;
+
+			  						SumaPago += pago.totalPago;
+
 			  						saldoPago = (saldo - pagoSuma);
-			  						// pago.cargo = (planPago.cargo - planPago.pago)
-			  						planPago.saldoPay = pago.paºgar
-
-
-			  						arreglo.push({fecha:pago.fechaPago,pago:pago,numeroPago : planPago.numeroPago,cargo:pago.cargo,
-			  							movimiento:"Abono",pago:SumaPago,saldo:saldoPago,planPago_id:planPago._id,pago_id:pago._id
-			  						})
 			  					}
+			  					if (saldoPago <= 0) {
+			  						saldoPago = 0
+			  					}
+			  									  						
+			  			
 			  					 		_.each(arreglo, function(array){
 										if (array.fecha == undefined) {
 									  	    array.saldo = 0
-									  	    }
+									  	  
+									  	    };
+
 								  	    if (array.saldo <= 0) {
-								  	    array.saldo = 0
-								  	    }
+									  	    array.saldo = 0
+									  	    };
+									    if (array.descripcion == "Multa") {
+									  	    array.movimiento = "Multa"
+									  	      array.pago = array.importe
+									  	      array.pagar = array.importe
+									  	      //saldoPago = saldoPago + array.importe
+									  	    
+									  	    }
+
+									  	     // if (array.planPago_id == planPago._id && array.descripcion == planPago.descripcion) {
+
+									  	     // }
+									  	if (array.cargo == undefined) {
+									  	    array.cargo = 0;
+									  	    }
+
 							  					
 									});
 
@@ -252,10 +278,12 @@ planPagosViejo : () => {
 			  				
 			  				
 						});
+				credito.saldoActual = saldoPago
+				//Creditos.update({_id:credito_id},{$set:pago});
 				});
 
 			
-
+					_.union([arreglo]).sort;
 
 			console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
@@ -504,6 +532,7 @@ planPagosViejo : () => {
 					p.usuarioCobro_id = Meteor.userId()
 					p.diaPago = diaSemana;
 
+
 					if (p.pagoSeleccionado == true) 
 					{
 						if (p.descripcion == "Multa") {
@@ -522,7 +551,7 @@ planPagosViejo : () => {
 							if (p.descripcion == "Multa" && p.estatus == 1) {
 								p.importeRegular = 0;
 							}
-							if (pago.pagar > p.importeRegular) {
+							if (pago.pagar >= p.importeRegular) {
 	 							p.importeRegular = 0
 	 							p.estatus = 1
 
