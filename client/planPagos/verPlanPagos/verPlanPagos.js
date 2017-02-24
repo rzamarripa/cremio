@@ -469,7 +469,8 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 				var idTemporal = p._id;
 				//Se Agrega el plan de pago al pago
-				var npago={planPago_id:p._id,totalPago:p.importeRegular,estatus:1,fechaPago:pago.fechaPago, numeroPago : p.numeroPago,};
+				var npago={planPago_id:p._id,totalPago:p.importeRegular,estatus:1,fechaPago:pago.fechaPago, numeroPago : p.numeroPago,
+				};
 				pago.planPagos.push(npago);
 
 

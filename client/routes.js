@@ -409,7 +409,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	    }
     })
     .state('root.historialPagos', {
-      url: '/historialPagos/:objeto_id',
+      url: '/historialPagos/:objeto_id/:credito_id',
       templateUrl: 'client/historialPagos/historialPagos.ng.html',
       controller: 'HistorialPagosCtrl as hp',
       resolve: {
