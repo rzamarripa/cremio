@@ -8,6 +8,11 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.fechaActual = new Date();
 	console.log($stateParams)
 	window.rc = rc;
+
+	this.credito = {};
+	this.pago = {};
+	this.creditos = [];
+	this.creditos_id = []
 	
   this.subscribe("planPagos", ()=>{
 		return [{ credito_id : $stateParams.credito_id }]
@@ -20,6 +25,11 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.subscribe('cliente', () => {
 		return [{ id : $stateParams.cliente_id }];
 	});
+	this.subscribe('creditos', () => {
+		return [{
+			cliente_id : $stateParams.objeto_id, estatus : 1
+		}];
+	});
 	
 	this.helpers({
 		cliente : () => {
@@ -30,7 +40,41 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		},
 		tiposCredito : () => {
 			return TiposCredito.find();
-		}
+		},
+		planPagosViejo : () => {
+			//var diferentes = c_ids.diff(p_ids)
+
+		//	var fechaPago = moment(pago.fecha).add(-1, "days");
+			var fechaActual = moment();
+			 
+			 pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
+			 _.each(pagos, function(p){
+			 	if (fechaActual > p.fechaLimite) {
+
+			 		var fechaLimite = moment(p.fechaLimite);
+
+
+
+			 		var dias = fechaLimite.diff(fechaActual, "days");
+			 		console.log("los dias",dias)
+			 		var multas = (dias/100) * rc.creditos.capitalSolicitado
+			 		console.log("las multas",multas)
+
+			 	}
+			
+		})
+			
+
+			 return pagos
+		},
+		creditos : () => {
+			var creditos = Creditos.find().fetch();
+			if(creditos != undefined){
+				rc.creditos_id = _.pluck(creditos, "cliente_id");
+			}
+			
+			return creditos;
+		},
 	});
 	  
   this.guardar = function(convenio,form)
@@ -214,5 +258,93 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 				}
 			}			
 		}
+	};
+
+
+
+	this.seleccionarPago = function(pago)
+	{ 
+		//console.log("entra pagada",pago)
+ 		pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
+		_.each(pagos, function(p){
+			p.pagoSeleccionado =  false
+			//console.log("prmer each",p)
+		})
+
+total = 0;
+		_.each(rc.planPagosViejo, function(p){
+			//console.log("segundo each",p)
+			if (pago.numeroPago >= p.numeroPago && p.estatus != 1)
+			{ 				
+				p.pagoSeleccionado = true
+				total += p.importeRegular
+				p.estatus = 0;	
+				p.totalPago = total;
+				rc.pago.totalPago = total;
+				console.log(pago.pagoSeleccionado)
+				console.log(total,p.totalPago)
+				console.log("entro", pago.pagoSeleccionado, pago.numeroPago, p.pagoSeleccionado, p.numeroPago)
+			}else if(pago.numeroPago <= p.numeroPago && p.estatus != 1) {
+				p.pagoSeleccionado = false;
+				total -= p.importeRegular;
+				p.estatus = 0;
+
+			}
+
+	
+	});
+		//console.log("HELPER",rc.planPagosViejo)
 	}
+
+	this.guardarPago = function(pago,credito)
+	{
+		
+		console.log(pago)
+		pago.fechaPago = new Date()
+		pago.usuario_id = Meteor.userId()
+		pago.sucursalPago_id = Meteor.user().profile.sucursal_id
+		pago.estatus = true;
+		var pago_id =  Pagos.insert(pago);
+		this.pago = {}
+
+        _.each(rc.planPagosViejo, function(p){
+	        if(p.estatus != 1){
+		        delete p.$$hashKey;
+        	_.each(p, function(nota){
+						delete nota.$$hashKey;
+						});	
+	        	if (p.pagoSeleccionado == true) {
+	        		var idTemp = p._id;
+			        delete p._id;
+			        var diaSemana = moment(new Date()).weekday();
+							p.pago_id = pago_id
+							p.cambio =  pago.pagar - pago.totalPago
+							p.fechaPago = new Date()
+							p.sucursalPago_id = Meteor.user().profile.sucursal_id
+							p.usuarioCobro_id = Meteor.userId()
+							p.diaPago = diaSemana;
+							p.estatus = 1;
+							if (p.fechaLimite > new Date()) 
+							{
+								pago.tiempoPago = 0
+							}else{
+								pago.tiempoPago = 1
+							}	
+							console.log(p)
+		        		PlanPagos.update({_id:idTemp},{$set:p});
+		        }
+	        
+	        }
+
+        })		
+	};
+
+
+
+
+
+
+
+
+
 };

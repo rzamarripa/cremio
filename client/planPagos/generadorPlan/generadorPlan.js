@@ -18,7 +18,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	window.rc = rc;
 
 	
-  	this.subscribe("planPagos", ()=>{
+	this.subscribe("planPagos", ()=>{
 		return [{ cliente_id : $stateParams.objeto_id }]
 	});
 	
@@ -53,7 +53,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		},
 		pagos : () => {
 			return Pagos.find();
-		}
+		},
+		
 	});
 	
 	this.nuevoPago = function()
@@ -292,7 +293,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 total = 0;
 		_.each(rc.planPagosViejo, function(p){
 			//console.log("segundo each",p)
-			if (pago.numeroPago >= p.numeroPago)
+			if (pago.numeroPago >= p.numeroPago && p.estatus != 1)
 			{ 				
 				p.pagoSeleccionado = true
 				total += p.importeRegular
@@ -302,7 +303,7 @@ total = 0;
 				console.log(pago.pagoSeleccionado)
 				console.log(total,p.totalPago)
 				console.log("entro", pago.pagoSeleccionado, pago.numeroPago, p.pagoSeleccionado, p.numeroPago)
-			}else{
+			}else if(pago.numeroPago <= p.numeroPago && p.estatus != 1) {
 				p.pagoSeleccionado = false;
 				total -= p.importeRegular;
 				p.estatus = 0;
@@ -326,48 +327,35 @@ total = 0;
 		this.pago = {}
 
         _.each(rc.planPagosViejo, function(p){
-        	delete p.$$hashKey;
+	        if(p.estatus != 1){
+		        delete p.$$hashKey;
         	_.each(p, function(nota){
-			delete nota.$$hashKey;
-			});	
-        	if (p.pagoSeleccionado == true) {
-        		var idTemp = p._id;
-		        delete p._id;
-		        var diaSemana = moment(new Date()).weekday();
-			    p.pago_id = pago_id
-				p.cambio =  pago.pagar - pago.totalPago
-				p.fechaPago = new Date()
-				p.sucursalPago_id = Meteor.user().profile.sucursal_id
-				p.usuarioCobro_id = Meteor.userId()
-				p.diaPago = diaSemana
-				if (p.fechaLimite > new Date()) 
-				{
-					pago.tiempoPago = 0
-				}else{
-					pago.tiempoPago = 1
-				}	
-				console.log(p)
-	        		PlanPagos.update({_id:idTemp},{$set:p});
-	        }
+						delete nota.$$hashKey;
+						});	
+	        	if (p.pagoSeleccionado == true) {
+	        		var idTemp = p._id;
+			        delete p._id;
+			        var diaSemana = moment(new Date()).weekday();
+							p.pago_id = pago_id
+							p.cambio =  pago.pagar - pago.totalPago
+							p.fechaPago = new Date()
+							p.sucursalPago_id = Meteor.user().profile.sucursal_id
+							p.usuarioCobro_id = Meteor.userId()
+							p.diaPago = diaSemana;
+							p.estatus = 1;
+							if (p.fechaLimite > new Date()) 
+							{
+								pago.tiempoPago = 0
+							}else{
+								pago.tiempoPago = 1
+							}	
+							console.log(p)
+		        		PlanPagos.update({_id:idTemp},{$set:p});
+		        }
 	        
-        })
+	        }
 
-		// this.credito = PlanPagos.findOne({_id:id});
-		// var idTemp = credito._id;
-		// delete credito._id;	
-	
-
-		
-		
-
-
-
-		
+        })		
 	};
-
-
-
-
-
 
 };
