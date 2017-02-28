@@ -265,7 +265,7 @@
 					<tbody>
 						<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fecha < ge.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in ge.planPagos">
 							<td class="text-center">{{$index + 1}}</td>	
-							<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+							<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy HH:mm:ss"}}</td>
 							<td class="text-center">{{pago.numeroPago}} - {{ge.planPagos.length}}</td>
 							<td class="text-right">{{pago.importeRegular | currency}}</td>
 						</tr>

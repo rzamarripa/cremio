@@ -200,7 +200,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			var importeParcial = this.credito.importeRegular / this.credito.totalPagos;
 			var pago = {
 				semana 			    		: mfecha.isoWeek(),
-				fechaLimite 			  : new Date(mfecha.toDate().getTime()),
+				fechaLimite 			  : new Date(mfecha.toDate().getTime()).setHours(23,59,59),
 				diaSemana						: mfecha.weekday(),
 				tipoPlan 		    		: 'Mensual',
 				numeroPago 	        : i + 1,
