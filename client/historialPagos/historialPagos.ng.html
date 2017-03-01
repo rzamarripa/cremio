@@ -1,5 +1,127 @@
 <div class="row"><br/>
 	<div class="col-sm-12">
+
+		<div class="well well-sm">
+			<div class="row">
+				<div class="col-sm-12 col-md-12 col-lg-12">
+					<div class="well well-light well-sm no-margin no-padding">
+						<div class="row">
+							<div class="col-sm-12">
+								<div id="myCarousel" class="carousel profile-carousel">
+									<div class="air air-bottom-right padding-10">
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.clienteDetalle({objeto_id : hp.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.editarCliente({objeto_id : hp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
+	 										<i class="fa fa-pencil"></i> Modificar
+	 									</a> 
+									</div>
+									<div class="air air-top-left padding-10">
+										<h4 class="txt-color-white font-md"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{hp.fechaActual | date:'dd-MM-yyyy'}}</h4>
+									</div>
+									<ol class="carousel-indicators">
+									</ol>
+									<div class="carousel-inner">
+										<div class="item active">
+											<img src="img/demo/s1.jpg" alt="" style="width:100%">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="row">
+									<div class="col-sm-2 profile-pic" style="text-align:left;width:initial;">
+										<img style="max-width:200px;" src="{{hp.tieneFoto(hp.cliente.profile.sexo, hp.cliente.profile.fotografia)}}" >
+									<!-- 	<div class="padding-10">
+											<h4 class="font-md"><strong>0</strong>
+											<br>
+											<small>Seguidores</small></h4>
+											<br>
+											<h4 class="font-md"><strong>0</strong>
+											<br>
+											<small>Amigos</small></h4>
+										</div> -->
+										<!-- <input id="certificacionPatrimonial" class="btn btn-primary" type="button" ng-click="hp.download()" value="Certificación Patrimonial" /> -->
+									</div>
+									<div class="col-sm-3">
+										<h1>{{hp.cliente.profile.nombre}} <span class="semi-bold">{{hp.cliente.profile.apellidoPaterno}} {{hp.cliente.profile.apellidoMaterno}}</span>
+										
+										<small> (Cliente)</small></h1>
+										<ul class="list-unstyled">
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-key fa-lg"></i>&nbsp;&nbsp;
+													<span class="txt-color-darken">
+														<strong>{{hp.cliente.username}}</strong>
+													</span>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{hp.cliente.profile.telefono}}</span>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;<a href="mailto:{{hp.cliente.profile.correo}}">{{hp.cliente.profile.correo}}</a>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-birthday-cake fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{hp.cliente.profile.fechaNacimiento | date:"dd-MM-yyyy"}}</span>
+												</p>
+											</li>
+										</ul>
+										<br>
+										<p class="font-sm">
+											<i>Un poco acerca de mi...</i>
+										</p>
+										<p class="font-xs">
+											{{hp.cliente.profile.observacionesGenerales}}
+										</p>
+									
+										
+
+										<br>
+									</div>
+									<div class="col-sm-3" ng-repeat="credito in hp.creditos">
+										<br/>
+										<h4><strong>Datos del credito No.(folio)</strong></h4>
+										<br/>
+										<dl class="dl-horizontal" >
+											<dt>Capital Solicitado:</dt>
+											<dd>{{credito.capitalSolicitado}}</dd>
+											<dt>Adeudo Inicial:</dt>
+											<dd>{{credito.adeudoInicial}}</dd>
+											<dt>Fecha Entrega:</dt>
+											<dd>{{credito.fechaSolicito | date:'dd-MM-yyyy'}}</dd>
+										
+										</dl>
+									
+									</div>
+									<div class="col-sm-3"  ng-repeat="credito in hp.creditos">
+										<br/>
+										<h4><strong></strong></h4>
+										<br/>
+										<br/>
+										<dl class="dl-horizontal" >
+											<dt>Numero de pagos:</dt>
+											<dd>{{hp.planPagos.length}}</dd>
+											<dt>Saldo Actual:</dt>
+											<dd>{{credito.saldoActual}}</dd>
+											<dt>Saldo Multas:</dt>
+											<dd>Pendiente</dd>
+										</dl>
+										
+									</div>
+							
+								</div>
+							</div>
+
+						</div>
+					</div>
+			
+				</div>
+
+
 		<table class="table table-striped table-bordered table-condensed font-xs">
 			<thead class="thead">
 				<tr>
@@ -14,7 +136,9 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr  ng-repeat="credito in hp.historial">
+				<tr  ng-repeat-start="credito in hp.historial" 
+				ng-class="(credito.descripcion == 'Multa') ? 'danger' : 'info'">
+				<!-- btn btn-{{edocivil.nuevo == true ? 'primary' : 'danger'}} -->
 
 				
 					<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{hp.planPagos.length}}</td>	
@@ -25,16 +149,17 @@
 					<td >{{credito.saldo | currency}}</td>
 					<td >0</td>
 					<td >0</td>
-				
-				<!-- 	<td class="text-center">
-						<span >
-							<button class="btn btn-warning btn-xs" ng-click="hp.editar(pago)"><i class="fa fa-pencil"></i></button>
-							<button class="btn btn-danger  btn-xs" ng-click="hp.cambiarEstatus(pago, 2, 'eliminar')"><i class="fa fa-trash"></i></button>
-						</span>
-						<span>
-							<button class="btn btn-success btn-xs" ng-click="hp.cambiarEstatus(pago, 0, 'activar')"><i class="fa fa-check"></i></button>
-						</span>
-					</td> -->
+		
+				</tr>
+				<tr ng-repeat-end  ng-repeat="pago in credito.pagos" ng-class="(credito.movimiento == 'Multa') ? 'danger' : 'success'"> >
+					<td  class="text-center">{{pago.numeroPago || pago.numeroPagoMulta}} - {{hp.planPagos.length}}</td>	
+					<td class="text-center">{{pago.movimiento}}</td>	
+					<td class="text-center">{{pago.fechaPago | date:"dd-MM-yyyy"}}</td>
+					<td class="text-center">{{pago.cargo | currency}}</td>
+					<td class="text-right">{{pago.totalPago | currency}}</td>
+					<td >{{pago.saldo | currency}}</td>
+					<td >0</td>
+					<td >0</td >
 				</tr>
 			</tbody>
 		</table>	
