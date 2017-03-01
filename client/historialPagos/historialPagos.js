@@ -11,12 +11,14 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	this.credito_id = "";
 
 	this.credito = {};
+	this.notaCredito = {};
 	this.pago = {};
 	this.pago.totalPago = 0;
 	this.creditos = [];
 	this.creditos_id = []
 
 	this.total = 0;
+	this.notaCre = true;
 
 	// this.informacionContacto = tr; 
 	
