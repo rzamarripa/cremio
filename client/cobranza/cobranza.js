@@ -11,11 +11,28 @@ angular.module("creditoMio")
   this.fechaFinal.setHours(23,0,0,0);
   
   var FI, FF;
-  
+  rc.cliente = {};
+  rc.credito = {};
   rc.cobranza = {};
-  	
+  
+  this.selected_credito = 0;
+  this.ban = false;
+  
+  this.subscribe("tiposCredito", ()=>{
+		return [{ estatus : true }]
+	});
+	
+	this.helpers({
+		tiposCredito : () => {
+			return TiposCredito.find();
+		},
+	});
+  
+  /*
 	this.getCobranza = function()
 	{
+			//
+			console.log(this.selected_credito);
 			Meteor.call('getCobranza', rc.getReactively("fechaInicial"), rc.getReactively("fechaFinal"), function(error, result) {
 						
 						if (result)
@@ -25,6 +42,7 @@ angular.module("creditoMio")
 						}
 			});	
 	}
+	*/
 	
 	this.calcularSemana = function(w, y) 
 	{
@@ -49,28 +67,28 @@ angular.module("creditoMio")
 	
 	this.AsignaFecha = function(op)
 	{	
-			
-			
+			this.selected_credito = 0;
 			if (op == 0) //Vencimiento Hoy
-			{
-
-				  this.fechaInicial.setHours(0,0,0,0);
-				  this.fechaFinal = new Date(this.fechaInicial.getTime());
-				  this.fechaFinal.setHours(23,59,59,0);
-				  FI = this.fechaInicial;
-				  FF = this.fechaFinal;
-				  
-				  console.log("FI:", FI);
-					console.log("FF:", FF);
-			}	
-			else if (op == 1) //Día
 			{
 					FI = new Date();
 				  FI.setHours(0,0,0,0);
 				  FF = new Date();
 				  FF.setHours(23,59,59,0);
-				  console.log("FI:",FI);
-					console.log("FF:",FF);
+				  //console.log("FI:",FI);
+					//console.log("FF:",FF);
+				  
+			}	
+			else if (op == 1) //Día
+			{
+					this.fechaInicial.setHours(0,0,0,0);
+				  this.fechaFinal = new Date(this.fechaInicial.getTime());
+				  this.fechaFinal.setHours(23,59,59,0);
+				  FI = this.fechaInicial;
+				  FF = this.fechaFinal;
+				  
+				  //console.log("FI:", FI);
+					//console.log("FF:", FF);
+					
 			}	
 			else if (op == 2) //Semana
 			{					
@@ -83,8 +101,8 @@ angular.module("creditoMio")
 					var semana = moment().isoWeek();
 					var anio = FI.getFullYear();
 					this.calcularSemana(semana, anio);
-					console.log("FI:", FI);
-					console.log("FF:", FF);
+					//console.log("FI:", FI);
+					//console.log("FF:", FF);
 				
 			}
 			else if (op == 3) //Mes
@@ -96,8 +114,8 @@ angular.module("creditoMio")
 					var mes = FI.getMonth();
 					console.log(mes);
 					this.calcularMes(mes,anio);
-					console.log("FI:", FI);
-					console.log("FF:", FF);
+					//console.log("FI:", FI);
+					//console.log("FF:", FF);
 				
 			}
 			else if (op == 4) //Siguiente Mes
@@ -114,12 +132,12 @@ angular.module("creditoMio")
 							mes = mes + 1;	
 					
 					this.calcularMes(mes,anio);
-					console.log("FI:", FI);
-					console.log("FF:", FF);
+					//console.log("FI:", FI);
+					//console.log("FF:", FF);
 			}
 			
 			Meteor.call('getCobranza', FI, FF, op, function(error, result) {
-						console.log(result);						
+						//console.log(result);						
 						if (result)
 						{
 								rc.cobranza = result;
@@ -128,4 +146,23 @@ angular.module("creditoMio")
 				
 			});	
 	}
+	
+  this.selCredito=function(objeto){
+	  	
+	  	rc.cliente = objeto.cliente;
+	  	rc.credito = objeto.credito;	  
+	  	console.log(objeto.credito);	
+	  	var tc = TiposCredito.findOne(rc.credito.tipoCredito_id);
+	  	rc.credito.tipoCredito = tc.nombre;
+	  	//var avales = [];
+	  	this.ban = !this.ban;
+	  	
+
+	  	
+      this.selected_credito=objeto.credito.folio;
+  }
+  this.isSelected=function(objeto){
+      return this.selected_credito===objeto;
+  }	
+	
 };
