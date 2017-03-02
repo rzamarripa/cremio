@@ -19,7 +19,7 @@
 		<div class="col-sm-3">
 			<form class="form-inline">
 				<div class="form-group">
-					<label for="fechaFinal">Fecha:</label>
+					<label for="fecha">Fecha:</label>
 					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="cob.fechaInicial"/>
 				</div>
 			</form>
@@ -37,6 +37,7 @@
 					<!--<th width="10%"><div class="text-center">Vencimiento</div></th>-->
 					<th ><div class="text-center">Cliente</div></th>
 					<th width="10%"><div class="text-center">Importe</div></th>
+					<th width="10%"><div class="text-center">Multas</div></th>
 					<th width="10%"><div class="text-center">Saldo</div></th>
 				</tr>
 			</thead>
@@ -48,6 +49,7 @@
 				    <span ng-class="planPago.classPago" title="{{planPago.fechaLimite | date:'dd-MM-yyyy'}}" ng-repeat="planPago in objeto.planPagos">| {{planPago.numeroPago}} </span>
 				  </td>
 			    <!--<td>{{objeto.fechaLimite.getUTCDate() +"/"+ (objeto.fechaLimite.getUTCMonth()+1) +"/"+ objeto.fechaLimite.getUTCFullYear()}} </td>-->
+			    <td>{{objeto.cliente.profile.nombreCompleto}}</td>
 			    <td>{{objeto.cliente.profile.nombreCompleto}}</td>
 			    <td class="text-right">{{objeto.importe | currency}}</td>
 			    <td>0</td>
