@@ -1,0 +1,311 @@
+<div class="row">
+	<div class="col-sm-12">
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingOne">
+			      <h4 class="panel-title">
+			        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#href1" aria-expanded="false" aria-controls="href1">
+			          Información del Cliente
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="href1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+			      <div class="panel-body">    
+						    <div class="row">
+						    	<div class="col-sm-4" valida> 					    
+							    	<label>Nombre (s)</label>
+							    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cob.cliente.profile.nombre" disabled="">
+						    	</div>
+						    	<div class="col-sm-4" valida>					    
+							    	<label>Apellido Paterno</label>
+							    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cob.cliente.profile.apellidoPaterno" disabled="">
+						    	</div>
+						    	<div class="col-sm-4">					    
+							    	<label>Apellido Materno</label>
+							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cob.cliente.profile.apellidoMaterno" disabled="">
+						    	</div>	    				    	    
+						    </div>
+			      </div>
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingTwo">
+			      <h4 class="panel-title">
+			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href2" aria-expanded="false" aria-controls="href2">
+			          Información de contacto
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="href2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+			      <div class="panel-body">
+			        	<div class="row">
+						    	<div class="col-sm-3" valida> 					    
+							    	<label>Teléfono </label>
+							    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cob.cliente.profile.telefono"  disabled="">
+						    	</div>
+						    	<div class="col-sm-3" valida>					    
+							    	<label>Celular </label>
+							    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="cob.cliente.profile.celular" disabled="">
+						    	</div>
+						    	<div class="col-sm-3">					    
+							    	<label>Otro Teléfono</label>
+							    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="cob.cliente.profile.otroTelefono" disabled="" >
+						    	</div>	  
+						    	<div class="col-sm-3">					    
+							    	<label>Correo</label>
+							    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="cob.cliente.profile.correo" disabled="">
+						    	</div>  				    	    
+						    </div>
+			      </div>
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingThree">
+			      <h4 class="panel-title">
+			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href3" aria-expanded="false" aria-controls="href3">
+			          Particulares
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="href3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+			      <div class="panel-body">
+			        	<div class="row">
+									<div class="col-sm-3" valida>
+								    <label for="sexo">Sexo </label>
+								    <select name="sexo" ng-model="cob.cliente.profile.sexo" data-placeholder="Seleccione" class="form-control" disabled>
+										    <option value=""></option>
+										    <option value="masculino">Masculino</option>
+										    <option value="feminino">Feminino</option>
+										</select>
+						    	</div>
+						    	<div class="col-sm-3">
+										<label for="estadocivil">Estado Civil </label>
+										<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="cob.cliente.profile.estadoCivil_id" disabled>
+												<option  value="{{estadoCivil._id}}" ng-repeat="estadoCivil in cob.estadosCiviles">
+													{{estadoCivil.nombre}}
+												</option>
+											</select>
+									</div>
+										
+						    	<div class="col-sm-3">					    
+							    	<label>Fecha Nacimiento </label>
+							    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="cob.cliente.profile.fechaNacimiento" disabled="">
+						    	</div>	
+									
+									<div class="col-sm-3">
+										<label for="nacionalidad">Nacionalidad</label>
+										<select name="nacionalidad" class="form-control select2" placeholder="Seleccione" ng-model="cob.cliente.profile.nacionalidad_id" disabled>
+												<option  value="{{nacionalidad._id}}" ng-repeat="nacionalidad in cob.nacionalidades">
+													{{nacionalidad.nombre}}
+												</option>
+											</select>
+									</div>			
+						    </div>
+						    <div class="row">
+							    <div class="col-sm-3">
+										<label for="ocupacion">Ocupación </label>
+										<select name="ocupacion" class="form-control select2" placeholder="Seleccione" ng-model="cob.cliente.profile.ocupacion_id" disabled>
+												<option  value="{{ocupacion._id}}" ng-repeat="ocupacion in cob.ocupaciones">
+													{{ocupacion.nombre}}
+												</option>
+											</select>
+									</div>		
+						    	<div class="col-sm-3">					    
+							    	<label>CURP</label>
+							    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="cob.cliente.profile.curp" disabled>
+						    	</div>
+						      <div class="col-sm-3">					    
+							    	<label>Lugar de Nacimiento</label>
+							    	<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="cob.cliente.profile.lugarNacimiento" disabled>
+						    	</div>	
+						    </div>		
+			      </div>
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingFour">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href4" aria-expanded="false" aria-controls="href4">
+				          Dirección
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+									    <div class="col-sm-6" valida>					    
+									    	<label>Calle </label>
+									    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="cob.cliente.profile.calle" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" valida>					    
+									    	<label>Numero </label>
+									    	<input name="numero" type="number" class="form-control" placeholder="Número" ng-model="cob.cliente.profile.numero" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" valida>					    
+									    	<label>CP </label>
+									    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="cob.cliente.profile.codigoPostal" disabled="">
+								    	</div>
+								    </div>
+								    <div class="row">
+									    <div class="col-sm-3" valida>
+													<label >Pais </label>
+													<select name="dirPais" class="form-control select2" placeholder="Seleccione" ng-model="cob.cliente.profile.pais_id" disabled>
+															<option  value="{{pais._id}}" ng-repeat="pais in cob.paises">{{pais.nombre}}</option>
+													</select>
+											</div>
+										  <div class="col-sm-3" valida>
+													<label for="seccion_id">Estado </label>
+													<select name="dirEstado" class="form-control select2" placeholder="Seleccione" ng-model="cob.cliente.profile.estado_id" disabled>
+														<option ng-repeat="estado in cob.estados" value="{{estado._id}}">{{estado.nombre}}</option>
+													</select>
+											</div>	
+											<div class="col-sm-3" valida>
+													<label >Municipio </label>
+													<select name="dirMunicipio" class="form-control select2" placeholder="Seleccione" ng-model="cob.cliente.profile.municipio_id" disabled>
+														<option  value="{{municipio._id}}" ng-repeat="municipio in cob.municipios">{{municipio.nombre}}</option>
+													</select>
+											</div>
+											<div class="col-sm-3" valida>
+													<label for="seccion_id">Ciudad </label>
+													<select name="dirCiudad" class="form-control select2" placeholder="Seleccione" ng-model="cob.cliente.profile.ciudad_id" disabled>
+														<option ng-repeat="ciudad in cob.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
+													</select>
+											</div>	
+								    </div>
+								    <div class="row">
+									    <div class="col-sm-3" valida>
+													<label for="seccion_id">Colonia </label>
+													<select name="dirColonia" class="form-control select2" placeholder="Seleccione" ng-model="cob.cliente.profile.colonia_id" disabled>
+														<option ng-repeat="colonia in cob.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
+													</select>
+											</div>
+											<div class="col-sm-3">					    
+									    	<label>Tiempo Residencia</label>
+									    	<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="cob.cliente.profile.tiempoResdencia" disabled>
+								    	</div>
+								    	<div class="col-sm-2">					    
+									    	<label>Renta</label>
+									    	<input name="rentaMes" type="checkbox" class="form-control" ng-model="cob.cliente.profile.renta" disabled>
+								    	</div>
+								    	<div class="col-sm-3" ng-if="cob.cliente.profile.renta">					    
+									    	<label>Renta Mes </label>
+									    	<input name="tiempo" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="cob.cliente.profile.rentaMes" disabled>
+								    	</div>
+											<div class="col-sm-12">					    
+									    	<label>Señas Particulares</label>
+									    	<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="cob.cliente.profile.senasParticulares" disabled>
+								    	</div>
+								    </div>	
+				      </div>
+				    </div>
+				</div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingFive">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href5" aria-expanded="false" aria-controls="href5">
+				          Ingresos Mensuales
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+							    	<div class="col-sm-3" valida> 					    
+								    	<label>Ingresos Personales</label>
+								    	<input name="ingresosPersonales" type="text" class="form-control" placeholder="Ingresos Personales" ng-model="cob.cliente.profile.ingresosPersonales" disabled>
+							    	</div>
+							    	<div class="col-sm-3" valida>					    
+								    	<label>Ingresos Conyuge</label>
+								    	<input name="ingresosConyuge" type="text" class="form-control" placeholder="Ingresos Conyuge" ng-model="cob.cliente.profile.ingresosConyuge" disabled>
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Otros Ingresos</label>
+								    	<input name="otrosIngresos" type="text" class="form-control" placeholder="Otros Ingresos" ng-model="cob.cliente.profile.otrosIngresos" disabled>
+							    	</div>	  
+							    	<div class="col-sm-3">					    
+								    	<label>Total Ingresos</label>
+								    	<input name="totalIngresos" type="text" class="form-control" placeholder="Total Ingresos" ng-model="cob.cliente.profile.totalIngresos" disabled>
+							    	</div>  				    	    
+							    </div>
+							    <div class="row">
+							    	<div class="col-sm-3" valida> 					    
+								    	<label>Gastos Fijos</label>
+								    	<input name="gastosFijos" type="text" class="form-control" placeholder="Gastos Fijos" ng-model="cob.cliente.profile.gastosFijos" disabled>
+							    	</div>
+							    	<div class="col-sm-3" valida>					    
+								    	<label>Gastos Eventuales</label>
+								    	<input name="gastosEventuales" type="text" class="form-control" placeholder="Gastos Eventuales" ng-model="cob.cliente.profile.gastosEventuales" disabled>
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Total Gastos</label>
+								    	<input name="totalGastos" type="text" class="form-control" placeholder="Total Gastos" ng-model="cob.cliente.profile.totalGastos" disabled>
+							    	</div>	  
+							    	<div class="col-sm-3">					    
+								    	<label>Resultado Neto</label>
+								    	<input name="resultadoNeto" type="text" class="form-control" placeholder="Resultado Neto" ng-model="cob.cliente.profile.resultadoNeto" disabled>
+							    	</div>  				    	    
+							    </div>
+				      </div>
+				    </div>
+				</div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingSix">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href6" aria-expanded="false" aria-controls="href6">
+				          Referencias Personales
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th width="5%">Número</th>
+													<th width="20%">Nombre</th>
+													<th width="5%">Parentezco</th>
+													<th width="30%">Dirección</th>
+													<th width="10%">Telefono</th>
+													<th width="10%">Tiempo</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="p in cob.referenciasPersonales">
+													<td>{{p.num}}</td>
+													<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}} </td>
+													<td>{{p.parentezco}}</td>
+													<td>{{p.direccion}}</td>
+													<td>{{p.telefono}}</td>
+													<td>{{p.tiempo}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+				      </div>
+				    </div>
+				</div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingSeven">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href7" aria-expanded="false" aria-controls="href7">
+				          Empresa
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+								    <div class="col-sm-3" valida>
+												<label for="seccion_id">Empresa </label>
+												<select name="empresa" class="form-control select2" placeholder="Seleccione" ng-model="cob.cliente.profile.empresa_id" required>
+													<option ng-repeat="empresa in cob.empresas" value="{{empresa._id}}">{{empresa.nombre}}</option>
+												</select>
+										</div>
+							    </div>
+				      </div>
+				    </div>
+				</div>
+			</div>
+	</div>
+</div>

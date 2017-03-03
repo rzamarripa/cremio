@@ -15,7 +15,8 @@ Meteor.methods({
 
 			
 			var hoy = new Date();
-					
+			var fechaActual = moment();
+			
 			_.each(planPagos, function(planPago){
 				var classPago = "";
 					
@@ -25,9 +26,12 @@ Meteor.methods({
 						classPago = "text-danger";
 						
 						//Calcular Multa
-						var fechaActual = moment();
+						
 						var fechaLimite = moment(planPago.fechaLimite);
 						var dias = fechaActual.diff(fechaLimite, "days");
+						
+									
+						
 						
 						
 					}else{
@@ -63,7 +67,7 @@ Meteor.methods({
 			 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago});
 		 			}
 	
-			 		console.log("Arreglo:", _.toArray(arreglo));			
+			 		//console.log("Arreglo:", _.toArray(arreglo));			
 			});
 			
 			return _.toArray(arreglo);
