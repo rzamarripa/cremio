@@ -1,5 +1,12 @@
 Meteor.methods({
 	generarPlanPagos: function(credito,cliente){
+
+		function clonar( original )  {		    
+		    var clone = {} ;
+		    for (var key in original )
+		        clone[ key ] = original[ key ] ;
+		    return clone ;
+		}
 	
 
 		var mfecha = moment(credito.primerAbono);
@@ -24,7 +31,6 @@ Meteor.methods({
 		var plan = [];
 		
 		for (var i = 0; i < totalPagos; i++) {
-			
 			var pago = {
 				semana				: mfecha.isoWeek(),
 				fechaLimite			: new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
@@ -47,7 +53,7 @@ Meteor.methods({
 				anio				: mfecha.get('year'),
 				cargo				: importeParcial,
 			}
-			plan.push(angular.copy(pago));
+			plan.push(clonar(pago));
 			if(credito.periodoPago == "Semanal"){
 				mfecha = mfecha.add(7, 'days');
 			}else if(credito.periodoPago == "Mensual"){
@@ -61,5 +67,6 @@ Meteor.methods({
 				mfecha = siguienteMes;
 			}	
 		}
+		return plan;
 	}
 });
