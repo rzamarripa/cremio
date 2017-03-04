@@ -274,12 +274,12 @@
 															</tr>
 														</thead>
 														<tbody>
-															<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < ge.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in credito.planPagos">								
-																<td class="text-center">{{$index + 1}}</td>	
-																<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-																<td class="text-center">{{pago.numeroPago}} - {{credito.planPagos.length}}</td>
-																<td class="text-right">{{pago.importeRegular | currency}}</td>
-																<td >{{pago.descripcion}}</td>
+															<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cd.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in credito.planPagos">								
+																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
+																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{credito.planPagos.length}}</td>
+																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular | currency}}</td>
+																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.descripcion}}</td>
 															</tr>
 														</tbody>
 													</table>	

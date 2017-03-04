@@ -11,12 +11,14 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	this.credito_id = "";
 
 	this.credito = {};
+	this.notaCredito = {};
 	this.pago = {};
 	this.pago.totalPago = 0;
 	this.creditos = [];
 	this.creditos_id = []
 
 	this.total = 0;
+	this.notaCre = true;
 
 	// this.informacionContacto = tr; 
 	
@@ -357,7 +359,7 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	    $scope.$apply();
 	  });
 	}
-	
+	/*	
 	this.calcularRecargos = function(){
 		if(this.credito.tipoCredito_id != undefined && this.credito.importeRegular > 0){
 			var tipoCredito = TiposCredito.findOne(rc.credito.tipoCredito_id);
@@ -372,6 +374,7 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			}			
 		}
 	};
+	*/
 
 
 

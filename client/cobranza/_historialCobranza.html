@@ -1,1 +1,28 @@
-trabajando
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="5%"><div class="text-center">Nombre</div></th>
+					<th><div class="text-center">Fecha</div></th>
+					<th><div class="text-center">Hora</div></th>
+					<th><div class="text-center">Título</div></th>
+					<th><div class="text-center">Elaboro</div></th>
+					<th><div class="text-center">Tipo</div></th>
+				
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="objeto in cob.notas">
+		    	<td>{{$index + 1}}</td>
+			    <td>{{objeto.fecha  | date:"dd-MM-yyyy"}}</td>
+			    <td>{{objeto.hora}}</td>
+			    <td>{{objeto.titulo}}</td>
+			    <td>{{objeto.usuario}}</td>
+			    <td>Pendiente</td>
+			
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>

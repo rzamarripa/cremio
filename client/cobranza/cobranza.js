@@ -16,7 +16,12 @@ angular.module("creditoMio")
   rc.cliente = {};
   rc.credito = {};
   rc.cobranza = {};
+
   rc.avales = [];
+
+  rc.cobranza_id = "";
+  rc.notaCobranza = {};
+
   
   this.selected_credito = 0;
   this.ban = false;
@@ -24,6 +29,7 @@ angular.module("creditoMio")
   this.subscribe("tiposCredito", ()=>{
 		return [{}]
 	});
+
 	this.subscribe("estadoCivil", ()=>{
 		return [{}]
 	});
@@ -52,6 +58,27 @@ angular.module("creditoMio")
 		return [{}]
 	});
 		  
+
+  this.subscribe('notas',()=>{
+		return [{estatus:true}]
+	});
+	
+	this.helpers({
+		tiposCredito : () => {
+			return TiposCredito.find();
+		},
+		cobranzas : () => {
+			return rc.cobranza;
+		},
+		notas : () => {
+			return Notas.find().fetch();
+		},
+		usuario : () => {
+			return Meteor.users.findOne();
+		},
+	});
+
+  
   /*
 	this.getCobranza = function()
 	{
@@ -67,6 +94,7 @@ angular.module("creditoMio")
 			});	
 	}
 	*/
+
 	
 	this.calcularSemana = function(w, y) 
 	{
@@ -233,6 +261,7 @@ angular.module("creditoMio")
   
   this.isSelected=function(objeto){
       return this.selected_credito===objeto;
+
   };
   
   this.buscarNombre=function(){
@@ -245,4 +274,34 @@ angular.module("creditoMio")
 			});
   };	
 
+
+  }	
+
+	var fecha = moment()
+		this.guardarNotaCobranza=function(nota){
+				console.log(nota);
+				
+				nota.estatus = true;
+				nota.fecha = new Date()
+				nota.hora = moment(nota.fecha).format("hh:mm:ss a")
+				rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+				Notas.insert(nota);
+				this.notaCobranza = {}
+				$('#myModal').modal('hide');
+				toastr.success('Guardado correctamente.');
+		}
+		this.mostrarNotaCobranza=function(objeto){
+			console.log(objeto)
+			rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
+			rc.notaCobranza.folioCredito = objeto.credito.folio 
+			rc.notaCobranza.recibo= objeto.planPagos[0].numeroPago
+			
+			 rc.cobranza_id = objeto.credito._id
+			 console.log("rc.cobranza_id",rc.cobranza_id)
+			 $("#myModal").modal();
+	
+	
+		}
+
+	
 };
