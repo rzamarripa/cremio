@@ -48,7 +48,42 @@
 				    </div>
 				    <div id="hrefAvales" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 				      <div class="panel-body">
-				        	
+				        	<div class="row">
+										<div class="col-sm-12">
+											<table class="table table-bordered">
+												<thead>
+													<tr>
+														<th width="5%">Número</th>
+														<th width="15%">Nombre</th>
+														<th width="5%">Estado Civil</th>
+														<th width="5%">Ocupación</th>
+														<th width="15%">Dirección</th>
+														<th width="10%">Empresa</th>
+														<th width="5%">Puesto</th>
+														<th width="5%">Antiguedad</th>
+														<th width="15%">Dirección Empresa</th>
+														<th width="10%">Parentezco</th>
+														<th width="10%">Tiempo Conocerlo</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat="aval in cob.avales">
+														<td>{{aval.num}}</td>
+														<td>{{aval.nombre}}</td>
+														<td>{{aval.estadoCivil}}</td>
+														<td>{{aval.ocupacion}}</td>
+														<td>{{aval.direccion}}</td>
+														<td>{{aval.empresa}}</td>
+														<td>{{aval.puesto}}</td>
+														<td>{{aval.antiguedad}}</td>
+														<td>{{aval.direccionEmpresa}}</td>
+														<td>{{aval.parentezco}}</td>
+														<td>{{aval.tiempoConocerlo}}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
 				      </div>
 				    </div>
 				  </div>
@@ -62,7 +97,34 @@
 				    </div>
 				    <div id="hrefGarantias" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 				      <div class="panel-body">
-				        	
+				        	<div class="row">
+										<div class="col-sm-12">
+											<table class="table table-bordered">
+												<thead>
+													<tr>
+														<th width="5%">Número</th>
+														<th width="15%">Tipo</th>
+														<th width="15%">Marca</th>
+														<th width="15%">Modelo</th>
+														<th width="15%">Serie</th>
+														<th width="15%">Color</th>
+														<th width="15%">Estado Actual</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat="garantia in cob.garantias">
+														<td>{{garantia.num}}</td>
+														<td>{{garantia.tipo}}</td>
+														<td>{{garantia.marca}}</td>
+														<td>{{garantia.modelo}}</td>
+														<td>{{garantia.serie}}</td>
+														<td>{{garantia.color}}</td>
+														<td>{{garantia.estadoActual}}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
 				      </div>
 				    </div>
 				  </div>

@@ -9,25 +9,49 @@ angular.module("creditoMio")
   this.fechaInicial.setHours(0,0,0,0);
   this.fechaFinal = new Date();
   this.fechaFinal.setHours(23,0,0,0);
+  rc.buscar = {};
+  rc.buscar.nombre = "";
   
   var FI, FF;
   rc.cliente = {};
   rc.credito = {};
   rc.cobranza = {};
+  rc.avales = [];
   
   this.selected_credito = 0;
   this.ban = false;
   
   this.subscribe("tiposCredito", ()=>{
-		return [{ estatus : true }]
+		return [{}]
 	});
-	
-	this.helpers({
-		tiposCredito : () => {
-			return TiposCredito.find();
-		},
+	this.subscribe("estadoCivil", ()=>{
+		return [{}]
 	});
-  
+	this.subscribe("nacionalidades", ()=>{
+		return [{}]
+	});
+	this.subscribe("ocupaciones", ()=>{
+		return [{}]
+	});
+	this.subscribe("paises", ()=>{
+		return [{}]
+	});
+	this.subscribe("estados", ()=>{
+		return [{}]
+	});
+	this.subscribe("municipios", ()=>{
+		return [{}]
+	});
+	this.subscribe("ciudades", ()=>{
+		return [{}]
+	});
+	this.subscribe("colonias", ()=>{
+		return [{}]
+	});
+	this.subscribe("empresas", ()=>{
+		return [{}]
+	});
+		  
   /*
 	this.getCobranza = function()
 	{
@@ -68,6 +92,8 @@ angular.module("creditoMio")
 	this.AsignaFecha = function(op)
 	{	
 			this.selected_credito = 0;
+			this.ban = false;
+			
 			if (op == 0) //Vencimiento Hoy
 			{
 					FI = new Date();
@@ -147,22 +173,76 @@ angular.module("creditoMio")
 			});	
 	}
 	
-  this.selCredito=function(objeto){
-	  	
-	  	rc.cliente = objeto.cliente;
-	  	rc.credito = objeto.credito;	  
-	  	console.log(objeto.credito);	
-	  	var tc = TiposCredito.findOne(rc.credito.tipoCredito_id);
-	  	rc.credito.tipoCredito = tc.nombre;
-	  	//var avales = [];
+  this.selCredito=function(objeto)
+  {
 	  	this.ban = !this.ban;
 	  	
+	  	//Información del Cliente
+	  	rc.cliente = objeto.cliente;
+	  	var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
+	  	if (ec != undefined) rc.cliente.profile.estadoCivil = ec.nombre; 
+	  	var nac = Nacionalidades.findOne(rc.cliente.profile.nacionalidad_id);
+	  	if (nac != undefined) rc.cliente.profile.nacionalidad = nac.nombre;
+	  	var ocu = Ocupaciones.findOne(rc.cliente.profile.ocupacion_id);
+	  	if (ocu != undefined) rc.cliente.profile.ocupacion = ocu.nombre;
+	  	
+	  	var pais = Paises.findOne(rc.cliente.profile.pais_id);
+	  	if (pais != undefined) rc.cliente.profile.pais = pais.nombre; 
+	  	var edo = Estados.findOne(rc.cliente.profile.estado_id);
+	  	if (edo != undefined) rc.cliente.profile.estado = edo.nombre;
+	  	var mun = Municipios.findOne(rc.cliente.profile.municipio_id);
+	  	if (mun != undefined) rc.cliente.profile.municipio = mun.nombre;
+	  	var ciu = Ciudades.findOne(rc.cliente.profile.ciudad_id);
+	  	if (ciu != undefined) rc.cliente.profile.ciudad = ciu.nombre;
+	  	var col = Colonias.findOne(rc.cliente.profile.colonia_id);
+	  	if (col != undefined) rc.cliente.profile.colonia = col.nombre;
+	  	
+	  	var emp = Empresas.findOne(rc.cliente.profile.empresa_id);
+	  	if (emp != undefined) rc.cliente.profile.empresa = emp;
+	  	
+	  	pais = Paises.findOne(rc.cliente.profile.empresa.pais_id);
+	  	if (pais != undefined) rc.cliente.profile.empresa.pais = pais.nombre; 
+	  	edo = Estados.findOne(rc.cliente.profile.empresa.estado_id);
+	  	if (edo != undefined) rc.cliente.profile.empresa.estado = edo.nombre;
+	  	mun = Municipios.findOne(rc.cliente.profile.empresa.municipio_id);
+	  	if (mun != undefined) rc.cliente.profile.empresa.municipio = mun.nombre;
+	  	ciu = Ciudades.findOne(rc.cliente.profile.empresa.ciudad_id);
+	  	if (ciu != undefined) rc.cliente.profile.empresa.ciudad = ciu.nombre;
+	  	
+	  	
+	  	
+	  	//Información del Crédito
+	  	rc.credito = objeto.credito;	  
+	  	console.log(rc.credito);
+	  	var tc = TiposCredito.findOne(rc.credito.tipoCredito_id);
+	  	if (tc != undefined) rc.credito.tipoCredito = tc.nombre;
+	  	
+	  	rc.avales = [];
+	  	_.each(rc.credito.avales_ids,function(aval_id){
+						Meteor.call('getPersona', aval_id, function(error, result){						
+									if (result)
+									{
+											rc.avales.push(result);
+									}
+						});	
+	  	});
 
 	  	
       this.selected_credito=objeto.credito.folio;
-  }
+  };
+  
   this.isSelected=function(objeto){
       return this.selected_credito===objeto;
-  }	
-	
+  };
+  
+  this.buscarNombre=function(){
+      Meteor.call('getcobranzaNombre', rc.buscar.nombre, function(error, result) {
+						if (result)
+						{
+								
+							
+						}
+			});
+  };	
+
 };
