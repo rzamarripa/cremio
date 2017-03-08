@@ -9,15 +9,17 @@ Meteor.methods({
 		}
 	
 
-		var mfecha = moment(credito.primerAbono);
+		var mfecha = moment(credito.fechaPrimerAbono);
 		var inicio = mfecha.toDate();
-
+		console.log(credito);
 		var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
+		//console.log(tipoCredito);
+
 		var totalPagos = 0;
 
 		if(credito.periodoPago == "Semanal")
 			totalPagos = credito.duracionMeses * 4;
-		else if(this.credito.periodoPago == "Mensual")
+		else if(credito.periodoPago == "Mensual")
 			totalPagos = credito.duracionMeses;
 		
 		
@@ -52,6 +54,7 @@ Meteor.methods({
 				pagos 				: [],
 				descripcion			: "Abono",
 				ultimaModificacion	: new Date(),
+				credito_id 			: credito._id,
 				mes					: mfecha.get('month') + 1,
 				anio				: mfecha.get('year'),
 				cargo				: importeParcial,
@@ -75,8 +78,9 @@ Meteor.methods({
 	},
 	actualizarMultas: function(){
 		var ahora = new Date();
-		ahora = new Date (ahora.getFullYear(),ahora.getMont(),ahora.getDate());
+		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 		var mfecha = moment(ahora);
+		console.log(ahora);
 		var pagos = PlanPagos.find({$and:[
 											{
 												$or:[
@@ -91,6 +95,7 @@ Meteor.methods({
 												ultimaModificacion : { $lt : ahora }
 											}
 										]}).fetch();
+		console.log(pagos);
 		_.each(pagos, function(pago){
 			try{
 				var dias = mfecha.diff(pago.ultimaModificacion, "days");
@@ -105,17 +110,23 @@ Meteor.methods({
 			}
 		});
 	},
-	pagoParcialCredito:function(pagos,abono){
+	pagoParcialCredito:function(pagos,abono,totalPago){
 		var ahora = new Date();
-		ahora = new Date (ahora.getFullYear(),ahora.getMont(),ahora.getDate());
+		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 
-		var diaSemana = moment(new Date()).weekday();
+		var ffecha = moment(new Date());
 		var pago = {};
 		pago.fechaPago = ahora;
 		pago.usuario_id = Meteor.userId();
 		pago.sucursalPago_id = Meteor.user().profile.sucursal_id;
 		pago.usuarioCobro_id = Meteor.userId();
-		pago.diaPago = diaSemana;
+		pago.pago = abono;
+		pago.totalPago = totalPago;
+		pago.cambio = abono -totalPago;
+		pago.cambio = pago.cambio<0? 0:pago.cambio;
+		pago.diaPago = ffecha.weekday();
+		pago.semanaPago = ffecha.isoWeek();
+		pago.semanaPago = ahora.getMonth();
 		pago.estatus = 1;
 		pago.planPagos=[];
 	
@@ -126,8 +137,9 @@ Meteor.methods({
 		var mfecha = moment(ahora);
 		_.each(pagos,function(p){
 			if(p.estatus!=1){
-				if(p.importeRegular<abono){
-					p.importe = 0;
+				var ttpago = 0;
+				if(p.importeRegular<=abono){
+					
 					if(p.descripcion=="Multa" && p.multa==1)
 						p.estatus=1;
 					else if(p.multada==1){
@@ -145,38 +157,47 @@ Meteor.methods({
 					}
 					
 					abono-=p.importeRegular;
-				}
+					ttpago = p.importeRegular;
+					p.importeRegular = 0;
+					
+				}	
 				else{
-					p.importe = p.importe-abono;
+					tttpago = abono;
+					p.importeRegular = p.importeRegular-abono;
 					p.estatus = 2;
 					abono=0;
 				}
+				pago.credito_id =p.credito_id;
 				p.modificada = 1;
 				p.ultimaModificacion = ahora;
 				p.fechaPago = ahora;
 				semanaPago = mfecha.isoWeek();
 				diaPago	= mfecha.weekday();
 
-				var npp={pago_id:pago_id,totalPago:pago.pagar,estatus:p.estatus,fechaPago:pago.fechaPago, 
+				var npp={pago_id:pago_id,totalPago:ttpago,estatus:p.estatus,fechaPago:pago.fechaPago, 
 						 numeroPago : p.numeroPago,movimiento:p.descripcion,cargo:p.importe,planPago_id:p._id}
 
 				p.pagos.push(npp);
 
-				var npago={planPago_id:p._id,totalPago:p.importeRegular,estatus:p.estatus,
+				var npago={planPago_id:p._id,totalPago:ttpago,estatus:p.estatus,
 						fechaPago:pago.fechaPago, numeroPago : p.numeroPago};
 				pago.planPagos.push(npago);
 
 				var pid = p._id;
 				delete p._id;
-				delete pago._id;
+				
 				PlanPagos.update({_id:pid},{$set:p})
-				PlanPagos.update({_id:pago_id},{$set:pago})
+				
 			}
 		});
+		delete pago._id;
+		Pagos.update({_id:pago_id},{$set:pago})
+		return "OK"
+
 	},
 	generarMultas:function(){
 		var ahora = new Date();
-		ahora = new Date (ahora.getFullYear(),ahora.getMont(),ahora.getDate());
+		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 		var pagos = PlanPagos.find({$and:[
 											{
 												$or:[
@@ -192,6 +213,7 @@ Meteor.methods({
 												fechaLimite : { $lt : ahora }
 											}
 										]}).fetch();
+		console.log(pagos)
 		_.each(pagos, function(pago){
 			try{
 				var mfecha = moment(ahora);
@@ -212,6 +234,7 @@ Meteor.methods({
 					pago				: 0,
 					estatus				: 0,
 					multada				: 0,
+					multa 				: 0,
 					multa_id			: undefined,
 					planPago_id			: pago._id,
 					tiempoPago			: 0,
@@ -219,13 +242,14 @@ Meteor.methods({
 					pagos 				: [],
 					descripcion			: "Multa",
 					ultimaModificacion	: ahora,
+					credito_id 			: credito._id,
 					mes					: mfecha.get('month') + 1,
 					anio				: mfecha.get('year'),
-					cargo				: importeParcial,
+					cargo				: pago.cargo,
 					movimiento			: "Multa"
 				};
 				var multa_id = PlanPagos.insert(multa);
-				PlanPagos.update({_id:pago.id},{$set:{multada:1,multa_id:multa_id}})
+				PlanPagos.update({_id:pago._id},{$set:{multada:1,multa_id:multa_id}})
 			}catch(e){
 				console.log(e);
 			}
