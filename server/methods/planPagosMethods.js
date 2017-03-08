@@ -60,7 +60,7 @@ Meteor.methods({
 				mes					: mfecha.get('month') + 1,
 				anio				: mfecha.get('year'),
 				cargo				: importeParcial,
-				movimiento			: "Abono"
+				movimiento			: "Gastos de Cobranza"
 			}
 			plan.push(clonar(pago));
 			if(credito.periodoPago == "Semanal"){
@@ -269,7 +269,7 @@ Meteor.methods({
 					mes					: mfecha.get('month') + 1,
 					anio				: mfecha.get('year'),
 					cargo				: pago.cargo,
-					movimiento			: "Multa"
+					movimiento			: "Gastos de Cobranza"
 				};
 				var multa_id = PlanPagos.insert(multa);
 				PlanPagos.update({_id:pago._id},{$set:{multada:1,multa_id:multa_id}})
