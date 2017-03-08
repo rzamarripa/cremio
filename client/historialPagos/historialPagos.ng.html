@@ -117,8 +117,8 @@
 									</div>
 									<div class="col-sm-6"  >
 			    	 				<label>Nota</label>
-							    		<textarea  class="form-control" ng-model="hp.notaCredito.nombre" 
-			    	 					  >{{hp.notaCredito.nombre}}
+							    		<textarea  class="form-control" ng-model="hp.notaCredito.nombre" >
+			    	 					  {{hp.notaCredito.nombre}}
 						  				</textarea>
 			    	 				</div>
 							
@@ -130,7 +130,8 @@
 			
 				</div>
 
-
+			</div>
+		</div>
 		<table class="table table-striped table-bordered table-condensed font-xs">
 			<thead class="thead">
 				<tr>
@@ -145,12 +146,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr  ng-repeat-start="credito in hp.historial" 
+				<tr  ng-repeat="credito in hp.historial" 
 				ng-class="(credito.descripcion == 'Multa') ? 'danger' : 'info'">
-				<!-- btn btn-{{edocivil.nuevo == true ? 'primary' : 'danger'}} -->
-
+			
 				
-					<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{hp.planPagos.length}}</td>	
+					<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
 					<td class="text-center">{{credito.movimiento}}</td>	
 					<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
 					<td class="text-center">{{credito.cargo | currency}}</td>
@@ -160,18 +160,9 @@
 					<td >0</td>
 		
 				</tr>
-				<tr ng-repeat-end  ng-repeat="pago in credito.pagos" ng-class="(credito.movimiento == 'Multa') ? 'danger' : 'success'"> >
-					<td  class="text-center">{{pago.numeroPago || pago.numeroPagoMulta}} - {{hp.planPagos.length}}</td>	
-					<td class="text-center">{{pago.movimiento}}</td>	
-					<td class="text-center">{{pago.fechaPago | date:"dd-MM-yyyy"}}</td>
-					<td class="text-center">{{pago.cargo | currency}}</td>
-					<td class="text-right">{{pago.totalPago | currency}}</td>
-					<td >{{pago.saldo | currency}}</td>
-					<td >0</td>
-					<td >0</td >
-				</tr>
+				
 			</tbody>
 		</table>	
 	</div>
-	<br/>
+	
 </div>

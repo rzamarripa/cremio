@@ -54,13 +54,13 @@ Meteor.methods({
 				tiempoPago			: 0,
 				modificada			: false,
 				pagos 				: [],
-				descripcion			: "Abono",
+				descripcion			: "Recibo",
 				ultimaModificacion	: new Date(),
 				credito_id 			: credito._id,
 				mes					: mfecha.get('month') + 1,
 				anio				: mfecha.get('year'),
 				cargo				: importeParcial,
-				movimiento			: "Abono"
+				movimiento			: "Recibo"
 			}
 			plan.push(clonar(pago));
 			if(credito.periodoPago == "Semanal"){
@@ -112,8 +112,10 @@ Meteor.methods({
 				//console.log(pago._id,multas,pago.importeRegular,pago.ultimaModificacion);
 				pago.importeRegular += multas;
 				pago.importeRegular=Math.round(pago.importeRegular * 100) / 100;
+				pago.cargo += multas;
+				pago.cargo=Math.round(pago.cargo * 100) / 100;
 
-				PlanPagos.update({_id:pago._id},{$set:{importeRegular:pago.importeRegular,ultimaModificacion:ahora}})
+				PlanPagos.update({_id:pago._id},{$set:{cargo:pago.cargo,importeRegular:pago.importeRegular,ultimaModificacion:ahora}})
 			}catch(e){
 				console.log(e)
 			}
@@ -143,7 +145,7 @@ Meteor.methods({
 		var pago_id=undefined;
 		pago_id = Pagos.insert(pago);
 
-		var pagos=PlanPagos.find({_id:{$in:pagos}},{sort:{descripcion:-1}}).fetch();
+		var pagos=PlanPagos.find({_id:{$in:pagos}},{sort:{descripcion:1}}).fetch();
 		var mfecha = moment(ahora);
 		_.each(pagos,function(p){
 			if(p.estatus!=1){
@@ -165,7 +167,7 @@ Meteor.methods({
 						PlanPagos.update({_id:p.multa_id},{$set:multa});
 					}
 					
-					if(p.descripcion=="Abono"){
+					if(p.descripcion=="Recibo"){
 						p.estatus=1
 					}
 
@@ -174,6 +176,8 @@ Meteor.methods({
 					abono=Math.round(abono * 100) / 100;
 
 					ttpago = p.importeRegular;
+					p.pago += p.importeRegular;
+					p.pago=Math.round(p.pago * 100) / 100;
 					p.importeRegular = 0;
 					
 				}	
@@ -184,6 +188,10 @@ Meteor.methods({
 					p.importeRegular = p.importeRegular-abono;
 					//p.importeRegular =Number(p.importeRegular.toFixed(2))
 					p.importeRegular=Math.round(p.importeRegular * 100) / 100;
+
+					p.pago += abono
+					p.pago=Math.round(p.pago * 100) / 100;
+
 					p.estatus = 2;
 					abono=0;
 				}
@@ -227,7 +235,7 @@ Meteor.methods({
 											},
 											{
 												multada		: 0,
-												descripcion : "Abono"
+												descripcion : "Recibo"
 											},
 											{
 												fechaLimite : { $lt : ahora }
