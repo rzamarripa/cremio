@@ -224,10 +224,12 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 	this.guardarPago = function(pago,credito)
 	{
+
 		var seleccionadosId=[];
 		_.each(rc.planPagosViejo,function(p){
 			if(p.pagoSeleccionado)
 				seleccionadosId.push(p._id)
+
 		});
 
 		Meteor.call("pagoParcialCredito",seleccionadosId,pago.pagar,pago.totalPago,function(error,success){
