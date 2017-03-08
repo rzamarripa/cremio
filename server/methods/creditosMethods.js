@@ -8,7 +8,14 @@ Meteor.methods({
 
 		var planPagos = Meteor.call("generarPlanPagos",credito,cliente);
 		//console.log (planPagos)
+		var saldoActual=0;
+		_.each(planPagos,function(pago){
+			saldoActual += pago.cargo;
+		});
 		credito.numeroPagos = planPagos.length;
+		credito.saldoActual = saldoActual;
+		credito.adeudoInicial = saldoActual;
+
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		credito.folio = sucursal.folio + 1;
 		credito.avales_ids = [];
@@ -40,7 +47,7 @@ Meteor.methods({
 			pago.multa = 0;
 			pago.abono = 0;
 			pago.credito_id = credito_id;
-			pago.descripcion = "Abono";
+			pago.descripcion = "Recibo";
 			PlanPagos.insert(pago)
 		});
 		Meteor.call("generarMultas");

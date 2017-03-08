@@ -497,31 +497,26 @@
 													<tr>
 														<th class="text-center" width="5%"></th>
 														<th class="text-center" width="5%">No.</th>
+														<th class="text-center" width="20%">Movimiento</th>
 														<th class="text-center" width="20%">Fecha de Pago</th>
 														<th class="text-center" width="15%">Pago</th>
-														<th class="text-center" width="10%">Importe</th>
-														<th class="text-center" width="20%">Descripción</th>
-														<th class="text-center" width="20%">Acciones</th>
+														<th class="text-center" width="10%">Saldo</th>
+														
+														
 													</tr>
 												</thead>
 												<tbody>
 													<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < vpp.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in vpp.planPagosViejo">
 							
 														<td ><a ng-model="pago.pagoSeleccionado" ng-click="vpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'seleccionado' : 'Pendiente'}}</a> </td>
+
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{$index + 1}}</td>	
+														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger' : ''">{{pago.movimiento }}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{vpp.creditos[0].numeroPagos}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger' : ''">{{pago.descripcion }}</td>
-														<td class="text-center">
-															<span ng-if="pago.estatus == 0">
-																<button class="btn btn-warning btn-xs" ng-click="vpp.editar(pago)"><i class="fa fa-pencil"></i></button>
-																<button class="btn btn-danger  btn-xs" ng-click="vpp.cambiarEstatus(pago, 2, 'eliminar')"><i class="fa fa-trash"></i></button>
-															</span>
-															<span ng-if="pago.estatus == 2">
-																<button class="btn btn-success btn-xs" ng-click="vpp.cambiarEstatus(pago, 0, 'activar')"><i class="fa fa-check"></i></button>
-															</span>
-														</td>
+														
+														
 													</tr>
 												</tbody>
 											</table>	

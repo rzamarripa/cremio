@@ -15,13 +15,21 @@ angular.module("creditoMio")
   var FI, FF;
   rc.cliente = {};
   rc.credito = {};
+  rc.historialCrediticio = {};
   rc.cobranza = {};
+  
 
   rc.avales = [];
-
+	rc.ihistorialCrediticio = [];
+ 
   rc.cobranza_id = "";
   rc.notaCobranza = {};
-
+  
+  rc.totalRecibos = 0;
+  rc.totalMultas = 0;
+  rc.seleccionadoRecibos = 0;
+  rc.seleccionadoMultas = 0;
+	
   
   this.selected_credito = 0;
   this.ban = false;
@@ -29,7 +37,6 @@ angular.module("creditoMio")
   this.subscribe("tiposCredito", ()=>{
 		return [{}]
 	});
-
 	this.subscribe("estadoCivil", ()=>{
 		return [{}]
 	});
@@ -60,7 +67,7 @@ angular.module("creditoMio")
 		  
 
   this.subscribe('notas',()=>{
-		return [{estatus:true}]
+		return [{cliente_id:this.getReactively("cliente_id")}]
 	});
 	
 	this.helpers({
@@ -78,23 +85,6 @@ angular.module("creditoMio")
 		},
 	});
 
-  
-  /*
-	this.getCobranza = function()
-	{
-			//
-			console.log(this.selected_credito);
-			Meteor.call('getCobranza', rc.getReactively("fechaInicial"), rc.getReactively("fechaFinal"), function(error, result) {
-						
-						if (result)
-						{
-								this.cobranza = result;
-							
-						}
-			});	
-	}
-	*/
-
 	
 	this.calcularSemana = function(w, y) 
 	{
@@ -104,7 +94,7 @@ angular.module("creditoMio")
 	    FI = new Date(simple);
 	    FF = new Date(moment(simple).add(7,"days"));
 	    
-	    FF.setHours(23,59,59,0);
+	    FF.setHours(23,59,59,999);
 	    
 	}
 	
@@ -114,7 +104,7 @@ angular.module("creditoMio")
 			var endDate = moment(startDate).endOf('month');
 	    FI = startDate.toDate();
 	    FF = endDate.toDate();
-	    FF.setHours(23,59,59,0);
+	    FF.setHours(23,59,59,999);
 	}
 	
 	this.AsignaFecha = function(op)
@@ -126,8 +116,8 @@ angular.module("creditoMio")
 			{
 					FI = new Date();
 				  FI.setHours(0,0,0,0);
-				  FF = new Date();
-				  FF.setHours(23,59,59,0);
+				  FF = new Date(FI.getTime() - (1 * 24 * 3600 * 1000));
+				  FF.setHours(23,59,59,999);
 				  //console.log("FI:",FI);
 					//console.log("FF:",FF);
 				  
@@ -136,7 +126,7 @@ angular.module("creditoMio")
 			{
 					this.fechaInicial.setHours(0,0,0,0);
 				  this.fechaFinal = new Date(this.fechaInicial.getTime());
-				  this.fechaFinal.setHours(23,59,59,0);
+				  this.fechaFinal.setHours(23,59,59,999);
 				  FI = this.fechaInicial;
 				  FF = this.fechaFinal;
 				  
@@ -150,7 +140,7 @@ angular.module("creditoMio")
 					FI = new Date();
 				  FI.setHours(0,0,0,0);
 				  FF = new Date(FI.getTime());
-				  FF.setHours(23,59,59,0);
+				  FF.setHours(23,59,59,999);
 					
 					var semana = moment().isoWeek();
 					var anio = FI.getFullYear();
@@ -166,7 +156,7 @@ angular.module("creditoMio")
 					FI.setHours(0,0,0,0);
 					var anio = FI.getFullYear();
 					var mes = FI.getMonth();
-					console.log(mes);
+					//console.log(mes);
 					this.calcularMes(mes,anio);
 					//console.log("FI:", FI);
 					//console.log("FF:", FF);
@@ -190,11 +180,16 @@ angular.module("creditoMio")
 					//console.log("FF:", FF);
 			}
 			
-			Meteor.call('getCobranza', FI, FF, op, function(error, result) {
-						//console.log(result);						
+			Meteor.call('getCobranza', FI, FF, op, Meteor.user().profile.sucursal_id, function(error, result) {						
 						if (result)
 						{
 								rc.cobranza = result;
+								rc.totalRecibos = 0;
+								rc.totalMultas = 0;
+								_.each(rc.cobranza,function(c){
+										rc.totalRecibos = rc.totalRecibos + c.importe;
+										rc.totalMultas = rc.totalMultas + c.multas;
+								});
 								$scope.$apply();
 						}
 				
@@ -207,6 +202,7 @@ angular.module("creditoMio")
 	  	
 	  	//Información del Cliente
 	  	rc.cliente = objeto.cliente;
+	  	//console.log(rc.cliente);
 	  	var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
 	  	if (ec != undefined) rc.cliente.profile.estadoCivil = ec.nombre; 
 	  	var nac = Nacionalidades.findOne(rc.cliente.profile.nacionalidad_id);
@@ -236,12 +232,12 @@ angular.module("creditoMio")
 	  	if (mun != undefined) rc.cliente.profile.empresa.municipio = mun.nombre;
 	  	ciu = Ciudades.findOne(rc.cliente.profile.empresa.ciudad_id);
 	  	if (ciu != undefined) rc.cliente.profile.empresa.ciudad = ciu.nombre;
-	  	
+	  	//-----------------------------------------------------------------------------
 	  	
 	  	
 	  	//Información del Crédito
 	  	rc.credito = objeto.credito;	  
-	  	console.log(rc.credito);
+	  	//console.log(rc.credito);
 	  	var tc = TiposCredito.findOne(rc.credito.tipoCredito_id);
 	  	if (tc != undefined) rc.credito.tipoCredito = tc.nombre;
 	  	
@@ -254,55 +250,102 @@ angular.module("creditoMio")
 									}
 						});	
 	  	});
-
+	  	//-----------------------------------------------------------------------------
+	  	
+	  	//Historial Crediticio
+	  	Meteor.call('gethistorialPago', rc.credito._id, function(error, result) {
+						if (result)
+						{
+								rc.historialCrediticio = result;
+								$scope.$apply();
+								//console.log(rc.historialCrediticio);
+						}
+			});
+			
+			
+			
+			//-----------------------------------------------------------------------------
+	  	
 	  	
       this.selected_credito=objeto.credito.folio;
   };
   
   this.isSelected=function(objeto){
+	  
+	  	this.sumarSeleccionados();
       return this.selected_credito===objeto;
 
   };
   
-  this.buscarNombre=function(){
+  this.buscarNombre=function()
+  {
       Meteor.call('getcobranzaNombre', rc.buscar.nombre, function(error, result) {
 						if (result)
 						{
-								
-							
+								rc.cobranza = result;
+								rc.totalRecibos = 0;
+								rc.totalMultas = 0;
+								_.each(rc.cobranza,function(c){
+										rc.totalRecibos = rc.totalRecibos + c.importe;
+										rc.totalMultas = rc.totalMultas + c.multas;
+								});
+								$scope.$apply();
 						}
 			});
   };	
 
-
-  	
-
-	var fecha = moment()
-		this.guardarNotaCobranza=function(nota){
-				console.log(nota);
+	this.cambiar = function() 
+  {
+			var chkImprimir = document.getElementById('todos');
 				
-				nota.estatus = true;
-				nota.fecha = new Date()
-				nota.hora = moment(nota.fecha).format("hh:mm:ss a")
-				rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
-				Notas.insert(nota);
-				this.notaCobranza = {}
-				$('#myModal').modal('hide');
-				toastr.success('Guardado correctamente.');
-		}
-		this.mostrarNotaCobranza=function(objeto){
-			console.log(objeto)
-			rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
-			rc.notaCobranza.folioCredito = objeto.credito.folio 
-			rc.notaCobranza.recibo= objeto.planPagos[0].numeroPago
+			_.each(rc.cobranza, function(cobranza){
+				cobranza.imprimir = chkImprimir.checked;
+			})
 			
-			 rc.cobranza_id = objeto.credito._id
-			 console.log("rc.cobranza_id",rc.cobranza_id)
-			 $("#myModal").modal();
+			this.sumarSeleccionados();
+					
+	};
 	
-	
-		}
+	this.sumarSeleccionados = function()
+	{
+			rc.seleccionadoRecibos = 0;
+			rc.seleccionadoMultas = 0;
+			_.each(rc.cobranza,function(c){	
+					if (c.imprimir == true)
+					{
+							rc.seleccionadoRecibos += c.importe;
+							rc.seleccionadoMultas += c.multas;
+					}		
+			});
+
+	};
 
 
-	
+
+	var fecha = moment();
+	this.guardarNotaCobranza=function(nota){
+			console.log(nota);			
+			nota.estatus = true;
+			nota.fecha = new Date()
+			nota.hora = moment(nota.fecha).format("hh:mm:ss a")
+			rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+			Notas.insert(nota);
+			this.notaCobranza = {}
+			$('#myModal').modal('hide');
+			toastr.success('Guardado correctamente.');
+	}
+	this.mostrarNotaCobranza=function(objeto){
+		console.log(objeto)
+		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
+		rc.notaCobranza.folioCredito = objeto.credito.folio 
+		rc.notaCobranza.recibo= objeto.planPagos[0].numeroPago
+		
+		 rc.cobranza_id = objeto.credito._id
+		 console.log("rc.cobranza_id",rc.cobranza_id)
+		 $("#myModal").modal();
+
+
+	}
+
+
 };

@@ -5,6 +5,18 @@
 				Cobranza
 		</h1>
 	</div>
+	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+						<ul id="sparks" class="">
+							<li class="sparks-info">
+								<h5> Total recibos <span class="txt-color-green" style="text-align: right">{{cob.totalRecibos | currency}}</span></h5>
+							<li class="sparks-info">
+								<h5> Total Multas <span class="txt-color-red" style="text-align: right">{{cob.totalMultas | currency}}</span></h5>
+							<li class="sparks-info">
+								<h5> Recibos seleccionados <span class="txt-color-green" style="text-align: right">{{cob.seleccionadoRecibos | currency}}</span></h5>
+							<li class="sparks-info">
+								<h5> Multas Seleccionadas <span class="txt-color-red" style="text-align: right">{{cob.seleccionadoMultas | currency}}</span></h5>
+						</ul>
+					</div>
 </div>
 <br>
 <div class="well">
@@ -25,10 +37,9 @@
 			</form>
 		</div>
 	</div>	
-</div>
-<div class="well">
+	<br />
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-sm-6">
 				<div class="input-group input-group-md">
 			      <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
 			      <div class="icon-addon addon-md">
@@ -41,12 +52,14 @@
 			  </div>
 		</div>	
 	</div>
-</div>		
+</div>
  <div class="row">	
 	<div class="col-sm-12">
-		<table class="table table-hover border-collapse" >
+		<table id="rec" class="table table-hover border-collapse" >
 			<thead>
 				<tr>
+					<th width="5%" style="margin: 0px; border: 0px; padding: 0px">
+						<input id="todos" type="checkbox" class="form-control" ng-checked="false" ng-click="cob.cambiar()" style="margin: 0px; border: 0px; padding: 0px"/></th>
 					<th width="5%">No.</th>
 					<th width="15%"><div class="text-center">Folio crédito</div></th>
 					<th width="25%"><div class="text-center">Recibo</div></th>
@@ -57,64 +70,22 @@
 				</tr>
 			</thead>
 			<tbody>
-		    <tr style='cursor: pointer' ng-repeat-start="objeto in cob.cobranza" ng-click="cob.selCredito(objeto)" >
-			    <td>{{ $index + 1 }}</td>
-			    <td class="text-center">{{objeto.credito.folio}}</td>
-			    <td>
+		    <tr style='cursor: pointer' ng-repeat-start="objeto in cob.cobranza" >
+			    <td style="margin: 0px; border: 0px; padding: 0px">
+				    <input type="checkbox" class="form-control" 
+				    											 ng-model="objeto.imprimir" 
+				    											 ng-click="cob.sumarSeleccionados()"
+				    											 ng-change="cob.Selecionar(objeto)" value="objeto.imprimir" style="margin: 0px; border: 0px; padding: 0px" /> 
+			    </td>
+			    <td ng-click="cob.selCredito(objeto)">{{ $index + 1 }}</td>
+			    <td class="text-center" ng-click="cob.selCredito(objeto)">{{objeto.credito.folio}}</td>
+			    <td ng-click="cob.selCredito(objeto)">
 				    <span ng-class="planPago.classPago" title="{{planPago.fechaLimite | date:'dd-MM-yyyy'}}" ng-repeat="planPago in objeto.planPagos">| {{planPago.numeroPago}} </span>
 				  </td>
-			    <td>{{objeto.cliente.profile.nombreCompleto}}</td>
-			    <td class="text-right">{{objeto.importe | currency}}</td>
-			    <td class="text-right">0</td>
-			    <td class="text-right">0</td>
-
-			    <!-- /////////////////////////MODAL ////////////////////////// -->
-			    <div class="container">
-			      <!-- Modal -->
-				  <div class="modal fade" id="myModal" role="dialog">
-				    <div class="modal-dialog">
-			    <!-- Modal content-->
-				      <div class="modal-content">
-				        <div class="modal-header">
-				          <button type="button" class="close" data-dismiss="modal">&times;</button>
-				          <h4 class="modal-title">Nota de cobranza</h4>
-				        </div>
-				        <div class="modal-body" >
-				          <h6>Información relacionada con el crédito</h6><br/>
-				          <p>Cliente: <strong>{{cob.notaCobranza.cliente}}</strong></p>
-				          <p>Crédito: <strong>{{cob.notaCobranza.folioCredito}}</strong></p>
-				          <p>Recibo: <strong>{{cob.notaCobranza.recibo}}</strong></p>
-				          <p>Multa: <strong>Pendiente</strong></p>
-				        </div>
-					        <div class="modal-footer">
-					        	<label class="pull-left">Título de la nota</label>
-					        	<input  type="text" class="form-control" placeholder="Nombre" ng-model="cob.notaCobranza.titulo" >
-					        	<label class="pull-left">nota</label>
-					        	<textarea type="text" class="form-control" placeholder="Escribe la nota aqui" 
-		    	 				ng-model="cob.notaCobranza.descripcion" >
-		    	 		
-					      
-								 
-							</div>
-							<div class="col-sm-3"> <br/>
-								<a ng-click="cob.guardarNotaCobranza(cob.notaCobranza)"  class="btn btn-primary">Guardar</a>
-							</div>
-							
-							
-		
-				        <div class="modal-footer">
-
-							  
-				          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				        </div>
-				      </div>
-				      
-				    </div>
-				  </div>
-				 </div>
-				  
-			<!--     //////////////////////////////////////////////////////////// -->
-
+			    <td ng-click="cob.selCredito(objeto)">{{objeto.cliente.profile.nombreCompleto}}</td>
+			    <td class="text-right" ng-click="cob.selCredito(objeto)">{{objeto.importe | currency}}</td>
+			    <td class="text-right" ng-click="cob.selCredito(objeto)">{{objeto.multas | currency}}</td>
+			    <td class="text-right" ng-click="cob.selCredito(objeto)">{{objeto.saldo | currency}}</td>
 		    </tr>
 		    <tr ng-repeat-end ng-if="cob.isSelected(objeto.credito.folio) && cob.ban">
             <td colspan="7">
@@ -140,18 +111,16 @@
 											<li class="">
 												<a data-toggle="tab" href="#hr4" aria-expanded="false"> <i class="fa fa-lg fa-list"></i> <span class="hidden-mobile hidden-tablet"> Historial de cobranza </span></a>
 											</li>
-											<li class="dropdown ">
+											<!-- <li class="dropdown ">
 												<a href="javascript:void(0);" class="dropdown-toggle " data-toggle="dropdown" aria-expanded="false"><i class="fa fa-lg  fa fa-plus"></i>Agregar nota de cobranza <b class="caret"></b></a>
 												<ul class="dropdown-menu text-left">
 												<li >
-													<a ng-click="cob.mostrarNotaCobranza(objeto)">Agregar nota de cobranza<a/> <span class="hidden-mobile hidden-tablet">
+													
 												</li>
-												<!-- <li>
-													<a>Agregar nota para el cliente<a/> <span class="hidden-mobile hidden-tablet">
-												</li> -->
+												
 													
 												</ul>
-											</li>
+											</li> -->
 											
 										</ul>	
 										
@@ -207,3 +176,52 @@
 		</table>
 	</div>
 </div>
+
+<!-- /////////////////////////MODAL ////////////////////////// -->
+<div class="container">
+    <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+  <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Nota de cobranza</h4>
+        </div>
+        <div class="modal-body" >
+          <h6>Información relacionada con el crédito</h6><br/>
+          <p>Cliente: <strong>{{cob.notaCobranza.cliente}}</strong></p>
+          <p>Crédito: <strong>{{cob.notaCobranza.folioCredito}}</strong></p>
+          <p>Recibo: <strong>{{cob.notaCobranza.recibo}}</strong></p>
+          <p>Multa: <strong>Pendiente</strong></p>
+        </div>
+	        <div class="modal-footer">
+	        	<label class="pull-left">Título de la nota</label>
+	        	<input  type="text" class="form-control" placeholder="Nombre" ng-model="cob.notaCobranza.titulo" >
+	        	<label class="pull-left">nota</label>
+	        	<textarea type="text" class="form-control" placeholder="Escribe la nota aqui" 
+	 				ng-model="cob.notaCobranza.descripcion" >
+	 		
+	      
+				 
+			</div>
+			<div class="col-sm-3"> <br/>
+				<a ng-click="cob.guardarNotaCobranza(cob.notaCobranza)"  class="btn btn-primary">Guardar</a>
+			</div>
+			
+			
+
+        <div class="modal-footer">
+
+			  
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+				  
+<!--     //////////////////////////////////////////////////////////// -->
+
+
