@@ -1,0 +1,156 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Clientes &gt; Notas de credito
+		</h1>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="well well-sm">
+			<div class="row">
+				<div class="col-sm-12 col-md-12 col-lg-12">
+					<div class="well well-light well-sm no-margin no-padding">
+						<div class="row">
+							<div class="col-sm-12">
+								<div id="myCarousel" class="carousel profile-carousel">
+									<div class="air air-bottom-right padding-10">
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Verificador'" ui-sref="root.generadorPlan({objeto_id : gnc.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm">
+											<i class="fa fa-plus"></i> Nueva Solicitud de credito
+										</a>&nbsp;
+										
+									</div>
+									<div class="air air-top-left padding-10">
+										<h4 class="txt-color-white font-md"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{gnc.fechaActual | date:'dd-MM-yyyy'}}</h4>
+									</div>
+									<ol class="carousel-indicators">
+									</ol>
+									<div class="carousel-inner">
+										<div class="item active">
+											<img src="img/demo/s1.jpg" alt="" style="width:100%">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="row">
+									<div class="col-sm-2 profile-pic" style="text-align:left;width:initial;">
+										<img style="max-width:200px;" src="{{gnc.tieneFoto(gnc.objeto.profile.sexo, gnc.objeto.profile.fotografia)}}" >
+										<div class="padding-10">
+											<h4 class="font-md"><strong>0</strong>
+											<br>
+											<small>Seguidores</small></h4>
+											<br>
+											<h4 class="font-md"><strong>0</strong>
+											<br>
+											<small>Amigos</small></h4>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<h1>{{gnc.objeto.profile.nombre}} <span class="semi-bold">{{gnc.objeto.profile.apellidoPaterno}} {{gnc.objeto.profile.apellidoMaterno}}</span>
+										
+										<small> (Cliente)</small></h1>
+										<ul class="list-unstyled">
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-key fa-lg"></i>&nbsp;&nbsp;
+													<span class="txt-color-darken">
+														<strong>{{gnc.objeto.username}}</strong>
+													</span>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{gnc.objeto.profile.telefono}}</span>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;<a href="mailto:{{gnc.objeto.profile.correo}}">{{gnc.objeto.profile.correo}}</a>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-birthday-cake fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{gnc.objeto.profile.fechaNacimiento | date:"dd-MM-yyyy"}}</span>
+												</p>
+											</li>
+										</ul>
+										<br>
+										<p class="font-sm">
+											<i>Un poco acerca de mi...</i>
+										</p>
+										<p class="font-xs">
+											{{gnc.objeto.profile.observacionesGenerales}}
+										</p>
+										<br>
+									</div>
+									<!--																
+									<div class="col-sm-3">
+										<h1><small>Amigos</small></h1>
+										<ul class="list-inline friends-list">
+											<li><img src="img/avatars/1.png" alt="friend-1">
+											</li>
+											<li><img src="img/avatars/2.png" alt="friend-2">
+											</li>
+											<li><img src="img/avatars/3.png" alt="friend-3">
+											</li>
+											<li><img src="img/avatars/4.png" alt="friend-4">
+											</li>
+											<li><img src="img/avatars/5.png" alt="friend-5">
+											</li>
+											<li><img src="img/avatars/male.png" alt="friend-6">
+											</li>
+											<li>
+												<a href="javascript:void(0);">413 more</a>
+											</li>
+										</ul>
+									</div>
+									-->
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<form name="form" class="form-horizontal" role="form">
+									<div class="well">			
+										<div class="row">
+																		
+											<div class="col-sm-5" valida>
+												<label>Tipo de Nota de Credito *</label>
+												<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="gnc.objeto.nombre" required>
+											</div>
+											<div class="col-sm-2" >
+											</div>
+											<div class="col-sm-5" valida>
+												<label>Fecha *</label>
+												<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="gnc.objeto.nombre" required>
+											</div>
+										</div>
+										<br/>
+										<div class="row">
+											<div class="col-sm-5" valida>
+												<label>Cantidad *</label>
+												<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="gnc.objeto.nombre" required>
+											</div>
+											
+										</div>
+									</div>
+									<div class="well">			
+										<div class="row">
+											<div class="col-sm-12">
+												<input type="submit" ng-click="gnc.guardar(gnc.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="gnc.action" valida-form formulario="form">
+												<input type="submit" ng-click="gnc.actualizar(gnc.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!gnc.action" valida-form formulario="form">	
+											</div>
+										</div>
+									</div>	
+								</form>
+							</div>												
+						</div>
+					</div>
+				</div>
+				<br/>
+			</div>
+		</div>
+	</div>
+</div>
+
