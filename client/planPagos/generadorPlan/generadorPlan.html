@@ -194,6 +194,7 @@
 					    <div class="row">		
 					    	<div class="col-sm-3">
 							   	<input type="button" ng-click="ge.insertarAval()" value="Agregar" ng-show="ge.actionAval" class="btn btn-primary"> 	
+							   	<input type="button" ng-click="ge.borrarReferencia()" value="Quitar Referenciado" ng-show="ge.aval.persona_id" class="btn btn-warning">
 							   	<input type="button" ng-click="ge.actualizarAval(ge.aval)" value="Actualizar" ng-show="!ge.actionAval" class="btn btn-primary">
 							   	<input type="button" ng-click="ge.cancelarAval()" value="Cancelar" ng-show="!ge.actionAval" class="btn btn-danger">	   				
 								</div>

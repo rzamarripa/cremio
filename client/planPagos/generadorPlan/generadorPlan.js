@@ -200,22 +200,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	}
 	
 	
-	this.AgregarAval = function(a){
-		this.aval.nombre = a.nombre;
-		this.aval.apellidoPaterno = a.apellidoPaterno;
-		this.aval.apellidoMaterno = a.apellidoMaterno;
-		this.aval.estadoCivil = a.estadoCivil;
-		this.aval.ocupacion = a.ocupacion;
-		this.aval.direccion = a.direccion;
-		this.aval.empresa = a.empresa;
-		this.aval.puesto = a.puesto;
-		this.aval.antiguedad = a.antiguedad;
-		this.aval.direccionEmpresa = a.direccionEmpresa;
-		this.aval.parentezco = a.parentezco;
-		this.aval.tiempoConocerlo = a.tiempoConocerlo;
-		this.aval.persona_id = a._id;
-		this.buscar.nombre = "";
-	}
+	
 	
 	/*
 	this.modificacionMasiva = function(modificacion, form){
@@ -429,8 +414,8 @@ total = 0;
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	this.insertarAval = function()
 	{
-			this.con = this.con + 1;
-			this.aval.num = this.con;
+// 			this.con = this.con + 1;
+			this.aval.num = this.avales.length + 1;
 			
 			this.avales.push(this.aval);	
 			this.aval={};
@@ -490,6 +475,43 @@ total = 0;
 		
 		this.num = a.num;
 	    this.actionAval = false;
+	};
+	
+	this.borrarReferencia = function()
+	{
+			this.aval.nombre = "";
+			this.aval.apellidoPaterno = "";
+			this.aval.apellidoMaterno = "";
+			this.aval.estadoCivil = "";
+			this.aval.ocupacion = "";
+			this.aval.direccion = "";
+			this.aval.parentezco = "";
+			this.aval.tiempoConocerlo = "";
+			this.aval.empresa = "";
+			this.aval.puesto = "";
+			this.aval.antiguedad = "";
+			this.aval.direccionEmpresa = "";
+			this.aval.parentezco = "";
+			this.aval.tiempoConocerlo = "";
+			delete this.aval["persona_id"];
+
+	};
+	
+	this.AgregarAval = function(a){
+		this.aval.nombre = a.nombre;
+		this.aval.apellidoPaterno = a.apellidoPaterno;
+		this.aval.apellidoMaterno = a.apellidoMaterno;
+		this.aval.estadoCivil = a.estadoCivil;
+		this.aval.ocupacion = a.ocupacion;
+		this.aval.direccion = a.direccion;
+		this.aval.empresa = a.empresa;
+		this.aval.puesto = a.puesto;
+		this.aval.antiguedad = a.antiguedad;
+		this.aval.direccionEmpresa = a.direccionEmpresa;
+		this.aval.parentezco = a.parentezco;
+		this.aval.tiempoConocerlo = a.tiempoConocerlo;
+		this.aval.persona_id = a._id;
+		this.buscar.nombre = "";
 	};
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
