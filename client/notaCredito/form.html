@@ -117,20 +117,27 @@
 																		
 											<div class="col-sm-5" valida>
 												<label>Tipo de Nota de Credito *</label>
-												<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="gnc.objeto.nombre" required>
+												<select name="tipoNotaCredito" ng-model="gnc.nota.tipoNotaCredito_id" data-placeholder="Seleccione" class="form-control" required>
+													<option  value="{{tipo._id}}" ng-repeat="tipo in gnc.tiposNotas">
+														{{tipo.nombre}}
+													</option>
+												</select>
+												
 											</div>
 											<div class="col-sm-2" >
 											</div>
 											<div class="col-sm-5" valida>
 												<label>Fecha *</label>
-												<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="gnc.objeto.nombre" required>
+											
+												<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="gnc.nota.fecha" name="fecha" required/>
 											</div>
 										</div>
 										<br/>
 										<div class="row">
 											<div class="col-sm-5" valida>
-												<label>Cantidad *</label>
-												<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="gnc.objeto.nombre" required>
+												<label>Monto *</label>
+												<input name="Monto" type="number" min="0" class="form-control" placeholder="Monto" ng-model="gnc.nota.monto" required="">
+											
 											</div>
 											
 										</div>
@@ -138,8 +145,8 @@
 									<div class="well">			
 										<div class="row">
 											<div class="col-sm-12">
-												<input type="submit" ng-click="gnc.guardar(gnc.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="gnc.action" valida-form formulario="form">
-												<input type="submit" ng-click="gnc.actualizar(gnc.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!gnc.action" valida-form formulario="form">	
+												<input type="submit" ng-click="gnc.guardar(gnc.nota,form)" value="Guardar" class="btn btn-primary" ng-show="gnc.action" valida-form formulario="form">
+												<input type="submit" ng-click="gnc.actualizar(gnc.nota,form)" value="Actualizar" class="btn btn-primary" ng-show="!gnc.action" valida-form formulario="form">	
 											</div>
 										</div>
 									</div>	

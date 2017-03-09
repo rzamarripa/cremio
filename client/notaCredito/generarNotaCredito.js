@@ -3,11 +3,12 @@ angular
 	.controller('GenerarNotaCredito', GenerarNotaCredito);
  
 function GenerarNotaCredito($scope, $meteor, $reactive, $state, toastr, $stateParams) {
-	
+
 	rc = $reactive(this).attach($scope);
-	
+	this.action = true;
+	this.nuevo = true;	 
+	this.objeto = {}; 
 	this.fechaActual = new Date();
-	
 	window.rc = rc;
 	
 	this.subscribe("ocupaciones",()=>{
@@ -18,6 +19,9 @@ function GenerarNotaCredito($scope, $meteor, $reactive, $state, toastr, $statePa
 		return [{
 			_id : $stateParams.objeto_id
 		}];
+	});
+	this.subscribe('tiposNotasCredito',()=>{
+		return [{}]
 	});
 	
 	
@@ -37,9 +41,29 @@ function GenerarNotaCredito($scope, $meteor, $reactive, $state, toastr, $statePa
 			}
 			return Ocupaciones.find();
 		},
+		tiposNotas : () => {
+			return TiposNotasCredito.find({});
+		}
 		
 	});
 	
+
+	this.guardar = function(objeto,form)
+	{
+			if(form.$invalid){
+						toastr.error('Error al guardar los datos.');
+						return;
+			}
+			
+			objeto.estatus = 1;
+			objeto.cliente_id = $stateParams.objeto_id;
+
+			objeto.usuarioInserto = Meteor.userId();
+			NotasCredito.insert(objeto);
+			toastr.success('Guardado correctamente.');
+			$state.go("root.clienteDetalle",{objeto_id : $stateParams.objeto_id});
+		
+	};
 	
 
 	

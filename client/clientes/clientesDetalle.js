@@ -27,11 +27,19 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			cliente_id : $stateParams.objeto_id, estatus : 2
 		}];
 	});
+	this.subscribe('notasCredito', () => {
+		return [{
+			cliente_id : $stateParams.objeto_id
+		}];
+	});
 	
 	this.subscribe('planPagos', () => {
 		return [{
 			cliente_id : $stateParams.objeto_id, credito_id : { $in : this.getCollectionReactively("creditos_id")}
 		}];
+	});
+	this.subscribe('tiposNotasCredito',()=>{
+		return [{}]
 	});
 			
 	this.helpers({
@@ -42,6 +50,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			}
 			
 			return creditos;
+		},
+		notasCredito : () =>{
+			return NotasCredito.find({},{sort:{fecha:1}});
 		},
 		objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
@@ -145,7 +156,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.masInformacion = function(){
 		this.masInfo = !this.masInfo;
 	}
-	
+	this.getNombreTipoNotaCredito = function (tipo_id) {
+		var tipo = TiposNotasCredito.findOne(tipo_id);
+		return tipo? tipo.nombre:"";
+	}
 	this.obtenerEstatus = function(cobro){
 		if(cobro.estatus == 1)
 			return "bg-color-green txt-color-white";

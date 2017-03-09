@@ -345,6 +345,65 @@
 					<!-- end widget -->
 			
 				</article>
+				<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+
+					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+						
+						<header role="heading">
+							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+							<h2>Notas de credito</h2>
+			
+			
+						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+			
+						<!-- widget div-->
+						<div class="no-padding" role="content">
+							<!-- widget edit box -->
+						
+							<!-- end widget edit box -->
+			
+							<div class="widget-body">
+								<!-- content -->
+								
+								
+										<div class="row  padding-10 ">
+											<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+												<table class="table table-striped table-bordered table-condensed font-xs">
+														<thead class="thead">
+															<tr>
+															<!-- 	<th class="text-center" width="5%"></th> -->
+																<th class="text-center" width="5%">No.</th>
+																<th class="text-center" width="20%">Tipo de Nota de Credito</th>
+																<th class="text-center" width="20%">Fecha</th>
+																<th class="text-center" width="15%">Monto</th>
+																<th class="text-center" width="15%">Estatus</th>
+																
+																
+																<!-- 	<th class="text-center" width="20%">Acciones</th> -->
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="(index,nota) in cd.notasCredito"  ng-class="nota.estatus==1? 'info':'warning'">
+																<td>{{index+1}}</td>
+																<td>{{cd.getNombreTipoNotaCredito(nota.tipoNotaCredito_id)}}</td>
+																<td>{{nota.fecha | date:'fullDate'}}</td>
+																<td>{{nota.monto | currency}}</td>
+																<td>{{nota.estatus==1? 'Vigente': nota.estatus==0? 'Cancelada':'Vigente'}}</td>
+															</tr>
+														</tbody>
+												</table>
+											</div>
+										</div>
+									
+								<!-- end content -->
+							</div>
+			
+						</div>
+						<!-- end widget div -->
+					</div>
+					<!-- end widget -->
+			
+				</article>
 			</div>
 		</div>
 	</div>
