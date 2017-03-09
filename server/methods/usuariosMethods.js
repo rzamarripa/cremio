@@ -9,7 +9,6 @@ Meteor.methods({
 		
 		Roles.addUsersToRoles(usuario_id, rol, grupo);
 
-						
 		//Insertar en personas el Cliente (Regresar el id)
 		var usuarioPersona = {};
 		
@@ -43,6 +42,7 @@ Meteor.methods({
 		
 		_.each(usuario.profile.referenciasPersonales, function(referenciaPersonal){
 					//Preguntar si es nuevo la Referencia personal
+					
 					if (!referenciaPersonal.persona_id)
 					{
 							//Insertar en Personas las referencia y poniedole el usuario_id (regresar el _id de cada persona para ponerlo en una pila
@@ -58,7 +58,7 @@ Meteor.methods({
 							var p = Personas.findOne({_id:referenciaPersonal.persona_id});
 							p.relaciones.push({cliente_id: usuario_id, cliente: usuario.profile.nombreCompleto , tipoPersona: "Referencia", estatus: 0});
 							Personas.update({_id: referenciaPersonal.persona_id},{$set:p});
-						
+							user.profile.referenciasPersonales_ids.push(referenciaPersonal.persona_id);
 					}
 							
 		});
@@ -68,7 +68,6 @@ Meteor.methods({
 		
 		//actualizar el user para poner solo los ids
 		Meteor.users.update({_id: usuario_id},{$set:user})
-		
 		
 		
 	},

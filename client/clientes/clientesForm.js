@@ -25,8 +25,7 @@ angular.module("creditoMio")
   
   this.buscar = {};
 	this.buscar.nombre = "";
-	this.buscandoCliente = false;
-	this.buscandoReferencia = false;
+	this.buscando = false;
   
   this.subscribe('buscarPersonas', () => {
 		if(this.getReactively("buscar.nombre").length > 3){
@@ -261,19 +260,24 @@ angular.module("creditoMio")
 	};
 	
 	this.AgregarCliente = function(a){
-		console.log("Entro Cliente");
-		rc.objeto.profile.nombre = a.nombre;
-		rc.objeto.profile.apellidoPaterno = a.apellidoPaterno;
-		rc.objeto.profile.apellidoMaterno = a.apellidoMaterno;
-		rc.objeto.profile.direccion = a.direccion;
-		rc.objeto.profile.persona_id = a._id;
-		rc.buscar.nombre = "";
+
+		this.objeto = {}; 
+		this.objeto.profile = {};
+		
+		this.objeto.profile.nombre = a.nombre;
+		this.objeto.profile.apellidoPaterno = a.apellidoPaterno;
+		this.objeto.profile.apellidoMaterno = a.apellidoMaterno;
+		this.objeto.profile.direccion = a.direccion;
+		this.objeto.profile.persona_id = a._id;
+
+		this.buscar.nombre = "";
 	};
 	
 	
 	
 	this.AgregarReferencia = function(a){
-		console.log("Entro Referencia");
+		
+		
 		this.parentezco.nombre = a.nombre;
 		this.parentezco.apellidoPaterno = a.apellidoPaterno;
 		this.parentezco.apellidoMaterno = a.apellidoMaterno;
@@ -301,10 +305,14 @@ angular.module("creditoMio")
 			}	
 			
 			*/
+			//console.log(this.referenciasPersonales.length);
 			
 			//incremeneto
-			this.con = this.con + 1;
-			this.parentezco.num = this.con;
+			//this.con = this.con + 1;
+			
+			console.log(this.parentezco);
+			
+			this.parentezco.num = this.referenciasPersonales.length + 1;
 			
 			this.referenciasPersonales.push(this.parentezco);	
 			this.parentezco={};
@@ -313,11 +321,7 @@ angular.module("creditoMio")
 	this.actualizarReferencia = function(p)
 	{
 			p.num = this.num;
-/*
-			console.log(p);
-			console.log(this.referenciasPersonales);
-			console.log(this.num);
-*/
+			
 			_.each(this.referenciasPersonales, function(rp){
 							if (rp.num == p.num)
 							{
@@ -330,7 +334,7 @@ angular.module("creditoMio")
 									rp.telefono = p.telefono;
 									rp.tiempo = p.tiempo;
 							}
-			})
+			});
 			
 			this.parentezco={};
 			this.num=0;
@@ -342,6 +346,18 @@ angular.module("creditoMio")
 			this.parentezco={};
 			this.num = -1;
 			this.action = true;
+	};
+	
+	this.borrarReferencia = function()
+	{
+			this.parentezco.nombre = "";
+			this.parentezco.apellidoPaterno = "";
+			this.parentezco.apellidoMaterno = "";
+			this.parentezco.direccion = "";
+			this.parentezco.parentezco = "";
+			this.parentezco.tiempoConocerlo = "";
+			delete this.parentezco["persona_id"];
+
 	};
 	
 	this.quitarReferencia = function(numero)

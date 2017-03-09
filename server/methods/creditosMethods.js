@@ -19,7 +19,9 @@ Meteor.methods({
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		credito.folio = sucursal.folio + 1;
 		credito.avales_ids = [];
-
+		
+		console.log(credito.avales);
+		
 		_.each(credito.avales, function(aval){
 			if (!aval.persona_id){	  	
 					aval.relaciones = [];
@@ -35,6 +37,7 @@ Meteor.methods({
 					var p = Personas.findOne({_id:aval.persona_id});
 					p.relaciones.push({credito: credito.folio, tipoPersona: "Aval", estatus: 0});
 					Personas.update({_id: aval.persona_id},{$set:p});
+					credito.avales_ids.push(aval.persona_id);
 			}
 		});
 

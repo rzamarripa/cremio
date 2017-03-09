@@ -20,6 +20,7 @@ angular.module("creditoMio")
   
 
   rc.avales = [];
+  rc.referenciasPersonales = [];
 	rc.ihistorialCrediticio = [];
  
   rc.cobranza_id = "";
@@ -232,12 +233,27 @@ angular.module("creditoMio")
 	  	if (mun != undefined) rc.cliente.profile.empresa.municipio = mun.nombre;
 	  	ciu = Ciudades.findOne(rc.cliente.profile.empresa.ciudad_id);
 	  	if (ciu != undefined) rc.cliente.profile.empresa.ciudad = ciu.nombre;
+	  	
+	  	rc.referenciasPersonales = [];
+	  	
+	  	_.each(rc.cliente.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
+						Meteor.call('getPersona', referenciaPersonal_id, function(error, result){						
+									if (result)
+									{
+											console.log(result);
+											rc.referenciasPersonales.push(result);
+											$scope.$apply();			
+									}
+						});	
+	  	});
+	  	
+	  	
 	  	//-----------------------------------------------------------------------------
 	  	
 	  	
 	  	//Información del Crédito
 	  	rc.credito = objeto.credito;	  
-	  	//console.log(rc.credito);
+	  	
 	  	var tc = TiposCredito.findOne(rc.credito.tipoCredito_id);
 	  	if (tc != undefined) rc.credito.tipoCredito = tc.nombre;
 	  	
