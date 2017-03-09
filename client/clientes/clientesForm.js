@@ -118,6 +118,7 @@ angular.module("creditoMio")
 	  objeto : () => {
 		  var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
 		  rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
+		  console.log("objeto",objeto,this.objeto_id)
 		  return objeto;
 	  },
 	  personasTipos : () => {
