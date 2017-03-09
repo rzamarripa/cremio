@@ -241,12 +241,15 @@ angular.module("creditoMio")
 	  	var tc = TiposCredito.findOne(rc.credito.tipoCredito_id);
 	  	if (tc != undefined) rc.credito.tipoCredito = tc.nombre;
 	  	
+	  	
 	  	rc.avales = [];
 	  	_.each(rc.credito.avales_ids,function(aval_id){
 						Meteor.call('getPersona', aval_id, function(error, result){						
 									if (result)
 									{
+											console.log(result);
 											rc.avales.push(result);
+											$scope.$apply();			
 									}
 						});	
 	  	});

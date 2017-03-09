@@ -1,11 +1,12 @@
 Meteor.publish("buscarClientes",function(options){
-	if(options.where.nombreCompleto.length > 0){
-		let selector = {
-	  	"profile.nombreCompleto": { '$regex' : '.*' + options.where.nombreCompleto || '' + '.*', '$options' : 'i' },
-	  	roles : ["Cliente"]
+	if (options.where != undefined)	
+		if(options.where.nombreCompleto.length > 0){
+			let selector = {
+		  	"profile.nombreCompleto": { '$regex' : '.*' + options.where.nombreCompleto || '' + '.*', '$options' : 'i' },
+		  	roles : ["Cliente"]
+			}
+			return Meteor.users.find(selector, options.options);	
 		}
-		return Meteor.users.find(selector, options.options);	
-	}
 });
 
 Meteor.publish("buscarRootClientes",function(options){

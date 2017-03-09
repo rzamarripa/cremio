@@ -4,6 +4,11 @@
 			<h4>Información del Cliente</h4>
 			<div class="well">	    
 		    <div class="row">
+			    <div class="col-sm-8"> 
+							<div ng-include=" 'client/clientes/_buscarPersonaCliente.html'"></div>
+					</div>
+		    </div>
+		    <div class="row">	
 		    	<div class="col-sm-4" valida> 					    
 			    	<label>Nombre (s) *</label>
 			    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cli.objeto.profile.nombre" required>
@@ -217,6 +222,11 @@
 			
 			<h4>Referencias Personales</h4>
 			<div class="well">	    
+		    <div class="row">
+			    <div class="col-sm-8"> 
+							<div ng-include=" 'client/clientes/_buscarPersonaReferencia.html'"></div>
+					</div>
+		    </div>	
 		    <div class="row">
 		    	<div class="col-sm-3"> 					    
 			    	<label>Nombre</label>

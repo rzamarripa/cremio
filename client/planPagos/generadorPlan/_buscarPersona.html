@@ -33,7 +33,7 @@
 							<a href="javascript:void(0);" ng-show="ge.persona.tipoPersona = 'Aval'" ng-click="ge.AgregarAval(persona);ge.buscando = false"> Agregar</a>
 							
 							<div class="btn-group btn-xs btn-group-justified">
-								<a href="javascript:void(0);" class="btn btn-default" ng-repeat="credito in persona.creditosPersonas"  ui-sref="root.verPlanPagos({objeto_id : persona._id, credito_id : credito._id})" ng-click="ge.buscando = false;">{{credito.credito}} - {{credito.tipoPersona}}</a>
+								<a href="javascript:void(0);" class="btn btn-default" ng-repeat="relacion in persona.relaciones"  ui-sref="root.verPlanPagos({objeto_id : persona._id, credito_id : relacion._id})" ng-click="ge.buscando = false;">{{relacion.credito}} - {{relacion.tipoPersona}} - <span ng-class = "relacion.estatus==0?'text-success':'text-danger'"><i ng-if="relacion.estatus==0" class="fa fa-check"></i><i ng-if="relacion.estatus!=0" class="fa fa-times"></span></a>
 							</div>
 							
 						</div>

@@ -270,7 +270,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla" || user.roles[0] == "Verificador"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
@@ -286,7 +286,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla" || user.roles[0] == "Verificador"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
@@ -302,7 +302,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla" || user.roles[0] == "Verificador"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
@@ -319,7 +319,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla" || user.roles[0] == "Verificador"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 

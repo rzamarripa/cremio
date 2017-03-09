@@ -199,7 +199,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		}
 	}
 	
-	/*
+	
 	this.AgregarAval = function(a){
 		this.aval.nombre = a.nombre;
 		this.aval.apellidoPaterno = a.apellidoPaterno;
@@ -213,10 +213,10 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		this.aval.direccionEmpresa = a.direccionEmpresa;
 		this.aval.parentezco = a.parentezco;
 		this.aval.tiempoConocerlo = a.tiempoConocerlo;
-		this.aval._id = a._id;
+		this.aval.persona_id = a._id;
 		this.buscar.nombre = "";
 	}
-	*/
+	
 	/*
 	this.modificacionMasiva = function(modificacion, form){
 		if(form.$invalid){

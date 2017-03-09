@@ -6,7 +6,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	rc = $reactive(this).attach($scope);
 	
-	
 	this.fechaActual = new Date();
 	this.creditos = [];
 	this.creditos_id = [];
@@ -25,7 +24,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.subscribe('creditos', () => {
 		return [{
-			cliente_id : $stateParams.objeto_id, estatus : 1
+			cliente_id : $stateParams.objeto_id, estatus : 2
 		}];
 	});
 	

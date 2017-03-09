@@ -14,20 +14,20 @@ Meteor.methods({
 		credito.avales_ids = [];
 
 		_.each(credito.avales, function(aval){
-			if (!aval._id){	  	
-				aval.creditosPersonas = [];
-				aval.creditosPersonas.push({credito: credito.folio, tipoPersona: "Aval"});
-				aval.nombreCompleto = aval.nombre + " " + aval.apellidoPaterno + " " + aval.apellidoMaterno;
-				Personas.insert(aval, function(error, result){
-					if (result){
-						credito.avales_ids.push(result);
-					}		  		
-				});
+			if (!aval.persona_id){	  	
+					aval.relaciones = [];
+					aval.relaciones.push({credito: credito.folio, tipoPersona: "Aval", estatus: 0});
+					aval.nombreCompleto = aval.nombre + " " + aval.apellidoPaterno + " " + aval.apellidoMaterno;
+					Personas.insert(aval, function(error, result){
+						if (result){
+							credito.avales_ids.push(result);
+						}		  		
+					});
 			}
 			else{
-				var p = Personas.findOne({_id:aval._id});
-				p.creditosPersonas.push({credito: credito.folio, tipoPersona: "Aval"});
-				Personas.update({_id: aval._id},{$set:p});
+					var p = Personas.findOne({_id:aval.persona_id});
+					p.relaciones.push({credito: credito.folio, tipoPersona: "Aval", estatus: 0});
+					Personas.update({_id: aval.persona_id},{$set:p});
 			}
 		});
 

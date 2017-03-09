@@ -23,6 +23,23 @@ angular.module("creditoMio")
   this.referenciasPersonales = [];
   this.parentezco = {};
   
+  this.buscar = {};
+	this.buscar.nombre = "";
+	this.buscandoCliente = false;
+	this.buscandoReferencia = false;
+  
+  this.subscribe('buscarPersonas', () => {
+		if(this.getReactively("buscar.nombre").length > 3){
+			this.buscando = true;
+			return [{
+		    options : { limit: 10 },
+		    where : { 
+					nombreCompleto : this.getReactively('buscar.nombre')
+				} 		   
+	    }];
+		}
+  });
+  
 	this.subscribe('empresas',()=>{
 		return [{estatus: true}]
 	});
@@ -102,7 +119,13 @@ angular.module("creditoMio")
 		  var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
 		  rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
 		  return objeto;
-	  }
+	  },
+	  personasTipos : () => {
+			var personas = Personas.find({
+		  	"nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
+			}, { sort : {"nombreCompleto" : 1 }}).fetch();
+			return personas;
+		},	
   }); 
   
   this.Nuevo = function()
@@ -236,6 +259,29 @@ angular.module("creditoMio")
       */
 	};
 	
+	this.AgregarCliente = function(a){
+		console.log("Entro Cliente");
+		rc.objeto.profile.nombre = a.nombre;
+		rc.objeto.profile.apellidoPaterno = a.apellidoPaterno;
+		rc.objeto.profile.apellidoMaterno = a.apellidoMaterno;
+		rc.objeto.profile.direccion = a.direccion;
+		rc.objeto.profile.persona_id = a._id;
+		rc.buscar.nombre = "";
+	};
+	
+	
+	
+	this.AgregarReferencia = function(a){
+		console.log("Entro Referencia");
+		this.parentezco.nombre = a.nombre;
+		this.parentezco.apellidoPaterno = a.apellidoPaterno;
+		this.parentezco.apellidoMaterno = a.apellidoMaterno;
+		this.parentezco.direccion = a.direccion;
+		this.parentezco.parentezco = a.parentezco;
+		this.parentezco.tiempoConocerlo = a.tiempoConocerlo;
+		this.parentezco.persona_id = a._id;
+		this.buscar.nombre = "";
+	};
 	
 	this.insertarReferencia = function()
 	{
@@ -266,9 +312,11 @@ angular.module("creditoMio")
 	this.actualizarReferencia = function(p)
 	{
 			p.num = this.num;
+/*
 			console.log(p);
 			console.log(this.referenciasPersonales);
 			console.log(this.num);
+*/
 			_.each(this.referenciasPersonales, function(rp){
 							if (rp.num == p.num)
 							{

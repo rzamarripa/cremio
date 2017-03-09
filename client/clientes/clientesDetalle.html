@@ -17,10 +17,10 @@
 							<div class="col-sm-12">
 								<div id="myCarousel" class="carousel profile-carousel">
 									<div class="air air-bottom-right padding-10">
-										<a ng-if="currentUser.roles[0] == 'Gerente'" ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm">
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Verificador'" ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm">
 											<i class="fa fa-plus"></i> Nueva Solicitud
 										</a>&nbsp;
-										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla' || currentUser.roles[0] == 'Verificador'" ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
 									</div>
