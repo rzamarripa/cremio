@@ -159,42 +159,68 @@ Meteor.methods({
 			
 			var saldoPago = 0;
 			var saldoActual = 0; 
+			var saldoMultas=0;
 			
 			//console.log(credito_id);			
 			
 			var credito = Creditos.findOne({_id: credito_id});
-			var planPagos = PlanPagos.find({credito_id:credito_id},{sort:{numeroPago:1,descripcion:1}}).fetch();
+			var planPagos = PlanPagos.find({credito_id:credito_id},{sort:{numeroPago:1,descripcion:-1}}).fetch();
 			
 			//console.log(planPagos);
 			
 			var saldo =0;
 			//try{ saldo = credito.numeroPago*pagos[0].cargo;} catch(ex){console.log("aqui",pagos)}
 			//console.log("credito",credito);
+			_.each(planPagos, function(planPago){
+				if(planPago.descripcion=="Recibo")
+					saldo+=planPago.cargo;
+				if(planPago.descripcion=="Multa")
+					saldoMultas+=planPago.importeRegular;
+			});
 			_.each(planPagos, function(planPago, index){
 
-  				if(planPago.descripcion=="Multa")
-	  					saldo+=planPago.importeRegular
-		  				
-
-						arreglo.push({saldo 				: saldo, 
-													numeroPago  	: planPago.numeroPago,
-													cantidad 			: credito,
-													fechaSolicito : credito.fechaSolicito,
-													fecha 				: planPago.fechaPago,
-													fechaLimite		: planPago.fechaLimite,
-													pago 					: planPago.importeRegular, 
-													cargo					: planPago.cargo,
-													movimiento		: planPago.movimiento,
-													planPago_id		: planPago._id,
-													credito_id 		: planPago.credito_id,
-													descripcion		: planPago.descripcion,
-													importe				: planPago.importeRegular,pagos:planPago.pagos
-		  				 })
 				
-							  				
-		  				
+				if(planPago.descripcion=="Multa")
+					saldo+=planPago.cargo
+				
+				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
+				//console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
+				arreglo.push({saldo:saldo,
+					numeroPago : planPago.numeroPago,
+					cantidad : credito.numeroPagos,
+					fechaSolicito : credito.fechaSolicito,
+					fecha : fechaini,
+					pago : 0, 
+					cargo : planPago.cargo,
+					movimiento : planPago.movimiento,
+					planPago_id : planPago._id,
+					credito_id : planPago.credito_id,
+					descripcion : planPago.descripcion,
+					importe : planPago.importeRegular,
+					pagos : planPago.pagos
+			  	});
+					
+				
+				if(planPago.pagos.length>0)
+					_.each(planPago.pagos,function (pago) {
+						saldo-=pago.totalPago
+						arreglo.push({saldo:saldo,
+							numeroPago : planPago.numeroPago,
+							cantidad : credito.numeroPagos,
+							fechaSolicito : credito.fechaSolicito,
+							fecha : pago.fechaPago,
+							pago : pago.totalPago, 
+							cargo : 0,
+							movimiento : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							planPago_id : planPago._id,
+							credito_id : planPago.credito_id,
+							descripcion : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							importe : planPago.importeRegular,
+							pagos : planPago.pagos
+					  	});
+					})
+				//console.log(rc.saldo)
 			});
-			credito.saldoActual = saldoPago
 
 			
 			return arreglo;
