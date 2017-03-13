@@ -47,6 +47,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 				} 		   
 	    }];
 		}
+		else if (this.getReactively("buscar.nombre").length  == 0 )
+			this.buscando = false;
   	});
 	
 	this.subscribe("planPagos", ()=>{
@@ -252,7 +254,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			saldoRecibo : 0.00,
 			estatus : 1,
 			requiereVerificacion: this.credito.requiereVerificacion,
-			sucursal_id : Meteor.user().profile.sucursal_id
+			sucursal_id : Meteor.user().profile.sucursal_id,
+			fechaVerificacion: this.credito.fechaVerificacion
 		};
 
 		Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
@@ -291,7 +294,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			saldoRecibo : 0.00,
 			estatus : 1,
 			requiereVerificacion: this.credito.requiereVerificacion,
-			sucursal_id : Meteor.user().profile.sucursal_id
+			sucursal_id : Meteor.user().profile.sucursal_id,
+			fechaVerificacion: this.credito.fechaVerificacion
 		};
 				
 		credito.avales = angular.copy(this.avales);

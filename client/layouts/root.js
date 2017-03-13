@@ -23,6 +23,8 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 				} 		   
 	    }];
 		}
+		else if (this.getReactively("buscar.nombre").length  == 0 )
+			this.buscando = false;		
   });
   
   this.helpers({

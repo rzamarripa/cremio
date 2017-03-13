@@ -108,18 +108,23 @@
 					    	</div>									    	
 					    </div>
 					    <div class="row">
-					    	<div class="col-sm-4" valida>
+					    	<div class="col-sm-3" valida>
 						    	<label>Capital Solicitado *</label>
 						    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ge.credito.capitalSolicitado" required="">
 					    	</div>
-					    	<div class="col-sm-4" valida>
+					    	<div class="col-sm-3" valida>
 						    	<label>Primer abono *</label>
-						    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.primerAbono" name="fechaCreditoNuevo" required/>
+						    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.primerAbono" name="fechaPrimerAbono" required/>
 					    	</div>
-					    	<div class="col-sm-4">					    
+					    	<div class="col-sm-3">					    
 						    	<label>Requiere Verificación</label>
 						    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ge.credito.requiereVerificacion">
 					    	</div>
+					    	<div class="col-sm-3" valida>
+						    	<label>Fecha Verificación</label>
+						    	<input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.fechaVerificacion" ng-disabled="!ge.credito.requiereVerificacion" />
+					    	</div>
+
 					    </div>
 						</div>
 						
