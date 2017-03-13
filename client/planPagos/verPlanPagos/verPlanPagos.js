@@ -58,6 +58,8 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.subscribe('empresas', () => {
 		return [{estatus:true  }];
 	});
+
+
 	this.helpers({
 		creditos : () => {
 			return Creditos.findOne({_id : $stateParams.credito_id})
@@ -109,7 +111,10 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		},
 		pagos : () =>{
 			return Pagos.find().fetch()
-		}
+		},
+		notas : () => {
+			return Notas.find().fetch();
+		},
 	});
 	  
  
@@ -293,4 +298,5 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		   }
 		});
 	};
+
 };

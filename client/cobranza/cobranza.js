@@ -34,6 +34,7 @@ angular.module("creditoMio")
   
   this.selected_credito = 0;
   this.ban = false;
+  this.respuestaNotaCLiente = false;
   
   this.subscribe("tiposCredito", ()=>{
 		return [{}]
@@ -349,6 +350,7 @@ angular.module("creditoMio")
 			nota.fecha = new Date()
 			nota.hora = moment(nota.fecha).format("hh:mm:ss a")
 			rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+			rc.notaCobranza.tipo = "Cobranza"
 			Notas.insert(nota);
 			this.notaCobranza = {}
 			$('#myModal').modal('hide');
@@ -359,20 +361,77 @@ angular.module("creditoMio")
 		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
 		rc.notaCobranza.folioCredito = objeto.credito.folio 
 		rc.notaCobranza.recibo= objeto.planPagos[0].numeroPago
-		
-		 rc.cobranza_id = objeto.credito._id
+	    rc.notaCobranza.cliente_id = objeto.cliente._id
+		rc.cobranza_id = objeto.credito._id
+		console.log("rc.cobranza_id",rc.cobranza_id)
+		$("#myModal").modal();
+
+
+	}
+
+	this.mostrarNotaCliente=function(objeto){
+		console.log(objeto)
+		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
+		rc.notaCobranza.folioCredito = objeto.credito.folio 
+		rc.notaCobranza.recibo= objeto.planPagos[0].numeroPago
+     	rc.cobranza_id = objeto.credito._id
+     	rc.notaCobranza.cliente_id = objeto.cliente._id
 		 console.log("rc.cobranza_id",rc.cobranza_id)
-		 $("#myModal").modal();
+		 $("#modalCliente").modal();
 
 
-	};
+	}
+	this.guardarNotaCliente=function(nota){
+			console.log(nota);			
+			nota.estatus = true;
+			nota.fecha = new Date()
+			nota.hora = moment(nota.fecha).format("hh:mm:ss a")
+			rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+			rc.notaCobranza.tipo = "Cliente"
+		    //rc.notaCobranza.cliente_id = objeto.cliente._id
+			rc.notaCobranza.respuesta =  this.respuestaNotaCLiente			
+			Notas.insert(nota);
+			this.notaCobranza = {}
+			$('#modalCliente').modal('hide');
+			toastr.success('Guardado correctamente.');
+	}
+	this.cambioEstatusRespuesta=function(){
+		this.respuestaNotaCLiente = !this.respuestaNotaCLiente;
+					
+	}
+
+	this.mostrarNotaCuenta=function(objeto){
+		console.log(objeto)
+		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
+		rc.notaCobranza.folioCredito = objeto.credito.folio 
+		rc.notaCobranza.recibo= objeto.planPagos[0].numeroPago
+		 rc.cobranza_id = objeto.credito._id
+		 rc.notaCobranza.cliente_id = objeto.cliente._id
+		 console.log("rc.cobranza_id",rc.cobranza_id)
+		 $("#modalCuenta").modal();
+
+	}
+	this.guardarNotaCuenta=function(nota){
+			console.log(nota);			
+			nota.estatus = true;
+			nota.fecha = new Date()
+			nota.hora = moment(nota.fecha).format("hh:mm:ss a")
+			rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+			rc.notaCobranza.tipo = "Cuenta"
+			rc.notaCobranza.respuesta =  this.respuestaNotaCLiente	
+		   // rc.notaCobranza.cliente_id = objeto.cliente._id
+			Notas.insert(nota);
+			this.notaCobranza = {}
+			$('#modalCuenta').modal('hide');
+			toastr.success('Guardado correctamente.');
+	}
+	
 
 
 	this.download = function(objeto) 
   {
 	  	
 		console.log("entro:", objeto);
-
 
 		Meteor.call('getcartaRecordatorio', objeto, function(error, response) {
 		   if(error)
