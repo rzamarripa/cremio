@@ -8,7 +8,7 @@ angular.module("creditoMio").run(function ($rootScope, $state, toastr) {
         break;
       case "FORBIDDEN":
         //$state.go('root.home');
-        break;
+        break; 
       case "UNAUTHORIZED":
       	toastr.error("Acceso Denegado");
 				toastr.error("No tiene permiso para ver esta opción");
@@ -454,5 +454,14 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
         }]
       }
     })
-
+		.state('root.cajas', {
+      url: '/cajas',
+      templateUrl: 'client/cajas/cajas.ng.html',
+      controller: 'CajasCtrl as caj',
+      resolve: {
+	      "currentUser": ["$meteor", function($meteor){
+	        return $meteor.requireUser();
+	      }]
+	    }
+    })
 }]);

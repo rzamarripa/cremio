@@ -331,6 +331,7 @@ angular.module("creditoMio")
 								//console.log(rc.historialCrediticio);
 						}
 			});
+			console.log(rc.historialCrediticio);
 			
 			
 			
