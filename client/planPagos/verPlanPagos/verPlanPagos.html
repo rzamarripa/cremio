@@ -382,110 +382,111 @@
 <div class="jarviswidget" id="wid-id-5" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false" role="widget"
  ng-repeat="credito in vpp.creditos">
 							
-								<!-- <header role="heading"><div class="jarviswidget-ctrls" role="menu">   <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus "></i></a>  <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Delete"><i class="fa fa-times"></i></a></div>
-									<h2>Tabs left </h2>
-									<div class="widget-toolbar hidden-phone" role="menu">
-										<div class="smart-form">
-											<label class="toggle">
-												<input type="checkbox" id="demo-switch-to-pills" name="checkbox-toggle">
-												<i data-swchon-text="TRUE" data-swchoff-text="FALSE"></i>Switch Navs / Pills</label>
-										</div>
-									</div>
-								<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header> -->
-				
-								<!-- widget div-->
-								<div role="content">
-				
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<!-- This area used as dropdown edit box -->
-				
-									</div>
-									<!-- end widget edit box -->
-				
-									<!-- widget content -->
-									<div class="widget-body">
-				
-										<div class="tabs-left">
-											<ul class="nav nav-tabs tabs-left" id="demo-pill-nav">
-												<li class="active">
-													<a href="#tab-r1" data-toggle="tab" aria-expanded="true"> Detalles de la Solicitud </a>
-												</li>
-												<li class="">
-													<a href="#tab-r2" data-toggle="tab" aria-expanded="false">Avales</a>
-												</li>
-												<li class="">
-													<a href="#tab-r3" data-toggle="tab" aria-expanded="false">Garantias</a>
-												</li>
-											</ul>
-											<div class="tab-content">
-												<div class="tab-pane active" id="tab-r1">
-												<div class="table-responsive">
-													<dl class="dl-horizontal">
-														  <dt>Tipo de Credito</dt>
-														  <dd>{{credito.nombreTipoCredito.nombre}}</dd>
-														  <dt>Periodo de Pago</dt>
-														  <dd>{{credito.periodoPago}}</dd>
-														  <dt>Capital Solicitado</dt>
-														  <dd>{{credito.capitalSolicitado | currency}}</dd>
-														  <dt>Duración</dt>
-														  <dd>{{credito.duracionMeses}}</dd>
-														</dl>
-												</div>
-												</div>
-												<div class="tab-pane" id="tab-r2">
-												<div class="table-responsive">
-													<dl class="dl-horizontal">
-														  <dt>Nombre:</dt>
-														  <dd>{{credito.avales[0].nombre}}</dd>
-														  <dt>Estado Civil:</dt>
-														  <dd>{{credito.avales[0].estadoCivil}}</dd>
-														  <dt>Ocupación:</dt>
-														  <dd>{{credito.avales[0].ocupacion}}</dd>
-														  <dt>Empresa:</dt>
-														  <dd>{{credito.avales[0].empresa}}</dd>
-														  <dt>Antiguedad:</dt>
-														  <dd>{{credito.avales[0].antiguedad}}</dd>
-														  <dt>Dirección:</dt>
-														  <dd>{{credito.avales[0].direccion}}</dd>
-														  <dt>Parentezco:</dt>
-														  <dd>{{credito.avales[0].parentezco}}</dd>
-														  <dt>Tiempo de Conocerlo:</dt>
-														  <dd>{{credito.avales[0].tiempoConocerlo}}</dd>
-														</dl>
-												</div>
-												</div>
-												<div class="tab-pane " id="tab-r3">
+							
+	<div role="content">
 
-												<div class="table-responsive">
-													<dl class="dl-horizontal">
-														  <dt>Tipo:</dt>
-														  <dd>{{credito.garantias[0].tipo}}</dd>
-														  <dt>Marca:</dt>
-														  <dd>{{credito.garantias[0].marca}}</dd>
-														  <dt>Modelo:</dt>
-														  <dd>{{credito.garantias[0].modelo}}</dd>
-														  <dt>Duración:</dt>
-														  <dd>{{credito.garantias[0].duracionMeses}}</dd>
-														  <dt>Num:</dt>
-														  <dd>{{credito.garantias[0].num}}</dd>
-														  <dt>serie:</dt>
-														  <dd>{{credito.garantias[0].serie}}</dd>
-														  <dt>Color:</dt>
-														  <dd>{{credito.garantias[0].color}}</dd>
-														   <dt>Estado actual:</dt>
-														  <dd>{{credito.garantias[0].estadoActual}}</dd>
+		<!-- widget edit box -->
+		<div class="jarviswidget-editbox">
+			<!-- This area used as dropdown edit box -->
 
-														</dl>
-												</div>
-												</div>
-											</div>
-										</div>
-				
-									</div>
-									<!-- end widget content -->
-				
-								</div>
+		</div>
+		<!-- end widget edit box -->
+
+		<!-- widget content -->
+		<div class="widget-body">
+
+			<div class="tabs-left">
+				<ul class="nav nav-tabs tabs-left" id="demo-pill-nav">
+					<li class="active">
+						<a href="#tab-r1" data-toggle="tab" aria-expanded="true"> Detalles de la Solicitud </a>
+					</li>
+					<li class="">
+						<a href="#tab-r2" data-toggle="tab" aria-expanded="false">Avales</a>
+					</li>
+					<li class="">
+						<a href="#tab-r3" data-toggle="tab" aria-expanded="false">Garantias</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab-r1">
+					<div class="table-responsive">
+						<dl class="dl-horizontal">
+							  <dt>Tipo de Credito</dt>
+							  <dd>{{credito.nombreTipoCredito.nombre}}</dd>
+							  <dt>Periodo de Pago</dt>
+							  <dd>{{credito.periodoPago}}</dd>
+							  <dt>Capital Solicitado</dt>
+							  <dd>{{credito.capitalSolicitado | currency}}</dd>
+							  <dt>Duración</dt>
+							  <dd>{{credito.duracionMeses}}</dd>
+							</dl>
+					</div>
+					</div>
+					<div class="tab-pane" id="tab-r2">
+					<div class="table-responsive">
+					<!-- List -->
+					<div class="row">
+						<div class="col-sm-12">
+							<table class="table table-bordered" >
+								<thead>
+									<tr>
+										<th><div class="text-center">Nombre</div></th>
+										<th><div class="text-center">Estado Civil</div></th>
+										<th><div class="text-center">Ocupación</div></th>
+										<th><div class="text-center">Antiguedad</div></th>
+										<th><div class="text-center">Dirección</div></th>
+										<th><div class="text-center">Parentezco</div></th>
+										<th><div class="text-center">Tiempo de Conocerlo</div></th>
+									</tr>
+								</thead>
+								<tbody>
+							    <tr ng-repeat="objeto in vpp.creditos">
+								    <td>{{objeto.aval.nombreCompleto}}</td>
+									<td>{{objeto.aval.estadoCivil}}</td>
+									<td>{{objeto.aval.ocupacion}}</td>
+									<td>{{objeto.aval.antiguedad}}</td>
+									<td>{{objeto.aval.direccion}}</td>
+									<td>{{objeto.aval.parentezco}}</td>
+									<td>{{objeto.aval.tiempoConocerlo}}</td>
+									
+							    </tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					</div>
+					</div>
+					<div class="tab-pane " id="tab-r3">
+
+					<div class="table-responsive">
+						<dl class="dl-horizontal">
+							  <dt>Tipo:</dt>
+							  <dd>{{credito.garantias[0].tipo}}</dd>
+							  <dt>Marca:</dt>
+							  <dd>{{credito.garantias[0].marca}}</dd>
+							  <dt>Modelo:</dt>
+							  <dd>{{credito.garantias[0].modelo}}</dd>
+							  <dt>Duración:</dt>
+							  <dd>{{credito.garantias[0].duracionMeses}}</dd>
+							  <dt>Num:</dt>
+							  <dd>{{credito.garantias[0].num}}</dd>
+							  <dt>serie:</dt>
+							  <dd>{{credito.garantias[0].serie}}</dd>
+							  <dt>Color:</dt>
+							  <dd>{{credito.garantias[0].color}}</dd>
+							   <dt>Estado actual:</dt>
+							  <dd>{{credito.garantias[0].estadoActual}}</dd>
+
+							</dl>
+					</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- end widget content -->
+
+	</div>
 								<!-- end widget div -->
 							</div>
 							<br/>
