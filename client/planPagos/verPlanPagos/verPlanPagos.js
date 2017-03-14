@@ -105,7 +105,6 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			var credito =Creditos.findOne({_id : $stateParams.credito_id});
 			//console.log(credito)
 			_.each(pagos, function(pago){
-				
 
 				//Generar Multa
 				var multa = PlanPagos.findOne({planPago_id:pago._id,descripcion:"Multa"});

@@ -10,24 +10,29 @@ angular.module("creditoMio")
   this.fechaFinal = new Date();
   this.fechaFinal.setHours(23,0,0,0);
   
+  var FI, FF;
+  rc.cliente = {};
+  rc.credito = {};
   rc.cobranza = {};
   
-  /*
-  this.subscribe('planPagos', () => {
-			return [{fechaLimite: {$gte: rc.getReactively("fechaInicial"),$lt: rc.getReactively("fechaFinal")}, estatus: 0}]
-			
-  });
+  this.selected_credito = 0;
+  this.ban = false;
   
-  this.helpers({
-		cobranza : () => {
-			return PlanPagos.find();
-		},
+  this.subscribe("tiposCredito", ()=>{
+		return [{ estatus : true }]
 	});
 	
-	*/
-	
+	this.helpers({
+		tiposCredito : () => {
+			return TiposCredito.find();
+		},
+	});
+  
+  /*
 	this.getCobranza = function()
 	{
+			//
+			console.log(this.selected_credito);
 			Meteor.call('getCobranza', rc.getReactively("fechaInicial"), rc.getReactively("fechaFinal"), function(error, result) {
 						
 						if (result)
@@ -35,78 +40,104 @@ angular.module("creditoMio")
 								this.cobranza = result;
 							
 						}
-				
 			});	
-		
 	}
+	*/
 	
 	this.calcularSemana = function(w, y) 
 	{
+			var ini, fin;
+		
 	    var simple = new Date(y, 0, 1 + (w - 1) * 7);
-	    rc.fechaInicial = new Date(simple);
-	    rc.fechaFinal = new Date(moment(simple).add(7,"days"));
+	    FI = new Date(simple);
+	    FF = new Date(moment(simple).add(7,"days"));
 	    
-	    rc.fechaFinal.setHours(23,59,59,0);
+	    FF.setHours(23,59,59,0);
+	    
 	}
 	
 	this.calcularMes = function(m, y) 
 	{
 	    var startDate = moment([y, m]);
 			var endDate = moment(startDate).endOf('month');
-	    rc.fechaInicial = startDate.toDate();
-	    rc.fechaFinal = endDate.toDate();
-	    rc.fechaFinal.setHours(23,59,59,0);
+	    FI = startDate.toDate();
+	    FF = endDate.toDate();
+	    FF.setHours(23,59,59,0);
 	}
 	
 	this.AsignaFecha = function(op)
 	{	
-			
-			if (op == 0 || op == 1)
+			this.selected_credito = 0;
+			if (op == 0) //Vencimiento Hoy
 			{
-					this.fechaInicial = new Date();
-				  this.fechaInicial.setHours(0,0,0,0);
-				  this.fechaFinal = new Date();
-				  this.fechaFinal.setHours(23,59,59,0);
-				  console.log("FI:",rc.fechaInicial);
-					console.log("FF:",rc.fechaFinal);
+					FI = new Date();
+				  FI.setHours(0,0,0,0);
+				  FF = new Date();
+				  FF.setHours(23,59,59,0);
+				  //console.log("FI:",FI);
+					//console.log("FF:",FF);
+				  
 			}	
-			else if (op == 2)
+			else if (op == 1) //Día
+			{
+					this.fechaInicial.setHours(0,0,0,0);
+				  this.fechaFinal = new Date(this.fechaInicial.getTime());
+				  this.fechaFinal.setHours(23,59,59,0);
+				  FI = this.fechaInicial;
+				  FF = this.fechaFinal;
+				  
+				  //console.log("FI:", FI);
+					//console.log("FF:", FF);
+					
+			}	
+			else if (op == 2) //Semana
 			{					
+					
+					FI = new Date();
+				  FI.setHours(0,0,0,0);
+				  FF = new Date(FI.getTime());
+				  FF.setHours(23,59,59,0);
+					
 					var semana = moment().isoWeek();
-					var anio = rc.fechaInicial.getFullYear();
+					var anio = FI.getFullYear();
 					this.calcularSemana(semana, anio);
-					console.log("FI:",rc.fechaInicial);
-					console.log("FF:",rc.fechaFinal);
+					//console.log("FI:", FI);
+					//console.log("FF:", FF);
 				
 			}
-			else if (op == 3)
+			else if (op == 3) //Mes
 			{
-					rc.fechaInicial = new Date();
-					var anio = rc.fechaInicial.getFullYear();
-					var mes = rc.fechaInicial.getMonth();
+				
+					FI = new Date();
+					FI.setHours(0,0,0,0);
+					var anio = FI.getFullYear();
+					var mes = FI.getMonth();
 					console.log(mes);
 					this.calcularMes(mes,anio);
-					console.log("FI:",rc.fechaInicial);
-					console.log("FF:",rc.fechaFinal);
+					//console.log("FI:", FI);
+					//console.log("FF:", FF);
 				
 			}
-			else if (op == 4)
+			else if (op == 4) //Siguiente Mes
 			{
-					rc.fechaInicial = new Date();
-					var anio = rc.fechaInicial.getFullYear();
-					var mes = rc.fechaInicial.getMonth();
+					FI = new Date();
+					var anio = FI.getFullYear();
+					var mes = FI.getMonth();
 					if (mes == 11) 
 					{
 							mes = 0;
 							anio = anio + 1; 
-					}	
-					this.calcularMes(mes+1,anio);
-					console.log("FI:",rc.fechaInicial);
-					console.log("FF:",rc.fechaFinal);
+					}
+					else
+							mes = mes + 1;	
+					
+					this.calcularMes(mes,anio);
+					//console.log("FI:", FI);
+					//console.log("FF:", FF);
 			}
 			
-			Meteor.call('getCobranza', rc.fechaInicial, rc.fechaFinal, function(error, result) {
-						console.log(result);						
+			Meteor.call('getCobranza', FI, FF, op, function(error, result) {
+						//console.log(result);						
 						if (result)
 						{
 								rc.cobranza = result;
@@ -115,4 +146,23 @@ angular.module("creditoMio")
 				
 			});	
 	}
+	
+  this.selCredito=function(objeto){
+	  	
+	  	rc.cliente = objeto.cliente;
+	  	rc.credito = objeto.credito;	  
+	  	console.log(objeto.credito);	
+	  	var tc = TiposCredito.findOne(rc.credito.tipoCredito_id);
+	  	rc.credito.tipoCredito = tc.nombre;
+	  	//var avales = [];
+	  	this.ban = !this.ban;
+	  	
+
+	  	
+      this.selected_credito=objeto.credito.folio;
+  }
+  this.isSelected=function(objeto){
+      return this.selected_credito===objeto;
+  }	
+	
 };

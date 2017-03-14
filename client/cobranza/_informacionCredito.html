@@ -1,0 +1,71 @@
+<div class="row">
+	<div class="col-sm-12">
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingOne">
+			      <h4 class="panel-title">
+			        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#hrefInfoCredito" aria-expanded="false" aria-controls="hrefInfoCredito">
+			          Información del Crédito
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="hrefInfoCredito" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+			      <div class="panel-body">    
+						    <div class="row">
+							    <div class="col-sm-4">
+							    	<label>Tipo de crédito</label>
+							    	<input name="tipoCredito" type="text" class="form-control" placeholder="Tipo Credito" ng-model="cob.credito.tipoCredito" disabled="">
+						    	</div>
+						    	<div class="col-sm-4">
+							    	<label>Periodo de pago</label>
+							    	<input name="periodoCreditoNuevo" type="text" class="form-control" placeholder="Periodo de pago" ng-model="cob.credito.periodoPago" disabled="">
+						    	</div>									    	
+						    	<div class="col-sm-4">					    
+							    	<label>Duración (Meses)</label>
+							    	<input name="duracionMesesCreditoNuevo" type="number" class="form-control" placeholder="Duración en Meses" ng-model="cob.credito.duracionMeses" disabled="">
+						    	</div>									    	
+						    </div>
+						    <div class="row">
+						    	<div class="col-sm-4">
+							    	<label>Capital Solicitado</label>
+							    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="cob.credito.capitalSolicitado" disabled="">
+						    	</div>
+						    	<div class="col-sm-4">
+							    	<label>Primer abono</label>
+							    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="cob.credito.primerAbono" name="fechaCreditoNuevo" disabled=""/>
+						    	</div>
+						    </div>
+							</div>
+			      </div>
+			    </div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingTwo">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#hrefAvales" aria-expanded="false" aria-controls="hrefAvales">
+				          Avales
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="hrefAvales" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	
+				      </div>
+				    </div>
+				  </div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingThree">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#hrefGarantias" aria-expanded="false" aria-controls="hrefGarantias">
+				          Garantias
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="hrefGarantias" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+				      <div class="panel-body">
+				        	
+				      </div>
+				    </div>
+				  </div>
+			</div>
+	</div>
+</div>

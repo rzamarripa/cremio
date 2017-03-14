@@ -4,6 +4,8 @@ angular
 function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
 	
 	let rc = $reactive(this).attach($scope);
+	window = rc;
+	
 	this.nuevoBotonPago = true;
 	this.action = false;
 	this.actionAval = true;
@@ -11,14 +13,13 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.fechaActual = new Date();
 	this.nuevoBotonReestructuracion = true;
 	this.nuevoBotonCredito = true;
-	this.buscar = {};
-	this.buscar.nombre = "";
+	//this.buscar = {};
+	//this.buscar.nombre = "";
 	this.cliente_id = "";
 	this.planPagos = [];
 	this.credito = {};
 	this.credito.primerAbono = new Date(moment().add(1, "weeks"));
 	this.pago = {};
-	window.rc = rc;
 
 	this.con = 0;
 	this.num = 0;
@@ -28,6 +29,25 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.numG = 0;
   this.garantias = [];
   this.garantia = {};
+  
+  this.buscar = {};
+	this.buscar.nombre = "";
+	this.buscando = false;
+	this.personasTipos = [];
+	this.personas_ids = [];
+	
+	
+	this.subscribe('buscarPersonas', () => {
+		if(this.getReactively("buscar.nombre").length > 3){
+			this.buscando = true;
+			return [{
+		    options : { limit: 20 },
+		    where : { 
+					nombreCompleto : this.getReactively('buscar.nombre')
+				} 		   
+	    }];
+		}
+  });
 	
 	this.subscribe("planPagos", ()=>{
 		return [{ cliente_id : $stateParams.objeto_id }]
@@ -45,6 +65,22 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	});
 	
 	this.helpers({
+		personasTipos : () => {
+			var personas = Personas.find({
+		  	"nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
+			}, { sort : {"nombreCompleto" : 1 }}).fetch();
+			/*
+			if(personas){
+				this.personas_ids = _.pluck(personas, "_id");
+			
+				_.each(personas, function(persona){
+					cliente.creditos = Personas.find({cliente_id : cliente._id, estatus : 2}).fetch();
+				})
+			}
+			*/	
+				
+			return personas;
+		},
 		cliente : () => {
 			return Meteor.users.findOne({roles : ["Cliente"]});
 		},
@@ -156,6 +192,29 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		}else{
 			return foto;
 		}
+	}
+	
+	this.AgregarAval = function(a){
+		
+		console.log(a);
+		this.aval.nombre = a.nombre;
+		this.aval.apellidoPaterno = a.apellidoPaterno;
+		this.aval.apellidoMaterno = a.apellidoMaterno;
+		this.aval.estadoCivil = a.estadoCivil;
+		this.aval.ocupacion = a.ocupacion;
+		this.aval.direccion = a.direccion;
+		this.aval.empresa = a.empresa;
+		this.aval.puesto = a.puesto;
+		this.aval.antiguedad = a.antiguedad;
+		this.aval.direccionEmpresa = a.direccionEmpresa;
+		this.aval.parentezco = a.parentezco;
+		this.aval.tiempoConocerlo = a.tiempoConocerlo;
+		this.aval._id = a._id;
+		
+		this.buscar.nombre = "";
+		
+		
+		
 	}
 	
 	this.modificacionMasiva = function(modificacion, form){
@@ -270,6 +329,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			sucursal_id : Meteor.user().profile.sucursal_id
 			
 		};
+				
+		
 		credito.avales = angular.copy(this.avales);
 		credito.garantias = angular.copy(this.garantias);
 
