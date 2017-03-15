@@ -23,6 +23,10 @@ angular.module("creditoMio")
   this.subscribe("tiposCredito", ()=>{
 		return [{ estatus : true }]
 	});
+
+  	this.subscribe('notas',()=>{
+		return [{estatus:true}]
+	});
 	
 	this.helpers({
 		tiposCredito : () => {
@@ -30,6 +34,12 @@ angular.module("creditoMio")
 		},
 		cobranzas : () => {
 			return rc.cobranza;
+		},
+		notas : () => {
+			return Notas.find().fetch();
+		},
+		usuario : () => {
+			return Meteor.users.findOne();
 		},
 	});
 
@@ -172,16 +182,18 @@ angular.module("creditoMio")
       return this.selected_credito===objeto;
   }	
 
-
+var fecha = moment()
 	this.guardarNotaCobranza=function(nota){
 			console.log(nota);
-			nota.estatus = true;
-			notasCobranza.insert(nota);
 			
+			nota.estatus = true;
+			nota.fecha = new Date()
+			nota.hora = moment(nota.fecha).format("hh:mm:ss a")
+			rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+			Notas.insert(nota);
 			this.notaCobranza = {}
 			$('#myModal').modal('hide');
-
-toastr.success('Guardado correctamente.');
+			toastr.success('Guardado correctamente.');
 	}
 	this.mostrarNotaCobranza=function(objeto){
 		console.log(objeto)
