@@ -60,7 +60,7 @@ angular.module("creditoMio")
 		  
 
   this.subscribe('notas',()=>{
-		return [{estatus:true}]
+		return [{cliente_id:this.getReactively("cliente_id")}]
 	});
 	
 	this.helpers({
@@ -293,6 +293,7 @@ angular.module("creditoMio")
 		this.mostrarNotaCobranza=function(objeto){
 			console.log(objeto)
 			rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
+			rc.notaCobranza.cliente_id = objeto.cliente._id
 			rc.notaCobranza.folioCredito = objeto.credito.folio 
 			rc.notaCobranza.recibo= objeto.planPagos[0].numeroPago
 			
