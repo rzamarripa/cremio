@@ -11,6 +11,7 @@ angular.module("creditoMio")
   this.fechaFinal.setHours(23,0,0,0);
   rc.buscar = {};
   rc.buscar.nombre = "";
+  rc.credito_id = "";
   
   var FI, FF;
   rc.cliente = {};
@@ -65,19 +66,27 @@ angular.module("creditoMio")
 	});
 	this.subscribe("empresas", ()=>{
 		return [{}]
-	});
-		  
+	});	  
 
-  this.subscribe('notas',()=>{
+  	this.subscribe('notas',()=>{
 		return [{cliente_id:this.getReactively("cliente_id")}]
 	});
+
+	 this.subscribe("planPagos", ()=>{
+		return [{ credito_id : this.getReactively("credito_id") }]
+	});
+
+  	this.subscribe('personas', () => {
+		return [{ }];
+	});
+		this.subscribe('creditos', () => {
+		return [{ }];
+	});
+
 	
 	this.helpers({
 		tiposCredito : () => {
 			return TiposCredito.find();
-		},
-		cobranzas : () => {
-			return rc.cobranza;
 		},
 		notas : () => {
 			return Notas.find().fetch();
@@ -85,7 +94,41 @@ angular.module("creditoMio")
 		usuario : () => {
 			return Meteor.users.findOne();
 		},
+
+		planPagos : () => {
+
+			var planes = PlanPagos.find({multada:1});
+			var obj = planes.length
+
+
+			return planes;
+		},
+
+		pagosVencidos : () => {
+
+			_.each(rc.getReactively("planPagos"),function(plan){});
+
+			return rc.planPagos.length
+
+		},
+
+
+
+		historialCredito : () => {
+				_.each(rc.getReactively("historialCrediticio"),function(historial){
+				
+			});
+		
+				return rc.historialCrediticio[rc.historialCrediticio.length - 1];	
+			
+		},
+
 	});
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	
 	this.calcularSemana = function(w, y) 
@@ -200,7 +243,18 @@ angular.module("creditoMio")
 	
   this.selCredito=function(objeto)
   {
+
 	  	this.ban = !this.ban;
+
+	  	rc.credito_id = objeto.credito._id;
+	  	console.log("el id del credito ",rc.credito_id)
+
+	  	_.each(rc.getReactively("planPagos"), function(item){
+	  	//	console.log(item,"lewa")
+
+
+	  	});
+
 	  	
 	  	//Información del Cliente
 	  	rc.cliente = objeto.cliente;
@@ -248,17 +302,13 @@ angular.module("creditoMio")
 						});	
 	  	});
 	  	
-	  	
 	  	//-----------------------------------------------------------------------------
 	  	
-	  	
 	  	//Información del Crédito
-	  	rc.credito = objeto.credito;	  
-	  	
-	  	var tc = TiposCredito.findOne(rc.credito.tipoCredito_id);
-	  	if (tc != undefined) rc.credito.tipoCredito = tc.nombre;
-	  	
-	  	
+	  
+	  	rc.credito = objeto.credito;	
+	  
+	 	  	
 	  	rc.avales = [];
 	  	_.each(rc.credito.avales_ids,function(aval_id){
 						Meteor.call('getPersona', aval_id, function(error, result){						
@@ -428,21 +478,25 @@ angular.module("creditoMio")
 	
 
 
+
 	this.download = function(objeto) 
+
   {
-	  	
 		console.log("entro:", objeto);
+		objeto.credito.saldoActualizado = rc.historialCredito.saldo
+		objeto.credito.avales = rc.avales;
+		objeto.credito.pagosVencidos = rc.pagosVencidos;
+
+
 
 		Meteor.call('getcartaRecordatorio', objeto, function(error, response) {
 		   if(error)
 		   {
 		    console.log('ERROR :', error);
-
 		    return;
 		   }
 		   else
 		   {
-			   
 			 				function b64toBlob(b64Data, contentType, sliceSize) {
 								  contentType = contentType || '';
 								  sliceSize = sliceSize || 512;
@@ -472,7 +526,135 @@ angular.module("creditoMio")
 						  
 						  //console.log(url);
 						  var dlnk = document.getElementById('dwnldLnk');
+
 					    dlnk.download = "recordatorios.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+  
+		   }
+		});
+
+		
+	};
+
+
+
+	this.downloadCartaUrgente = function(objeto) 
+
+  {
+	  	
+		console.log("entro:", objeto);
+		objeto.credito.saldoActualizado = rc.historialCredito.saldo
+		objeto.credito.avales = rc.avales;
+		objeto.credito.pagosVencidos = rc.pagosVencidos;
+
+
+		Meteor.call('getcartaUrgente', objeto, function(error, response) {
+		   if(error)
+		   {
+		    console.log('ERROR :', error);
+		    return;
+		   }
+		   else
+		   {
+			 				function b64toBlob(b64Data, contentType, sliceSize) {
+								  contentType = contentType || '';
+								  sliceSize = sliceSize || 512;
+								
+								  var byteCharacters = atob(b64Data);
+								  var byteArrays = [];
+								
+								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+								    var slice = byteCharacters.slice(offset, offset + sliceSize);
+								
+								    var byteNumbers = new Array(slice.length);
+								    for (var i = 0; i < slice.length; i++) {
+								      byteNumbers[i] = slice.charCodeAt(i);
+								    }
+								
+								    var byteArray = new Uint8Array(byteNumbers);
+								
+								    byteArrays.push(byteArray);
+								  }
+								    
+								  var blob = new Blob(byteArrays, {type: contentType});
+								  return blob;
+							}
+							
+							var blob = b64toBlob(response, "application/docx");
+						  var url = window.URL.createObjectURL(blob);
+						  
+						  //console.log(url);
+						  var dlnk = document.getElementById('dwnldLnk');
+
+					    dlnk.download = "URGENTE.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+  
+		   }
+		});
+
+		
+	};
+
+
+
+
+	this.downloadCartaCertificado= function(objeto) 
+
+  {
+	  	
+		console.log("entro:", objeto);
+		objeto.credito.saldoActualizado = rc.historialCredito.saldo
+		objeto.credito.avales = rc.avales;
+
+		 
+		//console.log("checando:", objeto);
+
+		Meteor.call('getcartaCertificado', objeto, function(error, response) {
+
+
+
+		   if(error)
+		   {
+		    console.log('ERROR :', error);
+		    return;
+		   }
+		   else
+		   {
+			 				function b64toBlob(b64Data, contentType, sliceSize) {
+								  contentType = contentType || '';
+								  sliceSize = sliceSize || 512;
+								
+								  var byteCharacters = atob(b64Data);
+								  var byteArrays = [];
+								
+								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+								    var slice = byteCharacters.slice(offset, offset + sliceSize);
+								
+								    var byteNumbers = new Array(slice.length);
+								    for (var i = 0; i < slice.length; i++) {
+								      byteNumbers[i] = slice.charCodeAt(i);
+								    }
+								
+								    var byteArray = new Uint8Array(byteNumbers);
+								
+								    byteArrays.push(byteArray);
+								  }
+								    
+								  var blob = new Blob(byteArrays, {type: contentType});
+								  return blob;
+							}
+							
+							var blob = b64toBlob(response, "application/docx");
+						  var url = window.URL.createObjectURL(blob);
+						  
+						  //console.log(url);
+						  var dlnk = document.getElementById('dwnldLnk');
+
+					    dlnk.download = "certificacionPatrimonial.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);

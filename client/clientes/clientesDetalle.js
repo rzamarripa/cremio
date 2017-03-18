@@ -111,15 +111,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			}
 		},
 		nota: () => {
-	
-	
-
 			var nota = Notas.find().fetch()
-			
-			//rc.notaCuenta = notas[notas.length - 1];
-
-			console.log(nota)
-
 			return nota[nota.length - 1];
 		},
 		usuario: () => {

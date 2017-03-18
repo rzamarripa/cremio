@@ -59,11 +59,13 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		return [{estatus:true  }];
 	});
 
+	this.subscribe('personas', () => {
+		return [{ }];
+	});
+
 
 	this.helpers({
-		creditos : () => {
-			return Creditos.findOne({_id : $stateParams.credito_id})
-		},
+
 		cliente : () => {
 			var clientes = Meteor.users.findOne({roles : ["Cliente"]});
 		  	if (clientes) {
@@ -107,6 +109,18 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			  			credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
 				})
 			}
+
+
+			if (creditos) {
+		  		_.each(creditos, function(credito){
+
+		  			_.each(credito.avales_ids, function(aval){
+		  			  credito.aval = Personas.findOne(aval)
+					
+					});		  			
+		  			
+		  		})
+	  		}
 			return creditos;
 		},
 		pagos : () =>{
