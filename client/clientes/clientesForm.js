@@ -26,6 +26,8 @@ angular.module("creditoMio")
   this.buscar = {};
 	this.buscar.nombre = "";
 	this.buscando = false;
+	
+	
   
   this.subscribe('buscarPersonas', () => {
 		if(this.getReactively("buscar.nombre").length > 3){
@@ -62,30 +64,44 @@ angular.module("creditoMio")
 	});
 	
 	this.subscribe('estados',()=>{
-		return [{pais_id: this.getReactively("pais_id"), estatus: true}]		
+		if (this.getReactively("pais_id") !=  "")
+				return [{pais_id: this.getReactively("pais_id"), estatus: true}];
+		else 
+				return [{estatus: true}];
 	});
 	
 	this.subscribe('municipios',()=>{
-		return [{estado_id: this.getReactively("estado_id"), estatus: true}]				
+		if (this.getReactively("estado_id") !=  "")
+				return [{estado_id: this.getReactively("estado_id"), estatus: true}];
+		else 
+				return [{estatus: true}];	
 	});
 	
 	this.subscribe('ciudades',()=>{
-    return [{municipio_id: this.getReactively("municipio_id"), estatus: true}]
-	
+    if (this.getReactively("municipio_id") !=  "")
+				return [{municipio_id: this.getReactively("municipio_id"), estatus: true}];
+		else 
+				return [{estatus: true}];
 	});
 	
 	this.subscribe('colonias',()=>{
-		return [{ciudad_id: this.getReactively("ciudad_id"), estatus: true}]
+		if (this.getReactively("ciudad_id") !=  "")
+				return [{ciudad_id: this.getReactively("ciudad_id"), estatus: true}];
+		else 
+				return [{estatus: true}];
 	});
 	
+	//Condición del Parametro
 	if($stateParams.objeto_id != undefined){
-		this.action = false;
-		rc.objeto_id = $stateParams.objeto_id
-		this.subscribe('cliente', () => {
-			return [{
-				id : $stateParams.objeto_id
-			}];
-		});
+			this.action = false;
+			rc.objeto_id = $stateParams.objeto_id
+			this.subscribe('cliente', () => {
+				return [{
+					id : $stateParams.objeto_id
+				}];
+			});
+			
+			
 	}
 	 
 	this.helpers({
@@ -119,7 +135,32 @@ angular.module("creditoMio")
 	  objeto : () => {
 		  var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
 		  rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
-		  console.log("objeto",objeto,this.objeto_id)
+		  
+		  
+		  console.log(objeto);
+		  if ($stateParams.objeto_id != undefined)
+			{
+					
+
+					_.each(objeto.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
+								Meteor.call('getPersona', referenciaPersonal_id, function(error, result){						
+											if (result)
+											{
+													console.log(result);
+													rc.referenciasPersonales.push(result);
+													$scope.$apply();			
+											}
+								});	
+			  	});			
+
+		
+						
+			} 
+		  
+		  
+		  
+		  //-------------------------------
+		  
 		  return objeto;
 	  },
 	  personasTipos : () => {
