@@ -294,5 +294,18 @@ angular.module("creditoMio")
 
 	}
 
+	this.mostrarNotaCliente=function(objeto){
+		console.log(objeto)
+		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
+		rc.notaCobranza.folioCredito = objeto.credito.folio 
+		rc.notaCobranza.recibo= objeto.planPagos[0].numeroPago
+		
+		 rc.cobranza_id = objeto.credito._id
+		 console.log("rc.cobranza_id",rc.cobranza_id)
+		 $("#modalCliente").modal();
+
+
+	}
+
 
 };
