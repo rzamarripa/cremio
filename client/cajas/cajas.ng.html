@@ -14,13 +14,32 @@
 					    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="caj.objeto.nombre" required>
 					   </div>
 					   <div class="col-sm-4" valida>
-						    <label>Máximo Efectivo *</label>
-					    	<input name="maximoEfectivo" type="number" class="form-control" placeholder="Nombre" ng-model="caj.objeto.maximoEfectivo" required>
+						    <label>Cajero *</label>
+					    
+					    	<select name="cajero" class="form-control select2" placeholder="Seleccione" ng-model="caj.objeto.usuario_id" required>
+									<option ng-repeat="cajero in caj.cajeros" value="{{cajero._id}}">{{cajero.profile.nombreCompleto}}</option>
+								</select>
 					   </div>
-					</div>
+					 
 				</div>
+				<div class="row" ng-repeat="(index, tipo) in caj.tiposIngreso">
+					   <div class="col-sm-4" valida>
+						    <label>Cuenta {{tipo.nombre}} *</label>
+					    	
+
+					    	<select name="cuenta" class="form-control select2" placeholder="Seleccione" ng-model="caj.objeto.cuenta[tipo._id].cuenta_id" required>
+								<option ng-repeat="cuenta in caj.cuentas[tipo._id]" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
+							</select>
+
+					   </div>
+					   <div class="col-sm-4" valida>
+						    <label>Saldo Maximo *</label>
+					    	<input name="maximoEfectivo" type="number" class="form-control" placeholder="Saldo Maximo" ng-model="caj.objeto.cuenta[tipo._id].maximo" required>
+					   </div>
+				</div>
+			</div>
 		  	<div class="well">	    
-			    <div class="row">
+			   		<div class="row">
 						<div class="col-sm-12">
 							<input type="submit" ng-click="caj.guardar(caj.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="caj.action" valida-form formulario="form">
 							<input type="submit" ng-click="caj.actualizar(caj.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!caj.action" valida-form formulario="form">	

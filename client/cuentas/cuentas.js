@@ -51,9 +51,9 @@ angular.module("creditoMio")
 				return
 			}
 			toastr.success('Guardado correctamente.');
-			this.objeto = {}; 
+			rc.objeto = {}; 
 			$('.collapse').collapse('hide');
-			this.nuevo = true;
+			rc.nuevo = true;
 			form.$setPristine();
 			form.$setUntouched();
 		});
@@ -81,9 +81,9 @@ angular.module("creditoMio")
 				return
 			}
 			toastr.success('Actualizado correctamente.');
-			this.objeto = {}; 
+			rc.objeto = {}; 
 			$('.collapse').collapse('hide');
-			this.nuevo = true;
+			rc.nuevo = true;
 			form.$setPristine();
 			form.$setUntouched();
 		});
