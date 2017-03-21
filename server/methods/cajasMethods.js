@@ -70,4 +70,32 @@ Meteor.methods({
 
 		return "200";
 	},
+	abrirCaja : function(caja){
+		caja.estadoCaja ="Abierta";
+		var cajaid =caja._id;
+		var user = Meteor.user()
+		_.each(caja.cuenta,function(cuenta,cuentaid){
+			var movimiento = {
+				tipoMovimiento : "Saldo Inicial",
+				origen : "Apertura de Caja",
+				origen_id : cajaid,
+				caja_id : cajaid,
+				cuenta_id :cuentaid,
+				monto : cuenta.saldo,
+				sucursal_id : user.profile.sucursal_id,
+				createdAt : new Date(),
+				createdBy : user._id,
+				updated : false,
+				estatus : 1
+			}
+			MovimientosCajas.insert(movimiento);
+		})
+		delete caja._id
+		caja.updated = true;
+		caja.updatedAt = new Date();
+		caja.updatedBy = user._id;
+		Cajas.update({id:cajaid},{$set:caja});
+
+		return "200"
+	}
 });

@@ -500,4 +500,14 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.abrirCaja', {
+			url: '/abricaja',
+			templateUrl: 'client/cajas/abrirCaja.ng.html',
+			controller: 'AbrirCajaCtrl as ocaj',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 }]);

@@ -92,6 +92,7 @@ angular.module("creditoMio")
 				rc.nuevo = true;
 				form.$setPristine();
 				form.$setUntouched();
+				$state.go('root.clientesLista');
 			});
 			
 		
