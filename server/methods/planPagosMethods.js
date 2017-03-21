@@ -11,7 +11,7 @@ Meteor.methods({
 
 		var mfecha = moment(credito.fechaPrimerAbono);
 		var inicio = mfecha.toDate();
-		console.log(credito);
+		//console.log(credito);
 		var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
 		//console.log(tipoCredito);
 
@@ -30,6 +30,8 @@ Meteor.methods({
 		
 		
 		var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)*credito.duracionMeses+credito.capitalSolicitado)/totalPagos);
+		
+		importeParcial=Math.round(importeParcial * 100) / 100;
 		var plan = [];
 		
 		for (var i = 0; i < totalPagos; i++) {
@@ -77,10 +79,12 @@ Meteor.methods({
 		return plan;
 	},
 	actualizarMultas: function(){
+		Meteor.call("generarMultas");
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 		var mfecha = moment(ahora);
-		console.log(ahora);
+
+		//console.log(ahora);
 		var pagos = PlanPagos.find({$and:[
 											{
 												$or:[
@@ -95,20 +99,26 @@ Meteor.methods({
 												ultimaModificacion : { $lt : ahora }
 											}
 										]}).fetch();
-		console.log(pagos);
+		//console.log(pagos);
 		_.each(pagos, function(pago){
 			try{
+				//console.log(ahora,pago.ultimaModificacion,mfecha.diff(pago.ultimaModificacion, "days"))
 				var dias = mfecha.diff(pago.ultimaModificacion, "days");
 				var credito = Creditos.findOne(pago.credito_id);
 				var multas = (dias/100) * credito.capitalSolicitado; 
 				pago.ultimaModificacion = ahora
+				
+				multas=Math.round(multas * 100) / 100;
+				//console.log(pago._id,multas,pago.importeRegular,pago.ultimaModificacion);
 				pago.importeRegular += multas;
+				pago.importeRegular=Math.round(pago.importeRegular * 100) / 100;
 
 				PlanPagos.update({_id:pago._id},{$set:{importeRegular:pago.importeRegular,ultimaModificacion:ahora}})
 			}catch(e){
 				console.log(e)
 			}
 		});
+		
 	},
 	pagoParcialCredito:function(pagos,abono,totalPago){
 		var ahora = new Date();
@@ -122,7 +132,7 @@ Meteor.methods({
 		pago.usuarioCobro_id = Meteor.userId();
 		pago.pago = abono;
 		pago.totalPago = totalPago;
-		pago.cambio = abono -totalPago;
+		pago.cambio = abono - totalPago;
 		pago.cambio = pago.cambio<0? 0:pago.cambio;
 		pago.diaPago = ffecha.weekday();
 		pago.semanaPago = ffecha.isoWeek();
@@ -133,37 +143,47 @@ Meteor.methods({
 		var pago_id=undefined;
 		pago_id = Pagos.insert(pago);
 
-		var pagos=PlanPagos.find({_id:{$in:pagos}}).fetch();
+		var pagos=PlanPagos.find({_id:{$in:pagos}},{sort:{descripcion:-1}}).fetch();
 		var mfecha = moment(ahora);
 		_.each(pagos,function(p){
 			if(p.estatus!=1){
 				var ttpago = 0;
+				//console.log(p.importeRegular,abono)
 				if(p.importeRegular<=abono){
-					
+					//console.log("Total",p._id,p.descripcion)
 					if(p.descripcion=="Multa" && p.multa==1)
 						p.estatus=1;
 					else if(p.multada==1){
-						var multa =PlanPagos.findOne(p.multa_id);
+						var multa = PlanPagos.findOne(p.multa_id);
+						
 						multa.multa = 1;
-						p.estatus = 1
+						p.estatus = 1;
 						if(multa.importeRegular==0)
-							multa.estatus = 1
-						var multaid = multa._id;
-						delete multa_id;
-						PlanPagos.update({_id:multaid},{$set:multa});
-					}
-					else if(p.descripcion=="abono"){
-						p.estatus=1
+							multa.estatus = 1;
+		
+						delete multa._id;
+						PlanPagos.update({_id:p.multa_id},{$set:multa});
 					}
 					
+					if(p.descripcion=="Abono"){
+						p.estatus=1
+					}
+
+					
 					abono-=p.importeRegular;
+					abono=Math.round(abono * 100) / 100;
+
 					ttpago = p.importeRegular;
 					p.importeRegular = 0;
 					
 				}	
-				else{
+				else
+				{
+					//console.log("Parcial",p._id,p.descripcion)
 					tttpago = abono;
 					p.importeRegular = p.importeRegular-abono;
+					//p.importeRegular =Number(p.importeRegular.toFixed(2))
+					p.importeRegular=Math.round(p.importeRegular * 100) / 100;
 					p.estatus = 2;
 					abono=0;
 				}
@@ -213,13 +233,16 @@ Meteor.methods({
 												fechaLimite : { $lt : ahora }
 											}
 										]}).fetch();
-		console.log(pagos)
+		//console.log(pagos)
 		_.each(pagos, function(pago){
 			try{
 				var mfecha = moment(ahora);
-				var dias = mfecha.diff(pago.fechaLimite, "days");
+				//console.log("fechaLimite",pago.fechaLimite, ahora)
+				limite = new Date (pago.fechaLimite.getFullYear(),pago.fechaLimite.getMonth(),pago.fechaLimite.getDate());
+				var dias = mfecha.diff(limite, "days");
 				var credito = Creditos.findOne(pago.credito_id);
 				var multas = (dias/100) * credito.capitalSolicitado; 
+				multas=Math.round(multas * 100) / 100;
 				var multa = {
 					semana				: mfecha.isoWeek(),
 					fechaLimite			: pago.fechaLimite,

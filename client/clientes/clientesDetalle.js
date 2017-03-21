@@ -58,7 +58,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return Ocupaciones.find();
 		},
 		planPagos : () => {
-			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
+			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:1}}).fetch();
 			if(rc.getReactively("creditos") && rc.creditos.length > 0 && planPagos.length > 0){
 				
 				_.each(rc.getReactively("creditos"), function(credito){

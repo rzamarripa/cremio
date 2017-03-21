@@ -7,8 +7,8 @@ Meteor.methods({
 		}
 
 		var planPagos = Meteor.call("generarPlanPagos",credito,cliente);
-		console.log (planPagos)
-
+		//console.log (planPagos)
+		credito.numeroPagos = planPagos.length;
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		credito.folio = sucursal.folio + 1;
 		credito.avales_ids = [];

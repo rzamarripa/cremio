@@ -268,6 +268,7 @@ angular.module("creditoMio")
 
 
 
+
 	var fecha = moment();
 	this.guardarNotaCobranza=function(nota){
 			console.log(nota);
@@ -293,5 +294,6 @@ angular.module("creditoMio")
 
 
 	}
+
 
 };

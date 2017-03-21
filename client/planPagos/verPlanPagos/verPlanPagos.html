@@ -510,7 +510,7 @@
 														<td ><a ng-model="pago.pagoSeleccionado" ng-click="vpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'seleccionado' : 'Pendiente'}}</a> </td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{$index + 1}}</td>	
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{vpp.planPagos.length}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{vpp.creditos[0].numeroPagos}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger' : ''">{{pago.descripcion }}</td>
 														<td class="text-center">
