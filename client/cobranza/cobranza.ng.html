@@ -28,7 +28,7 @@
 </div>
 <div class="well">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-sm-6">
 				<div class="input-group input-group-md">
 			      <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
 			      <div class="icon-addon addon-md">
@@ -42,11 +42,21 @@
 		</div>	
 	</div>
 </div>		
+<div class="well">
+	<div class="row">
+		<div class="col-sm-12">
+				
+				
+				
+		</div>	
+	</div>
+</div>
  <div class="row">	
 	<div class="col-sm-12">
-		<table class="table table-hover border-collapse" >
+		<table id="rec" class="table table-hover border-collapse" >
 			<thead>
 				<tr>
+					<th width="5%"> </th>
 					<th width="5%">No.</th>
 					<th width="15%"><div class="text-center">Folio crédito</div></th>
 					<th width="25%"><div class="text-center">Recibo</div></th>
@@ -58,6 +68,7 @@
 			</thead>
 			<tbody>
 		    <tr style='cursor: pointer' ng-repeat-start="objeto in cob.cobranza" ng-click="cob.selCredito(objeto)" >
+			    <td><input type="checkbox" class="form-control" ng-model="objeto.imprimir" value="objeto.imprimir"/> </td>
 			    <td>{{ $index + 1 }}</td>
 			    <td class="text-center">{{objeto.credito.folio}}</td>
 			    <td>
@@ -207,3 +218,4 @@
 		</table>
 	</div>
 </div>
+
