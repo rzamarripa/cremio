@@ -233,16 +233,26 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
-    .state('root.tiposIngreso', {
-      url: '/tiposIngreso',
-      templateUrl: 'client/tiposIngreso/tiposIngreso.ng.html',
-      controller: 'TiposIngresoCtrl as tictrl',
-      resolve: {
-        "currentUser": ["$meteor", function($meteor){
-          return $meteor.requireUser();
-        }]
-      }
-    })
+		.state('root.tiposIngreso', {
+			url: '/tiposIngreso',
+			templateUrl: 'client/tiposIngreso/tiposIngreso.ng.html',
+			controller: 'TiposIngresoCtrl as tictrl',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.cuentas', {
+			url: '/cuentas',
+			templateUrl: 'client/cuentas/cuentas.ng.html',
+			controller: 'CuentasCtrl as ctactrl',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.roles', {
 			url: '/roles',
 			templateUrl: 'client/roles/roles.ng.html',
