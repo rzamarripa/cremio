@@ -1,13 +1,17 @@
-Meteor.publish("buscarVentanillas",function(options){
+Meteor.publish("buscarCajeros",function(options){
 	if(options.where.nombreCompleto.length > 0){
 		let selector = {
 	  	"profile.nombreCompleto": { '$regex' : '.*' + options.where.nombreCompleto || '' + '.*', '$options' : 'i' },
-	  	roles : ["Ventanilla"]
+	  	roles : ["Cajero"]
 		}
 		return Meteor.users.find(selector, options.options);	
 	}
 });
 
-Meteor.publish("ventanillas",function(options){
+Meteor.publish("cajero",function(options){
   return Meteor.users.find(options.id);
 });
+
+Meteor.publish("allCajeros",function(){
+	return Meteor.users.find({roles : ["Cajero"]});
+})

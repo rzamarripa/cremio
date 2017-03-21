@@ -23,7 +23,7 @@
 										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Verificador'" ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm">
 											<i class="fa fa-plus"></i> Nueva Nota de Credito
 										</a>&nbsp;
-										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla' || currentUser.roles[0] == 'Verificador'" ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador'" ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
 									</div>

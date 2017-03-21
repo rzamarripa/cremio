@@ -8,11 +8,11 @@
 							<div class="col-sm-12">
 								<div id="myCarousel" class="carousel profile-carousel">
 									<div class="air air-bottom-right padding-10" ng-repeat="credito in vpp.creditos">
-										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.clienteDetalle({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
-										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.editarCliente({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.clienteDetalle({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.editarCliente({objeto_id : vpp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
-	 									<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.historialPagos({objeto_id : vpp.cliente._id,credito_id : credito._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
+	 									<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.historialPagos({objeto_id : vpp.cliente._id,credito_id : credito._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 	 										<i class="fa fa-pencil"></i> Historial de Creditos
 	 									</a> 
 									</div>
