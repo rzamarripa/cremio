@@ -199,7 +199,14 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		}else if(this.credito.periodoPago == "Mensual"){
 			totalPagos = this.credito.duracionMeses;
 		}
-		var importeParcial = (this.credito.capitalSolicitado / totalPagos) * (1 + (tipoCredito.tasa / 100));
+		
+		if(this.credito.requiereVerificacion == true){
+			rc.credito.estatus = 0;
+		}else{
+			rc.credito.estatus = 1;
+		}
+		//var importeParcial = (this.credito.capitalSolicitado / totalPagos) * (1 + (tipoCredito.tasa / 100));
+		var importeParcial = (((this.credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)*this.credito.duracionMeses+this.credito.capitalSolicitado)/totalPagos);
 		var plan = [];
 		
 		for (var i = 0; i < totalPagos; i++) {
@@ -259,7 +266,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			saldoMultas : 0.00,
 			saldoRecibo : 0.00,
 			estatus : 1,
-			requiereVerificacion: this.credito.requiereVerificacion
+			requiereVerificacion: this.credito.requiereVerificacion,
+			sucursal_id : Meteor.user().profile.sucursal_id
 			
 		};
 		credito.avales = angular.copy(this.avales);

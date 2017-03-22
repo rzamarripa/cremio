@@ -25,10 +25,10 @@
 						<div class="col-sm-1">
 							<img class="online" src="{{ro.tieneFoto(cliente.profile.fotografia, cliente.profile.sexo)}}">
 						</div>
-						<div class="col-sm-8">
+						<div class="col-sm-12">
 							<a href="javascript:void(0);" ui-sref="root.clienteDetalle({objeto_id : cliente._id})" ng-click="ro.buscando = false;"> {{cliente.profile.nombreCompleto}}</a>
 							<div class="btn-group btn-xs btn-group-justified">
-								<a href="javascript:void(0);" class="btn btn-default" ng-repeat="credito in cliente.profile.creditos"  ui-sref="root.verPlanPagos({objeto_id : cliente._id, credito_id : credito._id})">{{credito.capitalSolicitado | currency}}</a>
+								<a href="javascript:void(0);" class="btn btn-default" ng-repeat="credito in cliente.profile.creditos"  ui-sref="root.verPlanPagos({objeto_id : cliente._id, credito_id : credito._id})" ng-click="ro.buscando = false;">{{credito.capitalSolicitado | currency}}</a>
 							</div>
 						</div>
 					</div>
