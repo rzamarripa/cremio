@@ -26,7 +26,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.subscribe('creditos', () => {
 		return [{
-			cliente_id : $stateParams.objeto_id, estatus : 2
+			cliente_id : $stateParams.objeto_id
 		}];
 	});
 	this.subscribe('notasCredito', () => {
@@ -50,12 +50,15 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 	this.helpers({
 		creditos : () => {
-			var creditos = Creditos.find().fetch();
+			var creditos = Creditos.find({estatus:2}).fetch();
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
 			}
 			
 			return creditos;
+		},
+		creditosAprobados : () =>{
+			return Creditos.find({estatus:1});
 		},
 		notasCredito : () =>{
 			return NotasCredito.find({},{sort:{fecha:1}});
