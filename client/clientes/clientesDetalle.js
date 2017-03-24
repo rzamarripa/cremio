@@ -156,9 +156,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.tieneFoto = function(sexo, foto){
 		if(foto === undefined){
-			if(sexo === "masculino")
+			if(sexo === "Masculino")
 				return "img/badmenprofile.png";
-			else if(sexo === "femenino"){
+			else if(sexo === "Femenino"){
 				return "img/badgirlprofile.png";
 			}else{
 				return "img/badprofile.png";

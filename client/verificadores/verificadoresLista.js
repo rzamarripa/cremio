@@ -33,9 +33,9 @@ angular.module("creditoMio")
 	
 	this.tieneFoto = function(sexo, foto){
 	  if(foto === undefined){
-		  if(sexo === "masculino")
+		  if(sexo === "Masculino")
 			  return "img/badmenprofile.jpeg";
-			else if(sexo === "femenino"){
+			else if(sexo === "Femenino"){
 				return "img/badgirlprofile.jpeg";
 			}else{
 				return "img/badprofile.jpeg";

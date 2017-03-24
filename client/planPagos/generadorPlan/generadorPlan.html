@@ -18,7 +18,7 @@
 							<div class="col-sm-12">
 								<div id="myCarousel" class="carousel profile-carousel">
 									<div class="air air-bottom-right padding-10">
-										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla' || currentUser.roles[0] == 'Verificador' " ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador' " ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
  										<a ui-sref="root.editarCliente({cliente_id : ge.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-show="currentUser.roles[0] == 'Gerente'">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
