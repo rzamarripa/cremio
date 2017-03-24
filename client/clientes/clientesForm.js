@@ -100,8 +100,6 @@ angular.module("creditoMio")
 					id : $stateParams.objeto_id
 				}];
 			});
-			
-			
 	}
 	 
 	this.helpers({
