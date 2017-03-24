@@ -1,0 +1,62 @@
+<h2>Entregar Credito</h2>
+<div class="row">
+	<div class="col-sm-12">
+		<form name="form" class="form-horizontal" role="form">
+		  	<div class="well">	    
+		  		<div class="row ">
+		  			<div class="col-sm-6">
+		  				<div class="row " ng-repeat="(index, tipo) in ecCtrl.tiposIngreso">
+								<div class="col-sm-12" valida>
+									<label>Monto en {{tipo.nombre}} de Caja *</label>
+									<input name="tipo._id" type="number" class="form-control" placeholder="Monto" ng-model="ecCtrl.objeto.caja[tipo._id].saldo" ng-change="ecCtrl.calcular()" required>
+								</div>
+						</div>
+		  			</div>
+		  			<div class="col-sm-6">
+		  				<div class="row " ng-repeat="(index, cuenta) in ecCtrl.cuentas">
+					 
+								<div class="col-sm-12" valida>
+									<label>Monto de la Cuenta {{cuenta.nombre}}*</label>
+									<input name="cuenta._id" type="number" class="form-control" placeholder="Monto" ng-model="ecCtrl.objeto.cuenta[cuenta._id].saldo" ng-change="ecCtrl.calcular()" required>
+								</div>
+						</div>		
+		  			</div>
+		  		</div>
+			</div>
+		  	<div class="well">	    
+		  			<div class="row">
+						<div class="col-sm-4">
+							<h1>
+							Credito Solicitado:
+							</h1>
+						</div>
+						<div class="col-sm-4">
+							<h1>
+							{{ecCtrl.credito.capitalSolicitado | currency}}
+							</h1>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4">
+							<h1>
+							Monto Recaudado:
+							</h1>
+						</div>
+						<div class="col-sm-4">
+							<h1>
+							{{ecCtrl.suma | currency}}
+							</h1>
+						</div>
+					</div
+					<br/>
+					<br/>
+			   		<div class="row">
+						<div class="col-sm-12">
+							<input type="submit" ng-click="ecCtrl.guardar(ecCtrl.objeto,form)" value="Entregar Credito" class="btn btn-primary" valida-form formulario="form">
+						</div>
+					</div>
+		  	</div>  
+		</form>
+	</div>
+</div>
+		

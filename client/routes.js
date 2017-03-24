@@ -490,6 +490,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.entregarCredito', {
+			url: '/entregarCredito/:credito_id',
+			templateUrl: 'client/creditos/entregarCredito/entregarCredito.ng.html',
+			controller: 'EntregarCreditoCtrl as ecCtrl',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.cajas', {
 			url: '/cajas',
 			templateUrl: 'client/cajas/cajas.ng.html',

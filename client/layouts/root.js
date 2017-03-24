@@ -13,7 +13,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	})
 	
 	this.subscribe('cajas',()=>{
-		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""}]
+		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile? Meteor.user().profile.sucursal_id : "":""}]
 	});
 
 	this.subscribe('buscarClientes', () => {
@@ -52,14 +52,12 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 
 	this.verMenu =()=>{
 		var user= Meteor.user();
-		if( !user || !user.roles)
-			return true
-
-		if(user.roles[0]!="Cajero")
-			return true
-
-		var caja = Cajas.findOne(user.profile.caja_id);
-		return (caja && caja.estadoCaja=="Abierta")
+		if( user && user.roles && user.roles[0]=="Cajero"){
+			var caja = Cajas.findOne(user.profile.caja_id);
+			if (caja && caja.estadoCaja=="Cerrada")
+				return false;
+		}
+		return true;
 	}
 
 	this.tieneFoto = function(foto, sexo){

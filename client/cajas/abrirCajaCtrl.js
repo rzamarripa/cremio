@@ -28,7 +28,10 @@ angular.module("creditoMio")
 			return TiposIngreso.find()
 		},
 		objeto : () => {
-			return Cajas.findOne(Meteor.user().profile.caja_id);
+			var caja = Cajas.findOne(Meteor.user().profile.caja_id);
+			if(caja.estadoCaja=="Abierta")
+				$state.go('root.clientesLista');
+			return caja;
 		}
 	});
 
