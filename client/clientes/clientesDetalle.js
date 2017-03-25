@@ -50,7 +50,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 	this.helpers({
 		creditos : () => {
-			var creditos = Creditos.find({estatus:2}).fetch();
+			var creditos = Creditos.find({estatus:4}).fetch();
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
 			}
@@ -58,6 +58,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return creditos;
 		},
 		creditosAprobados : () =>{
+			return Creditos.find({estatus:2});
+		},
+		creditosPendientes : () =>{
 			return Creditos.find({estatus:1});
 		},
 		notasCredito : () =>{

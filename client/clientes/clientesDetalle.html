@@ -268,8 +268,64 @@
 												</div>
 											</div>
 											<div class="panel-footer no-padding">
+												<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button">Imprimir documentos</a>
 												<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button">Entregar Credito</a>
 											</div>
+										</div>
+									</div>
+									
+								</div>
+								<!-- end content -->
+							</div>
+			
+						</div>
+						<!-- end widget div -->
+					</div>
+					<!-- end widget -->
+			
+				</article>
+				<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+
+					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+						
+						<header role="heading">
+							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+							<h2>Creditos Pendientes</h2>
+			
+			
+						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+			
+						<!-- widget div-->
+						<div class="no-padding" role="content">
+							<!-- widget edit box -->
+						
+							<!-- end widget edit box -->
+			
+							<div class="widget-body">
+								<!-- content -->
+								
+
+								<div class="row ">
+									<br/>
+									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="pendiente in cd.creditosPendientes">
+										<div class="panel panel-blueDark">
+											<div class="panel-heading">
+												<h3 class="panel-title">
+													Credito</h3>
+										</div>
+											<div class="panel-body no-padding text-align-center">
+												<div class="the-price">
+													<h1>
+														{{pendiente.capitalSolicitado|currency}}
+													</h1>
+													<h2>
+														{{pendiente.duracionMeses}}
+														<span class="subscript">/meses</span>
+													</h2>
+													<small>Plan: {{pendiente.periodoPago}}</small>
+												</div>
+											</div>
+											
 										</div>
 									</div>
 									

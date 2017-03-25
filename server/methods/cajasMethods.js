@@ -15,7 +15,7 @@ Meteor.methods({
 		caja.createdAt = new Date();
 		caja.updated = false;
 		caja.estatus = true;
-		caja.estadoCaja = "Cerrado";
+		caja.estadoCaja = "Cerrada";
 
 
 		var cajaid = Cajas.insert(caja)
@@ -94,7 +94,7 @@ Meteor.methods({
 		caja.updated = true;
 		caja.updatedAt = new Date();
 		caja.updatedBy = user._id;
-		Cajas.update({id:cajaid},{$set:caja});
+		Cajas.update({_id:cajaid},{$set:caja});
 
 		return "200"
 	}

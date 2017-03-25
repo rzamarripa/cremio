@@ -8,7 +8,7 @@
 		  				<div class="row " ng-repeat="(index, tipo) in ecCtrl.tiposIngreso">
 								<div class="col-sm-12" valida>
 									<label>Monto en {{tipo.nombre}} de Caja *</label>
-									<input name="tipo._id" type="number" class="form-control" placeholder="Monto" ng-model="ecCtrl.objeto.caja[tipo._id].saldo" ng-change="ecCtrl.calcular()" required>
+									<input name="tipo._id" type="number" class="form-control" placeholder="Monto" ng-model="ecCtrl.objeto.caja[tipo._id].saldo" ng-change="ecCtrl.calcular()"  required>
 								</div>
 						</div>
 		  			</div>
@@ -17,7 +17,7 @@
 					 
 								<div class="col-sm-12" valida>
 									<label>Monto de la Cuenta {{cuenta.nombre}}*</label>
-									<input name="cuenta._id" type="number" class="form-control" placeholder="Monto" ng-model="ecCtrl.objeto.cuenta[cuenta._id].saldo" ng-change="ecCtrl.calcular()" required>
+									<input name="cuenta._id" type="number" class="form-control" placeholder="Monto" ng-model="ecCtrl.objeto.cuenta[cuenta._id].saldo" ng-change="ecCtrl.calcular()"  required>
 								</div>
 						</div>		
 		  			</div>

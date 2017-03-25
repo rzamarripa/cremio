@@ -24,13 +24,25 @@ angular.module("creditoMio")
 	this.helpers({
 
 		tiposIngreso : () => {
-			return TiposIngreso.find()
+			var tipos = TiposIngreso.find().fetch();
+			_.each(tipos,(tipo)=>{
+				rc.objeto.caja =rc.objeto.caja? rc.objeto.caja :{};
+				rc.objeto.caja[tipo._id] = rc.objeto.caja[tipo._id]? rc.objeto.caja[tipo._id] :{};
+				rc.objeto.caja[tipo._id].saldo = rc.objeto.caja[tipo._id].saldo? rc.objeto.caja[tipo._id].saldo :0;
+			});
+			return tipos;
 		},
 		caja : () => {
 			return Cajas.findOne(Meteor.user() != undefined ? Meteor.user().profile.caja_id : "")
 		},
 		cuentas : () => {
-			return Cuentas.find();
+			var cuentas = Cuentas.find().fetch();
+			_.each(cuentas,(cuenta)=>{
+				rc.objeto.cuenta =rc.objeto.cuenta? rc.objeto.cuenta :{};
+				rc.objeto.cuenta[cuenta._id] = rc.objeto.cuenta[cuenta._id]? rc.objeto.cuenta[cuenta._id] :{};
+				rc.objeto.cuenta[cuenta._id].saldo = rc.objeto.cuenta[cuenta._id].saldo? rc.objeto.cuenta[cuenta._id].saldo :0;
+			});
+			return cuentas;
 		},
 		credito : () => {
 			console.log($stateParams.credito_id)
@@ -41,21 +53,23 @@ angular.module("creditoMio")
 	this.calcular = function(){
 		if(!this.objeto)
 			return 0;
+		rc.suma = 0;
 		_.each(this.objeto.cuenta,function(cuenta){ 
 			if(cuenta && cuenta.saldo && cuenta.saldo>0)
-				rc.suma+=cuenta.saldo
+				rc.suma+= cuenta.saldo;
 		})
 		_.each(this.objeto.caja,function(caja){ 
 			if(caja && caja.saldo && caja.saldo>0)
-				rc.suma+=caja.saldo
+				rc.suma+= caja.saldo;
 		})
 	}
 	this.guardar = function (){
-			if(form.$invalid){
+			//console.log(rc.objeto)
+			if(form.$invalid || suma != credito.capitalSolicitado){
 						toastr.error('Error al actualizar los datos.');
 						return;
 			}
-			Meteor.call ("entregarCredito",objeto,function(error,result){
+			Meteor.call ("entregarCredito",objeto,$stateParams.credito_id,function(error,result){
 		
 				if(error){
 					console.log(error);

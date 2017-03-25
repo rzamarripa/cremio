@@ -29,8 +29,14 @@ Meteor.methods({
 			credito.estatus = 1;
 		
 		
-		var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)*credito.duracionMeses+credito.capitalSolicitado)/totalPagos);
+		var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)
+								*credito.duracionMeses+credito.capitalSolicitado)/totalPagos);
 		
+		var iva = ((credito.capitalSolicitado * (tipoCredito.tasa / 100)*0.16)*credito.duracionMeses)/totalPagos;
+		iva = parseFloat(iva.toFixed(2));
+		var interes = (credito.capitalSolicitado * (tipoCredito.tasa / 100) *credito.duracionMeses)/totalPagos;
+		interes = parseFloat(interes.toFixed(2));
+		var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
 		importeParcial=Math.round(importeParcial * 100) / 100;
 		var plan = [];
 		
@@ -42,7 +48,10 @@ Meteor.methods({
 				tipoPlan			: credito.periodoPago,
 				numeroPago			: i + 1,
 				importeRegular		: importeParcial,
+				iva					: iva,
+				interes 			: interes,
 				cliente_id			: cliente._id,
+				capital 			: capital,
 				fechaPago			: undefined,
 				semanaPago			: undefined,
 				diaPago				: undefined,
