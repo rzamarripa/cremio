@@ -46,6 +46,7 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
   
   this.guardar = function(objeto, form)
 	{	
+			
 			if(form.$invalid){
 		        toastr.error('Error al guardar los datos.');
 		        return;
