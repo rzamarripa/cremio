@@ -7,9 +7,10 @@ angular.module("creditoMio")
   this.action = true;
   this.nuevo = true;	 
   this.objeto = {}; 
+  this.buscar = {}; 
   
 	this.subscribe('estados',()=>{
-		return [{pais_id: this.getReactively('objeto.buscarPais_id')? this.getReactively('objeto.buscarPais_id'):""}]
+		return [{pais_id: this.getReactively('buscar.pais_id')? this.getReactively('buscar.pais_id'):""}]
 	 });
 	 
 	this.subscribe('paises',()=>{
