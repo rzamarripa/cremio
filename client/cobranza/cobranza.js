@@ -94,6 +94,9 @@ angular.module("creditoMio")
 		usuario : () => {
 			return Meteor.users.findOne();
 		},
+		creditos : () => {
+			return Creditos.find().fetch();
+		},
 
 		planPagos : () => {
 
@@ -226,17 +229,17 @@ angular.module("creditoMio")
 			}
 			
 			Meteor.call('getCobranza', FI, FF, op, Meteor.user().profile.sucursal_id, function(error, result) {						
-						if (result)
-						{
-								rc.cobranza = result;
-								rc.totalRecibos = 0;
-								rc.totalMultas = 0;
-								_.each(rc.cobranza,function(c){
-										rc.totalRecibos = rc.totalRecibos + c.importe;
-										rc.totalMultas = rc.totalMultas + c.multas;
-								});
-								$scope.$apply();
-						}
+					if (result)
+					{
+							rc.cobranza = result;
+							rc.totalRecibos = 0;
+							rc.totalMultas = 0;
+							_.each(rc.cobranza,function(c){
+									rc.totalRecibos = rc.totalRecibos + c.importe;
+									rc.totalMultas = rc.totalMultas + c.multas;
+							});
+							$scope.$apply();
+					}
 				
 			});	
 	}
@@ -665,5 +668,7 @@ angular.module("creditoMio")
 
 		
 	};
+
+	
 
 };

@@ -77,7 +77,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		  			cliente.estado = Estados.findOne(cliente.estado_id)
 		  			cliente.pais = Paises.findOne(cliente.pais_id)
 		  			cliente.empresa = Empresas.findOne(cliente.empresa_id)
-		  			cliente.municipio = Empresas.findOn
+		  			
 		  			
 		  		})
 	  		}

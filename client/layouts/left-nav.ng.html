@@ -194,6 +194,20 @@
 					<span class="menu-item-parent">Verificadores</span>
 			  </a>
 		</li>
+		<li data-menu-collapse ng-if="currentUser.roles[0] == 'Gerente'">
+				<a tilte="Credito Mio">
+		    	<i class="fa fa-lg fa-fw fa-group"></i>
+					<span class="menu-item-parent">Reportes</span>
+			  </a>
+			     <ul>
+			     	<li data-ui-sref-active="active">
+					 	<a tilte="Credito Mio">
+			      	<i class="fa fa-lg fa-fw fa-folder-o"></i>
+			      	<span class="menu-item-child" ng-click="ro.diarioCobranza(ro.creditos)">Diario de cobranza</span>
+			    	</a>
+					</li>
+			     </ul>
+		</li>
 		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Verificador'">
 				<a ui-sref="root.panelVerificador" tilte="Credito Mio">
 		    	<i class="fa fa-lg fa-fw fa-group"></i>

@@ -27,6 +27,7 @@
 			<a class="btn btn-primary" ng-click="cob.AsignaFecha(2);" style="width: 130px"><i class="fa fa-table"></i> Semana</a>
 			<a class="btn btn-primary" ng-click="cob.AsignaFecha(3);" style="width: 130px"><i class="fa fa-table"></i> Mes</a>
 			<a class="btn btn-primary" ng-click="cob.AsignaFecha(4);" style="width: 130px"><i class="fa fa-table"></i> Siguiente Mes</a>
+
 		</div>	
 		<div class="col-sm-3">
 			<form class="form-inline">
@@ -48,8 +49,12 @@
 			      </div>
 			      <span class="input-group-btn">
 			          <button class="btn btn-default" ng-click="cob.buscarNombre()" type="button">Buscar</button>
+			          
 			      </span>
 			  </div>
+		</div>
+		<div class="col-sm-6">
+			<a class="btn btn-default pull-right" ng-click="" style="width: 130px">Imprimir Recibos</a>
 		</div>	
 	</div>
 </div>
@@ -112,6 +117,16 @@
 											<li class="">
 												<a data-toggle="tab" href="#hr4" aria-expanded="false"> <i class="fa fa-lg fa-list"></i> <span class="hidden-mobile hidden-tablet"> Historial de cobranza </span></a>
 											</li>
+											<li class="">
+												<a class="dropdown-toggle" data-toggle="dropdown"  aria-expanded="false"> <i class="fa fa-lg fa-list"></i> <span class="hidden-mobile hidden-tablet"> Reportes </span></a>
+												<ul class="dropdown-menu">
+													<li>
+														<a ng-click="cob.diarioCobranza(objeto)">Diario de cobranza</a>
+													</li>
+
+													
+												</ul>
+											</li>
 											<!-- <li class="dropdown ">
 												<a href="javascript:void(0);" class="dropdown-toggle " data-toggle="dropdown" aria-expanded="false"><i class="fa fa-lg  fa fa-plus"></i>Agregar nota de cobranza <b class="caret"></b></a>
 												<ul class="dropdown-menu text-left">
@@ -154,7 +169,8 @@
 												</div>
 												<div class="tab-pane fade" id="hr4">
 													<div ng-include="'client/cobranza/_historialCobranza.html'"></div>
-												</div>	
+												</div>
+
 											</div>
 											
 											<!-- end widget body text-->
