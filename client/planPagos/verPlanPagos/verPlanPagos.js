@@ -6,7 +6,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	let rc = $reactive(this).attach($scope);
 	this.action = false;
 	this.fechaActual = new Date();
-	console.log($stateParams)
+	
 	window.rc = rc;
 	this.credito_id = "";
 
@@ -38,7 +38,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		return [{ _id : $stateParams.credito_id}];
 	});
 	this.subscribe('pagos', () => {
-		return [{  }];
+		return [{estatus:true  }];
 	});
 	
 	this.helpers({
@@ -54,17 +54,24 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		planPagosViejo : () => {
 			//var diferentes = c_ids.diff(p_ids)
 		//	var fechaPago = moment(pago.fecha).add(-1, "days");
+
 			rc.credito_id = $stateParams.credito_id;
 			var fechaActual = moment();
 			 pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
-			 _.each(pagos, function(p){ 
-			 	if (p.estatus == 0 && p.multa == 0) {
+			 _.each(pagos, function(p){
+
+			 	
+
+
+			 	if (p.estatus == 0 && p.multa == 0 ) {
+			 		console.log("epaaaa")
 			 	_.each(rc.creditos, function(c){
 			 	//console.log(p)
 			 	var fechaLimite = moment(p.fechaLimite);
 			 	var dias = fechaActual.diff(fechaLimite, "days");
 			 	
 			 	if (fechaActual > p.fechaLimite) {
+
 
 			 		//console.log("dif ", fechaLimite, fechaActual)
 			 		var multaCosto = 0;
@@ -73,11 +80,13 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			 		console.log(c.capitalSolicitado)
 			 		console.log("las multas",multas)
 			 		pagos.push({credito_id:p.credito_id,fechaLimite:p.fechaLimite,numeroPago:p.numeroPago, importeRegular:multas,
-			 		descripcion:"Multa",estatus:0,multa:multaCosto})
-			 	}				
+			 		descripcion:"Multa",estatus:0,multa:multaCosto,movimiento:"Multa"})
+			 	}	
+			 		
 				});
 			   }
-			  if (p.estatus == 1  && p.tiempoPago == 1 && p.multa == 0 ) {
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			  if (p.estatus == 1  && p.tiempoPago == 1 && p.multa == 0  ) {
 			  	_.each(rc.creditos, function(c){
 			  	var multaCosto = 0;
 			    var fechaLimite = moment(p.fechaLimite);
@@ -88,13 +97,53 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			  	console.log(diasMulta)
 			  	if (p.descripcion != "Multa") {
 			  	pagos.push({credito_id:p.credito_id,fechaLimite:p.fechaLimite,numeroPago:p.numeroPago, importeRegular:multasVencidas,
-			 		descripcion:"Multa",multa: 0})
+			 		descripcion:"Multa",multa: 0,movimiento:"Multa"})
 			  }
+
 
 			  });
 			}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			  if (p.estatus == 1 && p.multa == 0 && p.descripcion == "Multa" ) {
+			  	console.log("entro al if  3")
+			 		
+			  	planPago = PlanPagos.findOne({numeroPago:p.numeroPago,credito_id: p.credito_id})
+				console.log("planPagos",planPago)
+
+				var fechaLimite = moment(p.fechaLimite);
+				var hoy = new Date();
+				ultimoPago = PlanPagos.findOne({numeroPago : p.numeroPago},{ sort : { fechaPago : -1 }});
+				console.log(ultimoPago)
+			 	var fechaPago = moment(p.fechaPago);
 			 	
-			});
+			 	
+			 	if (fechaActual > p.fechaLimite && planPago.multa == 1 && planPago.estatus == 0 && p.recargo != 1 ) {
+			 		_.each(rc.creditos, function(c){
+
+			 		console.log("entro al if para la multa ")
+			 
+			 	
+			 	var dias = fechaActual.diff(ultimoPago.fechaPago, "days");
+			 	console.log("oie papu estos son los dias",dias)
+
+			  	var multaCosto = 0;
+			  	
+			  	var diasMulta = fechaActual.diff(ultimoPago.fechaPago, "days");
+			  	var multasVencidas = (diasMulta/100) * c.capitalSolicitado 
+			  	console.log("tercer if",diasMulta)
+			  	pagos.push({credito_id:p.credito_id,fechaLimite:hoy,numeroPago:p.numeroPago, importeRegular:multasVencidas,
+			 		descripcion:"Multa",multa: 0,recargo:1,movimiento:"Multa"})
+			 
+			 	});
+			   }
+
+			  
+			   // if (true) {}
+			}
+		});
+
+		
+
 //			pagos.sort(function(a,b) {return (a.numeroPago > b.numeroPago) ? 1 : ((b.numeroPago > a.numeroPago) ? -1 : 0);} );
 			pagos.sort(fieldSorter(['numeroPago', 'descripcion']));
 			//console.log("helpers",pagos)
@@ -358,7 +407,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		pago.sucursalPago_id = Meteor.user().profile.sucursal_id
 		pago.estatus = true;
 		var pago_id = Pagos.insert(pago);
-		console.log(pago)
+		console.log("el pago",pago)
 		this.pago = {}
 
         _.each(rc.planPagosViejo, function(p){
@@ -395,44 +444,36 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 						if (p.descripcion == "Multa") {
 							console.log("entro aqui a la multa")
 							planPago = PlanPagos.findOne({numeroPago:p.numeroPago,credito_id: p.credito_id})
+							//console.log("aca abajo",planPago)
 							var idTemp = p._id;
 	        				//delete planPago._id;
-							//console.log("el id ",planPago)
-							//console.log("idTemp ",idTemp)
-							
-
+	        				p.cargo = p.importeRegular;
+					
 							PlanPagos.update({_id:planPago._id},
 								 { $set : { multa : 1}});
-
+							// PlanPagos.update({_id:planPago._id},
+							// 	 { $set : { abono:1}});
 							p.estatus = 1
 							if (p.descripcion == "Multa" && p.estatus == 1) {
 								p.importeRegular = 0;
 							}
+
 							if (pago.pagar > p.importeRegular) {
 	 							p.importeRegular = 0
 	 							p.estatus = 1
 
 	 						}
-	 						 var totalP = 0;
-	 						if (p.pagoSeleccionado) {
 
-	 						}
-
-
-
-
-	 						// var cuenta = 0;
-		 					//  if (pago.pagar < p.importeRegular) {
-		 					//  	cuenta = p.importeRegular - pago.pagar
-		 					//  	console.log(cuenta)
-		 					//  }
-
-	 						
+							if (p.importeRegular == 0) {
+						
+								p.estatus = 1;
+							}
 							
 							PlanPagos.insert(p);
 							console.log("despues del insert y del update",p,rc.planPagosViejo)
 
 						}else{
+							p.cargo = p.importeRegular;
 							console.log("entro al else")
 
 							if (p.fechaLimite > p.fechaPago) 
@@ -467,28 +508,22 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 	 							if (  pago.pagar  >= p.importeRegular ) {
 	 								console.log("entro al if ")
-
 	 							
-	 									p.importeRegular= (pago.totalPago - pago.pagar)	
-	 									pago.totalPago = p.importeRegular
-	 							
-
-		 					 	
-		 					   
-
-		 					    if ( p.importeRegular < 0) {
-	 							p.importeRegular = 0
-	 							p.estatus = 1
+ 									p.importeRegular= (pago.totalPago - pago.pagar)	
+ 									pago.totalPago = p.importeRegular
+			 					    if ( p.importeRegular <= 0) {
+		 							p.importeRegular = 0
+		 							p.estatus = 1
 
 	 							}
 		 					 }else{
 		 					 	console.log("entro al else mannn")
-
 		 					 	p.importeRegular =  p.importeRegular -pago.pagar
 		 					 	pago.pagar = 0
+		 					 } 
 
-		 					 }
-		 									
+
+		 								
 		 					 
 
 	 						PlanPagos.update({_id:idTemporal},{$set:p});

@@ -14,15 +14,19 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr  ng-repeat="credito in hp.creditos">
+				<tr  ng-repeat="credito in hp.historial">
 
 				
-					<td class="text-center">{{$index + 1}}</td>	
-					<td class="text-center">{{credito.fechaLimite | date:"dd-MM-yyyy"}}</td>
-					<td class="text-center">{{pago.numeroPago || pago.numeroPagoMulta}} - {{hp.planPagos.length}}</td>
-					<td class="text-right">{{pago.importeRegular  | currency}}</td>
-					<td >{{pago.descripcion}}</td>
-					<td class="text-center">
+					<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{hp.planPagos.length}}</td>	
+					<td class="text-center">{{credito.movimiento}}</td>	
+					<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
+					<td class="text-center">{{credito.cargo | currency}}</td>
+					<td class="text-right">{{credito.pago | currency}}</td>
+					<td >{{credito.saldo | currency}}</td>
+					<td >0</td>
+					<td >0</td>
+				
+				<!-- 	<td class="text-center">
 						<span >
 							<button class="btn btn-warning btn-xs" ng-click="hp.editar(pago)"><i class="fa fa-pencil"></i></button>
 							<button class="btn btn-danger  btn-xs" ng-click="hp.cambiarEstatus(pago, 2, 'eliminar')"><i class="fa fa-trash"></i></button>
@@ -30,7 +34,7 @@
 						<span>
 							<button class="btn btn-success btn-xs" ng-click="hp.cambiarEstatus(pago, 0, 'activar')"><i class="fa fa-check"></i></button>
 						</span>
-					</td>
+					</td> -->
 				</tr>
 			</tbody>
 		</table>	

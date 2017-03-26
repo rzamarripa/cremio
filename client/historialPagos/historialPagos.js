@@ -19,8 +19,8 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 
 	// this.informacionContacto = tr; 
 	
-  this.subscribe("planPagos", ()=>{
-		return [{ credito_id : $stateParams.credito_id,credito_id: this.getReactively('credito_id') }]
+ this.subscribe("planPagos", ()=>{
+		return [{ cliente_id : this.getReactively("cliente_id") }]
 	});
 	
 	this.subscribe("tiposCredito", ()=>{
@@ -28,12 +28,16 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	});
 	
 	this.subscribe('cliente', () => {
-		return [{ id : $stateParams.cliente_id }];
+		return [{ _id : $stateParams.cliente_id }];
 	});
 	
 	this.subscribe('creditos', () => {
 		return [{ cliente_id : $stateParams.objeto_id, estatus : 1 }];
 	});
+	this.subscribe('pagos', () => {
+		return [{estatus:true  }];
+	});
+
 	
 	this.helpers({
 		cliente : () => {
@@ -45,19 +49,28 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		tiposCredito : () => {
 			return TiposCredito.find();
 		},
-		planPagosViejo : () => {
+planPagosViejo : () => {
 			//var diferentes = c_ids.diff(p_ids)
 		//	var fechaPago = moment(pago.fecha).add(-1, "days");
+
+			rc.credito_id = $stateParams.credito_id;
 			var fechaActual = moment();
 			 pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
-			 _.each(pagos, function(p){ 
-			 	if (p.estatus == 0 && p.multa == 0) {
+			 _.each(pagos, function(p){
+
+
+			 	
+
+
+			 	if (p.estatus == 0 && p.multa == 0 ) {
+			 		console.log("epaaaa")
 			 	_.each(rc.creditos, function(c){
 			 	//console.log(p)
 			 	var fechaLimite = moment(p.fechaLimite);
 			 	var dias = fechaActual.diff(fechaLimite, "days");
 			 	
 			 	if (fechaActual > p.fechaLimite) {
+
 
 			 		//console.log("dif ", fechaLimite, fechaActual)
 			 		var multaCosto = 0;
@@ -66,11 +79,13 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			 		console.log(c.capitalSolicitado)
 			 		console.log("las multas",multas)
 			 		pagos.push({credito_id:p.credito_id,fechaLimite:p.fechaLimite,numeroPago:p.numeroPago, importeRegular:multas,
-			 		descripcion:"Multa",estatus:0,multa:multaCosto})
-			 	}				
+			 		descripcion:"Multa",estatus:0,multa:multaCosto,movimiento:"Multa"})
+			 	}	
+			 		
 				});
 			   }
-			  if (p.estatus == 1  && p.tiempoPago == 1 && p.multa == 0 ) {
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			  if (p.estatus == 1  && p.tiempoPago == 1 && p.multa == 0  ) {
 			  	_.each(rc.creditos, function(c){
 			  	var multaCosto = 0;
 			    var fechaLimite = moment(p.fechaLimite);
@@ -81,40 +96,170 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			  	console.log(diasMulta)
 			  	if (p.descripcion != "Multa") {
 			  	pagos.push({credito_id:p.credito_id,fechaLimite:p.fechaLimite,numeroPago:p.numeroPago, importeRegular:multasVencidas,
-			 		descripcion:"Multa",multa: 0})
+			 		descripcion:"Multa",multa: 0,movimiento:"Multa"})
 			  }
+
+
+
 
 			  });
 			}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			  if (p.estatus == 1 && p.multa == 0 && p.descripcion == "Multa" ) {
+			  	console.log("entro al if  3")
+			 		
+			  	planPago = PlanPagos.findOne({numeroPago:p.numeroPago,credito_id: p.credito_id})
+				console.log("planPagos",planPago)
+
+				var fechaLimite = moment(p.fechaLimite);
+				var hoy = new Date();
+				ultimoPago = PlanPagos.findOne({numeroPago : p.numeroPago},{ sort : { fechaPago : -1 }});
+				console.log(ultimoPago)
+			 	var fechaPago = moment(p.fechaPago);
 			 	
-			});
-			pagos.sort(function(a,b) {return (a.numeroPago > b.numeroPago) ? 1 : ((b.numeroPago > a.numeroPago) ? -1 : 0);} );
+			 	
+			 	if (fechaActual > p.fechaLimite && planPago.multa == 1 && planPago.estatus == 0 && p.recargo != 1 ) {
+			 		_.each(rc.creditos, function(c){
+
+			 		console.log("entro al if para la multa ")
+			 
+			 	
+			 	var dias = fechaActual.diff(ultimoPago.fechaPago, "days");
+			 	console.log("oie papu estos son los dias",dias)
+
+			  	var multaCosto = 0;
+			  	
+			  	var diasMulta = fechaActual.diff(ultimoPago.fechaPago, "days");
+			  	var multasVencidas = (diasMulta/100) * c.capitalSolicitado 
+			  	console.log("tercer if",diasMulta)
+			  	pagos.push({credito_id:p.credito_id,fechaLimite:hoy,numeroPago:p.numeroPago, importeRegular:multasVencidas,
+			 		descripcion:"Multa",multa: 0,recargo:1,movimiento:"Multa"})
+			 
+			 	});
+			   }
+
+			  
+			   // if (true) {}
+			}
+			 // console.log("hola",pagos)
+		});
+
+		
+
+//			pagos.sort(function(a,b) {return (a.numeroPago > b.numeroPago) ? 1 : ((b.numeroPago > a.numeroPago) ? -1 : 0);} );
+			pagos.sort(fieldSorter(['numeroPago', 'descripcion']));
 			//console.log("helpers",pagos)
+			
+			function fieldSorter(fields) {
+			    return function (a, b) {
+			        return fields
+			            .map(function (o) {
+			                var dir = 1;
+			                if (o[0] === '-') {
+			                   dir = -1;
+			                   o=o.substring(1);
+			                }
+			                if (a[o] > b[o]) return dir;
+			                if (a[o] < b[o]) return -(dir);
+			                return 0;
+			            })
+			            .reduce(function firstNonZeroValue (p,n) {
+			                return p ? p : n;
+			            }, 0);
+			    };
+			}
 
 			 return pagos
 		},
-
-
-		planPagosTrue : () => {	 
-			 pagos = PlanPagos.find({multa:1},{sort : {numeroPago : 1}}).fetch();
-			 return pagos
+		pagos : () =>{
+			return Pagos.find().fetch()
 		},
+
+
 		creditos : () => {
+
 			var creditos = Creditos.find().fetch();
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
 				_.each(creditos, function(credito){
 					credito.planPagos = PlanPagos.find({credito_id : credito._id},{sort : {numeroPago : 1}}).fetch();
-			
 			  			credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
-			  			//producto.unidad = TiposCredito.findOne(producto.unidad_id)
-
-			  				  				
-				})
+			  		});
 			}
-			console.log("hola credito",creditos)
+			///console.log("hola credito",creditos)
 			return creditos;
 		},
+
+		historial : () => {
+			arreglo = [];
+			var saldoPago = 0; 
+			var pagoSuma = 0;
+			var SumaPago = 0;
+
+			_.each(rc.getReactively("creditos"), function(credito){
+				_.each(rc.getReactively("planPagosViejo"), function(planPago, index){
+					var saldo = 0;
+					console.log(saldo)
+				
+			  				
+			  					planPago.capitalSolicitado =  saldo;
+
+			  				if(index == 0){
+			  					console.log("primero", index)
+			  					saldo = credito.capitalSolicitado ;
+			  				}else{
+			  					console.log("más", index);
+			  					saldo = saldoPago; 
+			  					//console.log("saldoPago", saldoPago);
+			  				}
+			  					
+
+					arreglo.push({saldo:saldo , numeroPago : planPago.numeroPago,fechaSolicito : credito.fechaSolicito,
+			  				fecha:planPago.fechaPago,pago:planPago.importeRegular, cargo:planPago.cargo,movimiento:"Recibo",
+			  				planPago_id:planPago._id
+			  				 })
+					
+
+			
+						
+						// console.log(saldoPago,"ppo")
+			  				_.each(rc.pagos, function(pago){
+			  						pagoSuma += pago.pagar;
+			  						console.log("pagosuma",pagoSuma)
+			  					if (planPago.pago_id == pago._id) {
+
+			  						SumaPago += pago.pagar;
+			  						saldoPago = (saldo - pagoSuma);
+			  						// pago.cargo = (planPago.cargo - planPago.pago)
+			  						planPago.saldoPay = pago.paºgar
+
+
+			  						arreglo.push({fecha:pago.fechaPago,pago:pago,numeroPago : planPago.numeroPago,cargo:pago.cargo,
+			  							movimiento:"Abono",pago:SumaPago,saldo:saldoPago,planPago_id:planPago._id,pago_id:pago._id
+			  						})
+			  					}
+			  					 		_.each(arreglo, function(array){
+										if (array.fecha == undefined) {
+									  	    array.saldo = 0
+									  	    }
+								  	    if (array.saldo <= 0) {
+								  	    array.saldo = 0
+								  	    }
+							  					
+									});
+
+			  					});
+			  				
+			  				
+						});
+				});
+
+			
+
+
+			console.log("el ARREGLO del helper historial",arreglo)
+			return arreglo;
+		}
 	});
 	  
   this.guardar = function(convenio,form)
@@ -133,7 +278,7 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		$('.collapse').collapse('hide');
 		this.nuevo = true;
 		form.$setPristine();
-    form.$setUntouched();
+  		form.$setUntouched();
 		
 	};
 	
@@ -332,6 +477,7 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		pago.sucursalPago_id = Meteor.user().profile.sucursal_id
 		pago.estatus = true;
 		var pago_id = Pagos.insert(pago);
+
 		this.pago = {}
 
         _.each(rc.planPagosViejo, function(p){

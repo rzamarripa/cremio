@@ -92,19 +92,16 @@
 									<div class="widget-body">
 										<div class="tabs-right">
 											<ul class="nav nav-tabs">
-												<li  >
+												<li class="active" >
 													<a  aria-expanded="false" href="#tab1" data-toggle="tab">Información del contacto </a>
 												</li>
-												<li data-toggle="collapse" 
-								 					href="#collapseParticulares" aria-expanded="false" aria-controls="collapseParticulares">
+												<li>
 													<a  aria-expanded="false" href="#tab2" data-toggle="tab">Particulares</a>
 												</li>
-												<li data-toggle="collapse" 
-								 					href="#collapseDirecciones" aria-expanded="false" aria-controls="collapseDirecciones">
+												<li >
 													<a  aria-expanded="false" href="#tab3" data-toggle="tab">Dirección</a>
 												</li>
-												<li data-toggle="collapse" 
-								 					href="#collapseInfoLaboral" aria-expanded="false" aria-controls="collapseInfoLaboral">
+												<li>
 													<a aria-expanded="false" href="#tab4" data-toggle="tab">Información laboral</a>
 												</li>
 											</ul>
@@ -112,7 +109,6 @@
 												<div class="tab-pane active" id="tab1" style="margin-right: 10%;">
 
 														<div class="table-responsive">	
-														<div  class="collapse" id="collapseInfoContacto">	
 														<dl class="dl-horizontal" >
 
 														  <dt>Particular:</dt>
@@ -120,7 +116,7 @@
 														  <dt>Oficina:</dt>
 														  <dd>Oficina</dd>
 														  <dt>e-mail:</dt>
-														  <dd>{{currentUser.profile[1].correo}}</dd>
+														  <dd>{{currentUser[1].correo}}</dd>
 														  <dt>Movil:</dt>
 														  <dd>{{currentUser.profile[1].telefono}}</dd>
 														  <dt>Alternativo:</dt>
@@ -128,13 +124,12 @@
 														
 														</dl>
 
-												</div>
+											
 													
 
 												</div>
 												</div>
 												<div class="tab-pane" id="tab2">
-													<div  class="collapse" id="collapseParticulares">
 													<div class="table-responsive">										
 														<dl class="dl-horizontal">
 														  <dt>Sexo:</dt>
@@ -151,10 +146,9 @@
 														</dl>
 
 													 </div>
-													 </div>
+													
 												</div>
 												<div class="tab-pane" id="tab3">
-													<div  class="collapse" id="collapseDirecciones">	
 													<div class="table-responsive">									
 														<dl class="dl-horizontal">
 														  <dt>Calle:</dt>
@@ -177,7 +171,7 @@
 														</dl>
 
 													 </div>
-													 </div>
+													 
 												</div>
 												<div class="tab-pane" id="tab4">
 													<div  class="collapse" id="collapseInfoLaboral">						<div class="table-responsive">				
@@ -394,35 +388,19 @@
 </div>
 <!-- Tabla para mostrar los pagos -->
 
-
-<div class="row">
-	<article class="col-sm-12 sortable-grid ui-sortable">
-		<!-- new widget -->
-		<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-			<header role="heading">
-				<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-				<h2>Créditos Activos </h2>
-	
-				<ul class="nav nav-tabs pull-right" id="myTab">
-					<li class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in vpp.creditos track by $index">
-						<a data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado | currency}}</span></a>
-					</li>
-				</ul>
-	
-				<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
-			</header>
-			<div class="no-padding" role="content">
-				<div class="widget-body">
-					<div id="myTabContent" class="tab-content">
-						<div class="tab-pane fade padding-10 no-padding-bottom {{($index == 0 ? 'active in' : '')}}" id="s{{$index +1}}" ng-repeat="credito in vpp.creditos track by $index">
-							<div class="row no-space">
-								<div class="col-sm-12">
-
-
-								<div><div role="widget">
-								
-
-								
+<div class="jarviswidget" id="wid-id-5" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false" role="widget"
+ ng-repeat="credito in vpp.creditos">
+							
+								<!-- <header role="heading"><div class="jarviswidget-ctrls" role="menu">   <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus "></i></a>  <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Delete"><i class="fa fa-times"></i></a></div>
+									<h2>Tabs left </h2>
+									<div class="widget-toolbar hidden-phone" role="menu">
+										<div class="smart-form">
+											<label class="toggle">
+												<input type="checkbox" id="demo-switch-to-pills" name="checkbox-toggle">
+												<i data-swchon-text="TRUE" data-swchoff-text="FALSE"></i>Switch Navs / Pills</label>
+										</div>
+									</div>
+								<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header> -->
 				
 								<!-- widget div-->
 								<div role="content">
@@ -433,36 +411,26 @@
 				
 									</div>
 									<!-- end widget edit box -->
+				
 									<!-- widget content -->
 									<div class="widget-body">
 				
-										<div class="tabs-left ">
-									
+										<div class="tabs-left">
 											<ul class="nav nav-tabs tabs-left" id="demo-pill-nav">
-											
-												<li class="active" role="button" data-toggle="collapse" 
-								 					href="#collapseExampleDetalles" aria-expanded="false" aria-controls="collapseExampleDetalles">
-													<a href="#tab-r1" data-toggle="tab"> Detalles de la Solicitud </a>
+												<li class="">
+													<a href="#tab-r1" data-toggle="tab" aria-expanded="true"> Detalles de la Solicitud </a>
 												</li>
-												<li ole="button" data-toggle="collapse" 
-								 					href="#collapseExampleAvales" aria-expanded="false" aria-controls="collapseExampleAvales">
-													<a href="#tab-r2" data-toggle="tab"> Avales</a>
+												<li class="">
+													<a href="#tab-r2" data-toggle="tab" aria-expanded="false">Avales</a>
 												</li>
-												<li  data-toggle="collapse" 
-								 					href="#collapseExampleGarantias" aria-expanded="false" aria-controls="collapseExampleGarantias">
-													<a href="#tab-r3" data-toggle="tab" >Garantias</a>
+												<li class="">
+													<a href="#tab-r3" data-toggle="tab" aria-expanded="false">Garantias</a>
 												</li>
-												
 											</ul>
-											
-
 											<div class="tab-content">
-												<div class="tab-pane active" id="tab-r1">										
-													 <div class="collapse in" id="collapseExampleDetalles">
-
-														<div class="table-responsive">
-		
-														<dl class="dl-horizontal">
+												<div class="tab-pane active" id="tab-r1">
+												<div class="table-responsive">
+													<dl class="dl-horizontal">
 														  <dt>Tipo de Credito</dt>
 														  <dd>{{credito.nombreTipoCredito.nombre}}</dd>
 														  <dt>Periodo de Pago</dt>
@@ -472,17 +440,11 @@
 														  <dt>Duración</dt>
 														  <dd>{{credito.duracionMeses}}</dd>
 														</dl>
-														
-														</div>
-													</div>
-									
-
-											
+												</div>
+												</div>
 												<div class="tab-pane" id="tab-r2">
-													
-													<div  class="collapse" id="collapseExampleAvales">	
-													<div class="table-responsive">									
-														<dl class="dl-horizontal">
+												<div class="table-responsive">
+													<dl class="dl-horizontal">
 														  <dt>Nombre:</dt>
 														  <dd>{{credito.avales[0].nombre}}</dd>
 														  <dt>Estado Civil:</dt>
@@ -500,16 +462,12 @@
 														  <dt>Tiempo de Conocerlo:</dt>
 														  <dd>{{credito.avales[0].tiempoConocerlo}}</dd>
 														</dl>
-
-													 </div>
-													 </div>
 												</div>
-												<div class="tab-pane" id="tab-r3">
+												</div>
+												<div class="tab-pane " id="tab-r3">
 
-													 <div  class="collapse" id="collapseExampleGarantias">
-													 <div class="table-responsive">
-
-														<dl class="dl-horizontal">
+												<div class="table-responsive">
+													<dl class="dl-horizontal">
 														  <dt>Tipo:</dt>
 														  <dd>{{credito.garantias[0].tipo}}</dd>
 														  <dt>Marca:</dt>
@@ -528,14 +486,7 @@
 														  <dd>{{credito.garantias[0].estadoActual}}</dd>
 
 														</dl>
-
-									 				</div>
-									 				</div>
-
 												</div>
-													
-
-
 												</div>
 											</div>
 										</div>
@@ -546,7 +497,7 @@
 								</div>
 								<!-- end widget div -->
 				
-							</div></div>
+							</div>
 
 
 							<br/>
@@ -568,7 +519,7 @@
 												<tbody>
 													<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < vpp.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in vpp.planPagosViejo">
 							
-														<td ><a ng-model="pago.pagoSeleccionado" ng-click="vpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'success' : 'danger'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'Pendiente' : 'Por pagar'}}</a> </td>
+														<td ><a ng-model="pago.pagoSeleccionado" ng-click="vpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'seleccionado' : 'Pendiente'}}</a> </td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{$index + 1}}</td>	
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{vpp.planPagos.length}}</td>

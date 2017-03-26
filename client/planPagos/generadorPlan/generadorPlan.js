@@ -220,7 +220,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 				tiempoPago          : 0,
 				modificada          : false,
 				mes									: mfecha.get('month') + 1,
-				anio								: mfecha.get('year')
+				anio								: mfecha.get('year'),
+				cargo               : importeParcial,
 			}
 			console.log(pago);
 			rc.planPagos.push(angular.copy(pago));
