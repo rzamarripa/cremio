@@ -62,6 +62,11 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.subscribe('personas', () => {
 		return [{ }];
 	});
+	this.subscribe('tiposIngreso',()=>{
+		return [{
+			estatus : true
+		}]
+	});
 
 
 	this.helpers({
@@ -82,6 +87,9 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		  		})
 	  		}
 			return clientes;
+		},
+		tiposIngreso : () => {
+			return TiposIngreso.find()
 		},
 		planPagos : () => {
 			return PlanPagos.find({},{sort : {numeroPago : 1,descripcion:-1}});
@@ -251,7 +259,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 		});
 
-		Meteor.call("pagoParcialCredito",seleccionadosId,pago.pagar,pago.totalPago,function(error,success){
+		Meteor.call("pagoParcialCredito",seleccionadosId,pago.pagar,pago.totalPago,pago.tipoIngreso_id,function(error,success){
 			if(success!="OK")
 				toastr.error('Error al guardar.');
 		});

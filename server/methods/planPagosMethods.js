@@ -132,9 +132,13 @@ Meteor.methods({
 		});
 		
 	},
-	pagoParcialCredito:function(pagos,abono,totalPago){
+	pagoParcialCredito:function(pagos,abono,totalPago,tipoIngresoId){
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
+		
+		var cajaid = Meteor.user().profile.caja_id;
+		var user = Meteor.user();
+		var caja = Cajas.findOne(cajaid);
 
 		var ffecha = moment(new Date());
 		var pago = {};
@@ -154,6 +158,7 @@ Meteor.methods({
 	
 		var pago_id=undefined;
 		pago_id = Pagos.insert(pago);
+
 
 		var pagos=PlanPagos.find({_id:{$in:pagos}},{sort:{descripcion:1}}).fetch();
 		var mfecha = moment(ahora);
@@ -228,7 +233,25 @@ Meteor.methods({
 				
 			}
 		});
+		
+
+		var movimiento = {
+				tipoMovimiento : "Pago",
+				origen : "Pago de Cliente",
+				origen_id : pago_id,
+				monto : pago.totalPago,
+				cuenta_id : tipoIngresoId,
+				caja_id : caja._id,
+				sucursal_id : user.profile.sucursal_id,
+				createdAt : new Date(),
+				createdBy : user._id,
+				updated : false,
+				estatus : 1
+			}
+		var movimientoid = MovimientosCajas.insert(movimiento);
 		delete pago._id;
+		pago.caja_id =caja._id;
+		pago.movimientoCaja_id = movimientoid;
 		Pagos.update({_id:pago_id},{$set:pago})
 		return "OK"
 

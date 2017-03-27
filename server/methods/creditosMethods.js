@@ -62,7 +62,7 @@ Meteor.methods({
 		var caja = Cajas.findOne(cajaid);
 		var credito = Creditos.findOne(creditoid);
 
-		if(!credito || credito.status!=2)
+		if(!credito || credito.estatus!=2)
 			throw new Meteor.Error(500, 'Error 500: Conflicto', 'Credito Invalido');
 		if(!caja)
 			throw new Meteor.Error(500, 'Error 500: Conflicto', 'Usuario Sin Caja Asignada');
@@ -113,8 +113,8 @@ Meteor.methods({
 
 			var movimientoid = MovimientosCuenta.insert(movimiento);
 			credito.entrega.movimientosCuentas.push(movimientoid);
-
-			Cuentas.update({_id:cuenta._id},{$set:{saldo:cuenta.saldo-monoto.saldo}});
+			//console.log(cuenta);
+			Cuentas.update({_id:cuenta._id},{$set:{saldo:cuenta.saldo-monto.saldo}});
 		})
 
 		//credito.entregado = true;
