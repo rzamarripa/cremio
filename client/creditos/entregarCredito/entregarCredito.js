@@ -65,11 +65,11 @@ angular.module("creditoMio")
 	}
 	this.guardar = function (){
 			//console.log(rc.objeto)
-			if(form.$invalid || suma != credito.capitalSolicitado){
+			if(form.$invalid || rc.suma != rc.credito.capitalSolicitado){
 						toastr.error('Error al actualizar los datos.');
 						return;
 			}
-			Meteor.call ("entregarCredito",objeto,$stateParams.credito_id,function(error,result){
+			Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id,function(error,result){
 		
 				if(error){
 					console.log(error);
@@ -77,7 +77,7 @@ angular.module("creditoMio")
 					return
 				}
 				toastr.success('Operacion Realizada.');
-				$state.go("root.clienteDetalle",{objeto_id : $stateParams.cliente._id});
+				$state.go("root.clienteDetalle",{objeto_id : rc.credito.cliente_id});
 				rc.objeto = {}; 
 				$('.collapse').collapse('hide');
 				rc.nuevo = true;
