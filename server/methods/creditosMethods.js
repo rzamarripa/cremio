@@ -56,4 +56,73 @@ Meteor.methods({
 		Meteor.call("generarMultas");
 		return "hecho";
 	},
+	entregarCredito : (montos,creditoid)=>{
+		var cajaid = Meteor.user().profile.caja_id;
+		var user = Meteor.user();
+		var caja = Cajas.findOne(cajaid);
+		var credito = Creditos.findOne(creditoid);
+
+		if(!credito || credito.status!=2)
+			throw new Meteor.Error(500, 'Error 500: Conflicto', 'Credito Invalido');
+		if(!caja)
+			throw new Meteor.Error(500, 'Error 500: Conflicto', 'Usuario Sin Caja Asignada');
+
+		credito.entrega={movimientosCaja:[],movimientosCuentas:[]};
+
+		_.each(montos.caja,(monto,index)=>{
+			var movimiento = {
+				tipoMovimiento : "Retiro",
+				origen : "Entrega de Credito",
+				origen_id :creditoid,
+				caja_id : cajaid,
+				cuenta_id :index,
+				monto : monto.saldo * -1,
+				sucursal_id : user.profile.sucursal_id,
+				createdAt : new Date(),
+				createdBy : user._id,
+				updated : false,
+				estatus : 1
+			}
+			caja.cuenta[index].saldo -= monto.saldo;
+
+			var movimientoid = MovimientosCajas.insert(movimiento);
+			credito.entrega.movimientosCaja.push(movimientoid);
+
+		});
+
+		delete caja._id
+		caja.updated = true;
+		caja.updatedAt = new Date();
+		caja.updatedBy = user._id;
+		Cajas.update({_id:cajaid},{$set:caja});
+
+		_.each(montos.cuenta,(monto,index)=>{
+			var movimiento = {
+				tipoMovimiento : "Retiro",
+				origen : "Entrega de Credito",
+				origen_id : creditoid,
+				monto : monto.saldo * -1,
+				cuenta_id : index,
+				sucursal_id : user.profile.sucursal_id,
+				createdAt : new Date(),
+				createdBy : user._id,
+				updated : false,
+				estatus : 1
+			}
+			var cuenta = Cuentas.findOne(index);
+
+			var movimientoid = MovimientosCuenta.insert(movimiento);
+			credito.entrega.movimientosCuentas.push(movimientoid);
+
+			Cuentas.update({_id:cuenta._id},{$set:{saldo:cuenta.saldo-monoto.saldo}});
+		})
+
+		//credito.entregado = true;
+		credito.estatus = 4;
+
+		delete credito._id ;
+		Creditos.update({_id:creditoid},{$set:credito});
+
+		return "200";
+	}
 });

@@ -5,9 +5,6 @@
 			href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ng-click="suc.Nuevo()">
 		  {{suc.nuevo == true ? 'Nuevo' : 'Cancelar'}}
 		</a>
-		<a class="btn btn-primary" href="./campus">
-		  Listar Sucursales
-		</a>
 		<div class="collapse" id="collapseExample">
 			<form name="form" class="form-horizontal" role="form" novalidate>
 				<section id="usuario" data-widget-grid="data-widget-grid1" >
@@ -37,8 +34,8 @@
 										    <label for="sexo">Sexo *</label>
 										    <select name="sexo" ng-model="suc.objeto.sexo" data-placeholder="Seleccione" class="form-control" required>
 												    <option value=""></option>
-												    <option value="masculino">Masculino</option>
-												    <option value="femenino">Femenino</option>
+												    <option value="Masculino">Masculino</option>
+												    <option value="Femenino">Femenino</option>
 												</select>
 								    	</div>
 								    	<div class="col-sm-2" valida>					    

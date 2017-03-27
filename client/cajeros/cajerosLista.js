@@ -1,6 +1,6 @@
 angular.module("creditoMio")
-.controller("VentanillasListaCtrl", VentanillasListaCtrl);
- function VentanillasListaCtrl($scope, $meteor, $reactive, $state, toastr){
+.controller("CajerosListaCtrl", CajerosListaCtrl);
+ function CajerosListaCtrl($scope, $meteor, $reactive, $state, toastr){
  	
  	let rc = $reactive(this).attach($scope);
   this.action = true;
@@ -10,7 +10,7 @@ angular.module("creditoMio")
   this.buscar.nombre = "";
   window.rc = rc;
   
-  this.subscribe('buscarVentanillas', () => {
+  this.subscribe('buscarCajeros', () => {
 		if(this.getReactively("buscar.nombre").length > 0){
 			console.log(rc.buscar.nombre);
 			return [{
@@ -23,19 +23,20 @@ angular.module("creditoMio")
   });
   
   this.helpers({
-		clientes : () => {
+		cajeros : () => {
 			return Meteor.users.find({
 		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
-		  	roles : ["Cliente"]
+		  	roles : ["Cajero"]
 			}, { sort : {"profile.nombreCompleto" : 1 }});
 		},
 	});
 	
 	this.tieneFoto = function(sexo, foto){
+		console.log(sexo,foto)
 	  if(foto === undefined){
-		  if(sexo === "masculino")
+		  if(sexo === "Masculino" )
 			  return "img/badmenprofile.jpeg";
-			else if(sexo === "femenino"){
+			else if(sexo === "Femenino"){
 				return "img/badgirlprofile.jpeg";
 			}else{
 				return "img/badprofile.jpeg";

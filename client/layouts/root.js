@@ -14,6 +14,10 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		return [{estatus : 2, cliente_id : { $in : this.getReactively("clientes_ids")}}];
 	})
 	
+	this.subscribe('cajas',()=>{
+		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile? Meteor.user().profile.sucursal_id : "":""}]
+	});
+
 	this.subscribe('buscarClientes', () => {
 		if(this.getReactively("buscar.nombre").length > 3){
 			console.log(root.buscar.nombre);
@@ -57,7 +61,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		return [{estatus:true  }];
 	});
   
-  this.helpers({
+  	this.helpers({
 		clientesRoot : () => {
 			var clientes = Meteor.users.find({
 		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
@@ -81,12 +85,22 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 
 	});
 
+	this.verMenu =()=>{
+		var user= Meteor.user();
+		if( user && user.roles && user.roles[0]=="Cajero"){
+			var caja = Cajas.findOne(user.profile.caja_id);
+			if (caja && caja.estadoCaja=="Cerrada")
+				return false;
+		}
+		return true;
+	}
+
 	this.tieneFoto = function(foto, sexo){
 		
 	  if(foto === undefined){
-		  if(sexo === "masculino")
+		  if(sexo === "Masculino")
 			  return "img/badmenprofile.png";
-			else if(sexo === "femenino"){
+			else if(sexo === "Femenino"){
 				return "img/badgirlprofile.png";
 			}else{
 				return "img/badprofile.png";

@@ -27,6 +27,25 @@
 				    </div>
 					</div>
 				</div>
+				<h4>Multa al vencimiento</h4>
+				<div class="well">	    
+			    <div class="row">
+				    	<div class="col-sm-4" valida>
+						    <label>Importe *</label>
+					    	<input name="importe" type="number" class="form-control"ng-model="tc.objeto.importe" required>
+					    </div>
+					    <div class="col-sm-4" valida>
+						    <label for="formacionacademica">Cálculo</label>
+						    <select name="calculo" ng-model="tc.objeto.calculo" data-placeholder="Seleccione" class="form-control">
+								    <option value=""></option>
+								    <option value="importeSolicitado">En base al importe solicitado</option>
+								    <option value="importereciboVencido">En base al importe del recibo vencido</option>
+								    <option value="saldoreciboVencido">En base al saldo del recibo vencido</option>
+								</select>
+				    	</div>
+				    	
+			    </div>
+				</div>   
 		  	<div class="well">	    
 			    <div class="row">
 						<div class="col-sm-12">

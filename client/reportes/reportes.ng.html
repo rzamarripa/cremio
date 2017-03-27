@@ -1,0 +1,321 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Reportes
+		</h1>
+	</div>
+	<!-- <div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+						<ul id="sparks" class="">
+							<li class="sparks-info">
+								<h5> Total recibos <span class="txt-color-green" style="text-align: right">{{re.totalRecibos | currency}}</span></h5>
+							<li class="sparks-info">
+								<h5> Total Multas <span class="txt-color-red" style="text-align: right">{{re.totalMultas | currency}}</span></h5>
+							<li class="sparks-info">
+								<h5> Recibos seleccionados <span class="txt-color-green" style="text-align: right">{{re.seleccionadoRecibos | currency}}</span></h5>
+							<li class="sparks-info">
+								<h5> Multas Seleccionadas <span class="txt-color-red" style="text-align: right">{{re.seleccionadoMultas | currency}}</span></h5>
+						</ul>
+					</div> -->
+</div>
+<br>
+<div class="well">
+	<div class="row">
+		<div class="col-sm-9">
+			<a class="btn btn-primary" ng-click="re.AsignaFecha(0);" style="width: 130px"><i class="fa fa-table"></i> Vencido Hoy</a>	
+			<a class="btn btn-primary" ng-click="re.AsignaFecha(1);" style="width: 130px"><i class="fa fa-table"></i> Día</a>
+			<a class="btn btn-primary" ng-click="re.AsignaFecha(2);" style="width: 130px"><i class="fa fa-table"></i> Semana</a>
+			<a class="btn btn-primary" ng-click="re.AsignaFecha(3);" style="width: 130px"><i class="fa fa-table"></i> Mes</a>
+			<a class="btn btn-primary" ng-click="re.AsignaFecha(4);" style="width: 130px"><i class="fa fa-table"></i> Siguiente Mes</a>
+
+		</div>	
+		<div class="col-sm-3">
+			<form class="form-inline">
+				<div class="form-group">
+					<label for="fecha">Fecha:</label>
+					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaInicial"/>
+				</div>
+			</form>
+		</div>
+	</div>	
+	<br />
+	<div class="row">
+		<div class="col-sm-6">
+				<div class="input-group input-group-md">
+			      <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+			      <div class="icon-addon addon-md">
+			          <input type="text" placeholder="..." class="form-control" ng-model="re.buscar.nombre">
+			          <label for="email" class="glyphicon glyphicon-search" rel="tooltip" title="" data-original-title="email"></label>
+			      </div>
+			      <span class="input-group-btn">
+			          <button class="btn btn-default" ng-click="re.buscarNombre()" type="button">Buscar</button>
+			          
+			      </span>
+			  </div>
+		</div>
+		<div class="col-sm-6">
+			<a class="btn btn-default pull-right" ng-click="" style="width: 130px">Imprimir Recibos</a>
+		</div>	
+	</div>
+</div>
+ <div class="row">	
+	<div class="col-sm-12">
+		<table id="rec" class="table table-hover border-collapse" >
+			<thead>
+				<tr>
+					<th width="5%" style="margin: 0px; border: 0px; padding: 0px">
+						<input id="todos" type="checkbox" class="form-control" ng-checked="false" ng-click="re.cambiar()" style="margin: 0px; border: 0px; padding: 0px"/>
+					</th>
+					<th width="5%">No.</th>
+					<th width="15%"><div class="text-center">Folio crédito</div></th>
+					<th width="25%"><div class="text-center">Recibo</div></th>
+					<th width="15%"><div class="text-center">Cliente</div></th>
+					<th width="10%"><div class="text-center">Importe</div></th>
+					<th width="10%"><div class="text-center">Multas</div></th>
+					<th width="10%"><div class="text-center">Saldo</div></th>
+				</tr>
+			</thead>
+			<tbody>
+		    <tr style='cursor: pointer' ng-repeat-start="objeto in re.cobranza" >
+			    <td style="margin: 0px; border: 0px; padding: 0px">
+				    <input type="checkbox" class="form-control" 
+				    											 ng-model="objeto.imprimir" 
+				    											 ng-click="re.sumarSeleccionados()"
+				    											 ng-change="re.Selecionar(objeto)" value="objeto.imprimir" style="margin: 0px; border: 0px; padding: 0px" /> 
+			    </td>
+			    <td ng-click="re.selCredito(objeto)">{{ $index + 1 }}</td>
+			    <td class="text-center" ng-click="re.selCredito(objeto)">{{objeto.credito.folio}}</td>
+			    <td ng-click="re.selCredito(objeto)">
+				    <span ng-class="planPago.classPago" title="{{planPago.fechaLimite | date:'dd-MM-yyyy'}}" ng-repeat="planPago in objeto.planPagos">| {{planPago.numeroPago}} </span>
+				  </td>
+			    <td ng-click="re.selCredito(objeto)">{{objeto.cliente.profile.nombreCompleto}}</td>
+			    <td class="text-right" ng-click="re.selCredito(objeto)">{{objeto.importe | currency}}</td>
+			    <td class="text-right" ng-click="re.selCredito(objeto)">{{objeto.multas | currency}}</td>
+			    <td class="text-right" ng-click="re.selCredito(objeto)">{{objeto.saldo | currency}}</td>
+		    </tr>
+		    <tr ng-repeat-end ng-if="re.isSelected(objeto.credito.folio) && re.ban">
+            <td colspan="8">
+	           	<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
+										<header role="heading">
+										<!--<h2><strong>Panel de Folios </strong></h2>-->
+										
+										<ul id="widget-tab-1" class="nav nav-tabs pull-left">
+								
+											<li class="active">
+								
+												<a data-toggle="tab" href="#hr1" aria-expanded="true"> <i class="fa fa-lg fa-info"></i> <span class="hidden-mobile hidden-tablet"> Diario de cobranza	</span> </a>
+											</li>
+								
+											<li class="">
+												<a data-toggle="tab" href="#hr2" aria-expanded="false"> <i class="fa fa-lg fa-credit-card"></i> <span class="hidden-mobile hidden-tablet"> Movimiento en cuenta </span></a>
+											</li>
+											
+										
+											<!-- <li class="dropdown ">
+												<a href="javascript:void(0);" class="dropdown-toggle " data-toggle="dropdown" aria-expanded="false"><i class="fa fa-lg  fa fa-plus"></i>Agregar nota de cobranza <b class="caret"></b></a>
+												<ul class="dropdown-menu text-left">
+												<li >
+													
+												</li>
+												
+													
+												</ul>
+											</li> -->
+											
+										</ul>	
+										
+									<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+								
+									<!-- widget div-->
+									<div role="content">
+										
+										<!-- widget edit box -->
+										<div class="jarviswidget-editbox">
+											<!-- This area used as dropdown edit box -->
+											
+										</div>
+										<!-- end widget edit box -->
+										
+										<!-- widget content -->
+										<div class="widget-body no-padding">
+								
+											<!-- widget body text-->
+											
+											<div class="tab-content padding-10">
+												<div class="tab-pane fade active in" id="hr1">
+													<div ng-include="'client/reportes/_diarioCobranza.html'"></div>
+												</div>
+												<div class="tab-pane fade" id="hr2">
+													<div ng-include="'client/reportes/_movimientoCuenta.html'"></div>
+												</div>
+											
+
+											</div>
+											
+											<!-- end widget body text-->
+											
+											<!-- widget footer -->
+											<div class="widget-footer text-right">
+											</div>
+											<!-- end widget footer -->
+											
+										</div>
+										<!-- end widget content -->
+										
+									</div>
+									<!-- end widget div -->
+									
+								</div>	            
+            </td>
+        </tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+  <!-- /////////////////////////MODAL NOTA COBRANZA ////////////////////////// -->
+			    <div class="container">
+			      <!-- Modal -->
+				  <div class="modal fade" id="myModal" role="dialog">
+				    <div class="modal-dialog">
+			    <!-- Modal content-->
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				          <h4 class="modal-title">Nota de cobranza</h4>
+				        </div>
+				        <div class="modal-body" >
+				          <h6>Información relacionada con el crédito</h6><br/>
+				          <p>Cliente: <strong>{{re.notaCobranza.cliente}}</strong></p>
+				          <p>Crédito: <strong>{{re.notaCobranza.folioCredito}}</strong></p>
+				          <p>Recibo: <strong>{{re.notaCobranza.recibo}}</strong></p>
+				          <p>Multa: <strong>Pendiente</strong></p>
+				        </div>
+					        <div class="modal-footer">
+					        	<label class="pull-left">Título de la nota</label>
+					        	<input  type="text" class="form-control" placeholder="Nombre" ng-model="re.notaCobranza.titulo" >
+					        	<label class="pull-left">nota</label>
+					        	<textarea type="text" class="form-control" placeholder="Escribe la nota aqui" 
+		    	 				ng-model="re.notaCobranza.descripcion" >
+		    	 		
+					      
+								 
+							</div>
+							<div class="col-sm-3"> <br/>
+								<a ng-click="re.guardarNotaCobranza(re.notaCobranza)"  class="btn btn-primary">Guardar</a>
+							</div>
+							
+		
+				        <div class="modal-footer">
+
+							  
+				          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				        </div>
+				      </div>
+				      
+				    </div>
+				  </div>
+				 </div>
+				  
+			<!--     //////////////////////////////////////////////////////////// -->
+
+
+
+<!-- /////////////////////////MODAL NOTA CLIENTE //////////////////////////////////////// -->
+
+			<div class="container">
+			      <!-- Modal -->
+				  <div class="modal fade" id="modalCliente" role="dialog">
+				    <div class="modal-dialog">
+			    <!-- Modal content-->
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				          <h4 class="modal-title">Nota para el cliente</h4>
+				        </div>
+				        <div class="modal-body" >
+				    	 <h6>Información relacionada con el crédito</h6><br/>
+				          <p>Cliente: <strong>{{re.notaCobranza.cliente}}</strong></p>
+				          <p>Crédito: <strong>{{re.notaCobranza.folioCredito}}</strong></p>
+				          <p>Recibo: <strong>{{re.notaCobranza.recibo}}</strong></p>
+				          <p>Multa: <strong>Pendiente</strong></p>
+				        </div>
+					        <div class="modal-footer">
+					      	 <!--  	<label class="checkbox-inline pull-left"><input  type="checkbox"   ng-click="re.cambioEstatusRespuesta()"/> Requiere respuesta</label>
+					      	  	<br/><br/> -->
+					        	<label class="pull-left">Título de la nota</label>
+					        	<input  type="text" class="form-control" placeholder="Nombre" ng-model="re.notaCobranza.titulo" >
+					        	<label class="pull-left">nota</label>
+					        	<textarea type="text" class="form-control" placeholder="Escribe la nota aqui" 
+		    	 				ng-model="re.notaCobranza.descripcion" >
+
+
+		    	 										 
+							</div>
+							<div class="col-sm-3"> <br/>
+								<a ng-click="re.guardarNotaCliente(re.notaCobranza)"  class="btn btn-primary">Guardar</a>
+							</div>
+							
+		
+				        <div class="modal-footer">
+
+							  
+				          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				        </div>
+				      </div>
+				      
+				    </div>
+				  </div>
+				 </div>
+
+		    <!--////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+		    <!-- /////////////////////////MODAL NOTA PARA LA CUENTA //////////////////////////////////////// -->
+
+			<div class="container">
+			      <!-- Modal -->
+				  <div class="modal fade" id="modalCuenta" role="dialog">
+				    <div class="modal-dialog">
+			    <!-- Modal content-->
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				          <h4 class="modal-title">Nota para la cuenta</h4>
+				        </div>
+				        <div class="modal-body" >
+				    	 <h6>Información relacionada con el crédito</h6><br/>
+				          <p>Cliente: <strong>{{re.notaCobranza.cliente}}</strong></p>
+				          <p>Crédito: <strong>{{re.notaCobranza.folioCredito}}</strong></p>
+				          <p>Recibo: <strong>{{re.notaCobranza.recibo}}</strong></p>
+				          <p>Multa: <strong>Pendiente</strong></p>
+				        </div>
+					        <div class="modal-footer">
+					      	  	<label class="checkbox-inline pull-left"><input  type="checkbox"   ng-click="re.cambioEstatusRespuesta()"/> Requiere respuesta</label>
+					      	  	<br/><br/>
+										<label class="pull-left">Título de la nota</label>
+					        	<input  type="text" class="form-control" placeholder="Nombre" ng-model="re.notaCobranza.titulo" >
+					        	<label class="pull-left">nota</label>
+					        	<textarea type="text" class="form-control" placeholder="Escribe la nota aqui" 
+		    	 				ng-model="re.notaCobranza.descripcion" >							 
+							</div>
+							<div class="col-sm-3"> <br/>
+								<a ng-click="re.guardarNotaCuenta(re.notaCobranza)"  class="btn btn-primary">Guardar</a>
+							</div>
+							
+		
+				        <div class="modal-footer">
+
+							  
+				          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				        </div>
+				      </div>
+				      
+				    </div>
+				  </div>
+				 </div>
+
+		    <!--////////////////////////////////////////////////////////////////////////////////////// -->
+
+<a id='dwnldLnk' href="#" download='archivo.docx' style="display:none;" hidden="true"></a>   
