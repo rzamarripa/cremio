@@ -32,27 +32,41 @@ Meteor.methods({
 						
 					}
 					
-					if (planPago.importeRegular != 0)
+					if (planPago.importeRegular != 0 )
 					{
 						
-				 			if(arreglo[planPago.credito_id] == undefined){
+				 			if(arreglo[planPago.credito_id] == undefined ){
 					 			
 					 			arreglo[planPago.credito_id] = {};
 					 			arreglo[planPago.credito_id].credito = Creditos.findOne({_id: planPago.credito_id});
 					 			arreglo[planPago.credito_id].cliente = Meteor.users.findOne({_id: planPago.cliente_id});
-					 			arreglo[planPago.credito_id].importe = 0.00;
-					 			arreglo[planPago.credito_id].importe = planPago.importeRegular;
 					 			arreglo[planPago.credito_id].planPagos = [];			 			
 					 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago});
-					 			arreglo[planPago.credito_id].multas = planPago.multa;
+					 			
+					 			//arreglo[planPago.credito_id].importe = 0.00;
+					 			if (planPago.movimiento == "Recibo")
+					 			{
+					 					arreglo[planPago.credito_id].importe = planPago.importeRegular;
+					 					arreglo[planPago.credito_id].multas = 0;
+					 			}		
+					 			else
+					 			{
+						 				arreglo[planPago.credito_id].importe = 0;
+					 					arreglo[planPago.credito_id].multas = planPago.importeRegular;
+					 			}
+					 					
 					 			arreglo[planPago.credito_id].imprimir = false;
 					 			arreglo[planPago.credito_id].saldo = planPago.importeRegular + planPago.multa;
 					 			
 					 			
 				 			}else{
 					 			
-					 			arreglo[planPago.credito_id].importe += planPago.importeRegular;
-					 			arreglo[planPago.credito_id].multas += planPago.multa;
+					 			if (planPago.movimiento == "Recibo")
+						 				arreglo[planPago.credito_id].importe += planPago.importeRegular;
+					 			else
+						 				arreglo[planPago.credito_id].multas += planPago.importeRegular;
+
+					 			
 					 			arreglo[planPago.credito_id].saldo += planPago.importeRegular + planPago.multa;
 					 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago});
 					 			
@@ -125,19 +139,31 @@ Meteor.methods({
 					 			arreglo[planPago.credito_id] = {};
 					 			arreglo[planPago.credito_id].credito = Creditos.findOne({_id: planPago.credito_id});
 					 			arreglo[planPago.credito_id].cliente = Meteor.users.findOne({_id: planPago.cliente_id});
-					 			arreglo[planPago.credito_id].importe = 0.00;
-					 			arreglo[planPago.credito_id].importe = planPago.importeRegular;
 					 			arreglo[planPago.credito_id].planPagos = [];			 			
 					 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago});
-					 			arreglo[planPago.credito_id].multas = planPago.multa;
+					 			
+					 			if (planPago.movimiento == "Recibo")
+					 			{
+					 					arreglo[planPago.credito_id].importe = planPago.importeRegular;
+					 					arreglo[planPago.credito_id].multas = 0;
+					 			}		
+					 			else
+					 			{
+						 				arreglo[planPago.credito_id].importe = 0;
+					 					arreglo[planPago.credito_id].multas = planPago.importeRegular;
+					 			}
+					 			
 					 			arreglo[planPago.credito_id].imprimir = false;
 					 			arreglo[planPago.credito_id].saldo = planPago.importeRegular + planPago.multa;
 					 			
 					 			
 				 			}else{
 					 			
-					 			arreglo[planPago.credito_id].importe += planPago.importeRegular;
-					 			arreglo[planPago.credito_id].multas += planPago.multa;
+					 			if (planPago.movimiento == "Recibo")
+						 				arreglo[planPago.credito_id].importe += planPago.importeRegular;
+					 			else
+						 				arreglo[planPago.credito_id].multas += planPago.importeRegular;
+					 			
 					 			arreglo[planPago.credito_id].saldo += planPago.importeRegular + planPago.multa;
 					 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago});
 					 			
