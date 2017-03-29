@@ -67,7 +67,7 @@ angular.module("creditoMio")
 		  
 
   this.subscribe('notas',()=>{
-		return [{estatus:true}]
+		return [{cliente_id:this.getReactively("cliente_id")}]
 	});
 	
 	this.helpers({
@@ -324,8 +324,7 @@ angular.module("creditoMio")
 
 	var fecha = moment();
 	this.guardarNotaCobranza=function(nota){
-			console.log(nota);
-			
+			console.log(nota);			
 			nota.estatus = true;
 			nota.fecha = new Date()
 			nota.hora = moment(nota.fecha).format("hh:mm:ss a")
