@@ -24,10 +24,18 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
   this.helpers({
 	  verificaciones : () => {
 		  
-		  rc.objeto = Verificaciones.findOne({});
-		  //console.log(rc.objeto.antiguedad);
-		  //rc.garantias = angular.copy(rc.objeto.garantias);
-		  //console.log(rc.objeto.garantias);
+		  rc.objeto = Verificaciones.findOne();
+		  console.log(rc.objeto);
+		  
+		  
+/*
+		  _.each(rc.objeto.garantias,function (garantia) {
+			  	console.log(garantia);
+			  	
+			}); 
+*/
+		  
+		  
 	  }, 
   });
 
