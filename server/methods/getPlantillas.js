@@ -85,16 +85,29 @@ Meteor.methods({
 		//console.log("Cliente:", cliente);
 		
 		var nacionalidad = Nacionalidades.findOne({_id: cliente.profile.nacionalidad_id});
+		var colonia			 = Colonias.findOne({_id: cliente.profile.colonia_id});
+		var ciudad			 = Ciudades.findOne({_id: cliente.profile.ciudad_id});
+		var estado			 = Estados.findOne({_id: cliente.profile.estado_id});
 		
 		//Ir por los datos del Avales
 		
 		
 		
 		//Ir por lo datos de la tabla de amortización
-		console.log(creditoAprobado._id);
+
 		var pp = PlanPagos.find({credito_id: creditoAprobado._id}).fetch();
-		console.log(pp);
 		
+		var Monto = creditoAprobado.adeudoInicial;
+		var importe = 0;
+		_.each(pp,function (planPago) {
+				
+				planPago.monto = Monto;
+				planPago.fecha = planPago.fechaLimite.getUTCDate() +"-"+ (planPago.fechaLimite.getUTCMonth()+1) +"-"+ planPago.fechaLimite.getUTCFullYear();
+				planPago.importe = planPago.capital + planPago.interes + planPago.iva;
+				
+				Monto -= planPago.importe;
+				
+		});
 		
 		
 		var content = fs
@@ -111,11 +124,20 @@ Meteor.methods({
 		f = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 		
 		doc.setData({	nombreCliente					: cliente.profile.nombreCompleto.toUpperCase(), 
+									calleCliente					: cliente.profile.calle.toUpperCase(),
+									numeroCliente					: cliente.profile.numero,
+									telefonoCliente				: cliente.profile.telefono,
+									correoCliente					: cliente.profile.correo,
+									codigoPostalCliente		: cliente.profile.codigoPostal,
+									coloniaCliente				: colonia.nombre,
+									ciudadCliente					: ciudad.nombre,
+									estadoCliente					: estado.nombre,
 									nacionalidadCliente		: nacionalidad.nombre, 
-									direccion							: "Domicilio de Prueba", 					
+			
 									cantidad							:	creditoAprobado.capitalSolicitado,
 									letra									:	letras,
 									periodoPago						: creditoAprobado.periodoPago,
+									total									: creditoAprobado.adeudoInicial,
 													
 									pp
 								});

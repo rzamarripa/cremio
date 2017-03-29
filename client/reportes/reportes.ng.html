@@ -1,0 +1,196 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Reportes
+		</h1>
+	</div>
+	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+		<ul id="sparks" class="">
+			<li class="sparks-info">
+				<h5> <a class="" ng-click="re.mostrarDiarioCobranza()">Diario de cobranza</a></h5>
+			<li class="sparks-info">
+				<h5><a ng-click="re.mostarDiarioCreditos()">Diario de Creditos entregados</a><span class="txt-color-green" style="text-align: right"></span></h5>
+			<li class="sparks-info">
+				<h5> <a  ng-click="re.mostarMovimientoCuenta()">Movimiento en cuenta </a></h5>
+			
+
+		</ul>
+	</div>
+</div>
+<br>
+<div class="well">
+	<div class="row">
+		<div class="col-sm-3">
+			<form class="form-inline">
+				<div class="form-group">
+					<label for="fecha">Fecha Inicial:</label>
+					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaInicial"/>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-3 pull-left">
+			<form class="form-inline">
+				<div class="form-group">
+					<label for="fecha">Fecha Final:</label>
+					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaFinal"/>
+				</div>
+			</form>
+		</div>
+	</div>	
+	<br />
+<!-- 	<div class="row">
+		<div class="col-sm-6">
+				<div class="input-group input-group-md">
+			      <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+			      <div class="icon-addon addon-md">
+			          <input type="text" placeholder="..." class="form-control" ng-model="re.buscar.nombre">
+			          <label for="email" class="glyphicon glyphicon-search" rel="tooltip" title="" data-original-title="email"></label>
+			      </div>
+			      <span class="input-group-btn">
+			          <button class="btn btn-default" ng-click="re.buscarNombre()" type="button">Buscar</button>
+			          
+			      </span>
+			  </div>
+		</div>
+	</div> -->
+</div>
+<!-- ///////////////////////////// DIARIO COBRANZA ////////////////////////////////////////// -->
+ <div class="row">	
+	<div class="col-sm-12" ng-show="re.diarioCobranza" >
+	<H5>Diario de cobranza</H5>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+				    <th width="5%"><div class="text-center">No.</div></th>
+					<!-- <th><div class="text-center">Operación</div></th> -->
+					<th><div class="text-center">Fecha</div></th>
+					<!-- <th><div class="text-center">Pagare</div></th> -->
+					<th><div class="text-center">Recibo</div></th>
+					<!-- <th><div class="text-center">Cliente</div></th> -->
+					<th><div class="text-center">Nombre</div></th>
+					<th><div class="text-center">Intereses</div></th>
+					<th><div class="text-center">Abono a capital</div></th>
+					<th><div class="text-center">Iva</div></th>
+				<!-- 	<th><div class="text-center">T</div></th> -->
+					<th><div class="text-center">Importe</div></th>
+					<!-- <th><div class="text-center">Condonado</div></th> -->
+				
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="objeto in re.planPagos | filter:buscar">
+		    	<td>{{$index + 1}}</td>
+		    	<!-- <td>{{objeto.folio}}</td> -->
+			    <td>{{objeto.ultimaModificacion  | date:"dd-MM-yyyy"}}</td>
+			    <td>{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</td>
+			    <td>{{objeto.nombreCompleto}}</td>
+			    <td>{{objeto.interes}}</td>
+			    <td>{{objeto.pago}}</td>
+			    <td>{{objeto.iva}}</td>
+			    <td>{{objeto.cargo}}</td> 
+			
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+
+
+<!-- //////////////////////////////////////////////////////////////////////////////////// -->
+
+<!-- ///////////////////////////// DIARIO CREDITOS ////////////////////////////////////////// -->
+	<div class="col-sm-12" ng-show="re.diarioCreditos" >
+	<H5>Diario de creditos</H5>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+				    <th width="5%"><div class="text-center">No.</div></th>
+					<!-- <th><div class="text-center">Operación</div></th> -->
+					<th width="15%"> <div class="text-center">Fecha</div></th>
+					<!-- <th><div class="text-center">Pagare</div></th> -->
+					<!-- <th><div class="text-center">Recibo</div></th> -->
+					<!-- <th><div class="text-center">Cliente</div></th> -->
+					<th><div class="text-center">Nombre</div></th>
+					<th><div class="text-center">Garantia</div></th>
+					<th><div class="text-center">Solicitado</div></th>
+				<!-- 	<th><div class="text-center">T</div></th> -->
+					<th><div class="text-center">A pagar</div></th>
+					<!-- <th><div class="text-center">Condonado</div></th> -->
+				
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="objeto in re.creditos | filter:buscar">
+		    	<td>{{$index + 1}}</td>
+		    	<!-- <td>{{objeto.folio}}</td> -->
+			    <td>{{objeto.fechaSolicito  | date:"dd-MM-yyyy"}}</td>
+			   <!--  <td>{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{re.credito.numeroPagos}}</td> -->
+			    <td>{{objeto.nombreCompleto}}</td>
+			    <td>{{objeto.estatusGarantia}}</td>
+			    <td>{{objeto.capitalSolicitado}}</td>
+			    <td>{{objeto.adeudoInicial}}</td> 
+			
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+
+
+<!-- //////////////////////////////////////////////////////////////////////////////////// -->
+
+<!-- ///////////////////////////// MOVIMIENTO CUENTA ////////////////////////////////////////// -->
+
+	
+<div class="col-sm-12" ng-show="re.movimientoCuenta">
+	<H5>Movimiento Cuenta</H5>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+				    <th width="5%"><div class="text-center">No.</div></th>
+					<!-- <th><div class="text-center">Operación</div></th> -->
+					<th><div class="text-center">Fecha</div></th>
+					<!-- <th><div class="text-center">Pagare</div></th> -->
+					<th><div class="text-center">Recibo</div></th>
+					<!-- <th><div class="text-center">Cliente</div></th> -->
+					<th><div class="text-center">Nombre</div></th>
+					<th><div class="text-center">Garantia</div></th>
+					<th><div class="text-center">Saldo Multas</div></th>
+				
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="objeto in re.planPagos | filter:buscar">
+		    	<td>{{$index + 1}}</td>
+		    	<!-- <td>{{objeto.folio}}</td> -->
+			    <td>{{objeto.ultimaModificacion  | date:"dd-MM-yyyy"}}</td>
+			    <td>{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</td>
+			    <td>{{objeto.nombreCompleto}}</td>
+			    <td>{{objeto.estatusGarantia}}</td>
+			    <td>{{objeto.credito.saldoMultas}}</td> 
+			
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+
+
+<!-- //////////////////////////////////////////////////////////////////////////////////// -->
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+ 
+
+
+
+<a id='dwnldLnk' href="#" download='archivo.docx' style="display:none;" hidden="true"></a>   

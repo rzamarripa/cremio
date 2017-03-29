@@ -135,7 +135,7 @@ angular.module("creditoMio")
 		  rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
 		  
 		  
-		  console.log(objeto);
+		  //console.log(objeto);
 		  if ($stateParams.objeto_id != undefined)
 			{
 					

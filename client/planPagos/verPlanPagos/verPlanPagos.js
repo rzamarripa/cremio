@@ -9,6 +9,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	
 	window.rc = rc;
 	this.credito_id = "";
+	
 
 	this.credito = {};
 	this.pago = {};
@@ -82,7 +83,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		  			cliente.estado = Estados.findOne(cliente.estado_id)
 		  			cliente.pais = Paises.findOne(cliente.pais_id)
 		  			cliente.empresa = Empresas.findOne(cliente.empresa_id)
-		  			cliente.municipio = Empresas.findOn
+		  			
 		  			
 		  		})
 	  		}
