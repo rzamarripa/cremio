@@ -124,5 +124,7 @@ Meteor.methods({
 		Creditos.update({_id:creditoid},{$set:credito});
 
 		return "200";
-	}
+	},
+		
+	
 });

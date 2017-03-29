@@ -9,14 +9,16 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	this.clientes_ids = [];
 	this.referencias = [];
 	this.hoy = new Date();
+	this.caja = {};
 	
 	this.subscribe('creditos', () => {
 		return [{estatus : 2, cliente_id : { $in : this.getReactively("clientes_ids")}}];
 	})
 	
 	this.subscribe('cajas',()=>{
+		console.log(Meteor.user())
 		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile? Meteor.user().profile.sucursal_id : "":""}]
-	});
+	})
 
 	this.subscribe('buscarClientes', () => {
 		if(this.getReactively("buscar.nombre").length > 3){
@@ -62,6 +64,9 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	});
   
   	this.helpers({
+	  	caja : () =>{
+		  		return Cajas.findOne(Meteor.user() != undefined ? Meteor.user().profile? Meteor.user().profile.caja_id : "":"");
+	  	},
 		clientesRoot : () => {
 			var clientes = Meteor.users.find({
 		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
@@ -87,8 +92,11 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 
 	this.verMenu =()=>{
 		var user= Meteor.user();
+		console.log("usuario",user);
 		if( user && user.roles && user.roles[0]=="Cajero"){
-			var caja = Cajas.findOne(user.profile.caja_id);
+			
+			var caja = this.caja;
+			console.log("caja",caja);
 			if (caja && caja.estadoCaja=="Cerrada")
 				return false;
 		}

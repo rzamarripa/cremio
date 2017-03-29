@@ -1,6 +1,5 @@
 <nav>
 	<ul data-smart-menu ng-if = "ro.verMenu()">
-		
 		<!--Gerente-->
 		<li data-menu-collapse>
 			<a href="#" ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.username == 'admin'">
@@ -171,7 +170,7 @@
 			</ul>
 		</li>
 		<li data-menu-collapse>
-			<a ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajas' "> 
+			<a ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"> 
 					<i class="fa fa-lg fa-fw fa-inbox"></i>
 					<span class="menu-item-parent">Cajas</span>
 			</a>
@@ -183,19 +182,19 @@
 					</a>
 				</li>
 				
-				<li ng-if="currentUser.roles[0] == 'Cajas'">
+				<li ng-if="currentUser.roles[0] == 'Cajero'">
 					<a ui-sref="root.cajas" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-scissors"></i>
 						<span class="menu-item-child">Corte de Caja</span>
 					</a>
 				</li>
-				<li ng-if="currentUser.roles[0] == 'Cajas'">
+				<li ng-if="currentUser.roles[0] == 'Cajero'">
 					<a ui-sref="root.cajas" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-chain-broken"></i>
 						<span class="menu-item-child">Corte Parcial</span>
 					</a>
 				</li>
-				<li ng-if="currentUser.roles[0] == 'Cajas'">
+				<li ng-if="currentUser.roles[0] == 'Cajero'">
 					<a ui-sref="root.cajas" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-dollar"></i>
 						<span class="menu-item-child">Traspasos</span>

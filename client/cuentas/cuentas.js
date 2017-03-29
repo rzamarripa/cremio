@@ -44,7 +44,6 @@ angular.module("creditoMio")
 		}
 		console.log(objeto);
 		Meteor.call ("crearCuenta",objeto,function(error,result){
-		
 			if(error){
 				console.log(error);
 				toastr.error('Error al guardar los datos.');

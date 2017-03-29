@@ -24,7 +24,7 @@
 	      <tr ng-repeat="credito in cpa.creditosPorAutorizar">
 		      <td class="text-center">{{$index + 1}}</td>
 		      <td class="text-center">{{credito.folio}}</td>
-		      <td><a href="#">{{credito.cliente.profile.nombreCompleto}}</a></td>
+		      <td><a href="javascript:void(0);" ui-sref="root.clienteDetalle({objeto_id : credito.cliente_id})">{{credito.cliente.profile.nombreCompleto}}</a></td>
 		      <td class="text-center">{{credito.capitalSolicitado | currency}}</td>
 		      <td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy hh:mm:sss"}}</td>
 		      <td class="text-center">
