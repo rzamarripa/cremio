@@ -20,10 +20,10 @@
 										<a ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm">
 											<i class="fa fa-plus"></i> Nueva Solicitud
 										</a>&nbsp;
-										<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm">
+										<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
 											<i class="fa fa-plus"></i> Nueva Nota de Credito
 										</a>&nbsp;
-										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
+										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
 									</div>
@@ -269,8 +269,8 @@
 											</div>
 											<div class="panel-footer no-padding">
 <!-- 												<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button">Imprimir documentos</a> -->									
-												<input id="gafete" class="btn bg-color-blueDark txt-color-white btn-block" type="button" ng-click="cd.imprimirDocumento(aprobado)" value="Imprimir documentos" />
-												<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button">Entregar Crédito</a>
+												<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" ng-click="cd.imprimirDocumento(aprobado)" value="Imprimir documentos" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
+												<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
 											</div>
 										</div>
 									</div>
