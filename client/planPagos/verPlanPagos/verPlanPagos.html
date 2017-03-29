@@ -498,8 +498,11 @@
 														<th class="text-center" width="5%"></th>
 														<th class="text-center" width="5%">No.</th>
 														<th class="text-center" width="20%">Movimiento</th>
-														<th class="text-center" width="20%">Fecha de Pago</th>
+														<th class="text-center" width="15%">Fecha de Pago</th>
 														<th class="text-center" width="15%">Pago</th>
+														<th class="text-center" width="10%">Capital</th>
+														<th class="text-center" width="10%">Interes</th>
+														<th class="text-center" width="10%">IVA</th>
 														<th class="text-center" width="10%">Saldo</th>
 														
 														
@@ -514,6 +517,9 @@
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger' : ''">{{pago.movimiento }}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{vpp.creditos[0].numeroPagos}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.capital  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.interes  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
 														
 														
@@ -524,6 +530,11 @@
 										<br/>
 										<div class="col-sm-4">
 											<h4>Total a pagar: {{vpp.pago.totalPago | currency }}</h4>
+											<br/>
+											<caption>Monto a pagar: </caption> 
+											<select name="TipoIngreso" class="form-control select2" placeholder="Seleccione" ng-model="vpp.pago.tipoIngreso_id" required>
+												<option ng-repeat="tipo in vpp.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
+											</select>
 											<br/>
 											<caption>Monto a pagar: </caption> <input  type="number" class="form-control" placeholder="Pagar" ng-model="vpp.pago.pagar">
 											<br/>

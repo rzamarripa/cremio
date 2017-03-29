@@ -377,6 +377,9 @@
 																<th class="text-center" width="5%">No.</th>
 																<th class="text-center" width="20%">Movimiento</th>
 																<th class="text-center" width="20%">Fecha de Pago</th>
+																<th class="text-center" width="10%">Capital</th>
+																<th class="text-center" width="10%">Interes</th>
+																<th class="text-center" width="10%">IVA</th>
 																<th class="text-center" width="15%">Pago</th>
 																<th class="text-center" width="10%">Saldo</th>
 																
@@ -389,6 +392,9 @@
 																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
 																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{credito.numeroPagos}}</td>
+																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.capital | currency}}</td>
+																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.interes | currency}}</td>
+																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.iva | currency}}</td>
 																<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular | currency}}</td>
 																
 															</tr>
