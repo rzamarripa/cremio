@@ -14,13 +14,13 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	})
 	
 	this.subscribe('cajas',()=>{
-		console.log(Meteor.user())
+		//console.log(Meteor.user())
 		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile? Meteor.user().profile.sucursal_id : "":""}]
 	})
 
 	this.subscribe('buscarClientes', () => {
 		if(this.getReactively("buscar.nombre").length > 3){
-			console.log(root.buscar.nombre);
+			//console.log(root.buscar.nombre);
 			root.buscando = true;
 			return [{
 		    options : { limit: 20 },
@@ -57,11 +57,11 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 
 	this.verMenu =()=>{
 		var user= Meteor.user();
-		console.log("usuario",user);
+		//console.log("usuario",user);
 		if( user && user.roles && user.roles[0]=="Cajero"){
 			
 			var caja = this.caja;
-			console.log("caja",caja);
+			//console.log("caja",caja);
 			if (caja && caja.estadoCaja=="Cerrada")
 				return false;
 		}

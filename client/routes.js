@@ -510,6 +510,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.corteCaja', {
+			url: '/cajas/corte',
+			templateUrl: 'client/cajas/corteCaja.ng.html',
+			controller: 'CorteCajeCtrl as corcajCtrl',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.abrirCaja', {
 			url: '/abricaja',
 			templateUrl: 'client/cajas/abrirCaja.ng.html',

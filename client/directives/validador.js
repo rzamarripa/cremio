@@ -20,7 +20,11 @@ function validador () {
     }
   };
 }
-
+angular.module('creditoMio').filter('abs', function () {
+  return function(val) {
+    return Math.abs(val);
+  }
+});
 
 angular.module('creditoMio').directive('validaForm', validaForm);
 	function validaForm () {

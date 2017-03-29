@@ -97,5 +97,95 @@ Meteor.methods({
 		Cajas.update({_id:cajaid},{$set:caja});
 
 		return "200"
+	},
+	corteCaja :(montos)=>{
+		var user=Meteor.user();
+		var caja = Cajas.findOne(user.profile.caja_id);
+		caja.updated = true;
+		caja.updatedAt = new Date();
+		caja.updatedBy = user._id;
+		caja.estadoCaja = "Cerrada";
+		var objeto={ 
+						cuenta:{},
+						caja_id:caja._id,
+						createdAt: new Date(),
+						createdBy: user._id,
+						updated : false,
+						estatus : 1,
+						sucursal_id : user.profile.sucursal_id,
+						movimientosCuentas : [],
+						movimientosCaja : []
+					};
+		_.each(caja.cuenta,function(cuenta,cuentaid){
+			objeto.cuenta[cuentaid]={ montoRegistrado:cuenta.saldo, 
+								montoCaputado:montos[cuentaid].saldo, 
+								diferencia: montos[cuentaid].saldo-cuenta.saldo}
+			cuenta.saldo=0;
+
+		})
+
+		var corteid=CortesCaja.insert(objeto);
+		console.log(montos);
+		_.each(montos,function(monto,cuentaid){
+			var cuenta = Cuentas.findOne(monto.cuenta_id);
+			cuenta.sucursal_id = user.profile.sucursal_id;
+			cuenta.updatedBy = user._id;
+			cuenta.updatedAt = new Date();
+			cuenta.updated = true;
+			cuenta.estatus = 1;
+			cuenta.saldo = cuenta.saldo+monto.saldo
+			var cuentaid = cuenta._id;
+			delete cuenta._id
+			Cuentas.update({_id:cuentaid},{$set:cuenta})
+			console.log(monto)
+			var movimiento = {
+				tipoMovimiento : "Deposito",
+				origen : "Corte de Caja",
+				origen_id : corteid,
+				monto : monto.saldo ,
+				cuenta_id : cuentaid,
+				sucursal_id : user.profile.sucursal_id,
+				createdAt : new Date(),
+				createdBy : user._id,
+				updated : false,
+				estatus : 1
+			}
+
+			var movimientoid = MovimientosCuenta.insert(movimiento);
+			objeto.movimientosCuentas.push(movimientoid);
+			//caja.cuenta[cuentaid].saldo=0;
+			
+		});
+
+		var where = {
+			$and:[	{caja_id:user.profile.caja_id},
+					{$or : [	
+								{estatus:1},
+								{estatus:2}
+							]
+						}
+				 ]
+				}
+	
+  		var movimientos = MovimientosCajas.find(where).fetch();
+  		_.each(movimientos,(movimiento)=>{
+ 
+  			MovimientosCajas.update({_id:movimiento._id},{$set:{corteCaja_id:corteid,estatus:3}})
+  			objeto.movimientosCaja.push(movimiento._id)
+  		});
+
+	
+		try{
+			caja.cortesCaja.push(corteid)
+		}
+		catch(ex){
+			caja.cortesCaja=[corteid];
+		}
+
+		delete caja._id;
+		Cajas.update({_id:user.profile.caja_id},{$set:caja});
+
+		delete objeto._id
+		CortesCaja.update({_id:corteid},{$set:objeto});
 	}
 });
