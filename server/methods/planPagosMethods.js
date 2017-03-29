@@ -253,6 +253,8 @@ Meteor.methods({
 		pago.caja_id =caja._id;
 		pago.movimientoCaja_id = movimientoid;
 		Pagos.update({_id:pago_id},{$set:pago})
+		caja.cuenta[movimiento.cuenta_id].saldo = caja.cuenta[movimiento.cuenta_id].saldo? caja.cuenta[movimiento.cuenta_id].saldo+movimiento.monto:movimiento.monto;
+		Cajas.update({_id:caja._id},{$set:{cuenta:caja.cuenta}}); 
 		return "OK"
 
 	},
