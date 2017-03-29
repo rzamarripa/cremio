@@ -232,7 +232,7 @@
 						
 						<header role="heading">
 							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-							<h2>Creditos Aprobados</h2>
+							<h2>Créditos Aprobados</h2>
 			
 			
 						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
@@ -268,8 +268,9 @@
 												</div>
 											</div>
 											<div class="panel-footer no-padding">
-												<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button">Imprimir documentos</a>
-												<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button">Entregar Credito</a>
+<!-- 												<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button">Imprimir documentos</a> -->									
+												<input id="gafete" class="btn bg-color-blueDark txt-color-white btn-block" type="button" ng-click="cd.imprimirDocumento(aprobado)" value="Imprimir documentos" />
+												<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button">Entregar Crédito</a>
 											</div>
 										</div>
 									</div>
@@ -290,7 +291,7 @@
 						
 						<header role="heading">
 							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-							<h2>Creditos Pendientes</h2>
+							<h2>Créditos Pendientes</h2>
 			
 			
 						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
@@ -558,7 +559,7 @@
 
 
 
-
+<a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   
 
 
 
