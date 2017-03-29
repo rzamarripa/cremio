@@ -31,28 +31,31 @@
 			<thead>
 				<tr>
 				    <th width="5%"><div class="text-center">No.</div></th>
-					<th><div class="text-center">Operación</div></th>
+					<!-- <th><div class="text-center">Operación</div></th> -->
 					<th><div class="text-center">Fecha</div></th>
 					<!-- <th><div class="text-center">Pagare</div></th> -->
 					<th><div class="text-center">Recibo</div></th>
-					<th><div class="text-center">Cliente</div></th>
+					<!-- <th><div class="text-center">Cliente</div></th> -->
 					<th><div class="text-center">Nombre</div></th>
 					<th><div class="text-center">Intereses</div></th>
 					<th><div class="text-center">Abono a capital</div></th>
 					<th><div class="text-center">Iva</div></th>
-					<th><div class="text-center">T</div></th>
+				<!-- 	<th><div class="text-center">T</div></th> -->
 					<th><div class="text-center">Importe</div></th>
-					<th><div class="text-center">Condonado</di	v></th>
+					<!-- <th><div class="text-center">Condonado</div></th> -->
 				
 				</tr>
 			</thead>
 			<tbody>
-		    <tr ng-repeat="objeto in re.historialCrediticio | filter:buscar">
+		    <tr ng-repeat="objeto in re.planPagos | filter:buscar">
 		    	<td>{{$index + 1}}</td>
-		    	<td>{{objeto.folio}}</td>
-			    <td>{{objeto.fecha  | date:"dd-MM-yyyy"}}</td>
-			    <td>{{objeto.numeroPago}}</td>
-			    <td>{{re.objeto.num}}</td>
+		    	<!-- <td>{{objeto.folio}}</td> -->
+			    <td>{{objeto.fechaSolicito  | date:"dd-MM-yyyy"}}</td>
+			    <td>{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{re.credito.numeroPagos}}</td>
+			    <td>{{re.cliente.profile.nombreCompleto}}</td>
+			    <td>{{objeto.interes}}</td>
+			    <td>{{objeto.iva}}</td>
+			    <td>{{objeto.abono}}</td>
 			    <td>{{re.objeto.nombreCompleto}}</td>
 			<!--     <td>{{objeto.tipo}}</td> -->
 			

@@ -197,7 +197,10 @@ Meteor.methods({
 					credito_id : planPago.credito_id,
 					descripcion : planPago.descripcion,
 					importe : planPago.importeRegular,
-					pagos : planPago.pagos
+					pagos : planPago.pagos,
+					iva : planPago.iva,
+					interes : planPago.interes,
+					abono : planPago.abono,
 			  	});
 					
 				
@@ -216,10 +219,70 @@ Meteor.methods({
 							credito_id : planPago.credito_id,
 							descripcion : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
 							importe : planPago.importeRegular,
-							pagos : planPago.pagos
+							pagos : planPago.pagos,
+
 					  	});
 					})
 				//console.log(rc.saldo)
+			});
+
+			
+			return arreglo;
+		
+	},	
+
+	getreportesPagos: function (credito_id) {
+			var arreglo = [];
+			
+			var saldoPago = 0;
+			var saldoActual = 0; 
+			var saldoMultas=0;
+			
+			//console.log(credito_id);			
+			
+			var credito = Creditos.findOne({_id: credito_id});
+			var planPagos = PlanPagos.find({credito_id:credito_id},{sort:{numeroPago:1,descripcion:-1}}).fetch();
+			
+			//console.log(planPagos);
+			
+			var saldo =0;
+			//try{ saldo = credito.numeroPago*pagos[0].cargo;} catch(ex){console.log("aqui",pagos)}
+			//console.log("credito",credito);
+			_.each(planPagos, function(planPago){
+				if(planPago.descripcion=="Recibo")
+					saldo+=planPago.cargo;
+				if(planPago.descripcion=="Multa")
+					saldoMultas+=planPago.importeRegular;
+			});
+			_.each(planPagos, function(planPago, index){
+
+				
+				if(planPago.descripcion=="Multa")
+					saldo+=planPago.cargo
+				
+				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
+				//console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
+				arreglo.push({saldo:saldo,
+					numeroPago : planPago.numeroPago,
+					cantidad : credito.numeroPagos,
+					fechaSolicito : credito.fechaSolicito,
+					fecha : fechaini,
+					pago : 0, 
+					cargo : planPago.cargo,
+					movimiento : planPago.movimiento,
+					planPago_id : planPago._id,
+					credito_id : planPago.credito_id,
+					descripcion : planPago.descripcion,
+					importe : planPago.importeRegular,
+					pagos : planPago.pagos,
+					iva : planPago.iva,
+					interes : planPago.interes,
+					abono : planPago.abono,
+			  	});
+
+			
+					
+
 			});
 
 			

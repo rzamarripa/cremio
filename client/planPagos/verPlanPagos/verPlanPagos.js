@@ -9,6 +9,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	
 	window.rc = rc;
 	this.credito_id = "";
+	
 
 	this.credito = {};
 	this.pago = {};
