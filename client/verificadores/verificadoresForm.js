@@ -143,8 +143,11 @@ angular.module("creditoMio")
 			form.$setPristine();
 	    form.$setUntouched();
 			$state.go('root.verificadoresLista');
+<<<<<<< HEAD
 
 			
+=======
+>>>>>>> b25285ae9938c0be97d5b1749b54ef7a85163e64
 		
 	};
 	

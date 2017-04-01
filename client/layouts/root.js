@@ -16,13 +16,13 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	})
 	
 	this.subscribe('cajas',()=>{
-		console.log(Meteor.user())
+		//console.log(Meteor.user())
 		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile? Meteor.user().profile.sucursal_id : "":""}]
 	})
 
 	this.subscribe('buscarClientes', () => {
 		if(this.getReactively("buscar.nombre").length > 3){
-			console.log(root.buscar.nombre);
+			//console.log(root.buscar.nombre);
 			root.buscando = true;
 			return [{
 		    options : { limit: 20 },
@@ -96,7 +96,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		if( user && user.roles && user.roles[0]=="Cajero"){
 			
 			var caja = this.caja;
-			console.log("caja",caja);
+			//console.log("caja",caja);
 			if (caja && caja.estadoCaja=="Cerrada")
 				return false;
 		}
@@ -122,7 +122,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 
   this.generarFicha= function(objeto,referencia_id) 
   {
-		console.log("entro:", objeto);
+		//console.log("entro:", objeto);
 
 		root.cliente = objeto.profile	
   	    root.referencias = [];
@@ -132,8 +132,8 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 			//console.log("entra aqui",referencia)					
 				if (result)
 				{
-					console.log("entra aqui");
-					console.log("result",result);
+					//console.log("entra aqui");
+					//console.log("result",result);
 					root.referencias.push(result);
 					$scope.$apply();			
 				}
@@ -223,7 +223,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		objeto.fechaInicial = objeto[0].fechaSolicito
 		objeto.objetoFinal = objeto[objeto.length - 1];
 		objeto.fechaFinal = objeto.objetoFinal.fechaSolicito
-		console.log(objeto,"actualizado")
+		//console.log(objeto,"actualizado")
 
 
 

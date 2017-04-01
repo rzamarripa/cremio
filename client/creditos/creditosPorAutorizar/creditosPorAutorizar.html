@@ -17,6 +17,7 @@
 		      <th class="text-center">Cliente</th>
 		      <th class="text-center">Capital Solicitado</th>
 		      <th class="text-center">Fecha Solicitud</th>
+		      <th class="text-center">Verificación</th>
 		      <th class="text-center">Acciones</th>
 	      </tr>
       </thead>
@@ -27,6 +28,7 @@
 		      <td><a href="javascript:void(0);" ui-sref="root.clienteDetalle({objeto_id : credito.cliente_id})">{{credito.cliente.profile.nombreCompleto}}</a></td>
 		      <td class="text-center">{{credito.capitalSolicitado | currency}}</td>
 		      <td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy hh:mm:sss"}}</td>
+		      <td class="text-center"><a href="javascript:void(0);" ui-sref="root.verificacion({id : credito._id})" ng-if="credito.requiereVerificacion">verificación</a></td>
 		      <td class="text-center">
 			      <button ng-click="cpa.autorizar(credito._id)" class="btn btn-primary">Autorizar</button>
 			      <button ng-click="cpa.rechazar(credito._id)" class="btn btn-warning">Rechazar</button>

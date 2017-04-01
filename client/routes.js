@@ -490,20 +490,20 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
-		.state('root.abrirCaja', {
-			url: '/abricaja',
-			templateUrl: 'client/cajas/abrirCaja.ng.html',
-			controller: 'AbrirCajaCtrl as ocaj',
+		.state('root.corteCaja', {
+			url: '/cajas/corte',
+			templateUrl: 'client/cajas/corteCaja.ng.html',
+			controller: 'CorteCajeCtrl as corcajCtrl',
 			resolve: {
 				"currentUser": ["$meteor", function($meteor){
 					return $meteor.requireUser();
 				}]
 			}
 		})
-		.state('root.reportes', {
-			url: '/reportes',
-			templateUrl: 'client/reportes/reportes.ng.html',
-			controller: 'ReportesCtrl as re',
+		.state('root.abrirCaja', {
+			url: '/abricaja',
+			templateUrl: 'client/cajas/abrirCaja.ng.html',
+			controller: 'AbrirCajaCtrl as ocaj',
 			resolve: {
 				"currentUser": ["$meteor", function($meteor){
 					return $meteor.requireUser();

@@ -15,24 +15,28 @@
 					<i class="fa fa-plus"></i> Nuevo
 				</a>
 			</div>
-			<input class="form-control" type="text" placeholder="Buscar..." ng-model="lven.buscar.nombre">
+			<input class="form-control" type="text" placeholder="Buscar..." ng-model="lver.buscar.nombre">
 		</div>
 	</div>
 </div>
 <div class="row">
+<<<<<<< HEAD
 	<div class="col-lg-3" ng-repeat="verificador in lven.clientes">
+=======
+	<div class="col-lg-3" ng-repeat="verificador in lver.verificadores">
+>>>>>>> b25285ae9938c0be97d5b1749b54ef7a85163e64
       <div class="contact-box center-version">
 
           <a href="/verificadors/{{verificador._id}}" style="text-decoration: none;">
 
-              <img alt="image" class="img-circle" ng-src="{{lven.tieneFoto(verificador.profile.sexo, verificador.profile.fotografia)}}">
+              <img alt="image" class="img-circle" ng-src="{{lver.tieneFoto(verificador.profile.sexo, verificador.profile.fotografia)}}">
 
 
               <p class="lead font-xs text-center"><strong>{{verificador.profile.nombre}} <br/> {{verificador.profile.apPaterno}} {{verificador.profile.apMaterno}}</strong></p>
 
               <div class="font-bold">{{verificador.username}}</div>
               <address class="font-xs">
-                  <strong>Cliente</strong><br>
+                  <strong>Verificador</strong><br>
                   {{verificador.profile.call}} {{verificador.profile.numero}}<br>
                   {{verificador.profile.colonia}}<br>
                   <abbr title="Teléfono">T1:</abbr> {{verificador.profile.telefono}}<br/>

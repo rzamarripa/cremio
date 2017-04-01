@@ -18,7 +18,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.cliente_id = "";
 	this.planPagos = [];
 	this.credito = {};
-	this.credito.primerAbono = new Date(moment().add(1, "weeks"));
+	//this.credito.primerAbono = new Date(moment().add(1, "weeks"));
 	this.pago = {};
 
 	this.con = 0;
@@ -200,33 +200,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			return foto;
 		}
 	}
-	
-	
-	
-	
-	/*
-	this.modificacionMasiva = function(modificacion, form){
-		if(form.$invalid){
-      toastr.error('Error al hacer la modificación masiva, por favor revise el llenado del formulario.');
-      return;
-	  }
-	  var pagosPendientes = PlanPagos.find({ semana : { $gte : modificacion.semanaInicial, $lte : modificacion.semanaFinal }, anio : modificacion.anio, estatus : { $ne :  1}}).fetch();
 	  
-	  _.each(pagosPendientes, function(pago){
-		  PlanPagos.update({_id : pago._id},
-		  		{ $set : { modificada : true, pagoTiempo : 0, importeRegular : modificacion.importeRegular, importe : modificacion.importeRegular, importeRecargo : modificacion.recargo, importeDescuento : modificacion.descuento, descripcion : modificacion.descripcion}});
-	  })
-	  toastr.success('Se modificaron correctamente los ' + pagosPendientes.length + ' pagos');
-	  this.modificacion = {};
-	  $('#collapseMasiva').collapse('hide');
-	  this.nuevoMasivo = !this.nuevoMasivo;
-	}
-	
-	this.getFocus = function(){
-	  document.getElementById('buscar').focus();
-  }; 
-  */
-  
   this.generarPlanPagos = function(credito, form){
 		if(form.$invalid){
 			toastr.error('Error al calcular el nuevo plan de pagos, llene todos los campos.');
@@ -311,109 +285,6 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			$scope.$apply();
 		});
 	}
-
-	/*
-	this.calcularRecargos = function(){
-		if(this.credito.tipoCredito_id != undefined && this.credito.importeRegular > 0){
-			var tipoCredito = TiposCredito.findOne(rc.credito.tipoCredito_id);
-			if(tipoCredito != undefined){
-				if(rc.credito.importeRegular <= tipoCredito.montoMaximo){
-					console.log(tipoCredito);
-					rc.credito.importeRecargo = (tipoCredito.tasa / 100) * rc.credito.importeRegular;
-				}else{
-					toastr.warning('El límite para este tipo de crédito es de ' + tipoCredito.montoMaximo);
-					rc.credito.importeRegular = tipoCredito.montoMaximo;
-				}
-			}			
-		}
-	};*/
-
-	/*
-	this.mostrarPagar = function()
-	{
-		this.checkPagar = !this.checkPagar;
-		rc.credito.pagoSeleccionado = false;
-	};
-	*/
-
-	/*
-	this.seleccionarPago = function(pago)
-	{ 
-		//console.log("entra pagada",pago)
- 		pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
-		_.each(pagos, function(p){
-			p.pagoSeleccionado =  false
-			//console.log("prmer each",p)
-		})
-
-total = 0;
-		_.each(rc.planPagosViejo, function(p){
-			//console.log("segundo each",p)
-			if (pago.numeroPago >= p.numeroPago && p.estatus != 1)
-			{ 				
-				p.pagoSeleccionado = true
-				total += p.importeRegular
-				p.estatus = 0;	
-				p.totalPago = total;
-				rc.pago.totalPago = total;
-				console.log(pago.pagoSeleccionado)
-				console.log(total,p.totalPago)
-				console.log("entro", pago.pagoSeleccionado, pago.numeroPago, p.pagoSeleccionado, p.numeroPago)
-			}else if(pago.numeroPago <= p.numeroPago && p.estatus != 1) {
-				p.pagoSeleccionado = false;
-				total -= p.importeRegular;
-				p.estatus = 0;
-
-			}
-
-	
-	});
-		//console.log("HELPER",rc.planPagosViejo)
-	}*/
-	/*
-	this.guardarPago = function(pago,credito)
-	{
-		
-		console.log(pago)
-		pago.fechaPago = new Date()
-		pago.usuario_id = Meteor.userId()
-		pago.sucursalPago_id = Meteor.user().profile.sucursal_id
-		pago.estatus = true;
-		var pago_id =  Pagos.insert(pago);
-		this.pago = {}
-
-        _.each(rc.planPagosViejo, function(p){
-	        if(p.estatus != 1){
-		        delete p.$$hashKey;
-        	_.each(p, function(nota){
-						delete nota.$$hashKey;
-						});	
-	        	if (p.pagoSeleccionado == true) {
-	        		var idTemp = p._id;
-			        delete p._id;
-			        var diaSemana = moment(new Date()).weekday();
-							p.pago_id = pago_id
-							p.cambio =  pago.pagar - pago.totalPago
-							p.fechaPago = new Date()
-							p.sucursalPago_id = Meteor.user().profile.sucursal_id
-							p.usuarioCobro_id = Meteor.userId()
-							p.diaPago = diaSemana;
-							p.estatus = 1;
-							if (p.fechaLimite > new Date()) 
-							{
-								pago.tiempoPago = 0
-							}else{
-								pago.tiempoPago = 1
-							}	
-							console.log(p)
-		        		PlanPagos.update({_id:idTemp},{$set:p});
-		        }
-	        
-	        }
-
-        })		
-	};
-	*/
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	this.insertarAval = function()
@@ -566,6 +437,56 @@ total = 0;
  
 		functiontoOrginiceNum(this.garantias, "num");
 	};
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	this.fechaPago = function(diaSeleccionado)
+	{
+			var date = moment();
+			var diaActual = date.day();		
+			var fecha = new Date();
+			var dif = diaActual - diaSeleccionado;
+			if (diaActual > diaSeleccionado)
+			{
+					if (dif < 4)
+					{
+							if (dif == 1)
+									fecha.setDate(fecha.getDate() + 6);
+							else if (dif == 2)
+									fecha.setDate(fecha.getDate() + 5);					
+							else if (dif == 3)
+									fecha.setDate(fecha.getDate() + 4);
+					}
+					else
+					{
+							if (dif == 4)
+									fecha.setDate(fecha.getDate() + 10);
+							else if (dif == 5)
+									fecha.setDate(fecha.getDate() + 9);
+					}
+
+			} 
+			else if (diaSeleccionado > diaActual)
+			{
+					if (dif < 4)
+					{
+							if (dif == 1)
+									fecha.setDate(fecha.getDate() + 8);
+							else if (dif == 2)
+									fecha.setDate(fecha.getDate() + 9);					
+							else if (dif == 3)
+									fecha.setDate(fecha.getDate() + 10);
+					}
+					else 
+							fecha.setDate(fecha.getDate() + dif);
+				
+			} else
+					fecha.setDate(fecha.getDate() + 7);
+			rc.credito.primerAbono = fecha;
+	};
+	
+	
+	
 	
 	this.editarGarantia = function(a)
 	{

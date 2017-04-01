@@ -11,38 +11,34 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.numG = 0;
 	this.garantias = [];
   this.garantia = {};
+  rc.objeto = {};
 	
-  //this.action = true;
-	let Cred = this.subscribe('creditos',()=>{
-			return [{requiereVerificacion : true }]
+	
+	
+	this.subscribe('verificaciones',()=>{
+			console.log($stateParams.id);
+			return [{credito_id : $stateParams.id }]
 	});
-		
+	
+	
   this.helpers({
-	  creditos : () => {
-		  return Creditos.find();
-	  },
-	  datosCreditos : () => {
-			if(Cred.ready()){
-				_.each(rc.creditos, function(credito){
-					
-						var cliente = {};
-						Meteor.call('getUsuario', credito.cliente_id, function(error, result) {
-						   if(error)
-						   {
-							    console.log('ERROR :', error);
-							    return;
-						   }
-						   if(result)
-						   {	
-								 		cliente = result;
-										credito.nombreCliente = cliente.nombreCompleto;
-										//$scope.$apply();
-							 }
-						});
-				})
-			}
-	  }
+	  verificaciones : () => {
+		  
+		  rc.objeto = Verificaciones.findOne();
+		  console.log(rc.objeto);
+		  
+		  
+/*
+		  _.each(rc.objeto.garantias,function (garantia) {
+			  	console.log(garantia);
+			  	
+			}); 
+*/
+		  
+		  
+	  }, 
   });
+
   
   this.guardar = function(objeto, form)
 	{	
@@ -55,6 +51,7 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			objeto.credito_id = $stateParams.id;
 			objeto.garantias = angular.copy(this.garantias);
 			
+			
 			Verificaciones.insert(objeto);
 			Creditos.update({_id: objeto.credito_id}, {$set:{estatus: 1}})
 						
@@ -66,9 +63,6 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	    form.$setUntouched();
 	    $state.go('root.panelVerificador');
 			
-			
-			
-		
 	}
   
   
