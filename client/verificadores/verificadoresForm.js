@@ -141,7 +141,7 @@ angular.module("creditoMio")
 			this.nuevo = true;
 			form.$setPristine();
 	    form.$setUntouched();
-			$state.go('root.clientesLista');
+			$state.go('root.verificadoresLista');
 		
 	};
 	

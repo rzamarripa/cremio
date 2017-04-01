@@ -44,8 +44,10 @@ angular.module("creditoMio")
 
 	
 	this.cuentaNombre = (cuentaid)=>{
+		console.log("Par",cuentaid);
 		try{
 			var cuenta_id = this.caja.cuenta[cuentaid].cuenta_id;
+			console.log("local:",cuentaid);
 			var cuenta  = Cuentas.findOne(cuenta_id);
 			//console.log(cuenta)
 			return cuenta.nombre

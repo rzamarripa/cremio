@@ -126,6 +126,7 @@ Meteor.methods({
 
 		var corteid=CortesCaja.insert(objeto);
 		console.log(montos);
+		
 		_.each(montos,function(monto,cuentaid){
 			var cuenta = Cuentas.findOne(monto.cuenta_id);
 			cuenta.sucursal_id = user.profile.sucursal_id;

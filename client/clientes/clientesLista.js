@@ -13,7 +13,6 @@ angular.module("creditoMio")
   this.subscribe('buscarClientes', () => {
 	  
 		if(this.getReactively("buscar.nombre").length > 4){
-			console.log(rc.buscar.nombre);
 			return [{
 		    options : { limit: 20 },
 		    where : { 

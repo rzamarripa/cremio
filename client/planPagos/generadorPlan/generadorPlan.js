@@ -567,6 +567,42 @@ total = 0;
 		functiontoOrginiceNum(this.garantias, "num");
 	};
 	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	this.fechaPago = function(diaSeleccionado)
+	{
+			console.log("Seleccionado:", diaSeleccionado);
+			var date = moment();
+			var diaActual = date.day();
+			console.log("Actual:",diaActual);
+			
+			if (diaActual > diaSeleccionado)
+			{
+					var dif = diaActual - diaSeleccionado;
+					console.log(dif);
+				
+			} else if (diaSeleccionado > diaActual)
+			{
+					var dif =  diaSeleccionado - diaActual;
+					console.log(dif);
+				
+			} else
+			{
+					var dif =  diaSeleccionado - diaActual;
+					console.log(dif);
+					var fecha = new Date();
+					fecha.setDate(fecha.getDate() + 7);
+					console.log(fecha);
+					rc.credito.primerAbono = fecha;
+			}
+			
+			
+		
+	};
+	
+	
+	
+	
 	this.editarGarantia = function(a)
 	{
 		this.garantia.tipo = a.tipo;

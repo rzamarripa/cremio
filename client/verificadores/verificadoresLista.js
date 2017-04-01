@@ -1,6 +1,6 @@
 angular.module("creditoMio")
-.controller("verificadoresLista", verificadoresLista);
- function verificadoresLista($scope, $meteor, $reactive, $state, toastr){
+.controller("VerificadoresListaCtrl", VerificadoresListaCtrl);
+ function VerificadoresListaCtrl($scope, $meteor, $reactive, $state, toastr){
  	
  	let rc = $reactive(this).attach($scope);
   this.action = true;
@@ -11,10 +11,9 @@ angular.module("creditoMio")
   window.rc = rc;
   
   this.subscribe('buscarVerificadores', () => {
-		if(this.getReactively("buscar.nombre").length > 0){
-			console.log(rc.buscar.nombre);
+		if(this.getReactively("buscar.nombre").length > 4){
 			return [{
-		    options : { limit: 51 },
+		    options : { limit: 5 },
 		    where : { 
 					nombreCompleto : this.getReactively('buscar.nombre')
 				} 		   
@@ -23,10 +22,10 @@ angular.module("creditoMio")
   });
   
   this.helpers({
-		clientes : () => {
+		verificadores : () => {
 			return Meteor.users.find({
 		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
-		  	roles : ["Cliente"]
+		  	roles : ["Verificador"]
 			}, { sort : {"profile.nombreCompleto" : 1 }});
 		},
 	});

@@ -108,23 +108,41 @@
 					    	</div>									    	
 					    </div>
 					    <div class="row">
-					    	<div class="col-sm-3" valida>
+					    	<div class="col-sm-2" valida>
 						    	<label>Capital Solicitado *</label>
 						    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ge.credito.capitalSolicitado" required="">
 					    	</div>
-					    	<div class="col-sm-3" valida>
-						    	<label>Primer abono *</label>
-						    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.primerAbono" name="fechaPrimerAbono" required/>
+								<div class="col-sm-2" valida>
+						    	<label>Día preferido de pago *</label>
+						    	<select name="diaPreferidoPago" class="form-control" ng-change="ge.fechaPago(ge.credito.diaPreferidoPago)" ng-model="ge.credito.diaPreferidoPago">
+							    	<option value="1">Lunes</option>
+							    	<option value="2">Martes</option>
+							    	<option value="3">Miércoles</option>
+							    	<option value="4">Jueves</option>
+							    	<option value="5">Viernes</option>
+							    	<option value="6">Sábado</option>
+						    	</select>
 					    	</div>
-					    	<div class="col-sm-3">					    
+					    	<div class="col-sm-2" valida>
+						    	<label>Primer abono</label>
+						    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.primerAbono" name="fechaPrimerAbono"/>
+					    	</div>						
+
+					    	<div class="col-sm-2">					    
 						    	<label>Requiere Verificación</label>
 						    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ge.credito.requiereVerificacion">
 					    	</div>
-					    	<div class="col-sm-3" valida>
+					    	<div class="col-sm-2" valida>
 						    	<label>Fecha Verificación</label>
 						    	<input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.fechaVerificacion" ng-disabled="!ge.credito.requiereVerificacion" />
 					    	</div>
-
+								<div class="col-sm-2" valida>
+						    	<label>Horario</label>
+						    	<select name="horario" class="form-control" ng-model="ge.credito.horario" ng-disabled="!ge.credito.requiereVerificacion">
+							    	<option value="mañana">Mañana</option>
+							    	<option value="tarde">Tarde</option>
+						    	</select>
+					    	</div>
 					    </div>
 						</div>
 						
