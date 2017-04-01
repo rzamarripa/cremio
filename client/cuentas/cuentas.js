@@ -3,7 +3,7 @@ angular.module("creditoMio")
 .controller("CuentasCtrl", CuentasCtrl);
  function CuentasCtrl($scope, $meteor, $reactive, $state, toastr){
  	
- 	$reactive(this).attach($scope);
+ 	let rc = $reactive(this).attach($scope);
 	this.action = true;
 	this.nuevo = true;	 
 	this.objeto = {}; 

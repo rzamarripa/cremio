@@ -83,16 +83,6 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
-		.state('root.documentos', {
-			url: '/documentos',
-			templateUrl: 'client/documentos/documentos.ng.html',
-			controller: 'DocumentosCtrl as doc',
-			resolve: {
-				"currentUser": ["$meteor", function($meteor){
-					return $meteor.requireUser();
-				}]
-			}
-		})
 		.state('root.tiposNotaCredito', {
 			url: '/tiponotascredito',
 			templateUrl: 'client/notaCredito/tipoform.ng.html',
@@ -197,16 +187,6 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			url: '/municipios',
 			templateUrl: 'client/municipios/municipios.ng.html',
 			controller: 'MunicipiosCtrl as mun',
-			resolve: {
-				"currentUser": ["$meteor", function($meteor){
-					return $meteor.requireUser();
-				}]
-			}
-		})
-		.state('root.parentesco', {
-			url: '/parentesco',
-			templateUrl: 'client/parentesco/parentesco.ng.html',
-			controller: 'ParentescoCtrl as pare',
 			resolve: {
 				"currentUser": ["$meteor", function($meteor){
 					return $meteor.requireUser();

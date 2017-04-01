@@ -92,7 +92,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 
 	this.verMenu =()=>{
 		var user= Meteor.user();
-		console.log("usuario",user);
+		//console.log("usuario",user);
 		if( user && user.roles && user.roles[0]=="Cajero"){
 			
 			var caja = this.caja;

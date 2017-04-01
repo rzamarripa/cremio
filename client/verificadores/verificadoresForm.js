@@ -136,12 +136,15 @@ angular.module("creditoMio")
 			console.log(objeto.profile.nombreCompleto);
 			Meteor.call('createUsuario', objeto, "Verificador");
 			toastr.success('Guardado correctamente.');
+			console.log("objeto",objeto)
 			this.usuario = {};
 			$('.collapse').collapse('hide');
 			this.nuevo = true;
 			form.$setPristine();
 	    form.$setUntouched();
-			$state.go('root.clientesLista');
+			$state.go('root.verificadoresLista');
+
+			
 		
 	};
 	
@@ -172,6 +175,10 @@ angular.module("creditoMio")
 		form.$setUntouched();
 		$state.go('root.clientes');
 */
+
+
+
+
 	};
 	
 	this.guardarEmpresa = function(empresa, objeto,form)
@@ -227,5 +234,63 @@ angular.module("creditoMio")
       
       */
 	};
+
+	this.almacenaImagen = function(imagen)
+	{
+		if (this.objeto)
+			this.objeto.profile.foto = imagen;		
+						
+	}
+
+
+  $(document).ready( function() {
+		
+
+			$(".Mselect2").select2();
+					
+			var fileInput1 = document.getElementById('fileInput1');
+			var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+			
+			
+			//JavaScript para agregar la Foto
+			fileInput1.addEventListener('change', function(e) {
+				var file = fileInput1.files[0];
+				var imageType = /image.*/;
+	
+				if (file.type.match(imageType)) {
+					
+					if (file.size <= 512000)
+					{
+						
+						var reader = new FileReader();
+		
+						reader.onload = function(e) {
+							fileDisplayArea1.innerHTML = "";
+		
+							var img = new Image();
+							
+							
+							img.src = reader.result;
+							img.width =200;
+							img.height=200;
+		
+							rc.almacenaImagen(reader.result);
+							//this.folio.imagen1 = reader.result;
+							
+							fileDisplayArea1.appendChild(img);
+							//console.log(fileDisplayArea1);
+						}
+						reader.readAsDataURL(file);			
+					}else {
+						toastr.error("Error la Imagen supera los 512 KB");
+						return;
+					}
+					
+				} else {
+					fileDisplayArea1.innerHTML = "File not supported!";
+				}
+			});			
+
+	});
 
 };

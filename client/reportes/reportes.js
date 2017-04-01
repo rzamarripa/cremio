@@ -80,17 +80,20 @@ angular.module("creditoMio")
 	});
 
 	this.subscribe("planPagos", ()=>{
-	    return [{ultimaModificacion : { $gte : rc.fechaInicial, $lt : rc.fechaFinal},}]
+	    return [{fechaPago : { $gte : rc.fechaInicial, $lt : rc.fechaFinal},}]
 	});
 
   	this.subscribe('personas', () => {
 		return [{ }];
 	});
 		this.subscribe('creditos', () => {
-		return [{fechaSolicito : { $gte : rc.fechaInicial, $lt : rc.fechaFinal},}];
+		return [{fechaSolicito : { $gte : rc.fechaInicial, $lt : rc.fechaFinal},estatus:4}];
 	});
 		this.subscribe('clientes', () => {
 		return [{_id : {$in : this.getReactively("clientes_id")}}];
+	});
+		this.subscribe('pagos', () => {
+		return [{estatus:1  }];
 	});
 
 	
@@ -105,24 +108,22 @@ angular.module("creditoMio")
 			return Meteor.users.findOne();
 		},
 		creditos : () => {
-			var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
+			var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:4}).fetch();
 			_.each(creditos,function(credito){
 				credito.cliente = Meteor.users.findOne(credito.cliente_id)
 				client = credito.cliente.profile
 				credito.nombreCompleto = client.nombreCompleto
 			    credito.credito = Creditos.findOne(credito.credito_id)
-
 				if (credito.garantias != "") {
 					credito.estatusGarantia = "Si"
 				}else{
 					credito.estatusGarantia = "No"
-
 				}
 			});
 			return creditos
 		},
 		planPagos : () => {
-	        var planes = PlanPagos.find({ultimaModificacion : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
+	        var planes = PlanPagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
 	        this.clientes_id = _.pluck(planes, "cliente_id");
 	        var client = ""
 			if(planes){
@@ -132,41 +133,34 @@ angular.module("creditoMio")
 				console.log("variable",client)
 				plan.nombreCompleto = client.nombreCompleto
 				plan.credito = Creditos.findOne(plan.credito_id)
-
 				if (plan.credito.garantias != "") {
 					plan.estatusGarantia = "Si"
 				}else{
 					plan.estatusGarantia = "No"
 
 				}
+				if (plan.credito.estatus == 4) {
 
-
+				}else{
+					planes = ""
+				}
 			});
-			console.log(planes)
-
 		}
-		// _.each(planes,function(plan){
-		// 	_.each(plan.cliente,function(cliente){
-		// 		plan.nombreCompleto = cliente.profile.nombreCompleto
-
-		// });
-		// 	});
-
 			return planes
 		
 		},
 		pagosVencidos : () => {
 			_.each(rc.getReactively("planPagos"),function(plan){});
 			return rc.planPagos.length
-
 		},
 		historialCredito : () => {
 				_.each(rc.getReactively("historialCrediticio"),function(historial){
 			});
 				return rc.historialCrediticio[rc.historialCrediticio.length - 1];	
-			
 		},
-
+		pagos : () =>{
+			return Pagos.find().fetch()
+		},
 
 	});
 
