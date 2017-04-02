@@ -105,7 +105,7 @@
 													<a aria-expanded="false" href="#tab4" data-toggle="tab">Información laboral</a>
 												</li>
 											</ul>
-											<div class="tab-content">
+											<div class="tab-content" >
 												<div class="tab-pane active" id="tab1" style="margin-right: 10%;">
 													<div class="table-responsive">	
 														<dl class="dl-horizontal" >
@@ -114,11 +114,11 @@
 														  <dt>Oficina:</dt>
 														  <dd>Oficina</dd>
 														  <dt>e-mail:</dt>
-														  <dd>{{currentUser[1].correo}}</dd>
+														  <dd>{{vpp.cliente.profile.correo}}</dd>
 														  <dt>Movil:</dt>
-														  <dd>{{currentUser.profile[1].telefono}}</dd>
+														  <dd>{{vpp.cliente.profile.telefono}}</dd>
 														  <dt>Alternativo:</dt>
-														  <dd>{{currentUser.profile[1].otroTelefono}}</dd>
+														  <dd>{{vpp.cliente.profile.otroTelefono}}</dd>
 														</dl>
 													</div>
 												</div>
@@ -126,15 +126,15 @@
 													<div class="table-responsive">										
 														<dl class="dl-horizontal">
 														  <dt>Sexo:</dt>
-														  <dd>{{currentUser.profile[1].sexo}}</dd>
+														  <dd>{{vpp.cliente.profile.sexo}}</dd>
 														  <dt>Nacimiento:</dt>
-														  <dd>{{currentUser.profile[1].fechaNacimiento}}</dd>
+														  <dd>{{vpp.cliente.profile.fechaNacimiento | date:"dd-MM-yyyy"}}</dd>
 														  <dt>Ocupación:</dt>
-														  <dd>{{currentUser.profile[1].ocupacion}}</dd>
+														  <dd>{{vpp.cliente.profile.ocupacion.nombre}}</dd>
 														  <dt>Estado civil:</dt>
-														  <dd>estadocivil_id</dd>
+														  <dd>{{vpp.cliente.profile.estadoCivil.nombre}}</dd>
 														  <dt>Nacionalidad:</dt>
-														  <dd>nacionalidad_id</dd>
+														  <dd>{{vpp.cliente.profile.nacionalidad.nombre}}</dd>
 														</dl>
 													 </div>
 												</div>
@@ -142,21 +142,21 @@
 													<div class="table-responsive">									
 														<dl class="dl-horizontal">
 														  <dt>Calle:</dt>
-														  <dd>{{currentUser.profile[1].calle}}</dd>
+														  <dd>{{vpp.cliente.profile.calle}}</dd>
 														  <dt>Colonia:</dt>
-														  <dd>{{currentUser.profile[1].colonia}}</dd>
+														  <dd>{{vpp.cliente.profile.colonia}}</dd>
 														  <dt>Estado:</dt>
-														  <dd>Estado_id</dd>
+														  <dd>{{vpp.cliente.profile.estado.nombre}}</dd>
 														  <dt>Codigo Postal</dt>
-														  <dd>{{currentUser.profile[1].codigoPostal}}</dd>
+														  <dd>{{vpp.cliente.profile.codigoPostal}}</dd>
 														  <dt>Señas:</dt>
-														  <dd>?</dd>
+														  <dd>Falta de agregar al form</dd>
 														  <dt>Localidad:</dt>
 														  <dd>nacionalidad_id</dd>
 														  <dt>País:</dt>
-														  <dd>nacionalidad_id</dd>
+														  <dd>{{vpp.cliente.profile.pais.nombre}}</dd>
 														  <dt>Tiempo:</dt>
-														  <dd></dd>
+														  <dd>{{vpp.cliente.profile.tiempoResdencia}}</dd>
 														
 														</dl>
 
@@ -164,38 +164,38 @@
 													 
 												</div>
 												<div class="tab-pane" id="tab4">
-													<div  class="collapse" id="collapseInfoLaboral">						
+																	
 														<div class="table-responsive">				
 															<dl class="dl-horizontal">
 															  <dt>Empresa:</dt>
-															  <dd>{{Meteor.User().profile[1].calle}}</dd>
+															  <dd>{{vpp.cliente.profile.calle}}</dd>
 															  <dt>Calle:</dt>
-															  <dd>{{Meteor.User().profile[1].colonia}}</dd>
+															  <dd>{{vpp.cliente.profile.colonia}}</dd>
 															  <dt>Colonia:</dt>
 															  <dd>colonia_id</dd>
 															  <dt>Estado</dt>
-															  <dd>{{Meteor.User().profile[1].codigoPostal}}</dd>
+															  <dd>{{vpp.cliente.profile.codigoPostal}}</dd>
 															  <dt>Código Postal:</dt>
 															  <dd>cp</dd>
 															  <dt>Telefono:</dt>
 															  <dd>34343443</dd>
 															  <dt>Departamento:</dt>
-															  <dd>departamento_id</dd>
+															  <dd>Falta de agregar a formulario</dd>
 															  <dt>Jefe inmediato:</dt>
-															  <dd></dd>
+															  <dd>falta de agreagar al form</dd>
 															  <dt>Localidad:</dt>
-															  <dd></dd>
+															  <dd>falta de agregar lal form</dd>
 															  <dt>País:</dt>
-															  <dd></dd>
+															  <dd>{{vpp.cliente.profile.pais.nombre}}</dd>
 															  <dt>Antiguedad:</dt>
-															  <dd></dd>
+															  <dd>Falta de agregar a formulario</dd>
 															  <dt>Numero:</dt>
-															  <dd></dd>
+															  <dd>{{vpp.cliente.profile.numero}}</dd>
 															
 															</dl>
 
 													 	</div>
-													 </div>
+													
 												</div>
 											</div>
 										</div>
