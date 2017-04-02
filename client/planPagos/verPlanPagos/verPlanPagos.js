@@ -55,6 +55,9 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.subscribe('paises', () => {
 		return [{estatus:true  }];
 	});
+	this.subscribe('empresas', () => {
+		return [{estatus:true  }];
+	});
 	this.helpers({
 		creditos : () => {
 			return Creditos.findOne({_id : $stateParams.credito_id})
@@ -70,6 +73,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		  			cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
 		  			cliente.estado = Estados.findOne(cliente.estado_id)
 		  			cliente.pais = Paises.findOne(cliente.pais_id)
+		  			cliente.empresa = Empresas.findOne(cliente.empresa_id)
 
 
 		  	});
