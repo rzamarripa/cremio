@@ -110,13 +110,14 @@
 													<div class="table-responsive">	
 														<dl class="dl-horizontal" >
 														  <dt>Particular:</dt>
-														  <dd>Particular</dd>
-														  <dt>Oficina:</dt>
-														  <dd>Oficina</dd>
+														  <dd>Agregar al form</dd>
+														  <dt> Telefono Oficina:</dt>
+														  <dd>agregar al form</dd>
 														  <dt>e-mail:</dt>
 														  <dd>{{vpp.cliente.profile.correo}}</dd>
 														  <dt>Movil:</dt>
 														  <dd>{{vpp.cliente.profile.telefono}}</dd>
+
 														  <dt>Alternativo:</dt>
 														  <dd>{{vpp.cliente.profile.otroTelefono}}</dd>
 														</dl>
@@ -511,7 +512,7 @@
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{$index + 1}}</td>	
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{vpp.planPagos.length}}</td>
-														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-center'">{{pago.importeRegular  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger' : ''">{{pago.descripcion }}</td>
 														<td class="text-center">
 															<span ng-if="pago.estatus == 0">

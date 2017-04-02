@@ -29,9 +29,9 @@
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th width="5%"><div class="text-center">credito_id</div></th>
+					<th width="5%"><div class="text-center">Folio crédito</div></th>
 					<th width="5%"><div class="text-center">Recibo</div></th>
-					<th width="10%"><div class="text-center">Vencimiento</div></th>
+					<!--<th width="10%"><div class="text-center">Vencimiento</div></th>-->
 					<th width="15%"><div class="text-center">cliente_id</div></th>
 					<th width="10%"><div class="text-center">Importe</div></th>
 					<th width="10%"><div class="text-center">Saldo</div></th>
@@ -39,10 +39,12 @@
 			</thead>
 			<tbody>
 		    <tr ng-repeat="objeto in cob.cobranza">
-			    <td>{{objeto.credito_id}}</td>
-			    <td><!--{{objeto.numeroPago}}--></td>
-			    <td><!--{{objeto.fechaLimite.getUTCDate() +"/"+ (objeto.fechaLimite.getUTCMonth()+1) +"/"+ objeto.fechaLimite.getUTCFullYear()}}--> </td>
-			    <td>{{objeto.nombreCliente}}</td>
+			    <td>{{objeto.credito.folio}}</td>
+			    <td>
+				    <span ng-repeat="numeroPago in objeto.planPagos">| {{numeroPago}} | </span>
+				  </td>
+			    <!--<td>{{objeto.fechaLimite.getUTCDate() +"/"+ (objeto.fechaLimite.getUTCMonth()+1) +"/"+ objeto.fechaLimite.getUTCFullYear()}} </td>-->
+			    <td>{{objeto.cliente.profile.nombreCompleto}}</td>
 			    <td>{{objeto.importe}}</td>
 			    <td>0</td>
 		    </tr>

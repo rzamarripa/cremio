@@ -19,7 +19,7 @@ angular.module("creditoMio")
   
   this.helpers({
 		creditosPorAutorizar : () => {
-			var creditos = Creditos.find().fetch();
+			var creditos = Creditos.find({estatus : 1}).fetch();
 			if(creditos){
 				rc.clientes_ids = _.pluck(creditos, "cliente_id");
 			
@@ -47,5 +47,15 @@ angular.module("creditoMio")
 		  return foto;
 	  }
   };
+  
+  this.autorizar = function(credito_id){
+	  Creditos.update({_id : credito_id}, { $set : {estatus : 2}});
+	  toastr.success("Ha autorizado el crédito.")
+  }
+  
+  this.rechazar = function(credito_id){
+	  Creditos.update({_id : credito_id}, { $set : {estatus : 3}});
+	  toastr.error("Se ha rechazado el crédito.")
+  }
   
 };

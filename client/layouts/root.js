@@ -9,7 +9,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	this.hoy = new Date();
 	
 	this.subscribe('creditos', () => {
-		return [{cliente_id : { $in : this.getReactively("clientes_ids")}}];
+		return [{estatus : 2, cliente_id : { $in : this.getReactively("clientes_ids")}}];
 	})
 	
 	this.subscribe('buscarClientes', () => {
@@ -35,7 +35,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 				this.clientes_ids = _.pluck(clientes, "_id");
 			
 				_.each(clientes, function(cliente){
-					cliente.profile.creditos = Creditos.find({cliente_id : cliente._id}).fetch();
+					cliente.profile.creditos = Creditos.find({cliente_id : cliente._id, estatus : 2}).fetch();
 				})
 			}
 						
