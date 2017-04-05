@@ -8,10 +8,12 @@
     "babel-runtime": "^6.23.0",
     "bcrypt": "^1.0.2",
     "docxtemplater": "^3.0.3",
+    "docxtemplater-image-module": "^3.0.2",
     "jquery": "^3.1.1",
     "jszip": "^2.6.1",
     "meteor-node-stubs": "~0.2.0",
     "moment": "^2.17.1",
+    "node-cmd": "^2.0.0",
     "ui-select": "^0.19.6"
   }
 }

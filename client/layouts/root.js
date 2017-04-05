@@ -10,6 +10,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	this.referencias = [];
 	this.hoy = new Date();
 	this.caja = {};
+	//var cmd = require('node-cmd');
 	
 	this.subscribe('creditos', () => {
 		return [{estatus : 2, cliente_id : { $in : this.getReactively("clientes_ids")}}];
@@ -61,6 +62,12 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	});
 	this.subscribe('creditos', () => {
 		return [{estatus:true  }];
+	});
+	this.subscribe('sucursales', () => {
+		return [{estatus:true}];
+	});
+	this.subscribe('municipios', () => {
+		return [{estatus:true}];
 	});
   
   	this.helpers({
@@ -122,7 +129,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 
   this.generarFicha= function(objeto,referencia_id) 
   {
-		//console.log("entro:", objeto);
+		console.log("entro:", objeto);
 
 		root.cliente = objeto.profile	
   	    root.referencias = [];
@@ -154,6 +161,8 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		  			cliente.empresa = Empresas.findOne(cliente.empresa_id)
 		  			cliente.colonia = Colonias.findOne(cliente.colonia_id)
 		  			cliente.ciudad = Ciudades.findOne(cliente.ciudad_id)
+		  			cliente.sucursal = Sucursales.findOne(cliente.sucursal_id)
+		  			cliente.municipio = Municipios.findOne(cliente.municipio_id)
 
 		  			
 		  		})
@@ -164,6 +173,9 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		objeto.pais = objeto.profile.pais
 		objeto.colonia = objeto.profile.colonia
 	    objeto.ciudad = objeto.profile.ciudad
+	    objeto.sucursal = objeto.profile.ciudad
+	    objeto.municipio = objeto.profile.nombre
+	    objeto.empresa = objeto.profile.empresa
 
 
 		Meteor.call('getFicha', objeto, function(error, response) {

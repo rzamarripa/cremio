@@ -161,7 +161,7 @@ Meteor.methods({
 		
 		
 		var content = fs
-    							.readFileSync(produccion+"certificacionPatrimonial.docx", "binary");
+    	   .readFileSync(produccion+"certificacionPatrimonial.docx", "binary");
 
 	  
 		var zip = new JSZip(content);
@@ -235,22 +235,53 @@ Meteor.methods({
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var cmd = require('node-cmd');
+		var ImageModule = require('docxtemplater-image-module');
 		//var produccion = "/home/isde/archivos/";
 				 
+	
+
+		var opts = {}
+			opts.centered = false;
+			opts.getImage=function(tagValue, tagName) {
+					var binaryData =  fs.readFileSync(tagValue,'binary');
+					return binaryData;
+		}
 		
+		opts.getSize=function(img,tagValue, tagName) {
+		    return [180,160];
+		}
 		
+		var imageModule=new ImageModule(opts);
+
+
 		var content = fs
     							.readFileSync(produccion+"FICHASOCIO.docx", "binary");
 
 	  
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
-								.loadZip(zip)
+								.attachModule(imageModule)
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			return "";
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+
 
 		
 		var fecha = new Date();
+		fecha.setHours(0,0,0,0);
 		var fechaNaci = objeto.profile.fechaNacimiento;
     	//var f = fecha;
+    	hora = fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    	fechaAltaCliente = new Date(objeto.profile.fechaCreacion)
+    	fechaAltaCliente.setHours(0,0,0,0)
+    	fechaAlta = fechaAltaCliente.getUTCDate()+'-'+(fechaAltaCliente.getUTCMonth()+1)+'-'+fechaAltaCliente.getUTCFullYear();
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	    fechaNacimiento = fechaNaci.getUTCDate()+'-'+(fechaNaci.getUTCMonth()+1)+'-'+fechaNaci.getUTCFullYear();
 	    var cliente =objeto.nombreCompleto
@@ -276,7 +307,44 @@ Meteor.methods({
 	    var est = objeto.estadoCivil.nombre
 	    var estadoCivil  = est.toUpperCase();
 	    var anti = objeto.profile.tiempoResdencia
+	    var antiguedad  = anti.toUpperCase(); 
+	    var anti = objeto.profile.tiempoResdencia
 	    var antiguedad  = anti.toUpperCase();
+	    var sucu = objeto.sucursal.nombre;
+	    var sucursal = sucu.toUpperCase();
+	    var muni = objeto.municipio;
+	    var municipio = muni.toUpperCase();
+	    var empre = objeto.empresa.nombre;
+	    var empresa = empre.toUpperCase();
+	    var call = objeto.empresa.calle;
+	    var calleEmpresa = call.toUpperCase();
+	    var col = objeto.empresa.colonia;
+	    var coloniaEmpresa = col.toUpperCase();
+	    // var cas = objeto.profile.casa
+	    // var casa = cas.toUpperCase();
+	    // var loca = objeto.empresa.municipio;
+	    // var LocalidadEmpresa = loca.toUpperCase();
+
+	     var dep = objeto.empresa.departamento;
+		 var departamento = dep.toUpperCase();
+		 var pues = objeto.empresa.puesto;
+		 var puesto = pues.toUpperCase();
+		 var anti = objeto.empresa.tiempoLaborando;
+		 var antiguedadEmpresa = anti.toUpperCase();
+		 var jef = objeto.empresa.jefeInmediato;
+		 var jefe = jef.toUpperCase();
+
+
+
+
+	    var f = String(objeto.profile.foto);
+					objeto.profile.foto = f.replace('data:image/jpeg;base64,', '');
+
+					var bitmap = new Buffer(objeto.profile.foto, 'base64');
+
+					fs.writeFileSync(produccion+".jpeg", bitmap);
+					objeto.profile.foto = produccion+".jpeg";
+
 
 		doc.setData({				nombreCompleto: 		nombreCliente,
 									sexo:                   sexo,
@@ -287,29 +355,57 @@ Meteor.methods({
 									ocupacion:              ocupacion,
 									estadoCivil:            estadoCivil,
 									 calle: 			    calleCLiente,
-									 numero: 				objeto.profile.numero,
+									 no: 				    objeto.profile.numero,
 									 antiguedad:            antiguedad,
 									 colonia: 				coloniaCliente,
 									 cp: 	        		objeto.profile.codigoPostal,
 									 ciudad: 				ciudadCliente,
 									 estado: 				estadoCliente,
 									 pais: 					paisCliente,
+									 fechaCreacion:         fechaAlta,
+									 hora:                  hora,
+									 foto:                  objeto.profile.foto,
+									 sucursal:              sucursal,
+									 municipio:             municipio,
+									 telefonoContacto:      objeto.profile.telefono,
+									 telefonoAlternativo: objeto.profile.otroTelefono,
+									 telefonoMovilContacto: objeto.profile.celular,
+									 correo:                objeto.profile.correo,
+
+
 
 									 //////////////////// REFERENCIAS PERSONALES //////////////////////
 									 ingresosPersonales:    objeto.profile.ingresosPersonales,
 									 ingresosConyuge:       objeto.profile.ingresosConyuge,
 									 gastosFijos:           objeto.profile.gastosFijos,
 									 gastoEventuales:       objeto.profile.gastosEventuales,
-									 otrosIngresos:         objeto.profile.otrosIngresos,
+									 otrosIngresos:         objeto.otrosIngresos,
+
 
 									 /////////////////// CONTACTO //////////////////////
-									 referencias:           objeto.referencias
+									 referencias:           objeto.referencias,
 
 
 									//////////////////// EMPRESA //////////////////////
+									empresa:               empresa, 
+									calleEmpresa:          calleEmpresa,
+									coloniaEmpresa:        coloniaEmpresa,
+									telefonoEmpresa:       objeto.empresa.telefono,
+									departamento:          departamento,
+									puesto:                puesto,
+									antiguedad:            antiguedad,
+									numeroEmpresa:         objeto.empresa.numero,
+									cpEmpresa:             objeto.empresa.codigoPostal,
+
+									
+
+
 
 
 									//////////////////// CONYUGE //////////////////////
+									telefonoConyuge:       objeto.profile.telefonoConyuge,
+									ocupacionConyuge:      objeto.profile.ocupacionConyuge,
+									nombreConyu:           objeto.profile.nombreConyuge,
 
 
 
@@ -326,6 +422,8 @@ Meteor.methods({
 		//Pasar a base64
 		// read binary data
     var bitmap = fs.readFileSync(produccion+"FICHASOCIOSalida.docx");
+
+   // cmd.run('unoconv -f pdf '+ produccion+'cedulaSalida.docx');
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');

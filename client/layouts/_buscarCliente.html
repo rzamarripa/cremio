@@ -24,7 +24,7 @@
 				<div class="user well" title="{{cliente.profile.nombreCompleto}}" ng-repeat="cliente in ro.clientesRoot" style="width: 100%">
 					<div class="row">
 						<div class="col-sm-1">
-							<img class="online" src="{{ro.tieneFoto(cliente.profile.fotografia, cliente.profile.sexo)}}">
+							<img class="online" src="{{ro.tieneFoto(cliente.profile.foto, cliente.profile.sexo)}}">
 						</div>
 						<div class="pull-right">
 							<a ng-click="ro.generarFicha(cliente,cliente._id)"><i  class="fa fa-address-card"></i>Ficha Tecnica</a>

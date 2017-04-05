@@ -124,7 +124,7 @@ angular.module("creditoMio")
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
-			
+			objeto.profile.foto = this.objeto.profile.foto;
 			objeto.profile.estatus = true;
 			objeto.profile.usuarioInserto = Meteor.userId();
 			objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
@@ -141,14 +141,8 @@ angular.module("creditoMio")
 			$('.collapse').collapse('hide');
 			this.nuevo = true;
 			form.$setPristine();
-	    form.$setUntouched();
+	    	form.$setUntouched();
 			$state.go('root.verificadoresLista');
-<<<<<<< HEAD
-
-			
-=======
->>>>>>> b25285ae9938c0be97d5b1749b54ef7a85163e64
-		
 	};
 	
 	this.actualizar = function(objeto,form){
