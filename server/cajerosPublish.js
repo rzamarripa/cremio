@@ -15,3 +15,7 @@ Meteor.publish("cajero",function(options){
 Meteor.publish("allCajeros",function(){
 	return Meteor.users.find({roles : ["Cajero"]});
 })
+
+Meteor.publish("cajeroId",function(options){
+  return Meteor.users.find({_id:options.id,roles : ["Cajero"]});
+});

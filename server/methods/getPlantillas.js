@@ -7,8 +7,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
-		//var produccion = "/home/isde/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 		
 		/*
 		var opts = {}
@@ -76,8 +76,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
-		//var produccion = "/home/cremio/archivos/";		
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";		
 		
 		
 		//Ir por los datos del cliente
@@ -91,7 +91,7 @@ Meteor.methods({
 		
 		//Ir por los datos del Avales
 		
-		
+		var aval = Personas.findOne({_id: creditoAprobado.avales_ids[0]});
 		
 		//Ir por lo datos de la tabla de amortización
 
@@ -133,7 +133,10 @@ Meteor.methods({
 									ciudadCliente					: ciudad.nombre,
 									estadoCliente					: estado.nombre,
 									nacionalidadCliente		: nacionalidad.nombre, 
-			
+									nombreAval						: aval.nombreCompleto.toUpperCase(),
+									direccionAval					: aval.direccion.toUpperCase(),
+									
+										
 									cantidad							:	creditoAprobado.capitalSolicitado,
 									letra									:	letras,
 									periodoPago						: creditoAprobado.periodoPago,

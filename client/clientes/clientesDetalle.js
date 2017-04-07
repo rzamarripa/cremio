@@ -12,6 +12,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.notaCuenta = []
 	this.notaCobranza = {}
 	this.masInfo = true;
+	rc.cancelacion = {};
 	window.rc = rc;
 	
 	this.subscribe("ocupaciones",()=>{
@@ -232,10 +233,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	};
 	
 	this.imprimirDocumento = function(aprobado){
-			
-			console.log(aprobado);
-
-
 			Meteor.call('imprimirDocumentos', aprobado, function(error, response) {
 				   if(error)
 				   {
@@ -280,12 +277,22 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						  window.URL.revokeObjectURL(url);
 		  
 				   }
-				});
-
-			
-			
-		
+				});	
 	};	
+	
+	this.cancelarCredito = function(motivo){
+			
+			var cre = Creditos.findOne({folio : rc.cancelacion.folio});
+			Creditos.update({_id : cre._id}, { $set : {estatus : 6, motivo: motivo}});
+			toastr.success("El crédito se ha cancelado.")
+			$("[data-dismiss=modal]").trigger({ type: "click" });			
+		
+	};
+	
+	
+	this.cancelarSeleccion = function(aprobado){
+			 rc.cancelacion.folio = aprobado.folio;
+	};
 	
 	
 }

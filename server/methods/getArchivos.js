@@ -8,8 +8,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
-		//var produccion = "/home/isde/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 		
 		
@@ -23,19 +23,19 @@ Meteor.methods({
 		
 		var fecha = new Date();
 		var f = fecha;
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    var cliente =objeto.cliente.profile.nombreCompleto
-	    var nombreCliente  = cliente.toUpperCase();
-	    var calle = objeto.cliente.profile.calle
-	    var calleCLiente = calle.toUpperCase();
-	    var colonia = objeto.cliente.profile.colonia
-	    var coloniaCliente = colonia.toUpperCase();
-	    var ciudad = objeto.cliente.profile.ciudad
-	    var ciudadCliente = ciudad.toUpperCase();
-	    var estado = objeto.cliente.profile.estado
-	    var estadoCliente = estado.toUpperCase();
-	    var pais = objeto.cliente.profile.pais
-	    var paisCliente = pais.toUpperCase();
+    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    var cliente =objeto.cliente.profile.nombreCompleto
+    var nombreCliente  = cliente.toUpperCase();
+    var calle = objeto.cliente.profile.calle
+    var calleCLiente = calle.toUpperCase();
+    var colonia = objeto.cliente.profile.colonia
+    var coloniaCliente = colonia.toUpperCase();
+    var ciudad = objeto.cliente.profile.ciudad
+    var ciudadCliente = ciudad.toUpperCase();
+    var estado = objeto.cliente.profile.estado
+    var estadoCliente = estado.toUpperCase();
+    var pais = objeto.cliente.profile.pais
+    var paisCliente = pais.toUpperCase();
 
 		doc.setData({		        nombreCompleto: 		nombreCliente, 
 									calle: 					calleCLiente,
@@ -81,8 +81,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
-		//var produccion = "/home/isde/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 		
 		
@@ -155,8 +155,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
-		//var produccion = "/home/isde/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 		
 		
@@ -234,10 +234,15 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+<<<<<<< HEAD
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
 		//var produccion = "/home/isde/archivos/";
+=======
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+>>>>>>> 3cc1d570dac3ae9d22846f3d69b9bd65f10c8992
 				 
 	
 

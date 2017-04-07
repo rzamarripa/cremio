@@ -32,7 +32,7 @@
 						    	</div>
 						    	<div class="col-sm-4">
 							    	<label>Primer abono</label>
-							    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="cob.credito.primerAbono" name="fechaCreditoNuevo" disabled=""/>
+							    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="cob.credito.fechaPrimerAbono" name="fechaCreditoNuevo" disabled=""/>
 						    	</div>
 						    </div>
 							</div>
@@ -99,7 +99,7 @@
 				      <div class="panel-body">
 				        	<div class="row">
 										<div class="col-sm-12">
-											<table class="table table-bordered">
+											<table class="table table-bordered" ng-if="cob.credito.tipoGarantia=='mobiliaria'">
 												<thead>
 													<tr>
 														<th width="5%">Número</th>
@@ -120,6 +120,22 @@
 														<td>{{garantia.serie}}</td>
 														<td>{{garantia.color}}</td>
 														<td>{{garantia.estadoActual}}</td>
+													</tr>
+												</tbody>
+											</table>
+											<table class="table table-bordered" ng-if="cob.credito.tipoGarantia=='general'">
+												<thead>
+													<tr>
+														<th width="5%">Número</th>
+														<th width="15%">Descripción</th>
+														<th width="15%">Valor estimado</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat="garantia in cob.credito.garantias">
+														<td>{{garantia.num}}</td>
+														<td>{{garantia.descripcion}}</td>
+														<td>{{garantia.valorEstimado}}</td>
 													</tr>
 												</tbody>
 											</table>
