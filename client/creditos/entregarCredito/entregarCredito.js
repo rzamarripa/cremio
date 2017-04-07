@@ -20,6 +20,7 @@ angular.module("creditoMio")
 	this.subscribe('cuentas',()=>{
 		return [{estatus : 1}]
 	});
+	this.validar={};
 
 	this.helpers({
 
@@ -65,6 +66,11 @@ angular.module("creditoMio")
 	}
 	this.guardar = function (){
 			//console.log(rc.objeto)
+			if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagare!=true || this.validar.tabla!=true)
+			{
+				toastr.error('Es obligatorio verificar los documentos.');
+				return
+			}
 			if(form.$invalid || rc.suma != rc.credito.capitalSolicitado){
 						toastr.error('Error al actualizar los datos.');
 						return;
