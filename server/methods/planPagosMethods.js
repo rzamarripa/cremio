@@ -142,7 +142,7 @@ Meteor.methods({
 
 		var ffecha = moment(new Date());
 		var pago = {};
-		pago.fechaPago = ahora;
+		pago.fechaPago = new Date();
 		pago.usuario_id = Meteor.userId();
 		pago.sucursalPago_id = Meteor.user().profile.sucursal_id;
 		pago.usuarioCobro_id = Meteor.userId();
@@ -222,7 +222,7 @@ Meteor.methods({
 
 				p.pagos.push(npp);
 
-				var npago={planPago_id:p._id,totalPago:ttpago,estatus:p.estatus,
+				var npago={planPago_id:p._id,totalPago:ttpago,estatus:p.estatus, descripcion:p.descripcion,
 						fechaPago:pago.fechaPago, numeroPago : p.numeroPago};
 				pago.planPagos.push(npago);
 
@@ -255,7 +255,7 @@ Meteor.methods({
 		Pagos.update({_id:pago_id},{$set:pago})
 		caja.cuenta[movimiento.cuenta_id].saldo = caja.cuenta[movimiento.cuenta_id].saldo? caja.cuenta[movimiento.cuenta_id].saldo+movimiento.monto:movimiento.monto;
 		Cajas.update({_id:caja._id},{$set:{cuenta:caja.cuenta}}); 
-		return "OK"
+		return pago_id;
 
 	},
 	generarMultas:function(){

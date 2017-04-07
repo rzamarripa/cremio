@@ -261,8 +261,16 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		});
 
 		Meteor.call("pagoParcialCredito",seleccionadosId,pago.pagar,pago.totalPago,pago.tipoIngreso_id,function(error,success){
-			if(success!="OK")
+			if(!success){
 				toastr.error('Error al guardar.');
+				return;
+			}
+			toastr.success('Guardado correctamente.');
+			rc.pago = {};
+			rc.pago.totalPago = 0;
+			rc.pago.totalito = 0
+			var url = $state.href("anon.imprimirTicket",{pago_id : success},{newTab : true});
+			window.open(url,'_blank');
 		});
 		
        

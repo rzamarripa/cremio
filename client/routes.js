@@ -62,6 +62,11 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 					);
 				}]
 			}
+		})
+		.state('anon.imprimirTicket',{
+			url: '/pago/ticket/:pago_id',
+			templateUrl: 'client/planPagos/tickets/pago.ng.html',
+			controller: 'TicketPagoCtrl as tkpctrl'
 		});
 
 	/***************************

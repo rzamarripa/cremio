@@ -531,7 +531,7 @@
 										<div class="col-sm-4">
 											<h4>Total a pagar: {{vpp.pago.totalPago | currency }}</h4>
 											<br/>
-											<caption>Monto a pagar: </caption> 
+											<caption>Tipo de ingreso: </caption> 
 											<select name="TipoIngreso" class="form-control select2" placeholder="Seleccione" ng-model="vpp.pago.tipoIngreso_id" required>
 												<option ng-repeat="tipo in vpp.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
 											</select>
