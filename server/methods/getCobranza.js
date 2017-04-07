@@ -3,7 +3,7 @@ Meteor.methods({
 			
 			var arreglo = {};
 			
-			var creditos = Creditos.find({sucursal_id: sucursal_id, estatus: 2}).fetch(); //estatus 2 creditos autorizados
+			var creditos = Creditos.find({sucursal_id: sucursal_id, estatus: 4}).fetch(); //estatus 2 creditos entregado
 			var creditos_ids = _.pluck(creditos, '_id'); // [45, 3]
 			
 			

@@ -273,14 +273,15 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			estatus : 1,
 			requiereVerificacion: this.credito.requiereVerificacion,
 			sucursal_id : Meteor.user().profile.sucursal_id,
-			fechaVerificacion: this.credito.fechaVerificacion
+			fechaVerificacion: this.credito.fechaVerificacion,
+			tipoGarantia : this.credito.tipoGarantia
 		};
 				
 		credito.avales = angular.copy(this.avales);
 		
 		//Duda se guardan los dos???
 		
-		if (credito.tipoGarantia == "mobiliario")
+		if (this.credito.tipoGarantia == "mobiliaria")
 				credito.garantias = angular.copy(this.garantias);
 		else
 				credito.garantias = angular.copy(this.garantiasGeneral);

@@ -250,7 +250,7 @@ angular.module("creditoMio")
 	  	this.ban = !this.ban;
 
 	  	rc.credito_id = objeto.credito._id;
-	  	console.log("el id del credito ",rc.credito_id)
+	  	console.log("Objeto: ",objeto)
 
 	  	_.each(rc.getReactively("planPagos"), function(item){
 	  	//	console.log(item,"lewa")
@@ -311,13 +311,11 @@ angular.module("creditoMio")
 	  
 	  	rc.credito = objeto.credito;	
 	  
-	 	  	
 	  	rc.avales = [];
 	  	_.each(rc.credito.avales_ids,function(aval_id){
 						Meteor.call('getPersona', aval_id, function(error, result){						
 									if (result)
 									{
-											console.log(result);
 											rc.avales.push(result);
 											$scope.$apply();			
 									}
@@ -334,8 +332,6 @@ angular.module("creditoMio")
 								//console.log(rc.historialCrediticio);
 						}
 			});
-			console.log(rc.historialCrediticio);
-			
 			
 			
 			//-----------------------------------------------------------------------------
