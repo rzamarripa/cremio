@@ -23,19 +23,19 @@ Meteor.methods({
 		
 		var fecha = new Date();
 		var f = fecha;
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    var cliente =objeto.cliente.profile.nombreCompleto
-	    var nombreCliente  = cliente.toUpperCase();
-	    var calle = objeto.cliente.profile.calle
-	    var calleCLiente = calle.toUpperCase();
-	    var colonia = objeto.cliente.profile.colonia
-	    var coloniaCliente = colonia.toUpperCase();
-	    var ciudad = objeto.cliente.profile.ciudad
-	    var ciudadCliente = ciudad.toUpperCase();
-	    var estado = objeto.cliente.profile.estado
-	    var estadoCliente = estado.toUpperCase();
-	    var pais = objeto.cliente.profile.pais
-	    var paisCliente = pais.toUpperCase();
+    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    var cliente =objeto.cliente.profile.nombreCompleto
+    var nombreCliente  = cliente.toUpperCase();
+    var calle = objeto.cliente.profile.calle
+    var calleCLiente = calle.toUpperCase();
+    var colonia = objeto.cliente.profile.colonia
+    var coloniaCliente = colonia.toUpperCase();
+    var ciudad = objeto.cliente.profile.ciudad
+    var ciudadCliente = ciudad.toUpperCase();
+    var estado = objeto.cliente.profile.estado
+    var estadoCliente = estado.toUpperCase();
+    var pais = objeto.cliente.profile.pais
+    var paisCliente = pais.toUpperCase();
 
 		doc.setData({		        nombreCompleto: 		nombreCliente, 
 									calle: 					calleCLiente,

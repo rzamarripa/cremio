@@ -91,7 +91,7 @@ Meteor.methods({
 		
 		//Ir por los datos del Avales
 		
-		
+		var aval = Personas.findOne({_id: creditoAprobado.avales_ids[0]});
 		
 		//Ir por lo datos de la tabla de amortización
 
@@ -133,7 +133,10 @@ Meteor.methods({
 									ciudadCliente					: ciudad.nombre,
 									estadoCliente					: estado.nombre,
 									nacionalidadCliente		: nacionalidad.nombre, 
-			
+									nombreAval						: aval.nombreCompleto.toUpperCase(),
+									direccionAval					: aval.direccion.toUpperCase(),
+									
+										
 									cantidad							:	creditoAprobado.capitalSolicitado,
 									letra									:	letras,
 									periodoPago						: creditoAprobado.periodoPago,
