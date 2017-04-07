@@ -12,6 +12,7 @@ angular.module("creditoMio")
   rc.buscar = {};
   rc.buscar.nombre = "";
   rc.credito_id = "";
+  this.clientes_id = [];
   
   var FI, FF;
   rc.cliente = {};
@@ -80,14 +81,14 @@ angular.module("creditoMio")
 	});
 
 	this.subscribe("planPagos", ()=>{
-	    return [{fechaPago : { $gte : rc.fechaInicial, $lt : rc.fechaFinal},}]
+	    return [{fechaPago : { $gte : this.getReactively("fechaInicial"), $lt : this.getReactively("fechaFinal")}}]
 	});
 
   	this.subscribe('personas', () => {
 		return [{ }];
 	});
 		this.subscribe('creditos', () => {
-		return [{fechaSolicito : { $gte : rc.fechaInicial, $lt : rc.fechaFinal},estatus:4}];
+		return [{fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:4}];
 	});
 		this.subscribe('clientes', () => {
 		return [{_id : {$in : this.getReactively("clientes_id")}}];
@@ -107,45 +108,30 @@ angular.module("creditoMio")
 		usuario : () => {
 			return Meteor.users.findOne();
 		},
-		creditos : () => {
-			var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:4}).fetch();
-			_.each(creditos,function(credito){
-				credito.cliente = Meteor.users.findOne(credito.cliente_id)
-				client = credito.cliente.profile
-				credito.nombreCompleto = client.nombreCompleto
-			    credito.credito = Creditos.findOne(credito.credito_id)
-				if (credito.garantias != "") {
-					credito.estatusGarantia = "Si"
-				}else{
-					credito.estatusGarantia = "No"
-				}
-			});
-			return creditos
-		},
 		planPagos : () => {
 	        var planes = PlanPagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
 	        this.clientes_id = _.pluck(planes, "cliente_id");
 	        var client = ""
 			if(planes){
-			_.each(planes,function(plan){
-				plan.cliente = Meteor.users.findOne(plan.cliente_id);
-				client = plan.cliente.profile
-				console.log("variable",client)
-				plan.nombreCompleto = client.nombreCompleto
-				plan.credito = Creditos.findOne(plan.credito_id)
-				if (plan.credito.garantias != "") {
-					plan.estatusGarantia = "Si"
-				}else{
-					plan.estatusGarantia = "No"
+				_.each(planes,function(plan){
+					plan.cliente = Meteor.users.findOne(plan.cliente_id);
+					client = plan.cliente.profile
+					console.log("variable",client)
+					plan.nombreCompleto = client.nombreCompleto
+					plan.credito = Creditos.findOne(plan.credito_id)
+					// if (plan.credito.garantias != "") {
+					// 	plan.estatusGarantia = "Si"
+					// }else{
+					// 	plan.estatusGarantia = "No"
 
-				}
-				if (plan.credito.estatus == 4) {
+					// }
+					if (plan.credito.estatus == 4) {
 
-				}else{
-					planes = ""
-				}
-			});
-		}
+					}else{
+						planes = ""
+					}
+				});
+			}
 			return planes
 		
 		},
@@ -161,7 +147,24 @@ angular.module("creditoMio")
 		pagos : () =>{
 			return Pagos.find().fetch()
 		},
-
+		creditos : () => {
+			var creditos = Creditos.find().fetch();
+			_.each(creditos,function(credito){
+				console.log(credito.cliente_id);
+				credito.cliente = Meteor.users.findOne(credito.cliente_id)
+				console.log("hola", credito.cliente)
+				if(credito.cliente){
+					credito.nombreCompleto = credito.cliente.profile.nombreCompleto;
+				}
+				
+				if (credito.garantias != "") {
+					credito.estatusGarantia = "Si"
+				}else{
+					credito.estatusGarantia = "No"
+				}
+			});
+			return creditos
+		},
 	});
 
 

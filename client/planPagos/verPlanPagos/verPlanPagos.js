@@ -19,10 +19,8 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.creditos_id = []
 	this.total = 0;
 	
-	//console.log($stateParams)
+	//console.log($stateParams)	
 
-	// this.informacionContacto = tr; 
-	
   this.subscribe("planPagos", ()=>{
 		return [{ credito_id : this.getReactively("credito_id") }]
 	});
@@ -133,6 +131,15 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			return creditos;
 		},
 		pagos : () =>{
+			return Pagos.find().fetch()
+		},
+		pagosReporte : () =>{
+			_.each(rc.planPagosViejo, function(pp){
+				var pagos = pp.pagos
+
+
+			});
+
 			return Pagos.find().fetch()
 		},
 		notas : () => {
@@ -321,5 +328,10 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		   }
 		});
 	};
+
+	
+
+
+
 
 };
