@@ -237,15 +237,13 @@ Meteor.methods({
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
-<<<<<<< HEAD
 		//var produccion = "/home/isde/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		//var produccion = "/home/cremio/archivos/";
-=======
 		
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";
->>>>>>> a3d89b4636681144b2d3108eac85b27d241d36ae
+		//var produccion = "/home/cremio/archivos/";
+
 				 
 	
 

@@ -67,14 +67,11 @@ angular.module("creditoMio")
 	this.subscribe('paises',()=>{
 		return [{estatus: true}]
 	});
-<<<<<<< HEAD
+
 	this.subscribe('documentos',()=>{
 		return [{estatus: true}]
 	});
 	
-=======
-
->>>>>>> a3d89b4636681144b2d3108eac85b27d241d36ae
 	this.subscribe('estados',()=>{
 
 		if (this.getReactively("pais_id") !=  "")
@@ -572,7 +569,6 @@ this.tomarFoto = function(objeto){
 			});		
 	    });
 
-<<<<<<< HEAD
 
   this.getDocumentos= function(documento_id)
 	{
@@ -588,9 +584,7 @@ this.tomarFoto = function(objeto){
 	};
 
 
-  
-=======
-	});
+
 	
 	this.calcularTotales = function()
 	{
@@ -606,7 +600,5 @@ this.tomarFoto = function(objeto){
 			rc.objeto.profile.resultadoNeto = Number(rc.objeto.profile.totalIngresos) - Number(rc.objeto.profile.totalGastos);
 			
 	};
->>>>>>> a3d89b4636681144b2d3108eac85b27d241d36ae
-
 
 };
