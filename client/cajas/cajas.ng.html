@@ -58,9 +58,14 @@
 				<tr>
 					<th width="30%"><div class="text-center">Nombre</div></th>
 					<th width="30%"><div class="text-center">Máximo Efectivo</div></th>
-					<th width="20%">
+					<th width="10%">
 						<div class="text-center">
 							Estatus
+						</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">
+							Abierta
 						</div>
 					</th>
 					<th width="20%">
@@ -77,10 +82,20 @@
 			    <td>
 				    <div class="text-center">
 				    	<span ng-if="objeto.estatus" class="label label-success">
-							  Activo
+							  Si
 							</span>
 							<span ng-if="!objeto.estatus" class="label label-danger">
-							  Inactivo
+							  No
+							</span>
+				    </div>
+			    </td>
+			    <td>
+				    <div class="text-center">
+				    	<span ng-if="objeto.estadoCaja=='Abierta'" class="label label-success">
+							  Abierta
+							</span>
+							<span ng-if="objeto.estadoCaja!='Abierta'" class="label label-danger">
+							  Cerrada
 							</span>
 				    </div>
 			    </td>
@@ -92,8 +107,9 @@
 							    <span class="sr-only">Toggle Dropdown</span>
 							  </button>
 							  <ul class="dropdown-menu text-left">
-							    <li><a href="#" ng-click="caj.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
-							    <li><a href="#" ng-click="caj.cambiarEstatus(objeto._id)">
+							    <li><a  ng-click="caj.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+							    <li><a  ui-sref="root.abrirCaja({caja_id:objeto._id})"><i class="fa fa-external-link"></i> Abrir</a></li>
+							    <li><a  ng-click="caj.cambiarEstatus(objeto._id)">
 								    <i class="fa fa-{{objeto.estatus ? 'trash' : 'check' }}"></i> {{objeto.estatus ? "Desactivar" : "Activar" }}</a>
 							    </li>
 							  </ul>

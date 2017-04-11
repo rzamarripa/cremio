@@ -19,6 +19,8 @@ Meteor.methods({
 
 		if(credito.periodoPago == "Semanal")
 			totalPagos = credito.duracionMeses * 4;
+		else if (credito.periodoPago == "Quincenal")
+			totalPagos = credito.duracionMeses * 2;
 		else if(credito.periodoPago == "Mensual")
 			totalPagos = credito.duracionMeses;
 		
@@ -39,7 +41,7 @@ Meteor.methods({
 		var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
 		importeParcial=Math.round(importeParcial * 100) / 100;
 		var plan = [];
-		
+
 		for (var i = 0; i < totalPagos; i++) {
 			var pago = {
 				semana				: mfecha.isoWeek(),
@@ -75,7 +77,12 @@ Meteor.methods({
 			plan.push(clonar(pago));
 			if(credito.periodoPago == "Semanal"){
 				mfecha = mfecha.add(7, 'days');
-			}else if(credito.periodoPago == "Mensual"){
+			}
+			else if(credito.periodoPago == "Quincenal"){
+				mfecha = mfecha.add(15, 'days');
+				
+			}
+			else if(credito.periodoPago == "Mensual"){
 				var siguienteMes = moment(mfecha).add(1, 'M');
 				var finalSiguienteMes = moment(siguienteMes).endOf('month');
 				

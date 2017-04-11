@@ -1,7 +1,7 @@
 angular
 .module("creditoMio")
-.controller("GeneradorPlanCtrl", GeneradorPlanCtrl);
-function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
+.controller("ActualizarPlanCtrl", ActualizarPlanCtrl);
+function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
 	
 	let rc = $reactive(this).attach($scope);
 	window.rc = rc;
@@ -68,6 +68,16 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	});
 	this.subscribe('pagos', () => {
 		return [{ estatus:true}];
+	});
+	this.subscribe('creditos', () => {
+		return [{ _id:$stateParams.credito_id}];
+	},{
+		onReady:()=>{
+			rc.credito = Creditos.findOne($stateParams.credito_id)
+			rc.avales = rc.credito.avales;
+			rc.garantias = rc.credito.garantias;
+			rc.credito.primerAbono = rc.credito.fechaPrimerAbono;
+		}
 	});
 	
 	this.helpers({
@@ -291,9 +301,10 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		else
 				credito.garantias = angular.copy(this.garantiasGeneral);
 				
+			console.log(credito)
 				
-				
-		Meteor.apply('generarCredito', [this.cliente, credito], function(error, result){
+		Meteor.apply('actualizarCredito', [this.cliente, credito], function(error, result){
+			console.log(result,error)
 			if(result == "hecho"){
 				toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');
 				rc.planPagos = [];

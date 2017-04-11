@@ -326,6 +326,22 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.actualizarPlan', {
+			url: '/actualizarPlan/:objeto_id/:credito_id',
+			templateUrl: 'client/planPagos/actualizarPlan/generadorPlan.html',
+			controller: 'ActualizarPlanCtrl as ae',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 	
+					});
+				}]
+			}
+		})
 		.state('root.generarNotaCredito', {
 			url: '/generarNotaCredito/:objeto_id',
 			templateUrl: 'client/notaCredito/form.html',
@@ -523,7 +539,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			}
 		})
 		.state('root.abrirCaja', {
-			url: '/abricaja',
+			url: '/abricaja/:caja_id',
 			templateUrl: 'client/cajas/abrirCaja.ng.html',
 			controller: 'AbrirCajaCtrl as ocaj',
 			resolve: {
