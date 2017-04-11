@@ -19,7 +19,7 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  estados : () => {
-		  return Estados.find();
+		  return Estados.find({pais_id: this.getReactively('buscar.pais_id')});
 	  },
 		paises : () => {
 			return Paises.find();

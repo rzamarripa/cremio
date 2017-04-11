@@ -238,10 +238,10 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
-		.state('root.roles', {
-			url: '/roles',
-			templateUrl: 'client/roles/roles.ng.html',
-			controller: 'RolesCtrl as rol',
+		.state('root.documentos', {
+			url: '/documentos',
+			templateUrl: 'client/documentos/documentos.ng.html',
+			controller: 'DocumentosCtrl as doc',
 			resolve: {
 				"currentUser": ["$meteor", function($meteor){
 					return $meteor.requireUser();
@@ -314,6 +314,23 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			url: '/generadorPlan/:objeto_id',
 			templateUrl: 'client/planPagos/generadorPlan/generadorPlan.html',
 			controller: 'GeneradorPlanCtrl as ge',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 	
+					});
+				}]
+			}
+		})
+		.state('anon.imprimirTabla', {
+			url: '/imprimirTabla/:objeto_id/:credito_id',
+			params: {'planPagos':':planPagos'},
+			templateUrl: 'client/planPagos/generadorPlan/_imprimirTabla.html',
+			controller: 'VerPlanPagosCtrl as vpp',
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {

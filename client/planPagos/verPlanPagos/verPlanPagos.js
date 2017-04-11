@@ -18,8 +18,9 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.creditos = [];
 	this.creditos_id = []
 	this.total = 0;
+	rc.credit = $stateParams
 	
-	//console.log($stateParams)	
+	console.log(rc.credito)	
 
   this.subscribe("planPagos", ()=>{
 		return [{ credito_id : this.getReactively("credito_id") }]
@@ -337,6 +338,15 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		});
 	};
 
+
+ this.borrarBotonImprimir= function()
+	{
+		var printButton = document.getElementById("printpagebutton");
+		 printButton.style.visibility = 'hidden';
+		 window.print()
+		 printButton.style.visibility = 'visible';
+		
+	};
 	
 
 

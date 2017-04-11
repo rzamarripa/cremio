@@ -11,6 +11,7 @@ angular.module("creditoMio")
   this.objeto.profile.empresa_id = "";
   this.empresa = {}; 
   this.objeto_id = ""
+  var fotillo = ""
   
   this.pais_id = "";
   this.estado_id = "";
@@ -99,6 +100,15 @@ angular.module("creditoMio")
 		  return objeto;
 	  }
   }); 
+
+
+	this.tomarFoto = function(objeto){
+			console.log(objeto)
+		    $meteor.getPicture().then(function(data){
+			fotillo = data
+			//objeto.profile.fotografia = this.objeto.profile.fotografia;
+		});
+    };
   
   this.Nuevo = function()
   {
@@ -124,7 +134,7 @@ angular.module("creditoMio")
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
-			objeto.profile.foto = this.objeto.profile.foto;
+			objeto.profile.foto = fotillo;
 			objeto.profile.estatus = true;
 			objeto.profile.usuarioInserto = Meteor.userId();
 			objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
@@ -186,6 +196,7 @@ angular.module("creditoMio")
 		  }
 			empresa.estatus = true;
 			empresa.usuarioInserto = Meteor.userId();
+			objeto.profile.foto = this.objeto.profile.foto;
 			
 			Empresas.insert(empresa, function(error, result)
 															 {

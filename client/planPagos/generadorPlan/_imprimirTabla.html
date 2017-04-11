@@ -1,0 +1,34 @@
+<div class="content" > 
+<div class="row">
+	<div class="col-sm-12" >
+		<table class="table table-striped table-bordered table-condensed font-xs">
+			<caption>
+				<h4>Plan Nuevo</h4>
+			</caption>
+			<thead class="thead">
+				<tr>
+					<th class="text-center" width="5%">No.</th>
+					<th class="text-center" width="20%">Fecha de Pago</th>
+					<th class="text-center" width="15%">Pago</th>
+					<th class="text-center" width="10%">Capital</th>
+					<th class="text-center" width="10%">Interes</th>
+					<th class="text-center" width="10%">IVA</th>
+					<th class="text-center" width="10%">Importe total</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="pago in vpp.planPagosViejo">
+					<td class="text-center">{{$index + 1}}</td>	
+					<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy HH:mm:ss"}}</td>
+					<td class="text-center">{{pago.numeroPago}} - {{vpp.planPagos.length}}</td>
+					<td class="text-right">{{pago.capital | currency}}</td>
+					<td class="text-right">{{pago.interes | currency}}</td>
+					<td class="text-right">{{pago.iva | currency}}</td>
+					<td class="text-right">{{pago.importeRegular | currency}}</td>
+				</tr>
+			</tbody>
+		</table>
+			<a class="btn btn-primary" id="printpagebutton" ng-click="vpp.borrarBotonImprimir()">Imprimir</a>							
+	</div>
+</div>
+</div>

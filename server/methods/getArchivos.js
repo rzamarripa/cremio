@@ -234,15 +234,12 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-<<<<<<< HEAD
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
 		//var produccion = "/home/isde/archivos/";
-=======
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";
->>>>>>> 3cc1d570dac3ae9d22846f3d69b9bd65f10c8992
+		//var produccion = "/home/cremio/archivos/";
 				 
 	
 

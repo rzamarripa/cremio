@@ -5,7 +5,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	
 	let rc = $reactive(this).attach($scope);
 	window.rc = rc;
-	
+
+	this.tablaAmort = false;
 	this.nuevoBotonPago = true;
 	this.action = false;
 	this.actionAval = true;
@@ -211,11 +212,13 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			return;
 		}
 		rc.planPagos = [];
+		this.tablaAmort = true;
 			
 		if(rc.credito.requiereVerificacion == true)
 			rc.credito.estatus = 0;
 		else
 			rc.credito.estatus = 1;
+
 
 		var _credito = {
 			cliente_id : this.cliente._id,
@@ -598,6 +601,26 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	    	arraytosearch[i][key] = i + 1;	
 	    }
   };
+
+      this.borrarBotonImprimir= function()
+	{
+		var printButton = document.getElementById("printpagebutton");
+		 printButton.style.visibility = 'hidden';
+		 window.print()
+		 printButton.style.visibility = 'visible';
+		
+	};
+
+	this.imprecion = function(print){
+
+  var printContents = document.getElementById(print).innerHTML;
+  var popupWin = window.open('', '_blank', 'width=300,height=300');
+  popupWin.document.open();
+  popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</body></html>');
+  popupWin.document.close();
+ // setTimeout(function(){popupWin.print();},1000);
+
+    };
 	
 	
 	

@@ -35,15 +35,72 @@
 				    	<label>Confirmar Contraseña *</label>
 				    	<input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="cli.objeto.confirmpassword" required="">
 					  </div>
-					
-					  <div class="col-sm-4" >
-							<label>Foto (máximo 512Kb)</label>
-							<input name="foto" type="file" id="fileInput1">																
-							<div id="fileDisplayArea1"></div>
-							 <!--<img class="thumbnail" src="{{pn.participante.foto}}" ng-if="{{pn.participante.foto}}" width="200" height="200"/>-->										
-					   </div>
+   				    <div class="col-sm-4"><br/>
+							<label for="talla">Foto</label>
+							<button class="btn btn-primary" ng-click="cli.tomarFoto()"><i class="fa fa-camera"></i></button>
+							<img width="100px" ng-src="{{cli.objeto.foto}}" ng-class="{'img-thumbnail': !!cli.objeto.foto}" />
+			    	</div>
+			   </div>
 		    </div>  
 			</div>
+			
+			<div class="col-sm-12" >
+			<h4>Documentos</h4>
+			<div class="well">	    
+			    <div class="row">
+			    <div class="col-sm-3" >
+						<label>Archivo (máximo 512Kb)</label>
+						<input name="archivo" type="file" id="fileInput1">
+						<!-- <div id="fileDisplayArea1" ></div> -->
+						 <div class="container">
+			      <!-- Modal -->
+				  <div class="modal fade" id="myModal" role="dialog">
+				    <div class="modal-dialog">
+			    <!-- Modal content-->
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        </div>
+				        <div class="modal-body" >
+				        <div id="fileDisplayArea1" ></div>
+				          
+				        </div>
+					        <div class="modal-footer">
+
+							</div>						
+				      </div>
+				    </div>
+				  </div>
+
+
+				 </div>								
+					</div>
+			     <div class="col-sm-3">
+					<label id="id_label_single" >Seleccionar Documento</label>
+					<select class="js-example-basic-single js-states form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.objeto.docuemnto_id"
+					 ng-change="cli.getClientes(cli.objeto.documento_id)">
+						<option ng-repeat="documento in cli.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
+					</select>
+					</div>
+					<br/>
+			<div class="col-sm-6">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Archivos</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="objeto in cli.imagenesDocs">
+							<td class="text-center">
+		                    	<a ng-click="cli.mostrarModal()">Ver Archivo</a>
+		                    </td>
+						</tr>
+					</tbody>
+				</table>
+	        </div>
+	   	   </div>
+		    </div>
 			<h4>Información de Contacto</h4>
 			<div class="well">	    
 		    <div class="row">
@@ -65,6 +122,9 @@
 		    	</div>  				    	    
 		    </div>
 			</div>
+		    </div>
+
+
 			<h4>Particulares</h4>
 			<div class="well">
 		    <div class="row">

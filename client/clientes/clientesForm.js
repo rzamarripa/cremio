@@ -26,6 +26,9 @@ angular.module("creditoMio")
   this.buscar = {};
 	this.buscar.nombre = "";
 	this.buscando = false;
+	var fotillo = ""
+	this.pic = {};
+	this.imagenes = []
 	
 	
   
@@ -60,6 +63,9 @@ angular.module("creditoMio")
 	});
 	
 	this.subscribe('paises',()=>{
+		return [{estatus: true}]
+	});
+	this.subscribe('documentos',()=>{
 		return [{estatus: true}]
 	});
 	
@@ -130,6 +136,19 @@ angular.module("creditoMio")
 	  empresas : () => {
 		  return Empresas.find();
 	  },
+	  documentos : () => {
+		  return Documentos.find();
+	  },
+	   imagenesDocs : () => {
+	   	var imagen = rc.imagenes
+	   	_.each(rc.getReactively("imagenes"),function(imagen){
+	   		imagen.archivo = rc.objeto.profile.foto
+
+	   	});
+
+
+		  return imagen
+	  },
 	  objeto : () => {
 		  var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
 		  rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
@@ -168,6 +187,18 @@ angular.module("creditoMio")
 			return personas;
 		},	
   }); 
+
+
+this.tomarFoto = function(objeto){
+			console.log(objeto)
+		    $meteor.getPicture().then(function(data){
+			fotillo = data
+			//objeto.profile.fotografia = this.objeto.profile.fotografia;
+		});
+    };
+
+
+
   
   this.Nuevo = function()
   {
@@ -195,6 +226,7 @@ angular.module("creditoMio")
 		  }
 			
 			objeto.profile.estatus = true;
+			objeto.profile.foto = fotillo;
 			objeto.profile.usuarioInserto = Meteor.userId();
 			objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
 			objeto.profile.fechaCreacion = new Date();
@@ -203,7 +235,7 @@ angular.module("creditoMio")
 			var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
 			var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
 			objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-			console.log(objeto.profile.nombreCompleto);
+			
 			Meteor.call('createUsuario', objeto, "Cliente");
 			toastr.success('Guardado correctamente.');
 			this.usuario = {};
@@ -212,6 +244,7 @@ angular.module("creditoMio")
 			form.$setPristine();
 	    form.$setUntouched();
 			$state.go('root.clientesLista');
+			console.log(objeto);
 		
 	};
 	
@@ -254,28 +287,28 @@ angular.module("creditoMio")
 		  }
 			empresa.estatus = true;
 			empresa.usuarioInserto = Meteor.userId();
-			objeto.profile.foto = this.objeto.profile.foto;
+			//objeto.profile.foto = this.objeto.profile.foto;
 			
 			
 			Empresas.insert(empresa, function(error, result)
-															 {
-																	if (error){
-																		console.log("error: ",error);
-																	}
-																	if (result)
-																	{
-																			objeto.profile.empresa_id = result;
-																			toastr.success('Guardado correctamente.');
-																			this.empresa = {}; 
-																			$('.collapse').collapse('hide');
-																			this.nuevo = true;
-																			form.$setPristine();
-																	    form.$setUntouched();
-																	    $("[data-dismiss=modal]").trigger({ type: "click" });
-																	    
-																	}
-															 }
-											);
+						 {
+								if (error){
+									console.log("error: ",error);
+								}
+								if (result)
+								{
+										objeto.profile.empresa_id = result;
+										toastr.success('Guardado correctamente.');
+										this.empresa = {}; 
+										$('.collapse').collapse('hide');
+										this.nuevo = true;
+										form.$setPristine();
+								    form.$setUntouched();
+								    $("[data-dismiss=modal]").trigger({ type: "click" });
+								    
+								}
+						 }
+		);
 					
 	};
 	
@@ -447,7 +480,10 @@ angular.module("creditoMio")
   this.almacenaImagen = function(imagen)
 	{
 		if (this.objeto)
-			this.objeto.profile.foto = imagen;		
+			this.objeto.profile.foto = imagen;
+		    this.imagenes.push({archivo:imagen})
+		    console.log(this.imagenes)
+
 						
 	}
 
@@ -498,9 +534,25 @@ angular.module("creditoMio")
 				} else {
 					fileDisplayArea1.innerHTML = "File not supported!";
 				}
-			});			
+			});		
+	    });
 
-	});
+
+  this.getDocumentos= function(documento_id)
+	{
+	
+		console.log(documento_id);
+		rc.documento = Documentos.findOne(documento_id);
+		//rc.nota.unidad = Unidades.findOne(rc.nota.unidad_id);
+	};
+
+	  this.mostrarModal= function()
+	{
+		$("#myModal").modal();
+	};
+
+
+  
 
 
 };
