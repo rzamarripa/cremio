@@ -36,7 +36,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 			this.buscando = false;		
   });
 
-		this.subscribe('ocupaciones', () => {
+	this.subscribe('ocupaciones', () => {
 		return [{estatus:true  }];
 	});
 	this.subscribe('nacionalidades', () => {

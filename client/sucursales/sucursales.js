@@ -36,6 +36,13 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 	      toastr.error('Error al guardar los datos.');
 	      return;
 		}
+		
+		if (objeto.password != objeto.confirmarpassword)
+		{
+	      toastr.error('Las contraseñas no coinciden.');
+	      return;
+		}
+		
 		objeto.estatus = true;
 		objeto.usuarioInserto = Meteor.userId();
 		objeto.fechaRegistro = new Date();

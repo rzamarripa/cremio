@@ -230,16 +230,22 @@ Meteor.methods({
 		
 		
 		var fs = require('fs');
-    	var Docxtemplater = require('docxtemplater');
+    var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
+<<<<<<< HEAD
 		//var produccion = "/home/isde/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		//var produccion = "/home/cremio/archivos/";
+=======
+		
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+>>>>>>> a3d89b4636681144b2d3108eac85b27d241d36ae
 				 
 	
 

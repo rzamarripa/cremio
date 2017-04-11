@@ -7,6 +7,7 @@
 			<th ><div class="text-center">Capital Solicitado</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Solicitud</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
+			<th class="text-center" width="10%"><div class="text-center">Turno</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Acción</div></th>
 		</tr>
 	</thead>
@@ -17,6 +18,7 @@
 	    <td class="text-right">{{credito.capitalSolicitado | currency}}</td>
 	    <td class="text-center">{{credito.fechaSolicito.getUTCDate() +"/"+ (credito.fechaSolicito.getUTCMonth()+1) +"/"+ credito.fechaSolicito.getUTCFullYear()}} </td>
 	    <td class="text-center">{{credito.fechaVerificacion.getUTCDate() +"/"+ (credito.fechaVerificacion.getUTCMonth()+1) +"/"+ credito.fechaVerificacion.getUTCFullYear()}} </td>
+	    <td class="text-right">{{credito.horario}}</td>
 	    <td class="text-center">
 		    <a href="/verificacion/{{credito._id}}" class="btn btn-primary"><i class="fa fa-pencil"></i> Verificar</a>
 	    </td>

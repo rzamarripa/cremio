@@ -173,18 +173,27 @@
 			    	<label>CURP</label>
 			    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="cli.objeto.profile.curp" >
 		    	</div>
+		    	<div class="col-sm-3">					    
+			    	<label>RFC</label>
+			    	<input name="rfc" type="text" class="form-control" placeholder="RFC" ng-model="cli.objeto.profile.rfc" >
+		    	</div>
 		      <div class="col-sm-3">					    
 			    	<label>Lugar de Nacimiento</label>
 			    	<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="cli.objeto.profile.lugarNacimiento" >
 		    	</div>
-		    	  <div class="col-sm-3">
+		    	
+		    </div>
+		    <div class="row">
+			    <div class="col-sm-3">
 					  <label for="casa">Casa</label>
 					  	<select name="casa" class="form-control" ng-model="cli.objeto.casa">
 					  		<option >Propia</option>
 					  		<option>Otros</option>
 					  	</select>
-					  </div>
-		    </div>			 
+					</div>
+		    </div>
+		    
+		    
 			</div>  
 			<h4>Dirección</h4>			
 			<div class="well">	    
@@ -260,37 +269,37 @@
 		    <div class="row">
 		    	<div class="col-sm-3" valida> 					    
 			    	<label>Ingresos Personales</label>
-			    	<input name="ingresosPersonales" type="text" class="form-control" placeholder="Ingresos Personales" ng-model="cli.objeto.profile.ingresosPersonales">
+			    	<input name="ingresosPersonales" type="number" class="form-control" placeholder="Ingresos Personales" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.ingresosPersonales" value="0">
 		    	</div>
 		    	<div class="col-sm-3" valida>					    
 			    	<label>Ingresos Conyuge</label>
-			    	<input name="ingresosConyuge" type="text" class="form-control" placeholder="Ingresos Conyuge" ng-model="cli.objeto.profile.ingresosConyuge">
+			    	<input name="ingresosConyuge" type="number" class="form-control" placeholder="Ingresos Conyuge" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.ingresosConyuge">
 		    	</div>
 		    	<div class="col-sm-3">					    
 			    	<label>Otros Ingresos</label>
-			    	<input name="otrosIngresos" type="text" class="form-control" placeholder="Otros Ingresos" ng-model="cli.objeto.profile.otrosIngresos" >
+			    	<input name="otrosIngresos" type="number" class="form-control" placeholder="Otros Ingresos" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.otrosIngresos" >
 		    	</div>	  
 		    	<div class="col-sm-3">					    
 			    	<label>Total Ingresos</label>
-			    	<input name="totalIngresos" type="text" class="form-control" placeholder="Total Ingresos" ng-model="cli.objeto.profile.totalIngresos" >
+			    	<input name="totalIngresos" type="number" class="form-control" placeholder="Total Ingresos" ng-model="cli.objeto.profile.totalIngresos" disabled="" >
 		    	</div>  				    	    
 		    </div>
 		    <div class="row">
 		    	<div class="col-sm-3" valida> 					    
 			    	<label>Gastos Fijos</label>
-			    	<input name="gastosFijos" type="text" class="form-control" placeholder="Gastos Fijos" ng-model="cli.objeto.profile.gastosFijos">
+			    	<input name="gastosFijos" type="number" class="form-control" placeholder="Gastos Fijos" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.gastosFijos">
 		    	</div>
 		    	<div class="col-sm-3" valida>					    
 			    	<label>Gastos Eventuales</label>
-			    	<input name="gastosEventuales" type="text" class="form-control" placeholder="Gastos Eventuales" ng-model="cli.objeto.profile.gastosEventuales">
+			    	<input name="gastosEventuales" type="number" class="form-control" placeholder="Gastos Eventuales" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.gastosEventuales">
 		    	</div>
 		    	<div class="col-sm-3">					    
 			    	<label>Total Gastos</label>
-			    	<input name="totalGastos" type="text" class="form-control" placeholder="Total Gastos" ng-model="cli.objeto.profile.totalGastos" >
+			    	<input name="totalGastos" type="number" class="form-control" placeholder="Total Gastos" ng-model="cli.objeto.profile.totalGastos" disabled="">
 		    	</div>	  
 		    	<div class="col-sm-3">					    
 			    	<label>Resultado Neto</label>
-			    	<input name="resultadoNeto" type="text" class="form-control" placeholder="Resultado Neto" ng-model="cli.objeto.profile.resultadoNeto" >
+			    	<input name="resultadoNeto" type="number" class="form-control" placeholder="Resultado Neto" ng-model="cli.objeto.profile.resultadoNeto" disabled="">
 		    	</div>  				    	    
 		    </div>
 			</div>
@@ -453,10 +462,6 @@
 											    	<label>Número *</label>
 											    	<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="cli.empresa.numero" required="" >
 										    	</div>  				    	    
-										    	<div class="col-sm-6" valida>					    
-											    	<label>Colonia *</label>
-											    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cli.empresa.colonia" required="">
-										    	</div>
 										    </div>
 										    <div class="row">
 											    <div class="col-sm-3" valida>					    
@@ -511,7 +516,15 @@
 																<option ng-repeat="ciudad in cli.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
 															</select>
 													</div>	
-												</div> 
+												</div>
+												<div class="row">
+													<div class="col-sm-3" valida>
+															<label for="seccion_id">Colonia *</label>
+															<select name="dirColoniaEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.colonia_id" required ng-change="cli.cambiarColoniaEmpresa()">
+																<option ng-repeat="colonia in cli.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
+															</select>
+													</div>
+												</div>	 
 											</div>
 							</form>
 	      	</div>	

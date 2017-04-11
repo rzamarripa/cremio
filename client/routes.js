@@ -326,11 +326,18 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+<<<<<<< HEAD
 		.state('anon.imprimirTabla', {
 			url: '/imprimirTabla/:objeto_id/:credito_id',
 			params: {'planPagos':':planPagos'},
 			templateUrl: 'client/planPagos/generadorPlan/_imprimirTabla.html',
 			controller: 'VerPlanPagosCtrl as vpp',
+=======
+		.state('root.actualizarPlan', {
+			url: '/actualizarPlan/:objeto_id/:credito_id',
+			templateUrl: 'client/planPagos/actualizarPlan/generadorPlan.html',
+			controller: 'ActualizarPlanCtrl as ae',
+>>>>>>> a3d89b4636681144b2d3108eac85b27d241d36ae
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
@@ -540,7 +547,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			}
 		})
 		.state('root.abrirCaja', {
-			url: '/abricaja',
+			url: '/abricaja/:caja_id',
 			templateUrl: 'client/cajas/abrirCaja.ng.html',
 			controller: 'AbrirCajaCtrl as ocaj',
 			resolve: {
