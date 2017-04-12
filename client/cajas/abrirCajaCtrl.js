@@ -1,6 +1,6 @@
 angular.module("creditoMio")
 .controller("AbrirCajaCtrl", AbrirCajaCtrl);
- function AbrirCajaCtrl($scope, $meteor, $reactive, $state, toastr){
+ function AbrirCajaCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams){
  	
  	let rc = $reactive(this).attach($scope);
 	window.rc=rc
@@ -28,7 +28,7 @@ angular.module("creditoMio")
 			return TiposIngreso.find()
 		},
 		objeto : () => {
-			var caja = Cajas.findOne(Meteor.user().profile.caja_id);
+			var caja = Cajas.findOne($stateParams.caja_id);
 			if(caja.estadoCaja=="Abierta")
 				$state.go('root.clientesLista');
 			return caja;
