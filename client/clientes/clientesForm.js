@@ -27,8 +27,8 @@ angular.module("creditoMio")
 	this.buscar.nombre = "";
 	this.buscando = false;
 	
-	
-  
+	  
+
   this.subscribe('buscarPersonas', () => {
 		if(this.getReactively("buscar.nombre").length > 3){
 			this.buscando = true;
@@ -42,7 +42,9 @@ angular.module("creditoMio")
 		else if (this.getReactively("buscar.nombre").length  == 0 )
 			this.buscando = false;
   });
+
   
+
 	this.subscribe('empresas',()=>{
 		return [{estatus: true}]
 	});
@@ -62,36 +64,61 @@ angular.module("creditoMio")
 	this.subscribe('paises',()=>{
 		return [{estatus: true}]
 	});
-	
+
 	this.subscribe('estados',()=>{
+
 		if (this.getReactively("pais_id") !=  "")
+		{
+				console.log("Cambio pais:", this.pais_id);		
 				return [{pais_id: this.getReactively("pais_id"), estatus: true}];
+				
+		}		
+
 		else 
 				return [{estatus: true}];
+
 	});
-	
+
+
 	this.subscribe('municipios',()=>{
 		if (this.getReactively("estado_id") !=  "")
+		{	
+				console.log("Cambio Estado");
 				return [{estado_id: this.getReactively("estado_id"), estatus: true}];
+				
+		}		
+
 		else 
 				return [{estatus: true}];	
+
 	});
+
 	
+
 	this.subscribe('ciudades',()=>{
     if (this.getReactively("municipio_id") !=  "")
+    {
+				console.log("Cambio Muni");
 				return [{municipio_id: this.getReactively("municipio_id"), estatus: true}];
+				
+		}		
+
 		else 
 				return [{estatus: true}];
+
 	});
-	
+
 	this.subscribe('colonias',()=>{
 		if (this.getReactively("ciudad_id") !=  "")
 				return [{ciudad_id: this.getReactively("ciudad_id"), estatus: true}];
+
 		else 
 				return [{estatus: true}];
+
 	});
 	
 	//Condición del Parametro
+
 	if($stateParams.objeto_id != undefined){
 			this.action = false;
 			rc.objeto_id = $stateParams.objeto_id
@@ -101,6 +128,7 @@ angular.module("creditoMio")
 				}];
 			});
 	}
+
 	 
 	this.helpers({
 	  estadosCiviles : () => {
@@ -112,11 +140,13 @@ angular.module("creditoMio")
 	  ocupaciones : () => {
 		  return Ocupaciones.find();
 	  },
+
 	  paises : () => {
 		  return Paises.find();
 	  },
+
 	  estados : () => {
-		  return Estados.find();
+					return Estados.find();
 	  },
 	  municipios : () => {
 		  return Municipios.find();
@@ -150,9 +180,7 @@ angular.module("creditoMio")
 											}
 								});	
 			  	});			
-
-		
-						
+					
 			} 
 		  
 		  
@@ -176,6 +204,8 @@ angular.module("creditoMio")
     this.objeto = {};		
   };
   
+
+
   this.cambiarPaisObjeto = function() {this.pais_id = this.getReactively("objeto.profile.pais_id");};
   this.cambiarEstadoObjeto = function() {this.estado_id = this.getReactively("objeto.profile.estado_id");};
   this.cambiarMunicipioObjeto = function() {this.municipio_id = this.getReactively("objeto.profile.municipio_id");};
@@ -185,7 +215,8 @@ angular.module("creditoMio")
   this.cambiarEstadoEmpresa = function() {this.estado_id = this.getReactively("empresa.estado_id");};
   this.cambiarMunicipioEmpresa = function() {this.municipio_id = this.getReactively("empresa.municipio_id");};
   this.cambiarCiudadEmpresa = function() {this.ciudad_id = this.getReactively("empresa.ciudad_id");};
-  
+  this.cambiarColoniaEmpresa = function() {this.colonia_id = this.getReactively("empresa.colonia_id");};
+
 
   this.guardar = function(objeto,form)
 	{
@@ -501,6 +532,21 @@ angular.module("creditoMio")
 			});			
 
 	});
+	
+	this.calcularTotales = function()
+	{
+			
+						
+			rc.objeto.profile.totalIngresos = Number(rc.objeto.profile.ingresosPersonales == "" ? 0 :rc.objeto.profile.ingresosPersonales) + 
+																			  Number(rc.objeto.profile.ingresosConyuge == "" ? 0 :rc.objeto.profile.ingresosConyuge) + 
+																			  Number(rc.objeto.profile.otrosIngresos == "" ? 0 : rc.objeto.profile.otrosIngresos);
+			
+			rc.objeto.profile.totalGastos = Number(rc.objeto.profile.gastosFijos == "" ? 0 :rc.objeto.profile.gastosFijos) + 
+																			Number(rc.objeto.profile.gastosEventuales == "" ? 0 :rc.objeto.profile.gastosEventuales);
+			
+			rc.objeto.profile.resultadoNeto = Number(rc.objeto.profile.totalIngresos) - Number(rc.objeto.profile.totalGastos);
+			
+	};
 
 
 };

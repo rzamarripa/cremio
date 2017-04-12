@@ -6,17 +6,26 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	let rc = $reactive(this).attach($scope);
 	
 	window = rc;
+	
+	this.action = true;	
 	this.actionGarantia = true;
 	this.conG = 0;
 	this.numG = 0;
+	this.conGen = 0;
+	this.numGen = 0;
 	this.garantias = [];
   this.garantia = {};
   rc.objeto = {};
 	
+	this.garantiasGeneral = [];
+	
+/*
+	if ($stateParams.id != "")
+			this.action = false;
+*/
 	
 	
 	this.subscribe('verificaciones',()=>{
-			console.log($stateParams.id);
 			return [{credito_id : $stateParams.id }]
 	});
 	
@@ -25,17 +34,13 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	  verificaciones : () => {
 		  
 		  rc.objeto = Verificaciones.findOne();
-		  console.log(rc.objeto);
-		  
-		  
-/*
-		  _.each(rc.objeto.garantias,function (garantia) {
-			  	console.log(garantia);
-			  	
-			}); 
-*/
-		  
-		  
+		  if (rc.objeto != undefined)
+		  {
+				  if (rc.objeto.tipoGarantia == "general")
+				  	 this.garantiasGeneral = angular.copy(rc.objeto.garantias);
+				  else if (rc.objeto.tipoGarantia == "mobiliario")	 
+				  	 this.garantias = angular.copy(rc.objeto.garantias); 
+		  }	
 	  }, 
   });
 
@@ -47,13 +52,25 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
+		  
 			objeto.estatus = true;
 			objeto.credito_id = $stateParams.id;
-			objeto.garantias = angular.copy(this.garantias);
+			
+			if (this.credito.tipoGarantia == "mobiliaria")
+					objeto.garantias = angular.copy(this.garantias);
+			else
+					objeto.garantias = angular.copy(this.garantiasGeneral);	
 			
 			
 			Verificaciones.insert(objeto);
-			Creditos.update({_id: objeto.credito_id}, {$set:{estatus: 1}})
+			
+			var credito = Creditos.findOne($stateParams.id);
+			
+			if (this.credito.tipoGarantia == "mobiliaria")
+					Creditos.update({_id: objeto.credito_id}, {$set:{estatus: 1, garantias: angular.copy(this.garantias)}})
+			else
+					Creditos.update({_id: objeto.credito_id}, {$set:{estatus: 1, garantias: angular.copy(this.garantiasGeneral)}})
+			
 						
 			toastr.success('Guardado correctamente.');
 			this.objeto = {}; 
@@ -68,100 +85,131 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
   
   
   
-  this.insertarGarantia = function()
+  this.insertarGarantia = function(tipo)
 	{
-			/*
-			//Validar que no venga vacio
-			if (this.mes==null) 
-			{
-				toastr.error('Seleccionar Mes.');
-				return;
-			}	
-			//validar que vengan mes y cantidad
-			if (this.mes.nombre == null || this.mes.cantidad == null) 
-			{
-				toastr.error('Seleccionar Mes y Cantidad');
-				return;
-			}	
-			
-			*/
-			
-			//incremeneto
-			this.conG = this.conG + 1;
-			this.garantia.num = this.conG;
-			
-			this.garantias.push(this.garantia);	
-			this.garantia={};
-	};
-	
-	this.actualizarGarantia = function(a)
-	{
-			a.num = this.numG;
-
-			_.each(this.garantias, function(av){
-							if (av.num == a.num)
-							{
-									av.tipo = a.tipo;
-									av.marca = a.marca;
-									av.modelo = a.modelo;			
-									av.serie = a.serie;
-									av.color = a.color;
-									av.estadoActual = a.estadoActual;
-							}
-			})
-		
-			this.garantia = {};
-			this.numG = 0;
-			this.actionGarantia = true;
-	};
-	
-	this.cancelarGarantia = function()
-	{
-			this.garantia={};
-			this.numG = -1;
-			this.actionGarantia = true;
-	};
-	
-	this.quitarGarantia = function(numero)
-	{
-			pos = functiontofindIndexByKeyValue(this.garantias, "num", numero);
-	    this.garantias.splice(pos, 1);
-	    if (this.garantias.length == 0) this.con = 0;
-	    //reorganiza el consecutivo     
-	    functiontoOrginiceNum(this.garantias, "num");
-	};
-	
-	this.editarGarantia = function(a)
-	{
-			this.garantia.tipo = a.tipo;
-			this.garantia.marca = a.marca;
-			this.garantia.modelo = a.modelo;			
-			this.garantia.serie = a.serie;
-			this.garantia.color = a.color;
-			this.garantia.estadoActual = a.estadoActual;
-			
-			this.numG = a.num;
-	    this.actionGarantia = false;
-	};
-	
-	//busca un elemento en el arreglo
-	function functiontofindIndexByKeyValue(arraytosearch, key, valuetosearch) {
-	    for (var i = 0; i < arraytosearch.length; i++) {
-	    	if (arraytosearch[i][key] == valuetosearch) {
-				return i;
+			if (tipo == "mobiliaria")
+			{				
+					this.conG = this.conG + 1;
+					this.garantia.num = this.conG;
+					
+					this.garantias.push(this.garantia);	
+					this.garantia={};
 			}
-	    
-	  }
-	    return null;
-  };
-    
-    //Obtener el mayor
-	function functiontoOrginiceNum(arraytosearch, key) {
-		var mayor = 0;
-	    for (var i = 0; i < arraytosearch.length; i++) {
-	    	arraytosearch[i][key] = i + 1;	
-	    }
-  };
+			else
+			{
+					this.conGen = this.conGen + 1;
+					this.garantia.num = this.conGen;
+					
+					this.garantiasGeneral.push(this.garantia);	
+					this.garantia={};
+			}
+				
+	};
+	
+	this.actualizarGarantia = function(tipo, a)
+	{
+			if (tipo == "mobiliaria")
+			{
+					a.num = this.numG;
+			
+					_.each(this.garantias, function(av){
+						if (av.num == a.num)
+						{
+							av.tipo = a.tipo;
+							av.marca = a.marca;
+							av.modelo = a.modelo;			
+							av.serie = a.serie;
+							av.color = a.color;
+							av.estadoActual = a.estadoActual;
+						}
+					})
+				
+					this.garantia = {};
+					this.numG = 0;
+					this.actionGarantia = true;
+			}
+			else
+			{
+					a.num = this.numGen;
+			
+					_.each(this.garantiasGeneral, function(av){
+						if (av.num == a.num)
+						{
+							av.descripcion = a.descripcion;
+							av.valorEstimado = a.valorEstimado;
+						}
+					})
+				
+					this.garantia = {};
+					this.numGen = 0;
+					this.actionGarantia = true;		
+			}
+					
+	};
+	
+	this.cancelarGarantia = function(tipo)
+	{
+			if (tipo == "mobiliaria")
+			{
+					this.garantia={};
+					this.numG = -1;
+					this.actionGarantia = true;
+			}
+			else
+			{
+					this.garantia={};
+					this.numGen = -1;
+					this.actionGarantia = true;
+			}		
+	};
+	
+	this.quitarGarantia = function(tipo, numero)
+	{
+			if (tipo == "mobiliaria")
+			{
+					pos = functiontofindIndexByKeyValue(this.garantias, "num", numero);
+					this.garantias.splice(pos, 1);
+					if (this.garantias.length == 0) 
+						this.con = 0;
+			 
+					functiontoOrginiceNum(this.garantias, "num");
+			}
+			else
+			{
+					pos = functiontofindIndexByKeyValue(this.garantiasGeneral, "num", numero);
+					this.garantiasGeneral.splice(pos, 1);
+					if (this.garantiasGeneral.length == 0) 
+						this.con = 0;
+			 
+					functiontoOrginiceNum(this.garantiasGeneral, "num");		
+				
+			}
+					
+	};
+
+	this.editarGarantia = function(tipo, a)
+	{
+			if (tipo == "mobiliaria")
+			{
+					this.garantia.tipo = a.tipo;
+					this.garantia.marca = a.marca;
+					this.garantia.modelo = a.modelo;			
+					this.garantia.serie = a.serie;
+					this.garantia.color = a.color;
+					this.garantia.estadoActual = a.estadoActual;
+					
+					this.numG = a.num;
+					this.actionGarantia = false;
+			}
+			else
+			{
+					this.garantia.descripcion = a.descripcion;
+					this.garantia.valorEstimado = a.valorEstimado;
+					
+					this.numGen = a.num;
+					this.actionGarantia = false;
+			}		
+	};
 
   
 };

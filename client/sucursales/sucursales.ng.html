@@ -38,6 +38,8 @@
 												    <option value="Femenino">Femenino</option>
 												</select>
 								    	</div>
+								    </div>
+								    <div class="row">	
 								    	<div class="col-sm-2" valida>					    
 									    	<label>Usuario *</label>
 									    	<input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="suc.objeto.username" required>
@@ -45,6 +47,10 @@
 								    	<div class="col-sm-2" valida>					    										
 									    	<label>Contraseña *</label>																	
 									    	<input name="password" type="password" class="form-control" placeholder="Contraseña" ng-model="suc.objeto.password" required>
+								    	</div>
+								    	<div class="col-sm-2" valida>					    										
+									    	<label>Confirmar Contraseña *</label>																	
+									    	<input name="confirmarpassword" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="suc.objeto.confirmarpassword" required>
 								    	</div>
 								    </div>
 				          </div>
@@ -68,9 +74,9 @@
 							    		<label>Nombre *</label>
 								    	<input name="nombreobjeto" type="text" class="form-control" placeholder="Nombre Sección" ng-model="suc.objeto.nombreSucursal" required="">
 							    	</div>
-							    	<div class="col-sm-6" valida>
-									    <label>Descripción *</label>
-									    <textarea name="descripcion" class="form-control" placeholder="Descripción" ng-model="suc.objeto.descripcion" required=""></textarea>
+							    	<div class="col-sm-6">
+									    <label>Descripción</label>
+									    <textarea name="descripcion" class="form-control" placeholder="Descripción" ng-model="suc.objeto.descripcion"></textarea>
 							    	</div>
 							    </div>
 				          <div class="row" valida>

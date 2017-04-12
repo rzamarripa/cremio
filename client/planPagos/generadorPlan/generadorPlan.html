@@ -99,6 +99,7 @@
 						    	<label>Periodo de pago *</label>
 						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ge.credito.periodoPago" required="">
 							    	<option value="Semanal">Semanal</option>
+							    	<option value="Quincenal">Quincenal</option>
 							    	<option value="Mensual">Mensual</option>
 						    	</select>
 					    	</div>									    	
@@ -114,7 +115,7 @@
 					    	</div>
 								<div class="col-sm-2" valida>
 						    	<label>Día preferido de pago *</label>
-						    	<select name="diaPreferidoPago" class="form-control" ng-change="ge.fechaPago(ge.credito.diaPreferidoPago)" ng-model="ge.credito.diaPreferidoPago">
+						    	<select name="diaPreferidoPago" class="form-control" ng-change="ge.fechaPago(ge.credito.diaPreferidoPago, ge.credito.periodoPago)" ng-model="ge.credito.diaPreferidoPago">
 							    	<option value="1">Lunes</option>
 							    	<option value="2">Martes</option>
 							    	<option value="3">Miércoles</option>
@@ -138,7 +139,7 @@
 					    	</div>
 								<div class="col-sm-2" valida>
 						    	<label>Horario</label>
-						    	<select name="horario" class="form-control" ng-model="ge.credito.horario" ng-disabled="!ge.credito.requiereVerificacion">
+						    	<select name="horario" class="form-control" ng-model="ge.credito.turno" ng-disabled="!ge.credito.requiereVerificacion">
 							    	<option value="mañana">Mañana</option>
 							    	<option value="tarde">Tarde</option>
 						    	</select>
@@ -368,7 +369,7 @@
 							    	</div>
 							    	<div class="col-sm-4"> 					    
 								    	<label>Valor estimado:</label>
-								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Valor Estimado" ng-model="ge.garantia.valorEstimado">
+								    	<input name="valorEstimado" type="number" class="form-control" placeholder="Valor Estimado" ng-model="ge.garantia.valorEstimado">
 							    	</div>
 								</div>
 								<div class="row">

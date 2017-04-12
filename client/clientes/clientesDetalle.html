@@ -254,7 +254,7 @@
 											<div class="panel-heading">
 												<h3 class="panel-title">
 													Credito</h3>
-										</div>
+											</div>
 											<div class="panel-body no-padding text-align-center">
 												<div class="the-price">
 													<h1>
@@ -267,8 +267,7 @@
 													<small>Plan: {{aprobado.periodoPago}}</small>
 												</div>
 											</div>
-											<div class="panel-footer no-padding">
-<!-- 												<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button">Imprimir documentos</a> -->									
+											<div class="panel-footer no-padding">						
 												<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" ng-click="cd.imprimirDocumento(aprobado)" value="Imprimir documentos" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
 												<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
 												<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Crédito" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="cd.cancelarSeleccion(aprobado)" />
@@ -292,7 +291,7 @@
 						
 						<header role="heading">
 							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-							<h2>Créditos Pendientes</h2>
+							<h2>Solicitudes de Crédito</h2>
 			
 			
 						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>

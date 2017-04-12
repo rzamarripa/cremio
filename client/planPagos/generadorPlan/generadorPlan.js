@@ -233,7 +233,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			estatus : 1,
 			requiereVerificacion: this.credito.requiereVerificacion,
 			sucursal_id : Meteor.user().profile.sucursal_id,
-			fechaVerificacion: this.credito.fechaVerificacion
+			fechaVerificacion: this.credito.fechaVerificacion,
+			turno: this.credito.turno
 		};
 
 		Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
@@ -508,49 +509,68 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	this.fechaPago = function(diaSeleccionado)
-	{
+	this.fechaPago = function(diaSeleccionado, periodoPago)
+	{		
+			
 			var date = moment();
 			var diaActual = date.day();		
 			var fecha = new Date();
 			var dif = diaActual - diaSeleccionado;
-			if (diaActual > diaSeleccionado)
+			
+			console.log("Actual:", diaActual);
+			console.log("Seleccionado:",diaSeleccionado);
+			console.log("dif:",dif);
+			
+			
+			if (periodoPago == "Semanal")
 			{
-					if (dif < 4)
+					if (diaActual > diaSeleccionado)
 					{
-							if (dif == 1)
-									fecha.setDate(fecha.getDate() + 6);
-							else if (dif == 2)
-									fecha.setDate(fecha.getDate() + 5);					
-							else if (dif == 3)
-									fecha.setDate(fecha.getDate() + 4);
-					}
-					else
+							if (dif < 4)
+							{
+									if (dif == 1)
+											fecha.setDate(fecha.getDate() + 6);
+									else if (dif == 2)
+											fecha.setDate(fecha.getDate() + 5);					
+									else if (dif == 3)
+											fecha.setDate(fecha.getDate() + 4);
+							}
+							else
+							{
+									if (dif == 4)
+											fecha.setDate(fecha.getDate() + 10);
+									else if (dif == 5)
+											fecha.setDate(fecha.getDate() + 9);
+							}
+		
+					} 
+					else if (diaSeleccionado > diaActual)
 					{
-							if (dif == 4)
-									fecha.setDate(fecha.getDate() + 10);
-							else if (dif == 5)
-									fecha.setDate(fecha.getDate() + 9);
-					}
-
-			} 
-			else if (diaSeleccionado > diaActual)
+							if (Math.abs(dif) < 4)
+							{
+									if (dif == 1 || dif == -1)
+											fecha.setDate(fecha.getDate() + 8);
+									else if (dif == 2 || dif ==-2)
+											fecha.setDate(fecha.getDate() + 9);					
+									else if (dif == 3 || dif ==-3)
+											fecha.setDate(fecha.getDate() + 10);
+							}
+							else 
+									fecha.setDate(fecha.getDate() + Math.abs(dif));
+						
+					} else
+							fecha.setDate(fecha.getDate() + 7);
+							
+					rc.credito.primerAbono = fecha;
+			}
+			else if (periodoPago == "Quincenal")
 			{
-					if (dif < 4)
-					{
-							if (dif == 1)
-									fecha.setDate(fecha.getDate() + 8);
-							else if (dif == 2)
-									fecha.setDate(fecha.getDate() + 9);					
-							else if (dif == 3)
-									fecha.setDate(fecha.getDate() + 10);
-					}
-					else 
-							fecha.setDate(fecha.getDate() + dif);
-				
-			} else
-					fecha.setDate(fecha.getDate() + 7);
-			rc.credito.primerAbono = fecha;
+						//Hacer los calculos
+			}
+			else if (periodoPago == "Mensual")
+			{
+					//Hacer los calculos
+			}	
 	};
 	
 	
