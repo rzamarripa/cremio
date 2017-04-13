@@ -62,7 +62,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return Ocupaciones.find();
 		},
 		planPagos : () => {
-			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:1}}).fetch();
+			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:-1}}).fetch();
 			if(rc.getReactively("creditos") && rc.creditos.length > 0 && planPagos.length > 0){
 				
 				_.each(rc.getReactively("creditos"), function(credito){
@@ -72,7 +72,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					credito.abonados = 0;
 					credito.condonado = 0;
 					credito.tiempoPago = 0;
+					credito.pagos = 0;
+
 					_.each(planPagos, function(pago){
+						if(pago.descripcion=="Recibo"){
+							credito.pagos +=pago.pago;
+						}
 						if(credito._id == pago.credito_id){
 							credito.planPagos.push(pago);
 							if(pago.estatus == 0){
@@ -85,7 +90,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 								credito.condonado++;
 							}
 							
-							if(pago.tiempoPago == 1){
+							if(pago.multada == 1){
 								credito.tiempoPago++;
 							}
 						}

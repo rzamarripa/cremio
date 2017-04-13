@@ -82,7 +82,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			return clientes;
 		},
 		planPagos : () => {
-			return PlanPagos.find({},{sort : {numeroPago : 1,descripcion:1}});
+			return PlanPagos.find({},{sort : {numeroPago : 1,descripcion:-1}});
 		},
 		tiposCredito : () => {
 			return TiposCredito.find();
@@ -91,7 +91,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			
 			rc.credito_id = $stateParams.credito_id;
 			var fechaActual = moment();
-			var pagos = PlanPagos.find({},{sort : {numeroPago : 1,descripcion:1}}).fetch();
+			var pagos = PlanPagos.find({},{sort : {numeroPago : 1,descripcion:-1}}).fetch();
 
 			var credito =Creditos.findOne({_id : $stateParams.credito_id});
 		
@@ -103,7 +103,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
 				_.each(creditos, function(credito){
-					credito.planPagos = PlanPagos.find({credito_id : credito._id},{sort : {numeroPago : 1}}).fetch();
+					credito.planPagos = PlanPagos.find({credito_id : credito._id},{sort : {numeroPago : -1}}).fetch();
 			  			credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
 				})
 			}
