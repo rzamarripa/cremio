@@ -34,6 +34,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			cliente_id : $stateParams.objeto_id, credito_id : { $in : this.getCollectionReactively("creditos_id")}
 		}];
 	});
+		 this.subscribe('notas',()=>{
+		return [{cliente_id:this.getReactively("cliente_id"),respuesta:true}]
+	});
+
 			
 	this.helpers({
 		creditos : () => {
@@ -88,7 +92,18 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					})
 				})
 			}
-		}
+		},
+		nota: () => {
+
+			var nota = Notas.findOne()
+
+			_.each(nota, function(notilla){
+
+			});
+
+			return nota
+		},
+		
 	});
 	
 	this.actualizar = function(cliente,form){
@@ -159,5 +174,16 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		return "";
 		
 	}
+
+
+	$(document).ready(function() {
+    if (rc.notas != "") {
+    	console.log("entro al modal ")
+    	$("#myModal").modal();
+
+    }
+});
+
+	
 	
 }

@@ -345,3 +345,72 @@
 	</div>
 </div>
 
+
+ <!-- /////////////////////////MODAL NOTA CUENTA ////////////////////////// -->
+			    <div class="container">
+			      <!-- Modal -->
+				  <div class="modal fade" id="myModal"  data-backdrop="static" role="dialog">
+				    <div class="modal-dialog">
+			    <!-- Modal content-->
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				          <h4 class="modal-title">Responder Nota</h4>
+				        </div>
+					        <div class="modal-footer">
+					        	<div class="row">
+								<div class="col-sm-12">
+								
+								<div  ng-repeat="nota in cd.notas" class="pull-left ">
+								<div class="col-sm-12">
+								 <h6 class="pull-left"><strong>{{nota.titulo}}</strong></h6><br/><br/>
+								</div>
+										<div class="col-sm-12 pull-left"> 
+										<p >{{nota.descripcion}} </p>
+										</div>
+							
+										<div class="col-sm-12">
+											<textarea type="text" class="form-control"  ng-model="cd.notaCobranza.descripcion" >
+										</div>
+										
+										<div class="pull-right"><br/>
+											<a  class="btn btn-success">Contestar</a>
+										</div>
+										
+										
+									
+										
+									</div>
+								<!-- 	<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th width="30%"><div class="text-center">Titulo</div></th>
+												
+											</tr>
+										</thead>
+										<tbody>
+									    <tr ng-repeat="nota in cd.notas">
+										    <td>{{nota.titulo}}</td>			   
+									    </tr>
+										</tbody>
+									</table> -->
+								
+							</div>								 
+							</div>
+					
+				      
+				      </div>
+				      
+				    </div>
+				  </div>
+				 </div>
+				  
+			<!--     //////////////////////////////////////////////////////////// -->
+
+
+
+
+
+
+
+  
