@@ -93,6 +93,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 	      }]
 	    }
     })
+    .state('root.tiposNotaCredito', {
+      url: '/tiponotascredito',
+      templateUrl: 'client/notaCredito/tipoform.ng.html',
+      controller: 'TiposNotasCreditoCtrl as tnc',
+      resolve: {
+        "currentUser": ["$meteor", function($meteor){
+          return $meteor.requireUser();
+        }]
+      }
+    })
     .state('root.sexo', {
       url: '/sexo',
       templateUrl: 'client/sexo/sexo.ng.html',
@@ -270,7 +280,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla" || user.roles[0] == "Verificador"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
@@ -286,7 +296,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla" || user.roles[0] == "Verificador"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
@@ -302,7 +312,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla" || user.roles[0] == "Verificador"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
@@ -310,6 +320,22 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 					});
 				}]
 			}
+    })
+    .state('root.generarNotaCredito', {
+      url: '/generarNotaCredito/:objeto_id',
+      templateUrl: 'client/notaCredito/form.html',
+      controller: 'GenerarNotaCredito as gnc',
+      resolve: {
+        "currentUser": ["$meteor", "toastr", function($meteor, toastr){
+          return $meteor.requireValidUser(function(user) {
+            if(user.roles[0] == "Gerente" ||  user.roles[0] == "Verificador"){
+              return true;
+            }else{
+              return 'UNAUTHORIZED'; 
+            }           
+          });
+        }]
+      }
     })
     // /:credito_id
     .state('root.verPlanPagos', {
@@ -319,7 +345,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla"){
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Ventanilla" || user.roles[0] == "Verificador"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 

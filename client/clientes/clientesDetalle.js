@@ -6,7 +6,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	rc = $reactive(this).attach($scope);
 	
-	
 	this.fechaActual = new Date();
 	this.creditos = [];
 	this.creditos_id = [];
@@ -27,7 +26,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.subscribe('creditos', () => {
 		return [{
-			cliente_id : $stateParams.objeto_id, estatus : 1
+			cliente_id : $stateParams.objeto_id, estatus : 2
+		}];
+	});
+	this.subscribe('notasCredito', () => {
+		return [{
+			cliente_id : $stateParams.objeto_id
 		}];
 	});
 	
@@ -40,6 +44,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		return [{cliente_id:this.getReactively("cliente_id"),respuesta:true}]
 	});
 
+	this.subscribe('tiposNotasCredito',()=>{
+		return [{}]
+	});
 			
 	this.helpers({
 		creditos : () => {
@@ -49,6 +56,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			}
 			
 			return creditos;
+		},
+		notasCredito : () =>{
+			return NotasCredito.find({},{sort:{fecha:1}});
 		},
 		objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
@@ -169,7 +179,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.masInformacion = function(){
 		this.masInfo = !this.masInfo;
 	}
-	
+	this.getNombreTipoNotaCredito = function (tipo_id) {
+		var tipo = TiposNotasCredito.findOne(tipo_id);
+		return tipo? tipo.nombre:"";
+	}
 	this.obtenerEstatus = function(cobro){
 		if(cobro.estatus == 1)
 			return "bg-color-green txt-color-white";

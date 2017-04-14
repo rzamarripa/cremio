@@ -20,6 +20,7 @@ angular.module("creditoMio")
   
 
   rc.avales = [];
+  rc.referenciasPersonales = [];
 	rc.ihistorialCrediticio = [];
  
   rc.cobranza_id = "";
@@ -233,21 +234,39 @@ angular.module("creditoMio")
 	  	if (mun != undefined) rc.cliente.profile.empresa.municipio = mun.nombre;
 	  	ciu = Ciudades.findOne(rc.cliente.profile.empresa.ciudad_id);
 	  	if (ciu != undefined) rc.cliente.profile.empresa.ciudad = ciu.nombre;
+	  	
+	  	rc.referenciasPersonales = [];
+	  	
+	  	_.each(rc.cliente.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
+						Meteor.call('getPersona', referenciaPersonal_id, function(error, result){						
+									if (result)
+									{
+											console.log(result);
+											rc.referenciasPersonales.push(result);
+											$scope.$apply();			
+									}
+						});	
+	  	});
+	  	
+	  	
 	  	//-----------------------------------------------------------------------------
 	  	
 	  	
 	  	//Información del Crédito
 	  	rc.credito = objeto.credito;	  
-	  	//console.log(rc.credito);
+	  	
 	  	var tc = TiposCredito.findOne(rc.credito.tipoCredito_id);
 	  	if (tc != undefined) rc.credito.tipoCredito = tc.nombre;
+	  	
 	  	
 	  	rc.avales = [];
 	  	_.each(rc.credito.avales_ids,function(aval_id){
 						Meteor.call('getPersona', aval_id, function(error, result){						
 									if (result)
 									{
+											console.log(result);
 											rc.avales.push(result);
+											$scope.$apply();			
 									}
 						});	
 	  	});
@@ -335,7 +354,7 @@ angular.module("creditoMio")
 			this.notaCobranza = {}
 			$('#myModal').modal('hide');
 			toastr.success('Guardado correctamente.');
-	}
+	};
 	this.mostrarNotaCobranza=function(objeto){
 		console.log(objeto)
 		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
@@ -390,7 +409,6 @@ angular.module("creditoMio")
 		 console.log("rc.cobranza_id",rc.cobranza_id)
 		 $("#modalCuenta").modal();
 
-
 	}
 	this.guardarNotaCuenta=function(nota){
 			console.log(nota);			
@@ -406,6 +424,63 @@ angular.module("creditoMio")
 			$('#modalCuenta').modal('hide');
 			toastr.success('Guardado correctamente.');
 	}
+	
 
+
+	this.download = function(objeto) 
+  {
+	  	
+		console.log("entro:", objeto);
+
+		Meteor.call('getcartaRecordatorio', objeto, function(error, response) {
+		   if(error)
+		   {
+		    console.log('ERROR :', error);
+
+		    return;
+		   }
+		   else
+		   {
+			   
+			 				function b64toBlob(b64Data, contentType, sliceSize) {
+								  contentType = contentType || '';
+								  sliceSize = sliceSize || 512;
+								
+								  var byteCharacters = atob(b64Data);
+								  var byteArrays = [];
+								
+								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+								    var slice = byteCharacters.slice(offset, offset + sliceSize);
+								
+								    var byteNumbers = new Array(slice.length);
+								    for (var i = 0; i < slice.length; i++) {
+								      byteNumbers[i] = slice.charCodeAt(i);
+								    }
+								
+								    var byteArray = new Uint8Array(byteNumbers);
+								
+								    byteArrays.push(byteArray);
+								  }
+								    
+								  var blob = new Blob(byteArrays, {type: contentType});
+								  return blob;
+							}
+							
+							var blob = b64toBlob(response, "application/docx");
+						  var url = window.URL.createObjectURL(blob);
+						  
+						  //console.log(url);
+						  var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "recordatorios.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+
+  
+		   }
+		});
+
+		
+	};
 
 };

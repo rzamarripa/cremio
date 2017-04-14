@@ -18,7 +18,7 @@
 							<div class="col-sm-12">
 								<div id="myCarousel" class="carousel profile-carousel">
 									<div class="air air-bottom-right padding-10">
-										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla'" ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Ventanilla' || currentUser.roles[0] == 'Verificador' " ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
  										<a ui-sref="root.editarCliente({cliente_id : ge.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-show="currentUser.roles[0] == 'Gerente'">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
@@ -189,11 +189,12 @@
 						    	<label>Tiempo de Conocerlo</label>
 						    	<input name="tiempoConocerlo" type="text" class="form-control" placeholder="Tiempo en Conocerlo" ng-model="ge.aval.tiempoConocerlo">
 					    	</div>
-					    	<input type="hidden" name="aval_id" ng-model="ge.aval._id" value="">
+					    	<!--<input type="hidden" name="aval_id" ng-model="ge.aval._id" value="">-->
 					    </div>
 					    <div class="row">		
 					    	<div class="col-sm-3">
 							   	<input type="button" ng-click="ge.insertarAval()" value="Agregar" ng-show="ge.actionAval" class="btn btn-primary"> 	
+							   	<input type="button" ng-click="ge.borrarReferencia()" value="Quitar Referenciado" ng-show="ge.aval.persona_id" class="btn btn-warning">
 							   	<input type="button" ng-click="ge.actualizarAval(ge.aval)" value="Actualizar" ng-show="!ge.actionAval" class="btn btn-primary">
 							   	<input type="button" ng-click="ge.cancelarAval()" value="Cancelar" ng-show="!ge.actionAval" class="btn btn-danger">	   				
 								</div>

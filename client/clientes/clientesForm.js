@@ -23,6 +23,22 @@ angular.module("creditoMio")
   this.referenciasPersonales = [];
   this.parentezco = {};
   
+  this.buscar = {};
+	this.buscar.nombre = "";
+	this.buscando = false;
+  
+  this.subscribe('buscarPersonas', () => {
+		if(this.getReactively("buscar.nombre").length > 3){
+			this.buscando = true;
+			return [{
+		    options : { limit: 10 },
+		    where : { 
+					nombreCompleto : this.getReactively('buscar.nombre')
+				} 		   
+	    }];
+		}
+  });
+  
 	this.subscribe('empresas',()=>{
 		return [{estatus: true}]
 	});
@@ -103,7 +119,13 @@ angular.module("creditoMio")
 		  rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
 		  console.log("objeto",objeto,this.objeto_id)
 		  return objeto;
-	  }
+	  },
+	  personasTipos : () => {
+			var personas = Personas.find({
+		  	"nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
+			}, { sort : {"nombreCompleto" : 1 }}).fetch();
+			return personas;
+		},	
   }); 
   
   this.Nuevo = function()
@@ -237,6 +259,34 @@ angular.module("creditoMio")
       */
 	};
 	
+	this.AgregarCliente = function(a){
+
+		this.objeto = {}; 
+		this.objeto.profile = {};
+		
+		this.objeto.profile.nombre = a.nombre;
+		this.objeto.profile.apellidoPaterno = a.apellidoPaterno;
+		this.objeto.profile.apellidoMaterno = a.apellidoMaterno;
+		this.objeto.profile.direccion = a.direccion;
+		this.objeto.profile.persona_id = a._id;
+
+		this.buscar.nombre = "";
+	};
+	
+	
+	
+	this.AgregarReferencia = function(a){
+		
+		
+		this.parentezco.nombre = a.nombre;
+		this.parentezco.apellidoPaterno = a.apellidoPaterno;
+		this.parentezco.apellidoMaterno = a.apellidoMaterno;
+		this.parentezco.direccion = a.direccion;
+		this.parentezco.parentezco = a.parentezco;
+		this.parentezco.tiempoConocerlo = a.tiempoConocerlo;
+		this.parentezco.persona_id = a._id;
+		this.buscar.nombre = "";
+	};
 	
 	this.insertarReferencia = function()
 	{
@@ -255,10 +305,14 @@ angular.module("creditoMio")
 			}	
 			
 			*/
+			//console.log(this.referenciasPersonales.length);
 			
 			//incremeneto
-			this.con = this.con + 1;
-			this.parentezco.num = this.con;
+			//this.con = this.con + 1;
+			
+			console.log(this.parentezco);
+			
+			this.parentezco.num = this.referenciasPersonales.length + 1;
 			
 			this.referenciasPersonales.push(this.parentezco);	
 			this.parentezco={};
@@ -267,9 +321,7 @@ angular.module("creditoMio")
 	this.actualizarReferencia = function(p)
 	{
 			p.num = this.num;
-			console.log(p);
-			console.log(this.referenciasPersonales);
-			console.log(this.num);
+			
 			_.each(this.referenciasPersonales, function(rp){
 							if (rp.num == p.num)
 							{
@@ -282,7 +334,7 @@ angular.module("creditoMio")
 									rp.telefono = p.telefono;
 									rp.tiempo = p.tiempo;
 							}
-			})
+			});
 			
 			this.parentezco={};
 			this.num=0;
@@ -294,6 +346,18 @@ angular.module("creditoMio")
 			this.parentezco={};
 			this.num = -1;
 			this.action = true;
+	};
+	
+	this.borrarReferencia = function()
+	{
+			this.parentezco.nombre = "";
+			this.parentezco.apellidoPaterno = "";
+			this.parentezco.apellidoMaterno = "";
+			this.parentezco.direccion = "";
+			this.parentezco.parentezco = "";
+			this.parentezco.tiempoConocerlo = "";
+			delete this.parentezco["persona_id"];
+
 	};
 	
 	this.quitarReferencia = function(numero)
