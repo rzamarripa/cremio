@@ -10,6 +10,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.fechaActual = new Date();
 	this.creditos = [];
 	this.creditos_id = [];
+	rc.notaCuenta = []
+	this.notaCobranza = {}
 	this.masInfo = true;
 	window.rc = rc;
 	
@@ -99,15 +101,21 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			}
 		},
 		nota: () => {
+	
+	
 
-			var nota = Notas.findOne()
+			var nota = Notas.find().fetch()
+			
+			//rc.notaCuenta = notas[notas.length - 1];
 
-			_.each(nota, function(notilla){
+			console.log(nota)
 
-			});
-
-			return nota
+			return nota[nota.length - 1];
 		},
+		usuario: () => {
+			return Meteor.users.findOne()
+		},
+		
 		
 	});
 	
@@ -182,12 +190,35 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 
 	$(document).ready(function() {
-    if (rc.notas != "") {
+    if (rc.getReactively("nota") != undefined) {
     	console.log("entro al modal ")
     	$("#myModal").modal();
 
     }
 });
+
+
+	this.contestarNota = function(id){
+
+		this.nota = Notas.findOne({_id:id});
+
+		console.log(this.nota)
+		
+		if (rc.notaCobranza.respuestaNota != undefined) {
+			console.log("entro")
+			this.nota.respuestaNota = rc.notaCobranza.respuestaNota
+			var idTemp = this.nota._id;
+			delete this.nota._id;
+			this.nota.respuesta = false
+			Notas.update({_id:idTemp},{$set:this.nota});
+			toastr.success('Comentario guardado.');
+			$("#myModal").modal('hide');
+		}else{
+			toastr.error('Comentario vacio.');
+		}
+
+
+	}
 
 	
 	
