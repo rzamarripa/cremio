@@ -137,10 +137,15 @@
 			</a>
 		</li>
 		<li data-menu-collapse ng-if="currentUser.roles[0] == 'Gerente'">
-				<a tilte="Credito Mio" ui-sref="root.reportes" >
+				<a tilte="Credito Mio">
 		    	<i class="fa fa-lg fa-fw fa-group"></i>
 					<span class="menu-item-parent">Reportes</span>
 			  </a>
+			  <ul>
+			  	<li><a ui-sref="root.diarioCobranza">Diario de cobranza</a></li>
+			  	<li><a ui-sref="root.diarioCreditos">Diario de Creditos entregados</a></li>
+			  	<li><a ui-sref="root.movimientoCuenta">Movimiento en cuenta </a></li>
+			  </ul>
 		</li>
 		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Verificador'">
 			<a ui-sref="root.panelVerificador" tilte="Credito Mio">

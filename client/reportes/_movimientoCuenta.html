@@ -1,3 +1,4 @@
+
 <div class="row">
 	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 		<h1 class="alge-title txt-color-blueDark">
@@ -8,7 +9,6 @@
 
 </div>
 <br>
-
 
 <div class="well">
 	<div class="row">
@@ -31,12 +31,10 @@
 	</div>	
 	<br />
 </div>
-<div class="row">
 
-			
 
-	<div class="col-sm-12" >
-	<H5>Diario de cobranza</H5>
+<div class="col-sm-12" >
+	<H5>Movimiento Cuenta</H5>
 		<table class="table table-bordered">
 			<thead>
 				<tr>
@@ -47,12 +45,8 @@
 					<th><div class="text-center">Recibo</div></th>
 					<!-- <th><div class="text-center">Cliente</div></th> -->
 					<th><div class="text-center">Nombre</div></th>
-					<th><div class="text-center">Intereses</div></th>
-					<th><div class="text-center">Abono a capital</div></th>
-					<th><div class="text-center">Iva</div></th>
-				<!-- 	<th><div class="text-center">T</div></th> -->
-					<th><div class="text-center">Importe</div></th>
-					<!-- <th><div class="text-center">Condonado</div></th> -->
+					<th><div class="text-center">Garantia</div></th>
+					<th><div class="text-center">Saldo Multas</div></th>
 				
 				</tr>
 			</thead>
@@ -63,13 +57,10 @@
 			    <td>{{objeto.ultimaModificacion  | date:"dd-MM-yyyy"}}</td>
 			    <td>{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</td>
 			    <td>{{objeto.nombreCompleto}}</td>
-			    <td>{{objeto.interes}}</td>
-			    <td>{{objeto.pago}}</td>
-			    <td>{{objeto.iva}}</td>
-			    <td>{{objeto.cargo}}</td> 
+			    <td>{{objeto.estatusGarantia}}</td>
+			    <td>{{objeto.credito.saldoMultas}}</td> 
 			
 		    </tr>
 			</tbody>
 		</table>
 	</div>
-</div>

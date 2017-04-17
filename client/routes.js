@@ -455,6 +455,54 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.diarioCobranza', {
+			url: '/reportes/diarioCobranza',
+			templateUrl: 'client/reportes/_diarioCobranza.html',
+			controller: 'ReportesCtrl as re',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 
+					});
+				}]
+			}
+		})
+		.state('root.diarioCreditos', {
+			url: '/reportes/diarioCreditos',
+			templateUrl: 'client/reportes/_diarioCreditos.html',
+			controller: 'ReportesCtrl as re',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 
+					});
+				}]
+			}
+		})
+		.state('root.movimientoCuenta', {
+			url: '/reportes/movimientoCuenta',
+			templateUrl: 'client/reportes/_movimientoCuenta.html',
+			controller: 'ReportesCtrl as re',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 
+					});
+				}]
+			}
+		})
 		.state('root.verificadoresLista', {
 			url: '/verificadores',
 			templateUrl: 'client/verificadores/verificadoresLista.ng.html',
