@@ -90,8 +90,12 @@ angular.module("creditoMio")
 		this.subscribe('creditos', () => {
 		return [{fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:4}];
 	});
+	// 	this.subscribe('clientes', () => {
+	// 	return [{_id : {$in : this.getReactively("clientes_id")}}];
+	// });
+
 		this.subscribe('clientes', () => {
-		return [{_id : {$in : this.getReactively("clientes_id")}}];
+		return [{}];
 	});
 		this.subscribe('pagos', () => {
 		return [{estatus:1  }];
@@ -106,11 +110,12 @@ angular.module("creditoMio")
 			return Notas.find().fetch();
 		},
 		usuario : () => {
-			return Meteor.users.findOne();
+			return Meteor.users.find();
 		},
 		planPagos : () => {
 	        var planes = PlanPagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
 	        this.clientes_id = _.pluck(planes, "cliente_id");
+	        //console.log(this.clientes_id,"clientes")
 	        var client = ""
 			if(planes){
 				_.each(planes,function(plan){
