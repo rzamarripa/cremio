@@ -133,7 +133,7 @@
 		    </div>
 			</div>
 		    </div>
-
+			
 
 			<h4>Particulares</h4>
 			<div class="well">
@@ -146,10 +146,11 @@
 						    <option value="Femenino">Femenino</option>
 						</select>
 		    	</div>
+		    	
 		    	<div class="col-sm-3">
 						<label for="estadocivil">Estado Civil *</label>
 						<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.estadoCivil_id" required>
-								<option  value="{{estadoCivil._id}}" ng-repeat="estadoCivil in cli.estadosCiviles">
+								<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in cli.estadosCiviles">
 									{{estadoCivil.nombre}}
 								</option>
 							</select>
@@ -313,36 +314,39 @@
 		    	</div>  				    	    
 		    </div>
 			</div>
-
-			<h4>Información del conyuge</h4>
-			<div class="well">	    
-		    <div class="row">
-		    	<div class="col-sm-3" valida> 					    
-			    	<label>nombre</label>
-			    	<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cli.objeto.profile.nombreConyuge">
-		    	</div>
-		    	<div class="col-sm-3" valida>					    
-			    	<label>Dirección</label>
-			    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyuge">
-		    	</div>
-		    	<div class="col-sm-3" valida>					    
-			    	<label>Dirección del trabajo</label>
-			    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyugeTrabajo">
-		    	</div>
-		    	<div class="col-sm-3">					    
-			    	<label>Teléfono Particular</label>
-			    	<input name="telefonoConyuge" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyuge" >
-		    	</div>
-		    	<div class="col-sm-3">					    
-			    	<label>Teléfono del trabajo</label>
-			    	<input name="telefonoConyugeTrabajo" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyugeTrabajo" >
-		    	</div>
-		    	<div class="col-sm-3">					    
-			    	<label>Ocupación</label>
-			    	<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cli.objeto.profile.ocupacionConyuge" >
-		    	</div>		   				    	    
-		    </div>
+			
+			<div ng-if="cli.objeto.profile.estadoCivil_id == 'NHohqw26ZSs6EoJaC'">
+					<h4>Información del cónyuge</h4 >
+					<div class="well">	    
+				    <div class="row">
+				    	<div class="col-sm-3" valida> 					    
+					    	<label>Nombre *</label>
+					    	<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cli.objeto.profile.nombreConyuge" required="">
+				    	</div>
+				    	<div class="col-sm-3" valida>					    
+					    	<label>Dirección *</label>
+					    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyuge" required="">
+				    	</div>
+				    	<div class="col-sm-3" valida>					    
+					    	<label>Dirección del trabajo *</label>
+					    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyugeTrabajo" required="">
+				    	</div>
+				    	<div class="col-sm-3" valida>					    
+					    	<label>Teléfono Particular *</label>
+					    	<input name="telefonoConyuge" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyuge" required="">
+				    	</div>
+				    	<div class="col-sm-3">					    
+					    	<label>Teléfono del trabajo</label>
+					    	<input name="telefonoConyugeTrabajo" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyugeTrabajo" >
+				    	</div>
+				    	<div class="col-sm-3">					    
+					    	<label>Ocupación</label>
+					    	<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cli.objeto.profile.ocupacionConyuge" >
+				    	</div>		   				    	    
+				    </div>
+					</div>
 			</div>
+			
 			
 			<h4>Referencias Personales</h4>
 			<div class="well">	    
@@ -386,10 +390,10 @@
 		    </div>
 		    <div class="row">		
 		    	<div class="col-sm-3">
-				   	<input type="button" ng-click="cli.insertarReferencia()" value="Agregar" ng-show="cli.action" class="btn btn-primary">
+				   	<input type="button" ng-click="cli.insertarReferencia()" value="Agregar" ng-show="cli.actionReferencia" class="btn btn-primary">
 				   	<input type="button" ng-click="cli.borrarReferencia()" value="Quitar Referenciado" ng-show="cli.parentezco.persona_id" class="btn btn-warning"> 	
-				   	<input type="button" ng-click="cli.actualizarReferencia(cli.parentezco)" value="Actualizar" ng-show="!cli.action" class="btn btn-primary">
-				   	<input type="button" ng-click="cli.cancelarReferencia()" value="Cancelar" ng-show="!cli.action" class="btn btn-danger">	   				
+				   	<input type="button" ng-click="cli.actualizarReferencia(cli.parentezco)" value="Actualizar" ng-show="!cli.actionReferencia" class="btn btn-primary">
+				   	<input type="button" ng-click="cli.cancelarReferencia()" value="Cancelar" ng-show="!cli.actionReferencia" class="btn btn-danger">	   				
 					</div>
 		    </div>
 			</div>
@@ -410,7 +414,7 @@
 						<tbody>
 							<tr ng-repeat="p in cli.referenciasPersonales">
 								<td>{{p.num}}</td>
-								<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}} </td>
+								<td>{{p.nombreCompleto}} </td>
 								<td>{{p.parentezco}}</td>
 								<td>{{p.direccion}}</td>
 								<td>{{p.telefono}}</td>
@@ -438,7 +442,7 @@
 		    <div class="row">
 			    <div class="col-sm-3" valida>					    
 			    	<label>Teléfono *</label>
-			    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoEmpresa" required="">
+			    	<input name="telefonoEmpresa" type="text" class="form-control" placeholder="Teléfono Empresa" ng-model="cli.objeto.profile.telefonoEmpresa" required="">
 		    	</div>
 		    	<div class="col-sm-3" valida>					    
 			    	<label>Tiempo Laborando *</label>

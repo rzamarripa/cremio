@@ -65,8 +65,9 @@ Meteor.methods({
 		
 		
   },  
-  imprimirDocumentos : (creditoAprobado)=>{
+  imprimirDocumentos : (idCredito)=>{
 		
+		var creditoAprobado = Creditos.findOne({_id: idCredito});
 		
 		var letras = NumeroALetras(creditoAprobado.capitalSolicitado);		
 		//console.log(letras);
@@ -122,6 +123,14 @@ Meteor.methods({
 		var fecha = new Date();
 		var f = fecha;
 		f = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+		
+		console.log(aval);
+		if (aval == undefined)
+		{
+				aval = {};
+				aval.nombreCompleto = "";
+				aval.direccion = "";	
+		}
 		
 		doc.setData({	nombreCliente					: cliente.profile.nombreCompleto.toUpperCase(), 
 									calleCliente					: cliente.profile.calle.toUpperCase(),

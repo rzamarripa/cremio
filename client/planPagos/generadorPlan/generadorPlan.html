@@ -113,6 +113,7 @@
 						    	<label>Capital Solicitado *</label>
 						    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ge.credito.capitalSolicitado" required="">
 					    	</div>
+<!--
 								<div class="col-sm-2" valida>
 						    	<label>Día preferido de pago *</label>
 						    	<select name="diaPreferidoPago" class="form-control" ng-change="ge.fechaPago(ge.credito.diaPreferidoPago, ge.credito.periodoPago)" ng-model="ge.credito.diaPreferidoPago">
@@ -127,7 +128,8 @@
 					    	<div class="col-sm-2" valida>
 						    	<label>Primer abono</label>
 						    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.primerAbono" name="fechaPrimerAbono"/>
-					    	</div>						
+					    	</div>	
+-->					
 
 					    	<div class="col-sm-2">					    
 						    	<label>Requiere Verificación</label>
@@ -147,8 +149,7 @@
 					    </div>
 						</div>
 						
-						<h4>Avales</h4>
-						
+						<h4>Avales</h4>			
 						<div class="well">	    
 							<div class="row">
 								<div class="col-sm-8"> 
@@ -441,7 +442,7 @@
 			<tbody>
 				<tr ng-class="( pago.estatus == 1 ) ? 'success' : ( pago.fecha < ge.fechaActual && pago.estatus == 0 ) ? 'warning' : ( pago.estatus == 2 ) ? 'danger' : 'info'" ng-repeat="pago in ge.planPagos">
 					<td class="text-center">{{$index + 1}}</td>	
-					<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy HH:mm:ss"}}</td>
+					<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 					<td class="text-center">{{pago.numeroPago}} - {{ge.planPagos.length}}</td>
 					<td class="text-right">{{pago.capital | currency}}</td>
 					<td class="text-right">{{pago.interes | currency}}</td>
@@ -452,7 +453,7 @@
 		</table>
 		</div>
 
-		<button class="btn btn-success" ng-click="ge.generarCredito()">Generar Crédito</button>
+		<button class="btn btn-success" ng-click="ge.generarCredito()">Guardar Petición de Crédito</button>
 		<!-- <a class="btn btn-primary" ng-click="ge.imprecion('print')" target="_blank" ng-show="ge.tablaAmort"
 		>Imprimir Tabla</a>	 -->						
 	</div>

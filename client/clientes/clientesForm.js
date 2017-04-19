@@ -31,6 +31,7 @@ angular.module("creditoMio")
 	this.pic = {};
 	this.imagenes = []
 	
+	this.estadoCivil = "";
 	  
 
   this.subscribe('buscarPersonas', () => {
@@ -191,14 +192,12 @@ angular.module("creditoMio")
 				  if ($stateParams.objeto_id != undefined)
 					{
 							_.each(objeto.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
-										Meteor.call('getPersona', referenciaPersonal_id, function(error, result){						
+										Meteor.call('getPersona', referenciaPersonal_id, $stateParams.objeto_id, function(error, result){						
 													if (result)
 													{
 															//Recorrer las relaciones 
-															
-															console.log("Referencia:",result);
 															rc.referenciasPersonales.push(result);
-															$scope.$apply();			
+															$scope.$apply();		
 													}
 										});	
 					  	});			
@@ -284,8 +283,7 @@ this.tomarFoto = function(objeto){
 	
 	this.actualizarForm = function(objeto,form){
 
-		console.log(objeto);
-		console.log(form);
+
 		if(form.$invalid){
 			toastr.error('Error al actualizar los datos.');
 			return;
@@ -295,14 +293,14 @@ this.tomarFoto = function(objeto){
 		var apMaterno = objeto.profile.apMaterno != undefined ? objeto.profile.apMaterno : "";
 		objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
 		delete objeto.profile.repeatPassword;
-		Meteor.call('updateGerenteVenta', rc.objeto, "Cliente");
+		Meteor.call('updateGerenteVenta', rc.objeto, this.referenciasPersonales, "Cliente");
 		toastr.success('Actualizado correctamente.');
 		//$('.collapse').collapse('hide');
 		this.nuevo = true;
 		form.$setPristine();
 		form.$setUntouched();
-		$state.go('root.clientes');
-		console.log(objeto,"Final");
+		$state.go('root.clientesLista');
+		//console.log(objeto,"Final");
 
 	};
 	
@@ -338,29 +336,7 @@ this.tomarFoto = function(objeto){
 		);
 					
 	};
-	
-	this.actualizar = function(objeto,form)
-	{
-			if(form.$invalid){
-		        toastr.error('Error al actualizar los datos.');
-		        return;
-		  }
-		  
-		  /*
-			var idTemp = objeto._id;
-			delete objeto._id;		
-			objeto.usuarioActualizo = Meteor.userId(); 
-			objeto.fechaUltimaModificación = new Date();
-			Documentos.update({_id:idTemp},{$set : objeto});
-			toastr.success('Actualizado correctamente.');
-			$('.collapse').collapse('hide');
-			this.nuevo = true;
-			form.$setPristine();
-      form.$setUntouched();
-      
-      */
-	};
-	
+		
 	this.AgregarCliente = function(a){
 
 		this.objeto = {}; 
@@ -374,8 +350,6 @@ this.tomarFoto = function(objeto){
 
 		this.buscar.nombre = "";
 	};
-	
-	
 	
 	this.AgregarReferencia = function(a){
 		
@@ -427,7 +401,6 @@ this.tomarFoto = function(objeto){
 			_.each(this.referenciasPersonales, function(rp){
 							if (rp.num == p.num)
 							{
-									console.log("entro");
 									rp.nombre = p.nombre;
 									rp.apellidoPaterno = p.apellidoPaterno;
 									rp.apellidoMaterno = p.apellidoMaterno;			
@@ -578,8 +551,11 @@ this.tomarFoto = function(objeto){
 		$("#myModal").modal();
 	};
 
+	this.seleccionEstadoCivil = function(estadoCivil)
+	{
+			console.log(estadoCivil);			
 
-
+	}
 	
 	this.calcularTotales = function()
 	{

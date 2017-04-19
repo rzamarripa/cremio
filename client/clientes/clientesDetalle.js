@@ -232,6 +232,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 	};
 	
+/*
 	this.imprimirDocumento = function(aprobado){
 			Meteor.call('imprimirDocumentos', aprobado, function(error, response) {
 				   if(error)
@@ -279,6 +280,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				   }
 				});	
 	};	
+*/
 	
 	this.cancelarCredito = function(motivo){
 			

@@ -245,7 +245,7 @@ Meteor.methods({
 		//var produccion = "/home/cremio/archivos/";
 		
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		//var produccion = "/home/cremio/archivos/";
+		var produccion = "/home/cremio/archivos/";
 
 
 		var opts = {}

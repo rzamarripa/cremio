@@ -283,6 +283,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			requiereVerificacion: this.credito.requiereVerificacion,
 			sucursal_id : Meteor.user().profile.sucursal_id,
 			fechaVerificacion: this.credito.fechaVerificacion,
+			turno : this.credito.turno,
 			tipoGarantia : this.credito.tipoGarantia
 		};
 				
@@ -296,8 +297,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 				credito.garantias = angular.copy(this.garantiasGeneral);
 				
 				
-				
-		Meteor.apply('generarCredito', [this.cliente, credito], function(error, result){
+		//Cambie el metodo		
+		Meteor.apply('generarCreditoPeticion', [this.cliente, credito], function(error, result){
 			if(result == "hecho"){
 				toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');
 				rc.planPagos = [];
@@ -638,12 +639,12 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 
 	this.imprecion = function(print){
 
-  var printContents = document.getElementById(print).innerHTML;
-  var popupWin = window.open('', '_blank', 'width=300,height=300');
-  popupWin.document.open();
-  popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</body></html>');
-  popupWin.document.close();
- // setTimeout(function(){popupWin.print();},1000);
+		  var printContents = document.getElementById(print).innerHTML;
+		  var popupWin = window.open('', '_blank', 'width=300,height=300');
+		  popupWin.document.open();
+		  popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</body></html>');
+		  popupWin.document.close();
+		 // setTimeout(function(){popupWin.print();},1000);
 
     };
 	
