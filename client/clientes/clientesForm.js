@@ -5,6 +5,7 @@ angular.module("creditoMio")
   let rc = $reactive(this).attach($scope);
   window.rc = rc;
   this.action = true;
+  this.actionReferencia = true;
   this.nuevo = true;	 
   this.objeto = {}; 
   this.objeto.profile = {};
@@ -127,7 +128,7 @@ angular.module("creditoMio")
 	//Condición del Parametro
 
 	if($stateParams.objeto_id != undefined){
-			this.action = false;
+			rc.action = false;
 			rc.objeto_id = $stateParams.objeto_id
 			this.subscribe('cliente', () => {
 				return [{
@@ -185,25 +186,25 @@ angular.module("creditoMio")
 		  rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
 		  
 		  
-		  //console.log(objeto);
-		  if ($stateParams.objeto_id != undefined)
-			{
-					
-
-					_.each(objeto.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
-								Meteor.call('getPersona', referenciaPersonal_id, function(error, result){						
-											if (result)
-											{
-													console.log(result);
-													rc.referenciasPersonales.push(result);
-													$scope.$apply();			
-											}
-								});	
-			  	});			
-					
+		  if (objeto != undefined)
+		  {
+				  if ($stateParams.objeto_id != undefined)
+					{
+							_.each(objeto.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
+										Meteor.call('getPersona', referenciaPersonal_id, function(error, result){						
+													if (result)
+													{
+															//Recorrer las relaciones 
+															
+															console.log("Referencia:",result);
+															rc.referenciasPersonales.push(result);
+															$scope.$apply();			
+													}
+										});	
+					  	});			
+							
+					}
 			} 
-		  
-		  
 		  
 		  //-------------------------------
 		  
@@ -252,6 +253,7 @@ this.tomarFoto = function(objeto){
 
   this.guardar = function(objeto,form)
 	{
+			console.log(objeto);
 			if(form.$invalid){
 		        toastr.error('Error al guardar los datos.');
 		        return;
@@ -417,7 +419,7 @@ this.tomarFoto = function(objeto){
 			//incremeneto
 			//this.con = this.con + 1;
 			
-			console.log(this.parentezco);
+			//console.log(this.parentezco);
 			
 			this.parentezco.num = this.referenciasPersonales.length + 1;
 			
@@ -445,14 +447,14 @@ this.tomarFoto = function(objeto){
 			
 			this.parentezco={};
 			this.num=0;
-			this.action = true;
+			rc.actionReferencia = true;
 	};
 	
 	this.cancelarReferencia = function()
 	{
 			this.parentezco={};
 			this.num = -1;
-			this.action = true;
+			rc.actionReferencia = true;
 	};
 	
 	this.borrarReferencia = function()
@@ -487,7 +489,7 @@ this.tomarFoto = function(objeto){
 			this.parentezco.tiempo = p.tiempo;
 			
 			this.num = p.num;
-	    this.action = false;
+	    this.actionReferencia = false;
 	};
 	
 	//busca un elemento en el arreglo
