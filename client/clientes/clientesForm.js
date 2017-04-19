@@ -275,22 +275,14 @@ this.tomarFoto = function(objeto){
 			this.nuevo = true;
 			form.$setPristine();
 	    form.$setUntouched();
-			$state.go('root.clientesLista');
+			//$state.go('root.clientesLista');
 			console.log(objeto);
 		
 	};
 	
-	this.actualizar = function(objeto,form){
+	this.actualizarForm = function(objeto,form){
 
 		console.log(objeto);
-		
-	
-/*
-		var objetoTemp = Meteor.users.findOne({_id : objeto._id});
-		this.objeto.password = objetoTemp.password;
-		this.objeto.repeatPassword = objetoTemp.password;
-		console.log(this.objeto.password)
-		//document.getElementById("contra").value = this.objeto.password;
 		console.log(form);
 		if(form.$invalid){
 			toastr.error('Error al actualizar los datos.');
@@ -303,12 +295,13 @@ this.tomarFoto = function(objeto){
 		delete objeto.profile.repeatPassword;
 		Meteor.call('updateGerenteVenta', rc.objeto, "Cliente");
 		toastr.success('Actualizado correctamente.');
-		$('.collapse').collapse('hide');
+		//$('.collapse').collapse('hide');
 		this.nuevo = true;
 		form.$setPristine();
 		form.$setUntouched();
 		$state.go('root.clientes');
-*/
+		console.log(objeto,"Final");
+
 	};
 	
 	this.guardarEmpresa = function(empresa, objeto,form)

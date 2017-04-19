@@ -471,6 +471,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+
 		.state('root.diarioCreditos', {
 			url: '/reportes/diarioCreditos',
 			templateUrl: 'client/reportes/_diarioCreditos.html',

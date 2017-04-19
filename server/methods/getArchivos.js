@@ -70,7 +70,7 @@ Meteor.methods({
 		
 		
   },
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   getcartaUrgente: function (objeto) {
 	console.log(objeto,"URGENTE")
@@ -146,7 +146,8 @@ Meteor.methods({
   },
 
 
-  
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
   getcartaCertificado: function (objeto,objeto_id) {
 	console.log(objeto,"certificacionPatrimonial")
@@ -201,7 +202,6 @@ Meteor.methods({
 									saldoActualizado:       objeto.credito.saldoActualizado,
 									fechaEmision: 	        fecha,
 									avales:		   			objeto.credito.avales});
-									
 								
 		doc.render();
  
@@ -217,17 +217,20 @@ Meteor.methods({
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
 		
-		
   },
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   getReferencias: function (idReferencia) {
 			var referencia = Personas.findOne(idReferencia);
 			console.log("esta es la referencia",referencia)
 			return referencia;
 	},
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   getFicha: function (objeto,referencia_id) {
 	console.log(objeto,"ficha")
-		
 		
 		var fs = require('fs');
     var Docxtemplater = require('docxtemplater');
@@ -244,8 +247,6 @@ Meteor.methods({
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		//var produccion = "/home/cremio/archivos/";
 
-				 
-	
 
 		var opts = {}
 			opts.centered = false;
@@ -260,11 +261,9 @@ Meteor.methods({
 		
 		var imageModule=new ImageModule(opts);
 
-
 		var content = fs
     							.readFileSync(produccion+"FICHASOCIO.docx", "binary");
 
-	  
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
 								.attachModule(imageModule)
@@ -339,6 +338,12 @@ Meteor.methods({
 		 var antiguedadEmpresa = anti.toUpperCase();
 		 var jef = objeto.empresa.jefeInmediato;
 		 var jefe = jef.toUpperCase();
+		 var cas = objeto.profile.casa;
+		 var casa = cas.toUpperCase();
+		 var je = objeto.empresa.jefeInmediato;
+		 var jefeEmpresa = je.toUpperCase();
+		  var an = objeto.empresa.antiguedad;
+		 var antiguedadEmpresa = an.toUpperCase();
 
 
 
@@ -374,9 +379,11 @@ Meteor.methods({
 									 sucursal:              sucursal,
 									 municipio:             municipio,
 									 telefonoContacto:      objeto.profile.telefono,
-									 telefonoAlternativo: objeto.profile.otroTelefono,
+									 telefonoAlternativo:   objeto.profile.otroTelefono,
 									 telefonoMovilContacto: objeto.profile.celular,
 									 correo:                objeto.profile.correo,
+									 casa:                  casa,
+									 renta:                 objeto.profile.rentaMes,
 
 
 
@@ -390,6 +397,7 @@ Meteor.methods({
 
 									 /////////////////// CONTACTO //////////////////////
 									 referencias:           objeto.referencias,
+									 telefonoOficina:      objeto.profile.telefonoOficina,
 
 
 									//////////////////// EMPRESA //////////////////////
@@ -402,6 +410,8 @@ Meteor.methods({
 									antiguedad:            antiguedad,
 									numeroEmpresa:         objeto.empresa.numero,
 									cpEmpresa:             objeto.empresa.codigoPostal,
+									jefe:                  jefeEmpresa,
+									antiguedadEmpresa:      antiguedadEmpresa,      
 
 									
 
@@ -412,6 +422,8 @@ Meteor.methods({
 									telefonoConyuge:       objeto.profile.telefonoConyuge,
 									ocupacionConyuge:      objeto.profile.ocupacionConyuge,
 									nombreConyu:           objeto.profile.nombreConyuge,
+									telefonoConyugeTrabajo:       objeto.profile.telefonoConyugeTrabajo,
+									direccionConyugeTrabajo: objeto.profile.direccionConyugeTrabajo,
 
 
 
@@ -437,6 +449,57 @@ Meteor.methods({
 		
   },
 
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ getRecibosVencidos: function (objeto) {
+	console.log(objeto,"RECIBOS VENCIDOS")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+				 
+		
+		
+		var content = fs
+    	   .readFileSync(produccion+"PAGOS.docx", "binary");
+
+	  
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip)
+		
+		var fecha = new Date();
+		var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    var cliente =objeto.cliente.profile.nombreCompleto
+	    var nombreCliente  = cliente.toUpperCase();
+	    var calle = objeto.cliente.profile.calle
+	    var calleCLiente = calle.toUpperCase();
+
+		
+		doc.setData({				nombreCompleto: 		nombreCliente, 
+								
+
+								});
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+ 
+		fs.writeFileSync(produccion+"PAGOS.docx",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"PAGOS.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+  },
   	
 	
 });

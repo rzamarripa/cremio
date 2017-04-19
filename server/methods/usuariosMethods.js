@@ -97,6 +97,18 @@ Meteor.methods({
 		
 		Accounts.setPassword(user._id, usuario.password, {logout: false});		
 	},
+	updateGerenteVenta: function (usuario, rol) {
+	console.log(usuario,rol)		
+	  var user = Meteor.users.findOne({"username" : usuario.username});
+	  Meteor.users.update({_id: user._id}, {$set:{
+			username: usuario.username,
+			roles: [rol],
+			password: usuario.password,
+			profile: usuario.profile
+		}});
+		
+		Accounts.setPassword(user._id, usuario.password, {logout: false});		
+	},
 	getUsuario: function (usuario) {	
 	  var user = Meteor.users.findOne({"_id" : usuario});
 		return user.profile;

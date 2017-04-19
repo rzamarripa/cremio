@@ -252,12 +252,4 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 
 
 
-
-
-
-
-
-
-
-
 }])

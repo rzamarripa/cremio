@@ -114,10 +114,15 @@
 			    	<label>Teléfono *</label>
 			    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefono" required>
 		    	</div>
+		    	<div class="col-sm-3" valida> 					    
+			    	<label>Teléfono Oficina *</label>
+			    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoOficina" required>
+		    	</div>
 		    	<div class="col-sm-3" valida>					    
 			    	<label>Celular *</label>
 			    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="cli.objeto.profile.celular" required>
 		    	</div>
+
 		    	<div class="col-sm-3">					    
 			    	<label>Otro Teléfono</label>
 			    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="cli.objeto.profile.otroTelefono" >
@@ -189,15 +194,7 @@
 		    	</div>
 		    	
 		    </div>
-		    <div class="row">
-			    <div class="col-sm-3">
-					  <label for="casa">Casa</label>
-					  	<select name="casa" class="form-control" ng-model="cli.objeto.casa">
-					  		<option >Propia</option>
-					  		<option>Otros</option>
-					  	</select>
-					</div>
-		    </div>
+		  
 		    
 		    
 			</div>  
@@ -216,6 +213,7 @@
 			    	<label>CP *</label>
 			    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="cli.objeto.profile.codigoPostal" required="">
 		    	</div>
+
 		    </div>
 		    <div class="row">
 			    <div class="col-sm-3" valida>
@@ -266,7 +264,14 @@
 			    	<label>Señas Particulares</label>
 			    	<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="cli.objeto.profile.senasParticulares">
 		    	</div>
-						
+			    <div class="col-sm-3">
+					  <label for="casa">Casa</label>
+					  	<select name="casa" class="form-control" ng-model="cli.objeto.profile.casa">
+					  		<option >Propia</option>
+					  		<option>Otros</option>
+					  	</select>
+					</div>
+		    						
 		    </div>
 			</div>
 			
@@ -321,9 +326,17 @@
 			    	<label>Dirección</label>
 			    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyuge">
 		    	</div>
+		    	<div class="col-sm-3" valida>					    
+			    	<label>Dirección del trabajo</label>
+			    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyugeTrabajo">
+		    	</div>
 		    	<div class="col-sm-3">					    
-			    	<label>Teléfono</label>
+			    	<label>Teléfono Particular</label>
 			    	<input name="telefonoConyuge" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyuge" >
+		    	</div>
+		    	<div class="col-sm-3">					    
+			    	<label>Teléfono del trabajo</label>
+			    	<input name="telefonoConyugeTrabajo" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyugeTrabajo" >
 		    	</div>
 		    	<div class="col-sm-3">					    
 			    	<label>Ocupación</label>
@@ -428,7 +441,7 @@
 			    <div class="row">
 						<div class="col-sm-12">
 							<input type="submit" ng-click="cli.guardar(cli.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="cli.action" valida-form formulario="form">
-							<input type="submit" ng-click="cli.actualizar(cli.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!cli.action" valida-form formulario="form">
+							<input type="submit" ng-click="cli.actualizarForm(cli.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!cli.action" valida-form formulario="form">
 						</div>
 					</div>
 		  </div>    
