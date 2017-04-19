@@ -43,11 +43,21 @@ Meteor.methods({
 		_.each(usuario.profile.referenciasPersonales, function(referenciaPersonal){
 					//Preguntar si es nuevo la Referencia personal
 					
+					console.log(referenciaPersonal);
+					
 					if (!referenciaPersonal.persona_id)
 					{
+							
+							
 							//Insertar en Personas las referencia y poniedole el usuario_id (regresar el _id de cada persona para ponerlo en una pila
 							referenciaPersonal.relaciones = [];
-							referenciaPersonal.relaciones.push({cliente_id: usuario_id, cliente: usuario.profile.nombreCompleto , tipoPersona: "Referencia", estatus: 0});
+							referenciaPersonal.relaciones.push({cliente_id	: usuario_id, 
+																									cliente			: usuario.profile.nombreCompleto , 
+																									parentezco	: referenciaPersonal.parentezco,
+																									direccion		:	referenciaPersonal.direccion,
+																									tiempo			: referenciaPersonal.tiempo,
+																									tipoPersona	: "Referencia", 
+																									estatus: 0});
 							referenciaPersonal.nombreCompleto = referenciaPersonal.nombre + " " + referenciaPersonal.apellidoPaterno + " " + referenciaPersonal.apellidoMaterno;
 							
 							var result = Personas.insert(referenciaPersonal);
@@ -56,7 +66,13 @@ Meteor.methods({
 					else
 					{
 							var p = Personas.findOne({_id:referenciaPersonal.persona_id});
-							p.relaciones.push({cliente_id: usuario_id, cliente: usuario.profile.nombreCompleto , tipoPersona: "Referencia", estatus: 0});
+							p.relaciones.push({cliente_id: usuario_id, 
+																 cliente: usuario.profile.nombreCompleto,
+																 parentezco	: referenciaPersonal.parentezco,
+																 direccion		:	referenciaPersonal.direccion,
+																 tiempo			: referenciaPersonal.tiempo, 
+																 tipoPersona: "Referencia", 
+																 estatus: 0});
 							Personas.update({_id: referenciaPersonal.persona_id},{$set:p});
 							user.profile.referenciasPersonales_ids.push(referenciaPersonal.persona_id);
 					}
