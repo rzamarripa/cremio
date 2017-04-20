@@ -79,9 +79,17 @@ Meteor.methods({
 			
 			return _.toArray(arreglo);
 	},
-	getPersona: function (idPersona) {
+	getPersona: function (idPersona, idCliente) {
 			var persona = Personas.findOne(idPersona);
-			return persona;
+
+			var p = {};
+			_.each(persona.relaciones, function(relacion){
+					if (relacion.cliente_id == idCliente){
+							p = relacion;
+							p.nombreCompleto = persona.nombreCompleto;
+					}
+			});
+			return p;
 	},
 	getcobranzaNombre: function (nombre) {
 			

@@ -301,7 +301,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		else
 				credito.garantias = angular.copy(this.garantiasGeneral);
 				
-			console.log(credito)
+			//console.log(credito)
 				
 		Meteor.apply('actualizarCredito', [this.cliente, credito], function(error, result){
 			console.log(result,error)

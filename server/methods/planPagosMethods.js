@@ -8,7 +8,7 @@ Meteor.methods({
 		    return clone ;
 		}
 	
-
+		//console.log(fecha);
 		var mfecha = moment(credito.fechaPrimerAbono);
 		var inicio = mfecha.toDate();
 		//console.log(credito);
@@ -25,10 +25,12 @@ Meteor.methods({
 			totalPagos = credito.duracionMeses;
 		
 		
+/*
 		if(credito.requiereVerificacion == true)
 			credito.estatus = 0;
 		else
 			credito.estatus = 1;
+*/
 		
 		
 		var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)
@@ -45,7 +47,7 @@ Meteor.methods({
 		for (var i = 0; i < totalPagos; i++) {
 			var pago = {
 				semana				: mfecha.isoWeek(),
-				fechaLimite			: new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
+				fechaLimite		: new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
 				diaSemana			: mfecha.weekday(),
 				tipoPlan			: credito.periodoPago,
 				numeroPago			: i + 1,

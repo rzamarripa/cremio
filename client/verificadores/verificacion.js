@@ -56,7 +56,7 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			objeto.estatus = true;
 			objeto.credito_id = $stateParams.id;
 			
-			if (this.credito.tipoGarantia == "mobiliaria")
+			if (this.objeto.tipoGarantia == "mobiliaria")
 					objeto.garantias = angular.copy(this.garantias);
 			else
 					objeto.garantias = angular.copy(this.garantiasGeneral);	
@@ -66,7 +66,9 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			
 			var credito = Creditos.findOne($stateParams.id);
 			
-			if (this.credito.tipoGarantia == "mobiliaria")
+			credito.tipoGarantia = this.objeto.tipoGarantia;
+			
+			if (this.objeto.tipoGarantia == "mobiliaria")
 					Creditos.update({_id: objeto.credito_id}, {$set:{estatus: 1, garantias: angular.copy(this.garantias)}})
 			else
 					Creditos.update({_id: objeto.credito_id}, {$set:{estatus: 1, garantias: angular.copy(this.garantiasGeneral)}})
