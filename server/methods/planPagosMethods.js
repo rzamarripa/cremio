@@ -240,6 +240,7 @@ Meteor.methods({
 				
 			}
 		});
+
 		
 
 		var movimiento = {

@@ -123,6 +123,7 @@ Meteor.methods({
 		var user = Meteor.user();
 		var caja = Cajas.findOne(cajaid);
 		var credito = Creditos.findOne(creditoid);
+		var fechaNueva = new Date();
 
 		if(!credito || credito.estatus!=2)
 			throw new Meteor.Error(500, 'Error 500: Conflicto', 'Credito Invalido');
@@ -149,6 +150,7 @@ Meteor.methods({
 
 			var movimientoid = MovimientosCajas.insert(movimiento);
 			credito.entrega.movimientosCaja.push(movimientoid);
+			credito.fechaEntrega = fechaNueva
 
 		});
 
@@ -186,6 +188,24 @@ Meteor.methods({
 		Creditos.update({_id:creditoid},{$set:credito});
 
 		return "200";
+	},
+
+	cambiarEstatusCredito : function(credito){
+		//console.log(credito,"mi crdito")
+		// var empleado = Empleados.findOne({_id:id});
+		if(credito.estatus == 4)
+			credito.estatus = 5;
+		else
+			credito.estatus = 4;
+		
+		// Empleados.update({_id: id},{$set :  {estatus : empleado.estatus}});
+		// var fechaNueva = new Date();
+		// credito.fechaEntrega = fechaNueva;
+
+		Creditos.update({_id:credito._id},{$set :  {estatus : credito.estatus}});
+
+		
+
 	},
 		
 	
