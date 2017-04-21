@@ -4,10 +4,11 @@ angular.module("creditoMio")
  	
   let rc = $reactive(this).attach($scope);
   window.rc = rc;
+  
   this.action = true;
   this.actionReferencia = true;
   this.nuevo = true;	 
-  this.objeto = {}; 
+  rc.objeto = {}; 
   this.objeto.profile = {};
   this.objeto.profile.empresa_id = "";
   this.empresa = {}; 
@@ -182,13 +183,14 @@ angular.module("creditoMio")
 
 		  return imagen
 	  },
-	  objeto : () => {
+	  objetoEitar : () => {
 		  var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
 		  rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
 		  
 		  
 		  if (objeto != undefined)
 		  {
+			  	this.referenciasPersonales = [];
 				  if ($stateParams.objeto_id != undefined)
 					{
 							_.each(objeto.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
@@ -196,18 +198,30 @@ angular.module("creditoMio")
 													if (result)
 													{
 															//Recorrer las relaciones 
-															rc.referenciasPersonales.push(result);
+															//console.log(result);
+															rc.referenciasPersonales.push({buscarPersona_id	: referenciaPersonal_id,
+																														 nombre						: result.nombre,
+																														 apellidoPaterno	: result.apellidoPaterno,
+																														 apellidoMaterno	: result.apellidoMaterno,
+																														 parentezco				: result.parentezco,
+																														 direccion				: result.direccion,
+																														 telefono					: result.telefono,
+																														 tiempo						: result.tiempo,
+																														 num							: result.num,
+																														 cliente					: result.cliente,
+																														 cliente_id				: result.cliente_id,
+																														 tipoPersona			: result.tipoPersona,
+																														 estatus					: result.estatus
+															});
 															$scope.$apply();		
 													}
 										});	
 					  	});			
 							
 					}
-			} 
-		  
-		  //-------------------------------
-		  
-		  return objeto;
+					rc.objeto = objeto;
+					//return objeto;
+			}  
 	  },
 	  personasTipos : () => {
 			var personas = Personas.find({
@@ -269,15 +283,19 @@ this.tomarFoto = function(objeto){
 			var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
 			objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
 			
-			Meteor.call('createUsuario', objeto, "Cliente");
-			toastr.success('Guardado correctamente.');
-			this.usuario = {};
-			$('.collapse').collapse('hide');
-			this.nuevo = true;
-			form.$setPristine();
-	    form.$setUntouched();
-			//$state.go('root.clientesLista');
-			console.log(objeto);
+			Meteor.call('createUsuario', objeto, "Cliente", function(e,r){
+					if (r)
+					{
+							toastr.success('Guardado correctamente.');
+							this.usuario = {};
+							$('.collapse').collapse('hide');
+							this.nuevo = true;
+							form.$setPristine();
+					    form.$setUntouched();
+							$state.go('root.clienteDetalle', { 'objeto_id':r});
+					}
+			});
+			
 		
 	};
 	
@@ -387,6 +405,7 @@ this.tomarFoto = function(objeto){
 			//this.con = this.con + 1;
 			
 			//console.log(this.parentezco);
+			
 			
 			this.parentezco.num = this.referenciasPersonales.length + 1;
 			
