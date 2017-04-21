@@ -250,7 +250,7 @@ angular.module("creditoMio")
 	  	this.ban = !this.ban;
 
 	  	rc.credito_id = objeto.credito._id;
-	  	console.log("Objeto: ",objeto)
+	  	console.log("Objeto: ",objeto.cliente._id);
 
 	  	_.each(rc.getReactively("planPagos"), function(item){
 	  	//	console.log(item,"lewa")
@@ -295,12 +295,26 @@ angular.module("creditoMio")
 	  	rc.referenciasPersonales = [];
 	  	
 	  	_.each(rc.cliente.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
-						Meteor.call('getPersona', referenciaPersonal_id, function(error, result){						
+						Meteor.call('getPersona', referenciaPersonal_id, objeto.cliente._id, function(error, result){						
 									if (result)
 									{
-											console.log(result);
-											rc.referenciasPersonales.push(result);
-											$scope.$apply();			
+											//Recorrer las relaciones 
+											console.log("RP:",result);
+											rc.referenciasPersonales.push({buscarPersona_id	: referenciaPersonal_id,
+																										 nombre						: result.nombre,
+																										 apellidoPaterno	: result.apellidoPaterno,
+																										 apellidoMaterno	: result.apellidoMaterno,
+																										 parentezco				: result.parentezco,
+																										 direccion				: result.direccion,
+																										 telefono					: result.telefono,
+																										 tiempo						: result.tiempo,
+																										 num							: result.num,
+																										 cliente					: result.cliente,
+																										 cliente_id				: result.cliente_id,
+																										 tipoPersona			: result.tipoPersona,
+																										 estatus					: result.estatus
+											});
+											$scope.$apply();
 									}
 						});	
 	  	});
