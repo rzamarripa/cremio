@@ -58,6 +58,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			return creditos;
 		},
+
 		creditosAprobados : () =>{
 			return Creditos.find({estatus:2});
 		},
@@ -73,6 +74,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				this.ocupacion_id = cli.profile.ocupacion_id;
 				return cli;
 			}		
+		},
+		item : () =>{
+			var kaka = rc.objeto
+			return kaka
 		},
 		ocupaciones : () => {
 			if(this.getReactively("creditos")){
@@ -295,6 +300,17 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.cancelarSeleccion = function(aprobado){
 			 rc.cancelacion.folio = aprobado.folio;
 	};
+
+
+	
+
+	this.mostrarNotaCliente = function(){
+		$("#modalCliente").modal();
+		
+	};
+
+
+
 	
 	
 }
