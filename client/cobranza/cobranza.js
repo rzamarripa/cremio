@@ -315,7 +315,7 @@ angular.module("creditoMio")
 									if (result)
 									{
 											//Recorrer las relaciones 
-											console.log("RP:",result);
+											//console.log("RP:",result);
 											rc.referenciasPersonales.push({buscarPersona_id	: referenciaPersonal_id,
 																										 nombre						: result.nombre,
 																										 apellidoPaterno	: result.apellidoPaterno,
