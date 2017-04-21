@@ -242,6 +242,7 @@ Meteor.methods({
 				
 			}
 		});
+
 		
 
 		var movimiento = {

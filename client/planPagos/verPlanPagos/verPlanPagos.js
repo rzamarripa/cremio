@@ -104,6 +104,20 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			var pagos = PlanPagos.find({},{sort : {numeroPago : 1,descripcion:-1}}).fetch();
 
 			var credito =Creditos.findOne({_id : $stateParams.credito_id});
+			//console.log(credito)
+			if (rc.creditos[0] != undefined) {
+			_.each(pagos, function(pago){
+				if (pago.estatus == 1) {
+					Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
+						//console.log("entro")
+						
+					})
+				}else{
+					
+					rc.creditos[0].estatus = 4
+				}
+			});
+		}
 		
 
 			return pagos
@@ -277,9 +291,20 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			rc.pago = {};
 			rc.pago.totalPago = 0;
 			rc.pago.totalito = 0
+			rc.pago.fechaEntrega = pago.fechaEntrega
 			var url = $state.href("anon.imprimirTicket",{pago_id : success},{newTab : true});
 			window.open(url,'_blank');
 		});
+
+		_.each(rc.getReactively("planPagosViejo"), function(pago){
+			if (pago.estatus == 1) {
+				var fecha = new Date();
+
+				rc.creditos[0].fechaEntrega = fecha
+			}
+		});
+
+	  console.log(rc.creditos,"el credito") 
 		
        
 	};

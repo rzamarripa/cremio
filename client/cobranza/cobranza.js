@@ -12,6 +12,8 @@ angular.module("creditoMio")
   rc.buscar = {};
   rc.buscar.nombre = "";
   rc.credito_id = "";
+  rc.cliente_id = "";
+  rc.historial = [];
   
   var FI, FF;
   rc.cliente = {};
@@ -22,7 +24,8 @@ angular.module("creditoMio")
 
   rc.avales = [];
   rc.referenciasPersonales = [];
-	rc.ihistorialCrediticio = [];
+  rc.ihistorialCrediticio = [];
+  rc.clientes_id = [];
  
   rc.cobranza_id = "";
   rc.notaCobranza = {};
@@ -69,7 +72,7 @@ angular.module("creditoMio")
 	});	  
 
   	this.subscribe('notas',()=>{
-		return [{cliente_id:this.getReactively("cliente_id")}]
+		return [{cliente_id:this.getReactively("cliente_id"),}]
 	});
 
 	 this.subscribe("planPagos", ()=>{
@@ -79,8 +82,11 @@ angular.module("creditoMio")
   	this.subscribe('personas', () => {
 		return [{ }];
 	});
+	// 	this.subscribe('clientes', () => {
+	// 	return [{_id : {$in : this.getReactively("clientes_id")}}];
+	// });
 		this.subscribe('creditos', () => {
-		return [{ }];
+		return [{cliente_id : rc.getReactively("cliente_id")}];
 	});
 
 	
@@ -118,11 +124,13 @@ angular.module("creditoMio")
 
 
 		historialCredito : () => {
-				_.each(rc.getReactively("historialCrediticio"),function(historial){
+			var creditos = [];
+
+			rc.clientes_id = _.pluck(rc.cobranza,"cliente._id")
+			
 				
-			});
 		
-				return rc.historialCrediticio[rc.historialCrediticio.length - 1];	
+		    return creditos
 			
 		},
 
@@ -247,10 +255,18 @@ angular.module("creditoMio")
   this.selCredito=function(objeto)
   {
 
+  		rc.cliente_id = objeto.cliente._id
+  		console.log(rc.cliente_id)
+  		Creditos.find({cliente_id: rc.getReactively("cliente_id"),estatus : 5}).fetch()
+
+  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"),estatus : 5}).fetch()
+
 	  	this.ban = !this.ban;
 
 	  	rc.credito_id = objeto.credito._id;
-	  	console.log("Objeto: ",objeto.cliente._id);
+	  	console.log("Objeto: ",objeto)
+	  	rc.historial = objeto
+
 
 	  	_.each(rc.getReactively("planPagos"), function(item){
 	  	//	console.log(item,"lewa")
@@ -353,6 +369,21 @@ angular.module("creditoMio")
 	  	
       this.selected_credito=objeto.credito.folio;
   };
+
+   this.selCredito2=function(objeto)
+  {
+
+        //objeto.fechaEntrega = new Date();
+  		rc.cliente_id = objeto.cliente._id
+  		console.log(rc.cliente_id)
+  		Creditos.find({cliente_id: rc.getReactively("cliente_id"),estatus : 5}).fetch()
+  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"),estatus : 5}).fetch()
+
+	  	rc.credito_id = objeto.credito._id;
+	  	console.log("Objeto: ",objeto)
+	  	rc.historial = objeto
+
+	  }
   
   this.isSelected=function(objeto){
 	  
