@@ -105,7 +105,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 			var credito =Creditos.findOne({_id : $stateParams.credito_id});
 			//console.log(credito)
-			if (rc.creditos[0] != undefined) {
+			if (rc.creditos != undefined) {
 			_.each(pagos, function(pago){
 				if (pago.estatus == 1) {
 					Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
@@ -114,7 +114,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 					})
 				}else{
 					
-					rc.creditos[0].estatus = 4
+					rc.creditos.estatus = 4
 				}
 			});
 		}

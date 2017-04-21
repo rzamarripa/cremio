@@ -23,6 +23,9 @@
 										<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
 											<i class="fa fa-plus"></i> Nueva Nota de Credito
 										</a>&nbsp;
+										<a ng-click="cd.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
+											<i class="fa fa-plus"></i> Nueva Nota de Cliente
+										</a>&nbsp;
 										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
@@ -127,98 +130,370 @@
 			href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{cd.masInfo == true ? 'plus':'minus'}} fa-lg"></i></a>
 											</li>
 										</ul>
-									<!-- 	<div class="collapse padding-10" id="masInformacion">
-											<div class="tab-pane">
-												<div class="col-sm-6">
-													<ul class="list-unstyled">															
-														<li>
-															<address>
-																<strong>Información de la Madre</strong><br>
-																<strong>Nombre:</strong> {{cd.objeto.profile.madre}}<br>
-																<strong>Teléfono:</strong> {{cd.objeto.profile.telefonoMadre}}
-																<strong>Correo:</strong> {{cd.objeto.profile.correoMadre}}
-															</address>
-														</li>
-														<li>
-															<address>
-																<strong>Dirección</strong><br>
-																{{cd.objeto.profile.calleNum}}, {{cd.objeto.profile.colonia}}<br>
-																{{cd.objeto.profile.ciudad}}, {{cd.objeto.profile.estado}} {{cd.objeto.profile.codigoPostal}}<br>
-															</address>
-														</li>
-														<li>
-															<address>
-																<strong>Lugar de Nacimiento</strong><br>
-																{{cd.objeto.profile.lugarNac}}
-															</address>
-														</li>
-														<li>
-															<address>
-																<strong>Escolaridad</strong><br>
-																{{cd.objeto.profile.escolaridad}}
-															</address>
-														</li>		
-														<li>
-															<address>
-																<strong>Nivel Social</strong><br>
-																{{cd.objeto.profile.nivelSocial}}
-															</address>
-														</li>
-														<li>
-															<address>
-																<strong>Correo para Calificaciones</strong><br>
-																{{cd.objeto.profile.correoCalificaciones}}
-															</address>
-														</li>											
-													</ul>	
-												</div>
-												<div class="col-sm-6">
-													<ul class="list-unstyled">
-														<li>
-															<address>
-																<strong>Información del Padre</strong><br>
-																<strong>Nombre:</strong> {{cd.objeto.profile.padreTutor}}<br>
-																<strong>Teléfono:</strong> {{cd.objeto.profile.telefonoPadre}}
-																<strong>Correo:</strong> {{cd.objeto.profile.correoPadre}}
-															</address>
-														</li>
-														<li>
-															<address>
-																<strong>Teléfono Secundario</strong><br>
-																{{cd.objeto.profile.tel2}}																
-															</address>
-														</li>													
-														<li>
-															<address>
-																<strong>Ocupación del Alumno</strong><br>
-																{{cd.getOcupacion(cd.objeto.profile.ocupacion_id)}}
-															</address>
-														</li>													
-														<li>
-															<address>
-																<strong>Cómo te enteraste de nosotros</strong><br>
-																{{cd.objeto.profile.medio}}
-															</address>
-														</li>
-														<li>
-															<address>
-																<strong>Talla</strong><br>
-																{{cd.objeto.profile.talla}}																
-															</address>
-														</li>														
-													</ul>	
-												</div>
-											</div>											
-											<div class="tab-pane" id="pagos">												
-												<div class="row">
-													<section class="col col-sm-1 text-center padding-20" ng-repeat="semana in cd.misSemanas" ng-click="cd.seleccionarSemana(semana)" ng-class="($index == cd.misSemana.length) ? cd.obtenerEstatus(semana.pagada) : ''">
-														<label class="input text-center">
-															<label type="text" class="text-center">{{semana.numero}} / {{semana.anio}} | {{semana.pagada}}</label>
-														</label>
-													</section>													
-												</div>																		
-											</div>											
-										</div> -->
+										<!-- //////////////////////////////////////////////// -->
+
+										<div class="row">
+										<div class="collapse padding-10" id="masInformacion">
+				<div class="tab-pane">
+	<div class="col-sm-12">
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingOne">
+			      <h4 class="panel-title">
+			        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#href1" aria-expanded="false" aria-controls="href1">
+			          Información del Cliente
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="href1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+			      <div class="panel-body">    
+						    <div class="row">
+						    	<div class="col-sm-4" > 					    
+							    	<label>Nombre (s)</label>
+							    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cd.objeto.profile.nombre" disabled="">
+						    	</div>
+						    	<div class="col-sm-4" >					    
+							    	<label>Apellido Paterno</label>
+							    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cd.objeto.profile.apellidoPaterno" disabled="">
+						    	</div>
+						    	<div class="col-sm-4">					    
+							    	<label>Apellido Materno</label>
+							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cd.objeto.profile.apellidoMaterno" disabled="">
+						    	</div>	    				    	    
+						    </div>
+			      </div>
+			    </div>
+			  </div>
+
+			  <!-- //////////////////////////////////////////////////////////////////////// -->
+
+			  
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingTwo">
+			      <h4 class="panel-title">
+			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href2" aria-expanded="false" aria-controls="href2">
+			          Información de contacto
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="href2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+			      <div class="panel-body">
+			        	<div class="row">
+						    	<div class="col-sm-3" > 					    
+							    	<label>Teléfono </label>
+							    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefono"  disabled="">
+						    	</div>
+						    	<div class="col-sm-3" >					    
+							    	<label>Celular </label>
+							    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="cd.objeto.profile.celular" disabled="">
+						    	</div>
+						    	<div class="col-sm-3">					    
+							    	<label>Otro Teléfono</label>
+							    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="cd.objeto.profile.otroTelefono" disabled="" >
+						    	</div>	  
+						    	<div class="col-sm-3">					    
+							    	<label>Correo</label>
+							    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="cd.objeto.profile.correo" disabled="">
+						    	</div>  				    	    
+						    </div>
+			      </div>
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingThree">
+			      <h4 class="panel-title">
+			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href3" aria-expanded="false" aria-controls="href3">
+			          Particulares
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="href3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+			      <div class="panel-body">
+			        	<div class="row">
+									<div class="col-sm-3" >
+								    <label for="sexo">Sexo </label>
+								    <select name="sexo" ng-model="cd.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" disabled>
+										    <option value=""></option>
+										    <option value="Masculino">Masculino</option>
+										    <option value="Femenino">Femenino</option>
+										</select>
+						    	</div>
+						    	<div class="col-sm-3">
+										<label for="estadocivil">Estado Civil </label>
+										<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="cd.objeto.profile.estadoCivil" disabled="">
+									</div>
+										
+						    	<div class="col-sm-3">					    
+							    	<label>Fecha Nacimiento </label>
+							    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="cd.objeto.profile.fechaNacimiento" disabled="">
+						    	</div>	
+									
+									<div class="col-sm-3">
+										<label for="nacionalidad">Nacionalidad</label>
+										<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="cd.objeto.profile.nacionalidad" disabled="">
+									</div>			
+						    </div>
+						    <div class="row">
+							    <div class="col-sm-3">
+										<label for="ocupacion">Ocupación </label>
+										<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="cd.objeto.profile.ocupacion" disabled="">
+									</div>		
+						    	<div class="col-sm-3">					    
+							    	<label>CURP</label>
+							    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="cd.objeto.profile.curp" disabled>
+						    	</div>
+						      <div class="col-sm-3">					    
+							    	<label>Lugar de Nacimiento</label>
+							    	<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="cd.objeto.profile.lugarNacimiento" disabled>
+						    	</div>	
+						    </div>		
+			      </div>
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingFour">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href4" aria-expanded="false" aria-controls="href4">
+				          Dirección
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+									    <div class="col-sm-6" >					    
+									    	<label>Calle </label>
+									    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="cd.objeto.profile.calle" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Numero </label>
+									    	<input name="numero" type="number" class="form-control" placeholder="Número" ng-model="cd.objeto.profile.numero" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>CP </label>
+									    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="cd.objeto.profile.codigoPostal" disabled="">
+								    	</div>
+								    </div>
+								    <div class="row">
+									    <div class="col-sm-3" >
+													<label >Pais </label>
+													<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="cd.objeto.profile.pais" disabled>
+											</div>
+										  <div class="col-sm-3" >
+													<label for="seccion_id">Estado </label>
+													<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="cd.objeto.profile.estado" disabled>
+											</div>	
+											<div class="col-sm-3" >
+													<label >Municipio </label>
+													<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="cd.objeto.profile.municipio" disabled>
+											</div>
+											<div class="col-sm-3" >
+													<label for="seccion_id">Ciudad </label>
+													<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="cd.objeto.profile.ciudad" disabled>
+											</div>	
+								    </div>
+								    <div class="row">
+									    <div class="col-sm-3" >
+													<label for="seccion_id">Colonia </label>
+													<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="cd.objeto.profile.colonia" disabled>
+											</div>
+											<div class="col-sm-3">					    
+									    	<label>Tiempo Residencia</label>
+									    	<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="cd.objeto.profile.tiempoResdencia" disabled>
+								    	</div>
+								    	<div class="col-sm-2">					    
+									    	<label>Renta</label>
+									    	<input name="rentaMes" type="checkbox" class="form-control" ng-model="cd.objeto.profile.renta" disabled>
+								    	</div>
+								    	<div class="col-sm-3" ng-if="cd.objeto.profile.renta">					    
+									    	<label>Renta Mes </label>
+									    	<input name="tiempo" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="cd.objeto.profile.rentaMes" disabled>
+								    	</div>
+											<div class="col-sm-12">					    
+									    	<label>Señas Particulares</label>
+									    	<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="cd.objeto.profile.senasParticulares" disabled>
+								    	</div>
+								    </div>	
+				      </div>
+				    </div>
+				</div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingFive">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href5" aria-expanded="false" aria-controls="href5">
+				          Ingresos Mensuales
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+							    	<div class="col-sm-3" > 					    
+								    	<label>Ingresos Personales</label>
+								    	<input name="ingresosPersonales" type="text" class="form-control" placeholder="Ingresos Personales" ng-model="cd.objeto.profile.ingresosPersonales" disabled>
+							    	</div>
+							    	<div class="col-sm-3" >					    
+								    	<label>Ingresos Conyuge</label>
+								    	<input name="ingresosConyuge" type="text" class="form-control" placeholder="Ingresos Conyuge" ng-model="cd.objeto.profile.ingresosConyuge" disabled>
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Otros Ingresos</label>
+								    	<input name="otrosIngresos" type="text" class="form-control" placeholder="Otros Ingresos" ng-model="cd.objeto.profile.otrosIngresos" disabled>
+							    	</div>	  
+							    	<div class="col-sm-3">					    
+								    	<label>Total Ingresos</label>
+								    	<input name="totalIngresos" type="text" class="form-control" placeholder="Total Ingresos" ng-model="cd.objeto.profile.totalIngresos" disabled>
+							    	</div>  				    	    
+							    </div>
+							    <div class="row">
+							    	<div class="col-sm-3" > 					    
+								    	<label>Gastos Fijos</label>
+								    	<input name="gastosFijos" type="text" class="form-control" placeholder="Gastos Fijos" ng-model="cd.objeto.profile.gastosFijos" disabled>
+							    	</div>
+							    	<div class="col-sm-3" >					    
+								    	<label>Gastos Eventuales</label>
+								    	<input name="gastosEventuales" type="text" class="form-control" placeholder="Gastos Eventuales" ng-model="cd.objeto.profile.gastosEventuales" disabled>
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Total Gastos</label>
+								    	<input name="totalGastos" type="text" class="form-control" placeholder="Total Gastos" ng-model="cd.objeto.profile.totalGastos" disabled>
+							    	</div>	  
+							    	<div class="col-sm-3">					    
+								    	<label>Resultado Neto</label>
+								    	<input name="resultadoNeto" type="text" class="form-control" placeholder="Resultado Neto" ng-model="cd.objeto.profile.resultadoNeto" disabled>
+							    	</div>  				    	    
+							    </div>
+				      </div>
+				    </div>
+				</div>
+
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////// -->
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingSix">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href6" aria-expanded="false" aria-controls="href6">
+				          Referencias Personales
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th width="5%">Número</th>
+													<th width="20%">Nombre</th>
+													<th width="5%">Parentezco</th>
+													<th width="30%">Dirección</th>
+													<th width="10%">Telefono</th>
+													<th width="10%">Tiempo</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="p in cd.referenciasPersonales">
+													<td>{{p.num}}</td>
+													<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}} </td>
+													<td>{{p.parentezco}}</td>
+													<td>{{p.direccion}}</td>
+													<td>{{p.telefono}}</td>
+													<td>{{p.tiempo}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+				      </div>
+				    </div>
+				</div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingSeven">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href7" aria-expanded="false" aria-controls="href7">
+				          Empresa
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+								    	<div class="col-sm-6" > 					    
+									    	<label>Nombre</label>
+									    	<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="cd.objeto.profile.empresa.nombre" disabled>
+								    	</div>
+								    	<div class="col-sm-6" >					    
+									    	<label>Razón Social</label>
+									    	<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="cd.objeto.profile.empresa.razonSocial" disabled>
+								    	</div>
+								    	<div class="col-sm-4" >					    
+									    	<label>Calle</label>
+									    	<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="cd.objeto.profile.empresa.calle" disabled="" >
+								    	</div>	  
+								    	<div class="col-sm-2" >					    
+									    	<label>Número </label>
+									    	<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="cd.objeto.profile.empresa.numero" disabled="" >
+								    	</div>  				    	    
+								    	<div class="col-sm-6" >					    
+									    	<label>Colonia </label>
+									    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cd.objeto.profile.empresa.colonia" disabled="">
+								    	</div>
+								    </div>
+								    <div class="row">
+									    <div class="col-sm-3" >					    
+									    	<label>Teléfono </label>
+									    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.empresa.telefono" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Código Postal </label>
+									    	<input name="codigopostal" type="text" class="form-control" placeholder="Código Postal" ng-model="cd.objeto.profile.empresa.codigoPostal" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Tiempo Laborando </label>
+									    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="cd.objeto.profile.empresa.tiempoLaborando" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Puesto </label>
+									    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cd.objeto.profile.empresa.puesto" disabled="">
+								    	</div>
+								    </div>  
+								    <div class="row">
+								    	<div class="col-sm-3" >					    
+									    	<label>Departamento </label>
+									    	<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="cd.objeto.profile.empresa.departamento" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Jefe Inmediato </label>
+									    	<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cd.objeto.profile.empresa.jefeInmediato" disabled="">
+								    	</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-3" >
+													<label >Pais </label>
+													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cd.objeto.profile.empresa.pais" disabled="">
+											</div>
+										  <div class="col-sm-3" >
+													<label for="seccion_id">Estado </label>
+													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cd.objeto.profile.empresa.estado" disabled="">
+											</div>	
+											<div class="col-sm-3" >
+													<label >Municipio </label>
+													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cd.objeto.profile.empresa.municipio" disabled="">
+											</div>
+											<div class="col-sm-3" >
+													<label for="seccion_id">Ciudad </label>
+													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="cd.objeto.profile.empresa.ciudad" disabled="">
+											</div>	
+							    </div>
+				      </div>
+				    </div>
+				</div>
+			</div>
+	</div>
+</div>
+</div>
+				</div>
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////// -->
 									</div>
 								</div>
 							</div>													
@@ -552,11 +827,7 @@
 										<div class="col-sm-12 "><br/>
 											<a	class="btn btn-success" ng-click="cd.contestarNota(cd.nota._id)">Contestar</a>
 										</div>
-										
-										
-									
-										
-								
+																					
 	
 							</div>								 
 							</div>
@@ -606,6 +877,54 @@
 
 
 <!--		 //////////////////////////////////////////////////////////// -->
+
+<!-- /////////////////////////MODAL NOTA CLIENTE ////////////////////////// -->
+					<div class="container">
+						<!-- Modal -->
+					<div class="modal fade" id="modalCliente"	data-backdrop="static" role="dialog">
+						<div class="modal-dialog">
+					<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+							
+									<h4 class="modal-title">Responder Nota</h4>
+								</div>
+								<div class="modal-body">
+									<h6>Información de la nota</h6><br/>
+										<p>Por: <strong>{{cd.usuario.profile.nombreCompleto}}</strong></p>
+										<p>Fecha: <strong>{{cd.nota.fecha | date:'dd-MM-yyyy'}},{{cd.nota.hora}}</strong></p>
+								</div>
+									<div class="modal-footer">
+										<div class="row">
+								<div class="col-sm-12">
+								
+								
+								<div class="col-sm-12">
+								 <h6 class="pull-left" ><strong>{{cd.nota.titulo}}</strong></h6><br/><br/>
+								</div>
+										<div class="col-sm-12"> 
+										<p class="pull-left">{{cd.nota.descripcion}} </p>
+										</div>
+							
+										<div class="col-sm-12">
+										<label class="pull-left">Respuesta:</label>
+											<textarea type="text" class="form-control"	ng-model="cd.notaCobranza.respuestaNota" >
+										</div>
+										
+										<div class="col-sm-12 "><br/>
+											<a	class="btn btn-success" ng-click="cd.contestarNota(cd.nota._id)">Contestar</a>
+										</div>
+																					
+	
+							</div>								 
+							</div>
+					
+							
+							</div>
+							
+						</div>
+					</div>
+				 </div>
 
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   
 
