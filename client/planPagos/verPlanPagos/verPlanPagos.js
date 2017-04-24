@@ -98,99 +98,55 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		planPagosViejo : () => {
 			//var diferentes = c_ids.diff(p_ids)
 		//	var fechaPago = moment(pago.fecha).add(-1, "days");
-
 			rc.credito_id = $stateParams.credito_id;
 			var fechaActual = moment();
-			 pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
-			 _.each(pagos, function(p){
-			 	
+			var pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
+			//console.log(pagos)
+			var credito =Creditos.findOne({_id : $stateParams.credito_id});
+			//console.log(credito)
+			_.each(pagos, function(pago){
+				
 
-			 	if (p.estatus == 0 && p.multa == 0 ) {
-			 		//console.log("epaaaa")
-			 	_.each(rc.creditos, function(c){
-			 	//console.log(p)
-			 	var fechaLimite = moment(p.fechaLimite);
-			 	var dias = fechaActual.diff(fechaLimite, "days");
+				//Generar Multa
+				var multa = PlanPagos.findOne({planPago_id:pago._id,descripcion:"Multa"});
+				console.log(multa);
+				if (pago.estatus == 0 && pago.multa == 0 && fechaActual > pago.fechaLimite && !multa) {
+					var multaCosto = 0;
+					var dias = fechaActual.diff(pago.fechaLimite, "days");
+					var multas = (dias/100) * credito.capitalSolicitado 
+					pagos.push({planPago_id:pago._id,credito_id:pago.credito_id,fechaLimite:pago.fechaLimite,
+								numeroPago:pago.numeroPago, importeRegular:multas,descripcion:"Multa",
+								estatus:0,multa:multaCosto,movimiento:"Multa"})
+				}
+				else if (pago.estatus == 1 && pago.tiempoPago == 1 && pago.multa == 0  && pago.descripcion!="Multa" && !multa) {
+					var multaCosto = 0;
+			    	var fechaLimite = moment(pago.fechaLimite);
+			    	var fechaPago = moment(pago.fechaPago);
+			  		var diasMulta = fechaPago.diff(fechaLimite, "days");
+			  		var multasVencidas = (diasMulta/100) * credito.capitalSolicitado
+			  		pagos.push({credito_id:pago.credito_id,fechaLimite:pago.fechaLimite,numeroPago:pago.numeroPago, 
+			  					importeRegular:multasVencidas,descripcion:"Multa",multa: 0,movimiento:"Multa"})
+				}
+				else if(pago.estatus == 1 && pago.multa == 0 && pago.descripcion == "Multa" && !multa){
+					planPago = PlanPagos.findOne({numeroPago:pago.numeroPago,credito_id: pago.credito_id})
+					var fechaLimite = moment(pago.fechaLimite);
+					var hoy = new Date();
+					ultimoPago = PlanPagos.findOne({numeroPago : pago.numeroPago},{ sort : { fechaPago : -1 }});
+					var fechaPago = moment(pago.fechaPago);
+					if (fechaActual > pago.fechaLimite && planPago.multa == 1 && planPago.estatus == 0 && pago.recargo != 1 ) {
+						var dias = fechaActual.diff(ultimoPago.fechaPago, "days");
+					  	var multaCosto = 0;
+					  	var diasMulta = fechaActual.diff(ultimoPago.fechaPago, "days");
+					  	var multasVencidas = (diasMulta/100) * credito.capitalSolicitado 
+					  	pagos.push({credito_id:pago.credito_id,fechaLimite:hoy,numeroPago:pago.numeroPago, 
+					  				importeRegular:multasVencidas,descripcion:"Multa",multa: 0,
+					  				recargo:1,movimiento:"Multa"});
 			 
-			 	
-			 	if (fechaActual > p.fechaLimite) {
 
+					}
+				}
+			});
 
-			 		//console.log("dif ", fechaLimite, fechaActual)
-			 		var multaCosto = 0;
-			 		//console.log("los dias",dias)
-			 		var multas = (dias/100) * c.capitalSolicitado 
-			 		//console.log(c.capitalSolicitado)
-			 		//console.log("las multas",multas)
-			 		pagos.push({planPago_id:p._id,credito_id:p.credito_id,fechaLimite:p.fechaLimite,numeroPago:p.numeroPago, importeRegular:multas,
-			 		descripcion:"Multa",estatus:0,multa:multaCosto,movimiento:"Multa"})
-			 	}	
-			 		
-				});
-			   }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			  if (p.estatus == 1  && p.tiempoPago == 1 && p.multa == 0  ) {
-			  	_.each(rc.creditos, function(c){
-			  	var multaCosto = 0;
-			    var fechaLimite = moment(p.fechaLimite);
-			  	//console.log("entro al segundo if",p)
-			  	var fechaPago = moment(p.fechaPago);
-			  	var diasMulta = fechaPago.diff(fechaLimite, "days");
-			  	var multasVencidas = (diasMulta/100) * c.capitalSolicitado 
-			  	//console.log(diasMulta)
-			  	if (p.descripcion != "Multa") {
-			  	pagos.push({credito_id:p.credito_id,fechaLimite:p.fechaLimite,numeroPago:p.numeroPago, importeRegular:multasVencidas,
-			 		descripcion:"Multa",multa: 0,movimiento:"Multa"})
-			  }
-
-
-			  });
-			}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			  if (p.estatus == 1 && p.multa == 0 && p.descripcion == "Multa" ) {
-			  	//console.log("entro al if  3")
-			 		
-			  	planPago = PlanPagos.findOne({numeroPago:p.numeroPago,credito_id: p.credito_id})
-				//console.log("planPagos",planPago)
-
-				var fechaLimite = moment(p.fechaLimite);
-				var hoy = new Date();
-				ultimoPago = PlanPagos.findOne({numeroPago : p.numeroPago},{ sort : { fechaPago : -1 }});
-				//console.log(ultimoPago)
-			 	var fechaPago = moment(p.fechaPago);
-			 	
-			 	
-			 	if (fechaActual > p.fechaLimite && planPago.multa == 1 && planPago.estatus == 0 && p.recargo != 1 ) {
-			 		_.each(rc.creditos, function(c){
-
-			 		//console.log("entro al if para la multa ")
-			 
-			 	
-			 	var dias = fechaActual.diff(ultimoPago.fechaPago, "days");
-			 	//console.log("oie papu estos son los dias",dias)
-
-			  	var multaCosto = 0;
-			  	
-			  	var diasMulta = fechaActual.diff(ultimoPago.fechaPago, "days");
-			  	var multasVencidas = (diasMulta/100) * c.capitalSolicitado 
-			  	//console.log("tercer if",diasMulta)
-			  	pagos.push({credito_id:p.credito_id,fechaLimite:hoy,numeroPago:p.numeroPago, importeRegular:multasVencidas,
-			 		descripcion:"Multa",multa: 0,recargo:1,movimiento:"Multa"})
-			 
-			 	});
-			   }
-
-			  
-			   // if (true) {}
-			}
-
-
-			//console.log(p,"eeee")
-		});
-
-		
-
-//			pagos.sort(function(a,b) {return (a.numeroPago > b.numeroPago) ? 1 : ((b.numeroPago > a.numeroPago) ? -1 : 0);} );
 			pagos.sort(fieldSorter(['numeroPago', 'descripcion']));
 			//console.log("helpers",pagos)
 			
@@ -213,7 +169,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			    };
 			}
 
-			 return pagos
+			return pagos
 		},
 		creditos : () => {
 			var creditos = Creditos.find($stateParams.credito_id).fetch();
@@ -483,26 +439,25 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 					if (pago.pagar >= p.importeRegular) {
 	 					p.importeRegular = 0
 	 			
- 				}
+ 					}
 
-				if (p.importeRegular <= 0) {
-					console.log("entro al if de la multa padre",)
-					p.importeRegular = 0;
-					p.fechaPago = pago.fechaPago;
-					p.estatus = 1
-					// p.pago_id = pago_id
-					PlanPagos.update({_id:planPago._id},
-				 	{ $set : { multa : 1}});
+					if (p.importeRegular <= 0) {
+						console.log("entro al if de la multa padre",)
+						p.importeRegular = 0;
+						p.fechaPago = pago.fechaPago;
+						p.estatus = 1
+						// p.pago_id = pago_id
+						PlanPagos.update({_id:planPago._id},
+					 	{ $set : { multa : 1}});
 
-				}
+					}
 
 				p.pagoSeleccionado=false;
 
 				if (p.importeRegular <= 0) {
 					if(!p.pagos) p.pagos=[];
 					var npp={pago_id:pago_id,totalPago:pago.pagar,estatus:1,fechaPago:pago.fechaPago, numeroPago : p.numeroPago,
-					movimiento:p.descripcion,cargo:0,planPago_id:p._id,	
-				}
+							movimiento:p.descripcion,cargo:0,planPago_id:p._id,	}
 					p.pagos.push(npp);console.log("hace pago de multa")
 					PlanPagos.insert(p);
 				}
@@ -529,7 +484,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 				p.estatus=1
 				//p.fechaPago = pago.fechaPago;
 				p.pago_id = pago_id
-				p.importeRegular= p.importeRegular - pago.pagar 
+				p.importeRegular= 0 
 				
 				//Se agrega el pago al plan de pagos
 				if(!p.pagos) p.pagos=[];
