@@ -33,6 +33,11 @@
 									<div class="air air-top-left padding-10">
 										<h4 class="txt-color-white font-md"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{cd.fechaActual | date:'dd-MM-yyyy'}}</h4>
 									</div>
+									<div class="air air-top-right padding-10">
+									<a	ng-click="cd.verNota()" class="btn txt-color-white bg-color-orange btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
+	 										<i class="fa fa-file"></i> Ver nota
+	 									</a> 
+									</div>
 									<ol class="carousel-indicators">
 									</ol>
 									<div class="carousel-inner">
@@ -128,7 +133,9 @@
 											<li class="pull-right">
 												<a ng-click="cd.masInformacion()" role="button" data-toggle="collapse"
 			href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{cd.masInfo == true ? 'plus':'minus'}} fa-lg"></i></a>
+			
 											</li>
+											<li class="pull-right"><a>Historial Crediticio</a></li>
 										</ul>
 										<!-- //////////////////////////////////////////////// -->
 
@@ -840,10 +847,31 @@
 				 </div>
 					
 <!--		 //////////////////////////////////////////////////////////// -->
-<!--		 Modal de Cancelación de crédito -->
+		<div class="container">
+						<!-- Modal -->
+					<div class="modal fade" id="notaPerfil"	data-backdrop="static" role="dialog">
+						<div class="modal-dialog">
+					<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+							
+									<h4 class="modal-title">Nota</h4>
+								</div>
+								<div class="modal-body">
+								 <div ng-repeat="nota in cd.notaPerfil">{{nota.nombre}}</div>
+								</div>
+								<div class="modal-footer"s>
+			    				    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+			        
+		     				 </div>
+							</div>
+						</div>
+					 </div>
+	 <!--//////////////////////////////////// //////////////////////////////////////////////////////////// -->
 
 
-<!-- Modal -->
+
+<!-- Modal para cancelar credito -->
 
 <div class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -879,52 +907,38 @@
 <!--		 //////////////////////////////////////////////////////////// -->
 
 <!-- /////////////////////////MODAL NOTA CLIENTE ////////////////////////// -->
-					<div class="container">
-						<!-- Modal -->
-					<div class="modal fade" id="modalCliente"	data-backdrop="static" role="dialog">
-						<div class="modal-dialog">
-					<!-- Modal content-->
-							<div class="modal-content">
-								<div class="modal-header">
-							
-									<h4 class="modal-title">Responder Nota</h4>
-								</div>
-								<div class="modal-body">
-									<h6>Información de la nota</h6><br/>
-										<p>Por: <strong>{{cd.usuario.profile.nombreCompleto}}</strong></p>
-										<p>Fecha: <strong>{{cd.nota.fecha | date:'dd-MM-yyyy'}},{{cd.nota.hora}}</strong></p>
-								</div>
-									<div class="modal-footer">
-										<div class="row">
+<div class="container">
+<!-- Modal -->
+	<div class="modal fade" id="modalCliente"	data-backdrop="static" role="dialog">
+		<div class="modal-dialog">
+	<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+			
+					<h4 class="modal-title">Escribir Nota para el cliente</h4>
+				</div>
+			
+					<div class="modal-footer">
+						<div class="row">
+							<div class="col-sm-12">
 								<div class="col-sm-12">
-								
-								
-								<div class="col-sm-12">
-								 <h6 class="pull-left" ><strong>{{cd.nota.titulo}}</strong></h6><br/><br/>
-								</div>
-										<div class="col-sm-12"> 
-										<p class="pull-left">{{cd.nota.descripcion}} </p>
-										</div>
-							
-										<div class="col-sm-12">
-										<label class="pull-left">Respuesta:</label>
-											<textarea type="text" class="form-control"	ng-model="cd.notaCobranza.respuestaNota" >
-										</div>
-										
-										<div class="col-sm-12 "><br/>
-											<a	class="btn btn-success" ng-click="cd.contestarNota(cd.nota._id)">Contestar</a>
-										</div>
-																					
-	
+									<label class="pull-left">Escribir Nota:</label>
+										<textarea type="text" class="form-control"	ng-model="cd.nota.nombre" >
+									</div>
+									<div class="col-sm-12 "><br/>
+										<a	class="btn btn-success" ng-click="cd.guardarNota(cd.nota)">Guardar</a>
+									</div>
 							</div>								 
-							</div>
-					
-							
-							</div>
-							
 						</div>
-					</div>
-				 </div>
+			  </div>
+			  <div class="modal-footer">
+
+							  
+				          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				        </div>
+		</div>
+	</div>
+</div>
 
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   
 

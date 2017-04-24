@@ -13,6 +13,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.notaCobranza = {}
 	this.masInfo = true;
 	rc.cancelacion = {};
+	rc.nota = {};
 	window.rc = rc;
 	
 	this.subscribe("ocupaciones",()=>{
@@ -70,6 +71,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 		objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
+			_.each(cli, function(objeto){
+				objeto.empresa = Empresas.findOne(objeto.empresa_id)
+
+			});
 			if(cli){
 				this.ocupacion_id = cli.profile.ocupacion_id;
 				return cli;
@@ -128,6 +133,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 		usuario: () => {
 			return Meteor.users.findOne()
+		},
+		notaPerfil: () => {
+			var nota = Notas.find({perfil : "perfil"}).fetch()
+			return nota
 		},
 		
 		
@@ -306,8 +315,28 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 	this.mostrarNotaCliente = function(){
 		$("#modalCliente").modal();
+		rc.nota = {};
 		
 	};
+
+	this.guardarNota = function(objeto){
+		console.log(objeto,"nota")
+		objeto.perfil = "perfil"
+		objeto.cliente_id = rc.objeto._id
+		objeto.nombreCliente = rc.objeto.profile.nombreCompleto
+		objeto.respuesta = true;
+		Notas.insert(objeto);
+		toastr.success('Nota guardada.');
+		rc.nota = {};
+		$("#modalCliente").hide();
+
+       		
+	};
+	this.verNota = function(){
+		$("#notaPerfil").modal();
+
+	}
+
 
 
 
