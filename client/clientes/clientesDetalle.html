@@ -127,21 +127,25 @@
 									</div>
 									-->
 								</div>
-								<div class="row">
-									<div class="col-sm-12">
-										<ul class="nav nav-tabs">
-											<li class="pull-right">
-												<a ng-click="cd.masInformacion()" role="button" data-toggle="collapse"
-			href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{cd.masInfo == true ? 'plus':'minus'}} fa-lg"></i></a>
-			
-											</li>
-											<li class="pull-right"><a>Historial Crediticio</a></li>
-										</ul>
-										<!-- //////////////////////////////////////////////// -->
+<div class="row">
+	<div class="col-sm-12">
+		<ul class="nav nav-tabs">
+			<li class="pull-right">
+				<a ng-click="cd.masInformacion()" role="button" data-toggle="collapse"
+					href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{cd.masInfo == true ? 'plus':'minus'}} fa-lg"></i> Información del cliente</a>
+			</li>
 
-										<div class="row">
-										<div class="collapse padding-10" id="masInformacion">
-				<div class="tab-pane">
+			<li class="pull-right">
+			<a ng-click="cd.masInformacionCrdito()" data-toggle="collapse"
+			   href="#masInformacionCredito" aria-expanded="false" aria-controls="masInformacionCredito"> <i class="fa fa-{{cd.masInfoCredito == true ? 'plus':'minus'}} fa-lg">
+			   </i>Historial Crediticio </a>
+			</li>
+		</ul>
+		<!-- //////////////////////////////////////////////// -->
+
+<div class="row">
+  <div class="collapse padding-10" id="masInformacion">
+   <div class="tab-pane">
 	<div class="col-sm-12">
 			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 			  <div class="panel panel-default">
@@ -498,6 +502,39 @@
 	</div>
 </div>
 </div>
+
+  <div class="collapse padding-10" id="masInformacionCredito">
+   <div class="tab-pane">
+	<div class="col-sm-12">
+		<br/>
+		<table class="table table-striped table-bordered table-condensed font-xs">
+			<thead class="thead">
+				<tr>
+					<th class="text-center" width="7%">Credito No.</th>
+					<th class="text-center" width="15%">Fecha Solicitud</th>
+					<th class="text-center" width="15%">Fecha Entrega</th>
+					<th class="text-center" width="15%">Capital Solicitado</th>
+					<th class="text-center" width="15%">Adeudo Inicial</th>
+					<th class="text-center" width="20%">Saldo Actual</th>
+					<!-- <th class="text-center" width="20%">Multas Pendientes</th> -->
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="credito in cd.historial.historialCreditos">
+						
+					<td class="text-center">{{credito.folio}}</td>	
+					<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
+					<td class="text-center">{{credito.fechaEntrega |  date:"dd-MM-yyyy" }}</td>
+					<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
+					<td >{{credito.adeudoInicial | currency}}</td>
+					<td >{{credito.saldoActual | currency}}</td>
+				</tr>
+			</tbody>
+		</table>	
+		
+	</div>
+   </div>
+</div>
 				</div>
 
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -812,7 +849,7 @@
 								<div class="modal-body">
 									<h6>Información de la nota</h6><br/>
 										<p>Por: <strong>{{cd.usuario.profile.nombreCompleto}}</strong></p>
-										<p>Fecha: <strong>{{cd.nota.fecha | date:'dd-MM-yyyy'}},{{cd.nota.hora}}</strong></p>
+										<p>Fecha: <strong>{{cd.notaCuenta.fecha | date:'dd-MM-yyyy'}},{{cd.notaCuenta.hora}}</strong></p>
 								</div>
 									<div class="modal-footer">
 										<div class="row">
@@ -820,10 +857,10 @@
 								
 								
 								<div class="col-sm-12">
-								 <h6 class="pull-left" ><strong>{{cd.nota.titulo}}</strong></h6><br/><br/>
+								 <h6 class="pull-left" ><strong>{{cd.notaCuenta.titulo}}</strong></h6><br/><br/>
 								</div>
 										<div class="col-sm-12"> 
-										<p class="pull-left">{{cd.nota.descripcion}} </p>
+										<p class="pull-left">{{cd.notaCuenta.descripcion}} </p>
 										</div>
 							
 										<div class="col-sm-12">
@@ -832,7 +869,7 @@
 										</div>
 										
 										<div class="col-sm-12 "><br/>
-											<a	class="btn btn-success" ng-click="cd.contestarNota(cd.nota._id)">Contestar</a>
+											<a	class="btn btn-success" ng-click="cd.contestarNota(cd.notaCuenta._id)">Contestar</a>
 										</div>
 																					
 	

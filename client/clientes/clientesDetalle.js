@@ -12,6 +12,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.notaCuenta = []
 	this.notaCobranza = {}
 	this.masInfo = true;
+	this.masInfoCredito = true;
 	rc.cancelacion = {};
 	rc.nota = {};
 	window.rc = rc;
@@ -127,9 +128,13 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				})
 			}
 		},
-		nota: () => {
+		notaCuenta1: () => {
 			var nota = Notas.find().fetch()
-			return nota[nota.length - 1];
+			if (nota.perfil != undefined) {
+
+				return nota[nota.length - 1];
+			}
+			
 		},
 		usuario: () => {
 			return Meteor.users.findOne()
@@ -192,6 +197,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.masInformacion = function(){
 		this.masInfo = !this.masInfo;
 	}
+	this.masInformacionCrdito = function(){
+		this.masInfoCredito = !this.masInfoCredito;
+	}
 	this.getNombreTipoNotaCredito = function (tipo_id) {
 		var tipo = TiposNotasCredito.findOne(tipo_id);
 		return tipo? tipo.nombre:"";
@@ -218,7 +226,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	$(document).ready(function() {
     if (rc.getReactively("nota") != undefined) {
     	console.log("entro al modal ")
-    	$("#myModal").modal();
+    	if (rc.notaCuenta1.perfil != undefined) {
+    		console.log("mostrara el modal ")
+    	$("#myModal").modal(); 
+    }else{
+    	$("#myModal").modal('hide'); 
+	}
 
     }
 });
