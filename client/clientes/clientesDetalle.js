@@ -251,6 +251,20 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	}
 
 
+	$(document).ready(function() {
+		if (rc.getReactively("nota") != undefined) {
+		    	//console.log("entro al modal ")
+		   if (rc.notaCuenta1.perfil != undefined) {
+		    		//console.log("mostrara el modal ")
+		    	$("#myModal").modal(); 
+		   	}
+		   	else
+		   	{
+		    	$("#myModal").modal('hide'); 
+				}
+    }
+	});
+
 
 
 	this.contestarNota = function(id){
@@ -275,6 +289,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 	};
 	
+
 /*
 	this.imprimirDocumento = function(aprobado){
 			Meteor.call('imprimirDocumentos', aprobado, function(error, response) {
@@ -324,6 +339,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				});	
 	};	
 */
+
 	
 	this.cancelarCredito = function(motivo){
 			

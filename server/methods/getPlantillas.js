@@ -124,7 +124,7 @@ Meteor.methods({
 		var f = fecha;
 		f = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 		
-		console.log(aval);
+		//console.log(aval);
 		if (aval == undefined)
 		{
 				aval = {};
