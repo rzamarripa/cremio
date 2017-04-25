@@ -77,8 +77,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";		
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";		
 		
 		
 		//Ir por los datos del cliente
@@ -124,7 +124,7 @@ Meteor.methods({
 		var f = fecha;
 		f = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 		
-		console.log(aval);
+		//console.log(aval);
 		if (aval == undefined)
 		{
 				aval = {};
