@@ -138,10 +138,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 		notaCuenta1: () => {
 			var nota = Notas.find().fetch()
-			if (nota.perfil != undefined) {
+		
 
 				return nota[nota.length - 1];
-			}
+			
 			
 		},
 		usuario: () => {
@@ -172,6 +172,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
     	console.log("no hay nota")
     }
 });
+
+
 	console.log("nota ",rc.notaCuenta1)
 	this.actualizar = function(cliente,form){
 

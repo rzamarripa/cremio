@@ -849,16 +849,16 @@
 								<div class="modal-body">
 									<h6>Información de la nota</h6><br/>
 										<p>Por: <strong>{{cd.usuario.profile.nombreCompleto}}</strong></p>
-										<p>Fecha: <strong>{{cd.notaCuenta.fecha | date:'dd-MM-yyyy'}},{{cd.notaCuenta.hora}}</strong></p>
+										<p>Fecha: <strong>{{cd.notaCuenta1.fecha | date:'dd-MM-yyyy'}}, {{cd.notaCuenta1.hora}}</strong></p>
 								</div>
 									<div class="modal-footer">
 										<div class="row">
 								<div class="col-sm-12">
 								<div class="col-sm-12">
-								 <h6 class="pull-left" ><strong>{{cd.notaCuenta.titulo}}</strong></h6><br/><br/>
+								 <h6 class="pull-left" ><strong>{{cd.notaCuenta1.titulo}}</strong></h6><br/><br/>
 								</div>
 										<div class="col-sm-12"> 
-										<p class="pull-left">{{cd.notaCuenta.descripcion}} </p>
+										<p class="pull-left">{{cd.notaCuenta1.descripcion}} </p>
 										</div>
 							
 										<div class="col-sm-12">
@@ -867,7 +867,7 @@
 										</div>
 										
 										<div class="col-sm-12 "><br/>
-											<a	class="btn btn-success" ng-click="cd.contestarNota(cd.notaCuenta._id)">Contestar</a>
+											<a	class="btn btn-success" ng-click="cd.contestarNota(cd.notaCuenta1._id)">Contestar</a>
 										</div>
 																					
 	
