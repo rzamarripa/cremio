@@ -12,7 +12,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.notaCuenta = []
 	this.notaCobranza = {}
 	this.masInfo = true;
+	this.masInfoCredito = true;
 	rc.cancelacion = {};
+	rc.nota = {};
 	window.rc = rc;
 	
 	this.subscribe("ocupaciones",()=>{
@@ -58,6 +60,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			return creditos;
 		},
+		historialCreditos : () => {
+			var creditos = Creditos.find({estatus:5}).fetch();
+			if(creditos != undefined){
+				rc.creditos_id = _.pluck(creditos, "cliente_id");
+			}
+			
+			return creditos;
+		},
 
 		creditosAprobados : () =>{
 			return Creditos.find({estatus:2});
@@ -70,6 +80,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 		objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
+			_.each(cli, function(objeto){
+				objeto.empresa = Empresas.findOne(objeto.empresa_id)
+
+			});
 			if(cli){
 				this.ocupacion_id = cli.profile.ocupacion_id;
 				return cli;
@@ -122,12 +136,20 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				})
 			}
 		},
-		nota: () => {
+		notaCuenta1: () => {
 			var nota = Notas.find().fetch()
-			return nota[nota.length - 1];
+			if (nota.perfil != undefined) {
+
+				return nota[nota.length - 1];
+			}
+			
 		},
 		usuario: () => {
 			return Meteor.users.findOne()
+		},
+		notaPerfil: () => {
+			var nota = Notas.find({perfil : "perfil"}).fetch()
+			return nota
 		},
 		
 		
@@ -183,6 +205,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.masInformacion = function(){
 		this.masInfo = !this.masInfo;
 	}
+	this.masInformacionCrdito = function(){
+		this.masInfoCredito = !this.masInfoCredito;
+	}
 	this.getNombreTipoNotaCredito = function (tipo_id) {
 		var tipo = TiposNotasCredito.findOne(tipo_id);
 		return tipo? tipo.nombre:"";
@@ -209,7 +234,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	$(document).ready(function() {
     if (rc.getReactively("nota") != undefined) {
     	console.log("entro al modal ")
-    	$("#myModal").modal();
+    	if (rc.notaCuenta1.perfil != undefined) {
+    		console.log("mostrara el modal ")
+    	$("#myModal").modal(); 
+    }else{
+    	$("#myModal").modal('hide'); 
+	}
 
     }
 });
@@ -306,8 +336,28 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 	this.mostrarNotaCliente = function(){
 		$("#modalCliente").modal();
+		rc.nota = {};
 		
 	};
+
+	this.guardarNota = function(objeto){
+		console.log(objeto,"nota")
+		objeto.perfil = "perfil"
+		objeto.cliente_id = rc.objeto._id
+		objeto.nombreCliente = rc.objeto.profile.nombreCompleto
+		objeto.respuesta = true;
+		Notas.insert(objeto);
+		toastr.success('Nota guardada.');
+		rc.nota = {};
+		$("#modalCliente").hide();
+
+       		
+	};
+	this.verNota = function(){
+		$("#notaPerfil").modal();
+
+	}
+
 
 
 

@@ -594,6 +594,26 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.cajasActivas', {
+			url: '/cajas/activas',
+			templateUrl: 'client/cajas/cajasActivas.ng.html',
+			controller: 'CajasActivasCtrl as caaj',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.movimientosCaja', {
+			url: '/cajas/:caja_id/movimientos',
+			templateUrl: 'client/cajas/movimientosCaja.ng.html',
+			controller: 'MovimientosCajaCtrl as mcaj',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.corteCaja', {
 			url: '/cajas/corte',
 			templateUrl: 'client/cajas/corteCaja.ng.html',

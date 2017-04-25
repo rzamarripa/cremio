@@ -1,0 +1,43 @@
+<h2>Cajas</h2>
+
+<!-- List -->
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="30%"><div class="text-center">Caja</div></th>
+					<th width="20%"><div class="text-center">Cajero</div></th>
+					<th width="30%"><div class="text-center">Máximo Efectivo</div></th>
+					<th width="20%">
+						<div class="text-center">
+							Acciones
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="objeto in caaj.cajas">
+			    <td>{{objeto.nombre}}</td>
+			    <td>{{caaj.getCajero(objeto)}}</td>
+			    <td class="text-left">
+			    	<div  ng-bind-html="caaj.getMontos(objeto)"></div>
+			    </td>
+			    <td>
+				    <div class="text-center">
+					    <div class="btn-group">
+							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							  </button>
+							  <ul class="dropdown-menu text-left">
+							    <li><a  ui-sref="root.movimientosCaja({caja_id:objeto._id})"><i class="fa fa-external-link"></i> ver movimientos</a></li>
+							  </ul>
+							</div>
+				    </div>				    
+			    </td>
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>
