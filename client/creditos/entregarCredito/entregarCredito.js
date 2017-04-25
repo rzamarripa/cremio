@@ -63,20 +63,22 @@ angular.module("creditoMio")
 					
 					if (c.periodoPago == "Quincenal")
 					{
+							var fecha = new Date();
+							
 							//Hacer los calculos
 							var semana = moment().isoWeek();
-							var anio = FI.getFullYear();
+							var anio = fecha.getFullYear();
 							//this.calcularSemana(semana, anio);
 							
 							var ini, fin;
 				
-					    var simple = new Date(anio, 0, 1 + (semana - 1) * 7);
-					    FI = new Date(simple);
+					    var simple = new Date(anio, 0, 1 + (semana) * 7);
+					    fecha = new Date(simple);
 					    //FF = new Date(moment(simple).add(7,"days"));
 					    
-					    console.log(FI);
+					    //console.log(fecha);
 					    //FF.setHours(23,59,59,999);
-							
+							this.objeto.primerAbono = fecha;
 							
 					}
 					else if (c.periodoPago == "Mensual")
