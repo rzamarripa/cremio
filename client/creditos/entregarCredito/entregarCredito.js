@@ -4,12 +4,14 @@ angular.module("creditoMio")
  	
  	let rc = $reactive(this).attach($scope);
 	window.rc=rc
+	
 	this.suma =0;
 	this.verDiaPago = true;
 	
 	this.objeto = {};
 	
 	this.credito = {};
+	//this.credito.primerAbono = new Date();
 	
 	
 	this.subscribe('tiposIngreso',()=>{
@@ -55,10 +57,61 @@ angular.module("creditoMio")
 			var c = Creditos.findOne({_id:$stateParams.credito_id}); 		
 			
 			if (c != undefined)
-				 if (c.folio)
-					  this.verDiaPago = false;
+			{		
+					if (c.folio)
+						  this.verDiaPago = false;
+					
+					if (c.periodoPago == "Quincenal")
+					{
+							var fecha = new Date();
+							
+							//Hacer los calculos
+							var semana = moment().isoWeek();
+							var anio = fecha.getFullYear();
+							//this.calcularSemana(semana, anio);
+							
+							var ini, fin;
+				
+					    var simple = new Date(anio, 0, 1 + (semana) * 7);
+					    fecha = new Date(simple);
+					    //FF = new Date(moment(simple).add(7,"days"));
+					    
+					    //console.log(fecha);
+					    //FF.setHours(23,59,59,999);
+							this.objeto.primerAbono = fecha;
+							
+					}
+					else if (c.periodoPago == "Mensual")
+					{
+							var fecha = new Date();
+						
+							var anio = fecha.getFullYear();
+							var mes = fecha.getMonth();
+							
+							var startDate = moment([anio, mes]);
+							var endDate = moment(startDate).endOf('month');
+					    fecha = endDate.toDate();
+					    //FF = endDate.toDate();
+					    fecha.setHours(0,0,0,0);					    
+					    
+					    //console.log(fecha);
+					    
+					    this.objeto.primerAbono = fecha;
+					    //this.getReactively("objeto.primerAbono");
+/*
+							if(!$scope.$$phase) {
+						 		//$digest or $apply
+						 		rc.credito.primerAbono = fecha;
+						 		$scope.$apply();		
+							}
+*/
+							
+							//console.log("Control:",this.objeto.primerAbono);
+							
+					}		
 				 
-
+					
+			}			
 			return c
 		}
 
@@ -110,17 +163,12 @@ angular.module("creditoMio")
 	this.fechaPago = function(diaSeleccionado, periodoPago)
 	{		
 			
+			console.log(periodoPago);
+			
 			var date = moment();
 			var diaActual = date.day();		
 			var fecha = new Date();
 			var dif = diaActual - diaSeleccionado;
-			
-			
-/*
-			console.log("Actual:", diaActual);
-			console.log("Seleccionado:",diaSeleccionado);
-			console.log("dif:",dif);
-*/
 			
 			if (periodoPago == "Semanal")
 			{
@@ -163,21 +211,51 @@ angular.module("creditoMio")
 					
 					rc.credito.primerAbono = fecha;
 			}
+/*
 			else if (periodoPago == "Quincenal")
 			{
-						//Hacer los calculos
+					//Hacer los calculos
+					var semana = moment().isoWeek();
+					var anio = FI.getFullYear();
+					//this.calcularSemana(semana, anio);
+					
+					var ini, fin;
+		
+			    var simple = new Date(anio, 0, 1 + (semana - 1) * 7);
+			    FI = new Date(simple);
+			    //FF = new Date(moment(simple).add(7,"days"));
+			    
+			    console.log(FI);
+			    //FF.setHours(23,59,59,999);
+					
+					
 			}
+*/
+/*
 			else if (periodoPago == "Mensual")
 			{
-					//Hacer los calculos
+					var FI = new Date();
+				
+					var anio = FI.getFullYear();
+					var mes = FI.getMonth();
+					
+					var startDate = moment([anio, mes]);
+					var endDate = moment(startDate).endOf('month');
+			    FI = endDate.toDate();
+			    //FF = endDate.toDate();
+			    FI.setHours(0,0,0,0);
+			    //console.log(FI);
+
+					
 			}	
+*/
 	};
 	
 	this.generarCredito = function(){
 		
 		var credito = {
 			fechaSolicito : new Date(),
-			fechaPrimerAbono : this.credito.primerAbono
+			fechaPrimerAbono : this.objeto.primerAbono
 		};
 	
 		

@@ -250,6 +250,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 
 
+
 	this.contestarNota = function(id){
 
 		this.nota = Notas.findOne({_id:id});
