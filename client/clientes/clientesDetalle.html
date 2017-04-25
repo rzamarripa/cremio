@@ -138,7 +138,7 @@
 			<li class="pull-right">
 			<a ng-click="cd.masInformacionCrdito()" data-toggle="collapse"
 			   href="#masInformacionCredito" aria-expanded="false" aria-controls="masInformacionCredito"> <i class="fa fa-{{cd.masInfoCredito == true ? 'plus':'minus'}} fa-lg">
-			   </i>Historial Crediticio </a>
+			   </i> Historial Crediticio </a>
 			</li>
 		</ul>
 		<!-- //////////////////////////////////////////////// -->
@@ -520,7 +520,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="credito in cd.historial.historialCreditos">
+				<tr ng-repeat="credito in cd.historialCreditos">
 						
 					<td class="text-center">{{credito.folio}}</td>	
 					<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
@@ -854,8 +854,6 @@
 									<div class="modal-footer">
 										<div class="row">
 								<div class="col-sm-12">
-								
-								
 								<div class="col-sm-12">
 								 <h6 class="pull-left" ><strong>{{cd.notaCuenta.titulo}}</strong></h6><br/><br/>
 								</div>

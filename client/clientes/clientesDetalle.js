@@ -60,6 +60,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			return creditos;
 		},
+		historialCreditos : () => {
+			var creditos = Creditos.find({estatus:5}).fetch();
+			if(creditos != undefined){
+				rc.creditos_id = _.pluck(creditos, "cliente_id");
+			}
+			
+			return creditos;
+		},
 
 		creditosAprobados : () =>{
 			return Creditos.find({estatus:2});
