@@ -98,6 +98,36 @@ Meteor.methods({
 
 		return "200"
 	},
+	movimientosCaja : (caja)=>{
+			var ret=[];
+			//console.log(caja);
+			var movimientos=MovimientosCajas.find({
+				$and:[	{caja_id:caja.caja_id},
+					{$or : [	
+								{estatus:1},
+								{estatus:2}
+							]
+						}
+				 ]
+			}).fetch();
+			var cj = Cajas.findOne(caja.caja_id);
+			_.each(movimientos,function(mov){
+				var d ={};
+				d.createdAt = mov.createdAt;
+				d.tipoMovimiento = mov.tipoMovimiento;
+				d.origen = mov.origen;
+				//console.log(cj)
+				//console.log(cj.cuenta[mov.cuenta_id])
+				c = Cuentas.findOne(cj.cuenta[mov.cuenta_id].cuenta_id);
+				//console.log(c)
+				d.cuenta = c.nombre;
+				d.monto = mov.monto
+				ret.push(d)
+
+			})
+			console.log(ret)
+			return ret
+	},
 	corteCaja :(montos)=>{
 		var user=Meteor.user();
 		var caja = Cajas.findOne(user.profile.caja_id);

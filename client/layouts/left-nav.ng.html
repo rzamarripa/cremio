@@ -186,6 +186,12 @@
 						<span class="menu-item-child">Cajas</span>
 					</a>
 				</li>
+				<li ng-if="currentUser.roles[0] == 'Gerente'">
+					<a ui-sref="root.cajasActivas" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-file"></i>
+						<span class="menu-item-child">Cajas Activas</span>
+					</a>
+				</li>
 				
 				<li ng-if="currentUser.roles[0] == 'Cajero'">
 					<a ui-sref="root.corteCaja" tilte="Credito Mio">

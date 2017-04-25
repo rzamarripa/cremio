@@ -1,0 +1,31 @@
+<h2>Cajas</h2>
+
+<!-- List -->
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="20%"><div class="text-center">Fecha</div></th>
+					<th width="10%"><div class="text-center">Tipo Movimiento</div></th>
+					<th width="20%"><div class="text-center">Movimiento</div></th>
+					<th width="20%"><div class="text-center">Cuenta</div></th>
+
+					
+					<th width="10%"><div class="text-center">Monto</div></th>
+					
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="objeto in mcaj.movimientosCaja">
+			    <td>{{objeto.createdAt | date:"medium"}}</td>
+			    <td>{{objeto.tipoMovimiento}}</td>
+				<td>{{objeto.origen}}</td>
+			    <td>{{objeto.cuenta}}</td>
+			
+			    <td class="text-right">{{objeto.monto | currency}}</td>
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>
