@@ -154,7 +154,25 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		
 		
 	});
-	
+
+
+
+	$(document).ready(function() {
+    if (rc.getReactively("nota") != undefined) {
+    	console.log("entro al modal ",rc.notaCuenta1)
+
+    	if (rc.notaCuenta1 != undefined) {
+    		console.log("mostrara el modal ")
+    	$("#myModal").modal(); 
+    }else{
+    	$("#myModal").modal('hide'); 
+	}
+
+    }else{
+    	console.log("no hay nota")
+    }
+});
+	console.log("nota ",rc.notaCuenta1)
 	this.actualizar = function(cliente,form){
 
 		console.log(cliente);
@@ -230,19 +248,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		
 	}
 
-
-	$(document).ready(function() {
-    if (rc.getReactively("nota") != undefined) {
-    	console.log("entro al modal ")
-    	if (rc.notaCuenta1.perfil != undefined) {
-    		console.log("mostrara el modal ")
-    	$("#myModal").modal(); 
-    }else{
-    	$("#myModal").modal('hide'); 
-	}
-
-    }
-});
 
 
 	this.contestarNota = function(id){
@@ -349,7 +354,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		Notas.insert(objeto);
 		toastr.success('Nota guardada.');
 		rc.nota = {};
-		$("#modalCliente").hide();
+		$("#modalCliente").modal('hide');
 
        		
 	};
