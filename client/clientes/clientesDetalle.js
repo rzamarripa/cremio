@@ -154,7 +154,25 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		
 		
 	});
-	
+
+
+
+	$(document).ready(function() {
+    if (rc.getReactively("nota") != undefined) {
+    	console.log("entro al modal ",rc.notaCuenta1)
+
+    	if (rc.notaCuenta1 != undefined) {
+    		console.log("mostrara el modal ")
+    	$("#myModal").modal(); 
+    }else{
+    	$("#myModal").modal('hide'); 
+	}
+
+    }else{
+    	console.log("no hay nota")
+    }
+});
+	console.log("nota ",rc.notaCuenta1)
 	this.actualizar = function(cliente,form){
 
 		console.log(cliente);
@@ -246,6 +264,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	});
 
 
+
 	this.contestarNota = function(id){
 
 		this.nota = Notas.findOne({_id:id});
@@ -268,6 +287,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 	};
 	
+
 /*
 	this.imprimirDocumento = function(aprobado){
 			Meteor.call('imprimirDocumentos', aprobado, function(error, response) {
@@ -317,6 +337,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				});	
 	};	
 */
+
 	
 	this.cancelarCredito = function(motivo){
 			
@@ -350,7 +371,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		Notas.insert(objeto);
 		toastr.success('Nota guardada.');
 		rc.nota = {};
-		$("#modalCliente").hide();
+		$("#modalCliente").modal('hide');
 
        		
 	};

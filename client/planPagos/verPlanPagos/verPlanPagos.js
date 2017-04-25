@@ -105,19 +105,19 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 			var credito =Creditos.findOne({_id : $stateParams.credito_id});
 			//console.log(credito)
-			if (rc.creditos != undefined) {
-			_.each(pagos, function(pago){
-				if (pago.estatus == 1) {
-					Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
-						//console.log("entro")
+		// 	if (rc.creditos != undefined) {
+		// 	_.each(pagos, function(pago){
+		// 		if (pago.estatus == 1) {
+		// 			Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
+		// 				//console.log("entro")
 						
-					})
-				}else{
+		// 			})
+		// 		}else{
 					
-					rc.creditos.estatus = 4
-				}
-			});
-		}
+		// 			rc.creditos.estatus = 4
+		// 		}
+		// 	});
+		// }
 		
 
 			return pagos
