@@ -12,7 +12,7 @@
 	<div class="col-sm-12">
 		<div class="well well-sm">
 			<div class="row">
-				<div class="col-sm-12 col-md-12 col-lg-12">
+				<div class="col-sm-6 col-md-6 col-lg-6">
 					<div class="well well-light well-sm no-margin no-padding">
 						<div class="row">
 							<div class="col-sm-12">
@@ -73,349 +73,230 @@
 								</div>
 							</div>
 						</div>
-						<!-- Formulario de Nuevo Crédito -->
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<form name="formNuevoCredito" class="form-horizontal" role="form" novalidate>
+				  	<div class="well">	    
+					  	<div class="row">
+					  		<div class="col-sm-12">
+					  			<div class="alert alert-info">
+					  			 <p><i class="fa-fw fa fa-info"></i> Para <strong>crear un nuevo crédito</strong> es importante que pongamos la información correcta.</p>
+					  			 <p><strong>Revisar bien los datos.</strong></p>
+					  			</div>
+					  		</div>
+					  	</div>
+					    <div class="row">
+						    <div class="col-sm-4" valida>
+						    	<label>Tipo de crédito</label>
+						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="ge.credito.tipoCredito_id">
+							    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in ge.tiposCredito">{{tipoCredito.nombre}}</option>
+						    	</select>
+					    	</div>
+					    	<div class="col-sm-4" valida>
+						    	<label>Periodo de pago *</label>
+						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ge.credito.periodoPago">
+							    	<option value="Semanal">Semanal</option>
+							    	<option value="Mensual">Mensual</option>
+						    	</select>
+					    	</div>									    	
+					    	<div class="col-sm-4" valida>					    
+						    	<label>Duración Meses *</label>
+						    	<input name="totalPagosCreditoNuevo" type="number" class="form-control" placeholder="Cantidad de Pagos" ng-model="ge.credito.totalPagos" required="">
+					    	</div>									    	
+					    </div>
+					    <div class="row">
+					    	<div class="col-sm-4" valida>
+						    	<label>Capital Solicitado *</label>
+						    	<input name="importeRegularCreditoNuevo" type="number" class="form-control" placeholder="Cantidad del Crédito" ng-model="ge.credito.importeRegular" required="">
+					    	</div>
+					    	<div class="col-sm-4" valida>
+						    	<label>Primer abono *</label>
+						    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.fechaInicial" name="fechaCreditoNuevo" required/>
+					    	</div>
+					    	<div class="col-sm-4">					    
+						    	<label>Requiere Verificación</label>
+						    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ge.credito.requiereVerificacion">
+					    	</div>
+					    </div>
+						</div>
+						
+						<h4>Avales</h4>
+						<div class="well">	    
+					    <div class="row">
+					    	<div class="col-sm-4"> 					    
+						    	<label>Nombre</label>
+						    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ge.aval.nombre">
+					    	</div>
+					    	<div class="col-sm-4"> 					    
+						    	<label>Estado Civil</label>
+						    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="ge.aval.estadoCivil">
+					    	</div>
+					    	<div class="col-sm-4"> 					    
+						    	<label>Ocupación</label>
+						    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="ge.aval.ocupacion">
+					    	</div>
+					    </div>
+					    <div class="row">	
+						    <div class="col-sm-4">					    
+						    	<label>Dirección</label>
+						    	<input name="direccion" type="text" class="form-control" placeholder="Dirección" ng-model="ge.aval.direccion">
+					    	</div>
+					    	<div class="col-sm-4">					    
+						    	<label>Empresa</label>
+						    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="ge.aval.empresa">
+					    	</div>
+					    	<div class="col-sm-2">					    
+						    	<label>Puesto</label>
+						    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ge.aval.puesto">
+					    	</div>
+					    	<div class="col-sm-2">					    
+						    	<label>Antiguedad</label>
+						    	<input name="antiguedad" type="text" class="form-control" placeholder="Antiguedad" ng-model="ge.aval.antiguedad">
+					    	</div>
+					    </div>
+					    <div class="row">	
+						    <div class="col-sm-4">					    
+						    	<label>Dirección Empresa</label>
+						    	<input name="direccionEmpresa" type="text" class="form-control" placeholder="Dirección Empresa" ng-model="ge.aval.direccionEmpresa">
+					    	</div>
+					    	<div class="col-sm-4">					    
+						    	<label>Parentezco</label>
+						    	<input name="parentezco" type="text" class="form-control" placeholder="Parentezco" ng-model="ge.aval.parentezco">
+					    	</div>
+					    	<div class="col-sm-4">					    
+						    	<label>Tiempo de Conocerlo</label>
+						    	<input name="tiempoConocerlo" type="text" class="form-control" placeholder="Tiempo en Conocerlo" ng-model="ge.aval.tiempoConocerlo">
+					    	</div>
+					    </div>
+					    <div class="row">		
+					    	<div class="col-sm-3">
+							   	<input type="button" ng-click="ge.insertarAval()" value="Agregar" ng-show="ge.actionAval" class="btn btn-primary"> 	
+							   	<input type="button" ng-click="ge.actualizarAval(ge.aval)" value="Actualizar" ng-show="!ge.actionAval" class="btn btn-primary">
+							   	<input type="button" ng-click="ge.cancelarAval()" value="Cancelar" ng-show="!ge.actionAval" class="btn btn-danger">	   				
+								</div>
+					    </div>
+						</div>
+						<div class="well">				 
+							<div class="row">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th width="5%">Número</th>
+											<th width="15%">Nombre</th>
+											<th width="5%">Estado Civil</th>
+											<th width="5%">Ocupación</th>
+											<th width="15%">Dirección</th>
+											<th width="10%">Empresa</th>
+											<th width="5%">Puesto</th>
+											<th width="5%">Antiguedad</th>
+											<th width="15%">Dirección Empresa</th>
+											<th width="10%">Parentezco</th>
+											<th width="10%">Tiempo Conocerlo</th>
+											<th width="5%">Quitar</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="aval in ge.avales">
+											<td>{{aval.num}}</td>
+											<td>{{aval.nombre}}</td>
+											<td>{{aval.estadoCivil}}</td>
+											<td>{{aval.ocupacion}}</td>
+											<td>{{aval.direccion}}</td>
+											<td>{{aval.empresa}}</td>
+											<td>{{aval.puesto}}</td>
+											<td>{{aval.antiguedad}}</td>
+											<td>{{aval.direccionEmpresa}}</td>
+											<td>{{aval.parentezco}}</td>
+											<td>{{aval.tiempoConocerlo}}</td>
+											<td>
+													<a href="#" ng-click="ge.quitarAval(aval.num)"><i class="fa fa-trash"></i></a>
+													<a href="#" ng-click="ge.editarAval(aval)"><i class="fa fa-pencil"></i></a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+					  </div>	
+						
+						<h4>Garantias</h4>
+						<div class="well">	    
+					    <div class="row">
+					    	<div class="col-sm-4"> 					    
+						    	<label>Tipo</label>
+						    	<input name="tipo" type="text" class="form-control" placeholder="tipo" ng-model="ge.garantia.tipo">
+					    	</div>
+					    	<div class="col-sm-4"> 					    
+						    	<label>Marca</label>
+						    	<input name="marca" type="text" class="form-control" placeholder="Marca" ng-model="ge.garantia.marca">
+					    	</div>
+					    	<div class="col-sm-4"> 					    
+						    	<label>Modelo</label>
+						    	<input name="modelo" type="text" class="form-control" placeholder="Modelo" ng-model="ge.garantia.modelo">
+					    	</div>
+					    </div>
+					    <div class="row">	
+						    <div class="col-sm-4">					    
+						    	<label>Serie</label>
+						    	<input name="serie" type="text" class="form-control" placeholder="Serie" ng-model="ge.garantia.serie">
+					    	</div>
+					    	<div class="col-sm-4">					    
+						    	<label>Color</label>
+						    	<input name="color" type="text" class="form-control" placeholder="Color" ng-model="ge.garantia.color">
+					    	</div>
+					    	<div class="col-sm-4">					    
+						    	<label>Estado Actual</label>
+						    	<input name="estadoActual" type="text" class="form-control" placeholder="Estado Actual" ng-model="ge.garantia.estadoActual">
+					    	</div>
+					    </div>
+					    <div class="row">		
+					    	<div class="col-sm-3">
+							   	<input type="button" ng-click="ge.insertarGarantia()" value="Agregar" ng-show="ge.actionGarantia" class="btn btn-primary"> 	
+							   	<input type="button" ng-click="ge.actualizarGarantia(ge.garantia)" value="Actualizar" ng-show="!ge.actionGarantia" class="btn btn-primary">
+							   	<input type="button" ng-click="ge.cancelarGarantia()" value="Cancelar" ng-show="!ge.actionGarantia" class="btn btn-danger">	   				
+								</div>
+					    </div>
+						</div>
+						<div class="well">				 
+							<div class="row">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th width="5%">Número</th>
+											<th width="15%">Tipo</th>
+											<th width="15%">Marca</th>
+											<th width="15%">Modelo</th>
+											<th width="15%">Serie</th>
+											<th width="15%">Color</th>
+											<th width="15%">Estado Actual</th>
+											<th width="5%">Quitar</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="garantia in ge.garantias">
+											<td>{{garantia.num}}</td>
+											<td>{{garantia.tipo}}</td>
+											<td>{{garantia.marca}}</td>
+											<td>{{garantia.modelo}}</td>
+											<td>{{garantia.serie}}</td>
+											<td>{{garantia.color}}</td>
+											<td>{{garantia.estadoActual}}</td>
+											<td>
+													<a href="#" ng-click="ge.quitarGarantia(garantia.num)"><i class="fa fa-trash"></i></a>
+													<a href="#" ng-click="ge.editarGarantia(garantia)"><i class="fa fa-pencil"></i></a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+					  </div>
+						
 						<div class="row">
 							<div class="col-sm-12">
-								<a class="btn btn-{{ge.nuevoBotonCredito == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
-									href="#collapseNuevoCredito" aria-expanded="false" aria-controls="collapseExample" ng-click="ge.nuevoCredito()">
-								 {{ge.nuevoBotonCredito == true ? 'Generar Nuevo Crédito' : 'Cancelar'}}
-								</a>
-								<a class="btn btn-{{ge.nuevoBotonPago == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
-									href="#collapseNuevoPago" aria-expanded="false" aria-controls="collapseExample" ng-click="ge.nuevoPago()">
-								 {{ge.nuevoBotonPago == true ? 'Agregar Pago' : 'Cancelar'}}
-								</a>
-								<a class="btn btn-{{ge.nuevoBotonReestructuracion == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
-									href="#collapseReestructuracion" aria-expanded="false" aria-controls="collapseExample" ng-click="ge.nuevaReestructuracion()">
-								 {{ge.nuevoBotonReestructuracion == true ? 'Reestructurar Crédito' : 'Cancelar'}}
-								</a>
-								<div class="collapse" id="collapseNuevoCredito">
-									<form name="formNuevoCredito" class="form-horizontal" role="form" novalidate>
-								  	<div class="well">	    
-									  	<div class="row">
-									  		<div class="col-sm-12">
-									  			<div class="alert alert-info">
-									  			 <p><i class="fa-fw fa fa-info"></i> Para <strong>crear un nuevo crédito</strong> es importante que pongamos la información correcta.</p>
-									  			 <p><strong>Revisar bien los datos.</strong></p>
-									  			</div>
-									  		</div>
-									  	</div>
-									    <div class="row">
-									    	<div class="col-sm-4" valida>
-										    	<label>Fecha Inicial *</label>
-										    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.fechaInicial" name="fechaCreditoNuevo" required/>
-									    	</div>
-									    	<div class="col-sm-4" valida>					    
-										    	<label>Total de Meses *</label>
-										    	<input name="totalPagosCreditoNuevo" type="number" class="form-control" placeholder="Cantidad de Pagos" ng-model="ge.credito.totalPagos" required="">
-									    	</div>
-									    	<div class="col-sm-4" valida>
-										    	<label>Tipo de Crédito</label>
-										    	<select name="tipoCreditoNuevo" class="form-control" ng-model="ge.credito.tipoCredito_id" ng-change="ge.calcularRecargos()">
-											    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in ge.tiposCredito">{{tipoCredito.nombre}}</option>
-										    	</select>
-									    	</div>
-									    </div>
-									    <div class="row">
-									    	<div class="col-sm-4" valida>
-										    	<label>Importe *</label>
-										    	<input name="importeRegularCreditoNuevo" type="number" class="form-control" placeholder="Cantidad del Crédito" ng-model="ge.credito.importeRegular" required="" ng-change="ge.calcularRecargos()">
-									    	</div>
-									    	<div class="col-sm-4" valida>					    
-										    	<label>Importe Recargo *</label>
-										    	<input name="importeRecargoCreditoNuevo" type="number" class="form-control" placeholder="Monto recargo" ng-model="ge.credito.importeRecargo" required="">
-									    	</div>
-									    	<div class="col-sm-4">					    
-										    	<label>Requiere Verificación</label>
-										    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ge.credito.requiereVerificacion">
-									    	</div>
-									    </div>
-										</div>
-										
-										<h4>Avales</h4>
-										<div class="well">	    
-									    <div class="row">
-									    	<div class="col-sm-4"> 					    
-										    	<label>Nombre</label>
-										    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ge.aval.nombre">
-									    	</div>
-									    	<div class="col-sm-4"> 					    
-										    	<label>Estado Civil</label>
-										    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="ge.aval.estadoCivil">
-									    	</div>
-									    	<div class="col-sm-4"> 					    
-										    	<label>Ocupación</label>
-										    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="ge.aval.ocupacion">
-									    	</div>
-									    </div>
-									    <div class="row">	
-										    <div class="col-sm-4">					    
-										    	<label>Dirección</label>
-										    	<input name="direccion" type="text" class="form-control" placeholder="Dirección" ng-model="ge.aval.direccion">
-									    	</div>
-									    	<div class="col-sm-4">					    
-										    	<label>Empresa</label>
-										    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="ge.aval.empresa">
-									    	</div>
-									    	<div class="col-sm-2">					    
-										    	<label>Puesto</label>
-										    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ge.aval.puesto">
-									    	</div>
-									    	<div class="col-sm-2">					    
-										    	<label>Antiguedad</label>
-										    	<input name="antiguedad" type="text" class="form-control" placeholder="Antiguedad" ng-model="ge.aval.antiguedad">
-									    	</div>
-									    </div>
-									    <div class="row">	
-										    <div class="col-sm-4">					    
-										    	<label>Dirección Empresa</label>
-										    	<input name="direccionEmpresa" type="text" class="form-control" placeholder="Dirección Empresa" ng-model="ge.aval.direccionEmpresa">
-									    	</div>
-									    	<div class="col-sm-4">					    
-										    	<label>Parentezco</label>
-										    	<input name="parentezco" type="text" class="form-control" placeholder="Parentezco" ng-model="ge.aval.parentezco">
-									    	</div>
-									    	<div class="col-sm-4">					    
-										    	<label>Tiempo de Conocerlo</label>
-										    	<input name="tiempoConocerlo" type="text" class="form-control" placeholder="Tiempo en Conocerlo" ng-model="ge.aval.tiempoConocerlo">
-									    	</div>
-									    </div>
-									    <div class="row">		
-									    	<div class="col-sm-3">
-											   	<input type="button" ng-click="ge.insertarAval()" value="Agregar" ng-show="ge.actionAval" class="btn btn-primary"> 	
-											   	<input type="button" ng-click="ge.actualizarAval(ge.aval)" value="Actualizar" ng-show="!ge.actionAval" class="btn btn-primary">
-											   	<input type="button" ng-click="ge.cancelarAval()" value="Cancelar" ng-show="!ge.actionAval" class="btn btn-danger">	   				
-												</div>
-									    </div>
-										</div>
-										<div class="well">				 
-											<div class="row">
-												<table class="table table-bordered">
-													<thead>
-														<tr>
-															<th width="5%">Número</th>
-															<th width="15%">Nombre</th>
-															<th width="5%">Estado Civil</th>
-															<th width="5%">Ocupación</th>
-															<th width="15%">Dirección</th>
-															<th width="10%">Empresa</th>
-															<th width="5%">Puesto</th>
-															<th width="5%">Antiguedad</th>
-															<th width="15%">Dirección Empresa</th>
-															<th width="10%">Parentezco</th>
-															<th width="10%">Tiempo Conocerlo</th>
-															<th width="5%">Quitar</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr ng-repeat="aval in ge.avales">
-															<td>{{aval.num}}</td>
-															<td>{{aval.nombre}}</td>
-															<td>{{aval.estadoCivil}}</td>
-															<td>{{aval.ocupacion}}</td>
-															<td>{{aval.direccion}}</td>
-															<td>{{aval.empresa}}</td>
-															<td>{{aval.puesto}}</td>
-															<td>{{aval.antiguedad}}</td>
-															<td>{{aval.direccionEmpresa}}</td>
-															<td>{{aval.parentezco}}</td>
-															<td>{{aval.tiempoConocerlo}}</td>
-															<td>
-																	<a href="#" ng-click="ge.quitarAval(aval.num)"><i class="fa fa-trash"></i></a>
-																	<a href="#" ng-click="ge.editarAval(aval)"><i class="fa fa-pencil"></i></a>
-															</td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
-									  </div>	
-										
-										<h4>Garantias</h4>
-										<div class="well">	    
-									    <div class="row">
-									    	<div class="col-sm-4"> 					    
-										    	<label>Tipo</label>
-										    	<input name="tipo" type="text" class="form-control" placeholder="tipo" ng-model="ge.garantia.tipo">
-									    	</div>
-									    	<div class="col-sm-4"> 					    
-										    	<label>Marca</label>
-										    	<input name="marca" type="text" class="form-control" placeholder="Marca" ng-model="ge.garantia.marca">
-									    	</div>
-									    	<div class="col-sm-4"> 					    
-										    	<label>Modelo</label>
-										    	<input name="modelo" type="text" class="form-control" placeholder="Modelo" ng-model="ge.garantia.modelo">
-									    	</div>
-									    </div>
-									    <div class="row">	
-										    <div class="col-sm-4">					    
-										    	<label>Serie</label>
-										    	<input name="serie" type="text" class="form-control" placeholder="Serie" ng-model="ge.garantia.serie">
-									    	</div>
-									    	<div class="col-sm-4">					    
-										    	<label>Color</label>
-										    	<input name="color" type="text" class="form-control" placeholder="Color" ng-model="ge.garantia.color">
-									    	</div>
-									    	<div class="col-sm-4">					    
-										    	<label>Estado Actual</label>
-										    	<input name="estadoActual" type="text" class="form-control" placeholder="Estado Actual" ng-model="ge.garantia.estadoActual">
-									    	</div>
-									    </div>
-									    <div class="row">		
-									    	<div class="col-sm-3">
-											   	<input type="button" ng-click="ge.insertarGarantia()" value="Agregar" ng-show="ge.actionGarantia" class="btn btn-primary"> 	
-											   	<input type="button" ng-click="ge.actualizarGarantia(ge.garantia)" value="Actualizar" ng-show="!ge.actionGarantia" class="btn btn-primary">
-											   	<input type="button" ng-click="ge.cancelarGarantia()" value="Cancelar" ng-show="!ge.actionGarantia" class="btn btn-danger">	   				
-												</div>
-									    </div>
-										</div>
-										<div class="well">				 
-											<div class="row">
-												<table class="table table-bordered">
-													<thead>
-														<tr>
-															<th width="5%">Número</th>
-															<th width="15%">Tipo</th>
-															<th width="15%">Marca</th>
-															<th width="15%">Modelo</th>
-															<th width="15%">Serie</th>
-															<th width="15%">Color</th>
-															<th width="15%">Estado Actual</th>
-															<th width="5%">Quitar</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr ng-repeat="garantia in ge.garantias">
-															<td>{{garantia.num}}</td>
-															<td>{{garantia.tipo}}</td>
-															<td>{{garantia.marca}}</td>
-															<td>{{garantia.modelo}}</td>
-															<td>{{garantia.serie}}</td>
-															<td>{{garantia.color}}</td>
-															<td>{{garantia.estadoActual}}</td>
-															<td>
-																	<a href="#" ng-click="ge.quitarGarantia(garantia.num)"><i class="fa fa-trash"></i></a>
-																	<a href="#" ng-click="ge.editarGarantia(garantia)"><i class="fa fa-pencil"></i></a>
-															</td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
-									  </div>
-										
-										<div class="row">
-											<div class="col-sm-12">
-												<button class="btn btn-info" ng-click="ge.planPagosSemana(ge.credito, formNuevoCredito)" valida-form formulario="formNuevoCredito">Calcular Plan de Pagos</button>
-											</div>
-										</div>	  
-								  </form>
-								</div>
+								<button class="btn btn-info" ng-click="ge.planPagos(ge.credito, formNuevoCredito)" valida-form formulario="formNuevoCredito">Calcular Plan de Pagos</button>
 							</div>
-						</div>
-						<!-- Formulario de Nuevo Pago -->
-						<div class="row"> 
-							<div class="col-sm-12">
-								<div class="collapse" id="collapseNuevoPago">
-									<form name="form" class="form-horizontal" role="form" novalidate>
-								  	<div class="well">	    
-									    <div class="row">
-									    	<div class="col-sm-4" valida>
-													<label for="fechaPago">Fecha de Pago *</label>
-													<input name="fechaPago" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.fecha" required="" />
-												</div>
-									    	<div class="col-sm-4" valida>
-										    	<label>Colegiatura *</label>
-										    	<input name="clave" type="text" class="form-control" placeholder="Colegiatura" ng-model="ge.credito.semana" required="">
-									    	</div>
-									    	<div class="col-sm-4" valida>					    
-										    	<label>Año *</label>
-										    	<input name="anio" type="text" class="form-control" placeholder="Año" ng-model="ge.credito.anio" required="">
-									    	</div>
-									    	<div class="col-sm-4" valida>					    
-										    	<label>Importe *</label>
-										    	<input name="importe" type="number" class="form-control" ng-model="ge.credito.importe" required="">
-									    	</div>
-									    	<div class="col-sm-4" valida>					    
-										    	<label>Recargo *</label>
-										    	<input name="recargo" type="number" class="form-control" ng-model="ge.credito.importeRecargo" required="">
-									    	</div>
-									    	<div class="col-sm-4" valida>					    
-										    	<label>Descuento *</label>
-										    	<input name="descuento" type="number" class="form-control" ng-model="ge.credito.importeDescuento" required="">
-									    	</div>
-									    </div> 
-									    <div class="row">
-									    	<div class="col-sm-12">
-											    <label>Descripción</label>
-											    <textarea name="descripcion" class="form-control" placeholder="Descripción" ng-model="ge.credito.descripcion" required=""></textarea>
-									    	</div>
-									    </div>
-										</div>
-										<div class="row">
-											<div class="col-sm-12">
-												<input type="submit" ng-click="ge.guardar(ge.credito,form)" value="Guardar" class="btn btn-primary" ng-show="ge.action" valida-form formulario="form">
-												<input type="submit" ng-click="ge.actualizar(ge.credito,form)" value="Actualizar" class="btn btn-primary" ng-show="!ge.action" valida-form formulario="form">				
-											</div>
-										</div>	  
-								  </form>
-								</div>
-							</div>
-						</div>
-						<!-- Formulario de Reestructuracion -->
-						<div class="row"> 
-							<div class="col-sm-12">
-								<div class="collapse" id="collapseReestructuracion">
-									<form name="formMasivo" class="form-horizontal" role="form" novalidate>
-								  	<div class="well">	    
-									  	<div class="row">
-									  		<div class="col-sm-12">
-									  			<div class="alert alert-warning">
-									  			 <p><i class="fa-fw fa fa-warning"></i> La <strong>actualización masiva</strong> es una herramienta que actualizará el importe, recargo y descuento en un rango de semanas dadas, por favor asegúrese de hacerlo correctamente.</p>
-									  			 <p><strong>No se pueden modificar colegiaturas pagadas</strong></p>
-									  			</div>
-									  		</div>
-									  	</div>
-									    <div class="row">
-									    	<div class="col-sm-4" valida>
-										    	<label>Semana Inicial *</label>
-										    	<input name="semanaIncialMasiva" type="number" class="form-control" placeholder="De la semana" ng-model="ge.modificacion.semanaInicial" required="">
-									    	</div>
-									    	<div class="col-sm-4" valida>
-										    	<label>Semana Final *</label>
-										    	<input name="semanaFinalMasiva" type="number" class="form-control" placeholder="A la semana" ng-model="ge.modificacion.semanaFinal" required="">
-									    	</div>
-									    	<div class="col-sm-4" valida>					    
-										    	<label>Año *</label>
-										    	<input name="anioMasiva" type="number" class="form-control" placeholder="En el año" ng-model="ge.modificacion.anio" required="">
-									    	</div>
-									    	<div class="col-sm-4" valida>					    
-										    	<label>Importe *</label>
-										    	<input name="importeMasivo" type="number" class="form-control" placeholder="Nuevo costo colegiatura" ng-model="ge.modificacion.importeRegular" required="">
-									    	</div>
-									    	<div class="col-sm-4" valida>					    
-										    	<label>Recargo *</label>
-										    	<input name="recargoMasivo" type="number" class="form-control" placeholder="Monto recargo" ng-model="ge.modificacion.recargo" required="">
-									    	</div>
-									    	<div class="col-sm-4" valida>					    
-										    	<label>Descuento *</label>
-										    	<input name="descuentoMasivo" type="number" class="form-control" placeholder="Monto descuento" ng-model="ge.modificacion.descuento" required="">
-									    	</div>
-									    </div> 
-									    <div class="row">
-									    	<div class="col-sm-12" valida>
-											    <label>Descripción</label>
-											    <textarea name="descripcionMasiva" class="form-control" placeholder="Descripción" ng-model="ge.modificacion.descripcion" required=""></textarea>
-									    	</div>
-									    </div>
-										</div>
-										<div class="row">
-											<div class="col-sm-12">
-												<input type="submit" ng-click="ge.modificacionMasiva(ge.modificacion,formMasivo)" value="Modificar" class="btn btn-primary" valida-form formulario="formMasivo">	
-											</div>
-										</div>	  
-								  </form>
-								</div>
-							</div>
-						</div>
-					</div>
+						</div>	  
+				  </form>
 				</div>
 			</div>
 		</div>

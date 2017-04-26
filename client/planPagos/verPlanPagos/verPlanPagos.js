@@ -28,10 +28,9 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.subscribe('cliente', () => {
 		return [{ id : $stateParams.cliente_id }];
 	});
+	
 	this.subscribe('creditos', () => {
-		return [{
-			cliente_id : $stateParams.objeto_id, estatus : 1
-		}];
+		return [{ cliente_id : $stateParams.objeto_id, estatus : 1 }];
 	});
 	
 	this.helpers({
@@ -93,9 +92,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			 return pagos
 		},
 
-		planPagosTrue : () => {
-		
-			 
+		planPagosTrue : () => {	 
 			 pagos = PlanPagos.find({pagoSeleccionado:true},{sort : {numeroPago : 1}}).fetch();
 			 return pagos
 		},
@@ -103,6 +100,9 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			var creditos = Creditos.find().fetch();
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
+				_.each(creditos, function(credito){
+					credito.planPagos = PlanPagos.find({credito_id : credito._id},{sort : {numeroPago : 1}}).fetch();
+				})
 			}
 			
 			return creditos;

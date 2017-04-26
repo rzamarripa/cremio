@@ -189,7 +189,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	  document.getElementById('buscar').focus();
   }; 
   
-  this.planPagosSemana =function () {
+  this.planPagos = function(credito, form){
 	  if(form.$invalid){
       toastr.error('Error al calcular el nuevo plan de pagos, llene todos los campos.');
       return;
@@ -230,19 +230,22 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			}
 			
 			rc.planPagos.push(angular.copy(pago));
-
-			var siguienteMes = moment(mfecha).add(1, 'M');
-			var finalSiguienteMes = moment(siguienteMes).endOf('month');
 			
-			if(mfecha.date() != siguienteMes.date() && siguienteMes.isSame(finalSiguienteMes.format('YYYY-MM-DD'))) {
-			    siguienteMes = siguienteMes.add(1, 'd');
-			}
-			
-			mfecha = siguienteMes;
+			if(credito.periodoPago == "Semanal"){
+		  	mfecha = mfecha.day(8);
+		  }else if(credito.periodoPago == "Mensual"){
+			  var siguienteMes = moment(mfecha).add(1, 'M');
+				var finalSiguienteMes = moment(siguienteMes).endOf('month');
+				
+				if(mfecha.date() != siguienteMes.date() && siguienteMes.isSame(finalSiguienteMes.format('YYYY-MM-DD'))) {
+				    siguienteMes = siguienteMes.add(1, 'd');
+				}
+				
+				mfecha = siguienteMes;
+		  }			
 		}
-
-		return plan;
-	}
+	  return plan;
+  }
 	
 	this.generarCredito = function(){
 		console.log(this.credito);
