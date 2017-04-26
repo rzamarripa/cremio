@@ -158,15 +158,13 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 
 	$(document).ready(function() {
-    if (rc.getReactively("nota") != undefined) {
+    if (rc.getReactively("notaCuenta1") != undefined) {
     	console.log("entro al modal ",rc.notaCuenta1)
 
     	if (rc.notaCuenta1 != undefined) {
     		console.log("mostrara el modal ")
     	$("#myModal").modal(); 
-    }else{
-    	$("#myModal").modal('hide'); 
-	}
+    }
 
     }else{
     	console.log("no hay nota")
@@ -251,19 +249,19 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	}
 
 
-	$(document).ready(function() {
-		if (rc.getReactively("nota") != undefined) {
-		    	//console.log("entro al modal ")
-		   if (rc.notaCuenta1.perfil != undefined) {
-		    		//console.log("mostrara el modal ")
-		    	$("#myModal").modal(); 
-		   	}
-		   	else
-		   	{
-		    	$("#myModal").modal('hide'); 
-				}
-    }
-	});
+	// $(document).ready(function() {
+	// 	if (rc.getReactively("nota") != undefined) {
+	// 	    	//console.log("entro al modal ")
+	// 	   if (rc.notaCuenta1.perfil != undefined) {
+	// 	    		//console.log("mostrara el modal ")
+	// 	    	$("#myModal").modal(); 
+	// 	   	}
+	// 	   	else
+	// 	   	{
+	// 	    	$("#myModal").modal('hide'); 
+	// 			}
+ //    }
+	// });
 
 
 
