@@ -297,12 +297,32 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		});
 
 		_.each(rc.getReactively("planPagosViejo"), function(pago){
-			if (pago.estatus == 1) {
-				var fecha = new Date();
-
-				rc.creditos[0].fechaEntrega = fecha
-			}
+				if (pago.estatus == 1) {
+					Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
+						//console.log("entro")
+						
+					})
+				}else{
+					
+					rc.creditos.estatus = 4
+				}
+					
 		});
+
+			//console.log(credito)
+		// 	if (rc.creditos != undefined) {
+		// 	_.each(pagos, function(pago){
+		// 		if (pago.estatus == 1) {
+		// 			Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
+		// 				//console.log("entro")
+						
+		// 			})
+		// 		}else{
+					
+		// 			rc.creditos.estatus = 4
+		// 		}
+		// 	});
+		// }
 
 	  console.log(rc.creditos,"el credito") 
 		

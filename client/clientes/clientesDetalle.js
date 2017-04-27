@@ -138,10 +138,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 		notaCuenta1: () => {
 			var nota = Notas.find().fetch()
-			if (nota.perfil != undefined) {
+		
 
 				return nota[nota.length - 1];
-			}
+			
 			
 		},
 		usuario: () => {
@@ -158,20 +158,20 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 
 	$(document).ready(function() {
-    if (rc.getReactively("nota") != undefined) {
+    if (rc.getReactively("notaCuenta1") != undefined) {
     	console.log("entro al modal ",rc.notaCuenta1)
 
     	if (rc.notaCuenta1 != undefined) {
     		console.log("mostrara el modal ")
     	$("#myModal").modal(); 
-    }else{
-    	$("#myModal").modal('hide'); 
-	}
+    }
 
     }else{
     	console.log("no hay nota")
     }
 });
+
+
 	console.log("nota ",rc.notaCuenta1)
 	this.actualizar = function(cliente,form){
 
@@ -249,19 +249,19 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	}
 
 
-	$(document).ready(function() {
-		if (rc.getReactively("nota") != undefined) {
-		    	//console.log("entro al modal ")
-		   if (rc.notaCuenta1.perfil != undefined) {
-		    		//console.log("mostrara el modal ")
-		    	$("#myModal").modal(); 
-		   	}
-		   	else
-		   	{
-		    	$("#myModal").modal('hide'); 
-				}
-    }
-	});
+	// $(document).ready(function() {
+	// 	if (rc.getReactively("nota") != undefined) {
+	// 	    	//console.log("entro al modal ")
+	// 	   if (rc.notaCuenta1.perfil != undefined) {
+	// 	    		//console.log("mostrara el modal ")
+	// 	    	$("#myModal").modal(); 
+	// 	   	}
+	// 	   	else
+	// 	   	{
+	// 	    	$("#myModal").modal('hide'); 
+	// 			}
+ //    }
+	// });
 
 
 

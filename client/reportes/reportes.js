@@ -130,11 +130,11 @@ angular.module("creditoMio")
 					// 	plan.estatusGarantia = "No"
 
 					// }
-					if (plan.credito.estatus == 4) {
+					// if (plan.credito.estatus == 4) {
 
-					}else{
-						planes = ""
-					}
+					// }else{
+					// 	planes = ""
+					// }
 				});
 			}
 			return planes
