@@ -78,20 +78,35 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		notasCredito : () =>{
 			return NotasCredito.find({},{sort:{fecha:1}});
 		},
+		notaPerfil: () => {
+			var nota = Notas.find({perfil : "perfil"}).fetch()
+			return nota[nota.length - 1];
+		},
 		objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
-			_.each(cli, function(objeto){
-				objeto.empresa = Empresas.findOne(objeto.empresa_id)
+			
+			_.each(rc.getReactively("notaPerfil"), function(nota){
+				console.log(rc.notaPerfil.cliente_id,"nota a l avga")
+				if (cli._id == rc.notaPerfil.cliente_id) {
+					console.log("entro aqui compilla")
+					$("#notaPerfil").modal();
+					
+				}
 
 			});
+			_.each(cli, function(objeto){
+				
+				objeto.empresa = Empresas.findOne(objeto.empresa_id)
+				
+				
+				//console.log("ultima Nota",rc.notaPerfil)
+			});
+				
 			if(cli){
 				this.ocupacion_id = cli.profile.ocupacion_id;
+
 				return cli;
 			}		
-		},
-		item : () =>{
-			var kaka = rc.objeto
-			return kaka
 		},
 		ocupaciones : () => {
 			if(this.getReactively("creditos")){
@@ -137,7 +152,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			}
 		},
 		notaCuenta1: () => {
-			var nota = Notas.find().fetch()
+			var nota = Notas.find({tipo : "Cuenta"}).fetch()
 		
 
 				return nota[nota.length - 1];
@@ -147,10 +162,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		usuario: () => {
 			return Meteor.users.findOne()
 		},
-		notaPerfil: () => {
-			var nota = Notas.find({perfil : "perfil"}).fetch()
-			return nota
-		},
+		
 		
 		
 	});
@@ -159,11 +171,21 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 	$(document).ready(function() {
     if (rc.getReactively("notaCuenta1") != undefined) {
-    	console.log("entro al modal ",rc.notaCuenta1)
+    	//console.log("entro al modal ",rc.notaCuenta1)
 
     	if (rc.notaCuenta1 != undefined) {
-    		console.log("mostrara el modal ")
-    	$("#myModal").modal(); 
+    		//console.log("mostrara el modal ")
+    		_.each(rc.getReactively("notaCuenta1"), function(nota){
+    			_.each(rc.getReactively("objeto"), function(item){
+    			//console.log("entra")
+    			if (nota.cliente_id == item._id ) {
+    				//console.log("each del modal")
+    				$("#myModal").modal(); 
+    			}
+    		});
+    	});
+
+    	
     }
 
     }else{
@@ -372,17 +394,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		toastr.success('Nota guardada.');
 		rc.nota = {};
 		$("#modalCliente").modal('hide');
-
-       		
 	};
-	this.verNota = function(){
-		$("#notaPerfil").modal();
-
-	}
 
 
-
-
-	
 	
 }

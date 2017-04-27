@@ -105,27 +105,21 @@ angular.module("creditoMio")
 		},
 
 		planPagos : () => {
-
 			var planes = PlanPagos.find({multada:1});
 			var obj = planes.length
-
 
 			return planes;
 		},
 
 		pagosVencidos : () => {
-
 			_.each(rc.getReactively("planPagos"),function(plan){});
-
 			return rc.planPagos.length
 
 		},
 
 
-
 		historialCredito : () => {
 			var creditos = [];
-
 			rc.clientes_id = _.pluck(rc.cobranza,"cliente._id")
 			
 				
@@ -259,7 +253,7 @@ angular.module("creditoMio")
   		console.log(rc.cliente_id)
   		Creditos.find({cliente_id: rc.getReactively("cliente_id"),estatus : 5}).fetch()
 
-  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"),estatus : 5}).fetch()
+  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
 
 	  	this.ban = !this.ban;
 
@@ -703,12 +697,9 @@ angular.module("creditoMio")
 	};
 
 	this.imprimirRecibos= function(objeto) 
-
   {
 	  	
 		console.log("entro:", objeto);
-
-		
 
 
 		Meteor.call('getRecibosVencidos', objeto, function(error, response) {
@@ -718,9 +709,7 @@ angular.module("creditoMio")
 		 _.each(objeto.cliente,function(cliente){
 			console.log("entro: o culo?");
 			cliente.colonia = Colonias.findOne(cliente.profile.colonia_id)
-
 			});
-
 
 		   if(error)
 		   {
@@ -732,10 +721,8 @@ angular.module("creditoMio")
 			 				function b64toBlob(b64Data, contentType, sliceSize) {
 								  contentType = contentType || '';
 								  sliceSize = sliceSize || 512;
-								
 								  var byteCharacters = atob(b64Data);
 								  var byteArrays = [];
-								
 								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
 								    var slice = byteCharacters.slice(offset, offset + sliceSize);
 								

@@ -33,11 +33,7 @@
 									<div class="air air-top-left padding-10">
 										<h4 class="txt-color-white font-md"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{cd.fechaActual | date:'dd-MM-yyyy'}}</h4>
 									</div>
-									<div class="air air-top-right padding-10">
-									<a	ng-click="cd.verNota()" class="btn txt-color-white bg-color-orange btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
-	 										<i class="fa fa-file"></i> Ver nota
-	 									</a> 
-									</div>
+						
 									<ol class="carousel-indicators">
 									</ol>
 									<div class="carousel-inner">
@@ -893,9 +889,9 @@
 									<h4 class="modal-title">Nota</h4>
 								</div>
 								<div class="modal-body">
-								 <div ng-repeat="nota in cd.notaPerfil">{{nota.nombre}}</div>
+								 <div >{{cd.notaPerfil.nombre}}</div>
 								</div>
-								<div class="modal-footer"s>
+								<div class="modal-footer">
 			    				    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 			        
 		     				 </div>
