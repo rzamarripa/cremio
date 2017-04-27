@@ -18,11 +18,11 @@
 							<div class="col-sm-12">
 								<div id="myCarousel" class="carousel profile-carousel">
 									<div class="air air-bottom-right padding-10">
-										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador' " ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
- 										<a ui-sref="root.editarCliente({cliente_id : ge.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-show="currentUser.roles[0] == 'Gerente'">
-	 										<i class="fa fa-pencil"></i> Modificar
-	 									</a> 
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador' " ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp; 
 									</div>
+									<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
+	 										<i class="fa fa-pencil"></i> Modificar
+	 								</a> 
 									<div class="air air-top-left padding-10">
 										<h4 class="txt-color-white font-md"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{ge.fechaActual | date:'dd-MM-yyyy'}}</h4>
 									</div>
@@ -49,7 +49,7 @@
 												<p class="text-muted">
 													<i class="fa fa-key fa-lg"></i>&nbsp;&nbsp;
 													<span class="txt-color-darken">
-														<strong>{{ge.pago.username}}</strong>
+														<strong>{{ge.cliente.profile.username}}</strong>
 													</span>
 												</p>
 											</li>
@@ -66,6 +66,11 @@
 											<li>
 												<p class="text-muted">
 													<i class="fa fa-birthday-cake fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ge.cliente.profile.fechaNacimiento | date:"dd-MM-yyyy"}}</span>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-calendar fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ge.objeto.profile.fechaCreacion | date:"dd-MM-yyyy"}}(Fecha de alta)</span>
 												</p>
 											</li>
 										</ul>
@@ -112,25 +117,7 @@
 					    	<div class="col-sm-2" valida>
 						    	<label>Capital Solicitado *</label>
 						    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ge.credito.capitalSolicitado" required="">
-					    	</div>
-<!--
-								<div class="col-sm-2" valida>
-						    	<label>Día preferido de pago *</label>
-						    	<select name="diaPreferidoPago" class="form-control" ng-change="ge.fechaPago(ge.credito.diaPreferidoPago, ge.credito.periodoPago)" ng-model="ge.credito.diaPreferidoPago">
-							    	<option value="1">Lunes</option>
-							    	<option value="2">Martes</option>
-							    	<option value="3">Miércoles</option>
-							    	<option value="4">Jueves</option>
-							    	<option value="5">Viernes</option>
-							    	<option value="6">Sábado</option>
-						    	</select>
-					    	</div>
-					    	<div class="col-sm-2" valida>
-						    	<label>Primer abono</label>
-						    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.primerAbono" name="fechaPrimerAbono"/>
-					    	</div>	
--->					
-
+					    	</div>		
 					    	<div class="col-sm-2">					    
 						    	<label>Requiere Verificación</label>
 						    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ge.credito.requiereVerificacion">
@@ -435,6 +422,7 @@
 					<th class="text-center" width="15%">Pago</th>
 					<th class="text-center" width="10%">Capital</th>
 					<th class="text-center" width="10%">Interes</th>
+					<th class="text-center" width="10%">Seguro</th>
 					<th class="text-center" width="10%">IVA</th>
 					<th class="text-center" width="10%">Importe total</th>
 				</tr>
@@ -446,6 +434,7 @@
 					<td class="text-center">{{pago.numeroPago}} - {{ge.planPagos.length}}</td>
 					<td class="text-right">{{pago.capital | currency}}</td>
 					<td class="text-right">{{pago.interes | currency}}</td>
+					<td class="text-right">{{pago.seguro | currency}}</td>
 					<td class="text-right">{{pago.iva | currency}}</td>
 					<td class="text-right">{{pago.importeRegular | currency}}</td>
 				</tr>
@@ -453,7 +442,7 @@
 		</table>
 		</div>
 
-		<button class="btn btn-success" ng-click="ge.generarCredito()">Guardar Petición de Crédito</button>
+		<button class="btn btn-success" ng-click="ge.generarCredito()">Guardar Solicitud de Crédito</button>
 		<!-- <a class="btn btn-primary" ng-click="ge.imprecion('print')" target="_blank" ng-show="ge.tablaAmort"
 		>Imprimir Tabla</a>	 -->						
 	</div>

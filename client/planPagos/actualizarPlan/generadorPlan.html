@@ -19,9 +19,6 @@
 								<div id="myCarousel" class="carousel profile-carousel">
 									<div class="air air-bottom-right padding-10">
 										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador' " ui-sref="root.clienteDetalle({objeto_id : ae.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
- 										<a ui-sref="root.editarCliente({cliente_id : ae.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-show="currentUser.roles[0] == 'Gerente'">
-	 										<i class="fa fa-pencil"></i> Modificar
-	 									</a> 
 									</div>
 									<div class="air air-top-left padding-10">
 										<h4 class="txt-color-white font-md"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{ae.fechaActual | date:'dd-MM-yyyy'}}</h4>
@@ -38,7 +35,7 @@
 							<div class="col-sm-12">
 								<div class="row">
 									<div class="col-sm-2 profile-pic" style="text-align:left;width:initial;">
-										<img style="max-width:200px;" src="{{ae.tieneFoto(ae.cliente.profile.sexo, ae.cliente.profile.fotografia)}}" >
+										<img style="max-width:200px;" src="{{ae.tieneFoto(ae.cliente.profile.sexo, ae.cliente.profile.foto)}}" >
 									</div>
 									<div class="col-sm-6">
 										<h1>{{ae.cliente.profile.nombre}} <span class="semi-bold">{{ae.cliente.profile.apellidoPaterno}} {{ae.cliente.profile.apellidoMaterno}}</span>
@@ -49,13 +46,13 @@
 												<p class="text-muted">
 													<i class="fa fa-key fa-lg"></i>&nbsp;&nbsp;
 													<span class="txt-color-darken">
-														<strong>{{ae.pago.username}}</strong>
+														<strong>{{ae.cliente.username}}</strong>
 													</span>
 												</p>
 											</li>
 											<li>
 												<p class="text-muted">
-													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ae.cliente.profile.telefono}}</span>
+													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ae.cliente.profile.particular}}</span>
 												</p>
 											</li>
 											<li>
@@ -436,6 +433,7 @@
 					<th class="text-center" width="15%">Pago</th>
 					<th class="text-center" width="10%">Capital</th>
 					<th class="text-center" width="10%">Interes</th>
+					<th class="text-center" width="10%">Seguro</th>
 					<th class="text-center" width="10%">IVA</th>
 					<th class="text-center" width="10%">Importe total</th>
 				</tr>
@@ -447,12 +445,13 @@
 					<td class="text-center">{{pago.numeroPago}} - {{ae.planPagos.length}}</td>
 					<td class="text-right">{{pago.capital | currency}}</td>
 					<td class="text-right">{{pago.interes | currency}}</td>
+					<td class="text-right">{{pago.seguro | currency}}</td>
 					<td class="text-right">{{pago.iva | currency}}</td>
 					<td class="text-right">{{pago.importeRegular | currency}}</td>
 				</tr>
 			</tbody>
 		</table>	
-		<button class="btn btn-success" ng-click="ae.generarCredito()">Generar Crédito</button>							
+		<button class="btn btn-success" ng-click="ae.actualizarCredito()">Actualizar Solicitud de Crédito</button>							
 	</div>
 </div>
 

@@ -67,6 +67,8 @@ Meteor.methods({
   },  
   imprimirDocumentos : (idCredito)=>{
 		
+		const formatCurrency = require('format-currency');
+		
 		var creditoAprobado = Creditos.findOne({_id: idCredito});
 		
 		var letras = NumeroALetras(creditoAprobado.capitalSolicitado);		
@@ -77,8 +79,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";		
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";		
 		
 		
 		//Ir por los datos del cliente
@@ -102,9 +104,9 @@ Meteor.methods({
 		var importe = 0;
 		_.each(pp,function (planPago) {
 				
-				planPago.monto = Monto;
+				planPago.monto = formatCurrency(Monto);
 				planPago.fecha = planPago.fechaLimite.getUTCDate() +"-"+ (planPago.fechaLimite.getUTCMonth()+1) +"-"+ planPago.fechaLimite.getUTCFullYear();
-				planPago.importe = planPago.capital + planPago.interes + planPago.iva;
+				planPago.importe = formatCurrency(planPago.capital + planPago.interes + planPago.seguro + planPago.iva);
 				
 				Monto -= planPago.importe;
 				
@@ -149,7 +151,7 @@ Meteor.methods({
 									cantidad							:	creditoAprobado.capitalSolicitado,
 									letra									:	letras,
 									periodoPago						: creditoAprobado.periodoPago,
-									total									: creditoAprobado.adeudoInicial,
+									total									: formatCurrency(creditoAprobado.adeudoInicial),
 													
 									pp
 								});
