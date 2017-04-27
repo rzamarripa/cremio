@@ -14,8 +14,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.fechaActual = new Date();
 	this.nuevoBotonReestructuracion = true;
 	this.nuevoBotonCredito = true;
-	//this.buscar = {};
-	//this.buscar.nombre = "";
+	
 	this.cliente_id = "";
 	this.planPagos = [];
 	this.credito = {};
@@ -35,6 +34,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.garantiasGeneral = [];
 	this.garantia = {};
   
+  this.cliente = {};
 	this.buscar = {};
 	this.buscar.nombre = "";
 	this.buscando = false;
@@ -54,11 +54,13 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		}
 		else if (this.getReactively("buscar.nombre").length  == 0 )
 			this.buscando = false;
-  	});
+  });
 	
+
 	this.subscribe("planPagos", ()=>{
 		return [{ cliente_id : $stateParams.objeto_id }]
 	});
+
 	
 	this.subscribe("tiposCredito", ()=>{
 		return [{ estatus : true, sucursal_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "" }]
@@ -68,13 +70,10 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		return [{ _id : $stateParams.objeto_id }];
 	});
 	
-	this.subscribe('creditos', () => {
-		return [{ _id : $stateParams.credito_id }];
-	});
-	
 	this.subscribe('pagos', () => {
 		return [{ estatus:true}];
 	});
+
 	
 	this.helpers({
 		personasTipos : () => {
@@ -99,13 +98,9 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		tiposCredito : () => {
 			return TiposCredito.find();
 		},
+
 		pagos : () => {
 			return Pagos.find();
-		},
-		creditos : () => {
-			this.credito = Creditos.findOne();
-			//console.log(this.credito);
-			return;
 		},
 		
 	});
@@ -638,7 +633,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	    }
   };
 
-      this.borrarBotonImprimir= function()
+  this.borrarBotonImprimir= function()
 	{
 		var printButton = document.getElementById("printpagebutton");
 		 printButton.style.visibility = 'hidden';

@@ -270,7 +270,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		return rc.planPagos;
 	}
 	
-	this.generarCredito = function(){
+	this.actualizarCredito = function(){
 		
 		var credito = {
 			cliente_id : this.cliente._id,
@@ -285,25 +285,24 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			multasPendientes : 0,
 			saldoMultas : 0.00,
 			saldoRecibo : 0.00,
-			estatus : 1,
+			//estatus : 1,
 			requiereVerificacion: this.credito.requiereVerificacion,
 			sucursal_id : Meteor.user().profile.sucursal_id,
 			fechaVerificacion: this.credito.fechaVerificacion,
-			tipoGarantia : this.credito.tipoGarantia
+			tipoGarantia : this.credito.tipoGarantia,
 		};
 				
 		credito.avales = angular.copy(this.avales);
-		
-		//Duda se guardan los dos???
 		
 		if (this.credito.tipoGarantia == "mobiliaria")
 				credito.garantias = angular.copy(this.garantias);
 		else
 				credito.garantias = angular.copy(this.garantiasGeneral);
+		
 				
-			//console.log(credito)
+		console.log(credito)
 				
-		Meteor.apply('actualizarCredito', [this.cliente, credito], function(error, result){
+		Meteor.apply('actualizarCredito', [this.cliente, credito, $stateParams.credito_id], function(error, result){
 			console.log(result,error)
 			if(result == "hecho"){
 				toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');

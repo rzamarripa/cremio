@@ -169,7 +169,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
     }else{
     	console.log("no hay nota")
     }
-});
+	});
 
 
 	console.log("nota ",rc.notaCuenta1)

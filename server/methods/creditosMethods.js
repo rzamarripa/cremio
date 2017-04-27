@@ -156,15 +156,18 @@ Meteor.methods({
 		
 		return "hecho";
 	},
-	actualizarCredito : function(cliente, credito ) {
+	actualizarCredito : function(cliente, credito, idCredito ) {
+		
+		
 		if(credito.requiereVerificacion == true){
 			credito.estatus = 0;
 		}else if(credito.requiereVerificacion == false){
 			credito.estatus = 1;
 		}
 
-		var planPagos = Meteor.call("generarPlanPagos",credito,cliente);
+		//var planPagos = Meteor.call("generarPlanPagos",credito,cliente);
 		//console.log (planPagos)
+/*
 		var saldoActual=0;
 		_.each(planPagos,function(pago){
 			saldoActual += pago.cargo;
@@ -172,6 +175,7 @@ Meteor.methods({
 		credito.numeroPagos = planPagos.length;
 		credito.saldoActual = saldoActual;
 		credito.adeudoInicial = saldoActual;
+*/
 
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		//credito.folio = sucursal.folio + 1;
@@ -202,9 +206,12 @@ Meteor.methods({
 	  	
 		//Sucursales.update({_id : sucursal._id}, { $set : { folio : credito.folio}});
 		
-		var credito_id = credito._id;
-		delete credito._id
-		Creditos.update({_id:credito_id},{$set:credito});
+/*
+		var credito_idTemp = credito._id;
+		delete credito._id;
+*/
+		Creditos.update({_id:idCredito},{$set:credito});
+/*
 		PlanPagos.remove({credito_id:credito_id});
 
 		_.each(planPagos, function(pago){
@@ -216,6 +223,7 @@ Meteor.methods({
 			PlanPagos.insert(pago)
 		});
 		Meteor.call("generarMultas");
+*/
 		return "hecho";
 	},
 	entregarCredito : (montos,creditoid)=>{
