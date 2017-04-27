@@ -67,6 +67,11 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.subscribe('cliente', () => {
 		return [{ _id : $stateParams.objeto_id }];
 	});
+	
+	this.subscribe('creditos', () => {
+		return [{ _id : $stateParams.credito_id }];
+	});
+	
 	this.subscribe('pagos', () => {
 		return [{ estatus:true}];
 	});
@@ -96,6 +101,11 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		},
 		pagos : () => {
 			return Pagos.find();
+		},
+		creditos : () => {
+			this.credito = Creditos.findOne();
+			//console.log(this.credito);
+			return;
 		},
 		
 	});
@@ -256,7 +266,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 					rc.planPagos.push(pago)
 					$scope.$apply();
 				});
-				console.log("Prueba",rc.planPagos)
+				//console.log("Prueba",rc.planPagos)
 			}
 				
 		})

@@ -16,13 +16,23 @@ Meteor.methods({
 		//console.log(tipoCredito);
 
 		var totalPagos = 0;
+		var seguro = tipoCredito.seguro;
 
 		if(credito.periodoPago == "Semanal")
+		{
 			totalPagos = credito.duracionMeses * 4;
+			seguro = seguro / 2;	
+		}	
 		else if (credito.periodoPago == "Quincenal")
+		{
 			totalPagos = credito.duracionMeses * 2;
+		}	
 		else if(credito.periodoPago == "Mensual")
+		{
 			totalPagos = credito.duracionMeses;
+			seguro = seguro * 2;
+		
+		}	
 		
 		
 /*
@@ -34,7 +44,7 @@ Meteor.methods({
 		
 		
 		var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)
-								*credito.duracionMeses+credito.capitalSolicitado)/totalPagos);
+								*credito.duracionMeses+credito.capitalSolicitado)/totalPagos)+seguro;
 		
 		var iva = ((credito.capitalSolicitado * (tipoCredito.tasa / 100)*0.16)*credito.duracionMeses)/totalPagos;
 		iva = parseFloat(iva.toFixed(2));
@@ -54,6 +64,7 @@ Meteor.methods({
 				importeRegular		: importeParcial,
 				iva					: iva,
 				interes 			: interes,
+				seguro				: seguro,
 				cliente_id			: cliente._id,
 				capital 			: capital,
 				fechaPago			: undefined,

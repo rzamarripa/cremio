@@ -25,6 +25,10 @@
 					    <label>Descripción *</label>
 				    	<textarea rows="3" name="descripcion" type="text" class="form-control" placeholder="Descripción" ng-model="tc.objeto.descripcion" required>
 				    </div>
+				    <div class="col-sm-4" valida>
+					    <label>Seguro *</label>
+				    	<input name="seguro" type="number" class="form-control" placeholder="Seguro" ng-model="tc.objeto.seguro" required>
+				    </div>
 					</div>
 				</div>
 				<h4>Multa al vencimiento</h4>
@@ -70,6 +74,7 @@
 					<th width="10%"><div class="text-center">Monto Máximo</div></th>
 					<th width="10%"><div class="text-center">Tasa</div></th>
 					<th width="30%"><div class="text-center">Descripción</div></th>
+					<th width="10%"><div class="text-center">Seguro</div></th>
 					<th width="15%">
 						<div class="text-center">
 							Estatus
@@ -89,6 +94,7 @@
 			    <td class="text-right">{{objeto.montoMaximo | currency}}</td>
 			    <td class="text-center">{{objeto.tasa | number}}%</td>
 			    <td>{{objeto.descripcion}}</td>
+			    <td class="text-right">{{objeto.seguro | currency}}</td>
 			    <td>
 				    <div class="text-center">
 				    	<span ng-if="objeto.estatus" class="label label-success">
