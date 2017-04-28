@@ -241,9 +241,9 @@ Meteor.methods({
 						 numeroPago : p.numeroPago,movimiento:p.movimiento,cargo:p.importe,planPago_id:p._id}
 
 				p.pagos.push(npp);
-
+				credit = Creditos.findOne(pago.credito_id);
 				var npago={planPago_id:p._id,totalPago:ttpago,estatus:p.estatus, descripcion:p.descripcion,
-						fechaPago:pago.fechaPago, numeroPago : p.numeroPago};
+						fechaPago:pago.fechaPago, numeroPago : p.numeroPago,folioCredito:credit.folio};
 				pago.planPagos.push(npago);
 
 				var pid = p._id;
