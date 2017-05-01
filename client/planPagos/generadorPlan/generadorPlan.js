@@ -251,7 +251,26 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			rc.credito.estatus = 0;
 		else
 			rc.credito.estatus = 1;
-		Meteor.call("generarPlanPagos",rc.credito,rc.cliente,function(error,result){
+
+		var _credito = {
+			cliente_id : this.cliente._id,
+			tipoCredito_id : this.credito.tipoCredito_id,
+			fechaSolicito : new Date(),
+			duracionMeses : this.credito.duracionMeses,
+			capitalSolicitado : this.credito.capitalSolicitado,
+			adeudoInicial : this.credito.capitalSolicitado,
+			saldoActual : this.credito.capitalSolicitado,
+			periodoPago : this.credito.periodoPago,
+			fechaPrimerAbono : this.credito.primerAbono,
+			multasPendientes : 0,
+			saldoMultas : 0.00,
+			saldoRecibo : 0.00,
+			estatus : 1,
+			requiereVerificacion: this.credito.requiereVerificacion,
+			sucursal_id : Meteor.user().profile.sucursal_id
+		};
+
+		Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
 		
 			if(error){
 				console.log(error);

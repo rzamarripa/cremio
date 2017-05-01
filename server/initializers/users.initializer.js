@@ -7,4 +7,14 @@ Meteor.startup(function () {
     
     
   }
+  	var multas = function () {
+      console.log('multas!');
+      Meteor.call("actualizarMultas");
+    }
+
+    var cron = new Meteor.Cron( {
+      events:{
+        "0 1 * * *"  : multas
+      }
+    });
 });

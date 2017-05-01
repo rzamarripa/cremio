@@ -14,7 +14,7 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	this.notaCredito = {};
 	this.pago = {};
 	this.pago.totalPago = 0;
-	this.creditos = [];
+	//this.creditos = [];
 	this.creditos_id = []
 
 	this.total = 0;
@@ -58,7 +58,7 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 
 			rc.credito_id = $stateParams.credito_id;
 			var fechaActual = moment();
-			 pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
+			pagos = PlanPagos.find({},{sort : {numeroPago : 1,descripcion:1}}).fetch();
 
 			 return pagos
 		},
@@ -96,96 +96,35 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 						
 
 			_.each(rc.getReactively("creditos"), function(credito){
+				var pagos = PlanPagos.find({credito_id:credito._id},{sort:{numeroPago:1,descripcion:1}}).fetch()
+				var saldo =0;
+				try{ saldo = credito.numeroPago*pagos[0].cargo;} catch(ex){console.log("aqui",pagos)}
+				console.log("credito",credito);
 				_.each(rc.getReactively("planPagosViejo"), function(planPago, index){
-					var saldo = 0;
-					//console.log(saldo)
-				
+							
 			  				
-			  					planPago.capitalSolicitado =  saldo;
+			  				
 
-			  				if(index == 0){
-			  					//console.log("primero", index)
-			  					saldo = credito.capitalSolicitado ;
-			  				}else{
-			  					console.log("más", index);
-			  					saldo = saldoPago; 
-			  					console.log("saldoPago", saldoPago);
-			  				}
+			  				if(planPago.descripcion=="Multa")
+			  					saldo+=planPago.importeRegular
+			  				
 
-					arreglo.push({saldo:saldo , numeroPago : planPago.numeroPago,fechaSolicito : credito.fechaSolicito,
-			  				fecha:planPago.fechaPago,pago:planPago.importeRegular, cargo:planPago.cargo,movimiento:"Recibo",
-			  				planPago_id:planPago._id,credito_id:planPago.credito_id,descripcion:planPago.descripcion,importe:planPago.importeRegular,pagos:planPago.pagos
+							arreglo.push({saldo:saldo , numeroPago : planPago.numeroPago,cantidad:credito,fechaSolicito : credito.fechaSolicito,
+										fecha:planPago.fechaPago,pago:planPago.importeRegular, cargo:planPago.cargo,movimiento:planPago.movimiento,
+										planPago_id:planPago._id,credito_id:planPago.credito_id,descripcion:planPago.descripcion,
+										importe:planPago.importeRegular,pagos:planPago.pagos
 			  				 })
 					
-						var pagoSuma = 0;
-			  				_.each(planPago.pagos, function(pago){
-			  						var SumaPago = 0;
- 
-			  						console.log("pagosuma",pagoSuma)
-
-			  						if (planPago.descripcion == "Multa") {
-			  							console.log("entro aqui")
-			  							_.each(planPago.pagos, function(pago){
-			  								console.log("entro al each")
-			  								pago.cargo += pago.totalPago
-			  								pago.saldo = saldoPago
-
-
-			  							}); 
-			  							saldo = saldoPago + planPago.importe
-			  							console.log("el saldo ya con la multa",saldo)
-			  						}
-			  						if (pago.planPago_id == planPago._id) {
-			  						pagoSuma += pago.totalPago;
-			  						SumaPago += pago.totalPago;
-			  						saldoPago = (saldo - pagoSuma);
-			  						if (pago.movimiento=="Abono") {
-			  							pago.saldo = saldoPago
-
-			  						}
-			  					}
-			  					if (saldoPago <= 0) {
-			  						saldoPago = 0
-			  					}
-			  									  						
-			  			
-			  					 		_.each(arreglo, function(array){
-										if (array.fecha == undefined) {
-									  	    array.saldo = 0
-									  	  
-									  	    };
-
-								  	    if (array.saldo <= 0) {
-									  	    array.saldo = 0
-									  	    };
-									    if (array.descripcion == "Multa") {
-									  	    array.movimiento = "Multa"
-									  	      array.pago = array.importe
-									  	      array.pagar = array.importe
-									  	      //saldoPago = saldoPago + array.importe
-									  	    
-									  	    }
-
-									  	     // if (array.planPago_id == planPago._id && array.descripcion == planPago.descripcion) {
-
-									  	     // }
-									  	if (array.cargo == undefined) {
-									  	    array.cargo = 0;
-									  	    }
-
-							  					
-									});
-
-			  					});
+							
 			  				
 			  				
 						});
-				credito.saldoActual = saldoPago
-				//Creditos.update({_id:credito_id},{$set:pago});
+						credito.saldoActual = saldoPago
+						//Creditos.update({_id:credito_id},{$set:pago});
 				});
 
 			
-					_.union([arreglo]).sort;
+					//_.union([arreglo]).sort;
 
 			console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
