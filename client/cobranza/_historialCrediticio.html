@@ -1,1 +1,25 @@
-trabajando
+<div class="row"><br/>
+	<div class="col-sm-12">	
+		<table class="table table-striped table-bordered table-condensed font-xs">
+			<thead class="thead">
+				<tr>
+					<th class="text-center" width="5%">No.</th>
+					<th class="text-center" width="20%">Fecha de Pago</th>
+					<th class="text-center" width="15%">Pago</th>
+					<th class="text-center" width="10%">Importe</th>
+					<th class="text-center" width="20%">Descripción</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cob.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in cob.planPagos">
+					
+					<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{$index + 1}}</td>	
+					<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+					<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{cob.planPagos.length}}</td>
+					<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
+					<td ng-class="pago.descripcion == 'Multa' ? 'text-danger' : ''">{{pago.descripcion }}</td>
+				</tr>
+			</tbody>
+		</table>	
+	</div>
+</div>

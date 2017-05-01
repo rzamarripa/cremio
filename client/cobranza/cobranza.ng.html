@@ -26,7 +26,23 @@
 		</div>
 	</div>	
 </div>
-<div class="row">
+<div class="well">
+	<div class="row">
+		<div class="col-md-6">
+				<div class="input-group input-group-md">
+			      <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+			      <div class="icon-addon addon-md">
+			          <input type="text" placeholder="..." class="form-control" ng-model="cob.buscar.nombre">
+			          <label for="email" class="glyphicon glyphicon-search" rel="tooltip" title="" data-original-title="email"></label>
+			      </div>
+			      <span class="input-group-btn">
+			          <button class="btn btn-default" ng-click="cob.buscarNombre()" type="button">Buscar</button>
+			      </span>
+			  </div>
+		</div>	
+	</div>
+</div>		
+ <div class="row">	
 	<div class="col-sm-12">
 		<table class="table table-hover border-collapse" >
 			<thead>
@@ -41,7 +57,7 @@
 				</tr>
 			</thead>
 			<tbody>
-		    <tr style='cursor: pointer' ng-repeat-start="objeto in cob.cobranza" ng-click="cob.selCredito(objeto)">
+		    <tr style='cursor: pointer' ng-repeat-start="objeto in cob.cobranza" ng-click="cob.selCredito(objeto)" >
 			    <td>{{ $index + 1 }}</td>
 			    <td class="text-center">{{objeto.credito.folio}}</td>
 			    <td>

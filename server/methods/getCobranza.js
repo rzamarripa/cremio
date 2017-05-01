@@ -2,8 +2,8 @@ Meteor.methods({
   getCobranza: function (fechaInicial, fechaFinal, op) {
 			
 			var arreglo = {};
-			var creditos = Creditos.find({estatus: 2}).fetch(); //estatus 2 creditos autorizados
 			
+			var creditos = Creditos.find({estatus: 2}).fetch(); //estatus 2 creditos autorizados
 			var creditos_ids = _.pluck(creditos, '_id'); // [45, 3]
 			
 			var planPagos = {};
@@ -30,9 +30,6 @@ Meteor.methods({
 						var fechaLimite = moment(planPago.fechaLimite);
 						var dias = fechaActual.diff(fechaLimite, "days");
 						
-									
-						
-						
 						
 					}else{
 						
@@ -51,15 +48,7 @@ Meteor.methods({
 			 			arreglo[planPago.credito_id].planPagos = [];			 			
 			 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago});
 			 			arreglo[planPago.credito_id].multas = [];
-			 			
-			 			/*
-			 			if(hoy > planPago.fechaLimite){
-							
-						}else{
-							
-						}
-						*/
-			 			
+			 						 			
 			 			
 		 			}else{
 			 			
@@ -72,5 +61,37 @@ Meteor.methods({
 			
 			return _.toArray(arreglo);
 	},
+	getPersona: function (idPersona) {
+			var persona = Personas.findOne(idPersona);
+			return persona;
+	},
+	getcobranzaNombre: function (nombre) {
+			
+			var arreglo = {};
+			
+			//Ir por los clientes
+			let selector = {
+	  	"profile.nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' },
+			  	roles : ["Cliente"]
+			}
+			var clientes = Meteor.users.find(selector).fetch();
+			var clientes_ids = _.pluck(clientes,"_id");			
+			console.log(clientes_ids);
+			
+			//Ir por los creditos
+			var creditos = Creditos.find({cliente_id :{ $in: clientes_ids }}).fetch(); //estatus 2 creditos autorizados
+			var creditos_ids = _.pluck(creditos, '_id'); // [45, 3]
+			console.log(creditos_ids);
+			
+			//Ir por los pagos que ha hecho
+			var planPagos = PlanPagos.find({credito_id: { $in: creditos_ids }, estatus: 0}).fetch();
+			
+			
+			
+			
+			
+			
+	},
+	
 	
 });	
