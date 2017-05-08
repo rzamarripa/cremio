@@ -458,6 +458,7 @@
 														<th class="text-center" width="10%">Seguro</th>
 														<th class="text-center" width="10%">IVA</th>
 														<th class="text-center" width="10%">Saldo</th>
+														<th class="text-center" width="10%">Pago</th>
 														
 														
 													</tr>
@@ -477,6 +478,7 @@
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
+														<td ><input type="number" ng-change="pvpp.seleccionarMontoPago(pago)"  ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
 														
 														
 													</tr>

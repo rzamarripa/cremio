@@ -224,13 +224,58 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
  		pago.pagoSeleccionado = !pago.pagoSeleccionado;
 		pago.estatus = 0;	
 		rc.pago.totalPago = 0;
-
+		if(!pago.pagoSeleccionado)
+			pago.importepagado = 0;
 		_.each(rc.planPagosViejo, function(p){
+			if(!pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago>pago.numeroPago && p.estatus!=1){
+				p.importepagado = 0;
+				p.pagoSeleccionado = false;
+			}
+			if(pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago<=pago.numeroPago && p.estatus!=1){
+				p.importepagado = p.importeRegular;
+				p.pagoSeleccionado = true;
+			}
 			if(p.pagoSeleccionado != undefined){
 				if(p.pagoSeleccionado == true){
-					rc.pago.totalPago += p.importeRegular;	
+					rc.pago.totalPago += p.importepagado;	
 				}	
 			}
+
+		});
+	}
+	this.seleccionarMontoPago = function(pago)
+	{ 
+		
+			
+		rc.pago.totalPago = 0;
+	
+		var i = 0;
+
+		_.each(rc.planPagosViejo, function(p){
+			
+			if(pago.credito_id == p.credito_id && p.numeroPago<pago.numeroPago && p.estatus!=1){
+				p.importepagado = p.importeRegular;
+				p.pagoSeleccionado = true;
+				p.estatus = 0;
+			}
+			if(pago==p){
+				p.estatus = 0;
+				p.pagoSeleccionado = true;
+				if(p.importepagado>p.importeRegular)
+					p.importepagado=p.importeRegular
+				if(p.importepagado<0 || !p.importepagado || isNaN(p.importepagado))
+					p.importepagado=0
+			}
+			if(p.pagoSeleccionado != undefined){
+				if(p.pagoSeleccionado == true){
+					console.log ("--",p.importepagado,rc.pago.totalPago)
+					rc.pago.totalPago += p.importepagado;	
+				}	
+			}
+			//console.log(rc)
+			if(!rc.pago.pagar || rc.pago.pagar<rc.pago.totalPago)
+				rc.pago.pagar = rc.pago.totalPago
+
 		});
 	}
 
@@ -240,7 +285,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		var seleccionadosId=[];
 		_.each(rc.planPagosViejo,function(p){
 			if(p.pagoSeleccionado)
-				seleccionadosId.push(p._id)
+				seleccionadosId.push({id:p._id,importe:p.importepagado})
 
 		});
 		console.log(seleccionadosId,pago.pagar,pago.totalPago,pago.tipoIngreso_id)
