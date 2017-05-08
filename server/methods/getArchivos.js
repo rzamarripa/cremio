@@ -156,8 +156,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+	//	var produccion = "/home/cremio/archivos/";
 				 
 		
 		
@@ -245,7 +245,7 @@ Meteor.methods({
 		//var produccion = "/home/cremio/archivos/";
 		
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";
+		//var produccion = "/home/cremio/archivos/";
 
 
 		var opts = {}
@@ -342,7 +342,7 @@ Meteor.methods({
 		 var casa = cas.toUpperCase();
 		 var je = objeto.empresa.jefeInmediato;
 		 var jefeEmpresa = je.toUpperCase();
-		  var an = objeto.empresa.antiguedad;
+		  var an = objeto.empresa.tiempoLaborando;
 		 var antiguedadEmpresa = an.toUpperCase();
 
 
@@ -357,9 +357,9 @@ Meteor.methods({
 					objeto.profile.foto = produccion+".jpeg";
 
 
-		doc.setData({				nombreCompleto: 		nombreCliente,
-									sexo:                   sexo,
-									fechaEmision:           fecha,
+		doc.setData({				nombreCompleto: 		nombreCliente,//bien
+									sexo:                   sexo,//bien
+									fechaEmision:           fecha,//bien
 									nacionalidad:           nacionalidad,
 									fechaNacimiento:        fechaNacimiento,
 									lugarNacimiento:        lugarNacimiento,
@@ -384,7 +384,6 @@ Meteor.methods({
 									 correo:                objeto.profile.correo,
 									 casa:                  casa,
 									 renta:                 objeto.profile.rentaMes,
-
 
 
 									 //////////////////// REFERENCIAS PERSONALES //////////////////////
@@ -413,16 +412,13 @@ Meteor.methods({
 									jefe:                  jefeEmpresa,
 									antiguedadEmpresa:      antiguedadEmpresa,      
 
-									
-
-
-
+								
 
 									//////////////////// CONYUGE //////////////////////
-									telefonoConyuge:       objeto.profile.telefonoConyuge,
+									telefonoConyuge:       objeto.profile.telefonoConyuge,//bien
 									ocupacionConyuge:      objeto.profile.ocupacionConyuge,
 									nombreConyu:           objeto.profile.nombreConyuge,
-									telefonoConyugeTrabajo:       objeto.profile.telefonoConyugeTrabajo,
+									telefonoConyugeTrabajo: objeto.profile.telefonoConyugeTrabajo,
 									direccionConyugeTrabajo: objeto.profile.direccionConyugeTrabajo,
 
 
@@ -451,50 +447,58 @@ Meteor.methods({
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
- getRecibosVencidos: function (objeto) {
-	console.log(objeto,"RECIBOS VENCIDOS")
+  getRecibos: function (objeto) {
+	console.log(objeto,"RECIBOS")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
-		//var produccion = "/home/cremio/archivos/";
+	//	var produccion = "/home/cremio/archivos/";
 				 
 		
 		
 		var content = fs
-    	   .readFileSync(produccion+"PAGOS.docx", "binary");
+    	   .readFileSync(produccion+"RECIBOS.docx", "binary");
 
 	  
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
-								.loadZip(zip)
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			return "";
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
 		
 		var fecha = new Date();
 		var f = fecha;
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    var cliente =objeto.cliente.profile.nombreCompleto
-	    var nombreCliente  = cliente.toUpperCase();
-	    var calle = objeto.cliente.profile.calle
-	    var calleCLiente = calle.toUpperCase();
+	 
 
+	    console.log(objeto.planPagos);
 		
-		doc.setData({				nombreCompleto: 		nombreCliente, 
-								
+		doc.setData({				items: 		objeto,
+									fecha:     fecha,
 
-								});
+
+
+				  });
 								
 		doc.render();
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
  
-		fs.writeFileSync(produccion+"PAGOS.docx",buf);		
+		fs.writeFileSync(produccion+"RECIBOSSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"PAGOS.docx");
+    var bitmap = fs.readFileSync(produccion+"RECIBOSSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');

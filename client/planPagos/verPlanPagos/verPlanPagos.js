@@ -258,6 +258,8 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 	this.seleccionarPago = function(pago)
 	{ 
+
+
 		console.log(pago);
  		pago.pagoSeleccionado = !pago.pagoSeleccionado;
 		pago.estatus = 0;	
@@ -274,6 +276,9 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 	this.guardarPago = function(pago,credito)
 	{
+		console.log(credito,"el credito") 
+		console.log(credito[0]._id,"el id que quiere 1")
+		
 
 		var seleccionadosId=[];
 		_.each(rc.planPagosViejo,function(p){
@@ -281,8 +286,10 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 				seleccionadosId.push(p._id)
 
 		});
+		
+		
 
-		Meteor.call("pagoParcialCredito",seleccionadosId,pago.pagar,pago.totalPago,pago.tipoIngreso_id,function(error,success){
+		Meteor.call("pagoParcialCredito",seleccionadosId,pago.pagar,pago.totalPago,pago.tipoIngreso_id,credito[0]._id,function(error,success){
 			if(!success){
 				toastr.error('Error al guardar.');
 				return;
@@ -296,22 +303,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			window.open(url,'_blank');
 		});
 
-		_.each(rc.getReactively("planPagosViejo"), function(pago){
-				if (pago.estatus == 1) {
-					Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
-						//console.log("entro")
-						
-					})
-				}else{
-					
-					rc.creditos.estatus = 4
-				}
-					
-		});
-
-			//console.log(credito)
-		// 	if (rc.creditos != undefined) {
-		// 	_.each(pagos, function(pago){
+		// _.each(rc.getReactively("planPagosViejo"), function(pago){
 		// 		if (pago.estatus == 1) {
 		// 			Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
 		// 				//console.log("entro")
@@ -321,10 +313,11 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 					
 		// 			rc.creditos.estatus = 4
 		// 		}
-		// 	});
-		// }
+					
+		// });
 
-	  console.log(rc.creditos,"el credito") 
+	  // console.log(rc.creditos,"el credito") 
+	  console.log(pago,"el pago") 
 		
        
 	};

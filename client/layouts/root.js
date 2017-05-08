@@ -152,6 +152,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		objeto.lugarNacimiento = objeto.profile.lugarNacimiento;
 
 		_.each(objeto, function(cliente){
+			console.log("cliente",)	
 		  			
 		  			cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
 		  			cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
@@ -236,10 +237,6 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		objeto.objetoFinal = objeto[objeto.length - 1];
 		objeto.fechaFinal = objeto.objetoFinal.fechaSolicito
 		//console.log(objeto,"actualizado")
-
-
-
-
 
 
 	}

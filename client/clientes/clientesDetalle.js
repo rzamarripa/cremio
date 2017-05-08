@@ -9,13 +9,18 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.fechaActual = new Date();
 	this.creditos = [];
 	this.creditos_id = [];
+	rc.credito_id = ""
+	rc.credito = "";
 	rc.notaCuenta = []
 	this.notaCobranza = {}
 	this.masInfo = true;
 	this.masInfoCredito = true;
 	rc.cancelacion = {};
 	rc.nota = {};
+	rc.pagos = ""
 	window.rc = rc;
+	this.imagenes = []
+
 	
 	this.subscribe("ocupaciones",()=>{
 		return [{_id : this.getReactively("ocupacion_id"), estatus : true }]
@@ -43,12 +48,23 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			cliente_id : $stateParams.objeto_id, credito_id : { $in : this.getCollectionReactively("creditos_id")}
 		}];
 	});
+	// this.subscribe('planPagos', () => {
+	// 	return [{
+	// 		cliente_id : $stateParams.objeto_id, credito_id : this.getCollectionReactively("credito_id")
+	// 	}];
+	// });
 		 this.subscribe('notas',()=>{
 		return [{cliente_id:this.getReactively("cliente_id"),respuesta:true}]
 	});
 
 	this.subscribe('tiposNotasCredito',()=>{
 		return [{}]
+	});
+	this.subscribe('pagos',()=>{
+		return [{}];
+	});
+	this.subscribe('documentos',()=>{
+		return [{}];
 	});
 			
 	this.helpers({
@@ -61,7 +77,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return creditos;
 		},
 		historialCreditos : () => {
-			var creditos = Creditos.find({estatus:5}).fetch();
+			var creditos = Creditos.find().fetch();
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
 			}
@@ -86,20 +102,21 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
 			
 			_.each(rc.getReactively("notaPerfil"), function(nota){
-				console.log(rc.notaPerfil.cliente_id,"nota a l avga")
+				//console.log(rc.notaPerfil.cliente_id,"nota a l avga")
 				if (cli._id == rc.notaPerfil.cliente_id) {
-					console.log("entro aqui compilla")
+					//console.log("entro aqui compilla")
 					$("#notaPerfil").modal();
 					
 				}
 
 			});
 			_.each(cli, function(objeto){
+				 console.log(objeto,"objeto")
 				
 				objeto.empresa = Empresas.findOne(objeto.empresa_id)
-				
-				
-				//console.log("ultima Nota",rc.notaPerfil)
+				// objeto.documento = Documentos.findOne(objeto.docuemnto_id)
+				objeto.documento = Documentos.findOne(objeto.documento_id)
+				//objeto.documentoNombre = objeto.documento.nombre
 			});
 				
 			if(cli){
@@ -108,6 +125,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				return cli;
 			}		
 		},
+		
 		ocupaciones : () => {
 			if(this.getReactively("creditos")){
 				this.creditos_id = _.pluck(rc.creditos, "_id");
@@ -120,7 +138,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				
 				_.each(rc.getReactively("creditos"), function(credito){
 					credito.planPagos = [];
-					credito.pendientes = 0;
 					credito.pagados = 0;
 					credito.abonados = 0;
 					credito.condonado = 0;
@@ -150,6 +167,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					})
 				})
 			}
+			return planPagos
 		},
 		notaCuenta1: () => {
 			var nota = Notas.find({tipo : "Cuenta"}).fetch()
@@ -162,9 +180,94 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		usuario: () => {
 			return Meteor.users.findOne()
 		},
-		
-		
-		
+		planPagosHistorial  : () => {
+			
+			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
+			//rc.creditos_id = _.pluck(planes, "cliente_id");
+			console.log("kaka",planes)
+
+
+			return planes
+
+		},
+		historial : () => {
+			arreglo = [];
+			var saldoPago = 0;
+			var saldoActual = 0; 
+			rc.saldo =0;	
+			var credito = rc.credito
+			rc.saldoMultas=0;
+			
+
+			_.each(rc.getReactively("planPagosHistorial"), function(planPago){
+				
+				if(planPago.descripcion=="Recibo")
+					rc.saldo+=planPago.cargo;
+				if(planPago.descripcion=="Multa")
+					rc.saldoMultas+=planPago.importeRegular;
+			});
+			
+			_.each(rc.getReactively("planPagosHistorial"), function(planPago, index){
+				
+				console.log("entro al segundo")
+				console.log("credito",credito)
+
+				
+				if(planPago.descripcion=="Multa")
+					rc.saldo+=planPago.cargo
+				
+				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
+				//console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
+				arreglo.push({saldo:rc.saldo,
+					numeroPago : planPago.numeroPago,
+					cantidad : rc.credito.numeroPagos,
+					fechaSolicito : rc.credito.fechaSolicito,
+					fecha : fechaini,
+					pago : 0, 
+					cargo : planPago.cargo,
+					movimiento : planPago.movimiento,
+					planPago_id : planPago._id,
+					credito_id : planPago.credito_id,
+					descripcion : planPago.descripcion,
+					importe : planPago.importeRegular,
+					pagos : planPago.pagos
+			  	});				
+				if(planPago.pagos.length>0)
+					_.each(planPago.pagos,function (pago) {
+						rc.saldo-=pago.totalPago
+						arreglo.push({saldo:rc.saldo,
+							numeroPago : planPago.numeroPago,
+							//cantidad : credito.numeroPagos,
+							fechaSolicito : rc.credito.fechaSolicito,
+							fecha : pago.fechaPago,
+							pago : pago.totalPago, 
+							cargo : 0,
+							movimiento : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							planPago_id : planPago._id,
+							credito_id : planPago.credito_id,
+							descripcion : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							importe : planPago.importeRegular,
+							pagos : planPago.pagos
+					  	});
+					})
+				//console.log(rc.saldo)
+			});
+
+			console.log("el ARREGLO del helper historial",arreglo)
+			return arreglo;
+		},
+
+		   imagenesDocs : () => {
+		   	var imagen = rc.imagenes
+		   	_.each(rc.getReactively("imagenes"),function(imagen){
+		   		imagen.archivo = rc.objeto.profile.foto
+
+		   	});
+
+
+		  		return imagen
+	  		},
+				
 	});
 
 
@@ -395,6 +498,228 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		rc.nota = {};
 		$("#modalCliente").modal('hide');
 	};
+
+	this.verPagos= function(credito) {
+		console.log(credito,"el ob ")
+		rc.credito = credito;
+		rc.credito_id = credito._id;
+		$("#modalpagos").modal();
+		credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
+		rc.pagos = credito.pagos
+		rc.mostrarModal = true
+		////console.log(rc.pagos,"pagos")
+		console.log(rc.historial,"historial act")
+			_.each(rc.getReactively("historial"),function (pago) {
+
+			});
+
+			
+
+	};
+
+	this.cerrarModal= function() {
+		rc.mostrarModal = false
+
+	};
+
+	this.tieneFoto = function(foto, sexo){
+		
+	  if(foto === undefined){
+		  if(sexo === "Masculino")
+			  return "img/badmenprofile.png";
+			else if(sexo === "Femenino"){
+				return "img/badgirlprofile.png";
+			}else{
+				return "img/badprofile.png";
+			}
+	  }else{
+		  return foto;
+	  }
+  };
+
+
+
+  this.generarFicha= function(objeto,referencia_id) 
+  {
+		console.log("entro:", objeto);
+
+		root.cliente = objeto.profile	
+  	    root.referencias = [];
+	  	_.each(root.cliente.referenciasPersonales_ids,function(referencia){
+	  		
+			Meteor.call('getReferencias', referencia, function(error, result){	
+			//console.log("entra aqui",referencia)					
+				if (result)
+				{
+					//console.log("entra aqui");
+					//console.log("result",result);
+					root.referencias.push(result);
+					$scope.$apply();			
+				}
+			});	
+	  	});
+
+		objeto.nombreCompleto = objeto.profile.nombreCompleto
+		objeto.referencias = root.referencias;
+		objeto.lugarNacimiento = objeto.profile.lugarNacimiento;
+		console.log("entro2:", objeto);
+
+
+		_.each(objeto, function(cliente){
+			console.log("cliente",cliente)	
+		  			
+		  			cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
+		  			cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
+		  			cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
+		  			cliente.estado = Estados.findOne(cliente.estado_id)
+		  			cliente.pais = Paises.findOne(cliente.pais_id)
+		  			cliente.empresa = Empresas.findOne(cliente.empresa_id)
+		  			cliente.colonia = Colonias.findOne(cliente.colonia_id)
+		  			cliente.ciudad = Ciudades.findOne(cliente.ciudad_id)
+		  			cliente.sucursal = Sucursales.findOne(cliente.sucursal_id)
+		  			cliente.municipio = Municipios.findOne(cliente.municipio_id)
+		  			cliente.ducumento = Documentos.findOne(cliente.documento_id)
+
+		  			
+		  		})
+		objeto.ocupacion = objeto.profile.ocupacion
+		objeto.estadoCivil = objeto.profile.estadoCivil
+		objeto.nacionalidad = objeto.profile.nacionalidad
+		objeto.estado = objeto.profile.estado
+		objeto.pais = objeto.profile.pais
+		objeto.colonia = objeto.profile.colonia
+	    objeto.ciudad = objeto.profile.ciudad
+	    objeto.sucursal = objeto.profile.ciudad
+	    objeto.municipio = objeto.profile.nombre
+	    objeto.empresa = objeto.profile.empresa
+	    objeto.documento = objeto.profile.documento
+
+
+		Meteor.call('getFicha', objeto, function(error, response) {
+
+		   if(error)
+		   {
+		    console.log('ERROR :', error);
+		    return;
+		   }
+		   else
+		   {
+ 				function b64toBlob(b64Data, contentType, sliceSize) {
+					  contentType = contentType || '';
+					  sliceSize = sliceSize || 512;
+					
+					  var byteCharacters = atob(b64Data);
+					  var byteArrays = [];
+					
+					  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+					    var slice = byteCharacters.slice(offset, offset + sliceSize);
+					
+					    var byteNumbers = new Array(slice.length);
+					    for (var i = 0; i < slice.length; i++) {
+					      byteNumbers[i] = slice.charCodeAt(i);
+					    }
+					
+					    var byteArray = new Uint8Array(byteNumbers);
+					
+					    byteArrays.push(byteArray);
+					  }
+					    
+					  var blob = new Blob(byteArrays, {type: contentType});
+					  return blob;
+				}
+							
+						var blob = b64toBlob(response, "application/docx");
+					  var url = window.URL.createObjectURL(blob);
+					  
+					  //console.log(url);
+					  var dlnk = document.getElementById('dwnldLnk');
+
+				    dlnk.download = "FICHASOCIO.docx"; 
+						dlnk.href = url;
+						dlnk.click();		    
+					  window.URL.revokeObjectURL(url);
+
+  
+		   }
+		});
+
+		
+	}; 
+
+	this.diarioCobranza= function(objeto) {
+
+		//console.log(objeto,"objetillo")
+		objeto.fechaInicial = objeto[0].fechaSolicito
+		objeto.objetoFinal = objeto[objeto.length - 1];
+		objeto.fechaFinal = objeto.objetoFinal.fechaSolicito
+		//console.log(objeto,"actualizado")
+
+	}
+	this.mostrarModal= function()
+	{
+		$("#modalDocumento").modal();
+	};
+
+	 this.almacenaImagen = function(imagen)
+	{
+		if (this.objeto)
+			this.objeto.profile.foto = imagen;
+		    this.imagenes.push({archivo:imagen})
+		    console.log(this.imagenes)
+
+						
+	}
+
+
+  $(document).ready( function() {
+		
+
+			$(".Mselect2").select2();
+					
+			var fileInput1 = document.getElementById('fileInput1');
+			var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+			
+			
+			//JavaScript para agregar la Foto
+			fileInput1.addEventListener('change', function(e) {
+				var file = fileInput1.files[0];
+				var imageType = /image.*/;
+	
+				if (file.type.match(imageType)) {
+					
+					if (file.size <= 512000)
+					{
+						
+						var reader = new FileReader();
+		
+						reader.onload = function(e) {
+							fileDisplayArea1.innerHTML = "";
+		
+							var img = new Image();
+							
+							
+							img.src = reader.result;
+							img.width =200;
+							img.height=200;
+		
+							rc.objeto.profile.documento.archivo(reader.result);
+							//this.folio.imagen1 = reader.result;
+							
+							fileDisplayArea1.appendChild(img);
+							//console.log(fileDisplayArea1);
+						}
+						reader.readAsDataURL(file);			
+					}else {
+						toastr.error("Error la Imagen supera los 512 KB");
+						return;
+					}
+					
+				} else {
+					fileDisplayArea1.innerHTML = "File not supported!";
+				}
+			});		
+	    });
+
 
 
 	

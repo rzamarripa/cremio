@@ -298,23 +298,21 @@ Meteor.methods({
 		return "200";
 	},
 
-	cambiarEstatusCredito : function(credito){
-		//console.log(credito,"mi crdito")
-		// var empleado = Empleados.findOne({_id:id});
-		if(credito.estatus == 4)
-			credito.estatus = 5;
-		else
-			credito.estatus = 4;
+	// cambiarEstatusCredito : function(credito){
+	// 	//console.log(credito,"mi crdito")
+	// 	// var empleado = Empleados.findOne({_id:id});
+	// 	if(credito.estatus == 4)
+	// 		credito.estatus = 5;
+	// 	else
+	// 		credito.estatus = 4;
 		
-		// Empleados.update({_id: id},{$set :  {estatus : empleado.estatus}});
-		// var fechaNueva = new Date();
-		// credito.fechaEntrega = fechaNueva;
+	// 	// Empleados.update({_id: id},{$set :  {estatus : empleado.estatus}});
+	// 	// var fechaNueva = new Date();
+	// 	// credito.fechaEntrega = fechaNueva;
 
-		Creditos.update({_id:credito._id},{$set :  {estatus : credito.estatus}});
+	// 	Creditos.update({_id:credito._id},{$set :  {estatus : credito.estatus}});
 
-		
-
-	},
+	// },
 		
 	
 });

@@ -46,15 +46,15 @@
 							<div class="col-sm-12">
 								<div class="row">
 									<div class="col-sm-2 profile-pic" style="text-align:left;width:initial;">
-										<img style="max-width:200px;" src="{{cd.tieneFoto(cd.objeto.profile.sexo, cd.objeto.profile.foto)}}" >
+										<img style="max-width:200px;" src="{{cd.objeto.profile.foto}}" >
 										<div class="padding-10">
-											<h4 class="font-md"><strong>0</strong>
+											<h4 class="font-md">
 											<br>
-											<small>Seguidores</small></h4>
+											<small>
+											<a ng-click="ro.generarFicha(cd.objeto,cd.objeto._id)" class="btn btn-primary">Descargar ficha</a></small>
+											</h4>
 											<br>
-											<h4 class="font-md"><strong>0</strong>
-											<br>
-											<small>Amigos</small></h4>
+				
 										</div>
 									</div>
 									<div class="col-sm-6">
@@ -98,30 +98,37 @@
 										<p class="font-xs">
 											{{cd.objeto.profile.observacionesGenerales}}
 										</p>
+										<!-- <p class="font-xs">
+											<a class="btn btn-primary">Descargar ficha</a>
+										</p> -->
 										<br>
 									</div>
-									<!--																
 									<div class="col-sm-3">
-										<h1><small>Amigos</small></h1>
-										<ul class="list-inline friends-list">
-											<li><img src="img/avatars/1.png" alt="friend-1">
-											</li>
-											<li><img src="img/avatars/2.png" alt="friend-2">
-											</li>
-											<li><img src="img/avatars/3.png" alt="friend-3">
-											</li>
-											<li><img src="img/avatars/4.png" alt="friend-4">
-											</li>
-											<li><img src="img/avatars/5.png" alt="friend-5">
-											</li>
-											<li><img src="img/avatars/male.png" alt="friend-6">
-											</li>
-											<li>
-												<a href="javascript:void(0);">413 more</a>
-											</li>
-										</ul>
+									<br/>
+										<div class="well padding-10">
+											<h5 class="margin-top-0"><i class="fa fa-file"></i> Documento:</h5>
+											<div class="row">
+
+												<div class="col-lg-12">
+
+													<ul class="list-group no-margin">
+														<li class="list-group-item"  >
+															<a  ng-click="cd.mostrarModal()"> ver documento </a>
+														</li>
+														
+													</ul>
+
+												</div>
+
+												<div class="col-lg-12">
+													<div class="margin-top-10">
+														<!-- <img src="img/demo/video.png" alt="smartgirl" class="img-responsive"> -->
+													</div>
+												</div>
+											</div>
+
+										</div>
 									</div>
-									-->
 								</div>
 <div class="row">
 	<div class="col-sm-12">
@@ -512,7 +519,8 @@
 					<th class="text-center" width="15%">Capital Solicitado</th>
 					<th class="text-center" width="15%">Adeudo Inicial</th>
 					<th class="text-center" width="20%">Saldo Actual</th>
-					<!-- <th class="text-center" width="20%">Multas Pendientes</th> -->
+					<th class="text-center" width="10%">Acciones</th>
+					
 				</tr>
 			</thead>
 			<tbody>
@@ -524,6 +532,66 @@
 					<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
 					<td >{{credito.adeudoInicial | currency}}</td>
 					<td >{{credito.saldoActual | currency}}</td>
+					<td>
+						<div class="text-center">
+								<button type="button" class="btn btn-link" ng-click="cd.verPagos(credito)">Ver Pagos</button>
+						</div>						
+					</td>
+					Pagos cliente
+<!-- modal -->
+<!-- (////////////////////////////////////////////////////////////////////////) -->
+
+<td ng-show="cd.mostrarModal">
+<div class="container">
+
+	<div class="modal fade" id="modalpagos"	data-backdrop="static" role="dialog">
+		<div class="modal-dialog">
+		 <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Pagos</h4>
+				</div>
+				<div class="modal-body">
+				 <div>
+				   <table class="table table-striped table-bordered table-condensed font-xs">
+					<thead class="thead">
+						<tr>
+							<th class="text-center" width="7%">Recibo No.</th>
+							<th class="text-center" width="10%">Movimiento</th>
+							<th class="text-center" width="10%">Fecha</th>
+							<th class="text-center" width="10%">Cargo</th>
+							<th class="text-center" width="10%">Abono</th>
+							<th class="text-center" width="20%">Saldo</th>
+							<th class="text-center" width="20%">Nota de credito</th>
+							<th class="text-center" width="20%">Saldo actualizado</th>
+						</tr>
+					</thead>
+						<tbody>
+							<tr  ng-repeat="credito in cd.historial" 
+							ng-class="(credito.descripcion == 'Multa') ? 'danger' : (credito.descripcion == 'Recibo') ? 'info':'success'">
+								<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
+								<td class="text-center">{{credito.movimiento}}</td>	
+								<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
+								<td class="text-center">{{credito.cargo | currency}}</td>
+								<td class="text-right">{{credito.pago | currency}}</td>
+								<td >{{credito.saldo | currency}}</td>
+								<td >0</td>
+								<td >0</td>
+							</tr>
+						</tbody>
+					</table>
+				 	
+				 </div>
+				</div>
+				<div class="modal-footer">
+				    <button ng-click="cd.cerrarModal()" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+				 </div>
+			</div>
+		</div>
+	 </div>
+	 </div>
+	 </td>
 				</tr>
 			</tbody>
 		</table>	
@@ -583,10 +651,7 @@
 												</div>
 											</div>
 											<div class="panel-footer no-padding">						
-<!--
-												<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" ng-click="cd.imprimirDocumento(aprobado)" value="Imprimir documentos" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
-												
---><a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
+<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
 												<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Petición" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="cd.cancelarSeleccion(aprobado)" />
 												<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
 											</div>
@@ -969,6 +1034,35 @@
 				        </div>
 		</div>
 	</div>
+</div>
+<!-- ////////////////////////////////////////////////////////////////////////////////////////// -->
+ <div class="col-sm-3" >
+				
+						 <div class="container">
+			      <!-- Modal -->
+				  <div class="modal fade" id="modalDocumento" role="dialog">
+				    <div class="modal-dialog">
+			    <!-- Modal content-->
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        </div>
+				        <div class="modal-body" >
+				        <div class="row">
+				           <div class="col-sm-offset-4 col-sm-4 text-center" >
+				           <div id="fileDisplayArea1" class="text-center" ></div>
+				            <img style="max-width:200px;" src="{{cd.objeto.profile.archivo[0].archivo}}" >
+
+				           </div>					          
+					        </div>
+				        </div>
+					        <div class="modal-footer">
+
+							</div>						
+				      </div>
+				    </div>
+				  </div>
+				 </div>								
 </div>
 
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   
