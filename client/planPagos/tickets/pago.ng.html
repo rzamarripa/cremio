@@ -38,6 +38,8 @@
 						<tr ng-repeat="pago in tkpctrl.pago.planPagos">
 							<td>
 								{{pago.descripcion}} {{pago.numeroPago}}
+								<br>
+								Credito: {{pago.folioCredito}}
 							</td>
 							<td>
 								{{pago.totalPago | currency}}

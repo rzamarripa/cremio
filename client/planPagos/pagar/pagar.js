@@ -1,7 +1,7 @@
 angular
 .module("creditoMio")
-.controller("VerPlanPagosCtrl", VerPlanPagosCtrl);
-function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
+.controller("PagarPlanPagosCtrl", PagarPlanPagosCtrl);
+function PagarPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
 	
 	let rc = $reactive(this).attach($scope);
 	this.action = false;
@@ -22,8 +22,10 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	
 	console.log(rc.credito)	
 
-  this.subscribe("planPagos", ()=>{
-		return [{ credito_id : this.getReactively("credito_id") }]
+ 	this.subscribe('planPagos', () => {
+		return [{
+			cliente_id : $stateParams.objeto_id, credito_id : { $in : rc.getCollectionReactively("creditos_id")}
+		}];
 	});
 	
 	this.subscribe("tiposCredito", ()=>{
@@ -35,7 +37,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	});
 	
 	this.subscribe('creditos', () => {
-		return [{ _id : $stateParams.credito_id}];
+		return [{ cliente_id : $stateParams.objeto_id , estatus:4}];
 	});
 	this.subscribe('pagos', () => {
 		return [{estatus:1  }];
@@ -92,18 +94,22 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			return TiposIngreso.find()
 		},
 		planPagos : () => {
-			return PlanPagos.find({},{sort : {numeroPago : 1,descripcion:-1}});
+			return PlanPagos.find({
+					cliente_id : $stateParams.objeto_id, credito_id : { $in : this.getCollectionReactively("creditos_id")}
+			},{sort : {fechaLimite : 1, numeroPago : 1,descripcion:-1}});
 		},
 		tiposCredito : () => {
 			return TiposCredito.find();
 		},
 		planPagosViejo : () => {
 			
-			rc.credito_id = $stateParams.credito_id;
+			//rc.credito_id = $stateParams.credito_id;
 			var fechaActual = moment();
-			var pagos = PlanPagos.find({},{sort : {numeroPago : 1,descripcion:-1}}).fetch();
+			var pagos = PlanPagos.find({
+					cliente_id : $stateParams.objeto_id, credito_id : { $in : this.getCollectionReactively("creditos_id")}
+			},{sort : {fechaLimite : 1, numeroPago : 1,descripcion:-1}}).fetch();
 
-			var credito =Creditos.findOne({_id : $stateParams.credito_id});
+			//var credito =Creditos.findOne({_id : $stateParams.credito_id});
 			//console.log(credito)
 		// 	if (rc.creditos != undefined) {
 		// 	_.each(pagos, function(pago){
@@ -118,17 +124,19 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		// 		}
 		// 	});
 		// }
+			console.log("pp",this.getCollectionReactively("creditos_id"))
 		
 
-			return pagos
+			return PlanPagos.find({},{sort : {fechaLimite : 1, numeroPago : 1,descripcion:-1}})
 		},
 		creditos : () => {
-			var creditos = Creditos.find($stateParams.credito_id).fetch();
+			var creditos = Creditos.find({}).fetch();
 			if(creditos != undefined){
-				rc.creditos_id = _.pluck(creditos, "cliente_id");
+				rc.creditos_id = _.pluck(creditos, "_id");
+				console.log("ids",rc.creditos_id)
 				_.each(creditos, function(credito){
 					credito.planPagos = PlanPagos.find({credito_id : credito._id},{sort : {numeroPago : -1}}).fetch();
-			  			credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
+			  		credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
 				})
 			}
 
@@ -161,6 +169,16 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			return Notas.find().fetch();
 		},
 	});
+	this.getFolio = function(credito_id){
+		var credito = Creditos.findOne(credito_id);
+		return credito? credito.folio:"";
+
+	};
+	this.getnumeroPagos= function(credito_id){
+		var credito = Creditos.findOne(credito_id);
+		return credito? credito.numeroPagos:"";
+
+	};
 	  
  
 	
@@ -198,62 +216,6 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	
 
   
-  this.planPagosSemana =function () {
-	  if(form.$invalid){
-      toastr.error('Error al calcular el nuevo plan de pagos, llene todos los campos.');
-      return;
-	  }
-	  rc.planPagos = [];
-		var dia = 1;
-		console.log("original",this.credito.fechaInicial)
-		var mfecha = moment(this.credito.fechaInicial);
-		console.log("moment", mfecha);
-		//mfecha = mfecha.day(dia);
-		console.log("day", mfecha);
-		var inicio = mfecha.toDate();
-		console.log("inicio", inicio);
-		
-		console.log("1 month", mfecha);
-		var plan = [];
-		for (var i = 0; i < this.credito.totalPagos; i++) {
-			var importeParcial = this.credito.importeRegular / this.credito.totalPagos;
-			var pago = {
-				semana 			    		: mfecha.isoWeek(),
-				fechaLimite 			  : new Date(mfecha.toDate().getTime()),
-				diaSemana						: mfecha.weekday(),
-				tipoPlan 		    		: 'Mensual',
-				numeroPago 	        : i + 1,
-				importeRegular      : importeParcial,
-				importeRecargo      : (this.credito.importeRecargo / this.credito.totalPagos),
-				diasRecargo         : this.credito.diasRecargo,
-				cliente_id					: this.cliente._id,
-				fechaPago           : undefined,
-				semanaPago          : undefined,
-				diaPago             : undefined,
-				pago                : 0,
-				estatus             : 0,
-				tiempoPago          : 0,
-				modificada          : false,
-				mes									: mfecha.get('month') + 1,
-				anio								: mfecha.get('year')
-			}
-			
-			rc.planPagos.push(angular.copy(pago));
-
-			var siguienteMes = moment(mfecha).add(1, 'M');
-			var finalSiguienteMes = moment(siguienteMes).endOf('month');
-			
-			if(mfecha.date() != siguienteMes.date() && siguienteMes.isSame(finalSiguienteMes.format('YYYY-MM-DD'))) {
-			    siguienteMes = siguienteMes.add(1, 'd');
-			}
-			
-			mfecha = siguienteMes;
-		}
-
-		return plan;
-	}
-	
-
 
 
 	this.seleccionarPago = function(pago)
@@ -262,13 +224,58 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
  		pago.pagoSeleccionado = !pago.pagoSeleccionado;
 		pago.estatus = 0;	
 		rc.pago.totalPago = 0;
-
+		if(!pago.pagoSeleccionado)
+			pago.importepagado = 0;
 		_.each(rc.planPagosViejo, function(p){
+			if(!pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago>pago.numeroPago && p.estatus!=1){
+				p.importepagado = 0;
+				p.pagoSeleccionado = false;
+			}
+			if(pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago<=pago.numeroPago && p.estatus!=1){
+				p.importepagado = p.importeRegular;
+				p.pagoSeleccionado = true;
+			}
 			if(p.pagoSeleccionado != undefined){
 				if(p.pagoSeleccionado == true){
-					rc.pago.totalPago += p.importeRegular;	
+					rc.pago.totalPago += p.importepagado;	
 				}	
 			}
+
+		});
+	}
+	this.seleccionarMontoPago = function(pago)
+	{ 
+		
+			
+		rc.pago.totalPago = 0;
+	
+		var i = 0;
+
+		_.each(rc.planPagosViejo, function(p){
+			
+			if(pago.credito_id == p.credito_id && p.numeroPago<pago.numeroPago && p.estatus!=1){
+				p.importepagado = p.importeRegular;
+				p.pagoSeleccionado = true;
+				p.estatus = 0;
+			}
+			if(pago==p){
+				p.estatus = 0;
+				p.pagoSeleccionado = true;
+				if(p.importepagado>p.importeRegular)
+					p.importepagado=p.importeRegular
+				if(p.importepagado<0 || !p.importepagado || isNaN(p.importepagado))
+					p.importepagado=0
+			}
+			if(p.pagoSeleccionado != undefined){
+				if(p.pagoSeleccionado == true){
+					console.log ("--",p.importepagado,rc.pago.totalPago)
+					rc.pago.totalPago += p.importepagado;	
+				}	
+			}
+			//console.log(rc)
+			if(!rc.pago.pagar || rc.pago.pagar<rc.pago.totalPago)
+				rc.pago.pagar = rc.pago.totalPago
+
 		});
 	}
 
@@ -278,7 +285,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		var seleccionadosId=[];
 		_.each(rc.planPagosViejo,function(p){
 			if(p.pagoSeleccionado)
-				seleccionadosId.push(p._id)
+				seleccionadosId.push({id:p._id,importe:p.importepagado})
 
 		});
 		console.log(seleccionadosId,pago.pagar,pago.totalPago,pago.tipoIngreso_id)
@@ -296,7 +303,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			window.open(url,'_blank');
 		});
 
-		_.each(rc.getReactively("planPagosViejo"), function(pago){
+		/*_.each(rc.getReactively("planPagosViejo"), function(pago){
 				if (pago.estatus == 1) {
 					Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
 						//console.log("entro")
@@ -307,7 +314,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 					rc.creditos.estatus = 4
 				}
 					
-		});
+		});*/
 
 			//console.log(credito)
 		// 	if (rc.creditos != undefined) {
@@ -324,75 +331,13 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		// 	});
 		// }
 
-	  console.log(rc.creditos,"el credito") 
+	 // console.log(rc.creditos,"el credito") 
 		
        
 	};
 
-	this.download = function(participantes) 
-	{
-	  	
-				
-		$( "#certificacionPatrimonial" ).prop( "disabled", true );
-		Meteor.call('getcertificacionPatrimonial', function(error, response) {
-		   if(error)
-		   {
-		    console.log('ERROR :', error);
-		    $( "#certificacionPatrimonial" ).prop( "disabled", false );
-		    return;
-		   }
-		   else
-		   {
-			   
-			 				function b64toBlob(b64Data, contentType, sliceSize) {
-								  contentType = contentType || '';
-								  sliceSize = sliceSize || 512;
-								
-								  var byteCharacters = atob(b64Data);
-								  var byteArrays = [];
-								
-								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-								    var byteNumbers = new Array(slice.length);
-								    for (var i = 0; i < slice.length; i++) {
-								      byteNumbers[i] = slice.charCodeAt(i);
-								    }
-								
-								    var byteArray = new Uint8Array(byteNumbers);
-								
-								    byteArrays.push(byteArray);
-								  }
-								    
-								  var blob = new Blob(byteArrays, {type: contentType});
-								  return blob;
-							}
-							
-							var blob = b64toBlob(response, "application/docx");
-						  var url = window.URL.createObjectURL(blob);
-						  
-						  //console.log(url);
-						  var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "CertificacionPatrimonial.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
-						  $( "#certificacionPatrimonial" ).prop( "disabled", false );
-  
-		   }
-		});
-	};
-
-
- this.borrarBotonImprimir= function()
-	{
-		var printButton = document.getElementById("printpagebutton");
-		 printButton.style.visibility = 'hidden';
-		 window.print()
-		 printButton.style.visibility = 'visible';
-		
-	};
 	
+
 
 
 
