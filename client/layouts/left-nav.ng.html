@@ -110,6 +110,21 @@
 			</ul>
 		</li>
 		
+		<li data-menu-collapse>
+			<a href="#" ng-show="currentUser.roles[0] == 'Gerente' || currentUser.username == 'admin'">
+				<i class="fa fa-lg fa-fw fa-tags"></i>
+				<span class="menu-item-parent">Administración</span>
+			</a>
+			<ul>
+				<li data-ui-sref-active="active">
+					 <a ui-sref="root.calculadora" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-folder-open"></i>
+						<span class="menu-item-child">Calculadora</span>
+					</a>
+				</li>
+			</ul>
+		</li>		
+		
 		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" >
 				<a ui-sref="root.cobranza" tilte="Credito Mio">
 					<i class="fa fa-lg fa-fw fa-money"></i>
@@ -130,12 +145,14 @@
 				<span class="menu-item-parent">Clientes</span>
 			</a>
 		</li>
+		
 		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'" >
 			<a ui-sref="root.creditosPorAutorizar" tilte="Credito Mio">
 				<i class="fa fa-lg fa-fw fa-check-square"></i>
 				<span class="menu-item-parent">Créditos por Autorizar</span>
 			</a>
 		</li>
+		
 		<li data-menu-collapse ng-if="currentUser.roles[0] == 'Gerente'">
 				<a tilte="Credito Mio">
 		    	<i class="fa fa-lg fa-fw fa-group"></i>
