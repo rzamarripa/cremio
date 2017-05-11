@@ -164,7 +164,8 @@ Meteor.methods({
 		});
 		
 	},
-	pagoParcialCredito:function(pagos,abono,totalPago,tipoIngresoId){
+	pagoParcialCredito:function(pagos,abono,totalPago,tipoIngresoId,credito_id){
+		console.log(credito_id,"el id del credito papu")
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 		
@@ -186,6 +187,7 @@ Meteor.methods({
 		pago.semanaPago = ffecha.isoWeek();
 		pago.semanaPago = ahora.getMonth();
 		pago.estatus = 1;
+		pago.credito_id = credito_id;
 		pago.planPagos=[];
 	
 		var pago_id=undefined;

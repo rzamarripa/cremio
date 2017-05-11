@@ -13,6 +13,7 @@ angular.module("creditoMio")
   this.objeto.profile.empresa_id = "";
   this.empresa = {}; 
   this.objeto_id = ""
+  rc.pic = "";
   
   this.pais_id = "";
   this.estado_id = "";
@@ -236,6 +237,7 @@ this.tomarFoto = function(objeto){
 			console.log(objeto)
 		    $meteor.getPicture().then(function(data){
 			fotillo = data
+			rc.pic = fotillo
 			//objeto.profile.fotografia = this.objeto.profile.fotografia;
 		});
     };
@@ -273,6 +275,7 @@ this.tomarFoto = function(objeto){
 		  }
 			
 			objeto.profile.estatus = true;
+			objeto.profile.archivo = rc.imagenes
 			objeto.profile.foto = fotillo;
 			objeto.profile.usuarioInserto = Meteor.userId();
 			objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;

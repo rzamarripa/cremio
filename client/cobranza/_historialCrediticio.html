@@ -9,6 +9,7 @@
 					<th class="text-center" width="15%">Capital Solicitado</th>
 					<th class="text-center" width="15%">Adeudo Inicial</th>
 					<th class="text-center" width="20%">Saldo Actual</th>
+					<th class="text-center" width="20%">Acciones</th>
 					<!-- <th class="text-center" width="20%">Multas Pendientes</th> -->
 				</tr>
 			</thead>
@@ -21,6 +22,72 @@
 					<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
 					<td >{{credito.adeudoInicial | currency}}</td>
 					<td >{{credito.saldoActual | currency}}</td>
+					<td>
+						<div class="text-center">
+								<button type="button" class="btn btn-link" ng-click="cob.verPagos(credito)">Ver Pagos</button>
+						</div>						
+					</td>
+					<!-- Pagos cliente -->
+<td ng-show="cob.mostrarModal">
+<div class="container">
+						<!-- Modal -->
+	<div class="modal fade" id="modalpagos"	data-backdrop="static" role="dialog">
+		<div class="modal-dialog">
+	<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+			
+					<h4 class="modal-title">Pagos</h4>
+				</div>
+				<div class="modal-body">
+				 <div >
+				 	<table class="table table-striped table-bordered table-condensed font-xs">
+			<thead class="thead">
+				<tr>
+					<th class="text-center" width="15%">Fecha</th>
+					<th class="text-center" width="15%">Abono</th>
+					<!-- the offprings
+					 -->
+					
+					<!-- <th class="text-center" width="20%">Multas Pendientes</th> -->
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="pago in credito.pagos">
+						
+					<td class="text-center">{{pago.fechaPago | date: "dd-MM-yyyy"}}</td>
+					<td class="text-center">{{pago.pago | currency}}</td>
+					<!-- <td class="text-center">{{pago.fechaPago | date: "dd-MM-yyyy"}}</td>
+					<td class="text-center">{{pago.fechaPago | date: "dd-MM-yyyy"}}</td> -->	
+				
+					
+				</tr>
+			</tbody>
+		</table>
+				 </div>
+				</div>
+				<div class="modal-footer">
+				    <button ng-click="cob.cerrarModal()" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+				 </div>
+			</div>
+		</div>
+	 </div>
+	 </td>
+
+
+
+
+<!--		 //////////////////////////////////////////////////////////// -->
+
+
+					<!--//////////////////////////////////// //////////////////////////////////////////////////////////// -->
+
+
+
+
+
+
 					
 				</tr>
 			</tbody>
@@ -28,3 +95,10 @@
 		
 	</div>
 </div>
+
+
+
+
+
+
+ 

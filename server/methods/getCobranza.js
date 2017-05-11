@@ -39,9 +39,15 @@ Meteor.methods({
 					 			
 					 			arreglo[planPago.credito_id] = {};
 					 			arreglo[planPago.credito_id].credito = Creditos.findOne({_id: planPago.credito_id});
+					 			arreglo[planPago.credito_id].credito_id = arreglo[planPago.credito_id].credito._id
+
 					 			arreglo[planPago.credito_id].cliente = Meteor.users.findOne({_id: planPago.cliente_id});
+					 			arreglo[planPago.credito_id].perfil = []
+					 			arreglo[planPago.credito_id].perfil.push(arreglo[planPago.credito_id].cliente.profile);
 					 			arreglo[planPago.credito_id].planPagos = [];			 			
-					 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago});
+					 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago,
+					 				cargo : planPago.cargo,estatus : planPago.estatus });
+
 					 			
 					 			//arreglo[planPago.credito_id].importe = 0.00;
 					 			if (planPago.movimiento == "Recibo")
