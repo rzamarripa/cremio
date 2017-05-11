@@ -239,12 +239,17 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		//console.log(objeto,"actualizado")
 
 
-	}
+	};
 
-
-
-
-
+	
+	//Funcion Evalua la sessión del usuario
+	this.autorun(function() {
+ 		console.log("autorun");
+    if(!Meteor.user() && !Meteor.user()._id){
+    	$state.go('anon.login');
+    }
+    
+  });	
 
 
 

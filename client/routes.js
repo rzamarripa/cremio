@@ -650,4 +650,14 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.calculadora', {
+			url: '/calculadora',
+			templateUrl: 'client/administracion/calculadora.html',
+			controller: 'calculadoraCtrl as cal',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 }]);
