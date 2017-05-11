@@ -26,6 +26,9 @@
 										<a ng-click="cd.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
 											<i class="fa fa-plus"></i> Nueva Nota de Cliente
 										</a>&nbsp;
+										<a ui-sref="root.pagarPlanPagos({objeto_id : cd.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
+											<i class="fa fa-plus"></i> Nuevo Pago
+										</a>&nbsp;
 										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 

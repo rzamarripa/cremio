@@ -320,62 +320,7 @@
 		</div>
 	</div>
 </div>
-<!-- Formulario para cambiar algún dato de un pago -->
-<div class="row"> 
-	<div class="col-sm-12">
-		<div class="collapse" id="collapseMasivaSemanas">
-			<form name="formMasivoSemanas" class="form-horizontal" role="form" novalidate>
-		  	<div class="well">	    
-			  	<div class="row">
-			  		<div class="col-sm-12">
-			  			<div class="alert alert-warning">
-			  			 <p><i class="fa-fw fa fa-warning"></i> La <strong>actualización masiva</strong> es una herramienta que actualizará el importe, recargo y descuento en un rango de semanas dadas, por favor asegúrese de hacerlo correctamente.</p>
-			  			 <p><strong>No se pueden modificar colegiaturas pagadas</strong></p>
-			  			</div>
-			  		</div>
-			  	</div>
-			    <div class="row">
-			    	<div class="col-sm-4" valida>
-				    	<label>Fecha Inicial *</label>
-				    	<input date-time format="dd-MM-yyyy" class="form-control" view="year" max-view="year" min-view="date" ng-model="vpp.cambioSemanasPlanPagos.fechaInicial" name="fechacambioSemanasPlanPagos" required/>
-			    	</div>
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Total de Pagos *</label>
-				    	<input name="totalPagosCambioSemanasPlanPagos" type="number" class="form-control" ng-model="vpp.cambioSemanasPlanPagos.totalPagos" required="">
-			    	</div>
-			    </div>
-			    <div class="row">
-			    	<div class="col-sm-4" valida>
-				    	<label>Importe *</label>
-				    	<input name="importeRegularCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Nuevo costo colegiatura" ng-model="vpp.cambioSemanasPlanPagos.importeRegular" required="">
-			    	</div>
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Importe Recargo *</label>
-				    	<input name="importeRecargoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto recargo" ng-model="vpp.cambioSemanasPlanPagos.importeRecargo" required="">
-			    	</div>
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Importe Descuento *</label>
-				    	<input name="importeDescuentoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto descuento" ng-model="vpp.cambioSemanasPlanPagos.importeDescuento" required="">
-			    	</div>
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Días Recargo *</label>
-				    	<input name="diasRecargoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="vpp.cambioSemanasPlanPagos.diasRecargo" required="">
-			    	</div>
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Días Descuento *</label>
-				    	<input name="diasDescuentoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="vpp.cambioSemanasPlanPagos.diasDescuento" required="">
-			    	</div>
-			    </div> 
-				</div>
-				<div class="row">
-					<div class="col-sm-12">
-						<button class="btn btn-info" ng-click="vpp.planPagosSemana(vpp.cambioSemanasPlanPagos, formMasivoSemanas)" valida-form formulario="formMasivoSemanas">Calcular Plan de Pagos</button>
-					</div>
-				</div>	  
-		  </form>
-		</div>
-	</div>
-</div>
+
 <!-- Tabla para mostrar los pagos -->
 
 <div class="jarviswidget" id="wid-id-5" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false" role="widget"
@@ -505,6 +450,7 @@
 														<th class="text-center" width="15%">Pago</th>
 														<th class="text-center" width="10%">Capital</th>
 														<th class="text-center" width="10%">Interes</th>
+														<th class="text-center" width="10%">Seguro</th>
 														<th class="text-center" width="10%">IVA</th>
 														<th class="text-center" width="10%">Saldo</th>
 														
@@ -522,7 +468,9 @@
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{vpp.creditos[0].numeroPagos}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.capital  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.interes  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
+
 														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
 														
 														

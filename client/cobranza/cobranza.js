@@ -34,6 +34,7 @@ angular.module("creditoMio")
   rc.totalMultas = 0;
   rc.seleccionadoRecibos = 0;
   rc.seleccionadoMultas = 0;
+  rc.recibo = [];
 	
   
   this.selected_credito = 0;
@@ -44,6 +45,7 @@ angular.module("creditoMio")
 
   rc.colonia =""
   
+
   this.subscribe("tiposCredito", ()=>{
 		return [{}]
 	});
@@ -414,18 +416,24 @@ angular.module("creditoMio")
 
 	this.cambiar = function() 
   {
+
 			var chkImprimir = document.getElementById('todos');
 				
 			_.each(rc.cobranza, function(cobranza){
 				cobranza.imprimir = chkImprimir.checked;
+				//rc.cobranza.estatus = !this.estatus.estatus;
 			})
 			
 			this.sumarSeleccionados();
+		//	console.log(rc.cobranza)
 					
 	};
 	
-	this.sumarSeleccionados = function()
-	{
+	this.sumarSeleccionados = function(objeto)
+	{		
+		    //rc.cobranza.estatus = !rc.cobranza.estatus;
+		    _.each(objeto, function(cobranza){});
+
 			rc.seleccionadoRecibos = 0;
 			rc.seleccionadoMultas = 0;
 			_.each(rc.cobranza,function(c){	
@@ -435,6 +443,7 @@ angular.module("creditoMio")
 							rc.seleccionadoMultas += c.multas;
 					}		
 			});
+			//console.log(rc.cobranza)
 
 	};
 
@@ -707,9 +716,14 @@ angular.module("creditoMio")
 
 	this.imprimirRecibos= function(objeto) 
   {
+  	
 	  	
 	console.log("objeto:", objeto);
 		 _.each(objeto,function(item){
+		 	if (item.imprimir == true) {
+		 		//console.log(item,"objetos")
+		 		rc.recibo.push(item)
+		 
 		 		_.each(item.credito,function(credito){
 		 		//console.log(_id,"credito_id")
 		     		_.each(item.perfil,function(cliente){
@@ -729,15 +743,17 @@ angular.module("creditoMio")
 		 			});
 		 		});
 		 	});
-		 });
+		  }else{
+		  	item = undefined
+		  }
+		});
 
-
-
-
-
+		 
+		 
 	     
 	
-		console.log("2:",objeto);
+		console.log("2:",rc.recibo);
+
 
 
 		Meteor.call('getRecibos', objeto, function(error, response) {		 
@@ -780,7 +796,9 @@ angular.module("creditoMio")
 				  window.URL.revokeObjectURL(url);
 	 
 			}
+		
 		});
+		rc.recibo = [];
 		
 	};
 

@@ -1,0 +1,515 @@
+<div class="row">
+	<div class="col-sm-12">
+		<div class="well well-sm">
+			<div class="row">
+				<div class="col-sm-12 col-md-12 col-lg-12">
+					<div class="well well-light well-sm no-margin no-padding">
+						<div class="row">
+							<div class="col-sm-12">
+								<div id="myCarousel" class="carousel profile-carousel">
+									<div class="air air-bottom-right padding-10" ng-repeat="credito in pvpp.creditos">
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.clienteDetalle({objeto_id : pvpp.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
+										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.editarCliente({objeto_id : pvpp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
+	 										<i class="fa fa-pencil"></i> Modificar
+	 									</a> 
+	 									<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.historialPagos({objeto_id : pvpp.cliente._id,credito_id : credito._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
+	 										<i class="fa fa-pencil"></i> Historial de Creditos
+	 									</a> 
+									</div>
+									<div class="air air-top-left padding-10">
+										<h4 class="txt-color-white font-md"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{pvpp.fechaActual | date:'dd-MM-yyyy'}}</h4>
+									</div>
+									<ol class="carousel-indicators">
+									</ol>
+									<div class="carousel-inner">
+										<div class="item active">
+											<img src="img/demo/s1.jpg" alt="" style="width:100%">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="row">
+									<div class="col-sm-2 profile-pic" style="text-align:left;width:initial;">
+										<img style="max-width:200px;" src="{{pvpp.tieneFoto(pvpp.cliente.profile.sexo, pvpp.cliente.profile.foto)}}" >
+										<div class="padding-10">
+											<h4 class="font-md"><strong>0</strong>
+											<br>
+											<small>Seguidores</small></h4>
+											<br>
+											<h4 class="font-md"><strong>0</strong>
+											<br>
+											<small>Amigos</small></h4>
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<h1>{{pvpp.cliente.profile.nombre}} <span class="semi-bold">{{pvpp.cliente.profile.apellidoPaterno}} {{pvpp.cliente.profile.apellidoMaterno}}</span>
+										
+										<small> (Cliente)</small></h1>
+										<ul class="list-unstyled">
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-key fa-lg"></i>&nbsp;&nbsp;
+													<span class="txt-color-darken">
+														<strong>{{pvpp.cliente.username}}</strong>
+													</span>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{pvpp.cliente.profile.telefono}}</span>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;<a href="mailto:{{pvpp.cliente.profile.correo}}">{{pvpp.cliente.profile.correo}}</a>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-birthday-cake fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{pvpp.cliente.profile.fechaNacimiento | date:"dd-MM-yyyy"}}</span>
+												</p>
+											</li>
+										</ul>
+										<br>
+										<p class="font-sm">
+											<i>Un poco acerca de mi...</i>
+										</p>
+										<p class="font-xs">
+											{{pvpp.cliente.profile.observacionesGenerales}}
+										</p>
+										<br>
+									</div>
+									<div class="col-sm-7" style="margin-top: 0;">
+
+									<div  role="widget"><!-- class="jarviswidget" id="wid-id-6" -->
+
+								<!-- widget div-->
+								<br/>
+
+								<div role="content">
+									<div class="widget-body">
+										<div class="tabs-right">
+											<ul class="nav nav-tabs">
+												<li class="active" >
+													<a  aria-expanded="false" href="#tab1" data-toggle="tab">Información del contacto </a>
+												</li>
+												<li>
+													<a  aria-expanded="false" href="#tab2" data-toggle="tab">Particulares</a>
+												</li>
+												<li >
+													<a  aria-expanded="false" href="#tab3" data-toggle="tab">Dirección</a>
+												</li>
+												<li>
+													<a aria-expanded="false" href="#tab4" data-toggle="tab">Información laboral</a>
+												</li>
+											</ul>
+											<div class="tab-content" >
+												<div class="tab-pane active" id="tab1" style="margin-right: 10%;">
+													<div class="table-responsive">	
+														<dl class="dl-horizontal" >
+														  <dt>Particular:</dt>
+														  <dd>Agregar al form</dd>
+														  <dt> Telefono Oficina:</dt>
+														  <dd>agregar al form</dd>
+														  <dt>e-mail:</dt>
+														  <dd>{{pvpp.cliente.profile.correo}}</dd>
+														  <dt>Movil:</dt>
+														  <dd>{{pvpp.cliente.profile.telefono}}</dd>
+														  <dt>Alternativo:</dt>
+														  <dd>{{pvpp.cliente.profile.otroTelefono}}</dd>
+														</dl>
+													</div>
+												</div>
+												<div class="tab-pane" id="tab2">
+													<div class="table-responsive">										
+														<dl class="dl-horizontal">
+														  <dt>Sexo:</dt>
+														  <dd>{{pvpp.cliente.profile.sexo}}</dd>
+														  <dt>Nacimiento:</dt>
+														  <dd>{{pvpp.cliente.profile.fechaNacimiento | date:"dd-MM-yyyy"}}</dd>
+														  <dt>Ocupación:</dt>
+														  <dd>{{pvpp.cliente.profile.ocupacion.nombre}}</dd>
+														  <dt>Estado civil:</dt>
+														  <dd>{{pvpp.cliente.profile.estadoCivil.nombre}}</dd>
+														  <dt>Nacionalidad:</dt>
+														  <dd>{{pvpp.cliente.profile.nacionalidad.nombre}}</dd>
+														</dl>
+													 </div>
+												</div>
+												<div class="tab-pane" id="tab3">
+													<div class="table-responsive">									
+														<dl class="dl-horizontal">
+														  <dt>Calle:</dt>
+														  <dd>{{pvpp.cliente.profile.calle}}</dd>
+														  <dt>Colonia:</dt>
+														  <dd>{{pvpp.cliente.profile.colonia}}</dd>
+														  <dt>Estado:</dt>
+														  <dd>{{pvpp.cliente.profile.estado.nombre}}</dd>
+														  <dt>Codigo Postal</dt>
+														  <dd>{{pvpp.cliente.profile.codigoPostal}}</dd>
+														  <dt>Señas:</dt>
+														  <dd>Falta de agregar al form</dd>
+														  <dt>Localidad:</dt>
+														  <dd>nacionalidad_id</dd>
+														  <dt>País:</dt>
+														  <dd>{{pvpp.cliente.profile.pais.nombre}}</dd>
+														  <dt>Tiempo:</dt>
+														  <dd>{{pvpp.cliente.profile.tiempoResdencia}}</dd>
+														
+														</dl>
+
+													 </div>
+													 
+												</div>
+												<div class="tab-pane" id="tab4">
+																	
+														<div class="table-responsive">				
+															<dl class="dl-horizontal">
+															  <dt>Empresa:</dt>
+															  <dd>{{pvpp.cliente.profile.empresa.nombre}}</dd>
+															  <dt>Calle:</dt>
+															  <dd>{{pvpp.cliente.profile.empresa.calle}}</dd>
+															  <dt>Colonia:</dt>
+															  <dd>{{pvpp.cliente.profile.empresa.colonia}}</dd>
+															  <dt>Estado</dt>
+															  <dd>{{pvpp.cliente.profile.estado.nombre}}</dd>
+															  <dt>Código Postal:</dt>
+															  <dd>{{pvpp.cliente.profile.empresa.codigoPostal}}</dd>
+															  <dt>Telefono:</dt>
+															  <dd>{{pvpp.cliente.profile.empresa.telefono}}</dd>
+															  <dt>Departamento:</dt>
+															  <dd>{{pvpp.cliente.profile.empresa.departamento}}</dd>
+															  <dt>Jefe inmediato:</dt>
+															  <dd>{{pvpp.cliente.profile.empresa.jefeInmediato}}</dd>
+															  <dt>Localidad:</dt>
+															  <dd>Localidad(agregar al form)</dd>
+															  <dt>País:</dt>
+															  <dd>{{pvpp.cliente.profile.pais.nombre}}</dd>
+															  <dt>Antiguedad:</dt>
+															  <dd>{{pvpp.cliente.profile.empresa.tiempoLaborando}}</dd>
+															  <dt>Numero:</dt>
+															  <dd>{{pvpp.cliente.profile.empresa.numero}}</dd>
+															
+															</dl>
+
+													 	</div>
+													
+												</div>
+											</div>
+										</div>
+				
+									</div>
+									<!-- end widget content -->
+				
+								</div>
+								<!-- end widget div -->
+				
+							</div>
+									</div>
+
+						
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<ul class="nav nav-tabs">
+											<li class="pull-right">
+												<a ng-click="pvpp.masInformacion()" role="button" data-toggle="collapse"
+			href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{pvpp.masInfo == true ? 'plus':'minus'}} fa-lg"></i></a>
+											</li>
+										</ul>
+										<div class="collapse padding-10" id="masInformacion">
+											<div class="tab-pane">
+												<div class="col-sm-6">
+													<ul class="list-unstyled">															
+														<li>
+															<address>
+															  <strong>Información de la Madre</strong><br>
+															  <strong>Nombre:</strong> {{pvpp.cliente.profile.madre}}<br>
+															  <strong>Teléfono:</strong> {{pvpp.cliente.profile.telefonoMadre}}
+															  <strong>Correo:</strong> {{pvpp.cliente.profile.correoMadre}}
+															</address>
+														</li>
+														<li>
+															<address>
+															  <strong>Dirección</strong><br>
+															  {{pvpp.cliente.profile.calleNum}}, {{pvpp.cliente.profile.colonia}}<br>
+															  {{pvpp.cliente.profile.ciudad}}, {{pvpp.cliente.profile.estado}} {{pvpp.cliente.profile.codigoPostal}}<br>
+															</address>
+														</li>
+														<li>
+															<address>
+															  <strong>Lugar de Nacimiento</strong><br>
+															  {{pvpp.cliente.profile.lugarNac}}
+															</address>
+														</li>
+														<li>
+															<address>
+															  <strong>Escolaridad</strong><br>
+															  {{pvpp.cliente.profile.escolaridad}}
+															</address>
+														</li>		
+														<li>
+															<address>
+															  <strong>Nivel Social</strong><br>
+															  {{pvpp.cliente.profile.nivelSocial}}
+															</address>
+														</li>
+														<li>
+															<address>
+															  <strong>Correo para Calificaciones</strong><br>
+															  {{pvpp.cliente.profile.correoCalificaciones}}
+															</address>
+														</li>											
+													</ul>	
+												</div>
+												<div class="col-sm-6">
+													<ul class="list-unstyled">
+														<li>
+															<address>
+															  <strong>Información del Padre</strong><br>
+															  <strong>Nombre:</strong> {{pvpp.cliente.profile.padreTutor}}<br>
+															  <strong>Teléfono:</strong> {{pvpp.cliente.profile.telefonoPadre}}
+															  <strong>Correo:</strong> {{pvpp.cliente.profile.correoPadre}}
+															</address>
+														</li>
+														<li>
+															<address>
+															  <strong>Teléfono Secundario</strong><br>
+																{{pvpp.cliente.profile.tel2}}															  
+															</address>
+														</li>													
+														<li>
+															<address>
+															  <strong>Ocupación del Alumno</strong><br>
+															  {{pvpp.getOcupacion(pvpp.cliente.profile.ocupacion_id)}}
+															</address>
+														</li>													
+														<li>
+															<address>
+															  <strong>Cómo te enteraste de nosotros</strong><br>
+															  {{pvpp.cliente.profile.medio}}
+															</address>
+														</li>
+														<li>
+															<address>
+															  <strong>Talla</strong><br>
+																{{pvpp.cliente.profile.talla}}															  
+															</address>
+														</li>														
+													</ul>	
+												</div>
+											</div>											
+											<div class="tab-pane" id="pagos">												
+												<div class="row">
+													<section class="col col-sm-1 text-center padding-20" ng-repeat="semana in pvpp.misSemanas" ng-click="pvpp.seleccionarSemana(semana)" ng-class="($index == pvpp.misSemana.length) ? pvpp.obtenerEstatus(semana.pagada) : ''">
+														<label class="input text-center">
+															<label type="text" class="text-center">{{semana.numero}} / {{semana.anio}} | {{semana.pagada}}</label>
+														</label>
+													</section>													
+												</div>																		
+											</div>											
+										</div>
+									</div>
+								</div>
+							</div>													
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Formulario para cambiar algún dato de un pago -->
+<div class="row"> 
+	<div class="col-sm-12">
+		<div class="collapse" id="collapseMasivaSemanas">
+			<form name="formMasivoSemanas" class="form-horizontal" role="form" novalidate>
+		  	<div class="well">	    
+			  	<div class="row">
+			  		<div class="col-sm-12">
+			  			<div class="alert alert-warning">
+			  			 <p><i class="fa-fw fa fa-warning"></i> La <strong>actualización masiva</strong> es una herramienta que actualizará el importe, recargo y descuento en un rango de semanas dadas, por favor asegúrese de hacerlo correctamente.</p>
+			  			 <p><strong>No se pueden modificar colegiaturas pagadas</strong></p>
+			  			</div>
+			  		</div>
+			  	</div>
+			    <div class="row">
+			    	<div class="col-sm-4" valida>
+				    	<label>Fecha Inicial *</label>
+				    	<input date-time format="dd-MM-yyyy" class="form-control" view="year" max-view="year" min-view="date" ng-model="pvpp.cambioSemanasPlanPagos.fechaInicial" name="fechacambioSemanasPlanPagos" required/>
+			    	</div>
+			    	<div class="col-sm-4" valida>					    
+				    	<label>Total de Pagos *</label>
+				    	<input name="totalPagosCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pvpp.cambioSemanasPlanPagos.totalPagos" required="">
+			    	</div>
+			    </div>
+			    <div class="row">
+			    	<div class="col-sm-4" valida>
+				    	<label>Importe *</label>
+				    	<input name="importeRegularCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Nuevo costo colegiatura" ng-model="pvpp.cambioSemanasPlanPagos.importeRegular" required="">
+			    	</div>
+			    	<div class="col-sm-4" valida>					    
+				    	<label>Importe Recargo *</label>
+				    	<input name="importeRecargoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto recargo" ng-model="pvpp.cambioSemanasPlanPagos.importeRecargo" required="">
+			    	</div>
+			    	<div class="col-sm-4" valida>					    
+				    	<label>Importe Descuento *</label>
+				    	<input name="importeDescuentoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto descuento" ng-model="pvpp.cambioSemanasPlanPagos.importeDescuento" required="">
+			    	</div>
+			    	<div class="col-sm-4" valida>					    
+				    	<label>Días Recargo *</label>
+				    	<input name="diasRecargoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pvpp.cambioSemanasPlanPagos.diasRecargo" required="">
+			    	</div>
+			    	<div class="col-sm-4" valida>					    
+				    	<label>Días Descuento *</label>
+				    	<input name="diasDescuentoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pvpp.cambioSemanasPlanPagos.diasDescuento" required="">
+			    	</div>
+			    </div> 
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<button class="btn btn-info" ng-click="pvpp.planPagosSemana(pvpp.cambioSemanasPlanPagos, formMasivoSemanas)" valida-form formulario="formMasivoSemanas">Calcular Plan de Pagos</button>
+					</div>
+				</div>	  
+		  </form>
+		</div>
+	</div>
+</div>
+<!-- Tabla para mostrar los pagos -->
+<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+
+					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+						
+						<header role="heading">
+							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+							<h2>Créditos Aprobados</h2>
+			
+			
+						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+			
+						<!-- widget div-->
+						<div class="no-padding" role="content">
+							<!-- widget edit box -->
+						
+							<!-- end widget edit box -->
+			
+							<div class="widget-body">
+								<!-- content -->
+								
+
+								<div class="row ">
+									<br/>
+									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="aprobado in pvpp.creditos">
+										<div class="panel panel-blueDark">
+											<div class="panel-heading">
+												<h3 class="panel-title">
+													Credito</h3>
+											</div>
+											<div class="panel-body no-padding text-align-center">
+												<div class="the-price">
+													<h1>
+														{{aprobado.capitalSolicitado|currency}}
+													</h1>
+													<h2>
+														<span class="subscript">Folio:</span>
+														{{aprobado.folio}}
+														
+													</h2>
+													<h2>
+														{{aprobado.duracionMeses}}
+														<span class="subscript">/meses</span>
+													</h2>
+													<small>Plan: {{aprobado.periodoPago}}</small>
+												</div>
+											</div>
+											
+										</div>
+									</div>
+									
+								</div>
+								<!-- end content -->
+							</div>
+			
+						</div>
+						<!-- end widget div -->
+					</div>
+					<!-- end widget -->
+			
+				</article>
+
+							<br/>
+							<br/>
+							
+									<div class="row"><br/>
+										<div class="col-sm-8">
+
+											<table class="table table-striped table-bordered table-condensed font-xs">
+												<thead class="thead">
+													<tr>
+														<th class="text-center" width="5%"></th>
+														<th class="text-center" width="5%">No.</th>
+														<th class="text-center" width="5%">Folio Credito</th>
+														<th class="text-center" width="15%">Movimiento</th>
+														<th class="text-center" width="15%">Fecha de Pago</th>
+														<th class="text-center" width="15%">Pago</th>
+														<th class="text-center" width="10%">Capital</th>
+														<th class="text-center" width="10%">Interes</th>
+														<th class="text-center" width="10%">Seguro</th>
+														<th class="text-center" width="10%">IVA</th>
+														<th class="text-center" width="10%">Saldo</th>
+														<th class="text-center" width="10%">Pago</th>
+														
+														
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < pvpp.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in pvpp.planPagosViejo">
+							
+														<td ><a ng-model="pago.pagoSeleccionado" ng-click="pvpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? 'seleccionado' : 'Pendiente'}}</a> </td>
+
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago}}</td>	
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pvpp.getFolio(pago.credito_id)}}</td>
+														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger' : ''">{{pago.movimiento }}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pvpp.getnumeroPagos(pago.credito_id)}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.capital  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.interes  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
+														<td ><input type="number" ng-change="pvpp.seleccionarMontoPago(pago)"  ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
+														
+														
+													</tr>
+												</tbody>
+											</table>	
+										</div>
+										<br/>
+										<div class="col-sm-4">
+											<h4>Total a pagar: {{pvpp.pago.totalPago | currency }}</h4>
+											<br/>
+											<caption>Forma de Pago: </caption> 
+											<select name="TipoIngreso" class="form-control select2" placeholder="Seleccione" ng-model="pvpp.pago.tipoIngreso_id" required>
+												<option ng-repeat="tipo in pvpp.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
+											</select>
+											<br/>
+											<caption>Monto a pagar: </caption> <input  type="number" class="form-control" placeholder="Pagar" ng-model="pvpp.pago.pagar">
+											<br/>
+											<h4>Cambio: {{pvpp.pago.pagar - pvpp.pago.totalPago | currency }}</h4>
+											<br/>
+											<a class="btn btn-primary pull-right" ng-click="pvpp.guardarPago(pvpp.pago,pvpp.credito)">Guardar</a>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</article>
+</div>
+
+

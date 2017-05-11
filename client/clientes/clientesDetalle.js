@@ -66,6 +66,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('documentos',()=>{
 		return [{}];
 	});
+	this.subscribe('personas',()=>{
+		return [{}];
+	});
 			
 	this.helpers({
 		creditos : () => {
@@ -116,6 +119,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				objeto.empresa = Empresas.findOne(objeto.empresa_id)
 				// objeto.documento = Documentos.findOne(objeto.docuemnto_id)
 				objeto.documento = Documentos.findOne(objeto.documento_id)
+				
 				//objeto.documentoNombre = objeto.documento.nombre
 			});
 				
@@ -477,8 +481,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.cancelarSeleccion = function(aprobado){
 			 rc.cancelacion.folio = aprobado.folio;
 	};
-
-
 	
 
 	this.mostrarNotaCliente = function(){
