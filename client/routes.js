@@ -660,4 +660,15 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('anon.imprimirCredito', {
+			url: '/imprimirCredito',
+			templateUrl: 'client/administracion/_imprimirCredito.html',
+			controller: 'calculadoraCtrl as cal',
+			params: {'pago':':pago'},
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 }]);
