@@ -69,6 +69,35 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('personas',()=>{
 		return [{}];
 	});
+	this.subscribe('ciudades',()=>{
+		return [{}];
+	});
+	this.subscribe('municipios',()=>{
+		return [{}];
+	});
+	this.subscribe('colonias',()=>{
+		return [{}];
+	});
+	this.subscribe('estadoCivil',()=>{
+		return [{}];
+	});
+	this.subscribe('paises',()=>{
+		return [{}];
+	});
+	this.subscribe('sucursales',()=>{
+		return [{}];
+	});
+	this.subscribe('empresas',()=>{
+		return [{}];
+	});
+	this.subscribe('estados',()=>{
+		return [{}];
+	});
+	this.subscribe('nacionalidades',()=>{
+		return [{}];
+	});
+	
+
 			
 	this.helpers({
 		creditos : () => {
@@ -188,7 +217,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
 			//rc.creditos_id = _.pluck(planes, "cliente_id");
-			console.log("kaka",planes)
+			//console.log("kaka",planes)
 
 
 			return planes
@@ -257,7 +286,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				//console.log(rc.saldo)
 			});
 
-			console.log("el ARREGLO del helper historial",arreglo)
+			//console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
 		},
 
@@ -564,7 +593,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		objeto.nombreCompleto = objeto.profile.nombreCompleto
 		objeto.referencias = root.referencias;
 		objeto.lugarNacimiento = objeto.profile.lugarNacimiento;
-		console.log("entro2:", objeto);
+		//console.log("entro2:", objeto);
 
 
 		_.each(objeto, function(cliente){
