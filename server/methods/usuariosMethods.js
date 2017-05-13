@@ -149,17 +149,17 @@ Meteor.methods({
 	//console.log(usuario,rol)		
 	  var user = Meteor.users.findOne({"username" : usuario.username});
 		
-		console.log("RP:",referenciasPersonales);
+		//console.log("RP:",referenciasPersonales);
 	  		
 		_.each(referenciasPersonales, function(referenciaPersonal){
 								
 					
 					if (referenciaPersonal.buscarPersona_id)
 					{
-							console.log(referenciaPersonal.buscarPersona_id);
+							//console.log(referenciaPersonal.buscarPersona_id);
 							var p = Personas.findOne({_id:referenciaPersonal.buscarPersona_id});
 							
-							console.log("P:",p)	
+							//console.log("P:",p)	
 							
 							p.nombre = referenciaPersonal.nombre;
 							p.apellidoPaterno = referenciaPersonal.apellidoPaterno;
@@ -183,7 +183,7 @@ Meteor.methods({
 									}
 							});
 							
-							console.log("Actualizar cliente_id:",p);
+							//console.log("Actualizar cliente_id:",p);
 							
 							Personas.update({_id: referenciaPersonal.buscarPersona_id},{$set:p});
 					}
@@ -206,7 +206,7 @@ Meteor.methods({
 																 tipoPersona 		 : "Referencia", 
 																 estatus				 : 0});
 																 
-							console.log("Actualizar persona_id:",p);
+							//console.log("Actualizar persona_id:",p);
 							
 							Personas.update({_id: referenciaPersonal.persona_id},{$set:p});
 							user.profile.referenciasPersonales_ids.push(referenciaPersonal.persona_id);
@@ -234,7 +234,7 @@ Meteor.methods({
 																				tipoPersona			: "Referencia", 
 																				estatus					: 0});
 							
-							console.log("Actualizar sin nada:",relacion);
+							//console.log("Actualizar sin nada:",relacion);
 																									
 							var result = Personas.insert(relacion);
 							user.profile.referenciasPersonales_ids.push(result);

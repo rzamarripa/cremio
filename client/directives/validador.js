@@ -34,9 +34,9 @@ angular.module('creditoMio').directive('validaForm', validaForm);
           formulario:"="
       },
      link: function(scope, element, attrs) {
-			element.on("click", function () {
+      element.on("click", function () {
         errorsType = scope.formulario.$error;
-        if(errorsType != undefined){
+        if(!_.isEmpty(errorsType)){
           angular.forEach(errorsType, function(errors){
             errors.forEach(function(error){
               if(error.$invalid == true){
@@ -46,10 +46,13 @@ angular.module('creditoMio').directive('validaForm', validaForm);
             })
           });
         }else{
-          setTimeout(function() {$("div").removeClass("has-error");}, 10);  
+          _.each($("div").find("[valida]"), function(elem){
+            elem.carga = false;
+          }); 
         }
       });
-		}
+    }
   }
 }
+
 

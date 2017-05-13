@@ -35,7 +35,7 @@ angular.module("creditoMio")
 		  return Estados.find({pais_id: this.getReactively('buscar.pais_id')? this.getReactively('buscar.pais_id'):""});
 	  },
 	  estados : () => {
-		  return Estados.find({pais_id: this.getReactively('buscar.pais_id')});
+		  return Estados.find({pais_id: this.getReactively('objeto.pais_id')? this.getReactively('objeto.pais_id'):""});
 	  },
   });
   
@@ -52,7 +52,7 @@ angular.module("creditoMio")
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
-			objeto.estatus = true;
+				objeto.estatus = true;
 			objeto.usuarioInserto = Meteor.userId();
 			Municipios.insert(objeto);
 			toastr.success('Guardado correctamente.');
