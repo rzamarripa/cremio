@@ -536,6 +536,7 @@ Meteor.methods({
 									cliente:    credito.nombre,
 									avales:      avales,
 									garantias:   garantias,
+								
 
 				  });
 								
