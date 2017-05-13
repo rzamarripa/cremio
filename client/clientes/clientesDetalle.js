@@ -301,10 +301,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	});
 
 
-	console.log("nota ",rc.notaCuenta1)
+	//console.log("nota ",rc.notaCuenta1)
 	this.actualizar = function(cliente,form){
 
-		console.log(cliente);
+		//console.log(cliente);
 		var clienteTemp = Meteor.users.findOne({_id : cliente._id});
 		this.cliente.password = clienteTemp.password;
 		this.cliente.repeatPassword = clienteTemp.password;
@@ -326,7 +326,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.nuevo = true;
 		form.$setPristine();
 		form.$setUntouched();
-		$state.go('root.clientes');
+		$state.go("root.clienteDetalle",{objeto_id : cliente._id});
+		//$state.go('root.clientes');
 	};
 	
 	this.tomarFoto = function () {
@@ -720,7 +721,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					fileDisplayArea1.innerHTML = "File not supported!";
 				}
 			});		
-	    });
+	  });
 
 
 
