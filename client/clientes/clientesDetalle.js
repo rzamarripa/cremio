@@ -580,7 +580,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		  			cliente.ciudad = Ciudades.findOne(cliente.ciudad_id)
 		  			cliente.sucursal = Sucursales.findOne(cliente.sucursal_id)
 		  			cliente.municipio = Municipios.findOne(cliente.municipio_id)
-		  			cliente.ducumento = Documentos.findOne(cliente.documento_id)
+		  			//cliente.ducumento = Documentos.findOne(cliente.documento_id)
 
 		  			
 		  		})
@@ -594,7 +594,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	    objeto.sucursal = objeto.profile.ciudad
 	    objeto.municipio = objeto.profile.nombre
 	    objeto.empresa = objeto.profile.empresa
-	    objeto.documento = objeto.profile.documento
+	    //objeto.documento = objeto.profile.documento
 
 
 		Meteor.call('getFicha', objeto, function(error, response) {

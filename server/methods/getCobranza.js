@@ -46,7 +46,7 @@ Meteor.methods({
 					 			arreglo[planPago.credito_id].perfil.push(arreglo[planPago.credito_id].cliente.profile);
 					 			arreglo[planPago.credito_id].planPagos = [];			 			
 					 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago,
-					 				cargo : planPago.cargo,estatus : planPago.estatus });
+					 				cargo : planPago.cargo,estatus : planPago.estatus,_id : planPago._id });
 
 					 			
 					 			//arreglo[planPago.credito_id].importe = 0.00;
@@ -74,7 +74,8 @@ Meteor.methods({
 
 					 			
 					 			arreglo[planPago.credito_id].saldo += planPago.importeRegular + planPago.multa;
-					 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago});
+					 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago,
+					 			cargo : planPago.cargo,estatus : planPago.estatus,_id : planPago._id});
 					 			
 					
 					 			

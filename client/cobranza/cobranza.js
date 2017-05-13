@@ -727,7 +727,9 @@ angular.module("creditoMio")
 		 		_.each(item.credito,function(credito){
 		 		//console.log(_id,"credito_id")
 		     		_.each(item.perfil,function(cliente){
+		     			var saldoActual = 0;
 		 				_.each(item.planPagos,function(plan){
+
 		 				cliente.colonia = Colonias.findOne(cliente.colonia_id)
 		 				plan.colonia = cliente.colonia.nombre
 		 				plan.calle = cliente.calle
@@ -739,6 +741,9 @@ angular.module("creditoMio")
 						plan.planPagoNumero = plan.numeroPago
 						plan.no = cliente.numero
 						plan.nombreCompleto = cliente.nombreCompleto
+						plan.saldo = item.saldo
+						plan.saldoActual =  plan.saldo - plan.cargo 
+						saldoActual = plan.saldoActual
 						//plan.credito.numero = credito.numeroPagos
 		 			});
 		 		});
@@ -748,7 +753,6 @@ angular.module("creditoMio")
 		  }
 		});
 
-		 
 		 
 	     
 	
