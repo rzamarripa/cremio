@@ -44,7 +44,10 @@ Meteor.methods({
 		_.each(credito.avales, function(aval){
 			if (!aval.persona_id){	  	
 					aval.relaciones = [];
-					aval.relaciones.push({credito: c.folio, tipoPersona: "Aval", estatus: 0});
+					aval.relaciones.push({credito: c.folio, 
+															  tipoPersona: "Aval", 
+															  estatus: 0});
+															  
 					aval.nombreCompleto = aval.nombre + " " + aval.apellidoPaterno + " " + aval.apellidoMaterno;
 					Personas.insert(aval, function(error, result){
 						if (result){
@@ -96,30 +99,18 @@ Meteor.methods({
 			credito.estatus = 1;
 		}
 
-		//var planPagos = Meteor.call("generarPlanPagos",credito,cliente);
-		//console.log (planPagos)
-/*
-		var saldoActual=0;
-		_.each(planPagos,function(pago){
-			saldoActual += pago.cargo;
-		});
-		credito.numeroPagos = planPagos.length;
-		credito.saldoActual = saldoActual;
-		credito.adeudoInicial = saldoActual;
-*/
-
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		
-		//credito.folio = sucursal.folio + 1;
+		credito.avales_ids = [];		
 		
-		credito.avales_ids = [];
-		
-		//console.log(credito.avales);
 		
 		_.each(credito.avales, function(aval){
 			if (!aval.persona_id){	  	
 					aval.relaciones = [];
-					aval.relaciones.push({credito: credito.folio, tipoPersona: "Aval", estatus: 0});
+					aval.relaciones.push({credito				: credito.folio, 
+															  tipoPersona		: "Aval",
+															  estatus				: 0});
+															  
 					aval.nombreCompleto = aval.nombre + " " + aval.apellidoPaterno + " " + aval.apellidoMaterno;
 					Personas.insert(aval, function(error, result){
 						if (result){
@@ -136,23 +127,9 @@ Meteor.methods({
 		});
 
 		delete credito['avales'];
-	  	
-		//Sucursales.update({_id : sucursal._id}, { $set : { folio : credito.folio}});
 		
 
 		var credito_id = Creditos.insert(credito);
-/*		
-		_.each(planPagos, function(pago){
-			delete pago.$$hashKey;
-			pago.multa = 0;
-			pago.abono = 0;
-			pago.credito_id = credito_id;
-			pago.descripcion = "Recibo";
-			PlanPagos.insert(pago)
-		});
-*/
-		
-		//Meteor.call("generarMultas");
 		
 		return "hecho";
 	},
@@ -165,24 +142,11 @@ Meteor.methods({
 			credito.estatus = 1;
 		}
 
-		//var planPagos = Meteor.call("generarPlanPagos",credito,cliente);
-		//console.log (planPagos)
-/*
-		var saldoActual=0;
-		_.each(planPagos,function(pago){
-			saldoActual += pago.cargo;
-		});
-		credito.numeroPagos = planPagos.length;
-		credito.saldoActual = saldoActual;
-		credito.adeudoInicial = saldoActual;
-*/
-
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		//credito.folio = sucursal.folio + 1;
 		credito.avales_ids = [];
 		
-		//console.log(credito.avales);
-		
+		//console.log(credito.avales);		
 		_.each(credito.avales, function(aval){
 			if (!aval.persona_id){	  	
 					aval.relaciones = [];
@@ -203,27 +167,8 @@ Meteor.methods({
 		});
 
 		delete credito['avales'];
-	  	
-		//Sucursales.update({_id : sucursal._id}, { $set : { folio : credito.folio}});
-		
-/*
-		var credito_idTemp = credito._id;
-		delete credito._id;
-*/
 		Creditos.update({_id:idCredito},{$set:credito});
-/*
-		PlanPagos.remove({credito_id:credito_id});
 
-		_.each(planPagos, function(pago){
-			delete pago.$$hashKey;
-			pago.multa = 0;
-			pago.abono = 0;
-			pago.credito_id = credito_id;
-			pago.descripcion = "Recibo";
-			PlanPagos.insert(pago)
-		});
-		Meteor.call("generarMultas");
-*/
 		return "hecho";
 	},
 	entregarCredito : (montos,creditoid)=>{
