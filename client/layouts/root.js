@@ -36,39 +36,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 			this.buscando = false;		
   });
 
-	this.subscribe('ocupaciones', () => {
-		return [{estatus:true  }];
-	});
-	this.subscribe('nacionalidades', () => {
-		return [{estatus:true  }];
-	});
-	this.subscribe('estadoCivil', () => {
-		return [{estatus:true  }];
-	});
-	this.subscribe('estados', () => {
-		return [{estatus:true  }];
-	});
-	this.subscribe('paises', () => {
-		return [{estatus:true  }];
-	});
-	this.subscribe('empresas', () => {
-		return [{estatus:true  }];
-	});
-	this.subscribe('colonias', () => {
-		return [{estatus:true  }];
-	});
-	this.subscribe('ciudades', () => {
-		return [{estatus:true  }];
-	});
-	this.subscribe('creditos', () => {
-		return [{estatus:true  }];
-	});
-	this.subscribe('sucursales', () => {
-		return [{estatus:true}];
-	});
-	this.subscribe('municipios', () => {
-		return [{estatus:true}];
-	});
+	
   
   	this.helpers({
 	  	caja : () =>{
