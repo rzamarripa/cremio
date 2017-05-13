@@ -655,13 +655,15 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 
 	    };
 
-	    this.imprimirCredito = function(objeto,credito){
+	    this.imprimirCredito = function(objeto,credito,avales,garantias){
 
-	    	console.log(credito,"credito")
-	    	objeto.cliente  = credito.nombre
+	    	
 	    	console.log(objeto,"objeto")
+	    	console.log(credito,"credito")
+	    	console.log(avales,"avales")
+			console.log(garantias,"garantias")
 
-			  Meteor.call('getCreditoReporte', objeto,credito, function(error, response) {
+			  Meteor.call('getCreditoReporte', objeto,credito,avales, function(error, response) {
 
 
 

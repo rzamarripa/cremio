@@ -449,7 +449,7 @@ Meteor.methods({
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   getRecibos: function (objeto) {
-	console.log(credito,"credito")
+	
 		console.log(objeto,"planPagos")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
@@ -475,7 +475,7 @@ Meteor.methods({
 		var fecha = new Date();
 		var f = fecha;
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    objeto.cliente = credito.nombre
+	    
 	 
 
 	    console.log(objeto.planPagos);
@@ -501,7 +501,7 @@ Meteor.methods({
 		
   },
 
-    getCreditoReporte: function (objeto,credito) {
+    getCreditoReporte: function (objeto,credito,avales,garantias) {
 	console.log(objeto,"Credito")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
@@ -534,6 +534,9 @@ Meteor.methods({
 									length:       objeto.length,
 									fecha:        fecha,
 									cliente:    credito.nombre,
+									avales:      avales,
+									garantias:   garantias,
+								
 
 				  });
 								
