@@ -140,8 +140,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	
 	//Funcion Evalua la sessión del usuario
 	this.autorun(function() {
- 		console.log("autorun");
-    if(!Meteor.user() && !Meteor.user()._id){
+    if(!Meteor.user()){
     	$state.go('anon.login');
     }
     
