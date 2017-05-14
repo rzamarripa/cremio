@@ -571,6 +571,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		_.each(objeto, function(cliente){
 			console.log("cliente",cliente)	
 		  			
+
 		  			//if (cliente.ocupacion_id != undefined)
 		  				 	cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
 		  			//if (cliente.estadoCivil_id != undefined)
