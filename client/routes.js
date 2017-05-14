@@ -630,6 +630,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.intraCajas', {
+			url: '/cajas/traspasointra',
+			templateUrl: 'client/cajas/intraCajas.ng.html',
+			controller: 'IntraCajasCtrl as incaj',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.corteCaja', {
 			url: '/cajas/corte',
 			templateUrl: 'client/cajas/corteCaja.ng.html',

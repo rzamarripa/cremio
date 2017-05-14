@@ -802,9 +802,9 @@
 															<tr>
 															<!-- 	<th class="text-center" width="5%"></th> -->
 																<th class="text-center" width="5%">No.</th>
-																<th class="text-center" width="20%">Tipo de Nota de Credito</th>
-																<th class="text-center" width="20%">Fecha</th>
+																<th class="text-center" width="20%">vigencia</th>
 																<th class="text-center" width="15%">Monto</th>
+																<th class="text-center" width="15%">saldo</th>
 																<th class="text-center" width="15%">Estatus</th>
 																
 																
@@ -814,10 +814,10 @@
 														<tbody>
 															<tr ng-repeat="(index,nota) in cd.notasCredito"	ng-class="nota.estatus==1? 'info':'warning'">
 																<td>{{index+1}}</td>
-																<td>{{cd.getNombreTipoNotaCredito(nota.tipoNotaCredito_id)}}</td>
-																<td>{{nota.fecha | date:'fullDate'}}</td>
-																<td>{{nota.monto | currency}}</td>
-																<td>{{nota.estatus==1? 'Vigente': nota.estatus==0? 'Cancelada':'Vigente'}}</td>
+																<td>{{nota.vigencia | date:'fullDate'}}</td>
+																<td>{{nota.importe | currency}}</td>
+																<td>{{nota.saldo | currency}}</td>
+																<td>{{nota.estatus==1? 'Vigente':  'Cancelada'}}</td>
 															</tr>
 														</tbody>
 												</table>

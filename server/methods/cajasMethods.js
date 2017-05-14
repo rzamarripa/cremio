@@ -3,7 +3,7 @@ Meteor.methods({
 		var user=Meteor.user();
 		if(user.roles[0] != "Gerente")
 			throw new Meteor.Error(403, 'Error 403: Permiso denegado', 'Permiso denegado');
-
+		console.log(caja)
 		var usuario = Meteor.users.findOne(caja.usuario_id)
 		if(usuario.profile.caja_id){
 			var cajavieja = Cajas.findOne(usuario.profile.caja_id);
@@ -16,8 +16,8 @@ Meteor.methods({
 		caja.updated = false;
 		caja.estatus = true;
 		caja.estadoCaja = "Cerrada";
-
-
+		console.log(caja)
+     
 		var cajaid = Cajas.insert(caja)
 		
 		if(usuario.profile.caja_id)
@@ -27,6 +27,7 @@ Meteor.methods({
 
 		return cajaid;
 	},
+
 	actualizarCaja : function(caja ) {
 		var user=Meteor.user();
 		if(user.roles[0] != "Gerente")
@@ -70,6 +71,155 @@ Meteor.methods({
 
 		return "200";
 	},
+	traspasoCajaCuenta : function ( origen_id,destino_id,cantidad,cuenta){
+		
+		var origen = Cajas.findOne(origen_id);
+		var destino = Cuentas.findOne(destino_id);
+
+		var user=Meteor.user();
+
+		if(user.roles[0] != "Gerente")
+			throw new Meteor.Error(403, 'Error 403: Permiso denegado', 'Permiso denegado');
+		if(!destino || !origen || !origen.cuenta || !origen.cuenta[cuenta] || origen.cuenta[cuenta].saldo<cantidad || cantidad<=0)
+			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
+		origen.cuenta[cuenta].saldo -= cantidad;
+		destino.saldo += cantidad;
+
+		var objeto ={
+			origen_id : origen._id,
+			destino_id : destino._id,
+			tipoCuenta_id : cuenta,
+			importe : cantidad,
+			tipo : "CajaCuenta",
+			estatus : 1,
+			createdBy : user._id,
+			createdAt : new Date(),
+			sucursal_id : user.profile.sucursal_id,
+			updated : false
+		}
+		
+		var traspaso_id=Traspasos.insert(objeto);
+
+		var movimientoOrigen = {
+			tipoMovimiento : "Retiro Por Traspaso",
+			origen : "Traspaso Caja Cuenta",
+			origen_id : traspaso_id,
+			caja_id : origen._id,
+			cuenta_id :cuenta,
+			monto : cantidad * -1,
+			sucursal_id : user.profile.sucursal_id,
+			createdAt : new Date(),
+			createdBy : user._id,
+			updated : false,
+			estatus : 1
+		}
+		var movimientoDestino = {
+			tipoMovimiento : "Ingreso Por Traspaso",
+			origen : "Traspaso Caja Cuenta",
+			origen_id : traspaso_id,
+			caja_id : destino._id,
+			cuenta_id :cuenta,
+			monto : cantidad,
+			sucursal_id : user.profile.sucursal_id,
+			createdAt : new Date(),
+			createdBy : user._id,
+			updated : false,
+			estatus : 1
+		}
+		MovimientosCajas.insert(movimientoOrigen);
+		MovimientosCuenta.insert(movimientoDestino);
+
+		var origenid = origen._id;
+		var destinoid = destino._id;
+
+		origen.updated = true;
+		origen.updatedBy = user._id;
+		origen.updatedAt = new Date();
+
+		destino.updated = true;
+		destino.updatedBy = user._id;
+		destino.updatedAt = new Date();
+
+		Cajas.update({_id:origenid},{$set:origen});
+		Cuentas.update({_id:destinoid},{$set:destino});
+
+		return "200";
+	},
+	traspasoCajaCaja : function ( origen_id,destino_id,cantidad,cuenta){
+		
+		var origen = Cajas.findOne(origen_id);
+		var destino = Cajas.findOne(destino_id);
+
+		var user=Meteor.user();
+
+		if(user.roles[0] != "Gerente")
+			throw new Meteor.Error(403, 'Error 403: Permiso denegado', 'Permiso denegado');
+		if(!destino || !origen || !origen.cuenta || !origen.cuenta[cuenta] || origen.cuenta[cuenta].saldo<cantidad || cantidad<=0)
+			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
+		origen.cuenta[cuenta].saldo -= cantidad;
+		destino.cuenta[cuenta].saldo += cantidad;
+
+		var objeto ={
+			origen_id : origen._id,
+			destino_id : destino._id,
+			tipoCuenta_id : cuenta,
+			importe : cantidad,
+			tipo : "CajaCaja",
+			estatus : 1,
+			createdBy : user._id,
+			createdAt : new Date(),
+			sucursal_id : user.profile.sucursal_id,
+			updated : false
+		}
+		
+		var traspaso_id=Traspasos.insert(objeto);
+
+		var movimientoOrigen = {
+			tipoMovimiento : "Retiro Por Traspaso",
+			origen : "Traspaso Entre Cajas",
+			origen_id : traspaso_id,
+			caja_id : origen._id,
+			cuenta_id :cuenta,
+			monto : cantidad * -1,
+			sucursal_id : user.profile.sucursal_id,
+			createdAt : new Date(),
+			createdBy : user._id,
+			updated : false,
+			estatus : 1
+		}
+		var movimientoDestino = {
+			tipoMovimiento : "Ingreso Por Traspaso",
+			origen : "Traspaso Entre Cajas",
+			origen_id : traspaso_id,
+			caja_id : destino._id,
+			cuenta_id :cuenta,
+			monto : cantidad,
+			sucursal_id : user.profile.sucursal_id,
+			createdAt : new Date(),
+			createdBy : user._id,
+			updated : false,
+			estatus : 1
+		}
+		MovimientosCajas.insert(movimientoOrigen)
+		MovimientosCajas.insert(movimientoDestino)
+
+		var origenid = origen._id;
+		var destinoid = destino._id;
+
+		origen.updated = true;
+		origen.updatedBy = user._id;
+		origen.updatedAt = new Date();
+
+		destino.updated = true;
+		destino.updatedBy = user._id;
+		destino.updatedAt = new Date();
+
+		Cajas.update({_id:origenid},{$set:origen});
+		Cajas.update({_id:destinoid},{$set:destino});
+
+		return "200";
+	},
+
 	abrirCaja : function(caja){
 		caja.estadoCaja ="Abierta";
 		var cajaid =caja._id;
