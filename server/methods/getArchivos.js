@@ -342,7 +342,7 @@ Meteor.methods({
 		 var casa = cas.toUpperCase();
 		 var je = objeto.empresa.jefeInmediato;
 		 var jefeEmpresa = je.toUpperCase();
-		  var an = objeto.empresa.tiempoLaborando;
+		 var an = objeto.empresa.tiempoLaborando;
 		 var antiguedadEmpresa = an.toUpperCase();
 
 
@@ -421,8 +421,6 @@ Meteor.methods({
 									nombreConyu:           objeto.profile.nombreConyuge,
 									telefonoConyugeTrabajo: objeto.profile.telefonoConyugeTrabajo,
 									direccionConyugeTrabajo: objeto.profile.direccionConyugeTrabajo,
-
-
 
 								}) 
 									
