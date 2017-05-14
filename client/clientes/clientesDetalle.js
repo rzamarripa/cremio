@@ -69,35 +69,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('personas',()=>{
 		return [{}];
 	});
-	this.subscribe('ciudades',()=>{
-		return [{}];
-	});
-	this.subscribe('municipios',()=>{
-		return [{}];
-	});
-	this.subscribe('colonias',()=>{
-		return [{}];
-	});
-	this.subscribe('estadoCivil',()=>{
-		return [{}];
-	});
-	this.subscribe('paises',()=>{
-		return [{}];
-	});
-	this.subscribe('sucursales',()=>{
-		return [{}];
-	});
-	this.subscribe('empresas',()=>{
-		return [{}];
-	});
-	this.subscribe('estados',()=>{
-		return [{}];
-	});
-	this.subscribe('nacionalidades',()=>{
-		return [{}];
-	});
-	
-
 			
 	this.helpers({
 		creditos : () => {
@@ -217,7 +188,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
 			//rc.creditos_id = _.pluck(planes, "cliente_id");
-			//console.log("kaka",planes)
+			console.log("kaka",planes)
 
 
 			return planes
@@ -286,7 +257,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				//console.log(rc.saldo)
 			});
 
-			//console.log("el ARREGLO del helper historial",arreglo)
+			console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
 		},
 
@@ -573,7 +544,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
   this.generarFicha= function(objeto,referencia_id) 
   {
-		//console.log("entro:", objeto);
+		console.log("entro:", objeto);
 
 		root.cliente = objeto.profile	
   	    root.referencias = [];
@@ -594,37 +565,36 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		objeto.nombreCompleto = objeto.profile.nombreCompleto
 		objeto.referencias = root.referencias;
 		objeto.lugarNacimiento = objeto.profile.lugarNacimiento;
-		//console.log("entro2:", objeto);
+		console.log("entro2:", objeto);
 
 
 		_.each(objeto, function(cliente){
 			console.log("cliente",cliente)	
 		  			
-		  			if (cliente.ocupacion != undefined)
+		  			//if (cliente.ocupacion_id != undefined)
 		  				 	cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
-		  			if (cliente.estadoCivil != undefined)
+		  			//if (cliente.estadoCivil_id != undefined)
 		  					cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
-		  			if (cliente.nacionalidad != undefined)
+		  			//if (cliente.nacionalidad_id != undefined)
 		  					cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
-		  			if (cliente.estado != undefined)
+		  			//if (cliente.estado_id != undefined)
 		  					cliente.estado = Estados.findOne(cliente.estado_id)
-		  			if (cliente.pais != undefined)
+		  			//if (cliente.pais_id != undefined)
 		  					cliente.pais = Paises.findOne(cliente.pais_id)
-		  			if (cliente.empresa != undefined)
+		  			//if (cliente.empresa_id != undefined)
 		  					cliente.empresa = Empresas.findOne(cliente.empresa_id)
-		  			if (cliente.colonia != undefined)
+		  			//if (cliente.colonia_id != undefined)
 		  					cliente.colonia = Colonias.findOne(cliente.colonia_id)
-		  			if (cliente.ciudad != undefined)
+		  			//if (cliente.ciudad_id != undefined)
 		  					cliente.ciudad = Ciudades.findOne(cliente.ciudad_id)
-		  			if (cliente.sucursal != undefined)
+		  			//if (cliente.sucursal_id != undefined)
 		  					cliente.sucursal = Sucursales.findOne(cliente.sucursal_id)
-		  			if (cliente.municipio != undefined)
+		  			//if (cliente.municipio_id != undefined)
 		  					cliente.municipio = Municipios.findOne(cliente.municipio_id)
 		  			//cliente.ducumento = Documentos.findOne(cliente.documento_id)
 
 		  			
-		  })
-		  		
+		  		})
 			objeto.ocupacion = objeto.profile.ocupacion
 			objeto.estadoCivil = objeto.profile.estadoCivil
 			objeto.nacionalidad = objeto.profile.nacionalidad
