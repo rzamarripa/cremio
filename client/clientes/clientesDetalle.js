@@ -326,7 +326,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.nuevo = true;
 		form.$setPristine();
 		form.$setUntouched();
-		$state.go("root.clienteDetalle",{objeto_id : cliente._id});
+		$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
 		//$state.go('root.clientes');
 	};
 	
@@ -544,7 +544,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
   this.generarFicha= function(objeto,referencia_id) 
   {
-		console.log("entro:", objeto);
+		//console.log("entro:", objeto);
 
 		root.cliente = objeto.profile	
   	    root.referencias = [];
@@ -571,26 +571,37 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		_.each(objeto, function(cliente){
 			console.log("cliente",cliente)	
 		  			
-		  			cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
-		  			cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
-		  			cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
-		  			cliente.estado = Estados.findOne(cliente.estado_id)
-		  			cliente.pais = Paises.findOne(cliente.pais_id)
-		  			cliente.empresa = Empresas.findOne(cliente.empresa_id)
-		  			cliente.colonia = Colonias.findOne(cliente.colonia_id)
-		  			cliente.ciudad = Ciudades.findOne(cliente.ciudad_id)
-		  			cliente.sucursal = Sucursales.findOne(cliente.sucursal_id)
-		  			cliente.municipio = Municipios.findOne(cliente.municipio_id)
+		  			if (cliente.ocupacion != undefined)
+		  				 	cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
+		  			if (cliente.estadoCivil != undefined)
+		  					cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
+		  			if (cliente.nacionalidad != undefined)
+		  					cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
+		  			if (cliente.estado != undefined)
+		  					cliente.estado = Estados.findOne(cliente.estado_id)
+		  			if (cliente.pais != undefined)
+		  					cliente.pais = Paises.findOne(cliente.pais_id)
+		  			if (cliente.empresa != undefined)
+		  					cliente.empresa = Empresas.findOne(cliente.empresa_id)
+		  			if (cliente.colonia != undefined)
+		  					cliente.colonia = Colonias.findOne(cliente.colonia_id)
+		  			if (cliente.ciudad != undefined)
+		  					cliente.ciudad = Ciudades.findOne(cliente.ciudad_id)
+		  			if (cliente.sucursal != undefined)
+		  					cliente.sucursal = Sucursales.findOne(cliente.sucursal_id)
+		  			if (cliente.municipio != undefined)
+		  					cliente.municipio = Municipios.findOne(cliente.municipio_id)
 		  			//cliente.ducumento = Documentos.findOne(cliente.documento_id)
 
 		  			
-		  		})
-		objeto.ocupacion = objeto.profile.ocupacion
-		objeto.estadoCivil = objeto.profile.estadoCivil
-		objeto.nacionalidad = objeto.profile.nacionalidad
-		objeto.estado = objeto.profile.estado
-		objeto.pais = objeto.profile.pais
-		objeto.colonia = objeto.profile.colonia
+		  })
+		  		
+			objeto.ocupacion = objeto.profile.ocupacion
+			objeto.estadoCivil = objeto.profile.estadoCivil
+			objeto.nacionalidad = objeto.profile.nacionalidad
+			objeto.estado = objeto.profile.estado
+			objeto.pais = objeto.profile.pais
+			objeto.colonia = objeto.profile.colonia
 	    objeto.ciudad = objeto.profile.ciudad
 	    objeto.sucursal = objeto.profile.ciudad
 	    objeto.municipio = objeto.profile.nombre

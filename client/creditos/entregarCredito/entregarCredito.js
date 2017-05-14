@@ -174,6 +174,7 @@ angular.module("creditoMio")
 			{
 					if (diaActual > diaSeleccionado)
 					{
+
 							if (dif < 4)
 							{
 									if (dif == 1)
@@ -187,7 +188,7 @@ angular.module("creditoMio")
 							{
 									if (dif == 4)
 											fecha.setDate(fecha.getDate() + 10);
-									else if (dif == 5)
+									else if (dif === 5)
 											fecha.setDate(fecha.getDate() + 9);
 							}
 							
@@ -209,7 +210,9 @@ angular.module("creditoMio")
 					} else
 							fecha.setDate(fecha.getDate() + 7);
 					
-					rc.credito.primerAbono = fecha;
+					
+					rc.objeto.primerAbono = fecha;
+
 			}
 /*
 			else if (periodoPago == "Quincenal")
