@@ -2,7 +2,7 @@
 	
 	<div class="col-sm-12">
 		<form name="form" class="form-horizontal" role="form" novalidate>		
-			<div>
+			<div ng-show="!cli.action">
 					<a  ui-sref="root.clienteDetalle({objeto_id: cli.objeto_id})" class="btn btn-primary pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
 			</div>
 			<br><br>
@@ -40,11 +40,13 @@
 				    	<label>Confirmar Contraseña *</label>
 				    	<input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="cli.objeto.confirmpassword" required="">
 					  </div>
-   				  <div class="col-sm-4"><br/>
+   				  <div class="col-sm-1"><br/>
 							<label for="talla">Foto</label>
-							<button class="btn btn-primary" ng-click="cli.tomarFoto()"><i class="fa fa-camera"></i></button>
-							<img width="100px" ng-src="{{cli.objeto.foto}}" ng-class="{'img-thumbnail': !!cli.objeto.foto}" />
+							<button class="btn btn-primary" ng-model="cli.objeto.foto" ng-click="cli.tomarFoto()"><i class="fa fa-camera"></i></button>
+							
 			    	</div>
+			    	<div class="col-sm-3"><br/>
+			    	<img width="300px"  ng-src="{{cli.pic}}" ng-class="{'img-thumbnail': !!cli.pic}" /></div>
 		    </div>  
 			</div>
 			
@@ -54,9 +56,9 @@
 			    <div class="row">
 			    <div class="col-sm-3" >
 						<label>Archivo (máximo 512Kb)</label>
-						<input name="archivo" type="file" id="fileInput1">
-						<!-- <div id="fileDisplayArea1" ></div> -->
-						 <div class="container">
+						<input name="archivo" type="file" id="fileInput1" ng-model="cli.objeto.archivo">
+		
+				 <div class="container">
 			      <!-- Modal -->
 				  <div class="modal fade" id="myModal" role="dialog">
 				    <div class="modal-dialog">
@@ -87,8 +89,8 @@
 					</div>
 			     <div class="col-sm-3">
 					<label id="id_label_single" >Seleccionar Documento</label>
-					<select class="js-example-basic-single js-states form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.objeto.docuemnto_id"
-					 ng-change="cli.getClientes(cli.objeto.documento_id)">
+					<select class="js-example-basic-single js-states form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.objeto.profile.documento_id"
+					 ng-change="cli.getClientes(cli.objeto.profile.documento_id)">
 						<option ng-repeat="documento in cli.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
 					</select>
 					</div>
@@ -116,11 +118,11 @@
 		    <div class="row">
 		    	<div class="col-sm-3" valida> 					    
 			    	<label>Particular *</label>
-			    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.particular" required>
+			    	<input name="telefono" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.particular" required>
 		    	</div>
 		    	<div class="col-sm-3" valida> 					    
 			    	<label>Teléfono Oficina *</label>
-			    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoOficina" required>
+			    	<input name="telefono" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoOficina" required>
 		    	</div>
 		    	<div class="col-sm-3" valida>					    
 			    	<label>Celular *</label>
@@ -130,7 +132,7 @@
 		    <div class="row">
 			    <div class="col-sm-3">					    
 			    	<label>Teléfono Alternativo</label>
-			    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cli.objeto.profile.telefonoAlternativo" >
+			    	<input name="otroTelefono" type="number" class="form-control" placeholder="Otro Alternativo" ng-model="cli.objeto.profile.telefonoAlternativo" >
 		    	</div>	  
 		    	<div class="col-sm-2">					    
 			    	<label>Dueño</label>
@@ -353,11 +355,11 @@
 				    	</div>
 				    	<div class="col-sm-3" valida>					    
 					    	<label>Teléfono Particular *</label>
-					    	<input name="telefonoConyuge" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyuge" required="">
+					    	<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyuge" required="">
 				    	</div>
 				    	<div class="col-sm-3">					    
 					    	<label>Teléfono del trabajo</label>
-					    	<input name="telefonoConyugeTrabajo" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyugeTrabajo" >
+					    	<input name="telefonoConyugeTrabajo" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyugeTrabajo" >
 				    	</div>
 				    	<div class="col-sm-3">					    
 					    	<label>Ocupación</label>
@@ -400,7 +402,7 @@
 		    	</div>
 		    	<div class="col-sm-3">					    
 			    	<label>Telefono</label>
-			    	<input name="telefonoParentezco" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.parentezco.telefono">
+			    	<input name="telefonoParentezco" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.parentezco.telefono">
 		    	</div>
 		    	<div class="col-sm-3">					    
 			    	<label>Tiempo</label>

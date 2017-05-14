@@ -164,7 +164,9 @@ Meteor.methods({
 		});
 		
 	},
+
 	pagoParcialCredito:function(pagos,abono,totalPago,tipoIngresoId,pusuario_id){
+
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 		var puser = Meteor.users.findOne(pusuario_id);
@@ -198,6 +200,7 @@ Meteor.methods({
 		pago.semanaPago = ffecha.isoWeek();
 		pago.semanaPago = ahora.getMonth();
 		pago.estatus = 1;
+		//pago.credito_id = credito_id;
 		pago.planPagos=[];
 	
 		var pago_id=undefined;

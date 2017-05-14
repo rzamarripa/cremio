@@ -1,11 +1,12 @@
 Meteor.publish("buscarCajeros",function(options){
-	if(options.where.nombreCompleto.length > 0){
-		let selector = {
-	  	"profile.nombreCompleto": { '$regex' : '.*' + options.where.nombreCompleto || '' + '.*', '$options' : 'i' },
-	  	roles : ["Cajero"]
+	if (options != undefined)
+		if(options.where.nombreCompleto.length > 0){
+			let selector = {
+		  	"profile.nombreCompleto": { '$regex' : '.*' + options.where.nombreCompleto || '' + '.*', '$options' : 'i' },
+		  	roles : ["Cajero"]
+			}
+			return Meteor.users.find(selector, options.options);	
 		}
-		return Meteor.users.find(selector, options.options);	
-	}
 });
 
 Meteor.publish("cajero",function(options){

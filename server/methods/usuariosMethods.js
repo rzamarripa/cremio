@@ -148,18 +148,16 @@ Meteor.methods({
 	updateGerenteVenta: function (usuario, referenciasPersonales, rol) {
 	//console.log(usuario,rol)		
 	  var user = Meteor.users.findOne({"username" : usuario.username});
+
 		
-		console.log("RP:",referenciasPersonales);
-	  		
 		_.each(referenciasPersonales, function(referenciaPersonal){
-								
-					
+
 					if (referenciaPersonal.buscarPersona_id)
 					{
-							console.log(referenciaPersonal.buscarPersona_id);
+							//console.log(referenciaPersonal.buscarPersona_id);
 							var p = Personas.findOne({_id:referenciaPersonal.buscarPersona_id});
 							
-							console.log("P:",p)	
+							//console.log("P:",p)	
 							
 							p.nombre = referenciaPersonal.nombre;
 							p.apellidoPaterno = referenciaPersonal.apellidoPaterno;
@@ -183,7 +181,7 @@ Meteor.methods({
 									}
 							});
 							
-							console.log("Actualizar cliente_id:",p);
+							//console.log("Actualizar cliente_id:",p);
 							
 							Personas.update({_id: referenciaPersonal.buscarPersona_id},{$set:p});
 					}
@@ -206,10 +204,10 @@ Meteor.methods({
 																 tipoPersona 		 : "Referencia", 
 																 estatus				 : 0});
 																 
-							console.log("Actualizar persona_id:",p);
+							//console.log("Actualizar persona_id:",p);
 							
 							Personas.update({_id: referenciaPersonal.persona_id},{$set:p});
-							user.profile.referenciasPersonales_ids.push(referenciaPersonal.persona_id);
+							usuario.profile.referenciasPersonales_ids.push(referenciaPersonal.persona_id);
 					}
 					else //(referenciaPersonal.persona_id != undefined && referenciaPersonal.cliente_id != undefined)
 					{
@@ -234,39 +232,26 @@ Meteor.methods({
 																				tipoPersona			: "Referencia", 
 																				estatus					: 0});
 							
-							console.log("Actualizar sin nada:",relacion);
+							//console.log("Actualizar sin nada:",relacion);
 																									
 							var result = Personas.insert(relacion);
-							user.profile.referenciasPersonales_ids.push(result);
+							usuario.profile.referenciasPersonales_ids.push(result);
 
-							
-							
-/*
-							referenciaPersonal.relaciones = [];
-							referenciaPersonal.relaciones.push({cliente_id	: user._id, 
-																									cliente			: user.profile.nombreCompleto, 
-																									parentezco	: referenciaPersonal.parentezco,
-																									direccion		:	referenciaPersonal.direccion,
-																									telefono	  : referenciaPersonal.telefono,
-																									tiempo			: referenciaPersonal.tiempo,
-																									num				  : referenciaPersonal.num,
-																									tipoPersona	: "Referencia", 
-																									estatus: 0});
-							referenciaPersonal.nombreCompleto = referenciaPersonal.nombre + " " + referenciaPersonal.apellidoPaterno + " " + referenciaPersonal.apellidoMaterno;
-							
-							var result = Personas.insert(referenciaPersonal);
-							user.profile.referenciasPersonales_ids.push(result);	
-*/				
-					}
+							}
 							
 		});
 	  	  
+	  console.log(usuario);
+	  //delete usuario.profile.referenciasPersonales_ids;
+	  
+	  //usuario.profile.referenciasPersonales_ids = user.user.profile.referenciasPersonales_ids;
+	  
 	  
 	  Meteor.users.update({_id: user._id}, {$set:{
 			username: usuario.username,
 			roles: [rol],
 			password: usuario.password,
-			profile: user.profile
+			profile: usuario.profile
 		}});
 		
 		Accounts.setPassword(user._id, usuario.password, {logout: false});		

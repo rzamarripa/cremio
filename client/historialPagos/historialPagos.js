@@ -90,6 +90,7 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 
 
 		historial : () => {
+			
 			arreglo = [];
 			var saldoPago = 0;
 			var saldoActual = 0; 

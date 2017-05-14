@@ -73,14 +73,15 @@
 					<th width="10%"><div class="text-center">Importe</div></th>
 					<th width="10%"><div class="text-center">Multas</div></th>
 					<th width="10%"><div class="text-center">Saldo</div></th>
-				</tr>
+<!-- 					<th width="10%"><div class="text-center">Acciones</div></th>
+ -->				</tr>
 			</thead>
 			<tbody>
 		    <tr style='cursor: pointer' ng-repeat-start="objeto in cob.cobranza" >
 			    <td style="margin: 0px; border: 0px; padding: 0px">
 				    <input type="checkbox" class="form-control" 
 				    											 ng-model="objeto.imprimir" 
-				    											 ng-click="cob.sumarSeleccionados()"
+				    											 ng-click="cob.sumarSeleccionados(objeto)"
 				    											 ng-change="cob.Selecionar(objeto)" value="objeto.imprimir" style="margin: 0px; border: 0px; padding: 0px" /> 
 			    </td>
 			    <td ng-click="cob.selCredito(objeto)">{{ $index + 1 }}</td>
@@ -92,7 +93,9 @@
 			    <td class="text-right" ng-click="cob.selCredito(objeto)">{{objeto.importe | currency}}</td>
 			    <td class="text-right" ng-click="cob.selCredito(objeto)">{{objeto.multas | currency}}</td>
 			    <td class="text-right" ng-click="cob.selCredito(objeto)">{{objeto.saldo | currency}}</td>
+			   <!--  <td><a class="btn btn-default" ng-click="cob.imprimirRecibos(objeto)" >Imprimir Recibos</a></td> -->
 		    </tr>
+		    
 		    <tr ng-repeat-end ng-if="cob.isSelected(objeto.credito.folio) && cob.ban">
             <td colspan="8">
 	           	<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">

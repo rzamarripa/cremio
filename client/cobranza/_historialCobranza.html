@@ -2,25 +2,13 @@
 <div class="col-sm-12">					
 						
 						<form class="navbar-form navbar-left" role="search">
-							
-
-
-
 						<div class="input-group input-group-md">
 			      			
 			      			<div class="icon-addon addon-md">
 			         		<input id="filter" class="form-control"  width="100px" size="50" ng-model="buscar.titulo" type="text" 	placeholder="" />
 			          		<label for="email"  class="fa fa-search" rel="tooltip" title="" data-original-title="email"></label>
 			     		</div>
-			 <!--      <span class="input-group-btn">
-			          <button class="btn btn-default" ng-click="cob.buscarNombre()" type="button">Buscar</button>
-			      </span> -->
 			  </div>
-
-						
-						<!-- 	<button  class="btn btn-default">
-								Submit
-							</button> -->
 						</form>
 						<ul class="nav navbar-nav navbar-right">
 						
@@ -65,6 +53,7 @@
 					<th><div class="text-center">Fecha</div></th>
 					<th><div class="text-center">Hora</div></th>
 					<th><div class="text-center">Título</div></th>
+					<th><div class="text-center">Descripción</div></th>
 					<th><div class="text-center">Elaboro</div></th>
 					<th><div class="text-center">Tipo</div></th>
 				
@@ -76,6 +65,7 @@
 			    <td>{{objeto.fecha  | date:"dd-MM-yyyy"}}</td>
 			    <td>{{objeto.hora}}</td>
 			    <td>{{objeto.titulo}}</td>
+			    <td>{{objeto.descripcion}}</td>
 			    <td>{{objeto.usuario}}</td>
 			    <td>{{objeto.tipo}}</td>
 			

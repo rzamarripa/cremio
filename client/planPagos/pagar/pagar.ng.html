@@ -9,9 +9,12 @@
 								<div id="myCarousel" class="carousel profile-carousel">
 									<div class="air air-bottom-right padding-10" ng-repeat="credito in pvpp.creditos">
 										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.clienteDetalle({objeto_id : pvpp.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
+<!--
 										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.editarCliente({objeto_id : pvpp.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
+-->
+
 	 									<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.historialPagos({objeto_id : pvpp.cliente._id,credito_id : credito._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 	 										<i class="fa fa-pencil"></i> Historial de Creditos
 	 									</a> 
@@ -320,6 +323,7 @@
 		</div>
 	</div>
 </div>
+
 <!-- Formulario para cambiar algún dato de un pago -->
 <div class="row"> 
 	<div class="col-sm-12">
@@ -378,8 +382,7 @@
 </div>
 <!-- Tabla para mostrar los pagos -->
 <article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-
-					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+		<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
 						
 						<header role="heading">
 							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
@@ -435,12 +438,9 @@
 						<!-- end widget div -->
 					</div>
 					<!-- end widget -->
-			
-				</article>
-
+	</article>
 							<br/>
 							<br/>
-							
 									<div class="row"><br/>
 										<div class="col-sm-8">
 
@@ -458,7 +458,7 @@
 														<th class="text-center" width="10%">Seguro</th>
 														<th class="text-center" width="10%">IVA</th>
 														<th class="text-center" width="10%">Saldo</th>
-														<th class="text-center" width="10%">Pago</th>
+														<th class="text-center" width="5%">Pago</th>
 														
 														
 													</tr>
@@ -486,7 +486,7 @@
 											</table>	
 										</div>
 										<br/>
-										<div class="col-sm-4">
+										<div class="col-sm-3 pull-right">
 											<h4>Total a pagar: {{pvpp.pago.totalPago | currency }}</h4>
 											<br/>
 											<caption>Forma de Pago: </caption> 
@@ -501,7 +501,6 @@
 											<a class="btn btn-primary pull-right" ng-click="pvpp.guardarPago(pvpp.pago,pvpp.credito)">Guardar</a>
 										</div>
 									</div>
-									
 								</div>
 							</div>
 						</div>

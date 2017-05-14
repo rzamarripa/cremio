@@ -54,7 +54,7 @@
 	  <div class="col-sm-4">
 			<label >Estado</label>
 				<select name="Estado" class="form-control select2" placeholder="Seleccione" ng-model="mun.buscar.estado_id">
-					<option  value="{{estado._id}}" ng-repeat="estado in mun.estados">
+					<option  value="{{estado._id}}" ng-repeat="estado in mun.estadosBuscar">
 						{{estado.nombre}}
 					</option>
 				</select>

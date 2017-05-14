@@ -24,8 +24,16 @@ angular.module("creditoMio")
 	});
   
 	this.subscribe('colonias',()=>{
-		return [{ciudad_id: this.getReactively('buscar.ciudad_id')? this.getReactively('buscar.ciudad_id'):""}]
-	});
+		return [{pais_id: this.getReactively('buscar.pais_id')? this.getReactively('buscar.pais_id'):""
+						,estado_id: this.getReactively('buscar.estado_id')? this.getReactively('buscar.estado_id'):""
+						,municipio_id: this.getReactively('buscar.municipio_id')? this.getReactively('buscar.municipio_id'):""
+						,ciudad_id: this.getReactively('buscar.ciudad_id')? this.getReactively('buscar.ciudad_id'):""
+		}]
+	});	
+
+	
+
+
 	 
 	this.helpers({
 	  colonias : () => {

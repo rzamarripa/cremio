@@ -34,12 +34,18 @@ angular.module("creditoMio")
   rc.totalMultas = 0;
   rc.seleccionadoRecibos = 0;
   rc.seleccionadoMultas = 0;
+  rc.recibo = [];
 	
   
   this.selected_credito = 0;
   this.ban = false;
   this.respuestaNotaCLiente = false;
+
+
+
+  rc.colonia =""
   
+
   this.subscribe("tiposCredito", ()=>{
 		return [{}]
 	});
@@ -89,6 +95,11 @@ angular.module("creditoMio")
 		return [{cliente_id : rc.getReactively("cliente_id")}];
 	});
 
+		this.subscribe('pagos', () => {
+		return [{ }];
+	});
+
+
 	
 	this.helpers({
 		tiposCredito : () => {
@@ -105,27 +116,21 @@ angular.module("creditoMio")
 		},
 
 		planPagos : () => {
-
 			var planes = PlanPagos.find({multada:1});
 			var obj = planes.length
-
 
 			return planes;
 		},
 
 		pagosVencidos : () => {
-
 			_.each(rc.getReactively("planPagos"),function(plan){});
-
 			return rc.planPagos.length
 
 		},
 
 
-
 		historialCredito : () => {
 			var creditos = [];
-
 			rc.clientes_id = _.pluck(rc.cobranza,"cliente._id")
 			
 				
@@ -256,10 +261,10 @@ angular.module("creditoMio")
   {
 
   		rc.cliente_id = objeto.cliente._id
-  		console.log(rc.cliente_id)
-  		Creditos.find({cliente_id: rc.getReactively("cliente_id"),estatus : 5}).fetch()
+  		//console.log(rc.cliente_id)
+  		Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
 
-  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"),estatus : 5}).fetch()
+  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
 
 	  	this.ban = !this.ban;
 
@@ -376,8 +381,8 @@ angular.module("creditoMio")
         //objeto.fechaEntrega = new Date();
   		rc.cliente_id = objeto.cliente._id
   		console.log(rc.cliente_id)
-  		Creditos.find({cliente_id: rc.getReactively("cliente_id"),estatus : 5}).fetch()
-  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"),estatus : 5}).fetch()
+  		Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
+  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
 
 	  	rc.credito_id = objeto.credito._id;
 	  	console.log("Objeto: ",objeto)
@@ -411,18 +416,24 @@ angular.module("creditoMio")
 
 	this.cambiar = function() 
   {
+
 			var chkImprimir = document.getElementById('todos');
 				
 			_.each(rc.cobranza, function(cobranza){
 				cobranza.imprimir = chkImprimir.checked;
+				//rc.cobranza.estatus = !this.estatus.estatus;
 			})
 			
 			this.sumarSeleccionados();
+		//	console.log(rc.cobranza)
 					
 	};
 	
-	this.sumarSeleccionados = function()
-	{
+	this.sumarSeleccionados = function(objeto)
+	{		
+		    //rc.cobranza.estatus = !rc.cobranza.estatus;
+		    _.each(objeto, function(cobranza){});
+
 			rc.seleccionadoRecibos = 0;
 			rc.seleccionadoMultas = 0;
 			_.each(rc.cobranza,function(c){	
@@ -432,6 +443,7 @@ angular.module("creditoMio")
 							rc.seleccionadoMultas += c.multas;
 					}		
 			});
+			//console.log(rc.cobranza)
 
 	};
 
@@ -686,8 +698,8 @@ angular.module("creditoMio")
 								  var blob = new Blob(byteArrays, {type: contentType});
 								  return blob;
 							}
-							var blob = b64toBlob(response, "application/docx");
-						  var url = window.URL.createObjectURL(blob);
+						var blob = b64toBlob(response, "application/docx");
+						var url = window.URL.createObjectURL(blob);
 						  
 						  //console.log(url);
 						  var dlnk = document.getElementById('dwnldLnk');
@@ -703,25 +715,86 @@ angular.module("creditoMio")
 	};
 
 	this.imprimirRecibos= function(objeto) 
-
   {
+  	
 	  	
-		console.log("entro:", objeto);
+	console.log("objeto:", objeto);
+		 _.each(objeto,function(item){
+		 	
+		 	if (item.imprimir == true) {
+		 		//console.log(item,"objetos")
+		 		rc.recibo.push(item)
+		 
+		 		_.each(item.credito,function(credito){
+		 	     console.log(credito,"credito_id")
+		     		_.each(item.perfil,function(cliente){
+		     			
+		 				_.each(item.planPagos,function(plan){
+		 				
 
-		
+		 				cliente.colonia = Colonias.findOne(cliente.colonia_id)
+		 				plan.colonia = cliente.colonia.nombre
+		 				plan.calle = cliente.calle
+		 				cliente.estado = Estados.findOne(cliente.estado_id)
+						plan.estado = cliente.estado.nombre
+						cliente.municipio = Municipios.findOne(cliente.municipio_id)
+						plan.municipio = cliente.municipio.nombre
+		 				plan.nombreCompleto = cliente.nombreCompleto
+						plan.planPagoNumero = plan.numeroPago
+						plan.no = cliente.numero
+						plan.nombreCompleto = cliente.nombreCompleto
+						plan.telefono = cliente.telefono
+						plan.celular = cliente.celular
+						plan.telefonoOficina = cliente.telefonoOficina
+						plan.cantidadPagos = item.planPagos.length
+
+						
+						//plan.saldo = saldoActual 
+						
+
+						//plan.credito.numero = credito.numeroPagos
+		 			});
+
+		 		});
+		 	});
+		  }else{
+		  	item = undefined
+		  }
+		 
+		});
+
+		 var saldoActual = 0;
+		 _.each(objeto,function(item){
+
+		 	_.each(item.planPagos,function(plan){
+		 		
+		 		if (saldoActual == 0) {
+				 saldoActual = item.saldo
+				 console.log("entro")
+
+				}else{
+				saldoActual = saldoActual - plan.cargo
+				 console.log("else")
+			   }
+			   plan.saldoAnterior = parseFloat(saldoActual.toFixed(2))
+			   plan.saldoActualizado = parseFloat(saldoActual.toFixed(2) - plan.cargo.toFixed(2))
+
+		 		   
+				
+
+				
+				console.log(saldoActual)
+
+		 });
+		});
+		 
+	     
+	
+		console.log("2:",rc.recibo);
 
 
-		Meteor.call('getRecibosVencidos', objeto, function(error, response) {
 
-	     objeto.clientePerfil = rc.objeto.cliente.profile
-		 objeto.profile.nombreCompleto = objeto.clientePerfil.nombreCompleto
-		 _.each(objeto.cliente,function(cliente){
-			console.log("entro: o culo?");
-			cliente.colonia = Colonias.findOne(cliente.profile.colonia_id)
-
-			});
-
-
+		Meteor.call('getRecibos', objeto, function(error, response) {		 
 		   if(error)
 		   {
 		    console.log('ERROR :', error);
@@ -729,47 +802,61 @@ angular.module("creditoMio")
 		   }
 		   else
 		   {
-			 				function b64toBlob(b64Data, contentType, sliceSize) {
-								  contentType = contentType || '';
-								  sliceSize = sliceSize || 512;
-								
-								  var byteCharacters = atob(b64Data);
-								  var byteArrays = [];
-								
-								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-								    var byteNumbers = new Array(slice.length);
-								    for (var i = 0; i < slice.length; i++) {
-								      byteNumbers[i] = slice.charCodeAt(i);
-								    }
-								
-								    var byteArray = new Uint8Array(byteNumbers);
-								
-								    byteArrays.push(byteArray);
-								  }
-								    
-								  var blob = new Blob(byteArrays, {type: contentType});
-								  return blob;
-							}
+			function b64toBlob(b64Data, contentType, sliceSize) {
+				  contentType = contentType || '';
+				  sliceSize = sliceSize || 512;
+				  var byteCharacters = atob(b64Data);
+				  var byteArrays = [];
+				  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+				    var slice = byteCharacters.slice(offset, offset + sliceSize);
+				
+				    var byteNumbers = new Array(slice.length);
+				    for (var i = 0; i < slice.length; i++) {
+				      byteNumbers[i] = slice.charCodeAt(i);
+				    }
+				
+				    var byteArray = new Uint8Array(byteNumbers);
+				
+				    byteArrays.push(byteArray);
+				  }
+				    
+				  var blob = new Blob(byteArrays, {type: contentType});
+				  return blob;
+			    }
 							
-							var blob = b64toBlob(response, "application/docx");
-						  var url = window.URL.createObjectURL(blob);
-						  
-						  //console.log(url);
-						  var dlnk = document.getElementById('dwnldLnk');
+				  var blob = b64toBlob(response, "application/docx");
+				  var url = window.URL.createObjectURL(blob);
+				  var dlnk = document.getElementById('dwnldLnk');
 
-					    dlnk.download = "PAGOS.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
-
-  
-		   }
+			      dlnk.download = "RECIBOS.docx"; 
+					dlnk.href = url;
+					dlnk.click();		    
+				  window.URL.revokeObjectURL(url);
+	 
+			}
+		
 		});
-
+		rc.recibo = [];
 		
 	};
+
+
+
+	this.verPagos= function(credito) {
+		console.log(credito,"el ob ")
+		$("#modalpagos").modal();
+		credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
+		rc.mostrarModal = true
+
+	};
+
+	this.cerrarModal= function() {
+		rc.mostrarModal = false
+
+	};
+
+
+
 
 	
 

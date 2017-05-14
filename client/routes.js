@@ -660,4 +660,25 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.calculadora', {
+			url: '/calculadora',
+			templateUrl: 'client/administracion/calculadora.html',
+			controller: 'calculadoraCtrl as cal',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('anon.imprimirCredito', {
+			url: '/imprimirCredito',
+			templateUrl: 'client/administracion/_imprimirCredito.html',
+			controller: 'calculadoraCtrl as cal',
+			params: {'pago':':pago'},
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 }]);
