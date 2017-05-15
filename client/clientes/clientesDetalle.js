@@ -98,8 +98,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('nacionalidades',()=>{
 		return [{}];
 	});
-	
-
 			
 	this.helpers({
 		ciudades : () => {

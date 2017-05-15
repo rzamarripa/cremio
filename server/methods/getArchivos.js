@@ -230,7 +230,7 @@ Meteor.methods({
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   getFicha: function (objeto,referencia_id) {
-	console.log(objeto,"ficha")
+	//console.log(objeto,"ficha")
 		
 		var fs = require('fs');
     var Docxtemplater = require('docxtemplater');
@@ -325,6 +325,7 @@ Meteor.methods({
 	    var calleEmpresa = call.toUpperCase();
 	    var col = objeto.coloniaEmpresa;
 	    var coloniaEmpresa = col.toUpperCase();
+	    
 	    // var cas = objeto.profile.casa
 	    // var casa = cas.toUpperCase();
 	    // var loca = objeto.empresa.municipio;
