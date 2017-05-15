@@ -34,6 +34,7 @@ angular.module("creditoMio")
 	this.imagenes = []
 	
 	this.estadoCivil = "";
+	this.estadoCivilSeleccionado = {};
 	  
 
   this.subscribe('buscarPersonas', () => {
@@ -373,8 +374,6 @@ this.tomarFoto = function(objeto){
 	};
 	
 	this.AgregarReferencia = function(a){
-		
-		
 		this.parentezco.nombre = a.nombre;
 		this.parentezco.apellidoPaterno = a.apellidoPaterno;
 		this.parentezco.apellidoMaterno = a.apellidoMaterno;
@@ -594,4 +593,8 @@ this.tomarFoto = function(objeto){
 			
 	};
 
+	this.seleccionarEstadoCivil = function(estadoCivil_id)
+	{
+			this.estadoCivilSeleccionado = EstadoCivil.findOne(estadoCivil_id);	
+	}
 };
