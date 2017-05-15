@@ -1,0 +1,80 @@
+<h2> Traspaso Cuenta a Caja </h2>
+
+<div class="row" >
+	<div class="col-sm-12">
+		<input type="button" class="btn btn-{{tincuca.action == false ? 'primary' : 'danger'}}"  ng-click="tincuca.nuevo()" value ="{{tincuca.action == false ? 'Nuevo' : 'Cancelar'}}" >
+
+		<br/>
+		<br/>
+		<div ng-show="tincuca.action">
+			<form name="form" class="form-horizontal" role="form">
+			  	<div class="well">	    
+				    <div class="row">
+					    	<div class="col-sm-4" valida>
+							    <label>Caja de Origen*</label>
+						    	<select name="origen" class="form-control select2" placeholder="Seleccione" ng-model="tincuca.objeto.origen_id" required>
+									<option ng-repeat="caja in tincuca.cuentas" value="{{caja._id}}">{{caja.nombre}}</option>
+								</select>
+						    	
+						   </div>
+						   <div class="col-sm-4" valida>
+							    <label>Cuenta de Destino*</label>
+						    	<select name="destino" class="form-control select2" placeholder="Seleccione" ng-model="tincuca.objeto.destino_id" required>
+									<option ng-repeat="cuenta in tincuca.cajas" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
+								</select>
+						    	
+						   </div>
+						   <div class="col-sm-4" valida>
+							    <label>Monto *</label>
+						    	<input name="monto" type="number" class="form-control" placeholder="Monto" ng-model="tincuca.objeto.importe" required>
+						    	
+						   </div>
+						 
+					</div>
+					
+				</div>
+			  	<div class="well">	    
+				   		<div class="row">
+							<div class="col-sm-12">
+								<input type="submit" ng-click="tincuca.guardar(tincuca.objeto,form)" value="Guardar" class="btn btn-primary"  valida-form formulario="form">
+								
+							</div>
+						</div>
+			  	</div>  
+			</form>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="15%"><div class="text-center">Fecha</div></th>
+					<th width="30%"><div class="text-center">Cuenta Origen</div></th>
+					<th width="30%"><div class="text-center">Caja Destino</div></th>
+					<th width="15%"><div class="text-center">Monto</div></th>
+					<th width="10%"><div class="text-center">Estatus</div></th>
+				</tr>
+			</thead>
+			<tbody>
+			    <tr ng-repeat="objeto in tincuca.traspasos">
+				    <td>{{objeto.createdAt | date:'medium'}}</td>
+				    <td>{{objeto.origen.nombre}}</td>
+				    <td>{{objeto.destino.nombre}}</td>
+				    <td>{{objeto.importe | currency}}</td>
+				    <td>
+					    <div class="text-center">
+					    	<span ng-if="objeto.estatus" class="label label-success">
+								  Activo
+								</span>
+								<span ng-if="!objeto.estatus" class="label label-danger">
+								  Inactivo
+								</span>
+					    </div>
+				    </td>
+			    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>

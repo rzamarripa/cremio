@@ -1,6 +1,6 @@
 angular.module("creditoMio")
-.controller("IntraCajasCtrl", IntraCajasCtrl);
- function IntraCajasCtrl($scope, $meteor, $reactive, $state, toastr){
+.controller("TraspasoCuentaCtrl", TraspasoCuentaCtrl);
+ function TraspasoCuentaCtrl($scope, $meteor, $reactive, $state, toastr){
  	
  	let rc = $reactive(this).attach($scope);
 	
@@ -23,10 +23,16 @@ angular.module("creditoMio")
 	this.subscribe('traspasos',()=>{
 		return[{
 			estatus : 1,
-			tipo : "CajaCaja",
+			tipo : "CuentaCuenta",
 			sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
 		}];
-	})
+	});
+
+	this.subscribe('cuentas',()=>{
+		return [{
+			estatus : 1
+		}]
+	});
 
 
 
@@ -35,16 +41,17 @@ angular.module("creditoMio")
 		cajas : () => {
 			return Cajas.find();
 		},
-		tiposIngreso : () => {
-			return TiposIngreso.find()
+		cuentas : () => {
+			return Cuentas.find();
 		},
+		
 		
 	
 		traspasos : () => {
 			var traspasos = Traspasos.find({},{order: {createdAt: -1}}).fetch();
 			_.each(traspasos,function(traspaso){
-				var cajaOrigen = Cajas.findOne(traspaso.origen_id);
-				var cajaDestino =  Cajas.findOne(traspaso.destino_id);
+				var cajaOrigen = Cuentas.findOne(traspaso.origen_id);
+				var cajaDestino =  Cuentas.findOne(traspaso.destino_id);
 
 				traspaso.origen = cajaOrigen;
 				traspaso.destino = cajaDestino;
@@ -74,8 +81,8 @@ angular.module("creditoMio")
 			objeto.estatus = true;
 
 			//objeto.usuarioResponsable = "";
-			
-			Meteor.call ("traspasoCajaCaja",objeto.origen_id,objeto.destino_id,objeto.importe,objeto.tipoCuenta_id,function(error,result){
+			//var cuenta = Cuentas.findOne(objeto.origen_id);
+			Meteor.call ("traspasoCuentaCuenta",objeto.origen_id,objeto.destino_id,objeto.importe,function(error,result){
 		
 				if(error){
 					console.log(error);
