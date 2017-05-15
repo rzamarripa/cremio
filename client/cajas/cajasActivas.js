@@ -11,7 +11,7 @@ angular.module("creditoMio")
 	
 
 	this.subscribe('cajas',()=>{
-		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",estadoCaja:"Abierta"}]
+		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", estadoCaja:"Abierta"}]
 	});
 
 	this.subscribe('tiposIngreso',()=>{
