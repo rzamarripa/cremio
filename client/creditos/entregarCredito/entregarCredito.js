@@ -257,14 +257,7 @@ angular.module("creditoMio")
 	this.generarCredito = function(){
 		
 		var credito = {
-			fechaSolicito : new Date(),
-			fechaPrimerAbono : this.objeto.primerAbono
-		};
-	
-		
-/*
-		var credito = {
-			cliente_id : this.cliente._id,
+			//cliente_id : this.cliente._id,
 			tipoCredito_id : this.credito.tipoCredito_id,
 			fechaSolicito : new Date(),
 			duracionMeses : this.credito.duracionMeses,
@@ -283,25 +276,24 @@ angular.module("creditoMio")
 			turno : this.credito.turno,
 			tipoGarantia : this.credito.tipoGarantia
 		};
-*/
 				
-		//credito.avales = angular.copy(this.avales);
+		credito.avales = angular.copy(this.avales);
 		
-/*
+		//Duda se guardan los dos???
+		
 		if (this.credito.tipoGarantia == "mobiliaria")
 				credito.garantias = angular.copy(this.garantias);
 		else
 				credito.garantias = angular.copy(this.garantiasGeneral);
-*/
-		
-					
-		Meteor.apply('generarCredito', [credito, $stateParams.credito_id], function(error, result){
+				
+				
+		//Cambie el metodo		
+		Meteor.apply('generarCreditoPeticion', [this.cliente, credito], function(error, result){
 			if(result == "hecho"){
-				//toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');
-				//rc.planPagos = [];
+				toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');
+				rc.planPagos = [];
 				this.avales = [];
-				this.verDiaPago = false;
-				//$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+				$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
 			}
 			$scope.$apply();
 		});
