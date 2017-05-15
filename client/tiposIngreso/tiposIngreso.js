@@ -8,9 +8,7 @@ angular.module("creditoMio")
 	this.objeto = {}; 
 	
 	this.subscribe('tiposIngreso',()=>{
-		return [{
-			estatus : true
-		}]
+		return [{}]
 	 });
 	 
 	this.helpers({

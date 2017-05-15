@@ -8,7 +8,7 @@ angular.module("creditoMio")
   this.action = true;
   this.actionReferencia = true;
   this.nuevo = true;	 
-  rc.objeto = {}; 
+  this.objeto = {}; 
   this.objeto.profile = {};
   this.objeto.profile.empresa_id = "";
   this.empresa = {}; 
@@ -34,6 +34,7 @@ angular.module("creditoMio")
 	this.imagenes = []
 	
 	this.estadoCivil = "";
+	this.estadoCivilSeleccionado = {};
 	  
 
   this.subscribe('buscarPersonas', () => {
@@ -143,6 +144,9 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  estadosCiviles : () => {
+		  //if (this.getReactively("objeto") && rc.objeto != undefined && objeto.estadoCivil_id != undefined)
+		  //	 rc.estadoCivilSeleccionado = EstadoCivil.findOne(objeto.estadoCivil_id);
+		  
 		  return EstadoCivil.find();
 	  },
 	  nacionalidades : () => {
@@ -220,8 +224,11 @@ angular.module("creditoMio")
 					  	});			
 							
 					}
+					
+					
+					
 					rc.objeto = objeto;
-					//return objeto;
+					//eturn objeto;
 			}  
 	  },
 	  personasTipos : () => {
@@ -310,8 +317,8 @@ this.tomarFoto = function(objeto){
 			return;
 		}
 		var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
-		var apPaterno = objeto.profile.apPaterno != undefined ? objeto.profile.apPaterno + " " : "";
-		var apMaterno = objeto.profile.apMaterno != undefined ? objeto.profile.apMaterno : "";
+		var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
+		var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
 		objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
 		delete objeto.profile.repeatPassword;
 		Meteor.call('updateGerenteVenta', rc.objeto, this.referenciasPersonales, "Cliente");
@@ -373,8 +380,6 @@ this.tomarFoto = function(objeto){
 	};
 	
 	this.AgregarReferencia = function(a){
-		
-		
 		this.parentezco.nombre = a.nombre;
 		this.parentezco.apellidoPaterno = a.apellidoPaterno;
 		this.parentezco.apellidoMaterno = a.apellidoMaterno;
@@ -594,4 +599,8 @@ this.tomarFoto = function(objeto){
 			
 	};
 
+	this.seleccionarEstadoCivil = function(estadoCivil_id)
+	{
+			this.estadoCivilSeleccionado = EstadoCivil.findOne(estadoCivil_id);	
+	}
 };

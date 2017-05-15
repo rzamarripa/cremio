@@ -20,17 +20,6 @@ Meteor.methods({
 				usuarioPersona.apellidoMaterno	= usuario.profile.apellidoMaterno;
 				usuarioPersona.nombreCompleto	= usuario.profile.nombreCompleto;
 				usuarioPersona.relaciones = [];
-/*
-				usuarioPersona.relaciones.push({cliente_id			: usuario_id, 
-																				cliente					: usuario.profile.nombreCompleto,
-																				nombre					: usuario.profile.nombre,
-																				apellidoPaterno	: usuario.profile.apellidoPaterno,
-																				apellidoMaterno	: usuario.profile.apellidoMaterno,
-																				direccion				: usuario.profile.direccion,
-																				telefono				: usuario.profile.telefono,	
-																				tipoPersona			: "Cliente", 
-																				estatus: 0});
-*/
 		
 				Personas.insert(usuarioPersona)
 				

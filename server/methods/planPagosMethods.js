@@ -14,6 +14,8 @@ Meteor.methods({
 		//console.log(credito);
 		var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
 		//console.log(tipoCredito);
+		
+		
 
 		var totalPagos = 0;
 		var seguro = tipoCredito.seguro;
@@ -53,6 +55,11 @@ Meteor.methods({
 		var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
 		importeParcial=Math.round(importeParcial * 100) / 100;
 		var plan = [];
+		
+		if (cliente == undefined){
+			 cliente = {}; 
+			 cliente._id = "Prospecto";
+		}	 
 
 		for (var i = 0; i < totalPagos; i++) {
 			var pago = {
@@ -62,10 +69,10 @@ Meteor.methods({
 				tipoPlan			: credito.periodoPago,
 				numeroPago			: i + 1,
 				importeRegular		: importeParcial,
-				iva					: iva,
+				iva						: iva,
 				interes 			: interes,
 				seguro				: seguro,
-				cliente_id			: cliente._id,
+				cliente_id		: cliente._id,
 				capital 			: capital,
 				fechaPago			: undefined,
 				semanaPago			: undefined,

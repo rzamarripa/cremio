@@ -231,6 +231,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			rc.credito.estatus = 0;
 		else
 			rc.credito.estatus = 1;
+			
+		if (!this.credito.requiereVerificacion)
+				this.credito.turno = "";	
 
 		var _credito = {
 			cliente_id : this.cliente._id,
@@ -247,6 +250,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			saldoRecibo : 0.00,
 			estatus : 1,
 			requiereVerificacion: this.credito.requiereVerificacion,
+			turno : this.credito.turno,
 			sucursal_id : Meteor.user().profile.sucursal_id,
 			fechaVerificacion: this.credito.fechaVerificacion
 		};

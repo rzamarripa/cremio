@@ -12,6 +12,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.credito_id = ""
 	rc.credito = "";
 	rc.notaCuenta = []
+	rc.empresaArray
 	this.notaCobranza = {}
 	this.masInfo = true;
 	this.masInfoCredito = true;
@@ -69,8 +70,71 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('personas',()=>{
 		return [{}];
 	});
+
+	this.subscribe('ciudades',()=>{
+		return [{}];
+	});
+	this.subscribe('municipios',()=>{
+		return [{}];
+	});
+	this.subscribe('colonias',()=>{
+		return [{}];
+	});
+	this.subscribe('estadoCivil',()=>{
+		return [{}]
+	 });
+	this.subscribe('paises',()=>{
+		return [{}];
+	});
+	this.subscribe('sucursales',()=>{
+		return [{}];
+	});
+	this.subscribe('empresas',()=>{
+		return [{}];
+	});
+	this.subscribe('estados',()=>{
+		return [{}];
+	});
+	this.subscribe('nacionalidades',()=>{
+		return [{}];
+	});
 			
 	this.helpers({
+		ciudades : () => {
+			var ciudades = {};
+			_.each(Ciudades.find().fetch(), function(ciudad){
+				ciudades[ciudad._id] = ciudad;
+			});
+			return ciudades
+		},
+		municipios : () => {
+			var municipios = {};
+			_.each(Municipios.find().fetch(), function(municipio){
+				municipios[municipio._id] = municipio;
+			});
+			return municipios
+		},
+		paises : () => {
+			var paises = {};
+			_.each(Paises.find().fetch(), function(pais){
+				paises[pais._id] = pais;
+			});
+			return paises
+		},
+		estados : () => {
+			var estados = {};
+			_.each(Estados.find().fetch(), function(estado){
+				estados[estado._id] = estado;
+			});
+			return estados
+		},
+		colonias : () => {
+			var colonias = {};
+			_.each(Colonias.find().fetch(), function(colonia){
+				colonias[colonia._id] = colonia;
+			});
+			return colonias
+		},
 		creditos : () => {
 			var creditos = Creditos.find({estatus:4}).fetch();
 			if(creditos != undefined){
@@ -92,13 +156,21 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return Creditos.find({estatus:2});
 		},
 		creditosPendientes : () =>{
-			return Creditos.find({estatus:1});
+			var creditos = Creditos.find({estatus:{$in:[0,1]}}).fetch();
+			if(creditos.length > 0){
+				_.each(creditos, function(credito){
+					credito.estatusClase = obtenerClaseEstatus(credito.estatus);
+				})
+			}
+			
+			
+			return creditos;
 		},
 		notasCredito : () =>{
 			return NotasCredito.find({},{sort:{fecha:1}});
 		},
 		notaPerfil: () => {
-			var nota = Notas.find({perfil : "perfil"}).fetch()
+			var nota = Notas.find({perfil : "perfil",respuesta:true}).fetch()
 			return nota[nota.length - 1];
 		},
 		objeto : () => {
@@ -117,10 +189,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				 console.log(objeto,"objeto")
 				
 				objeto.empresa = Empresas.findOne(objeto.empresa_id)
+				
 				// objeto.documento = Documentos.findOne(objeto.docuemnto_id)
 				objeto.documento = Documentos.findOne(objeto.documento_id)
 				
+				
 				//objeto.documentoNombre = objeto.documento.nombre
+				
+
 			});
 				
 			if(cli){
@@ -568,34 +644,29 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		console.log("entro2:", objeto);
 
 
-		_.each(objeto, function(cliente){
-			console.log("cliente",cliente)	
-		  			
+		_.each(objeto, function(cliente){	
+	  			// var empresa = Empresas.findOne(cliente.empresa_id);
+	  			// cliente.empresaCiudad = empresa.ciudad;
+	  			// cliente. = empresa.;
+			 	cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
+				cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
+				cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
+				cliente.estado = Estados.findOne(cliente.estado_id)
+				cliente.pais = Paises.findOne(cliente.pais_id)
+				cliente.empresa = Empresas.findOne(cliente.empresa_id);
+				cliente.colonia = Colonias.findOne(cliente.colonia_id)
+				cliente.ciudad = Ciudades.findOne(cliente.ciudad_id)
+				cliente.sucursal = Sucursales.findOne(cliente.sucursal_id)
+				cliente.municipio = Municipios.findOne(cliente.municipio_id)
+		});
 
-		  			//if (cliente.ocupacion_id != undefined)
-		  				 	cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
-		  			//if (cliente.estadoCivil_id != undefined)
-		  					cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
-		  			//if (cliente.nacionalidad_id != undefined)
-		  					cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
-		  			//if (cliente.estado_id != undefined)
-		  					cliente.estado = Estados.findOne(cliente.estado_id)
-		  			//if (cliente.pais_id != undefined)
-		  					cliente.pais = Paises.findOne(cliente.pais_id)
-		  			//if (cliente.empresa_id != undefined)
-		  					cliente.empresa = Empresas.findOne(cliente.empresa_id)
-		  			//if (cliente.colonia_id != undefined)
-		  					cliente.colonia = Colonias.findOne(cliente.colonia_id)
-		  			//if (cliente.ciudad_id != undefined)
-		  					cliente.ciudad = Ciudades.findOne(cliente.ciudad_id)
-		  			//if (cliente.sucursal_id != undefined)
-		  					cliente.sucursal = Sucursales.findOne(cliente.sucursal_id)
-		  			//if (cliente.municipio_id != undefined)
-		  					cliente.municipio = Municipios.findOne(cliente.municipio_id)
-		  			//cliente.ducumento = Documentos.findOne(cliente.documento_id)
-
-		  			
-		  		})
+		  		
+		objeto.ocupacion = objeto.profile.ocupacion
+		objeto.estadoCivil = objeto.profile.estadoCivil 
+		objeto.nacionalidad = objeto.profile.nacionalidad
+		objeto.estado = objeto.profile.estado
+		objeto.pais = objeto.profile.pais
+		objeto.colonia = objeto.profile.colonia
 			objeto.ocupacion = objeto.profile.ocupacion
 			objeto.estadoCivil = objeto.profile.estadoCivil
 			objeto.nacionalidad = objeto.profile.nacionalidad
@@ -606,6 +677,15 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	    objeto.sucursal = objeto.profile.ciudad
 	    objeto.municipio = objeto.profile.nombre
 	    objeto.empresa = objeto.profile.empresa
+	    //console.log('-----------------------', objeto.profile.empresa);
+	    objeto.ciudadEmpresa = rc.ciudades[objeto.profile.empresa.ciudad_id].nombre;
+	    objeto.municipioEmpresa = rc.municipios[objeto.profile.empresa.municipio_id].nombre;
+	    objeto.paisEmpresa = rc.paises[objeto.profile.empresa.pais_id].nombre;
+	    objeto.coloniaEmpresa = rc.colonias[objeto.profile.empresa.colonia_id].nombre;
+	   
+	    console.log("cliente",objeto)
+	  
+	   
 	    //objeto.documento = objeto.profile.documento
 
 
@@ -735,6 +815,38 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	 //  });
 
 
+	  this.quitarNota = function(id)
+	{
+
+		console.log(nota,"seraaaaaaaaaa")
+		var nota = Notas.findOne({_id:id});
+			if(nota.respuesta == true)
+				nota.respuesta = false;
+			else
+				nota.respuesta = true;
+			
+			Notas.update({_id: id},{$set :  {respuesta : nota.respuesta}});
+			$("#notaPerfil").modal('hide');
+	}
+
+	function obtenerClaseEstatus(estatus){
+		console.log("hola", estatus);
+		if(estatus == 0){
+			return "danger";
+		}else if(estatus == 1){
+			return "warning";
+		}else if(estatus == 2){
+			return "primary";
+		}else if(estatus == 3){
+			return "danger";
+		}else if(estatus == 4){
+			return "info";
+		}else if(estatus == 5){
+			return "success";
+		}else if(estatus == 6){
+			return "danger";
+		}
+	}
 
 	
 }

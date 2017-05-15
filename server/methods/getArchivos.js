@@ -230,7 +230,7 @@ Meteor.methods({
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   getFicha: function (objeto,referencia_id) {
-	console.log(objeto,"ficha")
+	//console.log(objeto,"ficha")
 		
 		var fs = require('fs');
     var Docxtemplater = require('docxtemplater');
@@ -323,27 +323,27 @@ Meteor.methods({
 	    var empresa = empre.toUpperCase();
 	    var call = objeto.empresa.calle;
 	    var calleEmpresa = call.toUpperCase();
-	    var col = objeto.empresa.colonia;
+	    var col = objeto.coloniaEmpresa;
 	    var coloniaEmpresa = col.toUpperCase();
+	    
 	    // var cas = objeto.profile.casa
 	    // var casa = cas.toUpperCase();
 	    // var loca = objeto.empresa.municipio;
 	    // var LocalidadEmpresa = loca.toUpperCase();
 
-	     var dep = objeto.empresa.departamento;
-		 var departamento = dep.toUpperCase();
-		 var pues = objeto.empresa.puesto;
-		 var puesto = pues.toUpperCase();
-		 var anti = objeto.empresa.tiempoLaborando;
-		 var antiguedadEmpresa = anti.toUpperCase();
-		 var jef = objeto.empresa.jefeInmediato;
-		 var jefe = jef.toUpperCase();
+	  //    var dep = objeto.empresa.departamento;
+		 // var departamento = dep.toUpperCase();
+		 // var pues = objeto.empresa.puesto;
+		 // var puesto = pues.toUpperCase();
+		 
+		 // var jef = objeto.empresa.jefeInmediato;
+		 // var jefe = jef.toUpperCase();
 		 var cas = objeto.profile.casa;
 		 var casa = cas.toUpperCase();
-		 var je = objeto.empresa.jefeInmediato;
-		 var jefeEmpresa = je.toUpperCase();
-		 var an = objeto.empresa.tiempoLaborando;
-		 var antiguedadEmpresa = an.toUpperCase();
+		 //var je = objeto.empresa.jefeInmediato;
+		 //var jefeEmpresa = je.toUpperCase();
+		// var an = objeto.empresa.tiempoLaborando;
+		/// var antiguedadEmpresa = an.toUpperCase();
 
 
 
@@ -392,11 +392,11 @@ Meteor.methods({
 									 gastosFijos:           objeto.profile.gastosFijos,
 									 gastoEventuales:       objeto.profile.gastosEventuales,
 									 otrosIngresos:         objeto.otrosIngresos,
-									 referencias: 			objeto.referencias,
+									 //referencias: 			objeto.referencias,
 
 
 									 /////////////////// CONTACTO //////////////////////
-									 referencias:           objeto.referencias,
+									 referencias:        objeto.referencias,
 									 telefonoOficina:      objeto.profile.telefonoOficina,
 
 
@@ -405,13 +405,13 @@ Meteor.methods({
 									calleEmpresa:          calleEmpresa,
 									coloniaEmpresa:        coloniaEmpresa,
 									telefonoEmpresa:       objeto.empresa.telefono,
-									departamento:          departamento,
-									puesto:                puesto,
-									antiguedad:            antiguedad,
+									//departamento:          departamento,
+									//puesto:                puesto,
+									//antiguedad:            antiguedad,
 									numeroEmpresa:         objeto.empresa.numero,
 									cpEmpresa:             objeto.empresa.codigoPostal,
-									jefe:                  jefeEmpresa,
-									antiguedadEmpresa:      antiguedadEmpresa,      
+									//jefe:                  jefeEmpresa,
+									//antiguedadEmpresa:      antiguedadEmpresa,      
 
 								
 
