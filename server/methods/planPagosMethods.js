@@ -174,6 +174,7 @@ Meteor.methods({
 
 	pagoParcialCredito:function(pagos,abono,totalPago,tipoIngresoId,pusuario_id){
 
+
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 		var puser = Meteor.users.findOne(pusuario_id);
@@ -192,9 +193,17 @@ Meteor.methods({
 
 		var caja = Cajas.findOne(cajaid);
 
+		var sucursal = Sucursales.findOne({_id : Meteor.user().profile.sucursal_id});
+		sucursal.folioPago = sucursal.folioPago? sucursal.folioPago+1:1;	
+		var folioPago = sucursal.folioPago;
+
+		Sucursales.update({_id:sucursal._id},{folioPago:sucursal.folioPago})  
+
+
 		var ffecha = moment(new Date());
 		var pago = {};
 		pago.fechaPago = new Date();
+		pago.folioPago =folioPago;
 		pago.usuario_id = pusuario_id;
 		pago.sucursalPago_id = Meteor.user().profile.sucursal_id;
 		pago.usuarioCobro_id = Meteor.userId();
