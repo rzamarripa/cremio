@@ -1,0 +1,80 @@
+<h2> Traspaso Caja a Cuenta </h2>
+
+<div class="row" >
+	<div class="col-sm-12">
+		<input type="button" class="btn btn-{{tincc.action == false ? 'primary' : 'danger'}}"  ng-click="tincc.nuevo()" value ="{{tincc.action == false ? 'Nuevo' : 'Cancelar'}}" >
+
+		<br/>
+		<br/>
+		<div ng-show="tincc.action">
+			<form name="form" class="form-horizontal" role="form">
+			  	<div class="well">	    
+				    <div class="row">
+					    	<div class="col-sm-4" valida>
+							    <label>Caja de Origen*</label>
+						    	<select name="origen" class="form-control select2" placeholder="Seleccione" ng-model="tincc.objeto.origen_id" required>
+									<option ng-repeat="caja in tincc.cajas" value="{{caja._id}}">{{caja.nombre}}</option>
+								</select>
+						    	
+						   </div>
+						   <div class="col-sm-4" valida>
+							    <label>Cuenta de Destino*</label>
+						    	<select name="destino" class="form-control select2" placeholder="Seleccione" ng-model="tincc.objeto.destino_id" required>
+									<option ng-repeat="cuenta in tincc.cuentas" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
+								</select>
+						    	
+						   </div>
+						   <div class="col-sm-4" valida>
+							    <label>Monto *</label>
+						    	<input name="monto" type="number" class="form-control" placeholder="Saldo Maximo" ng-model="tincc.objeto.importe" required>
+						    	
+						   </div>
+						 
+					</div>
+					
+				</div>
+			  	<div class="well">	    
+				   		<div class="row">
+							<div class="col-sm-12">
+								<input type="submit" ng-click="tincc.guardar(tincc.objeto,form)" value="Guardar" class="btn btn-primary"  valida-form formulario="form">
+								
+							</div>
+						</div>
+			  	</div>  
+			</form>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="15%"><div class="text-center">Fecha</div></th>
+					<th width="30%"><div class="text-center">Caja Origen</div></th>
+					<th width="30%"><div class="text-center">Cuenta Destino</div></th>
+					<th width="15%"><div class="text-center">Monto</div></th>
+					<th width="10%"><div class="text-center">Estatus</div></th>
+				</tr>
+			</thead>
+			<tbody>
+			    <tr ng-repeat="objeto in tincc.traspasos">
+				    <td>{{objeto.createdAt | date:'medium'}}</td>
+				    <td>{{objeto.origen.nombre}}</td>
+				    <td>{{objeto.destino.nombre}}</td>
+				    <td>{{objeto.importe | currency}}</td>
+				    <td>
+					    <div class="text-center">
+					    	<span ng-if="objeto.estatus" class="label label-success">
+								  Activo
+								</span>
+								<span ng-if="!objeto.estatus" class="label label-danger">
+								  Inactivo
+								</span>
+					    </div>
+				    </td>
+			    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>

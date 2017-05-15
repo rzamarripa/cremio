@@ -124,6 +124,12 @@
 						<span class="menu-item-child">Calculadora</span>
 					</a>
 				</li>
+				<li>
+					<a ui-sref="root.traspasoCuentaCuenta" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-dollar"></i>
+						<span class="menu-item-child">Traspasos de Cuenta a Cuenta</span>
+					</a>
+				</li>
 			</ul>
 		</li>		
 		
@@ -230,6 +236,19 @@
 						<span class="menu-item-child">Traspasos Entre Cajas</span>
 					</a>
 				</li>
+				<li ng-if="currentUser.roles[0] == 'Gerente'">
+					<a ui-sref="root.traspasoCajaCuenta" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-dollar"></i>
+						<span class="menu-item-child">Traspasos de Caja a Cuenta</span>
+					</a>
+				</li>
+				<li ng-if="currentUser.roles[0] == 'Gerente'">
+					<a ui-sref="root.traspasoCuentaCaja" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-dollar"></i>
+						<span class="menu-item-child">Traspasos de Cuenta a Caja</span>
+					</a>
+				</li>
+				
 			</ul>
 		</li>
 	</ul>
