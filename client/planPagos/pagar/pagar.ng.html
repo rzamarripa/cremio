@@ -494,7 +494,7 @@
 												<option ng-repeat="tipo in pvpp.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
 											</select>
 											<br/>
-											<caption>Monto a pagar: </caption> <input  type="number" class="form-control" placeholder="Pagar" ng-model="pvpp.pago.pagar">
+											<caption>Paga con: </caption> <input  type="number" class="form-control" placeholder="Pagar" ng-model="pvpp.pago.pagar">
 											<br/>
 											<h4>Cambio: {{pvpp.pago.pagar - pvpp.pago.totalPago | currency }}</h4>
 											<br/>
