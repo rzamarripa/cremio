@@ -70,6 +70,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('personas',()=>{
 		return [{}];
 	});
+
 	this.subscribe('ciudades',()=>{
 		return [{}];
 	});
@@ -257,7 +258,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
 			//rc.creditos_id = _.pluck(planes, "cliente_id");
-			//console.log("kaka",planes)
+			console.log("kaka",planes)
 
 
 			return planes
@@ -326,7 +327,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				//console.log(rc.saldo)
 			});
 
-			//console.log("el ARREGLO del helper historial",arreglo)
+			console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
 		},
 
@@ -613,7 +614,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
   this.generarFicha= function(objeto,referencia_id) 
   {
-		//console.log("entro:", objeto);
+		console.log("entro:", objeto);
 
 		root.cliente = objeto.profile	
   	    root.referencias = [];
@@ -634,7 +635,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		objeto.nombreCompleto = objeto.profile.nombreCompleto
 		objeto.referencias = root.referencias;
 		objeto.lugarNacimiento = objeto.profile.lugarNacimiento;
-		//console.log("entro2:", objeto);
+		console.log("entro2:", objeto);
 
 
 		_.each(objeto, function(cliente){	
@@ -660,6 +661,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		objeto.estado = objeto.profile.estado
 		objeto.pais = objeto.profile.pais
 		objeto.colonia = objeto.profile.colonia
+			objeto.ocupacion = objeto.profile.ocupacion
+			objeto.estadoCivil = objeto.profile.estadoCivil
+			objeto.nacionalidad = objeto.profile.nacionalidad
+			objeto.estado = objeto.profile.estado
+			objeto.pais = objeto.profile.pais
+			objeto.colonia = objeto.profile.colonia
 	    objeto.ciudad = objeto.profile.ciudad
 	    objeto.sucursal = objeto.profile.ciudad
 	    objeto.municipio = objeto.profile.nombre
@@ -752,54 +759,54 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	}
 
 
-  $(document).ready( function() {
+  // $(document).ready( function() {
 		
 
-			$(".Mselect2").select2();
+		// 	$(".Mselect2").select2();
 					
-			var fileInput1 = document.getElementById('fileInput1');
-			var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+		// 	var fileInput1 = document.getElementById('fileInput1');
+		// 	var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
 			
 			
-			//JavaScript para agregar la Foto
-			fileInput1.addEventListener('change', function(e) {
-				var file = fileInput1.files[0];
-				var imageType = /image.*/;
+		// 	//JavaScript para agregar la Foto
+		// 	fileInput1.addEventListener('change', function(e) {
+		// 		var file = fileInput1.files[0];
+		// 		var imageType = /image.*/;
 	
-				if (file.type.match(imageType)) {
+		// 		if (file.type.match(imageType)) {
 					
-					if (file.size <= 512000)
-					{
+		// 			if (file.size <= 512000)
+		// 			{
 						
-						var reader = new FileReader();
+		// 				var reader = new FileReader();
 		
-						reader.onload = function(e) {
-							fileDisplayArea1.innerHTML = "";
+		// 				reader.onload = function(e) {
+		// 					fileDisplayArea1.innerHTML = "";
 		
-							var img = new Image();
+		// 					var img = new Image();
 							
 							
-							img.src = reader.result;
-							img.width =200;
-							img.height=200;
+		// 					img.src = reader.result;
+		// 					img.width =200;
+		// 					img.height=200;
 		
-							rc.objeto.profile.documento.archivo(reader.result);
-							//this.folio.imagen1 = reader.result;
+		// 					rc.objeto.profile.documento.archivo(reader.result);
+		// 					//this.folio.imagen1 = reader.result;
 							
-							fileDisplayArea1.appendChild(img);
-							//console.log(fileDisplayArea1);
-						}
-						reader.readAsDataURL(file);			
-					}else {
-						toastr.error("Error la Imagen supera los 512 KB");
-						return;
-					}
+		// 					fileDisplayArea1.appendChild(img);
+		// 					//console.log(fileDisplayArea1);
+		// 				}
+		// 				reader.readAsDataURL(file);			
+		// 			}else {
+		// 				toastr.error("Error la Imagen supera los 512 KB");
+		// 				return;
+		// 			}
 					
-				} else {
-					fileDisplayArea1.innerHTML = "File not supported!";
-				}
-			});		
-	  });
+		// 		} else {
+		// 			fileDisplayArea1.innerHTML = "File not supported!";
+		// 		}
+		// 	});		
+	 //  });
 
 
 

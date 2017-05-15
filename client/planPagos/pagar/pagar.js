@@ -289,7 +289,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 
 		});
 		console.log(seleccionadosId,pago.pagar,pago.totalPago,pago.tipoIngreso_id)
-		Meteor.call("pagoParcialCredito",seleccionadosId,pago.pagar,pago.totalPago,pago.tipoIngreso_id,function(error,success){
+		Meteor.call("pagoParcialCredito",seleccionadosId,pago.pagar,pago.totalPago,pago.tipoIngreso_id,$stateParams.objeto_id,function(error,success){
 			if(!success){
 				toastr.error('Error al guardar.');
 				return;
