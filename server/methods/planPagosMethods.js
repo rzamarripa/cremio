@@ -183,10 +183,10 @@ Meteor.methods({
 			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
 
 		if(tingreso.nombre =="Nota de Credito"){
-			console.log (1)
+			//console.log (1)
 			var resmc = Meteor.call("actualizarNotaDeCredito",pusuario_id,totalPago);
-			console.log(resmc)
-			console.log (2)
+			//console.log(resmc)
+			//console.log (2)
 		}
 		var cajaid = Meteor.user().profile.caja_id;
 		var user = Meteor.user();
@@ -403,7 +403,7 @@ Meteor.methods({
 												fechaLimite : { $lt : ahora }
 											}
 										]}).fetch();
-		console.log("si entre")
+		//console.log("si entre")
 		_.each(pagos, function(pago){
 			try{
 				var mfecha = moment(ahora);
@@ -411,9 +411,7 @@ Meteor.methods({
 				limite = new Date (pago.fechaLimite.getFullYear(),pago.fechaLimite.getMonth(),pago.fechaLimite.getDate());
 				var dias = mfecha.diff(limite, "days");
 				var credito = Creditos.findOne(pago.credito_id);
-				console.log(pago)
-				console.log(pago.credito_id)
-				console.log(credito)
+				
 				var multas = (dias/100) * credito.capitalSolicitado; 
 				multas=Math.round(multas * 100) / 100;
 				var interes = multas / 1.16
