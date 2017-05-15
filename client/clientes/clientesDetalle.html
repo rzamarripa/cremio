@@ -695,10 +695,10 @@
 								<div class="row ">
 									<br/>
 									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="pendiente in cd.creditosPendientes">
-										<div class="panel panel-blueDark">
+										<div class="panel panel-{{pendiente.estatusClase}}">
 											<div class="panel-heading">
 												<h3 class="panel-title">
-													Credito</h3>
+													Crédito</h3>
 										</div>
 											<div class="panel-body no-padding text-align-center">
 												<div class="the-price">
@@ -714,7 +714,7 @@
 											</div>
 											
 											<div class="panel-footer no-padding">						
-												<a ui-sref="root.actualizarPlan({objeto_id:currentUser._id, credito_id: pendiente._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
+												<a ui-sref="root.actualizarPlan({objeto_id:currentUser._id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
 											</div>
 											
 										</div>
