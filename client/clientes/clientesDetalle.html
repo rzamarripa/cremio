@@ -714,7 +714,7 @@
 											</div>
 											
 											<div class="panel-footer no-padding">						
-												<a ui-sref="root.actualizarPlan({objeto_id:currentUser._id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
+												<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
 											</div>
 											
 										</div>
