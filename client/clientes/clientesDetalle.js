@@ -159,7 +159,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			var creditos = Creditos.find({estatus:{$in:[0,1]}}).fetch();
 			if(creditos.length > 0){
 				_.each(creditos, function(credito){
-					credito.estatusClase = rc.obtenerClaseEstatus(credito.estatus);
+					credito.estatusClase = obtenerClaseEstatus(credito.estatus);
 				})
 			}
 			
@@ -829,7 +829,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			$("#notaPerfil").modal('hide');
 	}
 
-	this.obtenerClaseEstatus = function(estatus){
+	function obtenerClaseEstatus(estatus){
 		console.log("hola", estatus);
 		if(estatus == 0){
 			return "danger";
