@@ -169,6 +169,7 @@ Meteor.methods({
 		});
 
 		delete credito['avales'];
+		delete credito._id;	
 		Creditos.update({_id:idCredito},{$set:credito});
 
 		return "hecho";
