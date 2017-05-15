@@ -27,14 +27,14 @@
 						    <label>Cuenta {{tipo.nombre}} *</label>
 					    	
 
-					    	<select name="cuenta" class="form-control select2" placeholder="Seleccione" ng-model="caj.objeto.cuenta[tipo._id].cuenta_id" required>
+					    	<select name="cuenta{{$index}}" class="form-control select2" placeholder="Seleccione" ng-model="caj.objeto.cuenta[tipo._id].cuenta_id" required>
 								<option ng-repeat="cuenta in caj.cuentas[tipo._id]" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
 							</select>
 
 					   </div>
 					   <div class="col-sm-4" valida>
 						    <label>Saldo Maximo *</label>
-					    	<input name="maximoEfectivo" type="number" class="form-control" placeholder="Saldo Maximo" ng-model="caj.objeto.cuenta[tipo._id].maximo" required>
+					    	<input name="maximoEfectivo{{$index}}" type="number" class="form-control" placeholder="Saldo Maximo" ng-model="caj.objeto.cuenta[tipo._id].maximo" required>
 					   </div>
 				</div>
 			</div>
