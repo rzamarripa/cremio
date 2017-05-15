@@ -13,7 +13,6 @@
       <thead>
 	      <tr>
 		      <th class="text-center">No.</th>
-		      <th class="text-center">Folio</th>
 		      <th class="text-center">Cliente</th>
 		      <th class="text-center">Capital Solicitado</th>
 		      <th class="text-center">Fecha Solicitud</th>
@@ -24,7 +23,6 @@
       <tbody>
 	      <tr ng-repeat="credito in cpa.creditosPorAutorizar">
 		      <td class="text-center">{{$index + 1}}</td>
-		      <td class="text-center">{{credito.folio}}</td>
 		      <td><a href="javascript:void(0);" ui-sref="root.clienteDetalle({objeto_id : credito.cliente_id})">{{credito.cliente.profile.nombreCompleto}}</a></td>
 		      <td class="text-center">{{credito.capitalSolicitado | currency}}</td>
 		      <td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy hh:mm:sss"}}</td>

@@ -1,4 +1,4 @@
-angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reactive', function ($scope, $meteor, $reactive)
+angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reactive','$state', function ($scope, $meteor, $reactive, $state)
 {
 	let root = $reactive(this).attach($scope);
 	window.root = root;
