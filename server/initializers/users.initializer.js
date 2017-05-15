@@ -5,10 +5,10 @@ Meteor.startup(function () {
       password: '123qwe',
     }); 
   }
-  var tipoNotaCredito = TiposIngreso.find({nombre:"Nota de Crédito"}).fetch();
+  var tipoNotaCredito = TiposIngreso.find({nombre:"Nota de Credito"}).fetch();
   if (tipoNotaCredito.length < 1){
       TiposIngreso.insert({
-        nombre : "Nota de Crédito",
+        nombre : "Nota de Credito",
         estatus : true
       })
   }

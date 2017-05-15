@@ -90,9 +90,7 @@ angular.module("creditoMio")
 				rc.objeto = {}; 
 				$('.collapse').collapse('hide');
 				rc.nuevo = true;
-				form.$setPristine();
-				form.$setUntouched();
-				$state.go('root.cajerosLista');
+				$state.go('root.cajas');
 			});
 			
 		
