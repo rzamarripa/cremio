@@ -71,7 +71,7 @@ Meteor.methods({
 
 		return "200";
 	},
-	traspasoCajaCuenta : function ( origen_id,destino_id,cantidad,cuenta){
+	traspasoCajaCuenta : function ( origen_id,destino_id,cantidad){
 		
 		var origen = Cajas.findOne(origen_id);
 		var destino = Cuentas.findOne(destino_id);
@@ -80,7 +80,12 @@ Meteor.methods({
 
 		if(user.roles[0] != "Gerente")
 			throw new Meteor.Error(403, 'Error 403: Permiso denegado', 'Permiso denegado');
-		if(!destino || !origen || !origen.cuenta || !origen.cuenta[cuenta] || origen.cuenta[cuenta].saldo<cantidad || cantidad<=0)
+		var cta = Cuentas.findOne(destino_id);
+		var cuenta = undefined
+		if(cta && cta.tipoIngreso_id)
+			cuenta = cta.tipoIngreso_id
+		if(!destino || !origen || !origen.cuenta || !cuenta ||
+			!origen.cuenta[cuenta] || origen.cuenta[cuenta].saldo<cantidad || cantidad<=0)
 			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
 		origen.cuenta[cuenta].saldo -= cantidad;
 		destino.saldo += cantidad;
@@ -117,8 +122,8 @@ Meteor.methods({
 			tipoMovimiento : "Ingreso Por Traspaso",
 			origen : "Traspaso Caja Cuenta",
 			origen_id : traspaso_id,
-			caja_id : destino._id,
-			cuenta_id :cuenta,
+			caja_id : origen._id,
+			cuenta_id :destino_id,
 			monto : cantidad,
 			sucursal_id : user.profile.sucursal_id,
 			createdAt : new Date(),

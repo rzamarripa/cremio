@@ -93,8 +93,8 @@ Meteor.methods({
 			tipoMovimiento : "Retiro Por Traspaso",
 			origen : "Traspaso Cuenta Caja",
 			origen_id : traspaso_id,
-			caja_id : origen._id,
-			cuenta_id :cuenta,
+			caja_id : destino._id,
+			cuenta_id :origen_id,
 			monto : cantidad * -1,
 			sucursal_id : user.profile.sucursal_id,
 			createdAt : new Date(),
@@ -140,7 +140,9 @@ Meteor.methods({
 		var destino = Cuentas.findOne(destino_id);
 
 		var user=Meteor.user();
-
+		console.log(origen)
+		console.log(destino)
+		console.log(cantidad)
 		if(user.roles[0] != "Gerente")
 			throw new Meteor.Error(403, 'Error 403: Permiso denegado', 'Permiso denegado');
 		if(!destino || !origen || origen.saldo<cantidad || cantidad<=0)
@@ -151,7 +153,7 @@ Meteor.methods({
 		var objeto ={
 			origen_id : origen._id,
 			destino_id : destino._id,
-			tipoCuenta_id : cuenta,
+			tipoCuenta_id : destino.tipoIngreso_id,
 			importe : cantidad,
 			tipo : "CuentaCuenta",
 			estatus : 1,
@@ -167,8 +169,8 @@ Meteor.methods({
 			tipoMovimiento : "Retiro Por Traspaso",
 			origen : "Traspaso Cuenta Cuenta",
 			origen_id : traspaso_id,
-			caja_id : origen._id,
-			cuenta_id :cuenta,
+			//caja_id : origen._id,
+			cuenta_id :origen_id,
 			monto : cantidad * -1,
 			sucursal_id : user.profile.sucursal_id,
 			createdAt : new Date(),
@@ -180,8 +182,8 @@ Meteor.methods({
 			tipoMovimiento : "Ingreso Por Traspaso",
 			origen : "Traspaso Cuenta Cuenta",
 			origen_id : traspaso_id,
-			caja_id : destino._id,
-			cuenta_id :cuenta,
+			//caja_id : destino._id,
+			cuenta_id :destino_id,
 			monto : cantidad,
 			sucursal_id : user.profile.sucursal_id,
 			createdAt : new Date(),
