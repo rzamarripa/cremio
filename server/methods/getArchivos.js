@@ -392,7 +392,7 @@ Meteor.methods({
 									 gastosFijos:           objeto.profile.gastosFijos,
 									 gastoEventuales:       objeto.profile.gastosEventuales,
 									 otrosIngresos:         objeto.otrosIngresos,
-									 referencias: 			objeto.referencias,
+									 //referencias: 			objeto.referencias,
 
 
 									 /////////////////// CONTACTO //////////////////////

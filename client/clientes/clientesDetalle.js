@@ -162,7 +162,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return NotasCredito.find({},{sort:{fecha:1}});
 		},
 		notaPerfil: () => {
-			var nota = Notas.find({perfil : "perfil"}).fetch()
+			var nota = Notas.find({perfil : "perfil",respuesta:true}).fetch()
 			return nota[nota.length - 1];
 		},
 		objeto : () => {
@@ -806,6 +806,20 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		// 	});		
 	 //  });
 
+
+	  this.quitarNota = function(id)
+	{
+
+		console.log(nota,"seraaaaaaaaaa")
+		var nota = Notas.findOne({_id:id});
+			if(nota.respuesta == true)
+				nota.respuesta = false;
+			else
+				nota.respuesta = true;
+			
+			Notas.update({_id: id},{$set :  {respuesta : nota.respuesta}});
+			$("#notaPerfil").modal('hide');
+	}
 
 
 	
