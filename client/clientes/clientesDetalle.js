@@ -69,6 +69,33 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('personas',()=>{
 		return [{}];
 	});
+		this.subscribe('ciudades',()=>{
+		return [{}];
+	});
+		this.subscribe('municipios',()=>{
+		return [{}];
+	});
+		this.subscribe('colonias',()=>{
+		return [{}];
+	});
+		this.subscribe('estadoCivil',()=>{
+		return [{}];
+	});
+		this.subscribe('paises',()=>{
+		return [{}];
+	});
+		this.subscribe('sucursales',()=>{
+		return [{}];
+	});
+		this.subscribe('empresas',()=>{
+		return [{}];
+	});
+		this.subscribe('estados',()=>{
+		return [{}];
+	});
+		this.subscribe('nacionalidades',()=>{
+		return [{}];
+	});
 			
 	this.helpers({
 		creditos : () => {
