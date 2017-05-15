@@ -14,6 +14,8 @@ Meteor.methods({
 		//console.log(credito);
 		var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
 		//console.log(tipoCredito);
+		
+		
 
 		var totalPagos = 0;
 		var seguro = tipoCredito.seguro;
