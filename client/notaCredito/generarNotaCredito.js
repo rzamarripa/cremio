@@ -54,14 +54,23 @@ function GenerarNotaCredito($scope, $meteor, $reactive, $state, toastr, $statePa
 						toastr.error('Error al guardar los datos.');
 						return;
 			}
-			
-			objeto.estatus = 1;
-			objeto.cliente_id = $stateParams.objeto_id;
 
-			objeto.usuarioInserto = Meteor.userId();
-			NotasCredito.insert(objeto);
-			toastr.success('Guardado correctamente.');
-			$state.go("root.clienteDetalle",{objeto_id : $stateParams.objeto_id});
+
+			Meteor.call ("crearNotaDeCredito",$stateParams.objeto_id,objeto.monto,objeto.fecha,function(error,result){
+		
+				if(error){
+					console.log(error);
+					toastr.error('Error al guardar los datos.');
+					return
+				}
+				toastr.success('Actualizado correctamente.');
+				rc.objeto = {}; 
+				$('.collapse').collapse('hide');
+				rc.nuevo = true;
+				form.$setPristine();
+				form.$setUntouched();
+				$state.go("root.clienteDetalle",{objeto_id : $stateParams.objeto_id});
+			});	
 		
 	};
 	

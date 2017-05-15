@@ -164,21 +164,34 @@ Meteor.methods({
 		});
 		
 	},
-	pagoParcialCredito:function(pagos,abono,totalPago,tipoIngresoId,credito_id){
-		console.log(credito_id,"el id del credito papu")
+
+	pagoParcialCredito:function(pagos,abono,totalPago,tipoIngresoId,pusuario_id){
+
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
-		
+		var puser = Meteor.users.findOne(pusuario_id);
+		var tingreso = TiposIngreso.findOne(tipoIngresoId);
+		if(!tingreso || !puser || !puser.profile || (tingreso.nombre =="Nota de Credito" && puser.profile.notasCredito.saldo<totalPago))
+			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
+
+		if(tingreso.nombre =="Nota de Credito"){
+			console.log (1)
+			var resmc = Meteor.call("actualizarNotaDeCredito",pusuario_id,totalPago);
+			console.log(resmc)
+			console.log (2)
+		}
 		var cajaid = Meteor.user().profile.caja_id;
 		var user = Meteor.user();
+
 		var caja = Cajas.findOne(cajaid);
 
 		var ffecha = moment(new Date());
 		var pago = {};
 		pago.fechaPago = new Date();
-		pago.usuario_id = Meteor.userId();
+		pago.usuario_id = pusuario_id;
 		pago.sucursalPago_id = Meteor.user().profile.sucursal_id;
 		pago.usuarioCobro_id = Meteor.userId();
+		pago.tipoIngreso_id = tipoIngresoId;
 		pago.pago = abono;
 		pago.totalPago = totalPago;
 		pago.cambio = abono - totalPago;
@@ -187,7 +200,7 @@ Meteor.methods({
 		pago.semanaPago = ffecha.isoWeek();
 		pago.semanaPago = ahora.getMonth();
 		pago.estatus = 1;
-		pago.credito_id = credito_id;
+		//pago.credito_id = credito_id;
 		pago.planPagos=[];
 	
 		var pago_id=undefined;
@@ -313,14 +326,14 @@ Meteor.methods({
 				var npp={pago_id:pago_id,totalPago:ttpago,estatus:p.estatus,fechaPago:pago.fechaPago, 
 						 numeroPago : p.numeroPago,movimiento:p.movimiento,cargo:p.importe,planPago_id:p._id,
 						 pagoCapital : p.pagoCapital, pagoInteres: p.pagoInteres,
-						 pagoIva : p.pagoIva, pagoSeguro : p.pagoSeguro};
+						 pagoIva : p.pagoIva, pagoSeguro : p.pagoSeguro, usuario_id:pusuario_id};
 
 				p.pagos.push(npp);
 				credit = Creditos.findOne(pago.credito_id);
 				var npago={planPago_id:p._id,totalPago:ttpago,estatus:p.estatus, descripcion:p.descripcion,
 						 fechaPago:pago.fechaPago, numeroPago : p.numeroPago,folioCredito:credit.folio,
 						 pagoCapital : p.pagoCapital, pagoInteres: p.pagoInteres,
-						 pagoIva : p.pagoIva, pagoSeguro : p.pagoSeguro};
+						 pagoIva : p.pagoIva, pagoSeguro : p.pagoSeguro,usuario_id:pusuario_id};
 				pago.planPagos.push(npago);
 
 				var pid = p._id;

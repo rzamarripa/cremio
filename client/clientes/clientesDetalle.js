@@ -12,6 +12,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.credito_id = ""
 	rc.credito = "";
 	rc.notaCuenta = []
+	rc.empresaArray
 	this.notaCobranza = {}
 	this.masInfo = true;
 	this.masInfoCredito = true;
@@ -69,6 +70,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('personas',()=>{
 		return [{}];
 	});
+<<<<<<< HEAD
 		this.subscribe('ciudades',()=>{
 		return [{}];
 	});
@@ -96,8 +98,75 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.subscribe('nacionalidades',()=>{
 		return [{}];
 	});
+=======
+
+	this.subscribe('ciudades',()=>{
+		return [{}];
+	});
+	this.subscribe('municipios',()=>{
+		return [{}];
+	});
+	this.subscribe('colonias',()=>{
+		return [{}];
+	});
+	this.subscribe('estadoCivil',()=>{
+		return [{}]
+	 });
+	this.subscribe('paises',()=>{
+		return [{}];
+	});
+	this.subscribe('sucursales',()=>{
+		return [{}];
+	});
+	this.subscribe('empresas',()=>{
+		return [{}];
+	});
+	this.subscribe('estados',()=>{
+		return [{}];
+	});
+	this.subscribe('nacionalidades',()=>{
+		return [{}];
+	});
+	
+
+>>>>>>> 73381cff3571170016855f93fa13d4fc42bdf09e
 			
 	this.helpers({
+		ciudades : () => {
+			var ciudades = {};
+			_.each(Ciudades.find().fetch(), function(ciudad){
+				ciudades[ciudad._id] = ciudad;
+			});
+			return ciudades
+		},
+		municipios : () => {
+			var municipios = {};
+			_.each(Municipios.find().fetch(), function(municipio){
+				municipios[municipio._id] = municipio;
+			});
+			return municipios
+		},
+		paises : () => {
+			var paises = {};
+			_.each(Paises.find().fetch(), function(pais){
+				paises[pais._id] = pais;
+			});
+			return paises
+		},
+		estados : () => {
+			var estados = {};
+			_.each(Estados.find().fetch(), function(estado){
+				estados[estado._id] = estado;
+			});
+			return estados
+		},
+		colonias : () => {
+			var colonias = {};
+			_.each(Colonias.find().fetch(), function(colonia){
+				colonias[colonia._id] = colonia;
+			});
+			return colonias
+		},
 		creditos : () => {
 			var creditos = Creditos.find({estatus:4}).fetch();
 			if(creditos != undefined){
@@ -144,10 +213,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				 console.log(objeto,"objeto")
 				
 				objeto.empresa = Empresas.findOne(objeto.empresa_id)
+				
 				// objeto.documento = Documentos.findOne(objeto.docuemnto_id)
 				objeto.documento = Documentos.findOne(objeto.documento_id)
 				
+				
 				//objeto.documentoNombre = objeto.documento.nombre
+				
+
 			});
 				
 			if(cli){
@@ -595,34 +668,29 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		console.log("entro2:", objeto);
 
 
-		_.each(objeto, function(cliente){
-			console.log("cliente",cliente)	
-		  			
+		_.each(objeto, function(cliente){	
+	  			// var empresa = Empresas.findOne(cliente.empresa_id);
+	  			// cliente.empresaCiudad = empresa.ciudad;
+	  			// cliente. = empresa.;
+			 	cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
+				cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
+				cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
+				cliente.estado = Estados.findOne(cliente.estado_id)
+				cliente.pais = Paises.findOne(cliente.pais_id)
+				cliente.empresa = Empresas.findOne(cliente.empresa_id);
+				cliente.colonia = Colonias.findOne(cliente.colonia_id)
+				cliente.ciudad = Ciudades.findOne(cliente.ciudad_id)
+				cliente.sucursal = Sucursales.findOne(cliente.sucursal_id)
+				cliente.municipio = Municipios.findOne(cliente.municipio_id)
+		});
 
-		  			//if (cliente.ocupacion_id != undefined)
-		  				 	cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
-		  			//if (cliente.estadoCivil_id != undefined)
-		  					cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
-		  			//if (cliente.nacionalidad_id != undefined)
-		  					cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
-		  			//if (cliente.estado_id != undefined)
-		  					cliente.estado = Estados.findOne(cliente.estado_id)
-		  			//if (cliente.pais_id != undefined)
-		  					cliente.pais = Paises.findOne(cliente.pais_id)
-		  			//if (cliente.empresa_id != undefined)
-		  					cliente.empresa = Empresas.findOne(cliente.empresa_id)
-		  			//if (cliente.colonia_id != undefined)
-		  					cliente.colonia = Colonias.findOne(cliente.colonia_id)
-		  			//if (cliente.ciudad_id != undefined)
-		  					cliente.ciudad = Ciudades.findOne(cliente.ciudad_id)
-		  			//if (cliente.sucursal_id != undefined)
-		  					cliente.sucursal = Sucursales.findOne(cliente.sucursal_id)
-		  			//if (cliente.municipio_id != undefined)
-		  					cliente.municipio = Municipios.findOne(cliente.municipio_id)
-		  			//cliente.ducumento = Documentos.findOne(cliente.documento_id)
-
-		  			
-		  		})
+		  		
+		objeto.ocupacion = objeto.profile.ocupacion
+		objeto.estadoCivil = objeto.profile.estadoCivil 
+		objeto.nacionalidad = objeto.profile.nacionalidad
+		objeto.estado = objeto.profile.estado
+		objeto.pais = objeto.profile.pais
+		objeto.colonia = objeto.profile.colonia
 			objeto.ocupacion = objeto.profile.ocupacion
 			objeto.estadoCivil = objeto.profile.estadoCivil
 			objeto.nacionalidad = objeto.profile.nacionalidad
@@ -633,6 +701,15 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	    objeto.sucursal = objeto.profile.ciudad
 	    objeto.municipio = objeto.profile.nombre
 	    objeto.empresa = objeto.profile.empresa
+	    //console.log('-----------------------', objeto.profile.empresa);
+	    objeto.ciudadEmpresa = rc.ciudades[objeto.profile.empresa.ciudad_id].nombre;
+	    objeto.municipioEmpresa = rc.municipios[objeto.profile.empresa.municipio_id].nombre;
+	    objeto.paisEmpresa = rc.paises[objeto.profile.empresa.pais_id].nombre;
+	    objeto.coloniaEmpresa = rc.colonias[objeto.profile.empresa.colonia_id].nombre;
+	   
+	    console.log("cliente",objeto)
+	  
+	   
 	    //objeto.documento = objeto.profile.documento
 
 
@@ -712,54 +789,54 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	}
 
 
-  $(document).ready( function() {
+  // $(document).ready( function() {
 		
 
-			$(".Mselect2").select2();
+		// 	$(".Mselect2").select2();
 					
-			var fileInput1 = document.getElementById('fileInput1');
-			var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+		// 	var fileInput1 = document.getElementById('fileInput1');
+		// 	var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
 			
 			
-			//JavaScript para agregar la Foto
-			fileInput1.addEventListener('change', function(e) {
-				var file = fileInput1.files[0];
-				var imageType = /image.*/;
+		// 	//JavaScript para agregar la Foto
+		// 	fileInput1.addEventListener('change', function(e) {
+		// 		var file = fileInput1.files[0];
+		// 		var imageType = /image.*/;
 	
-				if (file.type.match(imageType)) {
+		// 		if (file.type.match(imageType)) {
 					
-					if (file.size <= 512000)
-					{
+		// 			if (file.size <= 512000)
+		// 			{
 						
-						var reader = new FileReader();
+		// 				var reader = new FileReader();
 		
-						reader.onload = function(e) {
-							fileDisplayArea1.innerHTML = "";
+		// 				reader.onload = function(e) {
+		// 					fileDisplayArea1.innerHTML = "";
 		
-							var img = new Image();
+		// 					var img = new Image();
 							
 							
-							img.src = reader.result;
-							img.width =200;
-							img.height=200;
+		// 					img.src = reader.result;
+		// 					img.width =200;
+		// 					img.height=200;
 		
-							rc.objeto.profile.documento.archivo(reader.result);
-							//this.folio.imagen1 = reader.result;
+		// 					rc.objeto.profile.documento.archivo(reader.result);
+		// 					//this.folio.imagen1 = reader.result;
 							
-							fileDisplayArea1.appendChild(img);
-							//console.log(fileDisplayArea1);
-						}
-						reader.readAsDataURL(file);			
-					}else {
-						toastr.error("Error la Imagen supera los 512 KB");
-						return;
-					}
+		// 					fileDisplayArea1.appendChild(img);
+		// 					//console.log(fileDisplayArea1);
+		// 				}
+		// 				reader.readAsDataURL(file);			
+		// 			}else {
+		// 				toastr.error("Error la Imagen supera los 512 KB");
+		// 				return;
+		// 			}
 					
-				} else {
-					fileDisplayArea1.innerHTML = "File not supported!";
-				}
-			});		
-	  });
+		// 		} else {
+		// 			fileDisplayArea1.innerHTML = "File not supported!";
+		// 		}
+		// 	});		
+	 //  });
 
 
 

@@ -116,31 +116,18 @@
 										<div class="row">
 																		
 											<div class="col-sm-5" valida>
-												<label>Tipo de Nota de Credito *</label>
-												<select name="tipoNotaCredito" ng-model="gnc.nota.tipoNotaCredito_id" data-placeholder="Seleccione" class="form-control" required>
-													<option  value="{{tipo._id}}" ng-repeat="tipo in gnc.tiposNotas">
-														{{tipo.nombre}}
-													</option>
-												</select>
-												
+												<label>Monto *</label>
+												<input name="Monto" type="number" min="0" class="form-control" placeholder="Monto" ng-model="gnc.nota.monto" required="">
 											</div>
 											<div class="col-sm-2" >
 											</div>
 											<div class="col-sm-5" valida>
-												<label>Fecha *</label>
+												<label>Vigencia Hasta *</label>
 											
 												<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="gnc.nota.fecha" name="fecha" required/>
 											</div>
 										</div>
-										<br/>
-										<div class="row">
-											<div class="col-sm-5" valida>
-												<label>Monto *</label>
-												<input name="Monto" type="number" min="0" class="form-control" placeholder="Monto" ng-model="gnc.nota.monto" required="">
-											
-											</div>
-											
-										</div>
+										
 									</div>
 									<div class="well">			
 										<div class="row">
