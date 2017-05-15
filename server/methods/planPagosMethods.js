@@ -197,7 +197,7 @@ Meteor.methods({
 		sucursal.folioPago = sucursal.folioPago? sucursal.folioPago+1:1;	
 		var folioPago = sucursal.folioPago;
 
-		Sucursales.update({_id:sucursal._id},{folioPago:sucursal.folioPago})  
+		Sucursales.update({_id:sucursal._id},{$set:{folioPago:sucursal.folioPago}})  
 
 
 		var ffecha = moment(new Date());
