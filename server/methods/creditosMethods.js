@@ -136,11 +136,13 @@ Meteor.methods({
 	actualizarCredito : function(cliente, credito, idCredito ) {
 		
 		
+/*
 		if(credito.requiereVerificacion == true){
 			credito.estatus = 0;
 		}else if(credito.requiereVerificacion == false){
 			credito.estatus = 1;
 		}
+*/
 
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		//credito.folio = sucursal.folio + 1;

@@ -18,13 +18,9 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
   rc.objeto = {};
 	
 	this.garantiasGeneral = [];
-	
-/*
-	if ($stateParams.id != "")
-			this.action = false;
-*/
-	
-	
+	this.garantiasMobiliaria = [];
+		
+
 	this.subscribe('verificaciones',()=>{
 			return [{credito_id : $stateParams.id }]
 	});
