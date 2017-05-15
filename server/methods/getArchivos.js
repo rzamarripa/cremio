@@ -323,7 +323,7 @@ Meteor.methods({
 	    var empresa = empre.toUpperCase();
 	    var call = objeto.empresa.calle;
 	    var calleEmpresa = call.toUpperCase();
-	    var col = objeto.empresa.colonia;
+	    var col = objeto.coloniaEmpresa;
 	    var coloniaEmpresa = col.toUpperCase();
 	    
 	    // var cas = objeto.profile.casa

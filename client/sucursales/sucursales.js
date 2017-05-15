@@ -6,8 +6,8 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 	
 	let rc = $reactive(this).attach($scope);
 	this.parametros = $stateParams;
-	this.action = true;  
-  this.nuevo = true;
+	rc.action = true;  
+  rc.nuevo = true;
 	
 	
 	this.subscribe('sucursales', function(){
@@ -25,7 +25,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
   this.Nuevo = function()
   {
     this.action = true;
-    this.nuevo = !this.nuevo;
+    rc.nuevo = !rc.nuevo;
     this.objeto = {}; 
   };
   
@@ -82,7 +82,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 																											toastr.success('Guardado correctamente.');
 																											this.objeto = {};
 																											$('.collapse').collapse('hide');
-																											this.nuevo = true;
+																											rc.nuevo = true;
 																											form.$setPristine();
 																									    form.$setUntouched();	
 																									}
@@ -96,7 +96,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 			this.objeto = Sucursales.findOne({_id:id});
 	    this.action = false;
 	    $('.collapse').collapse('show');
-	    this.nuevo = false;
+	    rc.nuevo = false;
 		
 	};
 	
@@ -142,7 +142,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 																													Meteor.call('updateGerenteSucursal', usuario, 'Gerente');
 																													toastr.success('Actualizado correctamente.');
 																													$('.collapse').collapse('hide');
-																													this.nuevo = true;
+																													rc.nuevo = true;
 																													form.$setPristine();
 																											    form.$setUntouched();
 																											}

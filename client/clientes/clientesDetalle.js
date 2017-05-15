@@ -70,35 +70,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('personas',()=>{
 		return [{}];
 	});
-<<<<<<< HEAD
-		this.subscribe('ciudades',()=>{
-		return [{}];
-	});
-		this.subscribe('municipios',()=>{
-		return [{}];
-	});
-		this.subscribe('colonias',()=>{
-		return [{}];
-	});
-		this.subscribe('estadoCivil',()=>{
-		return [{}];
-	});
-		this.subscribe('paises',()=>{
-		return [{}];
-	});
-		this.subscribe('sucursales',()=>{
-		return [{}];
-	});
-		this.subscribe('empresas',()=>{
-		return [{}];
-	});
-		this.subscribe('estados',()=>{
-		return [{}];
-	});
-		this.subscribe('nacionalidades',()=>{
-		return [{}];
-	});
-=======
 
 	this.subscribe('ciudades',()=>{
 		return [{}];
@@ -127,9 +98,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('nacionalidades',()=>{
 		return [{}];
 	});
-	
-
->>>>>>> 73381cff3571170016855f93fa13d4fc42bdf09e
 			
 	this.helpers({
 		ciudades : () => {
