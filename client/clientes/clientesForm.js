@@ -317,8 +317,8 @@ this.tomarFoto = function(objeto){
 			return;
 		}
 		var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
-		var apPaterno = objeto.profile.apPaterno != undefined ? objeto.profile.apPaterno + " " : "";
-		var apMaterno = objeto.profile.apMaterno != undefined ? objeto.profile.apMaterno : "";
+		var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
+		var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
 		objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
 		delete objeto.profile.repeatPassword;
 		Meteor.call('updateGerenteVenta', rc.objeto, this.referenciasPersonales, "Cliente");
