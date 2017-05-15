@@ -2,6 +2,7 @@ angular.module("creditoMio").run(function ($rootScope, $state, toastr) {
 	$rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
 		// We can catch the error thrown when the $requireUser promise is rejected
 		// and redirect the user back to the main page
+
 		switch(error) {
 			case "AUTH_REQUIRED":
 				$state.go('anon.login');
@@ -682,3 +683,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			}
 		})
 }]);
+
+function irArriba(){
+	$("html, body").animate({ scrollTop: 0 }, "slow");
+}
