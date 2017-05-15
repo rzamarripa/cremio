@@ -8,7 +8,7 @@ angular.module("creditoMio")
   this.action = true;
   this.actionReferencia = true;
   this.nuevo = true;	 
-  rc.objeto = {}; 
+  this.objeto = {}; 
   this.objeto.profile = {};
   this.objeto.profile.empresa_id = "";
   this.empresa = {}; 
@@ -144,6 +144,9 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  estadosCiviles : () => {
+		  //if (this.getReactively("objeto") && rc.objeto != undefined && objeto.estadoCivil_id != undefined)
+		  //	 rc.estadoCivilSeleccionado = EstadoCivil.findOne(objeto.estadoCivil_id);
+		  
 		  return EstadoCivil.find();
 	  },
 	  nacionalidades : () => {
@@ -221,8 +224,11 @@ angular.module("creditoMio")
 					  	});			
 							
 					}
+					
+					
+					
 					rc.objeto = objeto;
-					//return objeto;
+					//eturn objeto;
 			}  
 	  },
 	  personasTipos : () => {
