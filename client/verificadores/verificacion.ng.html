@@ -125,79 +125,6 @@
 		    </div> 	    
 			</div>
 			
-<!--
-			<h4>Garantias</h4>
-			<div class="well">	    
-				<div class="row">
-						<div class="col-sm-4"> 					    
-										    	<label>Tipo</label>
-										    	<input name="tipo" type="text" class="form-control" placeholder="tipo" ng-model="ver.garantia.tipo">
-			    	</div>
-						<div class="col-sm-4"> 					    
-										    	<label>Marca</label>
-										    	<input name="marca" type="text" class="form-control" placeholder="Marca" ng-model="ver.garantia.marca">
-						</div>
-									    	<div class="col-sm-4"> 					    
-										    	<label>Modelo</label>
-										    	<input name="modelo" type="text" class="form-control" placeholder="Modelo" ng-model="ver.garantia.modelo">
-									    	</div>
-									    </div>
-									    <div class="row">	
-										    <div class="col-sm-4">					    
-										    	<label>Serie</label>
-										    	<input name="serie" type="text" class="form-control" placeholder="Serie" ng-model="ver.garantia.serie">
-									    	</div>
-									    	<div class="col-sm-4">					    
-										    	<label>Color</label>
-										    	<input name="color" type="text" class="form-control" placeholder="Color" ng-model="ver.garantia.color">
-									    	</div>
-									    	<div class="col-sm-4">					    
-										    	<label>Estado Actual</label>
-										    	<input name="estadoActual" type="text" class="form-control" placeholder="Estado Actual" ng-model="ver.garantia.estadoActual">
-									    	</div>
-									    </div>
-									    <div class="row">		
-									    	<div class="col-sm-3">
-											   	<input type="button" ng-click="ver.insertarGarantia()" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
-											   	<input type="button" ng-click="ver.actualizarGarantia(ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
-											   	<input type="button" ng-click="ver.cancelarGarantia()" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
-												</div>
-									    </div>
-										</div>
-										<div class="well">				 
-											<div class="row">
-												<table class="table table-bordered">
-													<thead>
-														<tr>
-															<th width="5%">Número</th>
-															<th width="15%">Tipo</th>
-															<th width="15%">Marca</th>
-															<th width="15%">Modelo</th>
-															<th width="15%">Serie</th>
-															<th width="15%">Color</th>
-															<th width="15%">Estado Actual</th>
-															<th width="5%">Quitar</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr ng-repeat="garantia in ver.garantias">
-															<td>{{garantia.num}}</td>
-															<td>{{garantia.tipo}}</td>
-															<td>{{garantia.marca}}</td>
-															<td>{{garantia.modelo}}</td>
-															<td>{{garantia.serie}}</td>
-															<td>{{garantia.color}}</td>
-															<td>{{garantia.estadoActual}}</td>
-															<td>
-																	<a href="#" ng-click="ver.quitarGarantia(garantia.num)"><i class="fa fa-trash"></i></a>
-																	<a href="#" ng-click="ver.editarGarantia(garantia)"><i class="fa fa-pencil"></i></a>
-															</td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
-				</div>
--->
 				<h4>Garantias</h4>
 						<div class="well">	    
 							<div class="row">
@@ -249,9 +176,9 @@
 						    </div>
 						    <div class="row">		
 						    	<div class="col-sm-3">
-								   	<input type="button" ng-click="ver.insertarGarantia(ver.credito.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
-								   	<input type="button" ng-click="ver.actualizarGarantia(ver.credito.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
-								   	<input type="button" ng-click="ver.cancelarGarantia(ver.credito.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
+								   	<input type="button" ng-click="ver.insertarGarantia(ver.objeto.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
+								   	<input type="button" ng-click="ver.actualizarGarantia(ver.objeto.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
+								   	<input type="button" ng-click="ver.cancelarGarantia(ver.objeto.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
 									</div>
 						    </div>
 						    <br/>
@@ -280,8 +207,8 @@
 													<td>{{garantia.color}}</td>
 													<td>{{garantia.estadoActual}}</td>
 													<td>
-															<a href="#" ng-click="ver.quitarGarantia(ver.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
-															<a href="#" ng-click="ver.editarGarantia(ver.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
+															<a href="#" ng-click="ver.quitarGarantia(ver.objeto.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
+															<a href="#" ng-click="ver.editarGarantia(ver.objeto.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
 													</td>
 												</tr>
 											</tbody>
@@ -318,8 +245,8 @@
 													<td>{{garantia.descripcion}}</td>
 													<td>{{garantia.valorEstimado}}</td>
 													<td>
-															<a href="#" ng-click="ver.quitarGarantia(ver.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
-															<a href="#" ng-click="ver.editarGarantia(ver.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
+															<a href="#" ng-click="ver.quitarGarantia(ver.objeto.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
+															<a href="#" ng-click="ver.editarGarantia(ver.objeto.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
 													</td>
 												</tr>
 											</tbody>
@@ -328,9 +255,9 @@
 								</div>
 								<div class="row">		
 						    	<div class="col-sm-3">
-								   	<input type="button" ng-click="ver.insertarGarantia(ver.credito.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
-								   	<input type="button" ng-click="ver.actualizarGarantia(ver.credito.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
-								   	<input type="button" ng-click="ver.cancelarGarantia(ver.credito.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
+								   	<input type="button" ng-click="ver.insertarGarantia(ver.objeto.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
+								   	<input type="button" ng-click="ver.actualizarGarantia(ver.objeto.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
+								   	<input type="button" ng-click="ver.cancelarGarantia(ver.objeto.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
 									</div>
 						    </div>
 								

@@ -230,7 +230,6 @@ Meteor.methods({
 							
 		});
 	  	  
-	  console.log(usuario);
 	  //delete usuario.profile.referenciasPersonales_ids;
 	  
 	  //usuario.profile.referenciasPersonales_ids = user.user.profile.referenciasPersonales_ids;
