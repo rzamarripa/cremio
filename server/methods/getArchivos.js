@@ -256,8 +256,8 @@ Meteor.methods({
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
 		//var produccion = "/home/isde/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
-		//var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 		
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		//var produccion = "/home/cremio/archivos/";
