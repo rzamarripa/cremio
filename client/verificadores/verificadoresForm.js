@@ -246,7 +246,7 @@ angular.module("creditoMio")
       */
 	};
 
-<<<<<<< HEAD
+
 	this.almacenaImagen = function(imagen)
 	{
 		if (this.objeto)
@@ -254,9 +254,5 @@ angular.module("creditoMio")
 						
 	}
 
-
- 
-=======
->>>>>>> ba17618b02f9c43242f0eae51a67b2f5b34ecb92
 
 };

@@ -36,12 +36,9 @@ angular.module("creditoMio")
 	this.documents = []
 	
 	this.estadoCivil = "";
-<<<<<<< HEAD
 
-=======
 	this.estadoCivilSeleccionado = {};
->>>>>>> ba17618b02f9c43242f0eae51a67b2f5b34ecb92
-	  
+
 
   this.subscribe('buscarPersonas', () => {
 		if(this.getReactively("buscar.nombre").length > 3){
