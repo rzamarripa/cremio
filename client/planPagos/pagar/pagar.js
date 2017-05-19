@@ -263,8 +263,11 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				p.pagoSeleccionado = true;
 				if(p.importepagado>p.importeRegular)
 					p.importepagado=p.importeRegular
-				if(p.importepagado<0 || !p.importepagado || isNaN(p.importepagado))
+				if(p.importepagado<=0 || !p.importepagado || isNaN(p.importepagado)){
 					p.importepagado=0
+					p.pagoSeleccionado = false;
+				}
+					
 			}
 			if(p.pagoSeleccionado != undefined){
 				if(p.pagoSeleccionado == true){
@@ -273,8 +276,8 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				}	
 			}
 			//console.log(rc)
-			if(!rc.pago.pagar || rc.pago.pagar<rc.pago.totalPago)
-				rc.pago.pagar = rc.pago.totalPago
+			//if(!rc.pago.pagar || rc.pago.pagar<rc.pago.totalPago)
+				//rc.pago.pagar = rc.pago.totalPago
 
 		});
 	}

@@ -50,7 +50,10 @@
 		    </div>  
 			</div>
 			
+<<<<<<< HEAD
 			<div class="col-sm-12">
+=======
+>>>>>>> ba17618b02f9c43242f0eae51a67b2f5b34ecb92
 			<h4>Documentos</h4>
 			<div class="well">	    
 			    <div class="row">
@@ -107,15 +110,15 @@
 			<h4>Información de Contacto</h4>
 			<div class="well">	    
 		    <div class="row">
-		    	<div class="col-sm-3" valida> 					    
+		    	<div class="col-sm-4" valida> 					    
 			    	<label>Particular *</label>
-			    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.particular" required capitalize>
+			    	<input name="telefonoParticular" type="text" class="form-control" placeholder="Teléfono Particular" ng-model="cli.objeto.profile.particular" required>
 		    	</div>
-		    	<div class="col-sm-3" valida> 					    
+		    	<div class="col-sm-4" valida> 					    
 			    	<label>Teléfono Oficina *</label>
 			    	<input name="telefonoOficina" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoOficina" required capitalize>
 		    	</div>
-		    	<div class="col-sm-3" valida>					    
+		    	<div class="col-sm-4" valida>					    
 			    	<label>Celular *</label>
 			    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="cli.objeto.profile.celular" required capitalize>
 		    	</div>
@@ -125,11 +128,11 @@
 			    	<label>Teléfono Alternativo</label>
 			    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cli.objeto.profile.telefonoAlternativo" capitalize>
 		    	</div>	  
-		    	<div class="col-sm-2">					    
+		    	<div class="col-sm-3">					    
 			    	<label>Dueño</label>
 			    	<input name="otroTelefono" type="text" class="form-control" placeholder="Dueño" ng-model="cli.objeto.profile.duenoAlternativo" capitalize>
 		    	</div>
-		    	<div class="col-sm-2">					    
+		    	<div class="col-sm-3">					    
 			    	<label>Parentezco</label>
 			    	<input name="otroTelefono" type="text" class="form-control" placeholder="Parentezco" ng-model="cli.objeto.profile.parentescoAlternativo" capitalize>
 		    	</div>
@@ -140,7 +143,7 @@
 		    </div>  
 		    
 			</div>
-		    </div>
+		  
 			
 
 			<h4>Particulares</h4>
@@ -157,7 +160,8 @@
 		    	
 		    	<div class="col-sm-3">
 						<label for="estadocivil">Estado Civil *</label>
-						<select  name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.estadoCivil_id" required>
+					<!-- 	<select  name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.estadoCivil_id" required> -->
+						<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-change="cli.seleccionarEstadoCivil(cli.objeto.profile.estadoCivil_id)" ng-model="cli.objeto.profile.estadoCivil_id" required>
 								<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in cli.estadosCiviles">
 									{{estadoCivil.nombre}}
 								</option>
@@ -321,7 +325,7 @@
 		    </div>
 			</div>
 			
-			<div ng-if="cli.objeto.profile.estadoCivil_id == 'NHohqw26ZSs6EoJaC'">
+			<div ng-if="cli.estadoCivilSeleccionado.nombre == 'CASADO (A)'">
 					<h4>Información del cónyuge</h4 >
 					<div class="well">	    
 				    <div class="row">
@@ -450,7 +454,10 @@
 						<select name="empresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.empresa_id" required>
 							<option ng-repeat="empresa in cli.empresas" value="{{empresa._id}}">{{empresa.nombre}}</option>
 						</select>
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Crear Empresa</button>
+					</div>
+					<div class="col-sm-2">
+							<br />
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Crear Empresa</button>
 					</div>
 		    </div>
 		    <div class="row">

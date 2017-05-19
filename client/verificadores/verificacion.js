@@ -13,16 +13,12 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.numG = 0;
 	this.conGen = 0;
 	this.numGen = 0;
-	this.garantias = [];
+	
   this.garantia = {};
   rc.objeto = {};
 	
 	this.garantiasGeneral = [];
-	
-/*
-	if ($stateParams.id != "")
-			this.action = false;
-*/
+	this.garantias = [];
 	
 	
 	this.subscribe('verificaciones',()=>{
@@ -67,11 +63,8 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 					obj.garantias = angular.copy(this.garantias);
 			else
 					obj.garantias = angular.copy(this.garantiasGeneral);	
-					
-				
+									
 			var credito = Creditos.findOne($stateParams.id);
-			
-			console.log(credito);
 			
 			if (credito.tipoGarantia == undefined )
 					credito.tipoGarantia = [];
@@ -81,9 +74,9 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			Verificaciones.insert(obj);
 			
 			if (this.objeto.tipoGarantia == "mobiliaria")
-					Creditos.update({_id: obj.credito_id}, {$set:{estatus: 1, garantias: angular.copy(this.garantias)}})
+					Creditos.update({_id: obj.credito_id}, {$set:{estatus: 1, garantias: angular.copy(this.garantias), tipoGarantia: this.objeto.tipoGarantia}})
 			else
-					Creditos.update({_id: obj.credito_id}, {$set:{estatus: 1, garantias: angular.copy(this.garantiasGeneral)}})
+					Creditos.update({_id: obj.credito_id}, {$set:{estatus: 1, garantias: angular.copy(this.garantiasGeneral), tipoGarantia: this.objeto.tipoGarantia}})
 			
 						
 			toastr.success('Guardado correctamente.');
@@ -99,6 +92,7 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
   
   this.insertarGarantia = function(tipo)
 	{
+			console.log(tipo);
 			if (tipo == "mobiliaria")
 			{				
 					this.conG = this.conG + 1;

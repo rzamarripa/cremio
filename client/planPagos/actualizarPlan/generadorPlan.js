@@ -231,6 +231,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			rc.credito.estatus = 0;
 		else
 			rc.credito.estatus = 1;
+			
+		if (!this.credito.requiereVerificacion)
+				this.credito.turno = "";	
 
 		var _credito = {
 			cliente_id : this.cliente._id,
@@ -245,8 +248,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			multasPendientes : 0,
 			saldoMultas : 0.00,
 			saldoRecibo : 0.00,
-			estatus : 1,
+			//estatus : 1,
 			requiereVerificacion: this.credito.requiereVerificacion,
+			turno : this.credito.turno,
 			sucursal_id : Meteor.user().profile.sucursal_id,
 			fechaVerificacion: this.credito.fechaVerificacion
 		};
@@ -272,6 +276,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	
 	this.actualizarCredito = function(){
 		
+		if (!this.credito.requiereVerificacion)
+				this.credito.turno = "";	
+		
 		var credito = {
 			cliente_id : this.cliente._id,
 			tipoCredito_id : this.credito.tipoCredito_id,
@@ -285,8 +292,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			multasPendientes : 0,
 			saldoMultas : 0.00,
 			saldoRecibo : 0.00,
-			//estatus : 1,
+			estatus : this.credito.estatus,
 			requiereVerificacion: this.credito.requiereVerificacion,
+			turno : this.credito.turno,
 			sucursal_id : Meteor.user().profile.sucursal_id,
 			fechaVerificacion: this.credito.fechaVerificacion,
 			tipoGarantia : this.credito.tipoGarantia,
@@ -300,7 +308,6 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				credito.garantias = angular.copy(this.garantiasGeneral);
 		
 				
-		console.log(credito)
 				
 		Meteor.apply('actualizarCredito', [this.cliente, credito, $stateParams.credito_id], function(error, result){
 			console.log(result,error)

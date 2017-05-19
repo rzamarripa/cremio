@@ -2,6 +2,7 @@ angular.module("creditoMio").run(function ($rootScope, $state, toastr) {
 	$rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
 		// We can catch the error thrown when the $requireUser promise is rejected
 		// and redirect the user back to the main page
+
 		switch(error) {
 			case "AUTH_REQUIRED":
 				$state.go('anon.login');
@@ -640,6 +641,36 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.traspasoCajaCuenta', {
+			url: '/cajas/trascajacuenta',
+			templateUrl: 'client/cajas/trasCajaCuenta.ng.html',
+			controller: 'TraspasoCajaCuentaCtrl as tincc',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.traspasoCuentaCaja', {
+			url: '/cajas/trascuentacaja',
+			templateUrl: 'client/cajas/trasCuentaCaja.ng.html',
+			controller: 'TraspasoCuentaCajaCtrl as tincuca',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.traspasoCuentaCuenta', {
+			url: '/cuentas/traspaso',
+			templateUrl: 'client/cuentas/traspaso.ng.html',
+			controller: 'TraspasoCuentaCtrl as tincu',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.corteCaja', {
 			url: '/cajas/corte',
 			templateUrl: 'client/cajas/corteCaja.ng.html',
@@ -682,3 +713,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			}
 		})
 }]);
+
+function irArriba(){
+	$("html, body").animate({ scrollTop: 0 }, "slow");
+}

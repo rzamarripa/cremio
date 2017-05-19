@@ -233,7 +233,7 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 
 			var _credito = {
 				cliente: this.credito.nombre,
-				cliente_id : this.cliente._id,
+				//cliente_id : this.cliente._id,
 				tipoCredito_id : this.credito.tipoCredito_id,
 				fechaSolicito : new Date(),
 				duracionMeses : this.credito.duracionMeses,

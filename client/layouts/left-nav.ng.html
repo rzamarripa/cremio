@@ -2,7 +2,7 @@
 	<ul data-smart-menu ng-if = "ro.verMenu()">
 		<!--Gerente-->
 		<li data-menu-collapse>
-			<a href="#" ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.username == 'admin'">
+			<a href="#" ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
 				<i class="fa fa-lg fa-fw fa-tags"></i>
 				<span class="menu-item-parent">Catálogos</span>
 			</a>
@@ -14,12 +14,14 @@
 					</a>
 				</li>
 					
+<!--
 				<li data-ui-sref-active="active">
 					<a ui-sref="root.sexo" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-adjust"></i>
 						<span class="menu-item-child">Sexo</span>
 					</a>				
 				</li>
+-->
 					
 				<li data-ui-sref-active="active">
 					<a ui-sref="root.estadoCivil" tilte="Credito Mio">
@@ -113,7 +115,7 @@
 		</li>
 		
 		<li data-menu-collapse>
-			<a href="#" ng-show="currentUser.roles[0] == 'Gerente' || currentUser.username == 'admin'">
+			<a href="#" ng-show="currentUser.roles[0] == 'Gerente'">
 				<i class="fa fa-lg fa-fw fa-tags"></i>
 				<span class="menu-item-parent">Administración</span>
 			</a>
@@ -122,6 +124,12 @@
 					 <a ui-sref="root.calculadora" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-folder-open"></i>
 						<span class="menu-item-child">Calculadora</span>
+					</a>
+				</li>
+				<li>
+					<a ui-sref="root.traspasoCuentaCuenta" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-dollar"></i>
+						<span class="menu-item-child">Traspasos de Cuenta a Cuenta</span>
 					</a>
 				</li>
 			</ul>
@@ -230,10 +238,20 @@
 						<span class="menu-item-child">Traspasos Entre Cajas</span>
 					</a>
 				</li>
+				<li ng-if="currentUser.roles[0] == 'Gerente'">
+					<a ui-sref="root.traspasoCajaCuenta" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-dollar"></i>
+						<span class="menu-item-child">Traspasos de Caja a Cuenta</span>
+					</a>
+				</li>
+				<li ng-if="currentUser.roles[0] == 'Gerente'">
+					<a ui-sref="root.traspasoCuentaCaja" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-dollar"></i>
+						<span class="menu-item-child">Traspasos de Cuenta a Caja</span>
+					</a>
+				</li>
+				
 			</ul>
 		</li>
-	</ul>
-	<ul data-smart-menu ng-if = "!ro.verMenu()">
-		
 	</ul>
 </nav>

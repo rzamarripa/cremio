@@ -14,6 +14,8 @@ Meteor.methods({
 		//console.log(credito);
 		var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
 		//console.log(tipoCredito);
+		
+		
 
 		var totalPagos = 0;
 		var seguro = tipoCredito.seguro;
@@ -53,6 +55,11 @@ Meteor.methods({
 		var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
 		importeParcial=Math.round(importeParcial * 100) / 100;
 		var plan = [];
+		
+		if (cliente == undefined){
+			 cliente = {}; 
+			 cliente._id = "Prospecto";
+		}	 
 
 		for (var i = 0; i < totalPagos; i++) {
 			var pago = {
@@ -62,10 +69,10 @@ Meteor.methods({
 				tipoPlan			: credito.periodoPago,
 				numeroPago			: i + 1,
 				importeRegular		: importeParcial,
-				iva					: iva,
+				iva						: iva,
 				interes 			: interes,
 				seguro				: seguro,
-				cliente_id			: cliente._id,
+				cliente_id		: cliente._id,
 				capital 			: capital,
 				fechaPago			: undefined,
 				semanaPago			: undefined,
@@ -167,6 +174,7 @@ Meteor.methods({
 
 	pagoParcialCredito:function(pagos,abono,totalPago,tipoIngresoId,pusuario_id){
 
+
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 		var puser = Meteor.users.findOne(pusuario_id);
@@ -175,19 +183,27 @@ Meteor.methods({
 			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
 
 		if(tingreso.nombre =="Nota de Credito"){
-			console.log (1)
+			//console.log (1)
 			var resmc = Meteor.call("actualizarNotaDeCredito",pusuario_id,totalPago);
-			console.log(resmc)
-			console.log (2)
+			//console.log(resmc)
+			//console.log (2)
 		}
 		var cajaid = Meteor.user().profile.caja_id;
 		var user = Meteor.user();
 
 		var caja = Cajas.findOne(cajaid);
 
+		var sucursal = Sucursales.findOne({_id : Meteor.user().profile.sucursal_id});
+		sucursal.folioPago = sucursal.folioPago? sucursal.folioPago+1:1;	
+		var folioPago = sucursal.folioPago;
+
+		Sucursales.update({_id:sucursal._id},{$set:{folioPago:sucursal.folioPago}})  
+
+
 		var ffecha = moment(new Date());
 		var pago = {};
 		pago.fechaPago = new Date();
+		pago.folioPago =folioPago;
 		pago.usuario_id = pusuario_id;
 		pago.sucursalPago_id = Meteor.user().profile.sucursal_id;
 		pago.usuarioCobro_id = Meteor.userId();
@@ -387,7 +403,7 @@ Meteor.methods({
 												fechaLimite : { $lt : ahora }
 											}
 										]}).fetch();
-		console.log("si entre")
+		//console.log("si entre")
 		_.each(pagos, function(pago){
 			try{
 				var mfecha = moment(ahora);
@@ -395,9 +411,7 @@ Meteor.methods({
 				limite = new Date (pago.fechaLimite.getFullYear(),pago.fechaLimite.getMonth(),pago.fechaLimite.getDate());
 				var dias = mfecha.diff(limite, "days");
 				var credito = Creditos.findOne(pago.credito_id);
-				console.log(pago)
-				console.log(pago.credito_id)
-				console.log(credito)
+				
 				var multas = (dias/100) * credito.capitalSolicitado; 
 				multas=Math.round(multas * 100) / 100;
 				var interes = multas / 1.16

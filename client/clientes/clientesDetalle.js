@@ -167,7 +167,15 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return Creditos.find({estatus:2});
 		},
 		creditosPendientes : () =>{
-			return Creditos.find({estatus:1});
+			var creditos = Creditos.find({estatus:{$in:[0,1]}}).fetch();
+			if(creditos.length > 0){
+				_.each(creditos, function(credito){
+					credito.estatusClase = obtenerClaseEstatus(credito.estatus);
+				})
+			}
+			
+			
+			return creditos;
 		},
 		notasCredito : () =>{
 			return NotasCredito.find({},{sort:{fecha:1}});
@@ -874,6 +882,24 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		$("#modaldoc").modal('show');
 	};
 
+	function obtenerClaseEstatus(estatus){
+		console.log("hola", estatus);
+		if(estatus == 0){
+			return "danger";
+		}else if(estatus == 1){
+			return "warning";
+		}else if(estatus == 2){
+			return "primary";
+		}else if(estatus == 3){
+			return "danger";
+		}else if(estatus == 4){
+			return "info";
+		}else if(estatus == 5){
+			return "success";
+		}else if(estatus == 6){
+			return "danger";
+		}
+	}
 
 	
 }
