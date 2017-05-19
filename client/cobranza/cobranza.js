@@ -121,6 +121,77 @@ angular.module("creditoMio")
 
 			return planes;
 		},
+		planPagosViejo : () => {
+		
+			pagos = PlanPagos.find({},{sort : {numeroPago : 1,descripcion:-1}}).fetch();
+
+			 return pagos
+		},
+		historialDelCredito : () => {
+			
+			arreglo = [];
+			var saldoPago = 0;
+			var saldoActual = 0; 
+			rc.saldo =0;	
+			var credito = this.credito	
+			rc.saldoMultas=0;
+
+			_.each(rc.getReactively("planPagosViejo"), function(planPago){
+				if(planPago.descripcion=="Recibo")
+					rc.saldo+=planPago.cargo;
+				if(planPago.descripcion=="Multa")
+					rc.saldoMultas+=planPago.importeRegular;
+			});
+			
+			_.each(rc.getReactively("planPagosViejo"), function(planPago, index){
+
+				
+				if(planPago.descripcion=="Multa")
+					rc.saldo+=planPago.cargo
+				
+				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
+				//console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
+				arreglo.push({saldo:rc.saldo,
+					numeroPago : planPago.numeroPago,
+					cantidad : credito.numeroPagos,
+					fechaSolicito : credito.fechaSolicito,
+					fecha : fechaini,
+					pago : 0, 
+					cargo : planPago.cargo,
+					movimiento : planPago.movimiento,
+					planPago_id : planPago._id,
+					credito_id : planPago.credito_id,
+					descripcion : planPago.descripcion,
+					importe : planPago.importeRegular,
+					pagos : planPago.pagos
+			  	});
+					
+				
+				if(planPago.pagos.length>0)
+					_.each(planPago.pagos,function (pago) {
+						rc.saldo-=pago.totalPago
+						arreglo.push({saldo:rc.saldo,
+							numeroPago : planPago.numeroPago,
+							cantidad : credito.numeroPagos,
+							fechaSolicito : credito.fechaSolicito,
+							fecha : pago.fechaPago,
+							pago : pago.totalPago, 
+							cargo : 0,
+							movimiento : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							planPago_id : planPago._id,
+							credito_id : planPago.credito_id,
+							descripcion : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							importe : planPago.importeRegular,
+							pagos : planPago.pagos
+					  	});
+					})
+				//console.log(rc.saldo)
+			});
+			
+
+			console.log("el ARREGLO del helper historial",arreglo)
+			return arreglo;
+		},
 
 		pagosVencidos : () => {
 			_.each(rc.getReactively("planPagos"),function(plan){});

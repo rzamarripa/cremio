@@ -57,7 +57,7 @@
 			<thead>
 				<tr>
 					<th width="30%"><div class="text-center">Nombre</div></th>
-					<th width="30%"><div class="text-center">Máximo Efectivo</div></th>
+					
 					<th width="10%">
 						<div class="text-center">
 							Estatus
@@ -78,7 +78,7 @@
 			<tbody>
 		    <tr ng-repeat="objeto in caj.cajas">
 			    <td>{{objeto.nombre}}</td>
-			    <td class="text-right">{{objeto.maximoEfectivo | currency}}</td>
+			
 			    <td>
 				    <div class="text-center">
 				    	<span ng-if="objeto.estatus" class="label label-success">

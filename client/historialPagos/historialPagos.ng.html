@@ -93,7 +93,6 @@
 											<dd>{{credito.adeudoInicial | currency}}</dd>
 											<dt>Fecha Entrega:</dt>
 											<dd>{{credito.fechaSolicito | date:'dd-MM-yyyy'}}</dd>
-										
 										</dl>
 									
 									</div>
@@ -110,18 +109,7 @@
 											<dt>Saldo Multas:</dt>
 											<dd>{{hp.saldoMultas | currency}}</dd>
 										</dl>
-										
 									</div>
-									<div class="col-sm-6"  >
-									<a class="btn btn-primary"> {{hp.notaCre == true ? 'Agregar Nota de credito' : 'Cancelar'}}</a>
-									</div>
-									<div class="col-sm-6"  >
-			    	 				<label>Nota</label>
-							    		<textarea  class="form-control" ng-model="hp.notaCredito.nombre" >
-			    	 					  {{hp.notaCredito.nombre}}
-						  				</textarea>
-			    	 				</div>
-							
 								</div>
 							</div>
 

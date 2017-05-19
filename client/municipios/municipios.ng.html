@@ -24,7 +24,7 @@
 							</div>	
               <div class="col-sm-4" valida>
 						    <label>Nombre *</label>
-					    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="mun.objeto.nombre" required>
+					    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="mun.objeto.nombre" required capitalize>
 					    </div>
 					  </div>
 					</div>
@@ -72,6 +72,7 @@
 		<table class="table table-bordered">
 			<thead>
 				<tr>
+				<th width="5%"><div class="text-center">No.</div></th>
 					<th width="30%"><div class="text-center">Nombre</div></th>
 					<th width="20%">
 						<div class="text-center">
@@ -88,6 +89,7 @@
 			<tbody>
 		    <tr ng-repeat="objeto in mun.municipios">
 			    <td>{{objeto.nombre}}</td>
+			    <td>{{$index + 1}}</td>
 			    <td>
 				    <div class="text-center">
 				    	<span ng-if="objeto.estatus" class="label label-success">

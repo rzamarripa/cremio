@@ -6,15 +6,15 @@
 		    <div class="row">
 		    	<div class="col-sm-4" valida> 					    
 			    	<label>Nombre (s) *</label>
-			    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="ver.objeto.profile.nombre" required>
+			    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="ver.objeto.profile.nombre" required capitalize>
 		    	</div>
 		    	<div class="col-sm-4" valida>					    
 			    	<label>Apellido Paterno *</label>
-			    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ver.objeto.profile.apellidoPaterno" required>
+			    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ver.objeto.profile.apellidoPaterno" required capitalize>
 		    	</div>
 		    	<div class="col-sm-4">					    
 			    	<label>Apellido Materno</label>
-			    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ver.objeto.profile.apellidoMaterno" >
+			    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ver.objeto.profile.apellidoMaterno" capitalize>
 		    	</div>	    				    	    
 		    </div>
 		    <div class="row">
@@ -36,10 +36,14 @@
 							<div id="fileDisplayArea1"></div>
 															
 					   </div> -->
-					   <div class="col-sm-4"><br/>
+					   <div class="col-sm-1"><br/>
 							<label for="talla">Foto</label>
 							<button class="btn btn-primary" ng-click="ver.tomarFoto()"><i class="fa fa-camera"></i></button>
-							<img width="100px" ng-src="{{ver.objeto.foto}}" ng-class="{'img-thumbnail': !!cli.objeto.foto}" />
+							</div>
+							<div class="col-sm-3"> 
+							<img width="300px"  ng-src="{{ver.pic}}" ng-class="{'img-thumbnail': !!ver.pic}" />
+
+							</div>
 			    	</div>
 		    </div>  
 			</div>
@@ -61,7 +65,7 @@
 		    	</div>	  
 		    	<div class="col-sm-3">					    
 			    	<label>Correo</label>
-			    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="ver.objeto.profile.correo" >
+			    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="ver.objeto.profile.correo" capitalize>
 		    	</div>  				    	    
 		    </div>
 			</div>
@@ -110,7 +114,7 @@
 					</div>		
 		    	<div class="col-sm-3">					    
 			    	<label>CURP</label>
-			    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="ver.objeto.profile.curp" >
+			    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="ver.objeto.profile.curp" capitalize>
 		    	</div>
 		      <div class="col-sm-3">					    
 			    	<label>Lugar de Nacimiento</label>
@@ -123,15 +127,15 @@
 		    <div class="row">
 			    <div class="col-sm-6" valida>					    
 			    	<label>Calle *</label>
-			    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ver.objeto.profile.calle" required="">
+			    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ver.objeto.profile.calle" required="" capitalize>
 		    	</div>
 		    	<div class="col-sm-3" valida>					    
 			    	<label>Numero *</label>
-			    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ver.objeto.profile.numero" required="">
+			    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ver.objeto.profile.numero" required="" capitalize>
 		    	</div>
 		    	<div class="col-sm-3" valida>					    
 			    	<label>CP *</label>
-			    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="ver.objeto.profile.codigoPostal" required="">
+			    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="ver.objeto.profile.codigoPostal" required="" capitalize>
 		    	</div>
 		    </div>
 		    <div class="row">

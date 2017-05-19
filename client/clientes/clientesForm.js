@@ -14,6 +14,7 @@ angular.module("creditoMio")
   this.empresa = {}; 
   this.objeto_id = ""
   rc.pic = "";
+  rc.otrafoto = ""
   
   this.pais_id = "";
   this.estado_id = "";
@@ -30,10 +31,12 @@ angular.module("creditoMio")
 	this.buscar.nombre = "";
 	this.buscando = false;
 	var fotillo = ""
-	this.pic = {};
+	//this.pic = {};
 	this.imagenes = []
+	this.documents = []
 	
 	this.estadoCivil = "";
+
 	  
 
   this.subscribe('buscarPersonas', () => {
@@ -66,7 +69,7 @@ angular.module("creditoMio")
 	
 	this.subscribe('ocupaciones',()=>{
 		return [{estatus: true}]
-	});
+	}); 
 	
 	this.subscribe('paises',()=>{
 		return [{estatus: true}]
@@ -229,15 +232,16 @@ angular.module("creditoMio")
 		  	"nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
 			}, { sort : {"nombreCompleto" : 1 }}).fetch();
 			return personas;
-		},	
+		},
+			
   }); 
 
 
 this.tomarFoto = function(objeto){
 			console.log(objeto)
 		    $meteor.getPicture().then(function(data){
-			fotillo = data
-			rc.pic = fotillo
+			rc.fotillo = data
+			rc.pic = rc.fotillo
 			//objeto.profile.fotografia = this.objeto.profile.fotografia;
 		});
     };
@@ -275,7 +279,8 @@ this.tomarFoto = function(objeto){
 		  }
 			
 			objeto.profile.estatus = true;
-			objeto.profile.archivo = rc.imagenes
+			//rc.documentos
+			objeto.profile.documentos = rc.documents
 			objeto.profile.foto = fotillo;
 			objeto.profile.usuarioInserto = Meteor.userId();
 			objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
@@ -303,6 +308,7 @@ this.tomarFoto = function(objeto){
 	};
 	
 	this.actualizarForm = function(objeto,form){
+		console.log(objeto)
 
 
 		if(form.$invalid){
@@ -313,8 +319,29 @@ this.tomarFoto = function(objeto){
 		var apPaterno = objeto.profile.apPaterno != undefined ? objeto.profile.apPaterno + " " : "";
 		var apMaterno = objeto.profile.apMaterno != undefined ? objeto.profile.apMaterno : "";
 		objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
+		
+		if (rc.documents.length){
+			objeto.profile.documentos = rc.documents
+			objeto.profile.foto = rc.objeto.profile.foto
+			}
+			else{
+				objeto.profile.documentos = objeto.profile.documentos
+				objeto.profile.foto = rc.objeto.profile.foto
+				
+			}
+	
+			if (rc.pic != ""){
+				objeto.profile.foto = rc.pic
+			}
+			else{
+				objeto.profile.foto = rc.objeto.profile.foto
+			}
+
+			
+
+	
 		delete objeto.profile.repeatPassword;
-		Meteor.call('updateGerenteVenta', rc.objeto, this.referenciasPersonales, "Cliente");
+		Meteor.call('updateGerenteVenta', objeto, this.referenciasPersonales, "Cliente");
 		toastr.success('Actualizado correctamente.');
 		//$('.collapse').collapse('hide');
 		this.nuevo = true;
@@ -465,6 +492,11 @@ this.tomarFoto = function(objeto){
 	    //reorganiza el consecutivo     
 	    functiontoOrginiceNum(this.referenciasPersonales, "num");
 	};
+
+		this.borrarDoc = function($index)
+	{
+		rc.documents.splice($index, 1);
+    };
 	
 	this.editarReferencia = function(p)
 	{
@@ -499,24 +531,32 @@ this.tomarFoto = function(objeto){
 	    }
   };
 
-  this.almacenaImagen = function(imagen)
+	this.agregarDoc = function(imagen,doc)
 	{
-		if (this.objeto)
-			this.objeto.profile.foto = imagen;
-		    this.imagenes.push({archivo:imagen})
-		    console.log(this.imagenes)
+		//console.log("entro")
+		rc.referencias = [];
+		Meteor.call('getDocs', doc, function(error,result){
+			if (result)
+				{console.log("result",result)
+					//console.log("entra aqui");
+					//console.log("result",result);
+					rc.documents.push({imagen: imagen, nombre: result.nombre});
+					$scope.$apply();			
+				}
 
-						
+		});
+		//console.log(imagen);
+							
 	}
 
 
   $(document).ready( function() {
 		
 
-			$(".Mselect2").select2();
+			//$(".Mselect2").select2();
 					
 			var fileInput1 = document.getElementById('fileInput1');
-			var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+			//var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
 			
 			
 			//JavaScript para agregar la Foto
@@ -530,22 +570,9 @@ this.tomarFoto = function(objeto){
 					{
 						
 						var reader = new FileReader();
-		
 						reader.onload = function(e) {
-							fileDisplayArea1.innerHTML = "";
-		
-							var img = new Image();
-							
-							
-							img.src = reader.result;
-							img.width =200;
-							img.height=200;
-		
-							rc.almacenaImagen(reader.result);
-							//this.folio.imagen1 = reader.result;
-							
-							fileDisplayArea1.appendChild(img);
-							//console.log(fileDisplayArea1);
+							rc.objeto.profile.foto = reader.result;
+							//console.log(reader.result);
 						}
 						reader.readAsDataURL(file);			
 					}else {
@@ -554,7 +581,7 @@ this.tomarFoto = function(objeto){
 					}
 					
 				} else {
-					fileDisplayArea1.innerHTML = "File not supported!";
+					//fileDisplayArea1.innerHTML = "File not supported!";
 				}
 			});		
 	    });
@@ -568,9 +595,11 @@ this.tomarFoto = function(objeto){
 		//rc.nota.unidad = Unidades.findOne(rc.nota.unidad_id);
 	};
 
-	  this.mostrarModal= function()
+	this.mostrarModal= function(img)
 	{
-		$("#myModal").modal();
+		var imagen = '<img class="img-responsive" src="'+img+'" style="margin:auto;">';
+		$('#imagenDiv').empty().append(imagen);
+		$("#myModal").modal('show');
 	};
 
 	this.seleccionEstadoCivil = function(estadoCivil)

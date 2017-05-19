@@ -21,6 +21,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.pagos = ""
 	window.rc = rc;
 	this.imagenes = []
+	rc.openModal = false
+	rc.empresa = {}
 
 	
 	this.subscribe("ocupaciones",()=>{
@@ -135,6 +137,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			});
 			return colonias
 		},
+		
+		// referencias : () => {
+		// 	var referencias = {};
+		// 	_.each(Personas.find().fetch(), function(referencia){
+		// 		referencias[referencia._id] = referencia;
+		// 	});
+		// 	return referencias
+		// },
 		creditos : () => {
 			var creditos = Creditos.find({estatus:4}).fetch();
 			if(creditos != undefined){
@@ -143,6 +153,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			return creditos;
 		},
+
 		historialCreditos : () => {
 			var creditos = Creditos.find().fetch();
 			if(creditos != undefined){
@@ -177,22 +188,56 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				}
 
 			});
+
+			
 			_.each(cli, function(objeto){
-				 console.log(objeto,"objeto")
+				 //console.log(objeto,"objeto")
+				 rc.referencias = [];
+				 //rc.empresas = [];
 				
 				objeto.empresa = Empresas.findOne(objeto.empresa_id)
-				
 				// objeto.documento = Documentos.findOne(objeto.docuemnto_id)
 				objeto.documento = Documentos.findOne(objeto.documento_id)
+				objeto.pais = Paises.findOne(objeto.pais_id)
+				objeto.estado = Estados.findOne(objeto.estado_id)
+				objeto.municipio = Municipios.findOne(objeto.municipio_id)
+				objeto.ciudad = Ciudades.findOne(objeto.ciudad_id)
+				objeto.colonia = Colonias.findOne(objeto.colonia_id)
+				objeto.ocupacion = Ocupaciones.findOne(objeto.ocupacion_id)
+				objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id)
+				objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id)
 				
-				
-				//objeto.documentoNombre = objeto.documento.nombre
-				
+				_.each(objeto.referenciasPersonales_ids, function(referencia){
+						Meteor.call('getReferencias', referencia, function(error, result){	
+					//console.log("entra aqui",referencia)					
+						if (result)
+							//console.log(result,"caraculo")
+						{
+							//console.log("entra aqui");
+							//console.log("result",result);
+							rc.referencias.push(result);
+							$scope.$apply();			
+						}
+					});	
+				});
 
-			});
+				Meteor.call('getEmpresas', objeto.empresa_id, function(error, result){	
+					//console.log("entra aqui",referencia)					
+						if (result)
+							//console.log(result,"caraculo")
+						{
+							//console.log("entra aqui");
+							//console.log("result",result);
+							rc.empresa = result
+							$scope.$apply();			
+						}
+					});	
 				
+			    });
+
 			if(cli){
 				this.ocupacion_id = cli.profile.ocupacion_id;
+
 
 				return cli;
 			}		
@@ -239,6 +284,19 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					})
 				})
 			}
+
+			_.each(rc.empresas, function(empresa){
+				console.log("akakakakkakkakkaakakaak")
+					empresa.ciudad = Ciudades.findOne(empresa.ciudad_id)
+					empresa.colonia = Colonias.findOne(empresa.colonia_id)
+					empresa.estado = Estados.findOne(empresa.estado_id)
+					empresa.municipio = Municipios.findOne(empresa.municipio_id)
+					empresa.pais = Paises.findOne(empresa.pais_id)
+
+					console.log(empresa,"empresaaaaaaaaaa")
+
+
+				});
 			return planPagos
 		},
 		notaCuenta1: () => {
@@ -577,19 +635,24 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		$("#modalpagos").modal();
 		credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
 		rc.pagos = credito.pagos
-		rc.mostrarModal = true
+		rc.openModal = true
 		////console.log(rc.pagos,"pagos")
 		console.log(rc.historial,"historial act")
 			_.each(rc.getReactively("historial"),function (pago) {
 
 			});
 
-			
+	};
 
+	this.modalDoc= function(img)
+	{
+		var imagen = '<img class="img-responsive" src="'+img+'" style="margin:auto;">';
+		$('#imagenDiv').empty().append(imagen);
+		$("#modaldoc").modal('show');
 	};
 
 	this.cerrarModal= function() {
-		rc.mostrarModal = false
+		rc.openModal = false
 
 	};
 
@@ -610,28 +673,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 
 
-  this.generarFicha= function(objeto,referencia_id) 
+  this.generarFicha= function(objeto) 
   {
-		console.log("entro:", objeto);
-
-		root.cliente = objeto.profile	
-  	    root.referencias = [];
-	  	_.each(root.cliente.referenciasPersonales_ids,function(referencia){
-	  		
-			Meteor.call('getReferencias', referencia, function(error, result){	
-			//console.log("entra aqui",referencia)					
-				if (result)
-				{
-					//console.log("entra aqui");
-					//console.log("result",result);
-					root.referencias.push(result);
-					$scope.$apply();			
-				}
-			});	
-	  	});
+		console.log("entro:", objeto);	 
 
 		objeto.nombreCompleto = objeto.profile.nombreCompleto
-		objeto.referencias = root.referencias;
 		objeto.lugarNacimiento = objeto.profile.lugarNacimiento;
 		console.log("entro2:", objeto);
 
@@ -681,7 +727,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	    //objeto.documento = objeto.profile.documento
 
 
-		Meteor.call('getFicha', objeto, function(error, response) {
+		Meteor.call('getFicha', objeto, rc.referencias, function(error, response) {
 
 		   if(error)
 		   {
@@ -820,6 +866,13 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			Notas.update({_id: id},{$set :  {respuesta : nota.respuesta}});
 			$("#notaPerfil").modal('hide');
 	}
+
+	this.modalDoc= function(img)
+	{
+		var imagen = '<img class="img-responsive" src="'+img+'" style="margin:auto;">';
+		$('#imagenDiv').empty().append(imagen);
+		$("#modaldoc").modal('show');
+	};
 
 
 	

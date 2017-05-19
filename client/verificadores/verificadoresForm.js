@@ -11,7 +11,9 @@ angular.module("creditoMio")
   this.objeto.profile.empresa_id = "";
   this.empresa = {}; 
   this.objeto_id = ""
-  var fotillo = ""
+ 
+  rc.pic = "";
+   var fotillo = ""
   
   this.pais_id = "";
   this.estado_id = "";
@@ -105,7 +107,8 @@ angular.module("creditoMio")
 	this.tomarFoto = function(objeto){
 			console.log(objeto)
 		    $meteor.getPicture().then(function(data){
-			fotillo = data
+			rc.fotillo = data
+			rc.pic = fotillo
 			//objeto.profile.fotografia = this.objeto.profile.fotografia;
 		});
     };
@@ -251,54 +254,6 @@ angular.module("creditoMio")
 	}
 
 
-  $(document).ready( function() {
-		
-
-			$(".Mselect2").select2();
-					
-			var fileInput1 = document.getElementById('fileInput1');
-			var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
-			
-			
-			//JavaScript para agregar la Foto
-			fileInput1.addEventListener('change', function(e) {
-				var file = fileInput1.files[0];
-				var imageType = /image.*/;
-	
-				if (file.type.match(imageType)) {
-					
-					if (file.size <= 512000)
-					{
-						
-						var reader = new FileReader();
-		
-						reader.onload = function(e) {
-							fileDisplayArea1.innerHTML = "";
-		
-							var img = new Image();
-							
-							
-							img.src = reader.result;
-							img.width =200;
-							img.height=200;
-		
-							rc.almacenaImagen(reader.result);
-							//this.folio.imagen1 = reader.result;
-							
-							fileDisplayArea1.appendChild(img);
-							//console.log(fileDisplayArea1);
-						}
-						reader.readAsDataURL(file);			
-					}else {
-						toastr.error("Error la Imagen supera los 512 KB");
-						return;
-					}
-					
-				} else {
-					fileDisplayArea1.innerHTML = "File not supported!";
-				}
-			});			
-
-	});
+ 
 
 };

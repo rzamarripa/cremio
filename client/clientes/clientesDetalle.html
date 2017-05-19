@@ -75,7 +75,7 @@
 											</li>
 											<li>
 												<p class="text-muted">
-													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{cd.objeto.profile.telefono}}</span>
+													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{cd.objeto.profile.celular}}</span>
 												</p>
 											</li>
 											<li>
@@ -109,14 +109,14 @@
 									<div class="col-sm-3">
 									<br/>
 										<div class="well padding-10">
-											<h5 class="margin-top-0"><i class="fa fa-file"></i> Documento:</h5>
+											<h5 class="margin-top-0"><i class="fa fa-file"></i> Documentos:</h5>
 											<div class="row">
 
 												<div class="col-lg-12">
 
 													<ul class="list-group no-margin">
-														<li class="list-group-item"  >
-															<a  ng-click="cd.mostrarModal()"> ver documento </a>
+														<li class="list-group-item"  ng-repeat="item in cd.objeto.profile.documentos">
+															<a  ng-click="cd.modalDoc(item.imagen)"> {{item.nombre}}</a>
 														</li>
 														
 													</ul>
@@ -198,7 +198,7 @@
 			        	<div class="row">
 						    	<div class="col-sm-3" > 					    
 							    	<label>Teléfono </label>
-							    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefono"  disabled="">
+							    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.particular"  disabled="">
 						    	</div>
 						    	<div class="col-sm-3" >					    
 							    	<label>Celular </label>
@@ -206,7 +206,7 @@
 						    	</div>
 						    	<div class="col-sm-3">					    
 							    	<label>Otro Teléfono</label>
-							    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="cd.objeto.profile.otroTelefono" disabled="" >
+							    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="cd.objeto.profile.telefonoAlternativo" disabled="" >
 						    	</div>	  
 						    	<div class="col-sm-3">					    
 							    	<label>Correo</label>
@@ -237,7 +237,7 @@
 						    	</div>
 						    	<div class="col-sm-3">
 										<label for="estadocivil">Estado Civil </label>
-										<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="cd.objeto.profile.estadoCivil" disabled="">
+										<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="cd.objeto.profile.estadoCivil.nombre" disabled="">
 									</div>
 										
 						    	<div class="col-sm-3">					    
@@ -247,13 +247,13 @@
 									
 									<div class="col-sm-3">
 										<label for="nacionalidad">Nacionalidad</label>
-										<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="cd.objeto.profile.nacionalidad" disabled="">
+										<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="cd.objeto.profile.nacionalidad.nombre" disabled="">
 									</div>			
 						    </div>
 						    <div class="row">
 							    <div class="col-sm-3">
 										<label for="ocupacion">Ocupación </label>
-										<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="cd.objeto.profile.ocupacion" disabled="">
+										<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="cd.objeto.profile.ocupacion.nombre" disabled="">
 									</div>		
 						    	<div class="col-sm-3">					    
 							    	<label>CURP</label>
@@ -294,25 +294,25 @@
 								    <div class="row">
 									    <div class="col-sm-3" >
 													<label >Pais </label>
-													<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="cd.objeto.profile.pais" disabled>
+													<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="cd.objeto.profile.pais.nombre" disabled>
 											</div>
 										  <div class="col-sm-3" >
 													<label for="seccion_id">Estado </label>
-													<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="cd.objeto.profile.estado" disabled>
+													<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="cd.objeto.profile.estado.nombre" disabled>
 											</div>	
 											<div class="col-sm-3" >
 													<label >Municipio </label>
-													<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="cd.objeto.profile.municipio" disabled>
+													<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="cd.objeto.profile.municipio.nombre" disabled>
 											</div>
 											<div class="col-sm-3" >
 													<label for="seccion_id">Ciudad </label>
-													<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="cd.objeto.profile.ciudad" disabled>
+													<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="cd.objeto.profile.ciudad.nombre" disabled>
 											</div>	
 								    </div>
 								    <div class="row">
 									    <div class="col-sm-3" >
 													<label for="seccion_id">Colonia </label>
-													<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="cd.objeto.profile.colonia" disabled>
+													<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="cd.objeto.profile.colonia.nombre" disabled>
 											</div>
 											<div class="col-sm-3">					    
 									    	<label>Tiempo Residencia</label>
@@ -409,13 +409,13 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="p in cd.referenciasPersonales">
-													<td>{{p.num}}</td>
-													<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}} </td>
-													<td>{{p.parentezco}}</td>
-													<td>{{p.direccion}}</td>
-													<td>{{p.telefono}}</td>
-													<td>{{p.tiempo}}</td>
+												<tr ng-repeat="p in cd.referencias">
+													<td ng-repeat-start="r in p.relaciones">{{r.num}}</td>
+													<td>{{p.nombreCompleto}} </td>
+													<td>{{r.parentezco}}</td>
+													<td>{{r.direccion}}</td>
+													<td>{{r.telefono}}</td>
+													<td ng-repeat-end>{{r.tiempo}}</td>
 												</tr>
 											</tbody>
 										</table>
@@ -452,10 +452,10 @@
 								    	</div>  				    	    
 								    	<div class="col-sm-6" >					    
 									    	<label>Colonia </label>
-									    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cd.objeto.profile.empresa.colonia" disabled="">
+									    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" disabled="">
 								    	</div>
 								    </div>
-								    <div class="row">
+								    <!-- <div class="row">
 									    <div class="col-sm-3" >					    
 									    	<label>Teléfono </label>
 									    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.empresa.telefono" disabled="">
@@ -482,23 +482,23 @@
 									    	<label>Jefe Inmediato </label>
 									    	<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cd.objeto.profile.empresa.jefeInmediato" disabled="">
 								    	</div>
-										</div>
+										</div> -->
 										<div class="row">
 											<div class="col-sm-3" >
 													<label >Pais </label>
-													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cd.objeto.profile.empresa.pais" disabled="">
+													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cd.empresas.pais.nombre" disabled="">
 											</div>
 										  <div class="col-sm-3" >
 													<label for="seccion_id">Estado </label>
-													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cd.objeto.profile.empresa.estado" disabled="">
+													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cd.empresas.estado.nombre"disabled="">
 											</div>	
 											<div class="col-sm-3" >
 													<label >Municipio </label>
-													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cd.objeto.profile.empresa.municipio" disabled="">
+													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cd.empresas.muncipio.nombre" disabled="">
 											</div>
 											<div class="col-sm-3" >
 													<label for="seccion_id">Ciudad </label>
-													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="cd.objeto.profile.empresa.ciudad" disabled="">
+													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="cd.empresas.ciudad.nombre" disabled="">
 											</div>	
 							    </div>
 				      </div>
@@ -523,6 +523,8 @@
 					<th class="text-center" width="15%">Adeudo Inicial</th>
 					<th class="text-center" width="20%">Saldo Actual</th>
 					<th class="text-center" width="10%">Acciones</th>
+					<th ng-show="cd.openModal"></th>
+				
 					
 				</tr>
 			</thead>
@@ -544,13 +546,13 @@
 <!-- modal -->
 <!-- (////////////////////////////////////////////////////////////////////////) -->
 
-<td ng-show="cd.mostrarModal">
-<div class="container">
 
-	<div class="modal fade" id="modalpagos"	data-backdrop="static" role="dialog">
-		<div class="modal-dialog">
-		 <div class="modal-dialog modal-lg">
-			<div class="modal-content">
+
+
+<td ng-show="cd.openModal" colspan="-1">
+<div id="modalpagos" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+	  <div class="modal-dialog modal-lg" role="document">
+	    <div class="modal-content">
 				<div class="modal-header">
 					<h4 class="modal-title">Pagos</h4>
 				</div>
@@ -591,9 +593,10 @@
 
 				 </div>
 			</div>
-		</div>
-	 </div>
-	 </div>
+	  </div>
+</div>
+
+
 	 </td>
 				</tr>
 			</tbody>
@@ -1042,33 +1045,12 @@
 	</div>
 </div>
 <!-- ////////////////////////////////////////////////////////////////////////////////////////// -->
- <div class="col-sm-3" >
-				
-						 <div class="container">
-			      <!-- Modal -->
-				  <div class="modal fade" id="modalDocumento" role="dialog">
-				    <div class="modal-dialog">
-			    <!-- Modal content-->
-				      <div class="modal-content">
-				        <div class="modal-header">
-				          <button type="button" class="close" data-dismiss="modal">&times;</button>
-				        </div>
-				        <div class="modal-body" >
-				        <div class="row">
-				           <div class="col-sm-offset-4 col-sm-4 text-center" >
-				           <div id="fileDisplayArea1" class="text-center" ></div>
-				            <img style="max-width:200px;" src="{{cd.objeto.profile.archivo[0].archivo}}" >
+<div id="modaldoc" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+	  <div class="modal-dialog modal-lg" role="document">
+	    <div id="imagenDiv" class="modal-content">
 
-				           </div>					          
-					        </div>
-				        </div>
-					        <div class="modal-footer">
-
-							</div>						
-				      </div>
-				    </div>
-				  </div>
-				 </div>								
+	    </div>
+	  </div>
 </div>
 
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   

@@ -660,8 +660,6 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 	    	
 	    	console.log(objeto,"objeto")
 	    	console.log(credito,"credito")
-	    	console.log(avales,"avales")
-			console.log(garantias,"garantias")
 
 			  Meteor.call('getCreditoReporte', objeto,credito,avales, function(error, response) {
 

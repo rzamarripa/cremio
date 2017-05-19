@@ -3,7 +3,7 @@ Meteor.methods({
 	console.log(objeto,"recordatori")
 		
 		
-		var fs = require('fs');
+		var fs = require('fs') ;
     var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		
@@ -156,8 +156,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
-	//	var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 		
 		
@@ -226,22 +226,37 @@ Meteor.methods({
 			console.log("esta es la referencia",referencia)
 			return referencia;
 	},
+	 getDocs: function (idReferencia) {
+			var referencia = Documentos.findOne(idReferencia);
+			console.log("esta es la referencia",referencia)
+			return referencia;
+	},
+	getEmpresas: function (idEmpresa) {
+			var empresa = Empresas.findOne(idEmpresa);
+			empresa.ciudad = Ciudades.findOne(empresa.ciudad_id);
+			empresa.municipio = Municipios.findOne(empresa.municipio_id);
+			empresa.estado = Estados.findOne(empresa.estado_id);
+			empresa.colonia = Colonias.findOne(empresa.colonia_id);
+			empresa.pais = Paises.findOne(empresa.pais_id);
+			console.log("esta es la empresa",empresa)
+			return empresa;
+	},
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  getFicha: function (objeto,referencia_id) {
-	//console.log(objeto,"ficha")
+  getFicha: function (objeto,referencia) {
+	console.log(referencia,"ficha")
 		
 		var fs = require('fs');
     var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
 		//var produccion = "/home/isde/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		//var produccion = "/home/cremio/archivos/";
 		
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
@@ -392,11 +407,11 @@ Meteor.methods({
 									 gastosFijos:           objeto.profile.gastosFijos,
 									 gastoEventuales:       objeto.profile.gastosEventuales,
 									 otrosIngresos:         objeto.otrosIngresos,
-									 //referencias: 			objeto.referencias,
+									 referencias: 			referencia,
 
 
 									 /////////////////// CONTACTO //////////////////////
-									 referencias:        objeto.referencias,
+									 
 									 telefonoOficina:      objeto.profile.telefonoOficina,
 
 
@@ -410,6 +425,8 @@ Meteor.methods({
 									//antiguedad:            antiguedad,
 									numeroEmpresa:         objeto.empresa.numero,
 									cpEmpresa:             objeto.empresa.codigoPostal,
+									paisEmpresa:           objeto.paisEmpresa,
+									municipioEmpresa:      objeto.municipioEmpresa,
 									//jefe:                  jefeEmpresa,
 									//antiguedadEmpresa:      antiguedadEmpresa,      
 
@@ -453,8 +470,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
-	//	var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"RECIBOS.docx", "binary");
@@ -500,13 +517,13 @@ Meteor.methods({
   },
 
     getCreditoReporte: function (objeto,credito,avales,garantias) {
-	console.log(objeto,"Credito")
+	
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
-	//	var produccion = "/home/cremio/archivos/";
+		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteCredito.docx", "binary");
@@ -525,16 +542,24 @@ Meteor.methods({
 		var fecha = new Date();
 		var f = fecha;
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	 
+	 	 	_.each(objeto,function(item){
+	 	 		console.log(item,"Credito")
+	 	 		item.fechaLimite = item.fechaLimite.getUTCDate()+'-'+(item.fechaLimite.getUTCMonth()+1)+'-'+item.fechaLimite.getUTCFullYear();
+	 	 		 if (item.fechaLimite.length < 2) item.fechaLimite = '0' + item.fechaLimite;
+             
+
+
+	 	 	});
 
 		
 		doc.setData({				planPagos: 	  objeto,
 									length:       objeto.length,
 									fecha:        fecha,
-									cliente:    credito.nombre,
-									avales:      avales,
-									garantias:   garantias,
-								
+									cliente:      credito.nombre,
+									periodo:      credito.periodoPago,
+									duracion:     credito.duracionMeses,
+									capital:      credito.capitalSolicitado
+									//tipoCredito:
 
 				  });
 								
