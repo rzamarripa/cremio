@@ -848,11 +848,9 @@ angular.module("creditoMio")
 				 console.log("else")
 			   }
 			   plan.saldoAnterior = parseFloat(saldoActual.toFixed(2))
-			   plan.saldoActualizado = parseFloat(saldoActual.toFixed(2) - plan.cargo.toFixed(2))
+			   plan.saldoActualizado = parseFloat((saldoActual - plan.cargo).toFixed(2))
 
 		 		   
-				
-
 				
 				console.log(saldoActual)
 
