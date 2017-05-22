@@ -18,16 +18,12 @@ angular.module("creditoMio")
 		return [{estatus: true}]
 	});
 	this.subscribe('ciudades',()=>{
-		return [{pais_id: this.getReactively('buscar.pais_id')? this.getReactively('buscar.pais_id'):""
-						,estado_id: this.getReactively('buscar.estado_id')? this.getReactively('buscar.estado_id'):""
-						,municipio_id: this.getReactively('buscar.municipio_id')? this.getReactively('buscar.municipio_id'):""
-		}]
+		return [{estatus:true}]
+		
 	});	 
 	this.helpers({
 	  ciudades : () => {
-		  return Ciudades.find({pais_id: this.getReactively('buscar.pais_id'),
-			  										estado_id: this.getReactively('buscar.estado_id'),
-			  										municipio_id: this.getReactively('buscar.municipio_id')});
+		  return Ciudades.find().fetch();
 	  },
 		paises : () => {
 		  return Paises.find();
