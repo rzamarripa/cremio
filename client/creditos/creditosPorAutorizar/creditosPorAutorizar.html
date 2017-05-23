@@ -36,3 +36,38 @@
     </table>
   </div>
 </div>
+
+
+<!-- /////////////////////////MODAL NOTA CLIENTE ////////////////////////// -->
+<div class="container">
+<!-- Modal -->
+	<div class="modal fade" id="modalCliente"	data-backdrop="static" role="dialog">
+		<div class="modal-dialog">
+	<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+			
+					<h4 class="modal-title">Autorización de créditos</h4>
+				</div>
+			
+					<div class="modal-footer">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="col-sm-12">
+									<label class="pull-left">Motivo del rechazo:</label>
+										<textarea type="text" class="form-control"	ng-model="cd.nota.nombre" >
+									</div>
+									<div class="col-sm-12 "><br/>
+										<a	class="btn btn-success" ng-click="cpa.rechazar(cd.nota)">Guardar</a>
+									</div>
+							</div>								 
+						</div>
+			  </div>
+			  <div class="modal-footer">
+
+							  
+				          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				        </div>
+		</div>
+	</div>
+</div>

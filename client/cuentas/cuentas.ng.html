@@ -48,6 +48,7 @@
 				<tr>
 				<th width="5%"><div class="text-center">No.</div></th>
 					<th width="30%"><div class="text-center">Nombre</div></th>
+					<th width="30%"><div class="text-center">Tipo de Ingreso</div></th>
 					<th width="30%">
 						<div class="text-center">
 							Estatus
@@ -64,6 +65,7 @@
 				<tr ng-repeat="objeto in ctactrl.cuentas">
 				<td>{{$index + 1}}</td>
 					<td>{{objeto.nombre}}</td>
+					<td>{{ctactrl.getTipoIngreso(objeto.tipoIngreso_id)}} </td>
 					<td>
 						<div class="text-center">
 							<span ng-if="objeto.estatus" class="label label-success">
