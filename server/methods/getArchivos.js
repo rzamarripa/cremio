@@ -231,33 +231,33 @@ Meteor.methods({
 			console.log("esta es la referencia",referencia)
 			return referencia;
 	},
-	getEmpresas: function (idEmpresa) {
-			//console.log('hi');
-			Meteor.apply('findSomeShit',['Empresas', {_id: idEmpresa}, true], function(err, empresa){
-				Meteor.call('findSomeShit',['Ciudades', {_id: empresa.empresa_id}, true], function(err, ciudad){
-					Meteor.call('findSomeShit',['Municipios', {_id: empresa.municipio_id}, true], function(err, municipio){
-						Meteor.call('findSomeShit',['Estados', {_id: empresa.estado_id}, true], function(err, estado){
-							Meteor.call('findSomeShit',['Paises', {_id: empresa.pais_id}, true], function(err, pais){
-								Meteor.call('findSomeShit',['Colonias', {_id: empresa.colonia_id}, true], function(err, colonia){
-									empresa.ciudad = ciudad;
-									empresa.municipio = municipio;
-									empresa.estado = estado;
-									empresa.pais = pais;
-									empresa.colonia = colonia;
-									res['return'] = empresa;
-								});
-							});
-						});
-					});
-				});
-			});
-			// empresa.municipio = Municipios.findOne(empresa.municipio_id);
-			// empresa.estado = Estados.findOne(empresa.estado_id);
-			// empresa.colonia = Colonias.findOne(empresa.colonia_id);
-			// empresa.pais = Paises.findOne(empresa.pais_id);
-			// console.log("esta es la empresa",empresa)
-			return res.wait();
-	},
+	// getEmpresas: function (idEmpresa) {
+	// 		//console.log('hi');
+	// 		Meteor.apply('findSomeShit',['Empresas', {_id: idEmpresa}, true], function(err, empresa){
+	// 			Meteor.call('findSomeShit',['Ciudades', {_id: empresa.empresa_id}, true], function(err, ciudad){
+	// 				Meteor.call('findSomeShit',['Municipios', {_id: empresa.municipio_id}, true], function(err, municipio){
+	// 					Meteor.call('findSomeShit',['Estados', {_id: empresa.estado_id}, true], function(err, estado){
+	// 						Meteor.call('findSomeShit',['Paises', {_id: empresa.pais_id}, true], function(err, pais){
+	// 							Meteor.call('findSomeShit',['Colonias', {_id: empresa.colonia_id}, true], function(err, colonia){
+	// 								empresa.ciudad = ciudad;
+	// 								empresa.municipio = municipio;
+	// 								empresa.estado = estado;
+	// 								empresa.pais = pais;
+	// 								empresa.colonia = colonia;
+	// 								res['return'] = empresa;
+	// 							});
+	// 						});
+	// 					});
+	// 				});
+	// 			});
+	// 		});
+	// 		// empresa.municipio = Municipios.findOne(empresa.municipio_id);
+	// 		// empresa.estado = Estados.findOne(empresa.estado_id);
+	// 		// empresa.colonia = Colonias.findOne(empresa.colonia_id);
+	// 		// empresa.pais = Paises.findOne(empresa.pais_id);
+	// 		// console.log("esta es la empresa",empresa)
+	// 		return res.wait();
+	// },
 
 	findSomeShit: function (collection, find, findOne){
 		return findOne ? eval(collection).findOne(find) : eval(collection).find(find);
