@@ -597,6 +597,58 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
+   imprimirReporteCreditos: function (objeto) {
+	
+		console.log(objeto,"creditos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+				 
+				var content = fs
+    	   .readFileSync(produccion+"RECIBOS.docx", "binary");
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			return "";
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+		var fecha = new Date();
+		var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    
+	 
+
+	    console.log(objeto.planPagos);
+		
+		doc.setData({				items: 		objeto,
+									fecha:     fecha,
+									
+
+				  });
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"RECIBOSSalida.docx",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"RECIBOSSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+  },
   	
 	
 });

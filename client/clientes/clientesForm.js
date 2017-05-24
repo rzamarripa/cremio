@@ -288,7 +288,7 @@ this.tomarFoto = function(objeto){
 			objeto.profile.estatus = true;
 			//rc.documentos
 			objeto.profile.documentos = rc.documents
-			objeto.profile.foto = fotillo;
+			objeto.profile.foto = rc.pic;
 			objeto.profile.usuarioInserto = Meteor.userId();
 			objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
 			objeto.profile.fechaCreacion = new Date();
