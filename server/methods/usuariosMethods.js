@@ -124,7 +124,7 @@ Meteor.methods({
 		Roles.addUsersToRoles(usuario_id, rol);
 		
 	},
-	updateGerenteSucursal: function (usuario, rol) {		
+	updateUsuario: function (usuario, rol) {		
 	  var user = Meteor.users.findOne({"username" : usuario.username});
 	  Meteor.users.update({_id: user._id}, {$set:{
 			username: usuario.username,

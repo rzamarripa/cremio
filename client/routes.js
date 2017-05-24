@@ -455,7 +455,22 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			 }]
 			}
 		})
-
+		.state('root.editarVerificador', {
+			url: '/editarVerificador/:objeto_id',
+			templateUrl: 'client/verificadores/verificadoresForm.ng.html',
+			controller: 'VerificadoresFormCtrl as ver',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 
+				 });
+			 }]
+			}
+		})
 		.state('root.reportes', {
 			url: '/reportes',
 			templateUrl: 'client/reportes/reportes.ng.html',

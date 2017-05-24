@@ -163,7 +163,7 @@ angular.module("creditoMio")
 	this.fechaPago = function(diaSeleccionado, periodoPago)
 	{		
 			
-			console.log(periodoPago);
+			//console.log(periodoPago);
 			
 			var date = moment();
 			var diaActual = date.day();		
@@ -286,14 +286,11 @@ angular.module("creditoMio")
 		else
 				credito.garantias = angular.copy(this.garantiasGeneral);
 				
-				
-		//Cambie el metodo		
-		Meteor.apply('generarCreditoPeticion', [this.cliente, credito], function(error, result){
+
+		Meteor.apply('generarCredito', [credito, $stateParams.credito_id], function(error, result){
 			if(result == "hecho"){
-				toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');
-				rc.planPagos = [];
 				this.avales = [];
-				$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+				this.verDiaPago = false;
 			}
 			$scope.$apply();
 		});

@@ -38,6 +38,7 @@ angular.module("creditoMio")
 		return [{estatus: true}]
 	});
 	
+/*
 	this.subscribe('estados',()=>{
 		return [{pais_id: this.getReactively("pais_id"), estatus: true}]		
 	});
@@ -54,6 +55,58 @@ angular.module("creditoMio")
 	this.subscribe('colonias',()=>{
 		return [{ciudad_id: this.getReactively("ciudad_id"), estatus: true}]
 	});
+*/
+	this.subscribe('estados',()=>{
+
+		if (this.getReactively("pais_id") !=  "")
+		{
+				console.log("Cambio pais:", this.pais_id);		
+				return [{pais_id: this.getReactively("pais_id"), estatus: true}];
+				
+		}		
+
+		else 
+				return [{estatus: true}];
+
+	});
+
+
+	this.subscribe('municipios',()=>{
+		if (this.getReactively("estado_id") !=  "")
+		{	
+				console.log("Cambio Estado");
+				return [{estado_id: this.getReactively("estado_id"), estatus: true}];
+				
+		}		
+
+		else 
+				return [{estatus: true}];	
+
+	});
+
+	
+
+	this.subscribe('ciudades',()=>{
+    if (this.getReactively("municipio_id") !=  "")
+    {
+				console.log("Cambio Muni");
+				return [{municipio_id: this.getReactively("municipio_id"), estatus: true}];
+				
+		}		
+
+		else 
+				return [{estatus: true}];
+
+	});
+
+	this.subscribe('colonias',()=>{
+		if (this.getReactively("ciudad_id") !=  "")
+				return [{ciudad_id: this.getReactively("ciudad_id"), estatus: true}];
+
+		else 
+				return [{estatus: true}];
+
+	});	
 	
 	if($stateParams.objeto_id != undefined){
 		this.action = false;
@@ -146,12 +199,6 @@ angular.module("creditoMio")
 		
 	};
 	
-	this.actualizar = function(objeto,form){
-
-		console.log(objeto);
-
-	};
-	
 	this.guardarEmpresa = function(empresa, objeto,form)
 	{
 			if(form.$invalid){
@@ -185,10 +232,34 @@ angular.module("creditoMio")
 
 	this.actualizar = function(objeto,form)
 	{
-		if(form.$invalid){
-			toastr.error('Error al actualizar los datos.');
-			return;
-		}
+			if(form.$invalid){
+				toastr.error('Error al actualizar los datos.');
+				return;
+			}
+			var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
+			var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
+			var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
+			objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
+				
+			if (rc.pic != ""){
+				objeto.profile.foto = rc.pic
+			}
+			else{
+				objeto.profile.foto = rc.objeto.profile.foto
+			}
+	
+		
+			delete objeto.profile.repeatPassword;
+			Meteor.call('updateUsuario', objeto, "Cajero");
+			toastr.success('Actualizado correctamente.');
+			//$('.collapse').collapse('hide');
+			this.nuevo = true;
+			form.$setPristine();
+			form.$setUntouched();
+			$state.go('root.cajerosLista');
+			
+			
+			
 			
 		
 	};

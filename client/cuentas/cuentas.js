@@ -87,7 +87,9 @@ angular.module("creditoMio")
 			form.$setUntouched();
 		});
 	};
-
+	
+	
+	
 	this.cambiarEstatus = function(id)
 	{
 		var objeto = Cuentas.findOne({_id:id});
@@ -98,4 +100,15 @@ angular.module("creditoMio")
 		
 		Cuentas.update({_id: id},{$set :	{estatus : objeto.estatus}});
 	};	
+	
+	this.getTipoIngreso = function(tipoIngreso_id)
+	{		
+			var tipoIngreso = TiposIngreso.findOne({_id:tipoIngreso_id});
+
+			if (tipoIngreso)
+				 return tipoIngreso.nombre;
+				 
+	};
+
+	
 };

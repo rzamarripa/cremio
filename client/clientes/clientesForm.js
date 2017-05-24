@@ -315,9 +315,6 @@ this.tomarFoto = function(objeto){
 	};
 	
 	this.actualizarForm = function(objeto,form){
-		console.log(objeto)
-
-
 		if(form.$invalid){
 			toastr.error('Error al actualizar los datos.');
 			return;
@@ -344,8 +341,6 @@ this.tomarFoto = function(objeto){
 				objeto.profile.foto = rc.objeto.profile.foto
 			}
 
-			
-
 	
 		delete objeto.profile.repeatPassword;
 		Meteor.call('updateGerenteVenta', objeto, this.referenciasPersonales, "Cliente");
@@ -355,7 +350,6 @@ this.tomarFoto = function(objeto){
 		form.$setPristine();
 		form.$setUntouched();
 		$state.go('root.clientesLista');
-		//console.log(objeto,"Final");
 
 	};
 	
