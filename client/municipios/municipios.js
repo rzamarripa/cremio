@@ -10,9 +10,7 @@ angular.module("creditoMio")
   window.rc = rc;
   
 	this.subscribe('municipios',()=>{
-		return [{pais_id: this.getReactively('buscar.pais_id')? this.getReactively('buscar.pais_id'):""
-						,estado_id: this.getReactively('buscar.estado_id')? this.getReactively('buscar.estado_id'):""
-					 }]
+		return [{estatus:true}]
 	});
 	
 	this.subscribe('estados',()=>{
@@ -25,8 +23,7 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  municipios : () => {
-		  return Municipios.find({pais_id: this.getReactively('buscar.pais_id'),
-			  					estado_id: this.getReactively('buscar.estado_id')});
+		  return Municipios.find({});
 	  },
 		paises : () => {
 		  return Paises.find();

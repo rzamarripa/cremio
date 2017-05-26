@@ -49,13 +49,13 @@
 												<p class="text-muted">
 													<i class="fa fa-key fa-lg"></i>&nbsp;&nbsp;
 													<span class="txt-color-darken">
-														<strong>{{ge.cliente.profile.username}}</strong>
+														<strong>{{ge.cliente.username}}</strong>
 													</span>
 												</p>
 											</li>
 											<li>
 												<p class="text-muted">
-													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ge.cliente.profile.telefono}}</span>
+													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ge.cliente.profile.particular}}</span>
 												</p>
 											</li>
 											<li>
@@ -424,6 +424,7 @@
 					<th class="text-center" width="10%">Interes</th>
 					<th class="text-center" width="10%">Seguro</th>
 					<th class="text-center" width="10%">IVA</th>
+					<th class="text-center" width="10%">Seguro</th>
 					<th class="text-center" width="10%">Importe total</th>
 				</tr>
 			</thead>
@@ -436,6 +437,7 @@
 					<td class="text-right">{{pago.interes | currency}}</td>
 					<td class="text-right">{{pago.seguro | currency}}</td>
 					<td class="text-right">{{pago.iva | currency}}</td>
+					<td class="text-right">{{pago.seguro | currency}}</td>
 					<td class="text-right">{{pago.importeRegular | currency}}</td>
 				</tr>
 			</tbody>

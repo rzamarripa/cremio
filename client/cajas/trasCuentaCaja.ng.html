@@ -11,14 +11,14 @@
 			  	<div class="well">	    
 				    <div class="row">
 					    	<div class="col-sm-4" valida>
-							    <label>Caja de Origen*</label>
+							    <label>Cuenta de Origen*</label>
 						    	<select name="origen" class="form-control select2" placeholder="Seleccione" ng-model="tincuca.objeto.origen_id" required>
 									<option ng-repeat="caja in tincuca.cuentas" value="{{caja._id}}">{{caja.nombre}}</option>
 								</select>
 						    	
 						   </div>
 						   <div class="col-sm-4" valida>
-							    <label>Cuenta de Destino*</label>
+							    <label>Caja de Destino*</label>
 						    	<select name="destino" class="form-control select2" placeholder="Seleccione" ng-model="tincuca.objeto.destino_id" required>
 									<option ng-repeat="cuenta in tincuca.cajas" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
 								</select>
