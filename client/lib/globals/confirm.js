@@ -11,7 +11,9 @@ window.customConfirm  = function(message, buttons, resultCallback){
   			$( "#nelson").html(buttons.no);
   		}
   	}
-  }
+  }else{
+      resultCallback = buttons;
+    }
 
   $( "#simio" ).bind('click', function() {
   	$('#confirm').modal('toggle');
