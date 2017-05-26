@@ -1,84 +1,142 @@
 angular.module("creditoMio")
-.controller("CajasActivasCtrl", CajasActivasCtrl);
- function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr){
- 	
- 	let rc = $reactive(this).attach($scope);
-	
-	this.action = true;
-	this.nuevo = true;	 
-	this.objeto = {}; 
-	this.buscar = {};
-	
+  .controller("CajasActivasCtrl", CajasActivasCtrl);
 
-	this.subscribe('cajas',()=>{
-		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", estadoCaja:"Abierta"}]
-	});
+function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
 
-	this.subscribe('tiposIngreso',()=>{
-		return [{
-			estatus : true
-		}]
-	});
-	this.subscribe('cuentas',()=>{
-		return [{
-			estatus : 1
-		}]
-	});
-	this.subscribe('allCajeros',()=>{
-		return [{
-		}]
-	});
+  let rc = $reactive(this).attach($scope);
+  window.rc = rc;
+  this.action = true;
+  this.nuevo = true;
+  this.objeto = {};
+  this.buscar = {};
+  this.caja = {_id: 0};
 
+  this.subscribe('cajas', () => {
+    return [{ sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", estadoCaja: "Abierta" }]
+  });
+  this.subscribe('tiposIngreso', () => {
+    return [{}]
+  });
+  this.subscribe('allCajeros', () => {
+    return [{}]
+  });
+  this.subscribe('cuentas', () => {
+    return [{}]
+  });
+  this.subscribe('pagos', () => {
+    return [{ caja_id: this.getReactively('caja._id'), fechaPago: { $gte: this.getReactively('caja.updatedAt')} }]
+  });
+  this.subscribe('movimientosCaja', () => {
+    return [{
+      $and: [{ caja_id: this.getReactively('caja._id') },
+      			 { createdAt: { $gte: this.getReactively('caja.updatedAt')} }, {
+        $or: [
+          { estatus: 1 },
+          { estatus: 2 }
+        ]
+      }]
+    }]
+  });
 
+  this.helpers({
+    cajas: () => {
+      return Cajas.find();
+    },
+    pagos: () => {
+      var pagos = Pagos.find().fetch();
+      if (pagos.length) {
+        _.each(pagos, function(pago) {
+          pago.tipoIngreso = rc.tiposIngreso[pago.tipoIngreso_id].nombre;
+        });
+      }
+      return pagos;
+    },
+    tiposIngreso: () => {
+      var obj = {};
+      var tiposIngreso = TiposIngreso.find().fetch();
+      _.each(tiposIngreso, function(ti) {
+        obj[ti._id] = ti;
+      });
+      return obj;
+    },
+    cajeros: () => {
+      return Meteor.users.find({ roles: ["Cajero"] });
+    },
+    movimientosCaja: () => {
+      var ret = [];
+      if(rc.getReactively('caja._id')){
+	      var movimientos = MovimientosCajas.find({caja_id:rc.caja._id}).fetch();
+	      var cj = Cajas.findOne(rc.caja._id);
+	      _.each(movimientos, function(mov) {
+	        var d = {};
+	        d.createdAt = mov.createdAt;
+	        d.tipoMovimiento = mov.tipoMovimiento;
+	        d.origen = mov.origen;
+	        c = Cuentas.findOne(cj.cuenta[mov.cuenta_id].cuenta_id);
+	        d.cuenta = c.nombre;
+	        d.monto = mov.monto;
+	        d.pago = Pagos.findOne(mov.origen_id);
+	        ret.push(d)
+	      });
+    	}
+      return ret
+    }
+  });
 
-	this.helpers({
-		cajas : () => {
-			return Cajas.find();
-		},
-		tiposIngreso : () => {
-			return TiposIngreso.find()
-		},
-		cajeros : () =>{
-			return Meteor.users.find({roles : ["Cajero"]});
-		},
-		cuentas : () =>{
-			var cuentas  = Cuentas.find({}).fetch();
-			var retorno = {};
-			_.each(cuentas,function(cuenta){
-				if(!retorno[cuenta.tipoIngreso_id])
-					retorno[cuenta.tipoIngreso_id]=[]
-				retorno[cuenta.tipoIngreso_id].push(cuenta);
-			})
-		
-			return retorno;
-		}
+  this.getCajero = (objeto) => {
+    c = Meteor.users.findOne(objeto.usuario_id)
+    if (c && c.profile && c.profile.nombreCompleto)
+      return c.profile.nombreCompleto
+    return ""
+  }
 
-	});
+  this.verCaja = function(caja) {
+  	rc.caja = caja;
+    $('#cajaActiva').modal('show');
+  }
 
-	this.getMontos=(objeto)=>{
-		var r = '<table class="table table-bordered"> <tbody>';
-		for(i in objeto.cuenta){
-			r+="<tr>"
-			try{
-				c=Cuentas.findOne(objeto.cuenta[i].cuenta_id)
-				
-				r+="<td>"+c.nombre+"</td>";
-				r+='<td class="text-right">'+ ((objeto.cuenta[i].saldo+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"))+"</td>";
-			}catch(e){
+  this.cancelarPago = function(pago) {
+  	customConfirm('Estás seguro de cancelar el pago '+pago.folioPago+'?', function(){
+	    _.each(pago.planPagos, function(plan) {
+	      PlanPagos.update(plan.planPago_id, { $set: { estatus: 0 }, $inc: { importeRegular: plan.totalPago, pago: -plan.totalPago } });
+	    });
+	    var movimiento_id = MovimientosCajas.insert({
+	    	tipoMovimiento : "Cancelación",
+				origen : "Cancelación de pago",
+				origen_id : pago._id,
+				monto : pago.totalPago,
+				cuenta_id : pago.tipoIngreso_id,
+				caja_id : pago.caja_id,
+				sucursal_id : pago.sucursalPago_id,
+				createdAt : new Date(),
+				createdBy : Meteor.userId(),
+				updated : false,
+				estatus : 1
+	    });
+	    Pagos.update(pago._id, { $set: { estatus: 0, cancelacion_movimientoCaja_id: movimiento_id } });
+	  })
+  }
 
-			}
-			r+="</tr>"
-		}
-		r+="</tbody></table>"
-		return r;
-	}
-	this.getCajero = (objeto) => {
-		c=Meteor.users.findOne(objeto.usuario_id)
-		if(c && c.profile && c.profile.nombreCompleto)
-			return c.profile.nombreCompleto
-		return ""
-	}
+  // Meteor.call("movimientosCaja",$stateParams,function(error,result){
+  // 	rc.movimientosCaja=result 
+  // 	$scope.$apply()
+  // });
 
-	
-	
+  // this.getMontos=(objeto)=>{
+  // 	var r = '<table class="table table-bordered"> <tbody>';
+  // 	for(i in objeto.cuenta){
+  // 		r+="<tr>"
+  // 		try{
+  // 			c=Cuentas.findOne(objeto.cuenta[i].cuenta_id)
+
+  // 			r+="<td>"+c.nombre+"</td>";
+  // 			r+='<td class="text-right">'+ ((objeto.cuenta[i].saldo+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"))+"</td>";
+  // 		}catch(e){
+
+  // 		}
+  // 		r+="</tr>"
+  // 	}
+  // 	r+="</tbody></table>"
+  // 	return r;
+  // }
 };
