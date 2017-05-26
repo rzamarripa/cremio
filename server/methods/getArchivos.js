@@ -536,14 +536,15 @@ Meteor.methods({
 		
   },
 
-    getCreditoReporte: function (objeto,credito,avales,garantias) {
+    getCreditoReporte: function (objeto,credito,avales,total) {
+    	console.log(total,"total")
 	
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";
+		//var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteCredito.docx", "binary");
@@ -563,7 +564,7 @@ Meteor.methods({
 		var f = fecha;
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	 	 	_.each(objeto,function(item){
-	 	 		console.log(item,"Credito")
+	 	 		//console.log(item,"Credito")
 	 	 		item.fechaLimite = item.fechaLimite.getUTCDate()+'-'+(item.fechaLimite.getUTCMonth()+1)+'-'+item.fechaLimite.getUTCFullYear();
 	 	 		 if (item.fechaLimite.length < 2) item.fechaLimite = '0' + item.fechaLimite;
              
@@ -578,7 +579,8 @@ Meteor.methods({
 									cliente:      credito.nombre,
 									periodo:      credito.periodoPago,
 									duracion:     credito.duracionMeses,
-									capital:      credito.capitalSolicitado
+									capital:      credito.capitalSolicitado,
+									total:        total.sumatoria,
 									//tipoCredito:
 
 				  });
