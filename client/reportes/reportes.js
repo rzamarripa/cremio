@@ -485,134 +485,6 @@ angular.module("creditoMio")
 	};
 
 
-
-	this.downloadCartaUrgente = function(objeto) 
-
-  {
-	  	
-		console.log("entro:", objeto);
-		objeto.credito.saldoActualizado = rc.historialCredito.saldo
-		objeto.credito.avales = rc.avales;
-		objeto.credito.pagosVencidos = rc.pagosVencidos;
-
-
-		Meteor.call('getcartaUrgente', objeto, function(error, response) {
-		   if(error)
-		   {
-		    console.log('ERROR :', error);
-		    return;
-		   }
-		   else
-		   {
-			 				function b64toBlob(b64Data, contentType, sliceSize) {
-								  contentType = contentType || '';
-								  sliceSize = sliceSize || 512;
-								
-								  var byteCharacters = atob(b64Data);
-								  var byteArrays = [];
-								
-								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-								    var byteNumbers = new Array(slice.length);
-								    for (var i = 0; i < slice.length; i++) {
-								      byteNumbers[i] = slice.charCodeAt(i);
-								    }
-								
-								    var byteArray = new Uint8Array(byteNumbers);
-								
-								    byteArrays.push(byteArray);
-								  }
-								    
-								  var blob = new Blob(byteArrays, {type: contentType});
-								  return blob;
-							}
-							
-							var blob = b64toBlob(response, "application/docx");
-						  var url = window.URL.createObjectURL(blob);
-						  
-						  //console.log(url);
-						  var dlnk = document.getElementById('dwnldLnk');
-
-					    dlnk.download = "URGENTE.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
-  
-		   }
-		});
-
-		
-	};
-
-
-
-
-	this.downloadCartaCertificado= function(objeto) 
-
-  {
-	  	
-		console.log("entro:", objeto);
-		objeto.credito.saldoActualizado = rc.historialCredito.saldo
-		objeto.credito.avales = rc.avales;
-
-		 
-		//console.log("checando:", objeto);
-
-		Meteor.call('getcartaCertificado', objeto, function(error, response) {
-
-
-
-		   if(error)
-		   {
-		    console.log('ERROR :', error);
-		    return;
-		   }
-		   else
-		   {
-			 				function b64toBlob(b64Data, contentType, sliceSize) {
-								  contentType = contentType || '';
-								  sliceSize = sliceSize || 512;
-								
-								  var byteCharacters = atob(b64Data);
-								  var byteArrays = [];
-								
-								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-								    var byteNumbers = new Array(slice.length);
-								    for (var i = 0; i < slice.length; i++) {
-								      byteNumbers[i] = slice.charCodeAt(i);
-								    }
-								
-								    var byteArray = new Uint8Array(byteNumbers);
-								
-								    byteArrays.push(byteArray);
-								  }
-								    
-								  var blob = new Blob(byteArrays, {type: contentType});
-								  return blob;
-							}
-							
-							var blob = b64toBlob(response, "application/docx");
-						  var url = window.URL.createObjectURL(blob);
-						  
-						  //console.log(url);
-						  var dlnk = document.getElementById('dwnldLnk');
-
-					    dlnk.download = "certificacionPatrimonial.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
-
-  
-		   }
-		});
-
-		
-	};
-
-
 	this.mostrarDiarioCobranza = function(){
 		this.diarioCobranza = true
 		this.movimientoCuenta = false
@@ -628,7 +500,68 @@ angular.module("creditoMio")
 		this.movimientoCuenta = false
 		this.diarioCreditos = true
 	}
-	this.imprimirReporte = function(){
+	this.imprimirReporteCobranza = function(objeto){
+		_.each(objeto,function(item){
+			var fecha = ""
+	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
+	    	item.credito = _.toArray({credito:item.credito});
+	    	
+	    	//moment(item.fechaPago).format("DD-MM-YYYY").toDate()
+
+	    });
+	    console.log("objeto",objeto)
+
+		Meteor.call('ReporteCobranza', objeto, function(error, response) {
+
+
+
+
+
+		   if(error)
+		   {
+		    console.log('ERROR :', error);
+		    return;
+		   }
+		   else
+		   {
+			 				function b64toBlob(b64Data, contentType, sliceSize) {
+								  contentType = contentType || '';
+								  sliceSize = sliceSize || 512;
+								
+								  var byteCharacters = atob(b64Data);
+								  var byteArrays = [];
+								
+								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+								    var slice = byteCharacters.slice(offset, offset + sliceSize);
+								
+								    var byteNumbers = new Array(slice.length);
+								    for (var i = 0; i < slice.length; i++) {
+								      byteNumbers[i] = slice.charCodeAt(i);
+								    }
+								
+								    var byteArray = new Uint8Array(byteNumbers);
+								
+								    byteArrays.push(byteArray);
+								  }
+								    
+								  var blob = new Blob(byteArrays, {type: contentType});
+								  return blob;
+							}
+							
+							var blob = b64toBlob(response, "application/docx");
+						  var url = window.URL.createObjectURL(blob);
+						  
+						  //console.log(url);
+						  var dlnk = document.getElementById('dwnldLnk');
+
+					    dlnk.download = "reporteDiarioCobranza.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+
+  
+		   }
+		});
 		
 	}
 

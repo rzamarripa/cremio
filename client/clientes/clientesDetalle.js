@@ -16,7 +16,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.notaCobranza = {}
 	this.masInfo = true;
 	this.masInfoCredito = true;
-	this.creditoAc = false;
+	this.creditoAc = true;
 	this.solicitudesCre = true;
 	this.notasCre = true;
 	rc.cancelacion = {};
@@ -26,6 +26,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.imagenes = []
 	rc.openModal = false
 	rc.empresa = {}
+	rc.creActivos =false;
 
 	
 	this.subscribe("ocupaciones",()=>{
@@ -489,18 +490,39 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.masInformacion = function(){
 		this.masInfo = !this.masInfo;
+		this.solicitudesCre = false;
+		this.creditoAc = false;
+		this.notasCre=false;
+		this.masInfoCredito = false;
 	}
 	this.creditosActivos = function(){
 		this.creditoAc = !this.creditoAc;
+		this.solicitudesCre = false;
+		this.masInfo = false;
+		this.notasCre=false;
+		this.masInfoCredito = false;
 	}
 	this.solicitudesCreditos = function(){
 		this.solicitudesCre= !this.solicitudesCre;
+		this.creditoAc = false;
+		this.masInfo = false;
+		this.notasCre=false;
+		this.masInfoCredito = false;
 	}
 	this.notasCreditos = function(){
 		this.notasCre= !this.notasCre;
+		this.creditoAc = false;
+		this.solicitudesCre = false;
+		this.masInfo = false;
+		this.masInfoCredito = false;
 	}
 	this.masInformacionCrdito = function(){
 		this.masInfoCredito = !this.masInfoCredito;
+		this.creditoAc = false;
+		this.solicitudesCre = false;
+		this.masInfo = false;
+		this.notasCre=false;
+
 	}
 	this.getNombreTipoNotaCredito = function (tipo_id) {
 		var tipo = TiposNotasCredito.findOne(tipo_id);
