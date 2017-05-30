@@ -12,6 +12,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 			return [{requiereVerificacion : true , estatus: 0}]
 	});
 		
+		
   this.helpers({
 	  creditos : () => {
 		  return Creditos.find();
@@ -34,8 +35,37 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 										$scope.$apply();
 							 }
 						});
+						
+						Meteor.call('getVerificacion', credito.cliente_id, function(error, result) {
+						   if(error)
+						   {
+							    console.log('ERROR :', error);
+							    return;
+						   }
+						   if(result)
+						   {	
+								 		cliente = result;
+										credito.nombreCliente = cliente.nombreCompleto;
+										$scope.$apply();
+							 }
+						});
+						
+						
+						
 				})
 			}
 	  }
   });
+  
+  
+  this.finalizarVerificacion = function(credito_id, tipo)
+	{
+
+			Creditos.update({_id:credito_id}, {$set: {estatus: 1, verificacionEstatus: tipo}});
+			
+	};
+  
+  
+  
+  
 };

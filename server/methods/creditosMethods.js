@@ -41,38 +41,69 @@ Meteor.methods({
 		
 		//console.log(credito.avales);
 		
+/*
 		_.each(credito.avales, function(aval){
 			if (!aval.persona_id){	  	
 					aval.relaciones = [];
-					aval.relaciones.push({credito: c.folio, 
-															  tipoPersona: "Aval", 
-															  estatus: 0});
+					
+					aval.relaciones.push({credito						: credito.folio, 
+																cliente_id 				: cliente._id,
+																estadoCivil				:	aval.estadoCivil,
+																ocupacion					: aval.ocupacion,
+																direccion					:	aval.direccion, 
+																empresa						: aval.empresa, 
+																puesto						: aval.puesto, 
+																antiguedad				: aval.antiguedad, 
+																direccionEmpresa	: aval.direccionEmpresa, 
+																parentezco				: aval.parentezco, 
+																tiempoConocerlo		:	aval.tiempoConocerlo, 
+															  tipoPersona				: "Aval", 
+															  estatus						: 0});
 															  
 					aval.nombreCompleto = aval.nombre + " " + aval.apellidoPaterno + " " + aval.apellidoMaterno;
-					Personas.insert(aval, function(error, result){
-						if (result){
-							c.avales_ids.push(result);
-						}		  		
+					
+					var per = {};
+					per.nombreCompleto = aval.nombreCompleto;
+					per.nombre = aval.nombre;
+					per.apellidoPaterno = aval.apellidoPaterno;
+					per.apellidoMaterno = aval.apellidoMaterno;
+					
+					per.relaciones = [];
+					per.relaciones = aval.relaciones;
+					
+					Personas.insert(per, function(error, result){
+							if (result){
+								c.avales_ids.push(result);
+							}		  		
 					});
 			}
 			else{
 					var p = Personas.findOne({_id:aval.persona_id});
-					p.relaciones.push({credito: c.folio, tipoPersona: "Aval", estatus: 0});
+					
+					p.relaciones.push({		credito						: credito.folio, 
+																cliente_id 				: cliente._id,
+																estadoCivil				:	aval.estadoCivil,
+																ocupacion					: aval.ocupacion,
+																direccion					:	aval.direccion, 
+																empresa						: aval.empresa, 
+																puesto						: aval.puesto, 
+																antiguedad				: aval.antiguedad, 
+																direccionEmpresa	: aval.direccionEmpresa, 
+																parentezco				: aval.parentezco, 
+																tiempoConocerlo		:	aval.tiempoConocerlo, 
+															  tipoPersona				: "Aval", 
+																  estatus						: 0});
+															  
 					Personas.update({_id: aval.persona_id},{$set:p});
 					c.avales_ids.push(aval.persona_id);
 			}
 		});
+*/
 
 		//delete credito['avales'];
 	  	
 		Sucursales.update({_id : sucursal._id}, { $set : { folio : c.folio}});
-		
-		
-/*
-		c.fechaSolicito = credito.fechaSolicito;
-		c.fechaPrimerAbono = credito.primerAbono;
-*/
-		
+				
 		var idTemp = c._id;
 		delete c._id;		
 		Creditos.update({_id:idTemp},{$set : c});
@@ -107,20 +138,52 @@ Meteor.methods({
 		_.each(credito.avales, function(aval){
 			if (!aval.persona_id){	  	
 					aval.relaciones = [];
-					aval.relaciones.push({credito				: credito.folio, 
-															  tipoPersona		: "Aval",
-															  estatus				: 0});
-															  
+					aval.relaciones.push({
+																cliente_id 				: cliente._id,
+																estadoCivil				:	aval.estadoCivil,
+																ocupacion					: aval.ocupacion,
+																direccion					:	aval.direccion, 
+																empresa						: aval.empresa, 
+																puesto						: aval.puesto, 
+																antiguedad				: aval.antiguedad, 
+																direccionEmpresa	: aval.direccionEmpresa, 
+																parentezco				: aval.parentezco, 
+																tiempoConocerlo		:	aval.tiempoConocerlo,  
+																num				 				: aval.num,
+															  tipoPersona				: "Aval", 
+															  estatus						: 0});
+					
+										  
 					aval.nombreCompleto = aval.nombre + " " + aval.apellidoPaterno + " " + aval.apellidoMaterno;
-					Personas.insert(aval, function(error, result){
-						if (result){
-							credito.avales_ids.push(result);
-						}		  		
-					});
+					
+					var per = {};
+					per.nombreCompleto = aval.nombreCompleto;
+					per.nombre = aval.nombre;
+					per.apellidoPaterno = aval.apellidoPaterno;
+					per.apellidoMaterno = aval.apellidoMaterno;
+					
+					per.relaciones = [];
+					per.relaciones = aval.relaciones;
+					
+					var result = Personas.insert(per);
+					credito.avales_ids.push(result);
 			}
 			else{
 					var p = Personas.findOne({_id:aval.persona_id});
-					p.relaciones.push({credito: credito.folio, tipoPersona: "Aval", estatus: 0});
+					p.relaciones.push({		
+																cliente_id 				: cliente._id,
+																estadoCivil				:	aval.estadoCivil,
+																ocupacion					: aval.ocupacion,
+																direccion					:	aval.direccion, 
+																empresa						: aval.empresa, 
+																puesto						: aval.puesto, 
+																antiguedad				: aval.antiguedad, 
+																direccionEmpresa	: aval.direccionEmpresa, 
+																parentezco				: aval.parentezco, 
+																tiempoConocerlo		:	aval.tiempoConocerlo, 
+																num				 				: aval.num,
+															  tipoPersona				: "Aval", 
+															  estatus						: 0});
 					Personas.update({_id: aval.persona_id},{$set:p});
 					credito.avales_ids.push(aval.persona_id);
 			}
@@ -152,7 +215,20 @@ Meteor.methods({
 		_.each(credito.avales, function(aval){
 			if (!aval.persona_id){	  	
 					aval.relaciones = [];
-					aval.relaciones.push({credito: credito.folio, tipoPersona: "Aval", estatus: 0});
+					aval.relaciones.push({credito						: credito.folio, 
+																cliente_id 				: cliente._id,
+																estadoCivil				:	aval.estadoCivil,
+																ocupacion					: aval.ocupacion,
+																direccion					:	aval.direccion, 
+																empresa						: aval.empresa, 
+																puesto						: aval.puesto, 
+																antiguedad				: aval.antiguedad, 
+																direccionEmpresa	: aval.direccionEmpresa, 
+																parentezco				: aval.parentezco, 
+																tiempoConocerlo		:	aval.tiempoConocerlo, 
+																num				 				: aval.num,
+															  tipoPersona				: "Aval", 
+															  estatus						: 0});
 					aval.nombreCompleto = aval.nombre + " " + aval.apellidoPaterno + " " + aval.apellidoMaterno;
 					Personas.insert(aval, function(error, result){
 						if (result){
@@ -162,7 +238,20 @@ Meteor.methods({
 			}
 			else{
 					var p = Personas.findOne({_id:aval.persona_id});
-					p.relaciones.push({credito: credito.folio, tipoPersona: "Aval", estatus: 0});
+					p.relaciones.push({		//credito						: credito.folio, 
+																cliente_id 				: cliente._id,
+																estadoCivil				:	aval.estadoCivil,
+																ocupacion					: aval.ocupacion,
+																direccion					:	aval.direccion, 
+																empresa						: aval.empresa, 
+																puesto						: aval.puesto, 
+																antiguedad				: aval.antiguedad, 
+																direccionEmpresa	: aval.direccionEmpresa, 
+																parentezco				: aval.parentezco, 
+																tiempoConocerlo		:	aval.tiempoConocerlo, 
+																num				 				: aval.num,
+															  tipoPersona				: "Aval", 
+															  estatus						: 0});
 					Personas.update({_id: aval.persona_id},{$set:p});
 					credito.avales_ids.push(aval.persona_id);
 			}

@@ -58,6 +58,9 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		  
 			obj.estatus = true;
 			obj.credito_id = $stateParams.id;
+			obj.usuarioVerifico = Meteor.userId();
+			obj.tipoVerificacion = "solicitante o aval";
+			obj.fechaVerificacion = new Date();
 			
 			if (this.objeto.tipoGarantia == "mobiliaria")
 					obj.garantias = angular.copy(this.garantias);
@@ -73,12 +76,19 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			
 			Verificaciones.insert(obj);
 			
-			if (this.objeto.tipoGarantia == "mobiliaria")
+			/*
+if (this.objeto.tipoGarantia == "mobiliaria")
 					Creditos.update({_id: obj.credito_id}, {$set:{estatus: 1, garantias: angular.copy(this.garantias), tipoGarantia: this.objeto.tipoGarantia}})
 			else
 					Creditos.update({_id: obj.credito_id}, {$set:{estatus: 1, garantias: angular.copy(this.garantiasGeneral), tipoGarantia: this.objeto.tipoGarantia}})
+*/
+			if (this.objeto.tipoGarantia == "mobiliaria")
+					Creditos.update({_id: obj.credito_id}, {$set:{garantias: angular.copy(this.garantias), tipoGarantia: this.objeto.tipoGarantia}})
+			else
+					Creditos.update({_id: obj.credito_id}, {$set:{garantias: angular.copy(this.garantiasGeneral), tipoGarantia: this.objeto.tipoGarantia}})
+
 			
-						
+			
 			toastr.success('Guardado correctamente.');
 			this.objeto = {}; 
 			$('.collapse').collapse('hide');

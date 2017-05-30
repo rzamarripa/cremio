@@ -586,6 +586,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.verificacionVecino', {
+			url: '/verificacionVecino/:id',
+			templateUrl: 'client/verificadores/verificacionVecino.ng.html',
+			controller: 'VerificacionVecinoCtrl as verV',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.historialPagos', {
 			url: '/historialPagos/:objeto_id/:credito_id',
 			templateUrl: 'client/historialPagos/historialPagos.ng.html',

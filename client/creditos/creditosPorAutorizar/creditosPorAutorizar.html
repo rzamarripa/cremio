@@ -17,6 +17,7 @@
 		      <th class="text-center">Capital Solicitado</th>
 		      <th class="text-center">Fecha Solicitud</th>
 		      <th class="text-center">Verificación</th>
+		      <th class="text-center">Verificación Estatus</th>
 		      <th class="text-center">Acciones</th>
 	      </tr>
       </thead>
@@ -27,9 +28,10 @@
 		      <td class="text-center">{{credito.capitalSolicitado | currency}}</td>
 		      <td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy hh:mm:sss"}}</td>
 		      <td class="text-center"><a href="javascript:void(0);" ui-sref="root.verificacion({id : credito._id})" ng-if="credito.requiereVerificacion">verificación</a></td>
+		      <td class="text-center">{{credito.verificacionEstatus}}</td>
 		      <td class="text-center">
 			      <button ng-click="cpa.autorizar(credito._id)" class="btn btn-primary">Autorizar</button>
-			      <button ng-click="cpa.rechazar(credito._id)" class="btn btn-warning">Rechazar</button>
+			      <button ng-click="cpa.mostrarRechazoCredito(credito._id)" class="btn btn-warning">Rechazar</button>
 		      </td>
 	      </tr>
       </tbody>
@@ -41,7 +43,7 @@
 <!-- /////////////////////////MODAL NOTA CLIENTE ////////////////////////// -->
 <div class="container">
 <!-- Modal -->
-	<div class="modal fade" id="modalCliente"	data-backdrop="static" role="dialog">
+	<div class="modal fade" id="modalRechazo"	data-backdrop="static" role="dialog">
 		<div class="modal-dialog">
 	<!-- Modal content-->
 			<div class="modal-content">
@@ -55,19 +57,17 @@
 							<div class="col-sm-12">
 								<div class="col-sm-12">
 									<label class="pull-left">Motivo del rechazo:</label>
-										<textarea type="text" class="form-control"	ng-model="cd.nota.nombre" >
+										<textarea type="text" class="form-control"	ng-model="cpa.motivo" >
 									</div>
 									<div class="col-sm-12 "><br/>
-										<a	class="btn btn-success" ng-click="cpa.rechazar(cd.nota)">Guardar</a>
+										<a	class="btn btn-success" ng-click="cpa.rechazar(cpa.motivo)">Guardar</a>
 									</div>
 							</div>								 
 						</div>
 			  </div>
 			  <div class="modal-footer">
-
-							  
-				          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				        </div>
+				    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
 		</div>
 	</div>
 </div>
