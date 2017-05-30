@@ -120,6 +120,19 @@
 				<span class="menu-item-parent">Administración</span>
 			</a>
 			<ul>
+				<li ng-if="currentUser.roles[0] == 'Gerente'">
+					<a ui-sref="root.cajas" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-file"></i>
+						<span class="menu-item-child">Ventanillas</span>
+					</a>
+				</li>
+				<li ng-if="currentUser.roles[0] == 'Gerente'">
+					<a ui-sref="root.cajasActivas" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-file"></i>
+						<span class="menu-item-child">Ventanillas Activas</span>
+					</a>
+				</li>
+
 				<li data-ui-sref-active="active">
 					 <a ui-sref="root.calculadora" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-folder-open"></i>
@@ -206,20 +219,7 @@
 					<i class="fa fa-lg fa-fw fa-inbox"></i>
 					<span class="menu-item-parent">Cajas</span>
 			</a>
-			<ul>
-				<li ng-if="currentUser.roles[0] == 'Gerente'">
-					<a ui-sref="root.cajas" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-file"></i>
-						<span class="menu-item-child">Cajas</span>
-					</a>
-				</li>
-				<li ng-if="currentUser.roles[0] == 'Gerente'">
-					<a ui-sref="root.cajasActivas" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-file"></i>
-						<span class="menu-item-child">Cajas Activas</span>
-					</a>
-				</li>
-				
+			<ul>				
 				<li ng-if="currentUser.roles[0] == 'Cajero'">
 					<a ui-sref="root.corteCaja" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-scissors"></i>

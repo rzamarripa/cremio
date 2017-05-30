@@ -192,7 +192,7 @@ angular.module("creditoMio")
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
-			objeto.profile.foto = fotillo;
+			objeto.profile.foto = rc.pic;
 			objeto.profile.estatus = true;
 			objeto.profile.usuarioInserto = Meteor.userId();
 			objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
@@ -257,34 +257,38 @@ angular.module("creditoMio")
 			objeto.profile.foto = this.objeto.profile.foto;
 			
 			Empresas.insert(empresa, function(error, result)
-															 {
-																	if (error){
-																		console.log("error: ",error);
-																	}
-																	if (result)
-																	{
-																			objeto.profile.empresa_id = result;
-																			toastr.success('Guardado correctamente.');
-																			this.empresa = {}; 
-																			$('.collapse').collapse('hide');
-																			this.nuevo = true;
-																			form.$setPristine();
-																	    form.$setUntouched();
-																	    $("[data-dismiss=modal]").trigger({ type: "click" });
-																	    
-																	}
-															 }
-											);
+			 {
+					if (error){
+						console.log("error: ",error);
+					}
+					if (result)
+					{
+							objeto.profile.empresa_id = result;
+							toastr.success('Guardado correctamente.');
+							this.empresa = {}; 
+							$('.collapse').collapse('hide');
+							this.nuevo = true;
+							form.$setPristine();
+					    form.$setUntouched();
+					    $("[data-dismiss=modal]").trigger({ type: "click" });
+					    
+					}
+			 }
+		);
 					
 	};
 
 
-	this.almacenaImagen = function(imagen)
-	{
-		if (this.objeto)
-			this.objeto.profile.foto = imagen;		
-						
-	}
+
+
+	this.tomarFoto = function(objeto){
+			console.log(objeto)
+		    $meteor.getPicture().then(function(data){
+			rc.fotillo = data
+			rc.pic = rc.fotillo
+			//objeto.profile.fotografia = this.objeto.profile.fotografia;
+		});
+    };
 
 
 };

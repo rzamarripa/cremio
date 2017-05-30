@@ -10,7 +10,7 @@ angular.module("creditoMio")
   this.buscar = {}; 
   
 	this.subscribe('estados',()=>{
-		return [{pais_id: this.getReactively('buscar.pais_id')? this.getReactively('buscar.pais_id'):""}]
+		return [{estatus:true}]
 	 });
 	 
 	this.subscribe('paises',()=>{
@@ -19,7 +19,7 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  estados : () => {
-		  return Estados.find({pais_id: this.getReactively('buscar.pais_id')});
+		  return Estados.find();
 	  },
 		paises : () => {
 			return Paises.find();

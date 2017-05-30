@@ -40,6 +40,7 @@ angular.module("creditoMio")
   this.selected_credito = 0;
   this.ban = false;
   this.respuestaNotaCLiente = false;
+  rc.verRecibos = false;
 
 
 
@@ -246,10 +247,11 @@ angular.module("creditoMio")
 			
 			if (op == 0) //Vencimiento Hoy
 			{
-					FI = new Date();
+				  FI = new Date();
 				  FI.setHours(0,0,0,0);
 				  FF = new Date(FI.getTime() - (1 * 24 * 3600 * 1000));
 				  FF.setHours(23,59,59,999);
+				  rc.verRecibos = true;
 				  //console.log("FI:",FI);
 					//console.log("FF:",FF);
 				  
@@ -261,6 +263,7 @@ angular.module("creditoMio")
 				  this.fechaFinal.setHours(23,59,59,999);
 				  FI = this.fechaInicial;
 				  FF = this.fechaFinal;
+				   rc.verRecibos = false;
 				  
 				  //console.log("FI:", FI);
 					//console.log("FF:", FF);
@@ -277,6 +280,7 @@ angular.module("creditoMio")
 					var semana = moment().isoWeek();
 					var anio = FI.getFullYear();
 					this.calcularSemana(semana, anio);
+					rc.verRecibos = false;
 					//console.log("FI:", FI);
 					//console.log("FF:", FF);
 				
@@ -290,6 +294,7 @@ angular.module("creditoMio")
 					var mes = FI.getMonth();
 					//console.log(mes);
 					this.calcularMes(mes,anio);
+					rc.verRecibos = false;
 					//console.log("FI:", FI);
 					//console.log("FF:", FF);
 				
@@ -308,6 +313,7 @@ angular.module("creditoMio")
 							mes = mes + 1;	
 					
 					this.calcularMes(mes,anio);
+					rc.verRecibos = false;
 					//console.log("FI:", FI);
 					//console.log("FF:", FF);
 			}

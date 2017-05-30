@@ -1,112 +1,105 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-		<h1 class="alge-title txt-color-blueDark">
-			<i class="fa fa-list fa-fw "></i>
-				Clientes &gt; Detalle  
-		</h1>
-	</div>
-</div>
-<br>
+
 <div class="row">
 	<div class="col-sm-12">
-		<div class="well well-sm">
+		<div class="">
 			<div class="row">
 				<div class="col-sm-12 col-md-12 col-lg-12">
 					<div class="well well-light well-sm no-margin no-padding">
 						<div class="row">
 							<div class="col-sm-12">
-								<div id="myCarousel" class="carousel profile-carousel">
-									<div class="air air-bottom-right padding-10">
-										<a ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm">
-											<i class="fa fa-plus"></i> Nueva Solicitud
-										</a>&nbsp;
-										<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
-											<i class="fa fa-plus"></i> Nueva Nota de Credito
-										</a>&nbsp;
-										<a ng-click="cd.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
-											<i class="fa fa-plus"></i> Nueva Nota de Cliente
-										</a>&nbsp;
-										<a ui-sref="root.pagarPlanPagos({objeto_id : cd.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm" ng-if="currentUser.roles[0] == 'Cajero'">
-											<i class="fa fa-plus"></i> Nuevo Pago
-										</a>&nbsp;
-										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
-	 										<i class="fa fa-pencil"></i> Modificar
-	 									</a> 
-									</div>
-									<div class="air air-top-left padding-10">
-										<h4 class="txt-color-white font-md"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{cd.fechaActual | date:'dd-MM-yyyy'}}</h4>
-									</div>
-						
-									<ol class="carousel-indicators">
-									</ol>
-									<div class="carousel-inner">
-										<div class="item active">
-											<img src="img/demo/s1.jpg" alt="" style="width:100%">
-										</div>
-									</div>
-								</div>
+							<a ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;">
+								<i class="fa fa-plus"></i> Nueva Solicitud
+							</a>&nbsp;
+							<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
+								<i class="fa fa-plus"></i> Nueva Nota de Credito
+							</a>&nbsp;
+							<a ng-click="cd.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
+								<i class="fa fa-plus"></i> Nueva Nota de Cliente
+							</a>&nbsp;
+							<a ui-sref="root.pagarPlanPagos({objeto_id : cd.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
+								<i class="fa fa-plus"></i> Nuevo Pago
+							</a>&nbsp;
+							<div class="col-sm-3"><h4 class="txt-color-black font-md">
+								<i class="fa fa-calendar"></i> {{cd.fechaActual | date:'dd-MM-yyyy'}}</h4>
+							</div>
+							
+					
 							</div>
 							<div class="col-sm-12">
-								<div class="row">
-									<div class="col-sm-2 profile-pic" style="text-align:left;width:initial;">
-										<img style="max-width:200px;" src="{{cd.objeto.profile.foto}}" >
-										<div class="padding-10">
-											<h4 class="font-md">
-											<br>
-											<small>
-											<a ng-click="cd.generarFicha(cd.objeto,cd.objeto._id)" class="btn btn-primary">Descargar ficha</a></small>
-											</h4>
-											<br>
-				
-										</div>
-									</div>
+							
+									
+					
 									<div class="col-sm-6">
 										<h1>{{cd.objeto.profile.nombre}} <span class="semi-bold">{{cd.objeto.profile.apellidoPaterno}} {{cd.objeto.profile.apellidoMaterno}}</span>
-										
-										<small> (Cliente)</small></h1>
-										<ul class="list-unstyled">
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-key fa-lg"></i>&nbsp;&nbsp;
-													<span class="txt-color-darken">
-														<strong>{{cd.objeto.username}}</strong>
-													</span>
-												</p>
-											</li>
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{cd.objeto.profile.celular}}</span>
-												</p>
-											</li>
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;<a href="mailto:{{cd.objeto.profile.correo}}">{{cd.objeto.profile.correo}}</a>
-												</p>
-											</li>
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-birthday-cake fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{cd.objeto.profile.fechaNacimiento | date:"dd-MM-yyyy"}}</span>
-												</p>
-											</li>
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-calendar fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{cd.objeto.profile.fechaCreacion | date:"dd-MM-yyyy"}}(Fecha de alta)</span>
-												</p>
-											</li>
-										</ul>
-										<br>
-										<p class="font-sm">
-											<i>Un poco acerca de mi...</i>
-										</p>
-										<p class="font-xs">
-											{{cd.objeto.profile.observacionesGenerales}}
-										</p>
-										<!-- <p class="font-xs">
-											<a class="btn btn-primary">Descargar ficha</a>
-										</p> -->
 										<br>
 									</div>
-									<div class="col-sm-3">
+									
+								
+<div class="row">
+	<div class="col-sm-12">
+		<ul class="nav nav-tabs">
+		<li class="pull-right">
+				<a ng-click="cd.creditosActivos()" role="button" data-toggle="collapse"
+					href="#creditosActivos" aria-expanded="false" aria-controls="creditosActivos"><i class="fa fa-{{cd.creditoAc == true ? 'plus':'minus'}} fa-lg"></i> Creditos Activos
+				</a>
+			</li>
+			<li class="pull-right">
+				<a ng-click="cd.masInformacion()" role="button" data-toggle="collapse"
+					href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{cd.masInfo == true ? 'plus':'minus'}} fa-lg"></i> Información del cliente</a>
+			</li>
+
+			<li class="pull-right">
+			<a ng-click="cd.masInformacionCrdito()" data-toggle="collapse"
+			   href="#masInformacionCredito" aria-expanded="false" aria-controls="masInformacionCredito"> <i class="fa fa-{{cd.masInfoCredito == true ? 'plus':'minus'}} fa-lg">
+			   </i> Historial Crediticio </a>
+			</li>
+			<li class="pull-right">
+				<a ng-click="cd.solicitudesCreditos()" role="button" data-toggle="collapse"
+					href="#solicitudes" aria-expanded="false" aria-controls="solicitudes"><i class="fa fa-{{cd.solicitudesCre == true ? 'plus':'minus'}} fa-lg"></i> Solicitudes Creditos
+				</a>
+			</li>
+			<li class="pull-right">
+				<a ng-click="cd.notasCreditos()" role="button" data-toggle="collapse"
+					href="#notas" aria-expanded="false" aria-controls="notas"><i class="fa fa-{{cd.solicitudesCre == true ? 'plus':'minus'}} fa-lg"></i> Solicitudes Creditos
+				</a>
+			</li>
+			
+		</ul>
+		<!-- //////////////////////////////////////////////// -->
+
+<div class="row">
+  <div class="collapse padding-10" id="masInformacion">
+   <div class="tab-pane">
+	<div class="col-sm-12">
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingOne">
+			      <h4 class="panel-title">
+			        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#href1" aria-expanded="false" aria-controls="href1">
+			          Información del Cliente
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="href1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+			      <div class="panel-body">    
+						    <div class="row">
+						    	<div class="col-sm-3">
+						    		<img style="max-width:200px;" src="{{cd.objeto.profile.foto}}" >
+						    	</div>
+
+						    	<div class="col-sm-3" > 					    
+							    	<label>Nombre (s)</label>
+							    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cd.objeto.profile.nombre" disabled="">
+						    	</div>
+						    	<div class="col-sm-3" >					    
+							    	<label>Apellido Paterno</label>
+							    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cd.objeto.profile.apellidoPaterno" disabled="">
+						    	</div>
+						    	<div class="col-sm-3">					    
+							    	<label>Apellido Materno</label>
+							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cd.objeto.profile.apellidoMaterno" disabled="">
+						    	</div>	 
+						    		<div class="col-sm-3">
 									<br/>
 										<div class="well padding-10">
 											<h5 class="margin-top-0"><i class="fa fa-file"></i> Documentos:</h5>
@@ -132,51 +125,7 @@
 
 										</div>
 									</div>
-								</div>
-<div class="row">
-	<div class="col-sm-12">
-		<ul class="nav nav-tabs">
-			<li class="pull-right">
-				<a ng-click="cd.masInformacion()" role="button" data-toggle="collapse"
-					href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{cd.masInfo == true ? 'plus':'minus'}} fa-lg"></i> Información del cliente</a>
-			</li>
-
-			<li class="pull-right">
-			<a ng-click="cd.masInformacionCrdito()" data-toggle="collapse"
-			   href="#masInformacionCredito" aria-expanded="false" aria-controls="masInformacionCredito"> <i class="fa fa-{{cd.masInfoCredito == true ? 'plus':'minus'}} fa-lg">
-			   </i> Historial Crediticio </a>
-			</li>
-		</ul>
-		<!-- //////////////////////////////////////////////// -->
-
-<div class="row">
-  <div class="collapse padding-10" id="masInformacion">
-   <div class="tab-pane">
-	<div class="col-sm-12">
-			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-			  <div class="panel panel-default">
-			    <div class="panel-heading" role="tab" id="headingOne">
-			      <h4 class="panel-title">
-			        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#href1" aria-expanded="false" aria-controls="href1">
-			          Información del Cliente
-			        </a>
-			      </h4>
-			    </div>
-			    <div id="href1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-			      <div class="panel-body">    
-						    <div class="row">
-						    	<div class="col-sm-4" > 					    
-							    	<label>Nombre (s)</label>
-							    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cd.objeto.profile.nombre" disabled="">
-						    	</div>
-						    	<div class="col-sm-4" >					    
-							    	<label>Apellido Paterno</label>
-							    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cd.objeto.profile.apellidoPaterno" disabled="">
-						    	</div>
-						    	<div class="col-sm-4">					    
-							    	<label>Apellido Materno</label>
-							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cd.objeto.profile.apellidoMaterno" disabled="">
-						    	</div>	    				    	    
+						    	  				    	    
 						    </div>
 			      </div>
 			    </div>
@@ -596,8 +545,7 @@
 	  </div>
 </div>
 
-
-	 </td>
+<td>
 				</tr>
 			</tbody>
 		</table>	
@@ -605,135 +553,10 @@
 	</div>
    </div>
 </div>
-				</div>
 
-<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////// -->
-									</div>
-								</div>
-							</div>													
-						</div>
-					</div>
-				</div>
-				<br/>
-				<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-
-					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-						
-						<header role="heading">
-							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-							<h2>Créditos Aprobados</h2>
-			
-			
-						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-			
-						<!-- widget div-->
-						<div class="no-padding" role="content">
-							<!-- widget edit box -->
-						
-							<!-- end widget edit box -->
-			
-							<div class="widget-body">
-								<!-- content -->
-								
-
-								<div class="row ">
-									<br/>
-									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="aprobado in cd.creditosAprobados">
-										<div class="panel panel-blueDark">
-											<div class="panel-heading">
-												<h3 class="panel-title">
-													Credito</h3>
-											</div>
-											<div class="panel-body no-padding text-align-center">
-												<div class="the-price">
-													<h1>
-														{{aprobado.capitalSolicitado|currency}}
-													</h1>
-													<h2>
-														{{aprobado.duracionMeses}}
-														<span class="subscript">/meses</span>
-													</h2>
-													<small>Plan: {{aprobado.periodoPago}}</small>
-												</div>
-											</div>
-											<div class="panel-footer no-padding">						
-<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
-												<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Petición" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="cd.cancelarSeleccion(aprobado)" />
-												<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
-											</div>
-										</div>
-									</div>
-									
-								</div>
-								<!-- end content -->
-							</div>
-			
-						</div>
-						<!-- end widget div -->
-					</div>
-					<!-- end widget -->
-			
-				</article>
-				<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-
-					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-						
-						<header role="heading">
-							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-							<h2>Solicitudes de Crédito</h2>
-			
-			
-						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-			
-						<!-- widget div-->
-						<div class="no-padding" role="content">
-							<!-- widget edit box -->
-						
-							<!-- end widget edit box -->
-			
-							<div class="widget-body">
-								<!-- content -->
-								
-
-								<div class="row ">
-									<br/>
-									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="pendiente in cd.creditosPendientes">
-										<div class="panel panel-{{pendiente.estatusClase}}">
-											<div class="panel-heading">
-												<h3 class="panel-title">
-													Crédito</h3>
-										</div>
-											<div class="panel-body no-padding text-align-center">
-												<div class="the-price">
-													<h1>
-														{{pendiente.capitalSolicitado|currency}}
-													</h1>
-													<h2>
-														{{pendiente.duracionMeses}}
-														<span class="subscript">/meses</span>
-													</h2>
-													<small>Plan: {{pendiente.periodoPago}}</small>
-												</div>
-											</div>
-											
-											<div class="panel-footer no-padding">						
-												<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
-											</div>
-											
-										</div>
-									</div>
-									
-								</div>
-								<!-- end content -->
-							</div>
-			
-						</div>
-						<!-- end widget div -->
-					</div>
-					<!-- end widget -->
-			
-				</article>
-				<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+<div class="collapse in  padding-10" id="creditosActivos">
+   <div class="tab-pane ">
+		<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
 					<!-- new widget -->
 					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
 						
@@ -840,7 +663,75 @@
 					<!-- end widget -->
 			
 				</article>
-				<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+   </div>
+</div>
+<div class="collapse padding-10" id="solicitudes">
+   <div class="tab-pane">
+   	<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+
+					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+						
+						<header role="heading">
+							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+							<h2>Solicitudes de Crédito</h2>
+			
+			
+						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+			
+						<!-- widget div-->
+						<div class="no-padding" role="content">
+							<!-- widget edit box -->
+						
+							<!-- end widget edit box -->
+			
+							<div class="widget-body">
+								<!-- content -->
+								
+
+								<div class="row ">
+									<br/>
+									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="pendiente in cd.creditosPendientes">
+										<div class="panel panel-{{pendiente.estatusClase}}">
+											<div class="panel-heading">
+												<h3 class="panel-title">
+													Crédito</h3>
+										</div>
+											<div class="panel-body no-padding text-align-center">
+												<div class="the-price">
+													<h1>
+														{{pendiente.capitalSolicitado|currency}}
+													</h1>
+													<h2>
+														{{pendiente.duracionMeses}}
+														<span class="subscript">/meses</span>
+													</h2>
+													<small>Plan: {{pendiente.periodoPago}}</small>
+												</div>
+											</div>
+											
+											<div class="panel-footer no-padding">						
+												<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
+											</div>
+											
+										</div>
+									</div>
+									
+								</div>
+								<!-- end content -->
+							</div>
+			
+						</div>
+						<!-- end widget div -->
+					</div>
+					<!-- end widget -->
+			
+				</article>
+   </div>
+</div>
+
+<div class="collapse padding-10" id="notas">
+   <div class="tab-pane">
+   <article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
 
 					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
 						
@@ -899,6 +790,25 @@
 					<!-- end widget -->
 			
 				</article>
+   </div>
+</div>
+
+
+
+</div>
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////// -->
+									</div>
+								</div>
+							</div>													
+						</div>
+					</div>
+				</div>
+				<br/>
+				
+				
+				
+				
 			</div>
 		</div>
 	</div>

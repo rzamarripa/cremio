@@ -280,7 +280,6 @@ Meteor.methods({
 				ret.push(d)
 
 			})
-			console.log(ret)
 			return ret
 	},
 	corteCaja :(montos)=>{

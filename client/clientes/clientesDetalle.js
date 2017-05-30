@@ -16,6 +16,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.notaCobranza = {}
 	this.masInfo = true;
 	this.masInfoCredito = true;
+	this.creditoAc = false;
+	this.solicitudesCre = true;
+	this.notasCre = true;
 	rc.cancelacion = {};
 	rc.nota = {};
 	rc.pagos = ""
@@ -486,6 +489,15 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.masInformacion = function(){
 		this.masInfo = !this.masInfo;
+	}
+	this.creditosActivos = function(){
+		this.creditoAc = !this.creditoAc;
+	}
+	this.solicitudesCreditos = function(){
+		this.solicitudesCre= !this.solicitudesCre;
+	}
+	this.notasCreditos = function(){
+		this.notasCre= !this.notasCre;
 	}
 	this.masInformacionCrdito = function(){
 		this.masInfoCredito = !this.masInfoCredito;

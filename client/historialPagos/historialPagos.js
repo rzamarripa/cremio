@@ -62,6 +62,72 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 
 			 return pagos
 		},
+		objeto : () => {
+			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
+			
+			_.each(rc.getReactively("notaPerfil"), function(nota){
+				//console.log(rc.notaPerfil.cliente_id,"nota a l avga")
+				if (cli._id == rc.notaPerfil.cliente_id) {
+					//console.log("entro aqui compilla")
+					$("#notaPerfil").modal();
+					
+				}
+
+			});
+
+			
+			_.each(cli, function(objeto){
+				 //console.log(objeto,"objeto")
+				 rc.referencias = [];
+				 //rc.empresas = [];
+				
+				objeto.empresa = Empresas.findOne(objeto.empresa_id)
+				// objeto.documento = Documentos.findOne(objeto.docuemnto_id)
+				objeto.documento = Documentos.findOne(objeto.documento_id)
+				objeto.pais = Paises.findOne(objeto.pais_id)
+				objeto.estado = Estados.findOne(objeto.estado_id)
+				objeto.municipio = Municipios.findOne(objeto.municipio_id)
+				objeto.ciudad = Ciudades.findOne(objeto.ciudad_id)
+				objeto.colonia = Colonias.findOne(objeto.colonia_id)
+				objeto.ocupacion = Ocupaciones.findOne(objeto.ocupacion_id)
+				objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id)
+				objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id)
+				
+				_.each(objeto.referenciasPersonales_ids, function(referencia){
+						Meteor.call('getReferencias', referencia, function(error, result){	
+					//console.log("entra aqui",referencia)					
+						if (result)
+							//console.log(result,"caraculo")
+						{
+							//console.log("entra aqui");
+							//console.log("result",result);
+							rc.referencias.push(result);
+							$scope.$apply();			
+						}
+					});	
+				});
+
+				Meteor.call('getEmpresas', objeto.empresa_id, function(error, result){	
+					//console.log("entra aqui",referencia)					
+						if (result)
+							//console.log(result,"caraculo")
+						{
+							//console.log("entra aqui");
+							//console.log("result",result);
+							rc.empresa = result
+							$scope.$apply();			
+						}
+					});	
+				
+			    });
+
+			if(cli){
+				this.ocupacion_id = cli.profile.ocupacion_id;
+
+
+				return cli;
+			}		
+		},
 		pagos : () =>{
 			return Pagos.find().fetch()
 		},
@@ -94,9 +160,11 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			arreglo = [];
 			var saldoPago = 0;
 			var saldoActual = 0; 
-			rc.saldo =0;	
+			rc.saldo =0;
+
 			var credito = this.credito	
 			rc.saldoMultas=0;
+			if (credito) {
 
 			_.each(rc.getReactively("planPagosViejo"), function(planPago){
 				if(planPago.descripcion=="Recibo")
@@ -149,6 +217,7 @@ function HistorialPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 					})
 				//console.log(rc.saldo)
 			});
+		}
 			
 
 			console.log("el ARREGLO del helper historial",arreglo)

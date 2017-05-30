@@ -34,6 +34,7 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 		this.garantias = [];
 		this.garantiasGeneral = [];
 		this.garantia = {};
+		rc.total = ""
 	  
 	  this.cliente = {};
 		this.buscar = {};
@@ -138,79 +139,7 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 			$('#collapseNuevoPago').collapse('hide');
 			$('#collapseReestructuracion').collapse('hide');
 		};
-	 	/*
-		this.guardar = function(convenio,form)
-		{
-			if(form.$invalid){
-				toastr.error('Error al guardar los datos.');
-				return;
-			}
-			convenio.estatus = 0;
-			convenio.campus_id = Meteor.user().profile.campus_id;
-			convenio.usuarioInserto = Meteor.userId();
-			convenio.cliente_id = rc.objeto._id;
-			PlanPlagos.insert({});
-			toastr.success('Guardado correctamente.');
-			this.escuela = {}; 
-			$('.collapse').collapse('hide');
-			this.nuevo = true;
-			form.$setPristine();
-			form.$setUntouched();	
-		};
-		*/
-
-		/*
-		this.editar = function(pago)
-		{
-		    this.pago = pago;
-		    this.action = false;
-		    $('.collapse').collapse('show');
-		    this.nuevo = false;
-		};
-		*/
-		
-		/*
-		this.cambiarEstatus = function(pago, estatus, tipoMov){
-			var res = confirm("Está seguro que quiere " + tipoMov + " el pago?");
-			if(res == true){
-				PlanPagos.update(pago._id, { $set : {estatus : estatus}});
-				toastr.success('Cancelado correctamente.');
-			}
-		}
-		*/
-		/*
-		this.actualizar = function(pago,form)
-		{
-			if(form.$invalid){
-	      toastr.error('Error al actualizar los datos.');
-	      return;
-		  }
-			var idTemp = pago._id;
-			delete pago._id;		
-			pago.usuarioActualizo = Meteor.userId(); 
-			pago.convenio = 1;
-			PlanPagos.update({_id:idTemp},{$set:pago});
-			toastr.success('Actualizado correctamente.');
-			$('.collapse').collapse('hide');
-			this.nuevo = true;
-			form.$setPristine();
-	    form.$setUntouched();
-		};
-		*/
-		
-		this.tieneFoto = function(sexo, foto){
-			if(foto === undefined){
-				if(sexo === "Masculino")
-					return "img/badmenprofile.jpeg";
-				else if(sexo === "Femenino"){
-					return "img/badgirlprofile.jpeg";
-				}else{
-					return "img/badprofile.jpeg";
-				}
-			}else{
-				return foto;
-			}
-		}
+	 	
 		  
 	  this.generarPlanPagos = function(credito, form){
 	  		var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
@@ -259,7 +188,16 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 					toastr.error('Error al calcular el nuevo plan de pagos.');
 				}
 				else{
+					
 					_.each(result,function (pago) {
+					
+						console.log(pago,"pauisa")
+						var pag = pago
+						var pa = _.toArray(pag);
+						var all = pa[pa.length - 1]
+						rc.total = all
+						console.log(all,"all 12344")
+
 						rc.planPagos.push(pago)
 						$scope.$apply();
 					});
@@ -267,54 +205,12 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 				}
 					
 			})
+
 			
 			return rc.planPagos;
 		}
 		
-		this.generarCredito = function(){
-			
-			var credito = {
-				cliente_id : this.cliente._id,
-				tipoCredito_id : this.credito.tipoCredito_id,
-				fechaSolicito : new Date(),
-				duracionMeses : this.credito.duracionMeses,
-				capitalSolicitado : this.credito.capitalSolicitado,
-				adeudoInicial : this.credito.capitalSolicitado,
-				saldoActual : this.credito.capitalSolicitado,
-				periodoPago : this.credito.periodoPago,
-				fechaPrimerAbono : this.credito.primerAbono,
-				multasPendientes : 0,
-				saldoMultas : 0.00,
-				saldoRecibo : 0.00,
-				estatus : 1,
-				requiereVerificacion: this.credito.requiereVerificacion,
-				sucursal_id : Meteor.user().profile.sucursal_id,
-				fechaVerificacion: this.credito.fechaVerificacion,
-				turno : this.credito.turno,
-				tipoGarantia : this.credito.tipoGarantia
-			};
-					
-			credito.avales = angular.copy(this.avales);
-			
-			//Duda se guardan los dos???
-			
-			if (this.credito.tipoGarantia == "mobiliaria")
-					credito.garantias = angular.copy(this.garantias);
-			else
-					credito.garantias = angular.copy(this.garantiasGeneral);
-					
-					
-			//Cambie el metodo		
-			Meteor.apply('generarCreditoPeticion', [this.cliente, credito], function(error, result){
-				if(result == "hecho"){
-					toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');
-					rc.planPagos = [];
-					this.avales = [];
-					$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
-				}
-				$scope.$apply();
-			});
-		}
+		
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		this.insertarAval = function()
@@ -661,7 +557,14 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 	    	console.log(objeto,"objeto")
 	    	console.log(credito,"credito")
 
-			  Meteor.call('getCreditoReporte', objeto,credito,avales, function(error, response) {
+
+						var pag = objeto
+						var pa = _.toArray(pag);
+						var all = pa[pa.length - 1]
+						console.log(all,"all")
+						rc.total = all
+
+			  Meteor.call('getCreditoReporte', objeto,credito,avales,all, function(error, response) {
 
 
 
