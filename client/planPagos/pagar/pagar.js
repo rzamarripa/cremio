@@ -20,6 +20,11 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
   this.creditos_id = []
   this.total = 0;
   rc.credit = $stateParams
+  this.creditoAp = true;
+  this.masInfo = true;
+  this.masInfo = true;
+  this.masInfoCredito = true;
+  rc.openModal = false
 
   console.log(rc.credito)
 
@@ -92,6 +97,156 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
       }
       return clientes;
     },
+    objeto : () => {
+			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
+			
+			_.each(rc.getReactively("notaPerfil"), function(nota){
+				//console.log(rc.notaPerfil.cliente_id,"nota a l avga")
+				if (cli._id == rc.notaPerfil.cliente_id) {
+					//console.log("entro aqui compilla")
+					$("#notaPerfil").modal();
+					
+				}
+
+			});
+
+			
+			_.each(cli, function(objeto){
+				 //console.log(objeto,"objeto")
+				 rc.referencias = [];
+				 //rc.empresas = [];
+				
+				objeto.empresa = Empresas.findOne(objeto.empresa_id)
+				// objeto.documento = Documentos.findOne(objeto.docuemnto_id)
+				objeto.documento = Documentos.findOne(objeto.documento_id)
+				objeto.pais = Paises.findOne(objeto.pais_id)
+				objeto.estado = Estados.findOne(objeto.estado_id)
+				objeto.municipio = Municipios.findOne(objeto.municipio_id)
+				objeto.ciudad = Ciudades.findOne(objeto.ciudad_id)
+				objeto.colonia = Colonias.findOne(objeto.colonia_id)
+				objeto.ocupacion = Ocupaciones.findOne(objeto.ocupacion_id)
+				objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id)
+				objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id)
+				
+				_.each(objeto.referenciasPersonales_ids, function(referencia){
+						Meteor.call('getReferencias', referencia, function(error, result){	
+					//console.log("entra aqui",referencia)					
+						if (result)
+							//console.log(result,"caraculo")
+						{
+							//console.log("entra aqui");
+							//console.log("result",result);
+							rc.referencias.push(result);
+							$scope.$apply();			
+						}
+					});	
+				});
+
+				Meteor.call('getEmpresas', objeto.empresa_id, function(error, result){	
+					//console.log("entra aqui",referencia)					
+						if (result)
+							//console.log(result,"caraculo")
+						{
+							//console.log("entra aqui");
+							//console.log("result",result);
+							rc.empresa = result
+							$scope.$apply();			
+						}
+					});	
+				
+			    });
+
+			if(cli){
+				this.ocupacion_id = cli.profile.ocupacion_id;
+
+
+				return cli;
+			}		
+		},
+		historialCreditos : () => {
+			var creditos = Creditos.find().fetch();
+			if(creditos != undefined){
+				rc.creditos_id = _.pluck(creditos, "cliente_id");
+			}
+			
+			return creditos;
+		},
+		planPagosHistorial  : () => {
+			
+			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
+			//rc.creditos_id = _.pluck(planes, "cliente_id");
+			console.log("kaka",planes)
+
+
+			return planes
+
+		},
+		historial : () => {
+			arreglo = [];
+			var saldoPago = 0;
+			var saldoActual = 0; 
+			rc.saldo =0;	
+			var credito = rc.credito
+			rc.saldoMultas=0;
+			
+
+			_.each(rc.getReactively("planPagos"), function(planPago){
+				
+				if(planPago.descripcion=="Recibo")
+					rc.saldo+=planPago.cargo;
+				if(planPago.descripcion=="Multa")
+					rc.saldoMultas+=planPago.importeRegular;
+			});
+			
+			_.each(rc.getReactively("planPagos"), function(planPago, index){
+				
+				console.log("entro al segundo")
+				console.log("credito",credito)
+
+				
+				if(planPago.descripcion=="Multa")
+					rc.saldo+=planPago.cargo
+				
+				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
+				//console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
+				arreglo.push({saldo:rc.saldo,
+					numeroPago : planPago.numeroPago,
+					cantidad : rc.credito.numeroPagos,
+					fechaSolicito : rc.credito.fechaSolicito,
+					fecha : fechaini,
+					pago : 0, 
+					cargo : planPago.cargo,
+					movimiento : planPago.movimiento,
+					planPago_id : planPago._id,
+					credito_id : planPago.credito_id,
+					descripcion : planPago.descripcion,
+					importe : planPago.importeRegular,
+					pagos : planPago.pagos
+			  	});				
+				if(planPago.pagos.length>0)
+					_.each(planPago.pagos,function (pago) {
+						rc.saldo-=pago.totalPago
+						arreglo.push({saldo:rc.saldo,
+							numeroPago : planPago.numeroPago,
+							//cantidad : credito.numeroPagos,
+							fechaSolicito : rc.credito.fechaSolicito,
+							fecha : pago.fechaPago,
+							pago : pago.totalPago, 
+							cargo : 0,
+							movimiento : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							planPago_id : planPago._id,
+							credito_id : planPago.credito_id,
+							descripcion : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							importe : planPago.importeRegular,
+							pagos : planPago.pagos
+					  	});
+					})
+				//console.log(rc.saldo)
+			});
+
+			console.log("el ARREGLO del helper historial",arreglo)
+			return arreglo;
+		},
     tiposIngreso: () => {
       return TiposIngreso.find()
     },
@@ -183,6 +338,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
     return credito ? credito.numeroPagos : "";
 
   };
+
 
 
 
@@ -327,6 +483,26 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 
 
   };
+
+  this.creditosAprobados = function(){
+		this.creditoAp = !this.creditoAp;
+	}
+
+	this.verPagos= function(credito) {
+		console.log(credito,"el ob ")
+		rc.credito = credito;
+		rc.credito_id = credito._id;
+		$("#modalpagos").modal();
+		credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
+		rc.pagos = credito.pagos
+		rc.openModal = true
+		////console.log(rc.pagos,"pagos")
+		console.log(rc.historial,"historial act")
+			_.each(rc.getReactively("historial"),function (pago) {
+
+			});
+
+	};
 
 
 

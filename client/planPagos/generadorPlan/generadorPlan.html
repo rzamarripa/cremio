@@ -1,97 +1,36 @@
-<div class="row">
+<!-- <div class="row">
 	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 		<h1 class="alge-title txt-color-blueDark">
 			<i class="fa fa-list fa-fw "></i>
 				Clientes &gt; Solicitud de Crédito
 		</h1>
 	</div>
-</div>
+</div> -->
 <br>
 <!-- Cabecera del perfil de  alumno seleccionado -->
 <div class="row" ng-show="ge.cliente.profile != undefined">
 	<div class="col-sm-12">
-		<div class="well well-sm">
-			<div class="row">
-				<div class="col-sm-12 col-md-12 col-lg-12">
-					<div class="well well-light well-sm no-margin no-padding">
-						<div class="row">
-							<div class="col-sm-12">
-								<div id="myCarousel" class="carousel profile-carousel">
-									<div class="air air-bottom-right padding-10">
-										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador' " ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp; 
-									</div>
-								<!-- 	<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
-	 										<i class="fa fa-pencil"></i> Modificar
-	 								</a> --> 
-									<div class="air air-top-left padding-10">
-										<h4 class="txt-color-white font-md"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{ge.fechaActual | date:'dd-MM-yyyy'}}</h4>
-									</div>
-									<ol class="carousel-indicators">
-									</ol>
-									<div class="carousel-inner">
-										<div class="item active">
-											<img src="img/demo/s1.jpg" alt="" style="width:100%">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-12">
-								<div class="row">
-									<div class="col-sm-2 profile-pic" style="text-align:left;width:initial;">
-										<img style="max-width:200px;" src="{{ge.tieneFoto(ge.cliente.profile.sexo, ge.cliente.profile.foto)}}" >
-									</div>
-									<div class="col-sm-6">
-										<h1>{{ge.cliente.profile.nombre}} <span class="semi-bold">{{ge.cliente.profile.apellidoPaterno}} {{ge.cliente.profile.apellidoMaterno}}</span>
-										
-										<small> (Cliente)</small></h1>
-										<ul class="list-unstyled">
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-key fa-lg"></i>&nbsp;&nbsp;
-													<span class="txt-color-darken">
-														<strong>{{ge.cliente.username}}</strong>
-													</span>
-												</p>
-											</li>
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ge.cliente.profile.particular}}</span>
-												</p>
-											</li>
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;<a href="mailto:{{ge.cliente.profile.correo}}">{{ge.cliente.profile.correo}}</a>
-												</p>
-											</li>
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-birthday-cake fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ge.cliente.profile.fechaNacimiento | date:"dd-MM-yyyy"}}</span>
-												</p>
-											</li>
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-calendar fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ge.objeto.profile.fechaCreacion | date:"dd-MM-yyyy"}}(Fecha de alta)</span>
-												</p>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+		<div class="well">
 			<div class="row">
 				<div class="col-sm-12">
 					<form name="formNuevoCredito" class="form-horizontal" role="form" novalidate>
 				  	<div class="well">	    
 					  	<div class="row">
 					  		<div class="col-sm-12">
+						  		  <!--   <div class="air air-top-right padding-10">
+											<h4 class="txt-color-black font-md"><i class="fa fa-calendar pull-right"></i>&nbsp;&nbsp;{{ge.fechaActual | date:'dd-MM-yyyy'}}</h4>
+									</div>  -->
 					  			<div class="alert alert-info">
 					  			 <p><i class="fa-fw fa fa-info"></i> Para <strong>crear un nuevo crédito</strong> es importante que pongamos la información correcta.</p>
 					  			 <p><strong>Revisar bien los datos.</strong></p>
 					  			</div>
 					  		</div>
+					  		<div class="col-sm-6">
+										<h1>{{ge.cliente.profile.nombre}} <span class="semi-bold">{{ge.cliente.profile.apellidoPaterno}} {{ge.cliente.profile.apellidoMaterno}}</span>
+										
+										<small> (Cliente)</small></h1>
+										
+									</div>
 					  	</div>
 					    <div class="row">
 						    <div class="col-sm-4" valida>
