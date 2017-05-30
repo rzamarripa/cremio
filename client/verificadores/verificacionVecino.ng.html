@@ -1,0 +1,87 @@
+<div class="row">
+	<div class="col-sm-12">
+		<form name="form" class="form-horizontal" role="form" novalidate>		
+			<h4>Verificación Vecino</h4>
+			<div class="well">	    
+		    <div class="row">
+		    	<div class="col-sm-3" valida> 					    
+			    	<label>¿Cuál es la antiguedad del Sr(a) en su domicilio? *</label>
+			    	<input name="antiguedad" type="text" class="form-control" placeholder="Antiguedad domicilio" ng-model="verV.objeto.antiguedad" required>
+		    	</div>
+		    	<div class="col-sm-3" valida>					    
+			    	<label>¿Sabe si la vivienda es propia, prestada o propia? *</label>
+			    	<input name="vivienda" type="text" class="form-control" placeholder="Vivienda" ng-model="verV.objeto.vivienda" required>
+		    	</div>
+		    	<div class="col-sm-3">					    
+			    	<label>¿Sabe si el señor(a) trabaja?</label>
+			    	<input name="trabaja" type="text" class="form-control" placeholder="¿trabaja?" ng-model="verV.objeto.trabaja" >
+		    	</div>
+		    	<div class="col-sm-3">					    
+			    	<label>¿Dónde?</label>
+			    	<input name="donde" type="text" class="form-control" placeholder="¿Dónde?" ng-model="verV.objeto.donde" >
+		    	</div>	    				    	    
+		    </div>
+		    <div class="row">
+			    	<div class="col-sm-4" valida> 					    
+				    	<label>¿Es Casado (a)? *</label>
+				    	<input name="casado" type="text" class="form-control" placeholder="¿És Casado?" ng-model="verV.objeto.casado" required="">
+			    	</div>
+			    	<div class="col-sm-4" valida>					    
+				    	<label>¿Cómo se llama su esposo(a) *</label>
+				    	<input name="nombreEsposo" type="text" class="form-control" placeholder="Nombre" ng-model="verV.objeto.nombreEsposo" required="">
+			    	</div>		    				    	    
+			    	<div class="col-sm-4" valida>					    
+				    	<label>¿Dónde trabaja su esposo(a) *</label>
+				    	<input name="lugarTrajaboEsposo" type="text" class="form-control" placeholder="lugar Trabajo" ng-model="verV.objeto.lugarTrabajoEsposo" required="">
+					  </div>
+		    </div>
+		    <div class="row">
+			    <div class="col-sm-3" valida> 					    
+				    	<label>¿Cómo son como vecinos, serios, cumplidos, responsables? *</label>
+				    	<input name="vecinos" type="text" class="form-control" placeholder="¿Cómo son como vecinos?" ng-model="verV.objeto.vecinos" required="">
+			    	</div>
+			    	<div class="col-sm-6" valida>					    
+				    	<label>Él está pidiendo un préstamo con nosotros, sabe si ha quedado mal con alguno de los vecinos</label>
+				    	<input name="referenciavencino" type="text" class="form-control" placeholder="Ha quedado mal" ng-model="verV.objeto.haquedadoMal" required="">
+			    	</div>		    				    	    
+			    	<div class="col-sm-2" valida>					    
+				    	<label>En que trato *</label>
+				    	<br /><br />
+				    	<input name="trato" type="text" class="form-control" placeholder="¿Dónde?" ng-model="verV.objeto.trato" >
+					  </div>
+		    </div>  
+		    <div class="row">
+			    	<div class="col-sm-6" valida>
+							<label>¿Alguna de la personas que viven en ese domicilio es visitado frecuentemente por cobradores? *</label>
+				    	<select name="visitadoCobradores" ng-model="verV.objeto.visitadoCobradores" data-placeholder="Seleccione" class="form-control" required>
+								<option value=""></option>
+								<option value="SI">Si</option>
+								<option value="NO">No</option>
+							</select>
+					  </div>	
+					  <div class="col-sm-2" valida>					    
+				    	<label>Cada cuanto *</label>
+				    	<br /><br />
+				    	<input name="cadaCuanto" type="text" class="form-control" placeholder="cadaCuanto" ng-model="verV.objeto.cadaCuanto" >
+					  </div>
+		    </div>  
+		    <div class="row">
+			  		<div class="col-sm-6" valida>					    
+				    	<label>Aspectos de la vivienda donde nos dieron información</label>
+				    	<input name="aspectosVivienda" type="text" class="form-control" placeholder="Aspectos de la vivienda" ng-model="verV.objeto.aspectosVivienda" required="">
+			    	</div>   
+		    </div>   
+		    			
+				<div class="well">	    
+			    <div class="row">
+						<div class="col-sm-12">
+							<input type="submit" ng-click="verV.guardar(verV.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="verV.action" valida-form formulario="form">
+						</div>
+					</div>
+			  </div>    
+			 
+		</form>
+	</div>
+</div>
+
+

@@ -74,7 +74,38 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	},{
 		onReady:()=>{
 			rc.credito = Creditos.findOne($stateParams.credito_id)
-			rc.avales = rc.credito.avales;
+			
+			console.log(rc.credito);
+			rc.avales = [];
+	  	
+	  	_.each(rc.credito.avales_ids,function(aval_id){
+						Meteor.call('getPersona', aval_id, rc.credito.cliente_id, function(error, result){						
+									if (result)
+									{
+											//Recorrer las relaciones 
+											console.log("Aval:",result);
+											rc.avales.push({buscarPersona_id: aval_id,
+																		 nombre						: result.nombreCompleto,
+																		 estadoCivil			: result.estadoCivil,
+																		 ocupacion				: result.ocupacion,
+																		 direccion				: result.direccion,
+																		 empresa					: result.empresa,
+																		 puesto						: result.puesto,
+																		 antiguedad				: result.antiguedad,
+																		 direccionEmpresa	: result.direccionEmpresa,
+																		 parentezco				: result.parentezco,
+																		 tiempoConocerlo	: result.tiempoConocerlo,
+																		 num							: result.num,
+																		 cliente_id				: result.cliente_id,
+																		 tipoPersona			: result.tipoPersona,
+																		 estatus					: result.estatus
+											});
+											$scope.$apply();
+									}
+						});	
+	  	});
+			
+			
 			rc.garantias = rc.credito.garantias;
 			rc.credito.primerAbono = rc.credito.fechaPrimerAbono;
 		}
@@ -141,65 +172,6 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		$('#collapseNuevoPago').collapse('hide');
 		$('#collapseReestructuracion').collapse('hide');
 	};
- 	/*
-	this.guardar = function(convenio,form)
-	{
-		if(form.$invalid){
-			toastr.error('Error al guardar los datos.');
-			return;
-		}
-		convenio.estatus = 0;
-		convenio.campus_id = Meteor.user().profile.campus_id;
-		convenio.usuarioInserto = Meteor.userId();
-		convenio.cliente_id = rc.objeto._id;
-		PlanPlagos.insert({});
-		toastr.success('Guardado correctamente.');
-		this.escuela = {}; 
-		$('.collapse').collapse('hide');
-		this.nuevo = true;
-		form.$setPristine();
-		form.$setUntouched();	
-	};
-	*/
-
-	/*
-	this.editar = function(pago)
-	{
-	    this.pago = pago;
-	    this.action = false;
-	    $('.collapse').collapse('show');
-	    this.nuevo = false;
-	};
-	*/
-	
-	/*
-	this.cambiarEstatus = function(pago, estatus, tipoMov){
-		var res = confirm("Está seguro que quiere " + tipoMov + " el pago?");
-		if(res == true){
-			PlanPagos.update(pago._id, { $set : {estatus : estatus}});
-			toastr.success('Cancelado correctamente.');
-		}
-	}
-	*/
-	/*
-	this.actualizar = function(pago,form)
-	{
-		if(form.$invalid){
-      toastr.error('Error al actualizar los datos.');
-      return;
-	  }
-		var idTemp = pago._id;
-		delete pago._id;		
-		pago.usuarioActualizo = Meteor.userId(); 
-		pago.convenio = 1;
-		PlanPagos.update({_id:idTemp},{$set:pago});
-		toastr.success('Actualizado correctamente.');
-		$('.collapse').collapse('hide');
-		this.nuevo = true;
-		form.$setPristine();
-    form.$setUntouched();
-	};
-	*/
 	
 	this.tieneFoto = function(sexo, foto){
 		if(foto === undefined){
@@ -276,6 +248,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	
 	this.actualizarCredito = function(){
 		
+		
+		console.log("Estatus :",this.credito.estatus);
+		
 		if (!this.credito.requiereVerificacion)
 				this.credito.turno = "";	
 		
@@ -310,7 +285,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				
 				
 		Meteor.apply('actualizarCredito', [this.cliente, credito, $stateParams.credito_id], function(error, result){
-			console.log(result,error)
+			//console.log(result,error)
 			if(result == "hecho"){
 				toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');
 				rc.planPagos = [];

@@ -7,6 +7,9 @@ angular.module("creditoMio")
   this.nuevo = true;	 
   this.objeto = {}; 
 	this.clientes_ids = [];
+	this.creditoRechazar = "";
+	this.motivo = "";
+	
   window.rc = rc;
   
   this.subscribe('clientes', () => {
@@ -53,9 +56,25 @@ angular.module("creditoMio")
 	  toastr.success("Ha autorizado el crédito.")
   }
   
-  this.rechazar = function(credito_id){
-	  Creditos.update({_id : credito_id}, { $set : {estatus : 3}});
+  this.rechazar = function(motivo){
+	  
+	  Creditos.update({_id : this.creditoRechazar}, { $set : {motivo: motivo, estatus : 3}});
 	  toastr.error("Se ha rechazado el crédito.")
+	  
+	  this.motivo = "";
+	  this.creditoRechazar = "";
+	  $('#modalRechazo').modal('hide');
+	  
   }
+  
+  
+  this.mostrarRechazoCredito = function(credito_id){
+	  
+	  this.creditoRechazar = credito_id;
+		$("#modalRechazo").modal();
+		
+		
+	};
+  
   
 };
