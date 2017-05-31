@@ -16,7 +16,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.notaCobranza = {}
 	this.masInfo = false;
 	this.masInfoCredito = false;
-	this.creditoAc = false;
+	this.creditoAc = true;
 	this.solicitudesCre = false;
 	this.notasCre = false;
 	rc.cancelacion = {};

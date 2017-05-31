@@ -19,13 +19,19 @@
 							<a ui-sref="root.pagarPlanPagos({objeto_id : cd.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
 								<i class="fa fa-plus"></i> Nuevo Pago
 							</a>&nbsp;
+							
 							<!-- <div class="col-sm-3"><h4 class="txt-color-black font-md">
 								<i class="fa fa-calendar"></i> {{cd.fechaActual | date:'dd-MM-yyyy'}}</h4>
 							</div> -->
-							<div class="col-sm-3">
+							<div class="col-sm-2">
 										<h1>{{cd.objeto.profile.nombre}} <span class="semi-bold">{{cd.objeto.profile.apellidoPaterno}} {{cd.objeto.profile.apellidoMaterno}}</span>
 										<br>
 									</div>
+								
+										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
+		 									<i class="fa fa-pencil" ></i> Modificar
+	 								  </a>&nbsp; 
+								
 							
 					
 							</div>
