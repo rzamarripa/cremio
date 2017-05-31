@@ -54,6 +54,9 @@
 		<li class="pull-right">
 			<a href="#notasCredito" ng-click="cd.notasCreditos()" data-toggle="tab">Notas Creditos</a>
 		</li>
+		<li class="pull-right">
+			<a href="#aprobados" ng-click="cd.creAprobados()" data-toggle="tab">Creditos Aprobados</a>
+		</li>
 	</ul>
 
 
@@ -736,6 +739,70 @@
 			
 				</article>
    </div>
+</div>
+<div class="tab-pane fade" id="aprobados" ng-show="cd.creditoApro">
+	<p>
+	<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+
+					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+						
+						<header role="heading">
+							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+							<h2>Créditos Aprobados</h2>
+			
+			
+						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+			
+						<!-- widget div-->
+						<div class="no-padding" role="content">
+							<!-- widget edit box -->
+						
+							<!-- end widget edit box -->
+			
+							<div class="widget-body">
+								<!-- content -->
+								
+
+								<div class="row ">
+									<br/>
+									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="aprobado in cd.creditosAprobados">
+										<div class="panel panel-blueDark">
+											<div class="panel-heading">
+												<h3 class="panel-title">
+													Credito</h3>
+											</div>
+											<div class="panel-body no-padding text-align-center">
+												<div class="the-price">
+													<h1>
+														{{aprobado.capitalSolicitado|currency}}
+													</h1>
+													<h2>
+														{{aprobado.duracionMeses}}
+														<span class="subscript">/meses</span>
+													</h2>
+													<small>Plan: {{aprobado.periodoPago}}</small>
+												</div>
+											</div>
+											<div class="panel-footer no-padding">						
+<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
+												<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Petición" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="cd.cancelarSeleccion(aprobado)" />
+												<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+								<!-- end content -->
+							</div>
+			
+						</div>
+						<!-- end widget div -->
+					</div>
+					<!-- end widget -->
+			
+				</article>
+
+	</p>
 </div>
 
 	</p>

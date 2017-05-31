@@ -14,11 +14,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.notaCuenta = []
 	rc.empresaArray
 	this.notaCobranza = {}
-	this.masInfo = true;
-	this.masInfoCredito = true;
-	this.creditoAc = true;
-	this.solicitudesCre = true;
-	this.notasCre = true;
+	this.masInfo = false;
+	this.masInfoCredito = false;
+	this.creditoAc = false;
+	this.solicitudesCre = false;
+	this.notasCre = false;
 	rc.cancelacion = {};
 	rc.nota = {};
 	rc.pagos = ""
@@ -27,7 +27,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.openModal = false
 	rc.empresa = {}
 	rc.creActivos =false;
-	rc.creAproba = true;
+	rc.creditoApro = false;
 
 	
 	this.subscribe("ocupaciones",()=>{
@@ -495,6 +495,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.creditoAc = false;
 		this.notasCre=false;
 		this.masInfoCredito = false;
+		this.creditoApro = false
 	}
 	this.creditosActivos = function(){
 		this.creditoAc = !this.creditoAc;
@@ -502,6 +503,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.masInfo = false;
 		this.notasCre=false;
 		this.masInfoCredito = false;
+		this.creditoApro = false
 	}
 	this.solicitudesCreditos = function(){
 		this.solicitudesCre= !this.solicitudesCre;
@@ -509,6 +511,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.masInfo = false;
 		this.notasCre=false;
 		this.masInfoCredito = false;
+		this.creditoApro = false
 	}
 	this.notasCreditos = function(){
 		this.notasCre= !this.notasCre;
@@ -516,6 +519,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.solicitudesCre = false;
 		this.masInfo = false;
 		this.masInfoCredito = false;
+		this.creditoApro = false
 	}
 	this.masInformacionCrdito = function(){
 		this.masInfoCredito = !this.masInfoCredito;
@@ -523,10 +527,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.solicitudesCre = false;
 		this.masInfo = false;
 		this.notasCre=false;
+		this.creditoApro = false;
 
 	}
-	this.creditosAprobados = function(){
-		this.creAproba = !this.creAproba;
+	this.creAprobados = function(){
+		this.creditoApro = !this.creditoApro;
 		this.masInfoCredito = false;
 		this.creditoAc = false;
 		this.solicitudesCre = false;
