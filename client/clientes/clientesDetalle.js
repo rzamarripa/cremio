@@ -27,6 +27,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.openModal = false
 	rc.empresa = {}
 	rc.creActivos =false;
+	rc.creAproba = true;
 
 	
 	this.subscribe("ocupaciones",()=>{
@@ -518,6 +519,15 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	}
 	this.masInformacionCrdito = function(){
 		this.masInfoCredito = !this.masInfoCredito;
+		this.creditoAc = false;
+		this.solicitudesCre = false;
+		this.masInfo = false;
+		this.notasCre=false;
+
+	}
+	this.creditosAprobados = function(){
+		this.creAproba = !this.creAproba;
+		this.masInfoCredito = false;
 		this.creditoAc = false;
 		this.solicitudesCre = false;
 		this.masInfo = false;
