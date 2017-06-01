@@ -29,6 +29,8 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 			this.buscando = false;		
   });
 
+
+
 	
   
   	this.helpers({

@@ -505,6 +505,14 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	};
 
 
+    $(document).ready(function() {
+      $('body').addClass("hidden-menu");
+
+    
+    
+});
+
+
 
 
 
