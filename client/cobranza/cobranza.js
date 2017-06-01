@@ -37,12 +37,12 @@ angular.module("creditoMio")
   rc.recibo = [];
 	
   
-  this.selected_credito = 0;
+  this.selected_numero = 0;
   this.ban = false;
   this.respuestaNotaCLiente = false;
   rc.verRecibos = false;
 
-
+	this.valorOrdenar = "Folio";
 
   rc.colonia =""
   
@@ -242,7 +242,7 @@ angular.module("creditoMio")
 	
 	this.AsignaFecha = function(op)
 	{	
-			this.selected_credito = 0;
+			this.selected_numero = 0;
 			this.ban = false;
 			
 			if (op == 0) //Vencimiento Hoy
@@ -321,20 +321,26 @@ angular.module("creditoMio")
 			Meteor.call('getCobranza', FI, FF, op, Meteor.user().profile.sucursal_id, function(error, result) {						
 					if (result)
 					{
+
 							rc.cobranza = result;
 							rc.totalRecibos = 0;
 							rc.totalMultas = 0;
 							_.each(rc.cobranza,function(c){
-									rc.totalRecibos = rc.totalRecibos + c.importe;
-									rc.totalMultas = rc.totalMultas + c.multas;
+									if (c.descripcion == "Recibo")
+												rc.totalRecibos = rc.totalRecibos + c.importeRegular;
+										else if (c.descripcion == "Multa")		
+												rc.totalMultas = rc.totalMultas + c.importeRegular;
 							});
+							
+							
+							
 							$scope.$apply();
 					}
 				
 			});	
 	}
 	
-  this.selCredito=function(objeto)
+  this.selCredito=function(objeto, num)
   {
 
   		rc.cliente_id = objeto.cliente._id
@@ -346,7 +352,7 @@ angular.module("creditoMio")
 	  	this.ban = !this.ban;
 
 	  	rc.credito_id = objeto.credito._id;
-	  	console.log("Objeto: ",objeto)
+	  	//console.log("Objeto: ",objeto)
 	  	rc.historial = objeto
 
 
@@ -449,7 +455,7 @@ angular.module("creditoMio")
 			//-----------------------------------------------------------------------------
 	  	
 	  	
-      this.selected_credito=objeto.credito.folio;
+      this.selected_numero=num;
   };
 
    this.selCredito2=function(objeto)
@@ -457,20 +463,20 @@ angular.module("creditoMio")
 
         //objeto.fechaEntrega = new Date();
   		rc.cliente_id = objeto.cliente._id
-  		console.log(rc.cliente_id)
+  		//console.log(rc.cliente_id)
   		Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
-  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
+  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"), estatus: 4}).fetch()
 
 	  	rc.credito_id = objeto.credito._id;
-	  	console.log("Objeto: ",objeto)
+	  	//console.log("Objeto: ",objeto)
 	  	rc.historial = objeto
 
 	  }
   
   this.isSelected=function(objeto){
-	  
+
 	  	this.sumarSeleccionados();
-      return this.selected_credito===objeto;
+      return this.selected_numero===objeto;
 
   };
   
@@ -483,8 +489,10 @@ angular.module("creditoMio")
 								rc.totalRecibos = 0;
 								rc.totalMultas = 0;
 								_.each(rc.cobranza,function(c){
-										rc.totalRecibos = rc.totalRecibos + c.importe;
-										rc.totalMultas = rc.totalMultas + c.multas;
+										if (c.descripcion == "Recibo")
+												rc.totalRecibos = rc.totalRecibos + c.importeRegular;
+										else if (c.descripcion == "Multa")		
+												rc.totalMultas = rc.totalMultas + c.importeRegular;
 								});
 								$scope.$apply();
 						}
@@ -516,8 +524,10 @@ angular.module("creditoMio")
 			_.each(rc.cobranza,function(c){	
 					if (c.imprimir == true)
 					{
-							rc.seleccionadoRecibos += c.importe;
-							rc.seleccionadoMultas += c.multas;
+							if (c.descripcion == "Recibo")
+									rc.seleccionadoRecibos += c.importeRegular;
+							else if (c.descripcion == "Multa")		
+									rc.seleccionadoMultas += c.importeRegular;
 					}		
 			});
 			//console.log(rc.cobranza)
@@ -540,27 +550,27 @@ angular.module("creditoMio")
 			toastr.success('Guardado correctamente.');
 	};
 	this.mostrarNotaCobranza=function(objeto){
-		console.log(objeto)
-		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
-		rc.notaCobranza.folioCredito = objeto.credito.folio 
-		rc.notaCobranza.recibo= objeto.planPagos[0].numeroPago
-	    rc.notaCobranza.cliente_id = objeto.cliente._id
-		rc.cobranza_id = objeto.credito._id
-		console.log("rc.cobranza_id",rc.cobranza_id)
+		console.log("Nota de Cobranza:",objeto)
+		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto;
+		rc.notaCobranza.folioCredito = objeto.credito.folio;
+		rc.notaCobranza.recibo = objeto.numeroPago;
+	  rc.notaCobranza.cliente_id = objeto.cliente_id;
+		rc.cobranza_id = objeto.credito._id;
+		console.log("rc.cobranza_id",rc.cobranza_id);
 		$("#myModal").modal();
 
 
 	}
 
 	this.mostrarNotaCliente=function(objeto){
-		console.log(objeto)
-		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
-		rc.notaCobranza.folioCredito = objeto.credito.folio 
-		rc.notaCobranza.recibo= objeto.planPagos[0].numeroPago
-     	rc.cobranza_id = objeto.credito._id
-     	rc.notaCobranza.cliente_id = objeto.cliente._id
-		 console.log("rc.cobranza_id",rc.cobranza_id)
-		 $("#modalCliente").modal();
+		console.log("Nota de Cliente:",objeto);
+		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto;
+		rc.notaCobranza.folioCredito = objeto.credito.folio;
+		rc.notaCobranza.recibo= objeto.numeroPago;
+    rc.cobranza_id = objeto.credito_id;
+    rc.notaCobranza.cliente_id = objeto.cliente_id;
+		console.log("rc.cobranza_id",rc.cobranza_id);
+		$("#modalCliente").modal();
 
 
 	}
@@ -587,7 +597,7 @@ angular.module("creditoMio")
 		console.log(objeto)
 		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
 		rc.notaCobranza.folioCredito = objeto.credito.folio 
-		rc.notaCobranza.recibo= objeto.planPagos[0].numeroPago
+		rc.notaCobranza.recibo= objeto.numeroPago
 		 rc.cobranza_id = objeto.credito._id
 		 rc.notaCobranza.cliente_id = objeto.cliente._id
 		 console.log("rc.cobranza_id",rc.cobranza_id)
@@ -795,7 +805,7 @@ angular.module("creditoMio")
   {
   	
 	  	
-	console.log("objeto:", objeto);
+			console.log("objeto:", objeto);
 		 _.each(objeto,function(item){
 		 	
 		 	if (item.imprimir == true) {
@@ -806,31 +816,31 @@ angular.module("creditoMio")
 		 	     console.log(credito,"credito_id")
 		     		_.each(item.perfil,function(cliente){
 		     			
-		 				_.each(item.planPagos,function(plan){
-		 				
-
-		 				cliente.colonia = Colonias.findOne(cliente.colonia_id)
-		 				plan.colonia = cliente.colonia.nombre
-		 				plan.calle = cliente.calle
-		 				cliente.estado = Estados.findOne(cliente.estado_id)
-						plan.estado = cliente.estado.nombre
-						cliente.municipio = Municipios.findOne(cliente.municipio_id)
-						plan.municipio = cliente.municipio.nombre
-		 				plan.nombreCompleto = cliente.nombreCompleto
-						plan.planPagoNumero = plan.numeroPago
-						plan.no = cliente.numero
-						plan.nombreCompleto = cliente.nombreCompleto
-						plan.telefono = cliente.telefono
-						plan.celular = cliente.celular
-						plan.telefonoOficina = cliente.telefonoOficina
-						plan.cantidadPagos = item.planPagos.length
-
-						
-						//plan.saldo = saldoActual 
-						
-
-						//plan.credito.numero = credito.numeroPagos
-		 			});
+			 				_.each(item.planPagos,function(plan){
+			 				
+	
+			 				cliente.colonia = Colonias.findOne(cliente.colonia_id)
+			 				plan.colonia = cliente.colonia.nombre
+			 				plan.calle = cliente.calle
+			 				cliente.estado = Estados.findOne(cliente.estado_id)
+							plan.estado = cliente.estado.nombre
+							cliente.municipio = Municipios.findOne(cliente.municipio_id)
+							plan.municipio = cliente.municipio.nombre
+			 				plan.nombreCompleto = cliente.nombreCompleto
+							plan.planPagoNumero = plan.numeroPago
+							plan.no = cliente.numero
+							plan.nombreCompleto = cliente.nombreCompleto
+							plan.telefono = cliente.telefono
+							plan.celular = cliente.celular
+							plan.telefonoOficina = cliente.telefonoOficina
+							plan.cantidadPagos = item.planPagos.length
+	
+							
+							//plan.saldo = saldoActual 
+							
+	
+							//plan.credito.numero = credito.numeroPagos
+			 			});
 
 		 		});
 		 	});
@@ -903,7 +913,7 @@ angular.module("creditoMio")
 				  var url = window.URL.createObjectURL(blob);
 				  var dlnk = document.getElementById('dwnldLnk');
 
-			      dlnk.download = "RECIBOS.docx"; 
+			     dlnk.download = "RECIBOS.docx"; 
 					dlnk.href = url;
 					dlnk.click();		    
 				  window.URL.revokeObjectURL(url);
@@ -918,7 +928,7 @@ angular.module("creditoMio")
 
 
 	this.verPagos= function(credito) {
-		console.log(credito,"el ob ")
+		//console.log(credito,"el ob ")
 		$("#modalpagos").modal();
 		credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
 		rc.mostrarModal = true
@@ -929,7 +939,17 @@ angular.module("creditoMio")
 		rc.mostrarModal = false
 
 	};
-
+	
+	
+	this.funcionOrdenar = function() {
+		
+			if (this.valorOrdenar == "Folio")
+	    		return ['credito.folio','numeroPago'];
+	    if (this.valorOrdenar == "Fecha")
+	    		return ['fechaLimite'];
+	    if (this.valorOrdenar == "Cliente")
+	    		return ['cliente.nombreCompleto'];		
+	}
 
 
 

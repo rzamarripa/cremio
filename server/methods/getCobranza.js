@@ -11,18 +11,18 @@ Meteor.methods({
 
 			
 			if (op == 0)
-					var planPagos = PlanPagos.find({fechaLimite: {$lte: fechaFinal}, credito_id: { $in: creditos_ids }, estatus: 0}).fetch();
+					var planPagos = PlanPagos.find({fechaLimite: {$lte: fechaFinal}, credito_id: { $in: creditos_ids }, estatus: { $ne: 1 }}).fetch();
 			else
-					var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, credito_id: { $in: creditos_ids }, estatus: 0}).fetch();
+					var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, credito_id: { $in: creditos_ids }, estatus: { $ne: 1 }}).fetch();
 			
-
+					
 			var hoy = new Date();
 			var fechaActual = moment();
 			
 			_.each(planPagos, function(planPago){
 				var classPago = "";
 					
-					if(hoy > planPago.fechaLimite && planPago.estatus == 0){
+					if(hoy > planPago.fechaLimite && planPago.estatus != 1){
 						
 						classPago = "text-danger";
 						
@@ -32,6 +32,27 @@ Meteor.methods({
 						
 					}
 					
+					if (planPago.importeRegular != 0 )
+					{
+				 			
+							var u = Meteor.users.findOne({_id: planPago.cliente_id});
+							var c = Creditos.findOne({_id: planPago.credito_id});
+
+				 			//planPago.cliente = u.profile.nombreCompleto;
+				 			planPago.cliente = Meteor.users.findOne({_id: planPago.cliente_id});
+				 			planPago.credito = Creditos.findOne({_id: planPago.credito_id});
+				 			
+				 			planPago.imprimir = false;
+				 			planPago.classPago = classPago;
+				 			//planPago.folio = c.folio;
+				 			
+				 			
+				 			
+					 			
+					}
+					
+					
+/*
 					if (planPago.importeRegular != 0 )
 					{
 						
@@ -45,10 +66,14 @@ Meteor.methods({
 					 			arreglo[planPago.credito_id].perfil = []
 					 			arreglo[planPago.credito_id].perfil.push(arreglo[planPago.credito_id].cliente.profile);
 					 			arreglo[planPago.credito_id].planPagos = [];			 			
-					 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, fechaLimite : planPago.fechaLimite, classPago : classPago,
-					 				cargo : planPago.cargo,estatus : planPago.estatus,_id : planPago._id, folioCredito : arreglo[planPago.credito_id].credito.folio});
+					 			arreglo[planPago.credito_id].planPagos.push({numeroPago : planPago.numeroPago, 
+						 																								fechaLimite : planPago.fechaLimite, 
+						 																								classPago : classPago,
+						 																								cargo : planPago.cargo,
+						 																								estatus : planPago.estatus,
+						 																								_id : planPago._id, 
+						 																								folioCredito : arreglo[planPago.credito_id].credito.folio});
 
-					 			
 					 			//arreglo[planPago.credito_id].importe = 0.00;
 					 			if (planPago.movimiento == "Recibo")
 					 			{
@@ -81,22 +106,30 @@ Meteor.methods({
 					 			
 				 			}
 					}
-			 		//console.log("Arreglo:", _.toArray(arreglo));			
+*/
+
 			});
 			
-			return _.toArray(arreglo);
+			//return _.toArray(arreglo);
+			return planPagos;
 	},
 	getPersona: function (idPersona, idCliente) {
+		
 			var persona = Personas.findOne(idPersona);
 
 			var p = {};
-			_.each(persona.relaciones, function(relacion){
-					if (relacion.cliente_id == idCliente){
-							p = relacion;
-							p.nombreCompleto = persona.nombreCompleto;
-					}
-			});
-			return p;
+
+			if (persona != undefined && persona.relaciones !== undefined)
+			{
+					_.each(persona.relaciones, function(relacion){
+							if (relacion.cliente_id == idCliente){
+									p = relacion;
+									p.nombreCompleto = persona.nombreCompleto;
+							}
+					});	
+					return p;
+			}
+			
 	},
 	getcobranzaNombre: function (nombre) {
 			
@@ -111,14 +144,13 @@ Meteor.methods({
 			var clientes_ids = _.pluck(clientes,"_id");			
 
 
-			
 			//Ir por los creditos
 			var creditos = Creditos.find({cliente_id :{ $in: clientes_ids }}).fetch(); //estatus 2 creditos autorizados
 			var creditos_ids = _.pluck(creditos, '_id'); // [45, 3]
 
 			
 			//Ir por los pagos que ha hecho
-			var planPagos = PlanPagos.find({credito_id: { $in: creditos_ids }, estatus: 0}).fetch();
+			var planPagos = PlanPagos.find({credito_id: { $in: creditos_ids }, estatus: { $ne: 1 }}).fetch();
 
 			
 			var hoy = new Date();
@@ -129,15 +161,9 @@ Meteor.methods({
 					
 					
 					
-					if(hoy > planPago.fechaLimite && planPago.estatus == 0){
+					if(hoy > planPago.fechaLimite && planPago.estatus != 1){
 						
 						classPago = "text-danger";
-						
-						//Calcular Multa
-						
-						var fechaLimite = moment(planPago.fechaLimite);
-						var dias = fechaActual.diff(fechaLimite, "days");
-						
 						
 					}else{
 						
@@ -145,8 +171,24 @@ Meteor.methods({
 						
 					}
 					
+					if (planPago.importeRegular != 0 )
+					{
+				 			
+							var u = Meteor.users.findOne({_id: planPago.cliente_id});
+							var c = Creditos.findOne({_id: planPago.credito_id});
+
+				 			//planPago.cliente = u.profile.nombreCompleto;
+				 			planPago.cliente = Meteor.users.findOne({_id: planPago.cliente_id});
+				 			planPago.credito = Creditos.findOne({_id: planPago.credito_id});
+				 			
+				 			planPago.imprimir = false;
+				 			planPago.classPago = classPago;
+				 			//planPago.folio = c.folio;
+				 						
+					}
 					
-		 			if (planPago.importeRegular != 0)
+		 			/*
+if (planPago.importeRegular != 0)
 					{
 						
 				 			if(arreglo[planPago.credito_id] == undefined){
@@ -188,11 +230,13 @@ Meteor.methods({
 					 			
 				 			}
 					}
+*/
 	
 			 		//console.log("Arreglo:", _.toArray(arreglo));			
 			});
 			
-			return _.toArray(arreglo);
+			//return _.toArray(arreglo);
+			return planPagos;
 			
 			
 			

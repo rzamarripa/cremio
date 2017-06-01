@@ -40,20 +40,28 @@
 	</div>	
 	<br />
 	<div class="row">
+		<div class="col-sm-2">
+		    <select name="ordenar" ng-model="cob.valorOrdenar" ng-change="cob.funcionOrdenar()" data-placeholder="Ordenar" class="form-control" >
+				    <option value=""></option>
+				    <option value="Folio">Folio</option>
+				    <option value="Fecha">Fecha</option>
+				    <option value="Cliente">Cliente</option>
+				</select>
+  	</div>
 		<div class="col-sm-6">
-				<div class="input-group input-group-md">
-			      <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
-			      <div class="icon-addon addon-md">
-			          <input type="text" placeholder="..." class="form-control" ng-model="cob.buscar.nombre">
-			          <label for="email" class="glyphicon glyphicon-search" rel="tooltip" title="" data-original-title="email"></label>
-			      </div>
-			      <span class="input-group-btn">
-			          <button class="btn btn-default" ng-click="cob.buscarNombre()" type="button">Buscar</button>
-			          
-			      </span>
-			  </div>
+			<div class="input-group input-group-md">
+		      <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+		      <div class="icon-addon addon-md">
+		          <input type="text" placeholder="..." class="form-control" ng-model="cob.buscar.nombre">
+		          <label for="email" class="glyphicon glyphicon-search" rel="tooltip" title="" data-original-title="email"></label>
+		      </div>
+		      <span class="input-group-btn">
+		          <button class="btn btn-default" ng-click="cob.buscarNombre()" type="button">Buscar</button>
+		          
+		      </span>
+		  </div>
 		</div>
-		<div class="col-sm-6">
+		<div class="col-sm-2">
 			<a class="btn btn-default pull-right" ng-show="cob.verRecibos" ng-click="cob.imprimirRecibos(cob.cobranza)" style="width: 130px">Imprimir Recibos</a>
 		</div>	
 	</div>
@@ -63,50 +71,49 @@
 		<table id="rec" class="table table-hover border-collapse" >
 			<thead>
 				<tr>
-					<th width="5%" style="margin: 0px; border: 0px; padding: 0px">
+					<th width="2%" style="margin: 0px; border: 0px; padding: 0px">
 						<input id="todos" type="checkbox" class="form-control" ng-checked="false" ng-click="cob.cambiar()" style="margin: 0px; border: 0px; padding: 0px"/>
 					</th>
 					<th width="5%">No.</th>
-					<th width="15%"><div class="text-center">Folio crédito</div></th>
-					<th width="25%"><div class="text-center">Recibo</div></th>
-					<th width="15%"><div class="text-center">Cliente</div></th>
+					<th width="5%"><div class="text-center">Crédito</div></th>
+					<th width="5%"><div class="text-center">Recibo</div></th>
+					<th width="5%"><div class="text-center">Tipo</div></th>
+					<th width="15%"><div class="text-center">Fecha</div></th>
+					<th width="30%"><div class="text-center">Cliente</div></th>
 					<th width="10%"><div class="text-center">Importe</div></th>
-					<th width="10%"><div class="text-center">Multas</div></th>
 					<th width="10%"><div class="text-center">Saldo</div></th>
-<!-- 					<th width="10%"><div class="text-center">Acciones</div></th>
- -->				</tr>
+				</tr>
 			</thead>
 			<tbody>
-		    <tr style='cursor: pointer' ng-repeat-start="objeto in cob.cobranza" >
+		    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in cob.cobranza | orderBy: cob.funcionOrdenar()" ng-class="objeto.classPago">
 			    <td style="margin: 0px; border: 0px; padding: 0px">
 				    <input type="checkbox" class="form-control" 
 				    											 ng-model="objeto.imprimir" 
 				    											 ng-click="cob.sumarSeleccionados(objeto)"
 				    											 ng-change="cob.Selecionar(objeto)" value="objeto.imprimir" style="margin: 0px; border: 0px; padding: 0px" /> 
 			    </td>
-			    <td ng-click="cob.selCredito(objeto)">{{ $index + 1 }}</td>
-			    <td class="text-center" ng-click="cob.selCredito(objeto)">{{objeto.credito.folio}}</td>
-			    <td ng-click="cob.selCredito(objeto)">
-				    <span ng-class="planPago.classPago" title="{{planPago.fechaLimite | date:'dd-MM-yyyy'}}" ng-repeat="planPago in objeto.planPagos">| {{planPago.numeroPago}} </span>
+			    <td ng-click="cob.selCredito(objeto, $index + 1)">{{ $index + 1 }}</td>
+			    <td class="text-center" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.credito.folio}}</td>
+			    <td ng-click="cob.selCredito(objeto,$index + 1)">
+				    <span>{{objeto.numeroPago}} </span>
 				  </td>
-			    <td ng-click="cob.selCredito(objeto)">{{objeto.cliente.profile.nombreCompleto}}</td>
-			    <td class="text-right" ng-click="cob.selCredito(objeto)">{{objeto.importe | currency}}</td>
-			    <td class="text-right" ng-click="cob.selCredito(objeto)">{{objeto.multas | currency}}</td>
-			    <td class="text-right" ng-click="cob.selCredito(objeto)">{{objeto.saldo | currency}}</td>
-			   <!--  <td><a class="btn btn-default" ng-click="cob.imprimirRecibos(objeto)" >Imprimir Recibos</a></td> -->
+				  <td class="text-center" style="font-size: small" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.descripcion}}</td>
+				  <td class="text-center" style="font-size: small" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.fechaLimite | date:'dd-MM-yyyy'}}</td>
+			    <td ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.cliente.profile.nombreCompleto}}</td>
+			    <td class="text-right" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.cargo | currency}}</td>
+			    <td class="text-right" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.importeRegular | currency}}</td>
 		    </tr>
 		    
-		    <tr ng-repeat-end ng-if="cob.isSelected(objeto.credito.folio) && cob.ban">
-            <td colspan="8">
+		    <tr ng-repeat-end ng-if="cob.isSelected($index + 1) && cob.ban">
+            <td colspan="12">
 	           	<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
 										<header role="heading">
-										<!--<h2><strong>Panel de Folios </strong></h2>-->
 										
 										<ul id="widget-tab-1" class="nav nav-tabs pull-left">
 								
 											<li class="active">
 								
-												<a data-toggle="tab" href="#hr1" aria-expanded="true"> <i class="fa fa-lg fa-info"></i> <span class="hidden-mobile hidden-tablet"> Información del cliente	</span> </a>
+												<a data-toggle="tab" href="#hr1" aria-expanded="true"> <i class="fa fa-lg fa-info"></i> <span class="hidden-mobile hidden-tablet"> Datos del cliente	</span> </a>
 											</li>
 								
 											<li class="" ng-click="cob.selCredito2(objeto)">
@@ -114,24 +121,13 @@
 											</li>
 											
 											<li class="">
-												<a data-toggle="tab" href="#hr3" aria-expanded="false"> <i class="fa fa-lg fa-info-circle"></i> <span class="hidden-mobile hidden-tablet"> Información del crédito </span></a>
+												<a data-toggle="tab" href="#hr3" aria-expanded="false"> <i class="fa fa-lg fa-info-circle"></i> <span class="hidden-mobile hidden-tablet"> Datos del crédito </span></a>
 											</li>
 											
 											<li class="">
 												<a data-toggle="tab" href="#hr4" aria-expanded="false"> <i class="fa fa-lg fa-list"></i> <span class="hidden-mobile hidden-tablet"> Historial de cobranza </span></a>
 											</li>
-											
-											<!-- <li class="dropdown ">
-												<a href="javascript:void(0);" class="dropdown-toggle " data-toggle="dropdown" aria-expanded="false"><i class="fa fa-lg  fa fa-plus"></i>Agregar nota de cobranza <b class="caret"></b></a>
-												<ul class="dropdown-menu text-left">
-												<li >
-													
-												</li>
-												
-													
-												</ul>
-											</li> -->
-											
+																						
 										</ul>	
 										
 									<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>

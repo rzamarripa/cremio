@@ -39,23 +39,38 @@
 			    <div id="href2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 			      <div class="panel-body">
 			        	<div class="row">
-						    	<div class="col-sm-3" > 					    
-							    	<label>Teléfono </label>
-							    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cob.cliente.profile.telefono"  disabled="">
-						    	</div>
-						    	<div class="col-sm-3" >					    
-							    	<label>Celular </label>
-							    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="cob.cliente.profile.celular" disabled="">
-						    	</div>
-						    	<div class="col-sm-3">					    
-							    	<label>Otro Teléfono</label>
-							    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="cob.cliente.profile.otroTelefono" disabled="" >
-						    	</div>	  
-						    	<div class="col-sm-3">					    
-							    	<label>Correo</label>
-							    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="cob.cliente.profile.correo" disabled="">
-						    	</div>  				    	    
-						    </div>
+							    	<div class="col-sm-4" valida> 					    
+								    	<label>Particular</label>
+								    	<input name="telefonoParticular" type="text" class="form-control" placeholder="Teléfono Particular" ng-model="cob.cliente.profile.particular" disabled="">
+							    	</div>
+							    	<div class="col-sm-4" valida> 					    
+								    	<label>Teléfono Oficina</label>
+								    	<input name="telefonoOficina" type="text" class="form-control" placeholder="Teléfono" ng-model="cob.cliente.profile.telefonoOficina" disabled="">
+							    	</div>
+							    	<div class="col-sm-4" valida>					    
+								    	<label>Celular</label>
+								    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="cob.cliente.profile.celular" disabled="">
+							    	</div>
+							    </div>
+							    <div class="row">
+								    <div class="col-sm-3">					    
+								    	<label>Teléfono Alternativo</label>
+								    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cob.cliente.profile.telefonoAlternativo" disabled="">
+							    	</div>	  
+							    	<div class="col-sm-3">					    
+								    	<label>Dueño</label>
+								    	<input name="otroTelefono" type="text" class="form-control" placeholder="Dueño" ng-model="cob.cliente.profile.duenoAlternativo" disabled="">
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Parentezco</label>
+								    	<input name="otroTelefono" type="text" class="form-control" placeholder="Parentezco" ng-model="cob.cliente.profile.parentescoAlternativo" disabled="">
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Correo</label>
+								    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="cob.cliente.profile.correo" disabled="">
+							    	</div>  
+							    </div>
+			        	
 			      </div>
 			    </div>
 			  </div>
