@@ -106,6 +106,7 @@
 														<th class="text-center" width="10%">Capital</th>
 														<th class="text-center" width="10%">Interes</th>
 														<th class="text-center" width="10%">IVA</th>
+														<th class="text-center" width="10%">Seguro</th>
 														<th class="text-center" width="15%">Pago</th>
 														<th class="text-center" width="10%">Saldo</th>
 														
@@ -121,6 +122,7 @@
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.capital | currency}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.interes | currency}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.iva | currency}}</td>
+														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.seguro | currency}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular | currency}}</td>
 														
 													</tr>
@@ -662,6 +664,7 @@
 														<span class="subscript">/meses</span>
 													</h2>
 													<small>Plan: {{pendiente.periodoPago}}</small>
+													<small>Fecha: {{pendiente.fechaSolicito.getUTCDate() +"/"+ (pendiente.fechaSolicito.getUTCMonth()+1) +"/"+ pendiente.fechaSolicito.getUTCFullYear()}}</small>
 												</div>
 											</div>
 											
