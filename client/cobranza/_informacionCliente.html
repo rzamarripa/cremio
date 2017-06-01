@@ -69,8 +69,7 @@
 								    	<label>Correo</label>
 								    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="cob.cliente.profile.correo" disabled="">
 							    	</div>  
-							    </div>
-			        	
+							  </div>
 			      </div>
 			    </div>
 			  </div>
@@ -241,15 +240,60 @@
 				      </div>
 				    </div>
 				</div>
-				<div class="panel panel-default">
+				<div class="panel panel-default" ng-if="cob.estadoCivilSeleccionado == 'CASADO (A)'">
 				    <div class="panel-heading" role="tab" id="headingSix">
 				      <h4 class="panel-title">
 				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href6" aria-expanded="false" aria-controls="href6">
-				          Referencias Personales
+				          Información del Cónyuge
 				        </a>
 				      </h4>
 				    </div>
 				    <div id="href6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="col-sm-3" valida> 					    
+							    	<label>Nombre *</label>
+							    	<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cob.cliente.profile.nombreConyuge" required="" capitalize>
+						    	</div>
+						    	<div class="col-sm-3" valida>					    
+							    	<label>Dirección *</label>
+							    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cob.cliente.profile.direccionConyuge" required="" capitalize>
+						    	</div>
+						    	<div class="col-sm-3" valida>					    
+							    	<label>Dirección del trabajo *</label>
+							    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cob.cliente.profile.direccionConyugeTrabajo" required="" capitalize>
+						    	</div>
+						    	<div class="col-sm-3" valida>					    
+							    	<label>Puesto *</label>
+							    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cob.cliente.profile.puestoConyuge" required="" capitalize>
+						    	</div>
+						    	<div class="col-sm-3" valida>					    
+							    	<label>Teléfono Particular *</label>
+							    	<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="cob.cliente.profile.telefonoConyuge" required="">
+						    	</div>
+						    	<div class="col-sm-3">					    
+							    	<label>Teléfono del trabajo</label>
+							    	<input name="telefonoConyugeTrabajo" type="number" class="form-control" placeholder="Teléfono" ng-model="cob.cliente.profile.telefonoConyugeTrabajo" >
+						    	</div>
+						    	<div class="col-sm-3">					    
+							    	<label>Ocupación</label>
+							    	<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cob.cliente.profile.ocupacionConyuge" capitalize>
+						    	</div>	
+						    	<div class="col-sm-3">					    
+							    	<label>Dirección Trabajo</label>
+							    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion" ng-model="cob.cliente.profile.direccionTrabajoConyuge" capitalize>
+						    	</div>		   				    	    
+						    </div>
+				      </div>
+				    </div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingSeven">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href7" aria-expanded="false" aria-controls="href7">
+				          Referencias Personales
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 				      <div class="panel-body">
 				        	<div class="row">
 										<table class="table table-bordered">
@@ -279,14 +323,14 @@
 				    </div>
 				</div>
 				<div class="panel panel-default">
-				    <div class="panel-heading" role="tab" id="headingSeven">
+				    <div class="panel-heading" role="tab" id="headingEight">
 				      <h4 class="panel-title">
-				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href7" aria-expanded="false" aria-controls="href7">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href8" aria-expanded="false" aria-controls="href8">
 				          Empresa
 				        </a>
 				      </h4>
 				    </div>
-				    <div id="href7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				    <div id="href8" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 				      <div class="panel-body">
 				        	<div class="row">
 								    	<div class="col-sm-6" > 					    

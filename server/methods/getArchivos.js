@@ -223,12 +223,12 @@ Meteor.methods({
 
   getReferencias: function (idReferencia) {
 			var referencia = Personas.findOne(idReferencia);
-			console.log("esta es la referencia",referencia)
+			//console.log("esta es la referencia",referencia)
 			return referencia;
 	},
 	 getDocs: function (idReferencia) {
 			var referencia = Documentos.findOne(idReferencia);
-			console.log("esta es la referencia",referencia)
+			//console.log("esta es la referencia",referencia)
 			return referencia;
 	},
 	// getEmpresas: function (idEmpresa) {

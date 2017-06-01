@@ -349,7 +349,7 @@ this.tomarFoto = function(objeto){
 		this.nuevo = true;
 		form.$setPristine();
 		form.$setUntouched();
-		$state.go('root.clientesLista');
+		$state.go('root.clienteDetalle', { 'objeto_id':objeto._id});
 
 	};
 	

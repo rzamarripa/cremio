@@ -41,7 +41,8 @@ angular.module("creditoMio")
   this.ban = false;
   this.respuestaNotaCLiente = false;
   rc.verRecibos = false;
-
+	
+	this.estadoCivilSeleccionado = "";
 	this.valorOrdenar = "Folio";
 
   rc.colonia =""
@@ -395,6 +396,10 @@ angular.module("creditoMio")
 	  	if (mun != undefined) rc.cliente.profile.empresa.municipio = mun.nombre;
 	  	ciu = Ciudades.findOne(rc.cliente.profile.empresa.ciudad_id);
 	  	if (ciu != undefined) rc.cliente.profile.empresa.ciudad = ciu.nombre;
+	  	
+	  	var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
+			if (ec != undefined)
+					this.estadoCivilSeleccionado = 	ec.nombre;
 	  	
 	  	rc.referenciasPersonales = [];
 	  	
