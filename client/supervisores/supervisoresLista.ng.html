@@ -1,0 +1,53 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Supervisor &gt; Buscar
+		</h1>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="input-group">
+			<div class="input-group-btn">
+				<a href="./supervisoresForm" class="btn btn-default btn-primary">
+					<i class="fa fa-plus"></i> Nuevo
+				</a>
+			</div>
+			<input class="form-control" type="text" placeholder="Buscar..." ng-model="sup.buscar.nombre">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-3" ng-repeat="supervisor in sup.supervisores">
+      <div class="contact-box center-version">
+
+          <a href="/supervisores/{{supervisor._id}}" style="text-decoration: none;">
+
+              <img alt="image" class="img-circle" ng-src="{{sup.tieneFoto(supervisor.profile.sexo, supervisor.profile.foto)}}">
+           <!--   <img alt="image" class="img-circle" ng-src="img/badmenprofile.png"> -->
+
+
+              <p class="lead font-xs text-center"><strong>{{supervisor.profile.nombre}} <br/> {{supervisor.profile.apPaterno}} {{supervisor.profile.apMaterno}}</strong></p>
+
+              <div class="font-bold">{{supervisor.username}}</div>
+              <address class="font-xs">
+                  <strong>Cliente</strong><br>
+                  {{supervisor.profile.call}} {{supervisor.profile.numero}}<br>
+                  {{supervisor.profile.colonia}}<br>
+                  <abbr title="Teléfono">T1:</abbr> {{supervisor.profile.telefono}}<br/>
+                  <abbr title="Celular">C2:</abbr> {{supervisor.profile.celular}}
+              </address>
+
+          </a>
+          <div class="contact-box-footer">
+              <div class="m-t-xs btn-group">
+                  <a href="/supervisores/{{supervisor._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
+                  <a href="/editarSupervisor/{{supervisor._id}}" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Editar</a>
+              </div>
+          </div>
+
+      </div>
+  </div>
+</div>
