@@ -36,6 +36,7 @@
 			
 
 	<div class="col-sm-12" >
+	<!-- <a href="" ng-click="re.imprimirReporteCobranza(re.planPagos)"  class="btn btn-primary pull-right">Imprimir</a> -->
 	<H5>Diario de cobranza</H5>
 		<table class="table table-bordered">
 			<thead>
@@ -60,7 +61,7 @@
 		    <tr ng-repeat="objeto in re.planPagos | filter:buscar">
 		    	<td>{{$index + 1}}</td>
 		    	<!-- <td>{{objeto.folio}}</td> -->
-			    <td>{{objeto.ultimaModificacion  | date:"dd-MM-yyyy"}}</td>
+			    <td>{{objeto.fechaPago  | date:"dd-MM-yyyy"}}</td>
 			    <td>{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</td>
 			    <td>{{objeto.nombreCompleto}}</td>
 			    <td>{{objeto.interes}}</td>

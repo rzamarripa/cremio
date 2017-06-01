@@ -14,11 +14,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.notaCuenta = []
 	rc.empresaArray
 	this.notaCobranza = {}
-	this.masInfo = true;
-	this.masInfoCredito = true;
-	this.creditoAc = false;
-	this.solicitudesCre = true;
-	this.notasCre = true;
+	this.masInfo = false;
+	this.masInfoCredito = false;
+	this.creditoAc = true;
+	this.solicitudesCre = false;
+	this.notasCre = false;
 	rc.cancelacion = {};
 	rc.nota = {};
 	rc.pagos = ""
@@ -26,6 +26,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.imagenes = []
 	rc.openModal = false
 	rc.empresa = {}
+	rc.creActivos =false;
+	rc.creditoApro = false;
 
 	
 	this.subscribe("ocupaciones",()=>{
@@ -489,18 +491,53 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.masInformacion = function(){
 		this.masInfo = !this.masInfo;
+		this.solicitudesCre = false;
+		this.creditoAc = false;
+		this.notasCre=false;
+		this.masInfoCredito = false;
+		this.creditoApro = false
 	}
 	this.creditosActivos = function(){
 		this.creditoAc = !this.creditoAc;
+		this.solicitudesCre = false;
+		this.masInfo = false;
+		this.notasCre=false;
+		this.masInfoCredito = false;
+		this.creditoApro = false
 	}
 	this.solicitudesCreditos = function(){
 		this.solicitudesCre= !this.solicitudesCre;
+		this.creditoAc = false;
+		this.masInfo = false;
+		this.notasCre=false;
+		this.masInfoCredito = false;
+		this.creditoApro = false
 	}
 	this.notasCreditos = function(){
 		this.notasCre= !this.notasCre;
+		this.creditoAc = false;
+		this.solicitudesCre = false;
+		this.masInfo = false;
+		this.masInfoCredito = false;
+		this.creditoApro = false
 	}
 	this.masInformacionCrdito = function(){
 		this.masInfoCredito = !this.masInfoCredito;
+		this.creditoAc = false;
+		this.solicitudesCre = false;
+		this.masInfo = false;
+		this.notasCre=false;
+		this.creditoApro = false;
+
+	}
+	this.creAprobados = function(){
+		this.creditoApro = !this.creditoApro;
+		this.masInfoCredito = false;
+		this.creditoAc = false;
+		this.solicitudesCre = false;
+		this.masInfo = false;
+		this.notasCre=false;
+
 	}
 	this.getNombreTipoNotaCredito = function (tipo_id) {
 		var tipo = TiposNotasCredito.findOne(tipo_id);
