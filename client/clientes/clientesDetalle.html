@@ -46,7 +46,7 @@
 
 	<ul id="myTab3" class="nav nav-tabs tabs-pull-right bordered">
 		<li class="active">
-			<a href="#creditosActivos" data-toggle="tab" ng-click="cd.creditosActivos()">Creditos Activos</a>
+			<a href="#creditosActivos" data-toggle="tab" ng-click="cd.creditosActivos()">Créditos Activos</a>
 		</li>
 		<li class="pull-right">
 			<a href="#informacionCliente" data-toggle="tab" ng-click="cd.masInformacion()">Información del Cliente</a>
@@ -55,13 +55,13 @@
 			<a href="#historialCrediticio" ng-click="cd.masInformacionCrdito()"  data-toggle="tab">Historial Crediticio</a>
 		</li>
 		<li class="pull-right">
-			<a href="#solicitudes" ng-click="cd.solicitudesCreditos()" data-toggle="tab">Solicitudes Creditos</a>
+			<a href="#solicitudes" ng-click="cd.solicitudesCreditos()" data-toggle="tab">Solicitudes Créditos</a>
 		</li>
 		<li class="pull-right">
-			<a href="#notasCredito" ng-click="cd.notasCreditos()" data-toggle="tab">Notas Creditos</a>
+			<a href="#notasCredito" ng-click="cd.notasCreditos()" data-toggle="tab">Notas Créditos</a>
 		</li>
 		<li class="pull-right">
-			<a href="#aprobados" ng-click="cd.creAprobados()" data-toggle="tab">Creditos Aprobados</a>
+			<a href="#aprobados" ng-click="cd.creAprobados()" data-toggle="tab">Créditos Aprobados</a>
 		</li>
 	</ul>
 
@@ -790,6 +790,7 @@
 														<span class="subscript">/meses</span>
 													</h2>
 													<small>Plan: {{aprobado.periodoPago}}</small>
+													<small>Fecha: {{aprobado.fechaSolicito.getUTCDate() +"/"+ (aprobado.fechaSolicito.getUTCMonth()+1) +"/"+ aprobado.fechaSolicito.getUTCFullYear()}}</small>
 												</div>
 											</div>
 											<div class="panel-footer no-padding">						

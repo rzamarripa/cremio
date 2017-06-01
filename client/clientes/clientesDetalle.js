@@ -160,7 +160,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 
 		historialCreditos : () => {
-			var creditos = Creditos.find().fetch();
+			var creditos = Creditos.find({estatus: 4}).fetch();
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
 			}
