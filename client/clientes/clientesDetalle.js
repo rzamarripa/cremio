@@ -29,6 +29,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.creActivos =false;
 	rc.creditoApro = false;
 
+	this.estadoCivilSeleccionado = "";
 	
 	this.subscribe("ocupaciones",()=>{
 		return [{_id : this.getReactively("ocupacion_id"), estatus : true }]
@@ -160,7 +161,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 
 		historialCreditos : () => {
-			var creditos = Creditos.find().fetch();
+			var creditos = Creditos.find({estatus: 4}).fetch();
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
 			}
@@ -250,7 +251,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 			if(cli){
 				this.ocupacion_id = cli.profile.ocupacion_id;
-
+				
+				var ec = EstadoCivil.findOne(cli.profile.estadoCivil_id);
+				if (ec != undefined)
+						this.estadoCivilSeleccionado = 	ec.nombre;
 
 				return cli;
 			}		

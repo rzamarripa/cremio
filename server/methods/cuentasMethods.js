@@ -140,9 +140,9 @@ Meteor.methods({
 		var destino = Cuentas.findOne(destino_id);
 
 		var user=Meteor.user();
-		console.log(origen)
-		console.log(destino)
-		console.log(cantidad)
+		//console.log(origen)
+		//console.log(destino)
+		//console.log(cantidad)
 		if(user.roles[0] != "Gerente")
 			throw new Meteor.Error(403, 'Error 403: Permiso denegado', 'Permiso denegado');
 		if(!destino || !origen || origen.saldo<cantidad || cantidad<=0)

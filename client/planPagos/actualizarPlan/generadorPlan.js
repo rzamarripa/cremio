@@ -247,10 +247,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	}
 	
 	this.actualizarCredito = function(){
-		
-		
-		console.log("Estatus :",this.credito.estatus);
-		
+				
 		if (!this.credito.requiereVerificacion)
 				this.credito.turno = "";	
 		
