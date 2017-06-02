@@ -53,7 +53,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		}
 		else if (this.getReactively("buscar.nombre").length  == 0 )
 			this.buscando = false;
-  	});
+  });
 	
 	this.subscribe("planPagos", ()=>{
 		return [{ cliente_id : $stateParams.objeto_id }]
@@ -83,22 +83,26 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 									if (result)
 									{
 											//Recorrer las relaciones 
-											console.log("Aval:",result);
-											rc.avales.push({buscarPersona_id: aval_id,
-																		 nombre						: result.nombreCompleto,
-																		 estadoCivil			: result.estadoCivil,
-																		 ocupacion				: result.ocupacion,
-																		 direccion				: result.direccion,
-																		 empresa					: result.empresa,
-																		 puesto						: result.puesto,
-																		 antiguedad				: result.antiguedad,
-																		 direccionEmpresa	: result.direccionEmpresa,
-																		 parentezco				: result.parentezco,
-																		 tiempoConocerlo	: result.tiempoConocerlo,
-																		 num							: result.num,
-																		 cliente_id				: result.cliente_id,
-																		 tipoPersona			: result.tipoPersona,
-																		 estatus					: result.estatus
+											console.log("Aval Get Persona:",result);
+											
+											rc.avales.push({buscarPersona_id	: aval_id,
+																		  nombreCompleto		: result.nombreCompleto,
+																		  nombre						: result.nombre,
+																		  apellidoPaterno	  : result.apellidoPaterno,
+																		  apellidoMaterno		: result.apellidoMaterno,
+																		  estadoCivil				: result.estadoCivil,
+																		  ocupacion					: result.ocupacion,
+																		  direccion					: result.direccion,
+																		  empresa						: result.empresa,
+																		  puesto						: result.puesto,
+																		  antiguedad				: result.antiguedad,
+																		  direccionEmpresa	: result.direccionEmpresa,
+																		  parentezco				: result.parentezco,
+																		  tiempoConocerlo		: result.tiempoConocerlo,
+																		  num								: result.num,
+																		  cliente_id				: result.cliente_id,
+																		  tipoPersona				: result.tipoPersona,
+																		  estatus						: result.estatus
 											});
 											$scope.$apply();
 									}
@@ -187,6 +191,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		}
 	}
 	  
+/*
   this.generarPlanPagos = function(credito, form){
   		var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
   		if(!tipoCredito || credito.capitalSolicitado>tipoCredito.montoMaximon){
@@ -238,13 +243,14 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 					rc.planPagos.push(pago)
 					$scope.$apply();
 				});
-				console.log("Prueba",rc.planPagos)
+				//console.log("Prueba",rc.planPagos)
 			}
 				
 		})
 		
 		return rc.planPagos;
 	}
+*/
 	
 	this.actualizarCredito = function(){
 				
@@ -279,7 +285,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		else
 				credito.garantias = angular.copy(this.garantiasGeneral);
 		
-				
+		//console.log(credito.avales);		
 				
 		Meteor.apply('actualizarCredito', [this.cliente, credito, $stateParams.credito_id], function(error, result){
 			//console.log(result,error)
@@ -310,6 +316,8 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			if (av.num == a.num)
 			{
 				av.nombre = a.nombre;
+				av.apellidoPaterno = a.apellidoPaterno;
+				av.apellidoMaterno = a.apellidoMaterno;
 				av.estadoCivil = a.estadoCivil;
 				av.ocupacion = a.ocupacion;			
 				av.direccion = a.direccion;
@@ -346,8 +354,11 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	this.editarAval = function(a)
 	{
 		this.aval.nombre = a.nombre;
+		this.aval.apellidoPaterno = a.apellidoPaterno;
+		this.aval.apellidoMaterno = a.apellidoMaterno;
 		this.aval.estadoCivil = a.estadoCivil;
-		this.aval.ocupacion = a.ocupacion;			
+		this.aval.ocupacion = a.ocupacion;		
+		this.aval.puesto = a.puesto;	
 		this.aval.direccion = a.direccion;
 		this.aval.empresa = a.empresa;
 		this.aval.antiguedad = a.antiguedad;

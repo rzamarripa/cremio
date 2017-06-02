@@ -135,7 +135,7 @@
 								<div class="col-sm-8"> 
 									<!--<form class="header-search pull-right">
 								    <div class="form-group" style="width: 800px;">-->
-											<div ng-include=" 'client/planPagos/generadorPlan/_buscarPersona.html' "></div>
+											<div ng-include=" 'client/planPagos/actualizarPlan/_buscarPersona.html' "></div>
 								  <!--  </div>	    
 									</form>-->
 								</div>
@@ -227,7 +227,7 @@
 										<tbody>
 											<tr ng-repeat="aval in ae.avales">
 												<td>{{aval.num}}</td>
-												<td>{{aval.nombre}}</td>
+												<td>{{aval.nombre}} {{aval.apellidoPaterno}} {{aval.apellidoMaterno}} </td>
 												<td>{{aval.estadoCivil}}</td>
 												<td>{{aval.ocupacion}}</td>
 												<td>{{aval.direccion}}</td>
