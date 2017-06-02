@@ -419,6 +419,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.supervisoresLista', {
+			url: '/supervisores',
+			templateUrl: 'client/supervisores/supervisoresLista.ng.html',
+			controller: 'SupervisoresListaCtrl as sup',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.cajerosLista', {
 			url: '/cajeros',
 			templateUrl: 'client/cajeros/cajerosLista.ng.html',
@@ -437,6 +447,32 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				"currentUser": ["$meteor", function($meteor){
 					return $meteor.requireUser();
 				}]
+			}
+		})
+		.state('root.supervisoresForm', {
+			url: '/supervisoresForm',
+			templateUrl: 'client/supervisores/supervisoresForm.ng.html',
+			controller: 'SupervisoresFormCtrl as sup',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.editarSupervisor', {
+			url: '/editarSupervisor/:objeto_id',
+			templateUrl: 'client/supervisores/supervisoresForm.ng.html',
+			controller: 'SupervisoresFormCtrl as sup',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 
+				 });
+			 }]
 			}
 		})
 		.state('root.editarCajero', {

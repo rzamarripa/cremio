@@ -12,17 +12,7 @@
 						<i class="fa fa-lg fa-fw fa-folder-open"></i>
 						<span class="menu-item-child">Documentos</span>
 					</a>
-				</li>
-					
-<!--
-				<li data-ui-sref-active="active">
-					<a ui-sref="root.sexo" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-adjust"></i>
-						<span class="menu-item-child">Sexo</span>
-					</a>				
-				</li>
--->
-					
+				</li>			
 				<li data-ui-sref-active="active">
 					<a ui-sref="root.estadoCivil" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-share-alt-square"></i>
@@ -210,6 +200,12 @@
 					<a ui-sref="root.cajerosLista" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-group"></i>
 						<span class="menu-item-child">Cajeros</span>
+					</a>
+				</li>
+				<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
+					<a ui-sref="root.supervisoresLista" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-group"></i>
+						<span class="menu-item-child">Supervisores</span>
 					</a>
 				</li>
 			</ul>

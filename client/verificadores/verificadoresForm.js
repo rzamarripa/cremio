@@ -13,8 +13,7 @@ angular.module("creditoMio")
   this.objeto_id = ""
  
   rc.pic = "";
-   var fotillo = ""
-  
+  var fotillo = ""
   this.pais_id = "";
   this.estado_id = "";
   this.municipio_id = "";
