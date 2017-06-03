@@ -46,8 +46,10 @@ Meteor.methods({
 				if (tipoCredito.tipoInteres == "Simple")
 				{
 						var suma = 0;
-						var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)
-												*credito.duracionMeses+credito.capitalSolicitado)/totalPagos)+seguro;
+						if (tipoCredito.conSeguro)
+								var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)*credito.duracionMeses+credito.capitalSolicitado)/totalPagos)+seguro;
+						else
+								var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)*credito.duracionMeses+credito.capitalSolicitado)/totalPagos);
 						
 						var iva = ((credito.capitalSolicitado * (tipoCredito.tasa / 100)*0.16)*credito.duracionMeses)/totalPagos;
 						iva = parseFloat(iva.toFixed(2));
@@ -67,7 +69,11 @@ Meteor.methods({
 						interes = parseFloat(interes.toFixed(2));
 						var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
 						
-						var importeParcial = capital + interes + iva + seguro;
+						if (tipoCredito.conSeguro)
+								var importeParcial = capital + interes + iva + seguro;
+						else
+								var importeParcial = capital + interes + iva;
+						
 						
 						importeParcial=Math.round(importeParcial * 100) / 100;
 						suma += importeParcial;
@@ -89,7 +95,7 @@ Meteor.methods({
 						importeRegular: importeParcial,
 						iva						: iva,
 						interes 			: interes,
-						seguro				: seguro,
+						seguro				: (tipoCredito.conSeguro?seguro:0),
 						cliente_id		: cliente._id,
 						capital 			: capital,
 						fechaPago			: undefined,
@@ -110,7 +116,7 @@ Meteor.methods({
 						anio				: mfecha.get('year'),
 						cargo				: importeParcial,
 						//sumatoria  			: suma,
-						movimiento			: "Recibo",
+						movimiento			: "Recibo"
 					}
 					
 					plan.push(clonar(pago));
@@ -164,50 +170,50 @@ Meteor.methods({
 					
 					var interes = (capital * (tipoCredito.tasa / 100));
 					interes = parseFloat(interes.toFixed(2));
+					
+					
+					if (tipoCredito.conSeguro)
+								var importeParcial = amortizacion + interes + iva + seguro;
+						else
+								var importeParcial = amortizacion + interes + iva;
 										
-					var importeParcial = amortizacion + interes + iva + seguro;
+					
 					importeParcial=Math.round(importeParcial * 100) / 100;
 					
-/*
-					console.log(capital);
-					console.log(iva);
-					console.log(interes);
-					console.log(importeParcial);
-*/
 					//suma += importeParcial;
 					
 					
 					var pago = {
-						semana				: mfecha.isoWeek(),
-						fechaLimite		    : new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
-						diaSemana			: mfecha.weekday(),
-						tipoPlan			: credito.periodoPago,
-						numeroPago		: i + 1,
-						importeRegular: importeParcial,
-						iva						: iva,
-						interes 			: interes,
-						seguro				: seguro,
-						cliente_id		: cliente._id,
-						capital 			: capital,
-						fechaPago			: undefined,
-						semanaPago		: undefined,
-						diaPago				: undefined,
-						pago					: 0,
-						estatus				: 0,
-						multada				: 0,
-						multa_id			: undefined,
-						planPago_id		: undefined,
-						tiempoPago		: 0,
-						modificada		: false,
-						pagos 				: [],
-						descripcion		: "Recibo",
+						semana							: mfecha.isoWeek(),
+						fechaLimite					: new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
+						diaSemana						: mfecha.weekday(),
+						tipoPlan						: credito.periodoPago,
+						numeroPago					: i + 1,
+						importeRegular			: importeParcial,
+						iva									: iva,
+						interes 						: interes,
+						seguro							: (tipoCredito.conSeguro?seguro:0),
+						cliente_id					: cliente._id,
+						capital 						: capital,
+						fechaPago						: undefined,
+						semanaPago					: undefined,
+						diaPago							: undefined,
+						pago								: 0,
+						estatus							: 0,
+						multada							: 0,
+						multa_id						: undefined,
+						planPago_id					: undefined,
+						tiempoPago					: 0,
+						modificada					: false,
+						pagos 							: [],
+						descripcion					: "Recibo",
 						ultimaModificacion	: new Date(),
-						credito_id 			: credito._id,
-						mes					: mfecha.get('month') + 1,
-						anio				: mfecha.get('year'),
-						cargo				: importeParcial,
+						credito_id 					: credito._id,
+						mes									: mfecha.get('month') + 1,
+						anio								: mfecha.get('year'),
+						cargo								: importeParcial,
 						//sumatoria  			: suma,
-						movimiento			: "Recibo",
+						movimiento					: "Recibo",
 					}
 					
 					plan.push(clonar(pago));
@@ -245,34 +251,7 @@ Meteor.methods({
 					pago.total = val
 				});	
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		return plan;
