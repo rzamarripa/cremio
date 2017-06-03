@@ -74,8 +74,8 @@
 					<th class="text-center" width="15%">Pago</th>
 					<th class="text-center" width="10%">Capital</th>
 					<th class="text-center" width="10%">Interes</th>
-					<th class="text-center" width="10%">Seguro</th>
 					<th class="text-center" width="10%">IVA</th>
+					<th class="text-center" width="10%">Seguro</th>
 					<th class="text-center" width="10%">Importe total</th>
 				</tr>
 			</thead>
@@ -86,8 +86,8 @@
 					<td class="text-center">{{pago.numeroPago}} - {{cal.planPagos.length}}</td>
 					<td class="text-right">{{pago.capital | currency}}</td>
 					<td class="text-right">{{pago.interes | currency}}</td>
-					<td class="text-right">{{pago.seguro | currency}}</td>
 					<td class="text-right">{{pago.iva | currency}}</td>
+					<td class="text-right">{{pago.seguro | currency}}</td>
 					<td class="text-right">{{pago.importeRegular | currency}}</td>
 				</tr>
 				<tr><td colspan="8" class="text-right">Total: {{cal.total | currency}}</td></tr>
