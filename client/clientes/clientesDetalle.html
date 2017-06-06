@@ -31,8 +31,7 @@
 										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
 		 									<i class="fa fa-pencil" ></i> Modificar
 	 								  </a>&nbsp;
-	 								  <small>
-											<a ng-click="cd.generarFicha(cd.objeto,cd.objeto._id)" class="btn btn-primary">Descargar ficha</a></small>
+	 								  <small><a ng-click="cd.generarFicha(cd.objeto,cd.objeto._id)" class="btn btn-primary">Descargar ficha</a></small>
 								
 							
 					
@@ -101,18 +100,16 @@
 										<table class="table table-striped table-bordered table-condensed font-xs">
 												<thead class="thead">
 													<tr>
-													<!-- 	<th class="text-center" width="5%"></th> -->
 														<th class="text-center" width="5%">No.</th>
 														<th class="text-center" width="20%">Movimiento</th>
 														<th class="text-center" width="20%">Fecha de Pago</th>
+														<th class="text-center" width="10%">Recibo</th>
 														<th class="text-center" width="10%">Capital</th>
 														<th class="text-center" width="10%">Interes</th>
 														<th class="text-center" width="10%">IVA</th>
 														<th class="text-center" width="10%">Seguro</th>
 														<th class="text-center" width="15%">Pago</th>
 														<th class="text-center" width="10%">Saldo</th>
-														
-														<!-- 	<th class="text-center" width="20%">Acciones</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -125,12 +122,11 @@
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.interes | currency}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.iva | currency}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.seguro | currency}}</td>
+														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.cargo | currency}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular | currency}}</td>
-														
 													</tr>
 												</tbody>
 											</table>	
-
 									</div>
 									<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 show-stats">
 
@@ -149,6 +145,7 @@
 												<div class="progress">
 													<div class="progress-bar bg-color-blue" style="width: {{(credito.tiempoPago / credito.numeroPagos) * 100}}%;"></div>
 												</div> 
+												<small><a ng-click="cd.mostrarReestructuracion(credito)" class="btn btn-primary">Reestructuración del crédito</a></small>
 											</div>
 										</div>
 									</div>
@@ -628,34 +625,33 @@
 				</div>
 				<div class="modal-body">
 				 <div>
-				   <table class="table table-striped table-bordered table-condensed font-xs">
-					<thead class="thead">
-						<tr>
-							<th class="text-center" width="7%">Recibo No.</th>
-							<th class="text-center" width="10%">Movimiento</th>
-							<th class="text-center" width="10%">Fecha</th>
-							<th class="text-center" width="10%">Cargo</th>
-							<th class="text-center" width="10%">Abono</th>
-							<th class="text-center" width="20%">Saldo</th>
-							<th class="text-center" width="20%">Nota de credito</th>
-							<th class="text-center" width="20%">Saldo actualizado</th>
-						</tr>
-					</thead>
-						<tbody>
-							<tr  ng-repeat="credito in cd.historial" 
-							ng-class="(credito.descripcion == 'Multa') ? 'danger' : (credito.descripcion == 'Recibo') ? 'info':'success'">
-								<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
-								<td class="text-center">{{credito.movimiento}}</td>	
-								<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
-								<td class="text-center">{{credito.cargo | currency}}</td>
-								<td class="text-right">{{credito.pago | currency}}</td>
-								<td >{{credito.saldo | currency}}</td>
-								<td >0</td>
-								<td >0</td>
-							</tr>
-						</tbody>
-					</table>
-				 	
+					  <table class="table table-striped table-bordered table-condensed font-xs">
+							<thead class="thead">
+								<tr>
+									<th class="text-center" width="7%">Recibo No.</th>
+									<th class="text-center" width="10%">Movimiento</th>
+									<th class="text-center" width="10%">Fecha</th>
+									<th class="text-center" width="10%">Cargo</th>
+									<th class="text-center" width="10%">Abono</th>
+									<th class="text-center" width="20%">Saldo</th>
+									<th class="text-center" width="20%">Nota de credito</th>
+									<th class="text-center" width="20%">Saldo actualizado</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr  ng-repeat="credito in cd.historial" 
+								ng-class="(credito.descripcion == 'Multa') ? 'danger' : (credito.descripcion == 'Recibo') ? 'info':'success'">
+									<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
+									<td class="text-center">{{credito.movimiento}}</td>	
+									<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
+									<td class="text-center">{{credito.cargo | currency}}</td>
+									<td class="text-right">{{credito.pago | currency}}</td>
+									<td >{{credito.saldo | currency}}</td>
+									<td >0</td>
+									<td >0</td>
+								</tr>
+							</tbody>
+						</table>
 				 </div>
 				</div>
 				<div class="modal-footer">
@@ -983,11 +979,11 @@
 								    </div>
 									</div>
 							</form>
-	      	</div>	
-	      	<div class="modal-footer"s>
-			        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-			        <input type="submit" ng-click="cd.cancelarCredito(cd.motivo)" value="Aceptar" class="btn btn-primary" valida-form formulario="form2">
-		      </div>
+	      </div>	
+	      <div class="modal-footer"s>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+		        <input type="submit" ng-click="cd.cancelarCredito(cd.motivo)" value="Aceptar" class="btn btn-primary" valida-form formulario="form2">
+		     </div>
      </div>
      
   </div>
@@ -1002,15 +998,13 @@
 <div class="container">
 <!-- Modal -->
 	<div class="modal fade" id="modalCliente"	data-backdrop="static" role="dialog">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-lg">
 	<!-- Modal content-->
 			<div class="modal-content">
 				<div class="modal-header">
-			
 					<h4 class="modal-title">Escribir Nota para el cliente</h4>
 				</div>
-			
-					<div class="modal-footer">
+				<div class="modal-footer">
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="col-sm-12">
@@ -1024,10 +1018,8 @@
 						</div>
 			  </div>
 			  <div class="modal-footer">
-
-							  
-				          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				        </div>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
 		</div>
 	</div>
 </div>
@@ -1040,8 +1032,96 @@
 	  </div>
 </div>
 
-<a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   
+<!-- ////////////////////////////////////////////////////////////////////////////////////////// -->
+<div id="modalReestructuracion" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+	  <div class="modal-dialog modal-lg" role="document">
+	    <div id="imagenDiv" class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Reestructuración del crédito</h4>
+					</div>
+					<div class="widget-body">
+							<form name="form2" novalidate>
+									<div class="well">	    
+								    <div class="row">
+									    	<div class="col-sm-12">
+														<table id="mainTable" class="table table-striped table-bordered table-condensed font-xs">
+																<thead class="thead">
+																	<tr>
+																		<th class="text-center" width="5%">No.</th>
+																		<th class="text-center" width="15%">Movimiento</th>
+																		<th class="text-center" width="15%">Fecha de Pago</th>
+																		<th class="text-center" width="10%">Recibo</th>
+																		<th class="text-center" width="10%">Capital</th>
+																		<th class="text-center" width="10%">Ínteres</th>
+																		<th class="text-center" width="5%">IVA</th>
+																		<th class="text-center" width="5%">Seguro</th>
+																		<th class="text-center" width="5%">Pago</th>
+																		<th class="text-center" width="5%">Saldo</th>
+																		<th class="text-center" width="10%">Acción</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cd.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in cd.creditoSeleccionado.planPagos">								
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																			{{$index + 1}}
+																		</td>	
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																			<div ng-hide="pago.editar">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="pago.fechaLimite" /></div>
+																		</td>
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																			<div ng-hide="pago.editar">{{pago.capital | currency}}</div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.capital" /></div>
+																		</td>
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																			<div ng-hide="pago.editar">{{pago.interes | currency}}</div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.interes" /></div>
+																		</td>
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																			<div ng-hide="pago.editar">{{pago.iva | currency}}</div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.iva" /></div>
+																		</td>
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																			<div ng-hide="pago.editar">{{pago.seguro | currency}}</div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.seguro" /></div>
+																		</td>
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																			<div ng-hide="pago.editar">{{pago.cargo | currency}}</div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.cargo" /></div>
+																		</td>
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																			<div ng-hide="pago.editar">{{pago.importeRegular | currency}}</div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.importeRegular" /></div>
+																		</td>
+																		<td>
+																				<a ng-hide="pago.editar" ng-click="cd.modificar(pago)" class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;">
+																					<i class="fa fa-pencil"></i>
+																				</a>
+																				<a ng-show="pago.editar" ng-click="cd.actualizar(pago)" class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;">
+																					<i class="fa fa-check"></i>
+																				</a>
+																		</td>	
+																	</tr>
+																</tbody>
+														</table>
+													</div>
+								    </div>
+									</div>
+							</form>
+	      </div>
+					<div class="modal-footer">
+          <button type="button" ng-click="cd.agregarPago()" class="btn btn-primary">Agregar</button>
+          <button type="button" ng-click="cd.agregarPago()" class="btn btn-success">Guardar</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+	    </div>
+	  </div>
 
+</div>
+
+<a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   
 
 
 	

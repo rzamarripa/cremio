@@ -46,8 +46,6 @@ Meteor.methods({
 				 			planPago.classPago = classPago;
 				 			//planPago.folio = c.folio;
 				 			
-				 			
-				 			
 					 			
 					}
 					
