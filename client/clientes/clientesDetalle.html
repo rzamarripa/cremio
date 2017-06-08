@@ -113,7 +113,7 @@
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{credito.numeroPagos}}</td>
+														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.capital | currency}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.interes | currency}}</td>
 														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.iva | currency}}</td>
@@ -1072,33 +1072,27 @@
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
 																			<div ng-hide="pago.editar">{{pago.capital | currency}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.capital" style="width: 100%; padding-left: 0%; padding-right: 0%" /></div>
+																			<div ng-show="pago.editar"><input type="number" ng-model="pago.capital" style="width: 100%; padding-left: 0%; padding-right: 0%" ng-change="cd.sumarPago(pago)" /></div>
 																		</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
 																			<div ng-hide="pago.editar">{{pago.interes | currency}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.interes" style="width: 100%; padding-left: 0%; padding-right: 0%" /></div>
+																			<div ng-show="pago.editar"><input type="number" ng-model="pago.interes" style="width: 100%; padding-left: 0%; padding-right: 0%" ng-change="cd.sumarPago(pago)" /></div>
 																		</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
 																			<div ng-hide="pago.editar">{{pago.iva | currency}}</div>
-																			<div ng-show="pago.editar"><input style="width: 100%; padding-left: 0%; padding-right: 0%" class="col-sm-10" type="text" ng-model="pago.iva"  /></div>
+																			<div ng-show="pago.editar"><input type="number" ng-model="pago.iva" style="width: 100%; padding-left: 0%; padding-right: 0%" class="col-sm-10"   ng-change="cd.sumarPago(pago)" /></div>
 																		</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
 																			<div ng-hide="pago.editar">{{pago.seguro | currency}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.seguro" style="width: 100%; padding-left: 0%; padding-right: 0%" /></div>
+																			<div ng-show="pago.editar"><input type="number" ng-model="pago.seguro" style="width: 100%; padding-left: 0%; padding-right: 0%" ng-change="cd.sumarPago(pago)" /></div>
 																		</td>
-																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
-																			<div ng-hide="pago.editar">{{pago.cargo | currency}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.cargo" style="width: 100%; padding-left: 0%; padding-right: 0%" /></div>
-																		</td>
-																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
-																			<div ng-hide="pago.editar" style="width: 100%; padding-left: 0%; padding-right: 0%">{{pago.importeRegular | currency}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.importeRegular" style="width: 100%; padding-left: 0%; padding-right: 0%" /></div>
-																		</td>
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.cargo | currency}}</td>
+																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular | currency}}</td>
 																		<td>
-																				<a ng-hide="pago.editar" ng-click="cd.modificar(pago)" class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;">
+																				<a ng-show="(pago.importeRegular > 0 || pago._id == undefined) && !pago.editar" ng-click="cd.modificar(pago)" class="btn txt-color-white bg-color-blueLight btn-sm pull-right" style="margin: 5px;">
 																					<i class="fa fa-pencil"></i>
 																				</a>
-																				<a ng-show="pago.editar" ng-click="cd.actualizar(pago)" class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;">
+																				<a ng-show="(pago.importeRegular > 0 || pago._id == undefined) && pago.editar" ng-click="cd.actualizar(pago)" class="btn txt-color-white bg-color-green btn-sm pull-right" style="margin: 5px;">
 																					<i class="fa fa-check"></i>
 																				</a>
 																		</td>	
@@ -1112,39 +1106,13 @@
 	      </div>
 					<div class="modal-footer">
           <button type="button" ng-click="cd.agregarPago()" class="btn btn-primary">Agregar</button>
-          <button type="button" ng-click="cd.agregarPago()" class="btn btn-success">Guardar</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <button type="button" ng-click="cd.guardarplanPagos()" class="btn btn-success">Guardar</button>
+          <button type="button" ng-click="cd.cerrar()" class="btn btn-default" data-dismiss="modal">Cerrar</button>
         </div>
 	    </div>
 	  </div>
 
 </div>
-
-<!-- 
-<div class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-	    	<div class="modal-header">
-		    </div>
-				<div class="widget-body">
-							<form name="form2" novalidate>
-									<div class="well">	    
-								    <div class="row">
-								    	<div class="col-sm-6" valida> 					    
-												  <label for="comment">Motivo:</label>
-												  <textarea class="form-control" rows="5" ng-model="cd.motivo" required="" name="comment"></textarea>
-								    	</div>
-								    </div>
-									</div>
-							</form>
-	      </div>	
-	      <div class="modal-footer">
-		  
-		     </div>
-     </div>
-     
-  </div>
-</div> -->
 
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   
 

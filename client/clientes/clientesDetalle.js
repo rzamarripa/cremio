@@ -962,7 +962,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		rc.creditoSeleccionado = objeto;	
 		_.each(rc.creditoSeleccionado.planPagos,function(planPago){
 				planPago.editar = false;
-				planPago.numeroPagos = rc.creditoSeleccionado.numeroPagos;
+				//planPago.numeroPagos = rc.creditoSeleccionado.numeroPagos;
 		});
 		
 		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
@@ -973,19 +973,71 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.agregarPago= function()
 	{		
+			var fecha = moment(new Date()); 
+			
+		
 	    var nuevoPago = {
-				movimiento : 'Recibo',
-				fechaLimite : new Date(),
-	      numeroPago: rc.creditoSeleccionado.planPagos.length + 1,
-	      capital: 0,
-	      interes: 0,
-	      iva:	0,
-	      seguro: 0,
-	      cargo: 0,
-	      importeRegular: 0
+		    semana							: fecha.isoWeek(),
+				fechaLimite					: new Date(new Date(fecha.toDate().getTime()).setHours(23,59,59)),
+				diaSemana						: fecha.weekday(),
+				tipoPlan						: rc.creditoSeleccionado.periodoPago,
+				numeroPago					: rc.creditoSeleccionado.planPagos.length + 1,
+				importeRegular			: 0,
+				iva									: 0,
+				interes 						: 0,
+				seguro							: 0,
+				cliente_id					: rc.creditoSeleccionado.cliente_id,
+				capital 						: 0,
+				fechaPago						: undefined,
+				semanaPago					: undefined,
+				diaPago							: undefined,
+				pago								: 0,
+				estatus							: 0,
+				multada							: 0,
+				multa_id						: undefined,
+				planPago_id					: undefined,
+				tiempoPago					: 0,
+				modificada					: false,
+				pagos 							: [],
+				descripcion					: "Recibo",
+				ultimaModificacion	: new Date(),
+				credito_id 					: rc.creditoSeleccionado._id,
+				mes									: fecha.get('month') + 1,
+				anio								: fecha.get('year'),
+				cargo								: 0,
+				movimiento					: "Recibo",
+				multa								:0,
+				abono								:0,
+				numeroPagos					: rc.creditoSeleccionado.planPagos.length + 1
 	    };
 	    rc.creditoSeleccionado.planPagos.push(nuevoPago);
-			
+
+	};
+	
+	this.guardarplanPagos= function()
+	{		
+			//console.log(rc.creditoSeleccionado);
+	    _.each(rc.creditoSeleccionado.planPagos,function(planPago){
+					
+					if (planPago._id == undefined)
+					{
+							PlanPagos.insert(planPago);		
+					}	
+					else
+					{
+							planPago.numeroPagos = rc.creditoSeleccionado.planPagos.length;
+							var tempId = planPago._id;
+							delete planPago._id;
+							PlanPagos.update({_id:tempId}, {$set:planPago});
+							
+							//Actualizar numero de pagos de Credito, asi como el salfo del credito??
+							
+							
+							//----------		
+					}
+					
+			});	
+			toastr.success('Actualizado correctamente.');		
 	};
 	
 	this.modificar= function(pago)
@@ -996,6 +1048,26 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	{		
 	    pago.editar = false;
 	};
+	
+	this.sumarPago = function(pago)
+	{
+			
+			_.each(rc.creditoSeleccionado.planPagos,function(planPago){
+					if(planPago.numeroPago == pago.numeroPago)
+					{
+							planPago.importeRegular = pago.capital + pago.interes + pago.iva + pago.seguro;
+							planPago.cargo = pago.capital + pago.interes + pago.iva + pago.seguro;
+					}		
+			});	
+	}
+	
+	this.cerrar = function()
+	{
+			var newArr = _.filter(rc.creditoSeleccionado.planPagos, function(planPago) { return planPago._id !== undefined; });
+						
+			rc.creditoSeleccionado.planPagos = newArr;
+		
+	}
 	
 	
 }

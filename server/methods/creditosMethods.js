@@ -40,7 +40,7 @@ Meteor.methods({
 			pago.abono = 0;
 			pago.credito_id = idTemp;
 			pago.descripcion = "Recibo";
-			PlanPagos.insert(pago)
+			PlanPagos.insert(pago);
 		});
 		Meteor.call("generarMultas");
 		return "hecho";
