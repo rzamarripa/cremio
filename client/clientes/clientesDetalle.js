@@ -190,9 +190,13 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return NotasCredito.find({},{sort:{fecha:1}});
 		},
 		notaPerfil: () => {
-			var nota = Notas.find({perfil : "perfil",respuesta:true}).fetch()
+			var nota = Notas.find({perfil : "perfil",estatus:true}).fetch()
+			if (nota.tipo == "Cuenta") {
+
+			}else{
 
 			return nota[nota.length - 1];
+			}
 		},
 		objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
@@ -697,6 +701,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		objeto.cliente_id = rc.objeto._id
 		objeto.nombreCliente = rc.objeto.profile.nombreCompleto
 		objeto.respuesta = true;
+		objeto.estatus = true;
 		Notas.insert(objeto);
 		toastr.success('Nota guardada.');
 		rc.nota = {};
