@@ -66,7 +66,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	// 	}];
 	// });
 		 this.subscribe('notas',()=>{
-		return [{cliente_id:this.getReactively("cliente_id"),respuesta:true}]
+		return [{cliente_id:this.getReactively("cliente_id")}]
 	});
 
 	this.subscribe('tiposNotasCredito',()=>{
@@ -191,6 +191,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 		notaPerfil: () => {
 			var nota = Notas.find({perfil : "perfil",respuesta:true}).fetch()
+
 			return nota[nota.length - 1];
 		},
 		objeto : () => {
@@ -321,9 +322,31 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 		notaCuenta1: () => {
 			var nota = Notas.find({tipo : "Cuenta"}).fetch()
+			_.each(nota, function(notita){
+				if (notita.estatus == true) {
+					console.log("entro aqui al notaCuenta1")
+					$("#myModal").modal(); 
+				}
+				
+
+			});
+
+	// $(document).ready(function() {
+	// 	if (rc.getReactively("nota") != undefined) {
+	// 	    	//console.log("entro al modal ")
+	// 	   if (rc.notaCuenta1.perfil != undefined) {
+	// 	    		//console.log("mostrara el modal ")
+		    	
+	// 	   	}
+	// 	   	else
+	// 	   	{
+	// 	    	$("#myModal").modal('hide'); 
+	// 			}
+ //    }
+	// });
 		
 
-				return nota[nota.length - 1];
+			return nota[nota.length - 1];
 			
 			
 		},
@@ -569,19 +592,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	}
 
 
-	// $(document).ready(function() {
-	// 	if (rc.getReactively("nota") != undefined) {
-	// 	    	//console.log("entro al modal ")
-	// 	   if (rc.notaCuenta1.perfil != undefined) {
-	// 	    		//console.log("mostrara el modal ")
-	// 	    	$("#myModal").modal(); 
-	// 	   	}
-	// 	   	else
-	// 	   	{
-	// 	    	$("#myModal").modal('hide'); 
-	// 			}
- //    }
-	// });
 
 
 
@@ -591,12 +601,13 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 		//console.log(this.nota)
 		
-		if (rc.notaCobranza.respuestaNota != undefined) {
+		if (rc.notaCuenta1.respuestaNota != undefined) {
 			//console.log("entro")
-			this.nota.respuestaNota = rc.notaCobranza.respuestaNota
+			this.nota.respuestaNota = rc.notaCuenta1.respuestaNota
 			var idTemp = this.nota._id;
 			delete this.nota._id;
 			this.nota.respuesta = false
+			this.nota.estatus = false
 			Notas.update({_id:idTemp},{$set:this.nota});
 			toastr.success('Comentario guardado.');
 			$("#myModal").modal('hide');
@@ -769,12 +780,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		objeto.estado = objeto.profile.estado
 		objeto.pais = objeto.profile.pais
 		objeto.colonia = objeto.profile.colonia
-			objeto.ocupacion = objeto.profile.ocupacion
-			objeto.estadoCivil = objeto.profile.estadoCivil
-			objeto.nacionalidad = objeto.profile.nacionalidad
-			objeto.estado = objeto.profile.estado
-			objeto.pais = objeto.profile.pais
-			objeto.colonia = objeto.profile.colonia
 	    objeto.ciudad = objeto.profile.ciudad
 	    objeto.sucursal = objeto.profile.ciudad
 	    objeto.municipio = objeto.profile.nombre
@@ -922,12 +927,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 		//console.log(nota,"seraaaaaaaaaa")
 		var nota = Notas.findOne({_id:id});
-			if(nota.respuesta == true)
-				nota.respuesta = false;
+			if(nota.estatus == true)
+				nota.estatus = false;
 			else
-				nota.respuesta = true;
+				nota.estatus = true;
 			
-			Notas.update({_id: id},{$set :  {respuesta : nota.respuesta}});
+			Notas.update({_id: id},{$set :  {estatus : nota.estatus}});
 			$("#notaPerfil").modal('hide');
 	}
 
