@@ -1,5 +1,52 @@
 <div class="row">
 	<div class="col-sm-12">
+
+
+	<div class="row"><br/>
+		<div class="col-sm-12">
+
+			<table class="table table-striped table-bordered table-condensed font-xs">
+				<thead class="thead">
+					<tr>
+
+						<th class="text-center" width="5%">No.</th>
+						<th class="text-center" width="5%">Folio Credito</th>
+						<th class="text-center" width="15%">Movimiento</th>
+						<th class="text-center" width="15%">Fecha de Pago</th>
+						<th class="text-center" width="15%">Pago</th>
+						<th class="text-center" width="10%">Capital</th>
+						<th class="text-center" width="10%">Interes</th>
+						<th class="text-center" width="10%">Seguro</th>
+						<th class="text-center" width="10%">IVA</th>
+						<th class="text-center" width="10%">Saldo</th>
+						<!-- <th class="text-center" width="5%">Pago</th> -->
+						
+						
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cob.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in cob.planPagosViejo">
+
+
+						<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago}}</td>	
+						<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
+						<td ng-class="pago.descripcion == 'Multa' ? 'text-danger' : ''">{{pago.movimiento }}</td>
+						<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+						<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pago.credito.numeroPagos}}</td>
+						<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.capital  | currency}}</td>
+						<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.interes  | currency}}</td>
+						<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
+						<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
+						<td ng-class="(pago.descripcion == 'Multa') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
+						<!-- <td ><input type="number" ng-change="cob.seleccionarMontoPago(pago)"  ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td> -->
+						
+						
+					</tr>
+				</tbody>
+			</table>	
+		</div>
+		<br/>
+	</div>
 			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 			  <div class="panel panel-default">
 			    <div class="panel-heading" role="tab" id="headingOne">
@@ -9,7 +56,6 @@
 			        </a>
 			      </h4>
 			    </div>
-			    <div id="hrefInfoCredito" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 			      <div class="panel-body">    
 						    <div class="row">
 							    <div class="col-sm-4">
@@ -36,7 +82,7 @@
 						    	</div>
 						    </div>
 							</div>
-			      </div>
+			   
 			    </div>
 				<div class="panel panel-default">
 				    <div class="panel-heading" role="tab" id="headingTwo">
@@ -46,7 +92,7 @@
 				        </a>
 				      </h4>
 				    </div>
-				    <div id="hrefAvales" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				    
 				      <div class="panel-body">
 				        	<div class="row">
 										<div class="col-sm-12">
@@ -85,7 +131,7 @@
 										</div>
 									</div>
 				      </div>
-				    </div>
+				   
 				  </div>
 				<div class="panel panel-default">
 				    <div class="panel-heading" role="tab" id="headingThree">
@@ -95,7 +141,7 @@
 				        </a>
 				      </h4>
 				    </div>
-				    <div id="hrefGarantias" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+				   
 				      <div class="panel-body">
 				        	<div class="row">
 										<div class="col-sm-12">
@@ -142,7 +188,7 @@
 										</div>
 									</div>
 				      </div>
-				    </div>
+				   
 				  </div>
 			</div>
 	</div>

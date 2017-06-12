@@ -275,8 +275,8 @@ Meteor.methods({
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
-		//var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 		
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		//var produccion = "/home/cremio/archivos/";
@@ -489,8 +489,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
-		// var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"RECIBOS.docx", "binary");
@@ -598,7 +598,7 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
-   ReporteCobranza: function (objeto) {
+   ReporteCobranza: function (objeto,inicial,final) {
 	
 		console.log(objeto,"creditos ")
 		var fs = require('fs');
@@ -622,21 +622,32 @@ Meteor.methods({
 			return "";
 		}});
 		
-		var fecha = new Date();
-		var f = fecha;
+			var fecha = new Date();
+			var f = fecha;
+			var fechaInicial = inicial
+			var fechaFinal = final
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
+	    fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
 	    _.each(objeto,function(item){
 	    	moment(item.fechaPago).format("DD-MM-YYYY")
+	    	moment(item.fechaInicial).format("DD-MM-YYYY")
+	      moment(item.fechaFinal).format("DD-MM-YYYY")
+	      item.folio = item.credito.folio
 
 	    });
+
+	    
 	 
 
 	    console.log(objeto.planPagos);
 		
-		doc.setData({				items: 		objeto,
-									fecha:     fecha,
-									
-
+				doc.setData({				items: 		 objeto,
+														fecha:     fecha,
+														inicial:    fInicial,
+														final:      fFinal,
+													
+				
 				  });
 								
 		doc.render();
@@ -648,6 +659,134 @@ Meteor.methods({
 		//Pasar a base64
 		// read binary data
     var bitmap = fs.readFileSync(produccion+"reporteDiarioCobranzaSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+  },
+
+     ReporteCreditos: function (objeto,inicial,final) {
+	
+		console.log(objeto,"creditos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+				 
+				var content = fs
+    	   .readFileSync(produccion+"ReporteDiarioCreditos.docx", "binary");
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			return "";
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+			var fecha = new Date();
+			var f = fecha;
+			var fechaInicial = inicial
+			var fechaFinal = final
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
+	    fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
+	    _.each(objeto,function(item){
+	    	moment(item.fechaEntrega).format("DD-MM-YYYY")
+	    	
+
+	    });
+
+	    console.log(objeto.planPagos);
+		
+				doc.setData({				items: 		 objeto,
+														fecha:     fecha,
+														inicial:    fInicial,
+														final:      fFinal,
+													
+				
+				  });
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"ReporteDiarioCreditosSalida.docx",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"ReporteMovimientoCuentasSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+  },
+
+
+
+  ReporteMovimientoCuenta: function (objeto,inicial,final) {
+	
+		console.log(objeto,"creditos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+				 
+				var content = fs
+    	   .readFileSync(produccion+"ReporteMovimientoCuentas.docx", "binary");
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			return "";
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+			var fecha = new Date();
+			var f = fecha;
+			var fechaInicial = inicial
+			var fechaFinal = final
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
+	    fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
+	    _.each(objeto,function(item){
+	    	moment(item.fechaPago).format("DD-MM-YYYY")
+	    	
+	    	
+	 
+
+	    });
+	    
+	    console.log(objeto.planPagos);
+		
+				doc.setData({				items: 		 objeto,
+														fecha:     fecha,
+														inicial:    fInicial,
+														final:      fFinal,
+													
+				
+				  });
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"ReporteMovimientoCuentasSalida.docx",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"ReporteMovimientoCuentasSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');

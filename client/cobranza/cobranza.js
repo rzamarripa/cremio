@@ -129,6 +129,11 @@ angular.module("creditoMio")
 		
 			pagos = PlanPagos.find({},{sort : {numeroPago : 1,descripcion:-1}}).fetch();
 
+			_.each(pagos, function(pay){
+
+		     pay.credito = Creditos.findOne(pay.credito_id);
+		 });
+
 			 return pagos
 		},
 		historialDelCredito : () => {

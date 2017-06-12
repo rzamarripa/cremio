@@ -55,7 +55,9 @@
 					<th><div class="text-center">Título</div></th>
 					<th><div class="text-center">Descripción</div></th>
 					<th><div class="text-center">Elaboro</div></th>
+				<!-- 	<th ng-show="!cob.notas.respuesta"><div class="text-center">Respuesta</div></th> -->
 					<th><div class="text-center">Tipo</div></th>
+					<!-- <th><div class="text-center">Acciones</div></th> -->
 				
 				</tr>
 			</thead>
@@ -67,7 +69,24 @@
 			    <td>{{objeto.titulo}}</td>
 			    <td>{{objeto.descripcion}}</td>
 			    <td>{{objeto.usuario}}</td>
+			    <!-- <td>{{objeto.respuestaNota}}</td> -->
 			    <td>{{objeto.tipo}}</td>
+			    <!--    <td>
+				    <div class="text-center">
+					    <div class="btn-group">
+							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							  </button>
+							  <ul class="dropdown-menu text-left">
+							    <li><a href="#" ng-click="ciu.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+							    <li><a href="#" ng-click="ciu.cambiarEstatus(objeto._id)">
+								    <i class="fa fa-{{objeto.estatus ? 'trash' : 'check' }}"></i> {{objeto.estatus ? "Desactivar" : "Activar" }}</a>
+							    </li>
+							  </ul>
+							</div>
+				    </div>				    
+			    </td> -->
 			
 		    </tr>
 			</tbody>

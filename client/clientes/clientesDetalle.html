@@ -906,14 +906,20 @@
 										<p class="pull-left">{{cd.notaCuenta1.descripcion}} </p>
 										</div>
 							
-										<div class="col-sm-12">
+										<div class="col-sm-12" ng-if="cd.notaCuenta1.respuesta == true">
 										<label class="pull-left">Respuesta:</label>
-											<textarea type="text" class="form-control"	ng-model="cd.notaCobranza.respuestaNota" >
+											<textarea type="text" class="form-control"	ng-model="cd.notaCuenta1.respuestaNota" >
 										</div>
 										
 										<div class="col-sm-12 "><br/>
-											<a	class="btn btn-success" ng-click="cd.contestarNota(cd.notaCuenta1._id)">Contestar</a>
+											<a	class="btn btn-success" ng-click="cd.contestarNota(cd.notaCuenta1._id)"
+											ng-show="cd.notaCuenta1.respuesta">Contestar</a>
+											<button type="button" ng-click="cd.quitarNota(cd.notaCuenta1._id)" class="btn btn-default" data-dismiss="modal" ng-show="!cd.notaCuenta1.respuesta">Quitar</button>
+											 <button type="button" class="btn btn-default" data-dismiss="modal"
+											  ng-show="!cd.notaCuenta1.respuesta">Cerrar</button>
 										</div>
+
+
 																					
 	
 							</div>								 
@@ -1002,7 +1008,7 @@
 							<div class="col-sm-12">
 								<div class="col-sm-12">
 								<label class="pull-left">Tipo de nota</label>
-								 <select name="nota Cliente" ng-model="cd.nota.notaTipo" data-placeholder="Seleccione" class="form-control">
+								 <select name="nota Cliente" ng-model="cd.nota.tipo" data-placeholder="Seleccione" class="form-control">
 											    <option id="cuenta" >Cuenta</option>
 											    <option >Cliente</option>
 											</select>

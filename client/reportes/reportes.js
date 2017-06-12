@@ -88,7 +88,7 @@ angular.module("creditoMio")
 		return [{ }];
 	});
 		this.subscribe('creditos', () => {
-		return [{fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:4}];
+		return [{estatus:4}];
 	});
 	// 	this.subscribe('clientes', () => {
 	// 	return [{_id : {$in : this.getReactively("clientes_id")}}];
@@ -113,16 +113,18 @@ angular.module("creditoMio")
 			return Meteor.users.find();
 		},
 		planPagos : () => {
+			var creditos = Creditos.find().fetch();
 	        var planes = PlanPagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
 	        this.clientes_id = _.pluck(planes, "cliente_id");
 	        console.log(this.clientes_id,"clientes")
 	         console.log(planes,"planes")
 	        var client = ""
 			if(planes){
+				_.each(creditos,function(credit){
 				_.each(planes,function(plan){
 					plan.cliente = Meteor.users.findOne(plan.cliente_id);
 					client = plan.cliente.profile
-					console.log("variable",client)
+					//console.log("variable",client)
 					plan.nombreCompleto = client.nombreCompleto
 					plan.credito = Creditos.findOne(plan.credito_id)
 					if (plan.garantias == undefined) {
@@ -131,7 +133,10 @@ angular.module("creditoMio")
 						plan.garantias = "si"
 					}
 
+					
+
 				});
+			 });
 			}
 			return planes
 		
@@ -149,24 +154,35 @@ angular.module("creditoMio")
 			return Pagos.find().fetch()
 		},
 		creditos : () => {
-			var creditos = Creditos.find().fetch();
-			_.each(creditos,function(credito){
-				//console.log(credito.cliente_id);
-				credito.cliente = Meteor.users.findOne(credito.cliente_id)
-			//	console.log("hola", credito.cliente)
-				if(credito.cliente){
-					credito.nombreCompleto = credito.cliente.profile.nombreCompleto;
-				}
-				
-				if (credito.garantias != "") {
-					credito.estatusGarantia = "Si"
-				}else{
-					credito.estatusGarantia = "No"
-				}
-			});
-			return creditos
-		},
-	});
+				var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:4}).fetch();
+				_.each(creditos,function(credito){
+					//console.log(credito.cliente_id);
+					credito.cliente = Meteor.users.findOne(credito.cliente_id)
+				//	console.log("hola", credito.cliente)
+					if(credito.cliente){
+						credito.nombreCompleto = credito.cliente.profile.nombreCompleto;
+					}
+					
+					if (credito.garantias != "") {
+						credito.estatusGarantia = "Si"
+					}else{
+						credito.estatusGarantia = "No"
+					}
+				});
+				return creditos
+			},
+				creditoPlanes : () => {
+				var creditos = Creditos.find({}).fetch();
+				_.each(creditos,function(credito){
+				});
+				return creditos
+		
+			}
+		});
+
+	
+
+
 
 
 
@@ -501,20 +517,21 @@ angular.module("creditoMio")
 		this.diarioCreditos = true
 	}
 	this.imprimirReporteCobranza = function(objeto){
+
 		_.each(objeto,function(item){
 			var fecha = ""
 	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
-	    	item.credito = _.toArray({credito:item.credito});
+	    	item.numerosPagos= item.credito.folio
+	    	
+
+	    	// item.credito = _.toArray({credito:item.credito});
 	    	
 	    	//moment(item.fechaPago).format("DD-MM-YYYY").toDate()
-
 	    });
 	    console.log("objeto",objeto)
+	    
 
-		Meteor.call('ReporteCobranza', objeto, function(error, response) {
-
-
-
+		   Meteor.call('ReporteCobranza', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
 
 
 		   if(error)
@@ -555,6 +572,128 @@ angular.module("creditoMio")
 						  var dlnk = document.getElementById('dwnldLnk');
 
 					    dlnk.download = "reporteDiarioCobranza.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+  
+		   }
+		});
+		
+	}
+
+	this.imprimirReporteCreditos = function(objeto){
+
+	    console.log("objeto",objeto)
+	    _.each(objeto,function(item){
+			var fecha = ""
+	    	item.fechaEntrega = moment(item.fechaEntrega).format("DD-MM-YYYY")
+	   
+	    });
+	    
+		   Meteor.call('ReporteCreditos', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
+
+		   if(error)
+		   {
+		    console.log('ERROR :', error);
+		    return;
+		   }
+		   else
+		   {
+			 				function b64toBlob(b64Data, contentType, sliceSize) {
+								  contentType = contentType || '';
+								  sliceSize = sliceSize || 512;
+								
+								  var byteCharacters = atob(b64Data);
+								  var byteArrays = [];
+								
+								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+								    var slice = byteCharacters.slice(offset, offset + sliceSize);
+								
+								    var byteNumbers = new Array(slice.length);
+								    for (var i = 0; i < slice.length; i++) {
+								      byteNumbers[i] = slice.charCodeAt(i);
+								    }
+								
+								    var byteArray = new Uint8Array(byteNumbers);
+								
+								    byteArrays.push(byteArray);
+								  }
+								    
+								  var blob = new Blob(byteArrays, {type: contentType});
+								  return blob;
+							}
+							
+							var blob = b64toBlob(response, "application/docx");
+						  var url = window.URL.createObjectURL(blob);
+						  
+						  //console.log(url);
+						  var dlnk = document.getElementById('dwnldLnk');
+
+					    dlnk.download = "ReporteDiarioCreditos.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+
+  
+		   }
+		});
+		
+	}
+
+
+	this.imprimirReporteMovimiento = function(objeto){
+
+	   
+	    _.each(objeto,function(item){
+	    	console.log("item")
+	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
+			
+	    	item.folio = item.credito.folio
+	    	item.numeroPagos = item.credito.numeroPagos
+	   
+	    });
+	     console.log("objeto",objeto)
+	    
+		   Meteor.call('ReporteMovimientoCuenta', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
+
+		   if(error)
+		   {
+		    console.log('ERROR :', error);
+		    return;
+		   }
+		   else
+		   {
+			 				function b64toBlob(b64Data, contentType, sliceSize) {
+								  contentType = contentType || '';
+								  sliceSize = sliceSize || 512;
+								
+								  var byteCharacters = atob(b64Data);
+								  var byteArrays = [];
+								
+								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+								    var slice = byteCharacters.slice(offset, offset + sliceSize);
+								
+								    var byteNumbers = new Array(slice.length);
+								    for (var i = 0; i < slice.length; i++) {
+								      byteNumbers[i] = slice.charCodeAt(i);
+								    }
+								
+								    var byteArray = new Uint8Array(byteNumbers);
+								
+								    byteArrays.push(byteArray);
+								  }
+								    
+								  var blob = new Blob(byteArrays, {type: contentType});
+								  return blob;
+							}
+							
+							var blob = b64toBlob(response, "application/docx");
+						  var url = window.URL.createObjectURL(blob);
+						  
+						  //console.log(url);
+						  var dlnk = document.getElementById('dwnldLnk');
+
+					    dlnk.download = "ReporteMovimientoCuentas.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
