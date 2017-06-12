@@ -274,7 +274,10 @@ angular.module("creditoMio")
 			sucursal_id : Meteor.user().profile.sucursal_id,
 			fechaVerificacion: this.credito.fechaVerificacion,
 			turno : this.credito.turno,
-			tipoGarantia : this.credito.tipoGarantia
+			tipoGarantia : this.credito.tipoGarantia,
+			tasa: this.credito.tasa,
+			conSeguro : this.credito.conSeguro,
+			seguro: this.credito.seguro
 		};
 				
 		credito.avales = angular.copy(this.avales);

@@ -276,6 +276,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			sucursal_id : Meteor.user().profile.sucursal_id,
 			fechaVerificacion: this.credito.fechaVerificacion,
 			tipoGarantia : this.credito.tipoGarantia,
+			tasa: this.credito.tasa,
+			conSeguro : this.credito.conSeguro,
+			seguro: this.credito.seguro
 		};
 				
 		credito.avales = angular.copy(this.avales);
@@ -604,6 +607,74 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	    }
   };
 	
+	this.generarPlanPagos = function(credito, form){
+		
+		/*
+var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
+		if(!tipoCredito || credito.capitalSolicitado>tipoCredito.montoMaximon){
+			toastr.error("El monto solicitado es mayor al permitido.");
+			return;
+		}
+*/
+		
+		
+		if(form.$invalid){
+			toastr.error('Error al calcular el nuevo plan de pagos, llene todos los campos.');
+			return;
+		}
+		rc.planPagos = [];
+		this.tablaAmort = true;
+			
+		if(rc.credito.requiereVerificacion == true)
+			rc.credito.estatus = 0;
+		else
+			rc.credito.estatus = 1;
+			
+		if (!this.credito.requiereVerificacion)
+				this.credito.turno = "";
+
+		var _credito = {
+			cliente_id : this.cliente._id,
+			tipoCredito_id : this.credito.tipoCredito_id,
+			fechaSolicito : new Date(),
+			duracionMeses : this.credito.duracionMeses,
+			capitalSolicitado : this.credito.capitalSolicitado,
+			adeudoInicial : this.credito.capitalSolicitado,
+			saldoActual : this.credito.capitalSolicitado,
+			periodoPago : this.credito.periodoPago,
+			fechaPrimerAbono : this.credito.primerAbono,
+			multasPendientes : 0,
+			saldoMultas : 0.00,
+			saldoRecibo : 0.00,
+			estatus : 1,
+			requiereVerificacion: this.credito.requiereVerificacion,
+			turno : this.credito.turno,
+			sucursal_id : Meteor.user().profile.sucursal_id,
+			fechaVerificacion: this.credito.fechaVerificacion,
+			turno: this.credito.turno,
+			tasa: this.credito.tasa,
+			conSeguro : this.credito.conSeguro,
+			seguro: this.credito.seguro
+		};
+
+		Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
+		
+			if(error){
+				console.log(error);
+				toastr.error('Error al calcular el nuevo plan de pagos.');
+			}
+			else{
+				_.each(result,function (pago) {
+					rc.planPagos.push(pago)
+					$scope.$apply();
+				});
+				console.log("Prueba",rc.planPagos)
+			}
+				
+		})
+		
+		return rc.planPagos;
+	}
 	
 	
 
