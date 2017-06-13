@@ -374,10 +374,7 @@ Meteor.methods({
 		 // var jefe = jef.toUpperCase();
 		 var cas = objeto.profile.casa;
 		 var casa = cas.toUpperCase();
-		 //var je = objeto.empresa.jefeInmediato;
-		 //var jefeEmpresa = je.toUpperCase();
-		// var an = objeto.empresa.tiempoLaborando;
-		/// var antiguedadEmpresa = an.toUpperCase();
+
 
 
 
@@ -636,17 +633,14 @@ Meteor.methods({
 	      item.folio = item.credito.folio
 
 	    });
-
 	    
-	 
-
+	
 	    console.log(objeto.planPagos);
 		
 				doc.setData({				items: 		 objeto,
 														fecha:     fecha,
 														inicial:    fInicial,
 														final:      fFinal,
-													
 				
 				  });
 								
@@ -704,10 +698,11 @@ Meteor.methods({
 
 	    console.log(objeto.planPagos);
 		
-				doc.setData({				items: 		 objeto,
-														fecha:     fecha,
-														inicial:    fInicial,
-														final:      fFinal,
+		doc.setData({				
+								items: 		 objeto,
+								fecha:     fecha,
+								inicial:    fInicial,
+								final:      fFinal,
 													
 				
 				  });

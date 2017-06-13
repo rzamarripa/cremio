@@ -387,7 +387,7 @@ Meteor.methods({
 				p.pagoSeguro = p.pagoSeguro? p.pagoSeguro:0; 
 				if(p.importeRegular<=pagosId[p._id]){
 					//console.log("Total",p._id,p.descripcion)
-					if(p.descripcion=="Multa" && p.multa==1)
+					if(p.descripcion=="Cargo Moratorio" && p.multa==1)
 						p.estatus=1;
 					else if(p.multada==1){
 						var multa = PlanPagos.findOne(p.multa_id);
@@ -505,7 +505,9 @@ Meteor.methods({
 				
 			}
 		});
-
+		
+		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus (Plunk)
+		
 		
 
 		var movimiento = {

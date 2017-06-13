@@ -25,8 +25,14 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
   this.masInfo = true;
   this.masInfoCredito = true;
   rc.openModal = false
-
-  console.log(rc.credito)
+	
+	this.valorOrdenar = "Folio";
+	
+	rc.subtotal = 0;
+	rc.cargosMoratorios = 0;
+	rc.total = 0;
+	
+  //console.log(rc.credito)
 
   this.subscribe('planPagos', () => {
     return [{
@@ -131,30 +137,30 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 				_.each(objeto.referenciasPersonales_ids, function(referencia){
 						Meteor.call('getReferencias', referencia, function(error, result){	
 					//console.log("entra aqui",referencia)					
-						if (result)
-							//console.log(result,"caraculo")
-						{
-							//console.log("entra aqui");
-							//console.log("result",result);
-							rc.referencias.push(result);
-							$scope.$apply();			
-						}
-					});	
+							if (result)
+								//console.log(result,"caraculo")
+							{
+								//console.log("entra aqui");
+								//console.log("result",result);
+								rc.referencias.push(result);
+								$scope.$apply();			
+							}
+						});	
+					});
+	
+					Meteor.call('getEmpresas', objeto.empresa_id, function(error, result){	
+						//console.log("entra aqui",referencia)					
+							if (result)
+								//console.log(result,"caraculo")
+							{
+								//console.log("entra aqui");
+								//console.log("result",result);
+								rc.empresa = result
+								$scope.$apply();			
+							}
+						});	
+					
 				});
-
-				Meteor.call('getEmpresas', objeto.empresa_id, function(error, result){	
-					//console.log("entra aqui",referencia)					
-						if (result)
-							//console.log(result,"caraculo")
-						{
-							//console.log("entra aqui");
-							//console.log("result",result);
-							rc.empresa = result
-							$scope.$apply();			
-						}
-					});	
-				
-			    });
 
 			if(cli){
 				this.ocupacion_id = cli.profile.ocupacion_id;
@@ -175,7 +181,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 			
 			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
 			//rc.creditos_id = _.pluck(planes, "cliente_id");
-			console.log("kaka",planes)
+			//console.log("kaka",planes)
 
 
 			return planes
@@ -194,14 +200,14 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 				
 				if(planPago.descripcion=="Recibo")
 					rc.saldo+=planPago.cargo;
-				if(planPago.descripcion=="Multa")
+				if(planPago.descripcion=="Cargo Moratorio")
 					rc.saldoMultas+=planPago.importeRegular;
 			});
 			
 			_.each(rc.getReactively("planPagos"), function(planPago, index){
 				
-				console.log("entro al segundo")
-				console.log("credito",credito)
+				//console.log("entro al segundo")
+				//console.log("credito",credito)
 
 				
 				if(planPago.descripcion=="Multa")
@@ -233,10 +239,10 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 							fecha : pago.fechaPago,
 							pago : pago.totalPago, 
 							cargo : 0,
-							movimiento : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							movimiento : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
 							planPago_id : planPago._id,
 							credito_id : planPago.credito_id,
-							descripcion : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
 							importe : planPago.importeRegular,
 							pagos : planPago.pagos
 					  	});
@@ -244,7 +250,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 				//console.log(rc.saldo)
 			});
 
-			console.log("el ARREGLO del helper historial",arreglo)
+			//console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
 		},
     tiposIngreso: () => {
@@ -262,37 +268,45 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
     planPagosViejo: () => {
 
       //rc.credito_id = $stateParams.credito_id;
+/*
       var fechaActual = moment();
       var pagos = PlanPagos.find({
         cliente_id: $stateParams.objeto_id,
         credito_id: { $in: this.getCollectionReactively("creditos_id") }
       }, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
+					
+*/			
+				
+			var pp = PlanPagos.find({}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
+      rc.subtotal = 0;
+			rc.cargosMoratorios = 0;
+			
+			_.each(pp, function(pago) {
 
-      //var credito =Creditos.findOne({_id : $stateParams.credito_id});
-      //console.log(credito)
-      // 	if (rc.creditos != undefined) {
-      // 	_.each(pagos, function(pago){
-      // 		if (pago.estatus == 1) {
-      // 			Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
-      // 				//console.log("entro")
-
-      // 			})
-      // 		}else{
-
-      // 			rc.creditos.estatus = 4
-      // 		}
-      // 	});
-      // }
-      console.log("pp", this.getCollectionReactively("creditos_id"))
-
-
-      return PlanPagos.find({}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } })
+          var credito = Creditos.findOne({_id:pago.credito_id});
+	        pago.verCargo = true;
+	        
+	        if (pago.descripcion == "Recibo")
+	        		rc.subtotal +=  pago.importeRegular;
+	        else 
+	        		rc.cargosMoratorios +=  pago.importeRegular;
+	        
+					if (credito)
+							pago.folio = credito.folio;
+       });
+       
+       rc.total = rc.subtotal + rc.cargosMoratorios;
+					
+      //return PlanPagos.find({}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } })
+      
+      return pp;
+      
     },
     creditos: () => {
       var creditos = Creditos.find({}).fetch();
       if (creditos != undefined) {
         rc.creditos_id = _.pluck(creditos, "_id");
-        console.log("ids", rc.creditos_id)
+        //console.log("ids", rc.creditos_id)
         _.each(creditos, function(credito) {
           credito.planPagos = PlanPagos.find({ credito_id: credito._id }, { sort: { numeroPago: -1 } }).fetch();
           credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
@@ -436,7 +450,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
         seleccionadosId.push({ id: p._id, importe: p.importepagado })
 
     });
-    console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
+    //console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
     Meteor.call("pagoParcialCredito", seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id, $stateParams.objeto_id, function(error, success) {
       if (!success) {
         toastr.error('Error al guardar.');
@@ -489,7 +503,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	}
 
 	this.verPagos= function(credito) {
-		console.log(credito,"el ob ")
+		//console.log(credito,"el ob ")
 		rc.credito = credito;
 		rc.credito_id = credito._id;
 		$("#modalpagos").modal();
@@ -497,7 +511,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		rc.pagos = credito.pagos
 		rc.openModal = true
 		////console.log(rc.pagos,"pagos")
-		console.log(rc.historial,"historial act")
+		//console.log(rc.historial,"historial act")
 			_.each(rc.getReactively("historial"),function (pago) {
 
 			});
@@ -510,10 +524,64 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 
     
     
-});
+		});
 
+	this.funcionOrdenar = function() 
+	{
+		
+			if (this.valorOrdenar == "Folio")
+	    		return ['folio','numeroPago'];
+	    if (this.valorOrdenar == "Fecha")
+	    		return ['fechaLimite'];
+	    /*
+if (this.valorOrdenar == "Cliente")
+	    		return ['cliente.nombreCompleto'];		
+*/
+	};
 
+	this.ocultar = function() 
+	{
+			rc.subtotal = 0;
+			rc.cargosMoratorios = 0;
+/*
+			console.log(rc.subtotal);
+			console.log(rc.cargosMoratorios);
+*/
 
+			_.each(this.planPagosViejo, function(pago) {
+          if (pago.descripcion == "Cargo Moratorio")
+          {
+	          	pago.verCargo = !pago.verCargo;
+          }	
+          
+	        if (pago.verCargo)
+	        {
+		        	
+		        	if(pago.descripcion=="Recibo")
+								rc.subtotal+=pago.importeRegular;
+							if(pago.descripcion=="Cargo Moratorio")
+								rc.cargosMoratorios+=pago.importeRegular;
+		        	
+	        }		
+	        else 
+	        {
+		        	if(pago.descripcion=="Recibo")
+								rc.subtotal+=pago.importeRegular;
+							if(pago.descripcion=="Cargo Moratorio")
+								rc.cargosMoratorios = 0;
+	        }
+	        
+       });
+       
+       
+       rc.total = rc.subtotal + rc.cargosMoratorios;
+       
+/*
+       console.log(rc.subtotal);
+			 console.log(rc.cargosMoratorios);
+*/
+			
+	};
 
 
 

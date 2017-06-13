@@ -28,6 +28,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.empresa = {}
 	rc.creActivos =false;
 	rc.creditoApro = false;
+	this.respuestaNotaCLiente = false;
 	
 	rc.creditoSeleccionado = {};
 	this.estadoCivilSeleccionado = "";
@@ -191,12 +192,24 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 		notaPerfil: () => {
 			var nota = Notas.find({perfil : "perfil",estatus:true}).fetch()
-			if (nota.tipo == "Cuenta") {
-
-			}else{
 
 			return nota[nota.length - 1];
-			}
+		
+		},
+			notaCuenta1: () => {
+			var nota = Notas.find({tipo : "Cuenta"}).fetch()
+			_.each(nota, function(notita){
+				if (notita.estatus == true && notita.cliente_id == rc.objeto._id) {
+					console.log("entro aqui al notaCuenta1")
+					$("#myModal").modal(); 
+					
+				}
+				
+
+			 });
+			return nota[nota.length - 1];
+			
+			
 		},
 		objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
@@ -205,7 +218,16 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				//console.log(rc.notaPerfil.cliente_id,"nota a l avga")
 				if (cli._id == rc.notaPerfil.cliente_id) {
 					//console.log("entro aqui compilla")
-					$("#notaPerfil").modal();
+					if (rc.notaPerfil.tipo == "Cuenta") {
+						console.log("modal cerrar")
+						$("#notaPerfil").modal("hide");
+
+					}else{
+						console.log("modal abrir")
+						$("#notaPerfil").modal();
+					}
+
+					
 					
 				}
 
@@ -324,36 +346,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				});
 			return planPagos
 		},
-		notaCuenta1: () => {
-			var nota = Notas.find({tipo : "Cuenta"}).fetch()
-			_.each(nota, function(notita){
-				if (notita.estatus == true) {
-					console.log("entro aqui al notaCuenta1")
-					$("#myModal").modal(); 
-				}
-				
-
-			});
-
-	// $(document).ready(function() {
-	// 	if (rc.getReactively("nota") != undefined) {
-	// 	    	//console.log("entro al modal ")
-	// 	   if (rc.notaCuenta1.perfil != undefined) {
-	// 	    		//console.log("mostrara el modal ")
-		    	
-	// 	   	}
-	// 	   	else
-	// 	   	{
-	// 	    	$("#myModal").modal('hide'); 
-	// 			}
- //    }
-	// });
-		
-
-			return nota[nota.length - 1];
-			
-			
-		},
+	
 		usuario: () => {
 			return Meteor.users.findOne()
 		},
@@ -446,32 +439,20 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	  		},
 				
 	});
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 
+  this.mostrarCheckCuenta = function(nota){
+  	//console.log(nota,"mostrarCheckCuenta")
+  	if (nota.tipo == "Cuenta") {
+  		//console.log("entra")
+			 document.getElementById("cuentaNota").style.visibility = "visible";
+		}else{
+			document.getElementById("cuentaNota").style.visibility = "hidden";
+		}
 
-
-	$(document).ready(function() {
-    if (rc.getReactively("notaCuenta1") != undefined) {
-    	//console.log("entro al modal ",rc.notaCuenta1)
-
-    	if (rc.notaCuenta1 != undefined) {
-    		//console.log("mostrara el modal ")
-    		_.each(rc.getReactively("notaCuenta1"), function(nota){
-    			_.each(rc.getReactively("objeto"), function(item){
-    			//console.log("entra")
-    			if (nota.cliente_id == item._id ) {
-    				//console.log("each del modal")
-    				$("#myModal").modal(); 
-    			}
-    		});
-    	});
-
-    	
-    }
-
-    }else{
-    	console.log("no hay nota")
-    }
-	});
+  };
 
 
 	//console.log("nota ",rc.notaCuenta1)
@@ -692,6 +673,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.mostrarNotaCliente = function(){
 		$("#modalCliente").modal();
 		rc.nota = {};
+		document.getElementById("cuentaNota").style.visibility = "hidden";
 		
 	};
 
@@ -700,7 +682,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		objeto.perfil = "perfil"
 		objeto.cliente_id = rc.objeto._id
 		objeto.nombreCliente = rc.objeto.profile.nombreCompleto
-		objeto.respuesta = true;
+		//objeto.respuesta = true;
+		objeto.usuario = rc.objeto.profile.nombreCompleto
+		objeto.respuesta =  this.respuestaNotaCLiente	
+		objeto.fecha = new Date()
+	    objeto.hora = moment(objeto.fecha).format("hh:mm:ss a")
 		objeto.estatus = true;
 		Notas.insert(objeto);
 		toastr.success('Nota guardada.');
@@ -938,7 +924,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				nota.estatus = true;
 			
 			Notas.update({_id: id},{$set :  {estatus : nota.estatus}});
-			$("#notaPerfil").modal('hide');
+			if (nota.tipo == "Cuenta") {
+				$("#myModal").modal('hide');
+
+			}else{$("#notaPerfil").modal('hide');}
+			
 	}
 
 	this.modalDoc= function(img)
@@ -1077,6 +1067,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						
 			rc.creditoSeleccionado.planPagos = newArr;
 		
+	}
+
+	this.cambioEstatusRespuesta=function(){
+		this.respuestaNotaCLiente = !this.respuestaNotaCLiente;
+					
 	}
 	
 	
