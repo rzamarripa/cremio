@@ -45,9 +45,8 @@ Meteor.methods({
 				 			
 				 			planPago.imprimir = false;
 				 			planPago.classPago = classPago;
-				 			//planPago.folio = c.folio;
-				 			
-					 			
+				 			//planPago.folio = c.folio;					 			
+
 					}
 					
 					
@@ -264,13 +263,13 @@ if (planPago.importeRegular != 0)
 			_.each(planPagos, function(planPago){
 				if(planPago.descripcion=="Recibo")
 					saldo+=planPago.cargo;
-				if(planPago.descripcion=="Multa")
+				if(planPago.descripcion=="Cargo Moratorio")
 					saldoMultas+=planPago.importeRegular;
 			});
 			_.each(planPagos, function(planPago, index){
 
 				
-				if(planPago.descripcion=="Multa")
+				if(planPago.descripcion=="Cargo Moratorio")
 					saldo+=planPago.cargo
 				
 				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
@@ -304,10 +303,10 @@ if (planPago.importeRegular != 0)
 							fecha : pago.fechaPago,
 							pago : pago.totalPago, 
 							cargo : 0,
-							movimiento : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							movimiento : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
 							planPago_id : planPago._id,
 							credito_id : planPago.credito_id,
-							descripcion : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
 							importe : planPago.importeRegular,
 							pagos : planPago.pagos,
 
@@ -341,13 +340,13 @@ if (planPago.importeRegular != 0)
 			_.each(planPagos, function(planPago){
 				if(planPago.descripcion=="Recibo")
 					saldo+=planPago.cargo;
-				if(planPago.descripcion=="Multa")
+				if(planPago.descripcion=="Cargo Moratorio")
 					saldoMultas+=planPago.importeRegular;
 			});
 			_.each(planPagos, function(planPago, index){
 
 				
-				if(planPago.descripcion=="Multa")
+				if(planPago.descripcion=="Cargo Moratorio")
 					saldo+=planPago.cargo
 				
 				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite

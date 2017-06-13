@@ -93,6 +93,10 @@
 						    	</select>
 					    	</div>
 					    	<div class="col-sm-4" valida>
+							    <label>Tasa %*</label>
+						    	<input name="tasa" type="number" class="form-control" ng-model="ae.credito.tasa" required>
+						    </div>
+					    	<div class="col-sm-4" valida>
 						    	<label>Periodo de pago *</label>
 						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ae.credito.periodoPago" required="">
 							    	<option value="Semanal">Semanal</option>
@@ -100,17 +104,27 @@
 							    	<option value="Mensual">Mensual</option>
 						    	</select>
 					    	</div>									    	
-					    	<div class="col-sm-4" valida>					    
-						    	<label>Duración (Meses) *</label>
-						    	<input name="duracionMesesCreditoNuevo" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ae.credito.duracionMeses" required="">
-					    	</div>									    	
 					    </div>
 					    <div class="row">
-					    	<div class="col-sm-2" valida>
+						    <div class="col-sm-3" valida>					    
+						    	<label>Duración (Meses) *</label>
+						    	<input name="duracionMesesCreditoNuevo" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ae.credito.duracionMeses" required="">
+					    	</div>
+					    	<div class="col-sm-3" valida>
 						    	<label>Capital Solicitado *</label>
 						    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ae.credito.capitalSolicitado" required="">
 					    	</div>
-					    	<div class="col-sm-2">					    
+					    	<div class="col-sm-3">					    
+						    	<label>Con Seguro</label>
+						    	<input name="conSeguro" type="checkbox" class="form-control" ng-model="ae.credito.conSeguro">
+					    	</div>	
+					    	<div class="col-sm-3" ng-if="ae.credito.conSeguro" valida>
+							    <label>Importe seguro semanal *</label>
+						    	<input name="seguro" type="number" class="form-control" placeholder="Seguro" ng-model="ae.credito.seguro"  required>
+						    </div>		
+					    </div>
+					    <div class="row">
+								<div class="col-sm-2">					    
 						    	<label>Requiere Verificación</label>
 						    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ae.credito.requiereVerificacion">
 					    	</div>
@@ -125,7 +139,7 @@
 							    	<option value="tarde">Tarde</option>
 						    	</select>
 					    	</div>
-					    </div>
+						</div>
 						</div>
 						
 						<h4>Avales</h4>

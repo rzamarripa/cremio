@@ -20,15 +20,19 @@
 						  		<label>Nombre del cliente</label>
 						  		<input name="nombreCliente" type="text" class="form-control" placeholder="Nombre completo" ng-model="cal.credito.nombre">
 					  		</div>
-					  	</div>
-					    <div class="row">
-						    <div class="col-sm-4" valida>
+					  		<div class="col-sm-4" valida>
 						    	<label>Tipo de crédito *</label>
 						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="cal.credito.tipoCredito_id" required="">
 							    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in cal.tiposCredito">{{tipoCredito.nombre}}</option>
 						    	</select>
 					    	</div>
 					    	<div class="col-sm-4" valida>
+							    <label>Tasa %*</label>
+						    	<input name="tasa" type="number" class="form-control" ng-model="cal.credito.tasa" required>
+						    </div>
+					  	</div>
+					    <div class="row">
+					    	<div class="col-sm-3" valida>
 						    	<label>Periodo de pago *</label>
 						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="cal.credito.periodoPago" required="">
 							    	<option value="Semanal">Semanal</option>
@@ -36,19 +40,26 @@
 							    	<option value="Mensual">Mensual</option>
 						    	</select>
 					    	</div>									    	
-					    	<div class="col-sm-4" valida>					    
+					    	<div class="col-sm-3" valida>					    
 						    	<label>Duración (Meses) *</label>
 						    	<input name="duracionMesesCreditoNuevo" type="number" class="form-control" placeholder="Duración en Meses" ng-model="cal.credito.duracionMeses" required="">
-					    	</div>									    	
+					    	</div>				
+					    	<div class="col-sm-3">					    
+						    	<label>Con Seguro</label>
+						    	<input name="conSeguro" type="checkbox" class="form-control" ng-model="cal.credito.conSeguro">
+					    	</div>	
+					    	<div class="col-sm-3" ng-if="cal.credito.conSeguro" valida>
+							    <label>Importe seguro semanal *</label>
+						    	<input name="seguro" type="number" class="form-control" placeholder="Seguro" ng-model="cal.credito.seguro"  required>
+						    </div>    	
 					    </div>
 					    <div class="row">
-					    	<div class="col-sm-2" valida>
+					    	<div class="col-sm-4" valida>
 						    	<label>Capital Solicitado *</label>
 						    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="cal.credito.capitalSolicitado" required="">
 					    	</div>		
 					    </div>
 						</div>
-						
 						<div class="row">
 							<div class="col-sm-12">
 								<button class="btn btn-info" ng-click="cal.generarPlanPagos(cal.credito, formNuevoCredito)" valida-form formulario="formNuevoCredito">Calcular Plan de Pagos</button>

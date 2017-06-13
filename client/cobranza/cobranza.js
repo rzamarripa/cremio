@@ -148,14 +148,14 @@ angular.module("creditoMio")
 			_.each(rc.getReactively("planPagosViejo"), function(planPago){
 				if(planPago.descripcion=="Recibo")
 					rc.saldo+=planPago.cargo;
-				if(planPago.descripcion=="Multa")
+				if(planPago.descripcion=="Cargo Moratorio")
 					rc.saldoMultas+=planPago.importeRegular;
 			});
 			
 			_.each(rc.getReactively("planPagosViejo"), function(planPago, index){
 
 				
-				if(planPago.descripcion=="Multa")
+				if(planPago.descripcion=="Cargo Moratorio")
 					rc.saldo+=planPago.cargo
 				
 				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
@@ -186,10 +186,10 @@ angular.module("creditoMio")
 							fecha : pago.fechaPago,
 							pago : pago.totalPago, 
 							cargo : 0,
-							movimiento : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							movimiento : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
 							planPago_id : planPago._id,
 							credito_id : planPago.credito_id,
-							descripcion : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
 							importe : planPago.importeRegular,
 							pagos : planPago.pagos
 					  	});
@@ -326,17 +326,21 @@ angular.module("creditoMio")
 					//console.log("FF:", FF);
 			}
 			
+			
+			//Meteor.call("generarMultas",function(err, res){console.log("Fue por multas:",res)});
+			
 			Meteor.call('getCobranza', FI, FF, op, Meteor.user().profile.sucursal_id, function(error, result) {						
 					if (result)
 					{
-
+							console.log("Cobranza:",result);
+							
 							rc.cobranza = result;
 							rc.totalRecibos = 0;
 							rc.totalMultas = 0;
 							_.each(rc.cobranza,function(c){
 									if (c.descripcion == "Recibo")
 												rc.totalRecibos = rc.totalRecibos + c.importeRegular;
-										else if (c.descripcion == "Multa")		
+										else if (c.descripcion == "Cargo Moratorio")		
 												rc.totalMultas = rc.totalMultas + c.importeRegular;
 							});
 							
@@ -517,7 +521,7 @@ angular.module("creditoMio")
 								_.each(rc.cobranza,function(c){
 										if (c.descripcion == "Recibo")
 												rc.totalRecibos = rc.totalRecibos + c.importeRegular;
-										else if (c.descripcion == "Multa")		
+										else if (c.descripcion == "Cargo Moratorio")		
 												rc.totalMultas = rc.totalMultas + c.importeRegular;
 								});
 								$scope.$apply();
@@ -554,7 +558,7 @@ angular.module("creditoMio")
 					{
 							if (c.descripcion == "Recibo")
 									rc.seleccionadoRecibos += c.importeRegular;
-							else if (c.descripcion == "Multa")		
+							else if (c.descripcion == "Cargo Moratorio")		
 									rc.seleccionadoMultas += c.importeRegular;
 					}		
 			});

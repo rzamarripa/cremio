@@ -142,11 +142,13 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 	 	
 		  
 	  this.generarPlanPagos = function(credito, form){
-	  		var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
-	  		if(!tipoCredito || credito.capitalSolicitado>tipoCredito.montoMaximon){
+/*
+	  	var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
+	  	if(!tipoCredito || credito.capitalSolicitado>tipoCredito.montoMaximon){
 	  			toastr.error("El monto solicitado es mayor al permitido.");
 	  			return;
-	  		}
+	  	}
+*/
 			if(form.$invalid){
 				toastr.error('Error al calcular el nuevo plan de pagos, llene todos los campos.');
 				return;
@@ -178,7 +180,10 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 				requiereVerificacion: this.credito.requiereVerificacion,
 				sucursal_id : Meteor.user().profile.sucursal_id,
 				fechaVerificacion: this.credito.fechaVerificacion,
-				turno: this.credito.turno
+				turno: this.credito.turno,
+				tasa: this.credito.tasa,
+				conSeguro : this.credito.conSeguro,
+				seguro: this.credito.seguro
 			};
 
 			Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){

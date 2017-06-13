@@ -16,7 +16,14 @@ Meteor.methods({
 		//console.log(tipoCredito);
 		
 		var totalPagos = 0;
-		var seguro = tipoCredito.seguro;
+		
+		var seguro;
+		
+		if (credito.conSeguro)
+				seguro = credito.seguro;
+		else 
+				seguro = 0;		
+				
 		var numeroPagosCompuesto = 0;
 
 		if(credito.periodoPago == "Semanal")
@@ -46,14 +53,14 @@ Meteor.methods({
 				if (tipoCredito.tipoInteres == "Simple")
 				{
 						var suma = 0;
-						if (tipoCredito.conSeguro)
-								var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)*credito.duracionMeses+credito.capitalSolicitado)/totalPagos)+seguro;
+						if (credito.conSeguro)
+								var importeParcial = (((credito.capitalSolicitado * (credito.tasa  / 100)*1.16)*credito.duracionMeses+credito.capitalSolicitado)/totalPagos)+seguro;
 						else
-								var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)*credito.duracionMeses+credito.capitalSolicitado)/totalPagos);
+								var importeParcial = (((credito.capitalSolicitado * (credito.tasa  / 100)*1.16)*credito.duracionMeses+credito.capitalSolicitado)/totalPagos);
 						
-						var iva = ((credito.capitalSolicitado * (tipoCredito.tasa / 100)*0.16)*credito.duracionMeses)/totalPagos;
+						var iva = ((credito.capitalSolicitado * (credito.tasa  / 100)*0.16)*credito.duracionMeses)/totalPagos;
 						iva = parseFloat(iva.toFixed(2));
-						var interes = (credito.capitalSolicitado * (tipoCredito.tasa / 100) *credito.duracionMeses)/totalPagos;
+						var interes = (credito.capitalSolicitado * (credito.tasa  / 100) *credito.duracionMeses)/totalPagos;
 						interes = parseFloat(interes.toFixed(2));
 						var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
 						importeParcial=Math.round(importeParcial * 100) / 100;
@@ -63,13 +70,13 @@ Meteor.methods({
 				{
 						var suma = 0;
 						
-						var iva = ((credito.capitalSolicitado * (tipoCredito.tasa / 100)*0.16))/numeroPagosCompuesto;
+						var iva = ((credito.capitalSolicitado * (credito.tasa  / 100)*0.16))/numeroPagosCompuesto;
 						iva = parseFloat(iva.toFixed(2));
-						var interes = (credito.capitalSolicitado * (tipoCredito.tasa / 100))/numeroPagosCompuesto;
+						var interes = (credito.capitalSolicitado * (credito.tasa  / 100))/numeroPagosCompuesto;
 						interes = parseFloat(interes.toFixed(2));
 						var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
 						
-						if (tipoCredito.conSeguro)
+						if (credito.conSeguro)
 								var importeParcial = capital + interes + iva + seguro;
 						else
 								var importeParcial = capital + interes + iva;
@@ -95,7 +102,7 @@ Meteor.methods({
 						importeRegular			: importeParcial,
 						iva									: iva,
 						interes 						: interes,
-						seguro							: (tipoCredito.conSeguro?seguro:0),
+						seguro							: (credito.conSeguro?seguro:0),
 						cliente_id					: cliente._id,
 						capital 						: capital,
 						fechaPago						: undefined,
@@ -164,14 +171,14 @@ Meteor.methods({
 					
 					//capital = capital - saldo;
 					
-					var iva = ((capital * (tipoCredito.tasa / 100)*0.16)/numeroPagosCompuesto);
+					var iva = ((capital * (credito.tasa  / 100)*0.16)/numeroPagosCompuesto);
 					iva = parseFloat(iva.toFixed(2));
 					
-					var interes = (capital * (tipoCredito.tasa / 100)/numeroPagosCompuesto);
+					var interes = (capital * (credito.tasa  / 100)/numeroPagosCompuesto);
 					interes = parseFloat(interes.toFixed(2));
 					
 					
-					if (tipoCredito.conSeguro)
+					if (credito.conSeguro)
 								var importeParcial = amortizacion + interes + iva + seguro;
 						else
 								var importeParcial = amortizacion + interes + iva;
@@ -191,7 +198,7 @@ Meteor.methods({
 						importeRegular			: importeParcial,
 						iva									: iva,
 						interes 						: interes,
-						seguro							: (tipoCredito.conSeguro?seguro:0),
+						seguro							: (credito.conSeguro?seguro:0),
 						cliente_id					: cliente._id,
 						capital 						: capital,
 						fechaPago						: undefined,
@@ -269,7 +276,7 @@ Meteor.methods({
 													]
 											},
 											{
-												descripcion : "Multa"
+												descripcion : "Cargo Moratorio"
 											},
 											{
 												ultimaModificacion : { $lt : ahora }
@@ -527,80 +534,127 @@ Meteor.methods({
 	generarMultas:function(){
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
+		//ahora.setHours(23,59,59,999);
+		//console.log(ahora);
 		var pagos = PlanPagos.find({$and:[
+
 											{
 												$or:[
 														{estatus:0},
 														{estatus:2}
 													]
+
 											},
 											{
-												multada		: 0,
-												descripcion : "Recibo"
+												multada			:	0, 	
+												importeRegular : {$gte : 0 }
 											},
 											{
 												fechaLimite : { $lt : ahora }
 											}
 										]}).fetch();
-		//console.log("si entre")
+		//console.log("si entre")		
+		//console.log("Multas",pagos );
 		
-		
-		
+		//return pagos;
+
+
+
 		_.each(pagos, function(pago){
 			try{
-				var mfecha = moment(ahora);
-				//console.log("fechaLimite",pago.fechaLimite, ahora)
-				limite = new Date (pago.fechaLimite.getFullYear(),pago.fechaLimite.getMonth(),pago.fechaLimite.getDate());
-				var dias = mfecha.diff(limite, "days");
+				
 				var credito = Creditos.findOne(pago.credito_id);
 				
-				//Define la Multa
-				var multas = (dias/100) * credito.capitalSolicitado; 
-				multas=Math.round(multas * 100) / 100;
-				var interes = multas / 1.16
-				interes = Number(interes.toFixed(2));
-				var iva = multas - interes;
-				iva = Number(iva.toFixed(2));
+				if (pago.descripcion == "Recibo")
+				{
 				
-				
-				var multa = {
-					semana				: mfecha.isoWeek(),
-					fechaLimite			: ahora,
-					diaSemana			: mfecha.weekday(),
-					tipoPlan			: pago.tipoPlan,
-					numeroPago			: pago.numeroPago,
-					importeRegular		: multas,
-					cliente_id			: pago.cliente_id,
-					fechaPago			: undefined,
-					semanaPago			: undefined,
-					diaPago				: undefined,
-					iva					: iva,
-					interes 			: interes,
-					seguro				: 0,
-					capital 			: 0,
-					pago				: 0,
-					estatus				: 0,
-					multada				: 0,
-					multa 				: 0,
-					multa_id			: undefined,
-					planPago_id			: pago._id,
-					tiempoPago			: 0,
-					modificada			: false,
-					pagos 				: [],
-					descripcion			: "Cargo Moratorio",
-					ultimaModificacion	: ahora,
-					credito_id 			: credito._id,
-					mes					: mfecha.get('month') + 1,
-					anio				: mfecha.get('year'),
-					cargo				: multas,
-					movimiento			: "Gastos de Cobranza"
-				};
-				var multa_id = PlanPagos.insert(multa);
-				PlanPagos.update({_id:pago._id},{$set:{multada:1,multa_id:multa_id}})
+						var mfecha = moment(ahora);
+						//console.log("fechaLimite",pago.fechaLimite, ahora)
+						limite = new Date (pago.fechaLimite.getFullYear(),pago.fechaLimite.getMonth(),pago.fechaLimite.getDate());
+						var dias = mfecha.diff(limite, "days");
+						
+						
+						//Define la Multa
+						var multas = (dias/100) * credito.capitalSolicitado; 
+						multas=Math.round(multas * 100) / 100;
+						var interes = multas / 1.16
+						interes = Number(interes.toFixed(2));
+						var iva = multas - interes;
+						iva = Number(iva.toFixed(2));
+						
+						
+						var multa = {
+							semana							: mfecha.isoWeek(),
+							fechaLimite					: ahora,
+							diaSemana						: mfecha.weekday(),
+							tipoPlan						: pago.tipoPlan,
+							numeroPago					: pago.numeroPago,
+							importeRegular			: multas,
+							cliente_id					: pago.cliente_id,
+							fechaPago						: undefined,
+							semanaPago					: undefined,
+							diaPago							: undefined,
+							iva					  			: iva,
+							interes 						: interes,
+							seguro							: 0,
+							capital 						: 0,
+							pago				  			: 0,
+							estatus							: 0,
+							multada							: 0,
+							multa 							: 0,
+							multa_id						: undefined,
+							planPago_id					: pago._id,
+							tiempoPago					: 0,
+							modificada					: false,
+							pagos 							: [],
+							descripcion					: "Cargo Moratorio",
+							ultimaModificacion	: ahora,
+							credito_id 					: credito._id,
+							mes									: mfecha.get('month') + 1,
+							anio								: mfecha.get('year'),
+							cargo								: multas,
+							movimiento					: "Cargo Moratorio"
+						};
+						
+						var multa_id = PlanPagos.insert(multa);
+						PlanPagos.update({_id:pago._id},{$set:{multada:1,multa_id:multa_id}})
+
+				}
+				else
+				{
+						
+						//console.log("Anytes:",pago.importeRegular);
+						//Define la Multa
+						var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
+							
+						//console.log("CP:",credito.capitalSolicitado);
+						if (tipoCredito.calculo == "importeSolicitado")
+						{
+								var multas = credito.capitalSolicitado * (tipoCredito.importe / 100); 
+								multas=Math.round(multas * 100) / 100;
+								
+								var interes = multas / 1.16
+								interes = Number(interes.toFixed(2));
+								var iva = multas - interes;
+								iva = Number(iva.toFixed(2));	
+							
+						}
+
+						pago.importeRegular += multas;
+						pago.iva += iva;
+						pago.interes += interes;
+						pago.cargo = pago.importeRegular;
+						//console.log("Impor:",pago.importeRegular);
+
+						var idTemp = pago._id;
+						delete pago._id;	
+						PlanPagos.update({_id:idTemp},{$set : pago});		
+				}
 			}catch(e){
 				console.log(e);
 				console.log(e.stack);
 			}
-		})
+		});
+
 	}
 });

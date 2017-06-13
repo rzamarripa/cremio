@@ -77,9 +77,9 @@
 					<th width="5%">No.</th>
 					<th width="5%"><div class="text-center">Crédito</div></th>
 					<th width="5%"><div class="text-center">Recibo</div></th>
-					<th width="5%"><div class="text-center">Tipo</div></th>
+					<th width="15%"><div class="text-center">Tipo</div></th>
 					<th width="15%"><div class="text-center">Fecha</div></th>
-					<th width="30%"><div class="text-center">Cliente</div></th>
+					<th width="40%"><div class="text-center">Cliente</div></th>
 					<th width="10%"><div class="text-center">Importe</div></th>
 					<th width="10%"><div class="text-center">Saldo</div></th>
 				</tr>
@@ -97,7 +97,7 @@
 			    <td ng-click="cob.selCredito(objeto,$index + 1)">
 				    <span>{{objeto.numeroPago}} </span>
 				  </td>
-				  <td class="text-center" style="font-size: small" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.descripcion}}</td>
+				  <td class="text-center" style="font-size: smaller" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.descripcion}}</td>
 				  <td class="text-center" style="font-size: small" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.fechaLimite | date:'dd-MM-yyyy'}}</td>
 			    <td ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.cliente.profile.nombreCompleto}}</td>
 			    <td class="text-right" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.cargo | currency}}</td>

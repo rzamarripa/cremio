@@ -275,8 +275,8 @@ Meteor.methods({
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		//var produccion = "/home/cremio/archivos/";
@@ -359,25 +359,9 @@ Meteor.methods({
 	    var calleEmpresa = call.toUpperCase();
 	    var col = objeto.coloniaEmpresa;
 	    var coloniaEmpresa = col.toUpperCase();
-	    
-	    // var cas = objeto.profile.casa
-	    // var casa = cas.toUpperCase();
-	    // var loca = objeto.empresa.municipio;
-	    // var LocalidadEmpresa = loca.toUpperCase();
-
-	  //    var dep = objeto.empresa.departamento;
-		 // var departamento = dep.toUpperCase();
-		 // var pues = objeto.empresa.puesto;
-		 // var puesto = pues.toUpperCase();
-		 
-		 // var jef = objeto.empresa.jefeInmediato;
-		 // var jefe = jef.toUpperCase();
 		 var cas = objeto.profile.casa;
 		 var casa = cas.toUpperCase();
-		 //var je = objeto.empresa.jefeInmediato;
-		 //var jefeEmpresa = je.toUpperCase();
-		// var an = objeto.empresa.tiempoLaborando;
-		/// var antiguedadEmpresa = an.toUpperCase();
+
 
 
 
@@ -636,17 +620,14 @@ Meteor.methods({
 	      item.folio = item.credito.folio
 
 	    });
-
 	    
-	 
-
+	
 	    console.log(objeto.planPagos);
 		
 				doc.setData({				items: 		 objeto,
 														fecha:     fecha,
 														inicial:    fInicial,
 														final:      fFinal,
-													
 				
 				  });
 								
@@ -704,10 +685,11 @@ Meteor.methods({
 
 	    console.log(objeto.planPagos);
 		
-				doc.setData({				items: 		 objeto,
-														fecha:     fecha,
-														inicial:    fInicial,
-														final:      fFinal,
+		doc.setData({				
+								items: 		 objeto,
+								fecha:     fecha,
+								inicial:    fInicial,
+								final:      fFinal,
 													
 				
 				  });
