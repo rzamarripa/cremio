@@ -1,7 +1,7 @@
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
   <li role="presentation" class="active"><a href="#activas" aria-controls="activas" role="tab" data-toggle="tab">Activas</a></li>
-  <!-- <li role="presentation"><a href="#inactivas" aria-controls="inactivas" role="tab" data-toggle="tab">Inactivas</a></li> -->
+  <li role="presentation"><a href="#inactivas" aria-controls="inactivas" role="tab" data-toggle="tab">Inactivas</a></li>
 </ul>
 
 <!-- Tab panes -->
@@ -48,94 +48,235 @@
 			</div>
 		</div>
   </div>
-  <!-- <div role="tabpanel" class="tab-pane" id="inactivas">Inactivas</div> -->
+  <div role="tabpanel" class="tab-pane" id="inactivas">
+  	<div class="row">
+  		<div class="col-sm-12">
+  			<br>
+		  	<form class="form-inline">
+				  <div class="form-group">
+				  	<div class="input-group">
+				  		<div class="input-group-addon">Del</div>
+							<input date-time format="dd-MM-yyyy" class="form-control" style="background-color: white" view="year" max-view="year" min-view="date" ng-model="caaj.fechaInicio" />
+							<div class="input-group-addon"><span class="fa fa-calendar"></span></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-addon">Al</div>	
+							<input date-time format="dd-MM-yyyy" class="form-control" style="background-color: white" view="year" max-view="year" min-view="date" ng-model="caaj.fechaFin" />
+							<div class="input-group-addon"><span class="fa fa-calendar"></span></div>
+						</div>
+					</div>
+					<button type="button" class="btn btn-primary" ng-click="caaj.getHistorialCajas(caaj.fechaInicio, caaj.fechaFin)">Buscar</button>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+	  	<div class="col-sm-12">
+	  	<br>
+	  		<table class="table table-bordered table-stripped table-hover">
+	  			<thead>
+	  				<tr>
+	  					<th>Caja</th>
+	  					<!-- <th>Cuenta</th> -->
+	  					<th>Fecha Apertura</th>
+	  					<th>Fecha Corte</th>
+	  					<th></th>
+	  				</tr>
+	  			</thead>
+	  			<tbody>
+	  				<tr ng-repeat="ci in caaj.cajasInactivas">
+	  					<td>{{ci.caja.nombre}}</td>
+	  					<!-- <td>{{ci.cuenta.nombre}}</td> -->
+	  					<td>{{ci.createdAt | date:"dd-MM-yyyy"}}</td>
+	  					<td>{{ci.corte.createdAt | date:"dd-MM-yyyy"}}</td>
+	  					<td>
+						    <div class="text-center">
+							    <a class="btn btn-primary btn-mini" ng-click="caaj.verCaja(ci, true)">
+							    <span class="fa fa-eye"></span>
+							  	</a>	
+						    </div>			    
+					    </td>
+	  				</tr>
+	  			</tbody>
+	  		</table>
+	  	</div>
+	  </div>
+  </div>
 </div>
 
 <div id="cajaActiva" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-	  <div class="modal-dialog modal-lg" role="document">
-	  	<div class="modal-content">
-		  	<div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title">{{caaj.caja.nombre}}</h4>
-	      </div>
-	  		<div class="modal-body">
-	  		<div>
-					  <!-- Nav tabs -->
-					  <ul class="nav nav-tabs" role="tablist">
-					    <li role="presentation" class="active"><a href="#resumen" aria-controls="resumen" role="tab" data-toggle="tab">Resumen</a></li>
-					    <li role="presentation"><a href="#operaciones" aria-controls="operaciones" role="tab" data-toggle="tab">Opereaciones</a></li>
-					  </ul>
+  <div class="modal-dialog modal-lg" role="document">
+  	<div class="modal-content">
+	  	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{{caaj.caja.nombre}}</h4>
+        <!-- <a class="btn btn-primary btn-mini pull-right" ui-sref="anon.imprimirResumen({caja_id: caaj.caja._id, fechaApertura: caaj.caja.createdAt})" target="_blank">
+					<span class="fa fa-file-text-o"></span>
+				</a> -->
+      </div>
+  		<div class="modal-body">
+  		<div>
+				  <!-- Nav tabs -->
+				  <ul class="nav nav-tabs" role="tablist">
+				    <li role="presentation" class="active"><a href="#resumen" aria-controls="resumen" role="tab" data-toggle="tab">Resumen</a></li>
+				    <li role="presentation"><a href="#operaciones" aria-controls="operaciones" role="tab" data-toggle="tab">Opereaciones</a></li>
+				  </ul>
 
-					  <!-- Tab panes -->
-					  <div class="tab-content">
-					    <div role="tabpanel" class="tab-pane active" id="resumen">
-					    	<div class="row">
-					    	<div class="col-sm-12">
-										<table class="table table-stripped table-bordered table-condensed">
-											<thead>
-												<tr>
-													<th width="10%">Folio</th>
-													<th width="15%">Fecha</th>
-													<th width="30%">Tipo de Ingreso</th>
-													<th width="10%">Total</th>
-													<th width="10%"></th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="p in caaj.pagos" ng-class="p.estatus ? 'success':'danger'">
-													<td>{{p.folioPago}}</td>
-													<td>{{p.fechaPago | date:"dd-MM-yyyy"}}</td>
-													<td>{{p.tipoIngreso}}</td>
-													<td>{{p.totalPago | currency}}</td>
-													<td>
-														<a ng-if="p.estatus" class="btn btn-primary btn-mini" ui-sref="anon.imprimirTicket({pago_id:p._id})" target="_blank">
-					    								<span class="fa fa-file-text-o"></span>
-					  								</a>
-					  								<a ng-if="p.estatus" class="btn btn-danger btn-mini" ng-click="caaj.cancelarPago(p)">
-					    								<span class="fa fa-trash"></span>
-					  								</a>			
-					  							</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
+				  <!-- Tab panes -->
+				  <div class="tab-content">
+				    <div role="tabpanel" class="tab-pane active" id="resumen">
+				    	<div class="row">
+				    	<div class="col-sm-12">
+									<table class="table table-stripped table-bordered table-condensed">
+										<thead>
+											<tr>
+												<th width="10%">Folio</th>
+												<th width="15%">Fecha</th>
+												<th width="30%">Tipo de Ingreso</th>
+												<th width="10%">Total</th>
+												<th width="5%"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="p in caaj.pagos">
+												<td>{{p.folioPago}}</td>
+												<td>{{p.fechaPago | date:"dd-MM-yyyy"}}</td>
+												<td>{{p.tipoIngreso}}</td>
+												<td>{{p.totalPago | currency}}</td>
+												<td>
+													<a ng-if="p.estatus" class="btn btn-primary btn-mini" ui-sref="anon.imprimirTicket({pago_id:p._id})" target="_blank">
+				    								<span class="fa fa-file-text-o"></span>
+				  								</a>			
+				  							</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
-					    </div>
-					    <div role="tabpanel" class="tab-pane" id="operaciones">
-					    	<div class="row">
-									<div class="col-sm-12">
-										<table class="table table-bordered">
-											<thead>
-												<tr>
-													<th width="5%">Folio</th>
-													<th width="15%">Fecha</th>
-													<th width="20%">Tipo Movimiento</th>
-													<th width="20%">Movimiento</th>
-													<th width="20%">Cuenta</th>
-													<th width="10%">Monto</th>
-												</tr>
-											</thead>
-											<tbody>
-										    <tr ng-repeat="objeto in caaj.movimientosCaja">
-										    	<td align="center">{{objeto.pago.folioPago}}</td>
-											    <td>{{objeto.createdAt | date:"dd-MM-yyyy"}}</td>
-											    <td>{{objeto.tipoMovimiento}}</td>
-													<td>{{objeto.origen}}</td>
-											    <td>{{objeto.cuenta}}</td>
-											    <td class="text-right">{{objeto.monto | currency}}</td>
-										    </tr>
-											</tbody>
-										</table>
-									</div>
+							</div>
+				    </div>
+				    <div role="tabpanel" class="tab-pane" id="operaciones">
+				    	<div class="row">
+								<div class="col-sm-12">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th width="5%">Folio</th>
+												<th width="15%">Fecha</th>
+												<th width="20%">Tipo Movimiento</th>
+												<th width="20%">Movimiento</th>
+												<th width="20%">Cuenta</th>
+												<th width="10%">Monto</th>
+												<th width="5%"></th>
+											</tr>
+										</thead>
+										<tbody>
+									    <tr ng-repeat="mov in caaj.movimientosCaja" ng-class="mov.pago.estatus ? 'success':'danger'">
+									    	<td align="center">{{mov.pago.folioPago}}</td>
+										    <td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
+										    <td>{{mov.tipoMovimiento}}</td>
+												<td>{{mov.origen}}</td>
+										    <td>{{mov.cuenta}}</td>
+										    <td class="text-right">{{mov.monto | currency}}</td>
+										    <td>
+										    	<a ng-if="mov.pago.estatus" class="btn btn-danger btn-mini" ng-click="caaj.cancelarPago(mov.pago)">
+				    								<span class="fa fa-trash"></span>
+				  								</a>
+										    </td>
+									    </tr>
+										</tbody>
+									</table>
 								</div>
-					    </div>
-					  </div>
-					</div>
-	    	</div>
-	  	</div>
-	  </div>
+							</div>
+				    </div>
+				  </div>
+				</div>
+    	</div>
+  	</div>
+  </div>
 </div>
 
+<div id="cajaInactiva" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+  	<div class="modal-content">
+	  	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{{caaj.cajaInactiva.caja.nombre}} ({{caaj.cajaInactiva.caja.fechaApertura | date: 'dd-MM-yyyy'}} a {{caaj.cajaInactiva.caja.fechaCierre | date: 'dd-MM-yyyy'}})</h4>
+      </div>
+  		<div class="modal-body">
+  		<div>
+				  <!-- Nav tabs -->
+				  <ul class="nav nav-tabs" role="tablist">
+				    <li role="presentation" class="active"><a href="#resumenInactiva" aria-controls="resumenInactiva" role="tab" data-toggle="tab">Resumen</a></li>
+				    <li role="presentation"><a href="#operacionesInactiva" aria-controls="operacionesInactiva" role="tab" data-toggle="tab">Opereaciones</a></li>
+				  </ul>
+
+				  <!-- Tab panes -->
+				  <div class="tab-content">
+				    <div role="tabpanel" class="tab-pane active" id="resumenInactiva">
+				    	<div class="row">
+				    	<div class="col-sm-12">
+									<table class="table table-stripped table-bordered table-condensed">
+										<thead>
+											<tr>
+												<th width="10%">Folio</th>
+												<th width="15%">Fecha</th>
+												<th width="30%">Tipo de Ingreso</th>
+												<th width="10%">Total</th>
+												<th width="5%"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="p in caaj.cajaInactiva.pagos">
+												<td>{{p.folioPago}}</td>
+												<td>{{p.fechaPago | date:"dd-MM-yyyy"}}</td>
+												<td>{{p.tipoIngreso.nombre}}</td>
+												<td>{{p.totalPago | currency}}</td>
+												<td>
+													<a ng-if="p.estatus" class="btn btn-primary btn-mini" ui-sref="anon.imprimirTicket({pago_id:p._id})" target="_blank">
+				    								<span class="fa fa-file-text-o"></span>
+				  								</a>
+				  							</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+				    </div>
+				    <div role="tabpanel" class="tab-pane" id="operacionesInactiva">
+				    	<div class="row">
+								<div class="col-sm-12">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th width="5%">Folio</th>
+												<th width="15%">Fecha</th>
+												<th width="20%">Tipo Movimiento</th>
+												<th width="20%">Movimiento</th>
+												<th width="20%">Cuenta</th>
+												<th width="10%">Monto</th>
+											</tr>
+										</thead>
+										<tbody>
+									    <tr ng-repeat="mov in caaj.cajaInactiva.movimientosCaja" ng-class="mov.pago.estatus ? 'success':'danger'">
+									    	<td align="center">{{mov.pago.folioPago}}</td>
+										    <td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
+										    <td>{{mov.tipoMovimiento}}</td>
+												<td>{{mov.origen}}</td>
+										    <td>{{mov.cuenta}}</td>
+										    <td class="text-right">{{mov.monto | currency}}</td>
+									    </tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+				    </div>
+				  </div>
+				</div>
+    	</div>
+  	</div>
+  </div>
+</div>
 
 
 <div id="confirm" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-keyboard="false" data-backdrop="static">
