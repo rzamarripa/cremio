@@ -535,7 +535,7 @@ angular.module("creditoMio")
 			var chkxr = document.getElementById('todos');
 				
 			_.each(rc.cobranza, function(cobranza){
-				cobranza.imprimir = chkImprimir.checked;
+				cobranza.imprimir = chkxr.checked;
 				//rc.cobranza.estatus = !rc.estatus.estatus;
 			})
 			
