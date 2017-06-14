@@ -773,6 +773,12 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('anon.imprimirResumen',{
+			url: '/imprimir/resumen/:caja_id/:fechaApertura',
+			params: {'caja_id': ':caja_id','fechaApertura': ':fechaApertura'},
+			templateUrl: 'client/cajas/resumen.ng.html',
+			controller: 'CajaResumenCtrl as cj',
+		})
 }]);
 
 function irArriba(){

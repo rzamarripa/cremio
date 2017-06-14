@@ -10,7 +10,9 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
   this.objeto = {};
   this.buscar = {};
   this.caja = {_id: 0};
-
+  this.cajasInactivas = [];
+  this.fechaInicio = moment().subtract(1,'month').startOf('month').toDate();
+  this.fechaFin = moment().subtract(1,'month').endOf('month').toDate();
   this.subscribe('cajas', () => {
     return [{ sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", estadoCaja: "Abierta" }]
   });
@@ -24,7 +26,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
     return [{}]
   });
   this.subscribe('pagos', () => {
-    return [{ caja_id: this.getReactively('caja._id'), fechaPago: { $gte: this.getReactively('caja.updatedAt')} }]
+    return [{caja_id: this.getReactively('caja._id'), fechaPago: { $gte: this.getReactively('caja.updatedAt')} }]
   });
   this.subscribe('movimientosCaja', () => {
     return [{
@@ -43,7 +45,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
       return Cajas.find();
     },
     pagos: () => {
-      var pagos = Pagos.find().fetch();
+      var pagos = Pagos.find({estatus: {$ne: 0}}).fetch();
       if (pagos.length) {
         _.each(pagos, function(pago) {
           pago.tipoIngreso = rc.tiposIngreso[pago.tipoIngreso_id].nombre;
@@ -75,6 +77,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
 	        c = Cuentas.findOne(cj.cuenta[mov.cuenta_id].cuenta_id);
 	        d.cuenta = c.nombre;
 	        d.monto = mov.monto;
+	        d.pago_id = mov.origen_id;
 	        d.pago = Pagos.findOne(mov.origen_id);
 	        ret.push(d)
 	      });
@@ -90,9 +93,18 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
     return ""
   }
 
-  this.verCaja = function(caja) {
-  	rc.caja = caja;
-    $('#cajaActiva').modal('show');
+  this.verCaja = function(caja, cajaInactiva) {
+  	if(cajaInactiva){
+  		Meteor.apply('getCajaInactivaDetalle', [caja.caja._id, caja.createdAt, caja.corte.createdAt], function(err, result){
+  			rc.cajaInactiva = result;
+  			rc.cajaInactiva.caja = {nombre: caja.caja.nombre, fechaApertura: caja.createdAt, fechaCierre: caja.corte.createdAt}
+  			$scope.$apply();
+  			$('#cajaInactiva').modal('show');
+  		});
+  	}else{
+  		rc.caja = caja;
+  		$('#cajaActiva').modal('show');
+  	}
   }
 
   this.cancelarPago = function(pago) {
@@ -117,6 +129,18 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
 	  })
   }
 
+  this.getHistorialCajas = function(fechaInicio, fechaFin){
+  	fechaInicio = moment(fechaInicio).startOf('day').toDate();
+  	fechaFin = moment(fechaFin).endOf('day').toDate();
+  	Meteor.apply('getHistorialCajas', [fechaInicio, fechaFin, Meteor.user().profile.sucursal_id], function(err, result){
+  		if(err){
+  			toastr.warning('Error al consultar los datos');
+  		}else{
+  			rc.cajasInactivas = result;
+  			$scope.$apply();
+  		}
+  	});
+  }
   // Meteor.call("movimientosCaja",$stateParams,function(error,result){
   // 	rc.movimientosCaja=result 
   // 	$scope.$apply()

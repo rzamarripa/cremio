@@ -1,10 +1,10 @@
 angular.module("creditoMio")
 .controller("CobranzaCtrl", CobranzaCtrl);
  function CobranzaCtrl($scope, $meteor, $reactive, $state, toastr){
- 	
- 	let rc = $reactive(this).attach($scope);
- 	window.rc = rc;
- 	  
+  
+  let rc = $reactive(this).attach($scope);
+  window.rc = rc;
+    
   this.fechaInicial = new Date();
   this.fechaInicial.setHours(0,0,0,0);
   this.fechaFinal = new Date();
@@ -34,7 +34,7 @@ angular.module("creditoMio")
   rc.seleccionadoRecibos = 0;
   rc.seleccionadoMultas = 0;
   rc.recibo = [];
-	
+  
   
   this.selected_numero = 0;
   this.ban = false;
@@ -43,448 +43,448 @@ angular.module("creditoMio")
   rc.selectRecibo = false
   rc.conRespuesta = false
   //rc.cobranza.estatus = 
-	
-	this.estadoCivilSeleccionado = "";
-	this.valorOrdenar = "Folio";
+  
+  this.estadoCivilSeleccionado = "";
+  this.valorOrdenar = "Folio";
 
   rc.colonia =""
   
 
   this.subscribe("tiposCredito", ()=>{
-		return [{}]
-	});
-	this.subscribe("estadoCivil", ()=>{
-		return [{}]
-	});
-	this.subscribe("nacionalidades", ()=>{
-		return [{}]
-	});
-	this.subscribe("ocupaciones", ()=>{
-		return [{}]
-	});
-	this.subscribe("paises", ()=>{
-		return [{}]
-	});
-	this.subscribe("estados", ()=>{
-		return [{}]
-	});
-	this.subscribe("municipios", ()=>{
-		return [{}]
-	});
-	this.subscribe("ciudades", ()=>{
-		return [{}]
-	});
-	this.subscribe("colonias", ()=>{
-		return [{}]
-	});
-	this.subscribe("empresas", ()=>{
-		return [{}]
-	});	  
+    return [{}]
+  });
+  this.subscribe("estadoCivil", ()=>{
+    return [{}]
+  });
+  this.subscribe("nacionalidades", ()=>{
+    return [{}]
+  });
+  this.subscribe("ocupaciones", ()=>{
+    return [{}]
+  });
+  this.subscribe("paises", ()=>{
+    return [{}]
+  });
+  this.subscribe("estados", ()=>{
+    return [{}]
+  });
+  this.subscribe("municipios", ()=>{
+    return [{}]
+  });
+  this.subscribe("ciudades", ()=>{
+    return [{}]
+  });
+  this.subscribe("colonias", ()=>{
+    return [{}]
+  });
+  this.subscribe("empresas", ()=>{
+    return [{}]
+  });   
 
-  	this.subscribe('notas',()=>{
-		return [{cliente_id:this.getReactively("cliente_id"),}]
-	});
+    this.subscribe('notas',()=>{
+    return [{cliente_id:this.getReactively("cliente_id"),}]
+  });
 
-	 this.subscribe("planPagos", ()=>{
-		return [{ credito_id : this.getReactively("credito_id") }]
-	});
+   this.subscribe("planPagos", ()=>{
+    return [{ credito_id : this.getReactively("credito_id") }]
+  });
 
-  	this.subscribe('personas', () => {
-		return [{ }];
-	});
-	// 	this.subscribe('clientes', () => {
-	// 	return [{_id : {$in : this.getReactively("clientes_id")}}];
-	// });
-		this.subscribe('creditos', () => {
-		return [{cliente_id : rc.getReactively("cliente_id")}];
-	});
+    this.subscribe('personas', () => {
+    return [{ }];
+  });
+  //  this.subscribe('clientes', () => {
+  //  return [{_id : {$in : this.getReactively("clientes_id")}}];
+  // });
+    this.subscribe('creditos', () => {
+    return [{cliente_id : rc.getReactively("cliente_id")}];
+  });
 
-		this.subscribe('pagos', () => {
-		return [{ }];
-	});
-
-
-	
-	this.helpers({
-		tiposCredito : () => {
-			return TiposCredito.find();
-		},
-		notas : () => {
-			return Notas.find().fetch();
-		},
-		usuario : () => {
-			return Meteor.users.findOne();
-		},
-		creditos : () => {
-			return Creditos.find().fetch();
-		},
-
-		planPagos : () => {
-			var planes = PlanPagos.find({multada:1});
-			var obj = planes.length
-
-			return planes;
-		},
-		planPagosViejo : () => {
-		
-			pagos = PlanPagos.find({},{sort : {numeroPago : 1,descripcion:-1}}).fetch();
-
-			_.each(pagos, function(pay){
-
-		     pay.credito = Creditos.findOne(pay.credito_id);
-		 });
-
-			 return pagos
-		},
-		historialDelCredito : () => {
-			
-			arreglo = [];
-			var saldoPago = 0;
-			var saldoActual = 0; 
-			rc.saldo =0;	
-			var credito = this.credito	
-			rc.saldoMultas=0;
-
-			_.each(rc.getReactively("planPagosViejo"), function(planPago){
-				if(planPago.descripcion=="Recibo")
-					rc.saldo+=planPago.cargo;
-				if(planPago.descripcion=="Cargo Moratorio")
-					rc.saldoMultas+=planPago.importeRegular;
-			});
-			
-			_.each(rc.getReactively("planPagosViejo"), function(planPago, index){
-
-				
-				if(planPago.descripcion=="Cargo Moratorio")
-					rc.saldo+=planPago.cargo
-				
-				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
-				//console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
-				arreglo.push({saldo:rc.saldo,
-					numeroPago : planPago.numeroPago,
-					cantidad : credito.numeroPagos,
-					fechaSolicito : credito.fechaSolicito,
-					fecha : fechaini,
-					pago : 0, 
-					cargo : planPago.cargo,
-					movimiento : planPago.movimiento,
-					planPago_id : planPago._id,
-					credito_id : planPago.credito_id,
-					descripcion : planPago.descripcion,
-					importe : planPago.importeRegular,
-					pagos : planPago.pagos
-			  	});
-					
-				
-				if(planPago.pagos.length>0)
-					_.each(planPago.pagos,function (pago) {
-						rc.saldo-=pago.totalPago
-						arreglo.push({saldo:rc.saldo,
-							numeroPago : planPago.numeroPago,
-							cantidad : credito.numeroPagos,
-							fechaSolicito : credito.fechaSolicito,
-							fecha : pago.fechaPago,
-							pago : pago.totalPago, 
-							cargo : 0,
-							movimiento : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
-							planPago_id : planPago._id,
-							credito_id : planPago.credito_id,
-							descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
-							importe : planPago.importeRegular,
-							pagos : planPago.pagos
-					  	});
-					})
-				//console.log(rc.saldo)
-			});
-			
-
-			console.log("el ARREGLO del helper historial",arreglo)
-			return arreglo;
-		},
-
-		pagosVencidos : () => {
-			_.each(rc.getReactively("planPagos"),function(plan){});
-			return rc.planPagos.length
-
-		},
+    this.subscribe('pagos', () => {
+    return [{ }];
+  });
 
 
-		historialCredito : () => {
-			var creditos = [];
-			rc.clientes_id = _.pluck(rc.cobranza,"cliente._id")
-			
-				
-		
-		    return creditos
-			
-		},
+  
+  this.helpers({
+    tiposCredito : () => {
+      return TiposCredito.find();
+    },
+    notas : () => {
+      return Notas.find().fetch();
+    },
+    usuario : () => {
+      return Meteor.users.findOne();
+    },
+    creditos : () => {
+      return Creditos.find().fetch();
+    },
 
-	});
+    planPagos : () => {
+      var planes = PlanPagos.find({multada:1});
+      var obj = planes.length
+
+      return planes;
+    },
+    planPagosViejo : () => {
+    
+      pagos = PlanPagos.find({},{sort : {numeroPago : 1,descripcion:-1}}).fetch();
+
+      _.each(pagos, function(pay){
+
+         pay.credito = Creditos.findOne(pay.credito_id);
+     });
+
+       return pagos
+    },
+    historialDelCredito : () => {
+      
+      arreglo = [];
+      var saldoPago = 0;
+      var saldoActual = 0; 
+      rc.saldo =0;  
+      var credito = this.credito  
+      rc.saldoMultas=0;
+
+      _.each(rc.getReactively("planPagosViejo"), function(planPago){
+        if(planPago.descripcion=="Recibo")
+          rc.saldo+=planPago.cargo;
+        if(planPago.descripcion=="Cargo Moratorio")
+          rc.saldoMultas+=planPago.importeRegular;
+      });
+      
+      _.each(rc.getReactively("planPagosViejo"), function(planPago, index){
+
+        
+        if(planPago.descripcion=="Cargo Moratorio")
+          rc.saldo+=planPago.cargo
+        
+        fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
+        //console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
+        arreglo.push({saldo:rc.saldo,
+          numeroPago : planPago.numeroPago,
+          cantidad : credito.numeroPagos,
+          fechaSolicito : credito.fechaSolicito,
+          fecha : fechaini,
+          pago : 0, 
+          cargo : planPago.cargo,
+          movimiento : planPago.movimiento,
+          planPago_id : planPago._id,
+          credito_id : planPago.credito_id,
+          descripcion : planPago.descripcion,
+          importe : planPago.importeRegular,
+          pagos : planPago.pagos
+          });
+          
+        
+        if(planPago.pagos.length>0)
+          _.each(planPago.pagos,function (pago) {
+            rc.saldo-=pago.totalPago
+            arreglo.push({saldo:rc.saldo,
+              numeroPago : planPago.numeroPago,
+              cantidad : credito.numeroPagos,
+              fechaSolicito : credito.fechaSolicito,
+              fecha : pago.fechaPago,
+              pago : pago.totalPago, 
+              cargo : 0,
+              movimiento : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
+              planPago_id : planPago._id,
+              credito_id : planPago.credito_id,
+              descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
+              importe : planPago.importeRegular,
+              pagos : planPago.pagos
+              });
+          })
+        //console.log(rc.saldo)
+      });
+      
+
+      console.log("el ARREGLO del helper historial",arreglo)
+      return arreglo;
+    },
+
+    pagosVencidos : () => {
+      _.each(rc.getReactively("planPagos"),function(plan){});
+      return rc.planPagos.length
+
+    },
+
+
+    historialCredito : () => {
+      var creditos = [];
+      rc.clientes_id = _.pluck(rc.cobranza,"cliente._id")
+      
+        
+    
+        return creditos
+      
+    },
+
+  });
 
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	
-	this.calcularSemana = function(w, y) 
-	{
-			var ini, fin;
-		
-	    var simple = new Date(y, 0, 1 + (w - 1) * 7);
-	    FI = new Date(simple);
-	    FF = new Date(moment(simple).add(7,"days"));
-	    
-	    FF.setHours(23,59,59,999);
-	    
-	}
-	
-	this.calcularMes = function(m, y) 
-	{
-	    var startDate = moment([y, m]);
-			var endDate = moment(startDate).endOf('month');
-	    FI = startDate.toDate();
-	    FF = endDate.toDate();
-	    FF.setHours(23,59,59,999);
-	}
-	
-	this.AsignaFecha = function(op)
-	{	
-			this.selected_numero = 0;
-			this.ban = false;
-			
-			if (op == 0) //Vencimiento Hoy
-			{
-				  FI = new Date();
-				  FI.setHours(0,0,0,0);
-				  FF = new Date(FI.getTime() - (1 * 24 * 3600 * 1000));
-				  FF.setHours(23,59,59,999);
-				  rc.verRecibos = true;
-				  //console.log("FI:",FI);
-					//console.log("FF:",FF);
-				  
-			}	
-			else if (op == 1) //Día
-			{
-					this.fechaInicial.setHours(0,0,0,0);
-				  this.fechaFinal = new Date(this.fechaInicial.getTime());
-				  this.fechaFinal.setHours(23,59,59,999);
-				  FI = this.fechaInicial;
-				  FF = this.fechaFinal;
-				   rc.verRecibos = false;
-				  
-				  //console.log("FI:", FI);
-					//console.log("FF:", FF);
-					
-			}	
-			else if (op == 2) //Semana
-			{					
-					
-					FI = new Date();
-				  FI.setHours(0,0,0,0);
-				  FF = new Date(FI.getTime());
-				  FF.setHours(23,59,59,999);
-					
-					var semana = moment().isoWeek();
-					var anio = FI.getFullYear();
-					this.calcularSemana(semana, anio);
-					rc.verRecibos = false;
-					//console.log("FI:", FI);
-					//console.log("FF:", FF);
-				
-			}
-			else if (op == 3) //Mes
-			{
-				
-					FI = new Date();
-					FI.setHours(0,0,0,0);
-					var anio = FI.getFullYear();
-					var mes = FI.getMonth();
-					//console.log(mes);
-					this.calcularMes(mes,anio);
-					rc.verRecibos = false;
-					//console.log("FI:", FI);
-					//console.log("FF:", FF);
-				
-			}
-			else if (op == 4) //Siguiente Mes
-			{
-					FI = new Date();
-					var anio = FI.getFullYear();
-					var mes = FI.getMonth();
-					if (mes == 11) 
-					{
-							mes = 0;
-							anio = anio + 1; 
-					}
-					else
-							mes = mes + 1;	
-					
-					this.calcularMes(mes,anio);
-					rc.verRecibos = false;
-					//console.log("FI:", FI);
-					//console.log("FF:", FF);
-			}
-			
-			
-			//Meteor.call("generarMultas",function(err, res){console.log("Fue por multas:",res)});
-			
-			Meteor.call('getCobranza', FI, FF, op, Meteor.user().profile.sucursal_id, function(error, result) {						
-					if (result)
-					{
-							console.log("Cobranza:",result);
-							
-							rc.cobranza = result;
-							rc.totalRecibos = 0;
-							rc.totalMultas = 0;
-							_.each(rc.cobranza,function(c){
-									if (c.descripcion == "Recibo")
-												rc.totalRecibos = rc.totalRecibos + c.importeRegular;
-										else if (c.descripcion == "Cargo Moratorio")		
-												rc.totalMultas = rc.totalMultas + c.importeRegular;
-							});
-							
-							
-							
-							$scope.$apply();
-					}
-				
-			});	
-	}
-	
+  
+  this.calcularSemana = function(w, y) 
+  {
+      var ini, fin;
+    
+      var simple = new Date(y, 0, 1 + (w - 1) * 7);
+      FI = new Date(simple);
+      FF = new Date(moment(simple).add(7,"days"));
+      
+      FF.setHours(23,59,59,999);
+      
+  }
+  
+  this.calcularMes = function(m, y) 
+  {
+      var startDate = moment([y, m]);
+      var endDate = moment(startDate).endOf('month');
+      FI = startDate.toDate();
+      FF = endDate.toDate();
+      FF.setHours(23,59,59,999);
+  }
+  
+  this.AsignaFecha = function(op)
+  { 
+      this.selected_numero = 0;
+      this.ban = false;
+      
+      if (op == 0) //Vencimiento Hoy
+      {
+          FI = new Date();
+          FI.setHours(0,0,0,0);
+          FF = new Date(FI.getTime() - (1 * 24 * 3600 * 1000));
+          FF.setHours(23,59,59,999);
+          rc.verRecibos = true;
+          //console.log("FI:",FI);
+          //console.log("FF:",FF);
+          
+      } 
+      else if (op == 1) //Día
+      {
+          this.fechaInicial.setHours(0,0,0,0);
+          this.fechaFinal = new Date(this.fechaInicial.getTime());
+          this.fechaFinal.setHours(23,59,59,999);
+          FI = this.fechaInicial;
+          FF = this.fechaFinal;
+           rc.verRecibos = false;
+          
+          //console.log("FI:", FI);
+          //console.log("FF:", FF);
+          
+      } 
+      else if (op == 2) //Semana
+      {         
+          
+          FI = new Date();
+          FI.setHours(0,0,0,0);
+          FF = new Date(FI.getTime());
+          FF.setHours(23,59,59,999);
+          
+          var semana = moment().isoWeek();
+          var anio = FI.getFullYear();
+          this.calcularSemana(semana, anio);
+          rc.verRecibos = false;
+          //console.log("FI:", FI);
+          //console.log("FF:", FF);
+        
+      }
+      else if (op == 3) //Mes
+      {
+        
+          FI = new Date();
+          FI.setHours(0,0,0,0);
+          var anio = FI.getFullYear();
+          var mes = FI.getMonth();
+          //console.log(mes);
+          this.calcularMes(mes,anio);
+          rc.verRecibos = false;
+          //console.log("FI:", FI);
+          //console.log("FF:", FF);
+        
+      }
+      else if (op == 4) //Siguiente Mes
+      {
+          FI = new Date();
+          var anio = FI.getFullYear();
+          var mes = FI.getMonth();
+          if (mes == 11) 
+          {
+              mes = 0;
+              anio = anio + 1; 
+          }
+          else
+              mes = mes + 1;  
+          
+          this.calcularMes(mes,anio);
+          rc.verRecibos = false;
+          //console.log("FI:", FI);
+          //console.log("FF:", FF);
+      }
+      
+      
+      //Meteor.call("generarMultas",function(err, res){console.log("Fue por multas:",res)});
+      
+      Meteor.call('getCobranza', FI, FF, op, Meteor.user().profile.sucursal_id, function(error, result) {           
+          if (result)
+          {
+              console.log("Cobranza:",result);
+              
+              rc.cobranza = result;
+              rc.totalRecibos = 0;
+              rc.totalMultas = 0;
+              _.each(rc.cobranza,function(c){
+                  if (c.descripcion == "Recibo")
+                        rc.totalRecibos = rc.totalRecibos + c.importeRegular;
+                    else if (c.descripcion == "Cargo Moratorio")    
+                        rc.totalMultas = rc.totalMultas + c.importeRegular;
+              });
+              
+              
+              
+              $scope.$apply();
+          }
+        
+      }); 
+  }
+  
   this.selCredito=function(objeto, num)
   {
-  	console.log(objeto,"objeto")
+    console.log(objeto,"objeto")
 
-  	    
+        
 
-  		rc.cliente_id = objeto.cliente._id
-  		//console.log(rc.cliente_id)
-  		Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
+      rc.cliente_id = objeto.cliente._id
+      //console.log(rc.cliente_id)
+      Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
 
-  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
+      objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
 
-	  	this.ban = !this.ban;
+      this.ban = !this.ban;
 
-	  	rc.credito_id = objeto.credito._id;
-	  	//console.log("Objeto: ",objeto)
-	  	rc.historial = objeto
+      rc.credito_id = objeto.credito._id;
+      //console.log("Objeto: ",objeto)
+      rc.historial = objeto
 
 
-	  	
-	  	//Información del Cliente
-	  	rc.cliente = objeto.cliente;
-	  	//console.log(rc.cliente);
-	  	var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
-	  	if (ec != undefined) rc.cliente.profile.estadoCivil = ec.nombre; 
-	  	var nac = Nacionalidades.findOne(rc.cliente.profile.nacionalidad_id);
-	  	if (nac != undefined) rc.cliente.profile.nacionalidad = nac.nombre;
-	  	var ocu = Ocupaciones.findOne(rc.cliente.profile.ocupacion_id);
-	  	if (ocu != undefined) rc.cliente.profile.ocupacion = ocu.nombre;
-	  	
-	  	var pais = Paises.findOne(rc.cliente.profile.pais_id);
-	  	if (pais != undefined) rc.cliente.profile.pais = pais.nombre; 
-	  	var edo = Estados.findOne(rc.cliente.profile.estado_id);
-	  	if (edo != undefined) rc.cliente.profile.estado = edo.nombre;
-	  	var mun = Municipios.findOne(rc.cliente.profile.municipio_id);
-	  	if (mun != undefined) rc.cliente.profile.municipio = mun.nombre;
-	  	var ciu = Ciudades.findOne(rc.cliente.profile.ciudad_id);
-	  	if (ciu != undefined) rc.cliente.profile.ciudad = ciu.nombre;
-	  	var col = Colonias.findOne(rc.cliente.profile.colonia_id);
-	  	if (col != undefined) rc.cliente.profile.colonia = col.nombre;
-	  	
-	  	var emp = Empresas.findOne(rc.cliente.profile.empresa_id);
-	  	if (emp != undefined) rc.cliente.profile.empresa = emp;
-	  	
-	  	pais = Paises.findOne(rc.cliente.profile.empresa.pais_id);
-	  	if (pais != undefined) rc.cliente.profile.empresa.pais = pais.nombre; 
-	  	edo = Estados.findOne(rc.cliente.profile.empresa.estado_id);
-	  	if (edo != undefined) rc.cliente.profile.empresa.estado = edo.nombre;
-	  	mun = Municipios.findOne(rc.cliente.profile.empresa.municipio_id);
-	  	if (mun != undefined) rc.cliente.profile.empresa.municipio = mun.nombre;
-	  	ciu = Ciudades.findOne(rc.cliente.profile.empresa.ciudad_id);
-	  	if (ciu != undefined) rc.cliente.profile.empresa.ciudad = ciu.nombre;
-	  	
-	  	var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
-			if (ec != undefined)
-					this.estadoCivilSeleccionado = 	ec.nombre;
+      
+      //Información del Cliente
+      rc.cliente = objeto.cliente;
+      //console.log(rc.cliente);
+      var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
+      if (ec != undefined) rc.cliente.profile.estadoCivil = ec.nombre; 
+      var nac = Nacionalidades.findOne(rc.cliente.profile.nacionalidad_id);
+      if (nac != undefined) rc.cliente.profile.nacionalidad = nac.nombre;
+      var ocu = Ocupaciones.findOne(rc.cliente.profile.ocupacion_id);
+      if (ocu != undefined) rc.cliente.profile.ocupacion = ocu.nombre;
+      
+      var pais = Paises.findOne(rc.cliente.profile.pais_id);
+      if (pais != undefined) rc.cliente.profile.pais = pais.nombre; 
+      var edo = Estados.findOne(rc.cliente.profile.estado_id);
+      if (edo != undefined) rc.cliente.profile.estado = edo.nombre;
+      var mun = Municipios.findOne(rc.cliente.profile.municipio_id);
+      if (mun != undefined) rc.cliente.profile.municipio = mun.nombre;
+      var ciu = Ciudades.findOne(rc.cliente.profile.ciudad_id);
+      if (ciu != undefined) rc.cliente.profile.ciudad = ciu.nombre;
+      var col = Colonias.findOne(rc.cliente.profile.colonia_id);
+      if (col != undefined) rc.cliente.profile.colonia = col.nombre;
+      
+      var emp = Empresas.findOne(rc.cliente.profile.empresa_id);
+      if (emp != undefined) rc.cliente.profile.empresa = emp;
+      
+      pais = Paises.findOne(rc.cliente.profile.empresa.pais_id);
+      if (pais != undefined) rc.cliente.profile.empresa.pais = pais.nombre; 
+      edo = Estados.findOne(rc.cliente.profile.empresa.estado_id);
+      if (edo != undefined) rc.cliente.profile.empresa.estado = edo.nombre;
+      mun = Municipios.findOne(rc.cliente.profile.empresa.municipio_id);
+      if (mun != undefined) rc.cliente.profile.empresa.municipio = mun.nombre;
+      ciu = Ciudades.findOne(rc.cliente.profile.empresa.ciudad_id);
+      if (ciu != undefined) rc.cliente.profile.empresa.ciudad = ciu.nombre;
+      
+      var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
+      if (ec != undefined)
+          this.estadoCivilSeleccionado =  ec.nombre;
 
-				 objeto.nombreCompleto = rc.cliente.profile.nombreCompleto
-  	     objeto.calle = rc.cliente.profile.calle
-  	     objeto.colonia = rc.cliente.profile.colonia
-  	     objeto.municipio = rc.cliente.profile.municipio
-  	     objeto.estado = rc.cliente.profile.estado
-  	     objeto.pais = rc.cliente.profile.pais
-  	     objeto.cantidadPagos = objeto.credito.numeroPagos
-  	     objeto.telefono = rc.cliente.profile.particular
-  	     objeto.telefonoOficina = rc.cliente.profile.telefonoOficina
-  	     objeto.celular = rc.cliente.profile.celular
-  	     objeto.folioCredito = objeto.credito.folio
-  	     objeto.saldoActual = objeto.credito.saldoActual
+         objeto.nombreCompleto = rc.cliente.profile.nombreCompleto
+         objeto.calle = rc.cliente.profile.calle
+         objeto.colonia = rc.cliente.profile.colonia
+         objeto.municipio = rc.cliente.profile.municipio
+         objeto.estado = rc.cliente.profile.estado
+         objeto.pais = rc.cliente.profile.pais
+         objeto.cantidadPagos = objeto.credito.numeroPagos
+         objeto.telefono = rc.cliente.profile.particular
+         objeto.telefonoOficina = rc.cliente.profile.telefonoOficina
+         objeto.celular = rc.cliente.profile.celular
+         objeto.folioCredito = objeto.credito.folio
+         objeto.saldoActual = objeto.credito.saldoActual
 
-  	     //objeto.municipio = rc.cliente.profile.municipio
+         //objeto.municipio = rc.cliente.profile.municipio
 
-    	 //_.each(obj,function(item){});
-	  	
-	  	rc.referenciasPersonales = [];
-	  	
-	  	_.each(rc.cliente.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
-						Meteor.call('getPersona', referenciaPersonal_id, objeto.cliente._id, function(error, result){						
-									if (result)
-									{
-											//Recorrer las relaciones 
-											//console.log("RP:",result);
-											rc.referenciasPersonales.push({buscarPersona_id	: referenciaPersonal_id,
-																										 nombre						: result.nombre,
-																										 apellidoPaterno	: result.apellidoPaterno,
-																										 apellidoMaterno	: result.apellidoMaterno,
-																										 parentezco				: result.parentezco,
-																										 direccion				: result.direccion,
-																										 telefono					: result.telefono,
-																										 tiempo						: result.tiempo,
-																										 num							: result.num,
-																										 cliente					: result.cliente,
-																										 cliente_id				: result.cliente_id,
-																										 tipoPersona			: result.tipoPersona,
-																										 estatus					: result.estatus
-											});
-											$scope.$apply();
-									}
-						});	
-	  	});
-	  	
-	  	//-----------------------------------------------------------------------------
-	  	
-	  	//Información del Crédito
-	  
-	  	rc.credito = objeto.credito;	
-	  
-	  	rc.avales = [];
-	  	_.each(rc.credito.avales_ids,function(aval_id){
-						Meteor.call('getPersona', aval_id, function(error, result){						
-									if (result)
-									{
-											rc.avales.push(result);
-											$scope.$apply();			
-									}
-						});	
-	  	});
-	  	//-----------------------------------------------------------------------------
-	  	
-	  	//Historial Crediticio
-	  	Meteor.call('gethistorialPago', rc.credito._id, function(error, result) {
-						if (result)
-						{
-								rc.historialCrediticio = result;
-								$scope.$apply();
-								//console.log(rc.historialCrediticio);
-						}
-			});
-			
-			
-			//-----------------------------------------------------------------------------
-	  	
-	  	
+       //_.each(obj,function(item){});
+      
+      rc.referenciasPersonales = [];
+      
+      _.each(rc.cliente.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
+            Meteor.call('getPersona', referenciaPersonal_id, objeto.cliente._id, function(error, result){           
+                  if (result)
+                  {
+                      //Recorrer las relaciones 
+                      //console.log("RP:",result);
+                      rc.referenciasPersonales.push({buscarPersona_id : referenciaPersonal_id,
+                                                     nombre           : result.nombre,
+                                                     apellidoPaterno  : result.apellidoPaterno,
+                                                     apellidoMaterno  : result.apellidoMaterno,
+                                                     parentezco       : result.parentezco,
+                                                     direccion        : result.direccion,
+                                                     telefono         : result.telefono,
+                                                     tiempo           : result.tiempo,
+                                                     num              : result.num,
+                                                     cliente          : result.cliente,
+                                                     cliente_id       : result.cliente_id,
+                                                     tipoPersona      : result.tipoPersona,
+                                                     estatus          : result.estatus
+                      });
+                      $scope.$apply();
+                  }
+            }); 
+      });
+      
+      //-----------------------------------------------------------------------------
+      
+      //Información del Crédito
+    
+      rc.credito = objeto.credito;  
+    
+      rc.avales = [];
+      _.each(rc.credito.avales_ids,function(aval_id){
+            Meteor.call('getPersona', aval_id, function(error, result){           
+                  if (result)
+                  {
+                      rc.avales.push(result);
+                      $scope.$apply();      
+                  }
+            }); 
+      });
+      //-----------------------------------------------------------------------------
+      
+      //Historial Crediticio
+      Meteor.call('gethistorialPago', rc.credito._id, function(error, result) {
+            if (result)
+            {
+                rc.historialCrediticio = result;
+                $scope.$apply();
+                //console.log(rc.historialCrediticio);
+            }
+      });
+      
+      
+      //-----------------------------------------------------------------------------
+      
+      
       this.selected_numero=num;
   };
 
@@ -492,20 +492,20 @@ angular.module("creditoMio")
   {
 
         //objeto.fechaEntrega = new Date();
-  		rc.cliente_id = objeto.cliente._id
-  		//console.log(rc.cliente_id)
-  		Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
-  		objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"), estatus: 4}).fetch()
+      rc.cliente_id = objeto.cliente._id
+      //console.log(rc.cliente_id)
+      Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
+      objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"), estatus: 4}).fetch()
 
-	  	rc.credito_id = objeto.credito._id;
-	  	//console.log("Objeto: ",objeto)
-	  	rc.historial = objeto
+      rc.credito_id = objeto.credito._id;
+      //console.log("Objeto: ",objeto)
+      rc.historial = objeto
 
-	  }
+    }
   
   this.isSelected=function(objeto){
 
-	  this.sumarSeleccionados();
+    this.sumarSeleccionados();
       return this.selected_numero===objeto;
 
   };
@@ -513,23 +513,23 @@ angular.module("creditoMio")
   this.buscarNombre=function()
   {
       Meteor.call('getcobranzaNombre', rc.buscar.nombre, function(error, result) {
-						if (result)
-						{
-								rc.cobranza = result;
-								rc.totalRecibos = 0;
-								rc.totalMultas = 0;
-								_.each(rc.cobranza,function(c){
-										if (c.descripcion == "Recibo")
-												rc.totalRecibos = rc.totalRecibos + c.importeRegular;
-										else if (c.descripcion == "Cargo Moratorio")		
-												rc.totalMultas = rc.totalMultas + c.importeRegular;
-								});
-								$scope.$apply();
-						}
-			});
-  };	
+            if (result)
+            {
+                rc.cobranza = result;
+                rc.totalRecibos = 0;
+                rc.totalMultas = 0;
+                _.each(rc.cobranza,function(c){
+                    if (c.descripcion == "Recibo")
+                        rc.totalRecibos = rc.totalRecibos + c.importeRegular;
+                    else if (c.descripcion == "Cargo Moratorio")    
+                        rc.totalMultas = rc.totalMultas + c.importeRegular;
+                });
+                $scope.$apply();
+            }
+      });
+  };  
 
-	this.cambiar = function() 
+  this.cambiar = function() 
   {
 
 			var chkxr = document.getElementById('todos');
@@ -540,7 +540,7 @@ angular.module("creditoMio")
 			})
 			
 			this.sumarSeleccionados();
-			console.log(rc.cobranza)
+			//console.log(rc.cobranza)
 					
 	};
 	
@@ -601,361 +601,361 @@ angular.module("creditoMio")
 		rc.notaCobranza.recibo= objeto.numeroPago;
     rc.cobranza_id = objeto.credito_id;
     rc.notaCobranza.cliente_id = objeto.cliente_id;
-		console.log("rc.cobranza_id",rc.cobranza_id);
-		$("#modalCliente").modal();
+    console.log("rc.cobranza_id",rc.cobranza_id);
+    $("#modalCliente").modal();
 
 
-	}
-	this.guardarNotaCliente=function(nota){
-			console.log(nota);			
-			nota.estatus = true;
-			nota.fecha = new Date()
-			nota.hora = moment(nota.fecha).format("hh:mm:ss a")
-			rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
-			rc.notaCobranza.tipo = "Cliente"
-		    //rc.notaCobranza.cliente_id = objeto.cliente._id
-			rc.notaCobranza.respuesta =  this.respuestaNotaCLiente			
-			Notas.insert(nota);
-			this.notaCobranza = {}
-			$('#modalCliente').modal('hide');
-			toastr.success('Guardado correctamente.');
-	}
-	this.cambioEstatusRespuesta=function(){
-		this.respuestaNotaCLiente = !this.respuestaNotaCLiente;
-					
-	}
+  }
+  this.guardarNotaCliente=function(nota){
+      console.log(nota);      
+      nota.estatus = true;
+      nota.fecha = new Date()
+      nota.hora = moment(nota.fecha).format("hh:mm:ss a")
+      rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+      rc.notaCobranza.tipo = "Cliente"
+        //rc.notaCobranza.cliente_id = objeto.cliente._id
+      rc.notaCobranza.respuesta =  this.respuestaNotaCLiente      
+      Notas.insert(nota);
+      this.notaCobranza = {}
+      $('#modalCliente').modal('hide');
+      toastr.success('Guardado correctamente.');
+  }
+  this.cambioEstatusRespuesta=function(){
+    this.respuestaNotaCLiente = !this.respuestaNotaCLiente;
+          
+  }
 
-	this.mostrarNotaCuenta=function(objeto){
-		console.log(objeto)
-		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
-		rc.notaCobranza.folioCredito = objeto.credito.folio 
-		rc.notaCobranza.recibo= objeto.numeroPago
-		 rc.cobranza_id = objeto.credito._id
-		 rc.notaCobranza.cliente_id = objeto.cliente._id
-		 console.log("rc.cobranza_id",rc.cobranza_id)
-		 $("#modalCuenta").modal();
+  this.mostrarNotaCuenta=function(objeto){
+    console.log(objeto)
+    rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
+    rc.notaCobranza.folioCredito = objeto.credito.folio 
+    rc.notaCobranza.recibo= objeto.numeroPago
+     rc.cobranza_id = objeto.credito._id
+     rc.notaCobranza.cliente_id = objeto.cliente._id
+     console.log("rc.cobranza_id",rc.cobranza_id)
+     $("#modalCuenta").modal();
 
-	}
-	this.guardarNotaCuenta=function(nota){
-			console.log(nota);			
-			nota.estatus = true;
-			nota.fecha = new Date()
-			nota.hora = moment(nota.fecha).format("hh:mm:ss a")
-			rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
-			rc.notaCobranza.tipo = "Cuenta"
-			rc.notaCobranza.respuesta =  this.respuestaNotaCLiente	
-		   // rc.notaCobranza.cliente_id = objeto.cliente._id
-			Notas.insert(nota);
-			this.notaCobranza = {}
-			$('#modalCuenta').modal('hide');
-			toastr.success('Guardado correctamente.');
-	}
-	
-
-
-
-	this.download = function(objeto) 
-
-  {
-		console.log("entro:", objeto);
-		objeto.credito.saldoActualizado = rc.historialCredito.saldo
-		objeto.credito.avales = rc.avales;
-		objeto.credito.pagosVencidos = rc.pagosVencidos;
-
-
-
-		Meteor.call('getcartaRecordatorio', objeto, function(error, response) {
-		   if(error)
-		   {
-		    console.log('ERROR :', error);
-		    return;
-		   }
-		   else
-		   {
-			 				function b64toBlob(b64Data, contentType, sliceSize) {
-								  contentType = contentType || '';
-								  sliceSize = sliceSize || 512;
-								
-								  var byteCharacters = atob(b64Data);
-								  var byteArrays = [];
-								
-								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-								    var byteNumbers = new Array(slice.length);
-								    for (var i = 0; i < slice.length; i++) {
-								      byteNumbers[i] = slice.charCodeAt(i);
-								    }
-								
-								    var byteArray = new Uint8Array(byteNumbers);
-								
-								    byteArrays.push(byteArray);
-								  }
-								    
-								  var blob = new Blob(byteArrays, {type: contentType});
-								  return blob;
-							}
-							
-							var blob = b64toBlob(response, "application/docx");
-						  var url = window.URL.createObjectURL(blob);
-						  
-						  //console.log(url);
-						  var dlnk = document.getElementById('dwnldLnk');
-
-					    dlnk.download = "recordatorios.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
+  }
+  this.guardarNotaCuenta=function(nota){
+      console.log(nota);      
+      nota.estatus = true;
+      nota.fecha = new Date()
+      nota.hora = moment(nota.fecha).format("hh:mm:ss a")
+      rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+      rc.notaCobranza.tipo = "Cuenta"
+      rc.notaCobranza.respuesta =  this.respuestaNotaCLiente  
+       // rc.notaCobranza.cliente_id = objeto.cliente._id
+      Notas.insert(nota);
+      this.notaCobranza = {}
+      $('#modalCuenta').modal('hide');
+      toastr.success('Guardado correctamente.');
+  }
   
-		   }
-		});
-
-		
-	};
 
 
 
-	this.downloadCartaUrgente = function(objeto) 
+  this.download = function(objeto) 
 
   {
-	  	
-		console.log("entro:", objeto);
-		objeto.credito.saldoActualizado = rc.historialCredito.saldo
-		objeto.credito.avales = rc.avales;
-		objeto.credito.pagosVencidos = rc.pagosVencidos;
+    console.log("entro:", objeto);
+    objeto.credito.saldoActualizado = rc.historialCredito.saldo
+    objeto.credito.avales = rc.avales;
+    objeto.credito.pagosVencidos = rc.pagosVencidos;
 
 
-		Meteor.call('getcartaUrgente', objeto, function(error, response) {
-		   if(error)
-		   {
-		    console.log('ERROR :', error);
-		    return;
-		   }
-		   else
-		   {
-			 				function b64toBlob(b64Data, contentType, sliceSize) {
-								  contentType = contentType || '';
-								  sliceSize = sliceSize || 512;
-								
-								  var byteCharacters = atob(b64Data);
-								  var byteArrays = [];
-								
-								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-								    var byteNumbers = new Array(slice.length);
-								    for (var i = 0; i < slice.length; i++) {
-								      byteNumbers[i] = slice.charCodeAt(i);
-								    }
-								
-								    var byteArray = new Uint8Array(byteNumbers);
-								
-								    byteArrays.push(byteArray);
-								  }
-								    
-								  var blob = new Blob(byteArrays, {type: contentType});
-								  return blob;
-							}
-							
-							var blob = b64toBlob(response, "application/docx");
-						  var url = window.URL.createObjectURL(blob);
-						  
-						  //console.log(url);
-						  var dlnk = document.getElementById('dwnldLnk');
 
-					    dlnk.download = "URGENTE.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
+    Meteor.call('getcartaRecordatorio', objeto, function(error, response) {
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+              function b64toBlob(b64Data, contentType, sliceSize) {
+                  contentType = contentType || '';
+                  sliceSize = sliceSize || 512;
+                
+                  var byteCharacters = atob(b64Data);
+                  var byteArrays = [];
+                
+                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+                
+                    var byteNumbers = new Array(slice.length);
+                    for (var i = 0; i < slice.length; i++) {
+                      byteNumbers[i] = slice.charCodeAt(i);
+                    }
+                
+                    var byteArray = new Uint8Array(byteNumbers);
+                
+                    byteArrays.push(byteArray);
+                  }
+                    
+                  var blob = new Blob(byteArrays, {type: contentType});
+                  return blob;
+              }
+              
+              var blob = b64toBlob(response, "application/docx");
+              var url = window.URL.createObjectURL(blob);
+              
+              //console.log(url);
+              var dlnk = document.getElementById('dwnldLnk');
+
+              dlnk.download = "recordatorios.docx"; 
+              dlnk.href = url;
+              dlnk.click();       
+              window.URL.revokeObjectURL(url);
   
-		   }
-		});
+       }
+    });
 
-		
-	};
-
-
+    
+  };
 
 
-	this.downloadCartaCertificado= function(objeto) 
+
+  this.downloadCartaUrgente = function(objeto) 
 
   {
-	  	
-		console.log("entro:", objeto);
-		objeto.credito.saldoActualizado = rc.historialCredito.saldo
-		objeto.credito.avales = rc.avales;
+      
+    console.log("entro:", objeto);
+    objeto.credito.saldoActualizado = rc.historialCredito.saldo
+    objeto.credito.avales = rc.avales;
+    objeto.credito.pagosVencidos = rc.pagosVencidos;
 
-		Meteor.call('getcartaCertificado', objeto, function(error, response) {
 
-		   if(error)
-		   {
-		    console.log('ERROR :', error);
-		    return;
-		   }
-		   else
-		   {
-			 				function b64toBlob(b64Data, contentType, sliceSize) {
-								  contentType = contentType || '';
-								  sliceSize = sliceSize || 512;
-								
-								  var byteCharacters = atob(b64Data);
-								  var byteArrays = [];
-								
-								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-								    var byteNumbers = new Array(slice.length);
-								    for (var i = 0; i < slice.length; i++) {
-								      byteNumbers[i] = slice.charCodeAt(i);
-								    }
-								
-								    var byteArray = new Uint8Array(byteNumbers);
-								
-								    byteArrays.push(byteArray);
-								  }
-								    
-								  var blob = new Blob(byteArrays, {type: contentType});
-								  return blob;
-							}
-						var blob = b64toBlob(response, "application/docx");
-						var url = window.URL.createObjectURL(blob);
-						  
-						  //console.log(url);
-						  var dlnk = document.getElementById('dwnldLnk');
+    Meteor.call('getcartaUrgente', objeto, function(error, response) {
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+              function b64toBlob(b64Data, contentType, sliceSize) {
+                  contentType = contentType || '';
+                  sliceSize = sliceSize || 512;
+                
+                  var byteCharacters = atob(b64Data);
+                  var byteArrays = [];
+                
+                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+                
+                    var byteNumbers = new Array(slice.length);
+                    for (var i = 0; i < slice.length; i++) {
+                      byteNumbers[i] = slice.charCodeAt(i);
+                    }
+                
+                    var byteArray = new Uint8Array(byteNumbers);
+                
+                    byteArrays.push(byteArray);
+                  }
+                    
+                  var blob = new Blob(byteArrays, {type: contentType});
+                  return blob;
+              }
+              
+              var blob = b64toBlob(response, "application/docx");
+              var url = window.URL.createObjectURL(blob);
+              
+              //console.log(url);
+              var dlnk = document.getElementById('dwnldLnk');
 
-					    dlnk.download = "certificacionPatrimonial.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
-		   }
-		});
+              dlnk.download = "URGENTE.docx"; 
+              dlnk.href = url;
+              dlnk.click();       
+              window.URL.revokeObjectURL(url);
+  
+       }
+    });
 
-		
-	};
+    
+  };
 
-	this.imprimirRecibos= function(objeto) 
+
+
+
+  this.downloadCartaCertificado= function(objeto) 
+
   {
-  	var toPrint = [];
-		_.each(objeto,function(item){
-		 	if (item.imprimir) {
-	 			item.cliente.profile.colonia = Colonias.findOne(item.cliente.profile.colonia_id)
- 				item.colonia = item.cliente.profile.colonia.nombre
- 				item.calle = item.cliente.profile.calle
- 				item.cliente.profile.estado = Estados.findOne(item.cliente.profile.estado_id)
-				item.estado = item.cliente.profile.estado.nombre
-				item.cliente.profile.municipio = Municipios.findOne(item.cliente.profile.municipio_id)
-				item.municipio = item.cliente.profile.municipio.nombre
- 				item.nombreCompleto = item.cliente.profile.nombreCompleto
-				item.planPagoNumero = item.numeroPago
-				item.no = item.cliente.profile.numero
-				item.nombreCompleto = item.cliente.profile.nombreCompleto
-				item.telefono = item.cliente.profile.telefono
-				item.celular = item.cliente.profile.celular
-				item.telefonoOficina = item.cliente.profile.telefonoOficina
-				item.cantidadPagos = item.credito.numeroPagos
-				item.telefono = item.cliente.profile.particular
-				item.celular = item.cliente.profile.celular
-				item.telefonoOficina = item.cliente.profile.telefonoOficina
-				item.folioCredito = item.credito.folio
-				item.saldo = item.credito.saldoActual
-		 		var saldoActual = 0;
-		 		if (saldoActual == 0) {
-				  saldoActual = item.saldo
-				}else{
-					saldoActual = saldoActual - item.cargo
-			  }
-			   item.saldoAnterior = parseFloat(saldoActual.toFixed(2))
-			   item.saldoActual = parseFloat((saldoActual - item.cargo).toFixed(2));
-			  toPrint.push(item);
-			}
-		});
-		 
-	     
-	
-		//console.log("reciboooooo:",objeto);
+      
+    console.log("entro:", objeto);
+    objeto.credito.saldoActualizado = rc.historialCredito.saldo
+    objeto.credito.avales = rc.avales;
+
+    Meteor.call('getcartaCertificado', objeto, function(error, response) {
+
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+              function b64toBlob(b64Data, contentType, sliceSize) {
+                  contentType = contentType || '';
+                  sliceSize = sliceSize || 512;
+                
+                  var byteCharacters = atob(b64Data);
+                  var byteArrays = [];
+                
+                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+                
+                    var byteNumbers = new Array(slice.length);
+                    for (var i = 0; i < slice.length; i++) {
+                      byteNumbers[i] = slice.charCodeAt(i);
+                    }
+                
+                    var byteArray = new Uint8Array(byteNumbers);
+                
+                    byteArrays.push(byteArray);
+                  }
+                    
+                  var blob = new Blob(byteArrays, {type: contentType});
+                  return blob;
+              }
+            var blob = b64toBlob(response, "application/docx");
+            var url = window.URL.createObjectURL(blob);
+              
+              //console.log(url);
+              var dlnk = document.getElementById('dwnldLnk');
+
+              dlnk.download = "certificacionPatrimonial.docx"; 
+              dlnk.href = url;
+              dlnk.click();       
+              window.URL.revokeObjectURL(url);
+       }
+    });
+
+    
+  };
+
+  this.imprimirRecibos= function(objeto) 
+  {
+    var toPrint = [];
+    _.each(objeto,function(item){
+      if (item.imprimir) {
+        item.cliente.profile.colonia = Colonias.findOne(item.cliente.profile.colonia_id)
+        item.colonia = item.cliente.profile.colonia.nombre
+        item.calle = item.cliente.profile.calle
+        item.cliente.profile.estado = Estados.findOne(item.cliente.profile.estado_id)
+        item.estado = item.cliente.profile.estado.nombre
+        item.cliente.profile.municipio = Municipios.findOne(item.cliente.profile.municipio_id)
+        item.municipio = item.cliente.profile.municipio.nombre
+        item.nombreCompleto = item.cliente.profile.nombreCompleto
+        item.planPagoNumero = item.numeroPago
+        item.no = item.cliente.profile.numero
+        item.nombreCompleto = item.cliente.profile.nombreCompleto
+        item.telefono = item.cliente.profile.telefono
+        item.celular = item.cliente.profile.celular
+        item.telefonoOficina = item.cliente.profile.telefonoOficina
+        item.cantidadPagos = item.credito.numeroPagos
+        item.telefono = item.cliente.profile.particular
+        item.celular = item.cliente.profile.celular
+        item.telefonoOficina = item.cliente.profile.telefonoOficina
+        item.folioCredito = item.credito.folio
+        item.saldo = item.credito.saldoActual
+        var saldoActual = 0;
+        if (saldoActual == 0) {
+          saldoActual = item.saldo
+        }else{
+          saldoActual = saldoActual - item.cargo
+        }
+         item.saldoAnterior = parseFloat(saldoActual.toFixed(2))
+         item.saldoActual = parseFloat((saldoActual - item.cargo).toFixed(2));
+        toPrint.push(item);
+      }
+    });
+     
+       
+  
+    //console.log("reciboooooo:",objeto);
 
 
 
-		Meteor.call('getRecibos', toPrint, function(error, response) {		 
-		   if(error)
-		   {
-		    console.log('ERROR :', error);
-		    return;
-		   }
-		   else
-		   {
-			function b64toBlob(b64Data, contentType, sliceSize) {
-				  contentType = contentType || '';
-				  sliceSize = sliceSize || 512;
-				  var byteCharacters = atob(b64Data);
-				  var byteArrays = [];
-				  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-				    var slice = byteCharacters.slice(offset, offset + sliceSize);
-				
-				    var byteNumbers = new Array(slice.length);
-				    for (var i = 0; i < slice.length; i++) {
-				      byteNumbers[i] = slice.charCodeAt(i);
-				    }
-				
-				    var byteArray = new Uint8Array(byteNumbers);
-				
-				    byteArrays.push(byteArray);
-				  }
-				    
-				  var blob = new Blob(byteArrays, {type: contentType});
-				  return blob;
-			    }
-							
-				  var blob = b64toBlob(response, "application/docx");
-				  var url = window.URL.createObjectURL(blob);
-				  var dlnk = document.getElementById('dwnldLnk');
+    Meteor.call('getRecibos', toPrint, function(error, response) {     
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+      function b64toBlob(b64Data, contentType, sliceSize) {
+          contentType = contentType || '';
+          sliceSize = sliceSize || 512;
+          var byteCharacters = atob(b64Data);
+          var byteArrays = [];
+          for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+        
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+            }
+        
+            var byteArray = new Uint8Array(byteNumbers);
+        
+            byteArrays.push(byteArray);
+          }
+            
+          var blob = new Blob(byteArrays, {type: contentType});
+          return blob;
+          }
+              
+          var blob = b64toBlob(response, "application/docx");
+          var url = window.URL.createObjectURL(blob);
+          var dlnk = document.getElementById('dwnldLnk');
 
-			     dlnk.download = "RECIBOS.docx"; 
-					dlnk.href = url;
-					dlnk.click();		    
-				  window.URL.revokeObjectURL(url);
-	 
-			}
-		
-		});
-		rc.recibo = [];
-		
-	};
-
-
-
-	this.verPagos= function(credito) {
-		//console.log(credito,"el ob ")
-		$("#modalpagos").modal();
-		credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
-		rc.mostrarModal = true
-
-	};
-
-	this.cerrarModal= function() {
-		rc.mostrarModal = false
-
-	};
-	
-	
-	this.funcionOrdenar = function() {
-		
-			if (this.valorOrdenar == "Folio")
-	    		return ['credito.folio','numeroPago'];
-	    if (this.valorOrdenar == "Fecha")
-	    		return ['fechaLimite'];
-	    if (this.valorOrdenar == "Cliente")
-	    		return ['cliente.nombreCompleto'];		
-	}
-
-	this.aparecerCheck = function() {
-		console.log("muestra")
-		
-			rc.conRespuesta = !rc.conRespuesta;
-	}
+           dlnk.download = "RECIBOS.docx"; 
+          dlnk.href = url;
+          dlnk.click();       
+          window.URL.revokeObjectURL(url);
+   
+      }
+    
+    });
+    rc.recibo = [];
+    
+  };
 
 
 
-	
+  this.verPagos= function(credito) {
+    //console.log(credito,"el ob ")
+    $("#modalpagos").modal();
+    credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
+    rc.mostrarModal = true
+
+  };
+
+  this.cerrarModal= function() {
+    rc.mostrarModal = false
+
+  };
+  
+  
+  this.funcionOrdenar = function() {
+    
+      if (this.valorOrdenar == "Folio")
+          return ['credito.folio','numeroPago'];
+      if (this.valorOrdenar == "Fecha")
+          return ['fechaLimite'];
+      if (this.valorOrdenar == "Cliente")
+          return ['cliente.nombreCompleto'];    
+  }
+
+  this.aparecerCheck = function() {
+    console.log("muestra")
+    
+      rc.conRespuesta = !rc.conRespuesta;
+  }
+
+
+
+  
 
 };
