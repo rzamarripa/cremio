@@ -368,6 +368,7 @@ Meteor.methods({
 		var pago_id=undefined;
 		pago_id = Pagos.insert(pago);
 
+		var idCreditos = [];
 		var idpagos = [];
 		var pagosId = {};
 		_.each(pagos,function (p) {
@@ -504,11 +505,32 @@ Meteor.methods({
 				PlanPagos.update({_id:pid},{$set:p})
 				
 			}
+			idCreditos.push(pago.credito_id);
 		});
 		
-		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus (Plunk)
-		
-		
+		//console.log("idCreditos:",idCreditos);
+		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus del credito
+		_.each(idCreditos,function(c){
+				var pp = PlanPagos.find({credito_id: c}).fetch();
+				//console.log("pp:", pp);
+				var ban = true;
+				_.each(pp,function(p){
+						if (p.importeRegular > 0)
+								ban = false;
+				});			
+				
+				if (ban)
+				{
+						//console.log("Acualizar Credito");
+						Creditos.update({_id : c},{$set : {estatus : 5 }})
+				}
+				/*
+				else
+						console.log("Todavia no Acualizar Credito");
+				*/
+				
+		});
+				
 
 		var movimiento = {
 				tipoMovimiento : "Pago",
