@@ -1,6 +1,8 @@
 Meteor.methods({
 		getcartaRecordatorio: function (objeto) {
 	console.log(objeto,"recordatori")
+   // var produccion = meteor_root+"/web.browser/app/plantillas/";
+
 		
 		
 		var fs = require('fs') ;
@@ -8,7 +10,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 		
@@ -81,7 +83,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 		
@@ -156,7 +158,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 		
@@ -272,13 +274,13 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 		
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		//var produccion = "/home/cremio/archivos/";
 
 
@@ -486,7 +488,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 		//var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
@@ -539,7 +541,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
@@ -602,7 +604,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
@@ -666,7 +668,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
@@ -731,7 +733,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
@@ -795,7 +797,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 		//var produccion = "/home/cremio/archivos/";
 				var content = fs
 					.readFileSync(produccion+"CONTRATOINTERES.docx", "binary");
@@ -844,7 +846,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 		//var produccion = "/home/cremio/archivos/";
 				var content = fs
 					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO.docx", "binary");
@@ -889,7 +891,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 		//var produccion = "/home/cremio/archivos/";
 				var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -935,8 +937,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		//var produccion = "/home/cremio/archivos/";
+		var produccion = "/home/cremio/archivos/";
 				var content = fs				
 					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.docx", "binary");
     	   
