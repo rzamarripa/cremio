@@ -65,6 +65,7 @@ Meteor.methods({
 						var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
 						importeParcial=Math.round(importeParcial * 100) / 100;
 						suma += importeParcial;
+												
 				}
 				else if(tipoCredito.tipoInteres == "Compuesto")
 				{
