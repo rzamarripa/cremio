@@ -512,7 +512,7 @@ Meteor.methods({
 		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus del credito
 		_.each(idCreditos,function(c){
 				var pp = PlanPagos.find({credito_id: c}).fetch();
-				//console.log("pp:", pp);
+				console.log("pp:", pp);
 				var ban = true;
 				_.each(pp,function(p){
 						if (p.importeRegular > 0)

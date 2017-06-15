@@ -20,9 +20,11 @@ Meteor.methods({
 				usuarioPersona.apellidoMaterno	= usuario.profile.apellidoMaterno;
 				usuarioPersona.nombreCompleto	= usuario.profile.nombreCompleto;
 				usuarioPersona.relaciones = [];
+				if (rol == "Cliente") {
+					usuarioPersona.folio= usuario.profile.folio
+				}
 		
 				Personas.insert(usuarioPersona)
-				
 				
 		}
 		else

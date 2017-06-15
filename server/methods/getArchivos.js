@@ -486,8 +486,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"RECIBOS.docx", "binary");
@@ -765,13 +765,13 @@ Meteor.methods({
 	    
 	    console.log(objeto.planPagos);
 		
-				doc.setData({				items: 		 objeto,
-														fecha:     fecha,
-														inicial:    fInicial,
-														final:      fFinal,
+		doc.setData({				items: 		 objeto,
+												fecha:     fecha,
+												inicial:    fInicial,
+												final:      fFinal,
 													
 				
-				  });
+				});
 								
 		doc.render();
  
@@ -787,6 +787,190 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
+  contratos: function (contrato,credito) {
+  	if (contrato == "CONTRATO DE MUTUO CON INTERÉS") {
+	
+		console.log(contrato,"contratos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+				var content = fs
+					.readFileSync(produccion+"CONTRATOINTERES.doc", "binary");
+
+
+    	   
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+			var fecha = new Date();
+			var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	 
+	    
+	  		doc.setData({			items: 	   contrato,
+									fecha:     fecha,
+											
+													
+				});
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"CONTRATOINTERESSalida.doc",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"CONTRATOINTERESSalida.doc");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+  }
+   if (contrato=="CONTRATO DE MUTUO CON INTERÉS (OBLIGADO SOLIDARIO) VFINAL") {
+   	console.log(contrato,"contratos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+				var content = fs
+					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO.doc", "binary");
+    	   
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+			var fecha = new Date();
+			var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	  
+	    
+	  		doc.setData({				items: 		 contrato,
+									    fecha:     fecha,
+											
+													
+				});
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.doc",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.doc");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+   }
+   if (contrato=="CONTRATO DE MUTUO CON INTERES CON GARANTIA HIPOTECARIO VFINAL") {
+   	console.log(contrato,"contratos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+				var content = fs
+					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
+    	   
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+			var fecha = new Date();
+			var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	
+	    
+	  		doc.setData({		    items: 	   contrato,
+									fecha:     fecha,
+													
+				});
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalida.doc",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalida.doc");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+
+   }
+   if (contrato=="CONTRATO DE MUTUO CON INTERÉS CON GARANTÍA PRENDARIA VF") {
+   		console.log(contrato,"contratos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+				var content = fs				
+					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.doc", "binary");
+    	   
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+			var fecha = new Date();
+			var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    
+	  		doc.setData({				items: 	   contrato,
+									    fecha:     fecha,
+				});
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.doc",buf);		
+
+    var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.doc");
+    
+    return new Buffer(bitmap).toString('base64');
+
+   }
+}
   	
 	
 });
