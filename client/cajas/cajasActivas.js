@@ -10,6 +10,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
   this.objeto = {};
   this.buscar = {};
   this.caja = {_id: 0};
+  this.pagos_id = [];
   this.cajasInactivas = [];
   this.fechaInicio = moment().subtract(1,'month').startOf('month').toDate();
   this.fechaFin = moment().subtract(1,'month').endOf('month').toDate();
@@ -26,12 +27,12 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
     return [{}]
   });
   this.subscribe('pagos', () => {
-    return [{caja_id: this.getReactively('caja._id'), fechaPago: { $gte: this.getReactively('caja.updatedAt')} }]
+    return [{_id: { $in: this.getReactively('pagos_id')}}]
   });
   this.subscribe('movimientosCaja', () => {
     return [{
       $and: [{ caja_id: this.getReactively('caja._id') },
-      			 { createdAt: { $gte: this.getReactively('caja.updatedAt')} }, {
+      			  {
         $or: [
           { estatus: 1 },
           { estatus: 2 }
@@ -42,6 +43,8 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
 
   this.helpers({
     cajas: () => {
+    	var cajas = Cajas.find().fetch();
+
       return Cajas.find();
     },
     pagos: () => {
@@ -69,7 +72,11 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
       if(rc.getReactively('caja._id')){
 	      var movimientos = MovimientosCajas.find({caja_id:rc.caja._id}).fetch();
 	      var cj = Cajas.findOne(rc.caja._id);
+	      var pagos_id = [];
 	      _.each(movimientos, function(mov) {
+	      	if(mov.origen == "Pago de Cliente"){
+	      		pagos_id.push(mov.origen_id);
+	      	}
 	        var d = {};
 	        d.createdAt = mov.createdAt;
 	        d.tipoMovimiento = mov.tipoMovimiento;
@@ -77,10 +84,11 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
 	        c = Cuentas.findOne(cj.cuenta[mov.cuenta_id].cuenta_id);
 	        d.cuenta = c.nombre;
 	        d.monto = mov.monto;
-	        d.pago_id = mov.origen_id;
+	        //d.pago_id = mov.origen_id;
 	        d.pago = Pagos.findOne(mov.origen_id);
 	        ret.push(d)
 	      });
+	      rc.pagos_id = pagos_id;
     	}
       return ret
     }
