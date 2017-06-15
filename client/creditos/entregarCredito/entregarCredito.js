@@ -7,6 +7,8 @@ angular.module("creditoMio")
 	
 	this.suma =0;
 	this.verDiaPago = true;
+	rc.seleccinadorContrato = false;
+	rc.imprecion = true;
 	
 	this.objeto = {};
 	
@@ -15,6 +17,11 @@ angular.module("creditoMio")
 	
 	
 	this.subscribe('tiposIngreso',()=>{
+		return [{
+			estatus : true
+		}]
+	});
+	this.subscribe('tiposCredito',()=>{
 		return [{
 			estatus : true
 		}]
@@ -54,7 +61,13 @@ angular.module("creditoMio")
 			return cuentas;
 		},
 		credito : () => {
-			var c = Creditos.findOne({_id:$stateParams.credito_id}); 		
+			var c = Creditos.findOne({_id:$stateParams.credito_id}); 
+			
+
+			// _.each(c, function(credito){
+			// 	credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
+				
+			// });		
 			
 			if (c != undefined)
 			{		
@@ -299,8 +312,10 @@ angular.module("creditoMio")
 		});
 	}
 	
-	this.imprimirDocumento = function(){
-			
+	this.imprimirDocumento = function(credito){
+		credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
+    console.log(credito, "credito")
+			if (credito.tipoCredito.tipoInteres == "Simple") {
 			
 			Meteor.call('imprimirDocumentos', $stateParams.credito_id, function(error, response) {
 				   if(error)
@@ -347,7 +362,93 @@ angular.module("creditoMio")
 		  
 				   }
 				});	
-	};	
+		  }else{
+		  	rc.seleccinadorContrato = true;
+		  	rc.imprecion = false;
+		  }
+	  };	
+
+	  this.imprimirContrato = function(contrato){
+	  	console.log("contrato",contrato)
+
+	  		Meteor.call('contratos', contrato, $stateParams.credito_id, function(error, response) {
+				   if(error)
+				   {
+					    console.log('ERROR :', error);
+					    return;
+				   }
+				   else
+				   {
+					   
+			 				function b64toBlob(b64Data, contentType, sliceSize) {
+								  contentType = contentType || '';
+								  sliceSize = sliceSize || 512;
+								
+								  var byteCharacters = atob(b64Data);
+								  var byteArrays = [];
+								
+								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+								    var slice = byteCharacters.slice(offset, offset + sliceSize);
+								
+								    var byteNumbers = new Array(slice.length);
+								    for (var i = 0; i < slice.length; i++) {
+								      byteNumbers[i] = slice.charCodeAt(i);
+								    }
+								
+								    var byteArray = new Uint8Array(byteNumbers);
+								
+								    byteArrays.push(byteArray);
+								  }
+								    
+								  var blob = new Blob(byteArrays, {type: contentType});
+								  return blob;
+							}
+							
+							var blob = b64toBlob(response, "application/docx");
+						  var url = window.URL.createObjectURL(blob);
+						  
+						  //console.log(url);
+						  if (contrato == "CONTRATO DE MUTUO CON INTERÉS") {
+
+						  var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOINTERES.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+						}
+						if (contrato=="CONTRATO DE MUTUO CON INTERÉS (OBLIGADO SOLIDARIO) VFINAL") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+
+						}
+							if (contrato=="CONTRATO DE MUTUO CON INTERES CON GARANTIA HIPOTECARIO VFINAL") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOHIPOTECARIO.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+
+						}
+							if (contrato=="CONTRATO DE MUTUO CON INTERÉS CON GARANTÍA PRENDARIA VF") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOGARANTIAPRENDARIA.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+
+						}
+		  
+				   }
+				});
+
+
+
+
+		
+		}
 	
 	
 };

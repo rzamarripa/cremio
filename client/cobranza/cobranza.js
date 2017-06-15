@@ -532,73 +532,73 @@ angular.module("creditoMio")
   this.cambiar = function() 
   {
 
-      var chkxr = document.getElementById('todos');
-        
-      _.each(rc.cobranza, function(cobranza){
-        cobranza.imprimir = chkImprimir.checked;
-        //rc.cobranza.estatus = !rc.estatus.estatus;
-      })
-      
-      this.sumarSeleccionados();
-      console.log(rc.cobranza)
-          
-  };
-  
-  this.sumarSeleccionados = function(objeto)
-  {   
-    //console.log(objeto,"caaaaaaa")  
-       // rc.selectRecibo = !rc.cobranza.estatus;
+			var chkxr = document.getElementById('todos');
+				
+			_.each(rc.cobranza, function(cobranza){
+				cobranza.imprimir = chkxr.checked;
+				//rc.cobranza.estatus = !rc.estatus.estatus;
+			})
+			
+			this.sumarSeleccionados();
+			//console.log(rc.cobranza)
+					
+	};
+	
+	this.sumarSeleccionados = function(objeto)
+	{		
+		//console.log(objeto,"caaaaaaa")	
+		   // rc.selectRecibo = !rc.cobranza.estatus;
 
-      rc.seleccionadoRecibos = 0;
-      rc.seleccionadoMultas = 0;
-      _.each(objeto,function(c){
-        //console.log(c,"caaaaaaacahuateee")  
-      
-          if (c.imprimir == true)
-          {
-              if (c.descripcion == "Recibo")
-                  rc.seleccionadoRecibos += c.importeRegular;
-              else if (c.descripcion == "Cargo Moratorio")    
-                  rc.seleccionadoMultas += c.importeRegular;
-          }   
-      });
-    //  console.log(rc.cobranza)
+			rc.seleccionadoRecibos = 0;
+			rc.seleccionadoMultas = 0;
+			_.each(objeto,function(c){
+				//console.log(c,"caaaaaaacahuateee")	
+			
+					if (c.imprimir == true)
+					{
+							if (c.descripcion == "Recibo")
+									rc.seleccionadoRecibos += c.importeRegular;
+							else if (c.descripcion == "Cargo Moratorio")		
+									rc.seleccionadoMultas += c.importeRegular;
+					}		
+			});
+		//	console.log(rc.cobranza)
 
-  };
-
-
-
-  var fecha = moment();
-  this.guardarNotaCobranza=function(nota){
-      console.log(nota);      
-      nota.estatus = true;
-      nota.fecha = new Date()
-      nota.hora = moment(nota.fecha).format("hh:mm:ss a")
-      rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
-      rc.notaCobranza.tipo = "Cobranza"
-      Notas.insert(nota);
-      this.notaCobranza = {}
-      $('#myModal').modal('hide');
-      toastr.success('Guardado correctamente.');
-  };
-  this.mostrarNotaCobranza=function(objeto){
-    console.log("Nota de Cobranza:",objeto)
-    rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto;
-    rc.notaCobranza.folioCredito = objeto.credito.folio;
-    rc.notaCobranza.recibo = objeto.numeroPago;
-    rc.notaCobranza.cliente_id = objeto.cliente_id;
-    rc.cobranza_id = objeto.credito._id;
-    console.log("rc.cobranza_id",rc.cobranza_id);
-    $("#myModal").modal();
+	};
 
 
-  }
 
-  this.mostrarNotaCliente=function(objeto){
-    console.log("Nota de Cliente:",objeto);
-    rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto;
-    rc.notaCobranza.folioCredito = objeto.credito.folio;
-    rc.notaCobranza.recibo= objeto.numeroPago;
+	var fecha = moment();
+	this.guardarNotaCobranza=function(nota){
+			console.log(nota);			
+			nota.estatus = true;
+			nota.fecha = new Date()
+			nota.hora = moment(nota.fecha).format("hh:mm:ss a")
+			rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+			rc.notaCobranza.tipo = "Cobranza"
+			Notas.insert(nota);
+			this.notaCobranza = {}
+			$('#myModal').modal('hide');
+			toastr.success('Guardado correctamente.');
+	};
+	this.mostrarNotaCobranza=function(objeto){
+		console.log("Nota de Cobranza:",objeto)
+		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto;
+		rc.notaCobranza.folioCredito = objeto.credito.folio;
+		rc.notaCobranza.recibo = objeto.numeroPago;
+	  rc.notaCobranza.cliente_id = objeto.cliente_id;
+		rc.cobranza_id = objeto.credito._id;
+		console.log("rc.cobranza_id",rc.cobranza_id);
+		$("#myModal").modal();
+
+
+	}
+
+	this.mostrarNotaCliente=function(objeto){
+		console.log("Nota de Cliente:",objeto);
+		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto;
+		rc.notaCobranza.folioCredito = objeto.credito.folio;
+		rc.notaCobranza.recibo= objeto.numeroPago;
     rc.cobranza_id = objeto.credito_id;
     rc.notaCobranza.cliente_id = objeto.cliente_id;
     console.log("rc.cobranza_id",rc.cobranza_id);

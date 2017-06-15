@@ -259,7 +259,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
     planPagos: () => {
       return PlanPagos.find({
         cliente_id: $stateParams.objeto_id,
-        credito_id: { $in: this.getCollectionReactively("creditos_id") }
+        credito_id: { $in: this.getCollectionReactively("creditos_id") },
       }, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } });
     },
     tiposCredito: () => {
@@ -277,7 +277,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 					
 */			
 				
-			var pp = PlanPagos.find({}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
+			var pp = PlanPagos.find({importeRegular : {$gt : 0},}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
       rc.subtotal = 0;
 			rc.cargosMoratorios = 0;
 			

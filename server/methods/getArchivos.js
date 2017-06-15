@@ -1,6 +1,8 @@
 Meteor.methods({
 		getcartaRecordatorio: function (objeto) {
 	console.log(objeto,"recordatori")
+   // var produccion = meteor_root+"/web.browser/app/plantillas/";
+
 		
 		
 		var fs = require('fs') ;
@@ -8,7 +10,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 		
@@ -81,7 +83,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 		
@@ -156,7 +158,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 		
@@ -272,13 +274,13 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 		
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		//var produccion = "/home/cremio/archivos/";
 
 
@@ -486,8 +488,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		var produccion = "/home/cremio/archivos/";
+		//var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"RECIBOS.docx", "binary");
@@ -539,7 +541,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
@@ -602,7 +604,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
@@ -666,7 +668,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
@@ -731,7 +733,7 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
@@ -765,13 +767,13 @@ Meteor.methods({
 	    
 	    console.log(objeto.planPagos);
 		
-				doc.setData({				items: 		 objeto,
-														fecha:     fecha,
-														inicial:    fInicial,
-														final:      fFinal,
+		doc.setData({				items: 		 objeto,
+												fecha:     fecha,
+												inicial:    fInicial,
+												final:      fFinal,
 													
 				
-				  });
+				});
 								
 		doc.render();
  
@@ -787,6 +789,190 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
+  contratos: function (contrato,credito) {
+  	if (contrato == "CONTRATO DE MUTUO CON INTERÉS") {
+	
+		console.log(contrato,"contratos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = "/home/cremio/archivos/";
+				var content = fs
+					.readFileSync(produccion+"CONTRATOINTERES.docx", "binary");
+
+
+    	   
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+			var fecha = new Date();
+			var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	 
+	    
+	  		doc.setData({			items: 	   contrato,
+									fecha:     fecha,
+											
+													
+				});
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"CONTRATOINTERESSalida.docx",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"CONTRATOINTERESSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+  }
+   if (contrato=="CONTRATO DE MUTUO CON INTERÉS (OBLIGADO SOLIDARIO) VFINAL") {
+   	console.log(contrato,"contratos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = "/home/cremio/archivos/";
+				var content = fs
+					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO.docx", "binary");
+    	   
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+			var fecha = new Date();
+			var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	  
+	    
+	  		doc.setData({				items: 		 contrato,
+									    fecha:     fecha,
+											
+													
+				});
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.docx",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+   }
+   if (contrato=="CONTRATO DE MUTUO CON INTERES CON GARANTIA HIPOTECARIO VFINAL") {
+   	console.log(contrato,"contratos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = "/home/cremio/archivos/";
+				var content = fs
+					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
+    	   
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+			var fecha = new Date();
+			var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	
+	    
+	  		doc.setData({		    items: 	   contrato,
+									fecha:     fecha,
+													
+				});
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalida.docx",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+
+   }
+   if (contrato=="CONTRATO DE MUTUO CON INTERÉS CON GARANTÍA PRENDARIA VF") {
+   		console.log(contrato,"contratos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = "/home/cremio/archivos/";
+				var content = fs				
+					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.docx", "binary");
+    	   
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+			var fecha = new Date();
+			var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    
+	  		doc.setData({				items: 	   contrato,
+									    fecha:     fecha,
+				});
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx",buf);		
+
+    var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx");
+    
+    return new Buffer(bitmap).toString('base64');
+
+   }
+}
   	
 	
 });
