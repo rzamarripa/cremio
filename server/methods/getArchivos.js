@@ -798,7 +798,7 @@ Meteor.methods({
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		//var produccion = "/home/cremio/archivos/";
 				var content = fs
-					.readFileSync(produccion+"CONTRATOINTERES.doc", "binary");
+					.readFileSync(produccion+"CONTRATOINTERES.docx", "binary");
 
 
     	   
@@ -828,11 +828,11 @@ Meteor.methods({
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"CONTRATOINTERESSalida.doc",buf);		
+		fs.writeFileSync(produccion+"CONTRATOINTERESSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"CONTRATOINTERESSalida.doc");
+    var bitmap = fs.readFileSync(produccion+"CONTRATOINTERESSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -847,7 +847,7 @@ Meteor.methods({
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		//var produccion = "/home/cremio/archivos/";
 				var content = fs
-					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO.doc", "binary");
+					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO.docx", "binary");
     	   
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
@@ -874,11 +874,11 @@ Meteor.methods({
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.doc",buf);		
+		fs.writeFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.doc");
+    var bitmap = fs.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -919,11 +919,11 @@ Meteor.methods({
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalida.doc",buf);		
+		fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalida.doc");
+    var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -938,7 +938,7 @@ Meteor.methods({
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		//var produccion = "/home/cremio/archivos/";
 				var content = fs				
-					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.doc", "binary");
+					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.docx", "binary");
     	   
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
@@ -963,9 +963,9 @@ Meteor.methods({
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.doc",buf);		
+		fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx",buf);		
 
-    var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.doc");
+    var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx");
     
     return new Buffer(bitmap).toString('base64');
 
