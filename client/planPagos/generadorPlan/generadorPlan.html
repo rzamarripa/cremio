@@ -6,20 +6,23 @@
 		</h1>
 	</div>
 </div> -->
-<br>
 <!-- Cabecera del perfil de  alumno seleccionado -->
 <div class="row" ng-show="ge.cliente.profile != undefined">
 	<div class="col-sm-12">
-		<div class="well">
-			<div class="row">
+		<div class="well">	
+			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+				<h2 class="alge-title txt-color-blueDark">
+					<i class="fa fa-list fa-fw "></i>
+						Solicitud de Crédito
+				</h2>
+			</div>
+			<a  ui-sref="root.clienteDetalle({objeto_id: ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>		
+			<div class="row">				
 				<div class="col-sm-12">
 					<form name="formNuevoCredito" class="form-horizontal" role="form" novalidate>
 				  	<div class="well">	    
 					  	<div class="row">
 					  		<div class="col-sm-12">
-						  		  <!--   <div class="air air-top-right padding-10">
-											<h4 class="txt-color-black font-md"><i class="fa fa-calendar pull-right"></i>&nbsp;&nbsp;{{ge.fechaActual | date:'dd-MM-yyyy'}}</h4>
-									</div>  -->
 					  			<div class="alert alert-info">
 					  			 <p><i class="fa-fw fa fa-info"></i> Para <strong>crear un nuevo crédito</strong> es importante que pongamos la información correcta. <strong>(Revisar bien los datos.)</strong></p>
 					  			</div>
