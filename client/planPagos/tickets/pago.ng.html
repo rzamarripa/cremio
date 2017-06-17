@@ -4,47 +4,34 @@
 			<div class="row text-center">
 				<div class="col-sm-4 col-sm-offset-4">
 					<strong> <h2>Credito Mio</h2> </strong>
+					<strong>----------------------Recibo de Pago----------------------</strong>
 					<address>
-						Rubidia Martinez Alcaraz<br>
-						Blvd Emiliano Zapata 3125 Local 12BC<br>
-						Colonia Lomas del Boulevard<br>
-						MAAR-661007-BF5<br>
-						(667) 717-21-21<br>
+						RECIBIMOS DE {{tkpctrl.cliente.profile.nombreCompleto}} (CLIENTE No. {{tkpctrl.cliente.profile.folio}}) CON DOMICILIO EN: CALLE {{tkpctrl.cliente.profile.calle}} NO. {{tkpctrl.cliente.profile.numero}} {{tkpctrl.cliente.profile.colonia.nombre}}. {{tkpctrl.cliente.profile.municipio.nombre}}, {{tkpctrl.cliente.profile.estado.nombre}}.
 					</address>
-					<div>
-						<div>
-							<strong>Folio de Pago:</strong> {{ tkpctrl.pago.folioPago }}
-						</div>		
-					</div>
-					<div>
-						<div>
-							<table class="table">
-								<tr>
-									<td><strong>FECHA:</strong> {{ tkpctrl.pago.fechaPago | date:'dd-MM-yyyy'}}</td>
-									<td><strong>Hora:</strong> {{ tkpctrl.pago.fechaPago | date:'H:mm:ss'}}</td>
-								</tr>
-							</table>
-							
-						</div>		
-					</div>
+					
+					<span class="pull-left">LA CANTIDAD DE: {{tkpctrl.pago.totalPago | currency}}</span>
 					<br>
+					<span class="pull-left"> POR CONCEPTO DE ABONO A SU CUENTA</span>
+					<br>
+					<strong>--------------DETALLE DEL PAGO/ABONO>-------------</strong>
+					<table class="table" ng-repeat="pago in tkpctrl.pago.planPagos">
+						<tbody>
+							<tr>
+								<th align="center">CREDITO</th>
+								<th align="center">RECIBO</th>
+								<th align="center">ABONO</th>
+								<th align="center">CONCEPTO</th>					
+							</tr>
+							<tr>
+								<td align="center">{{pago.folioCredito}}</td>
+								<td align="center">{{pago.numeroPago}}</td>
+								<td align="center">{{pago.totalPago | currency:""}}</td>
+								<td align="center">{{pago.descripcion}}</td>					
+							</tr>
+						</tbody>
+					</table>
 
-					<strong>-----------------Recibo de Pago-----------------</strong>
 					<table class="table">
-						<tr>
-							<td>CONCEPTO</td>
-							<td>IMPORTE</td>
-						</tr>
-						<tr ng-repeat="pago in tkpctrl.pago.planPagos">
-							<td>
-								{{pago.descripcion}} {{pago.numeroPago}}
-								<br>
-								Credito: {{pago.folioCredito}}
-							</td>
-							<td>
-								{{pago.totalPago | currency}}
-							</td>
-						</tr>
 						<tr>
 							<td>
 								<strong>Total: </strong>
@@ -70,19 +57,27 @@
 							</td>
 						</tr>
 					</table>
-					<br>
-
-					<div>
-						<table class="table">
-							<tr>
-								<td>SUCURSAL: {{tkpctrl.sucursal.nombreSucursal}}</td>
-								<td>Caja: {{tkpctrl.caja.nombre}}</td>
-							</tr>
-						</table>
-					
 						Atendio:<br>
 						{{tkpctrl.cajero.profile.nombreCompleto}}
+					<br>
+					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
+					<strong><center>FIRMA DEL CAJERO Y SELLO DE LA CAJA</center></strong>
+					<div class="row">
+						<div class="col-sm-6 pull-left">VENTANILLA: {{tkpctrl.caja.nombre}}</div>
+						<div class="col-sm-6 pull-right">TURNO: 0000</div>
 					</div>
+					<div class="row">
+						<div class="col-sm-6 pull-left">{{ tkpctrl.pago.fechaPago | date:'H:mm:ss'}}</div>
+						<div class="col-sm-6 pull-right">{{ tkpctrl.pago.fechaPago | date:'dd-MM-yyyy'}}</div>
+					</div>
+					<address>
+						Rubidia Martinez Alcaraz<br>
+						Blvd Emiliano Zapata 3125 Local 12BC<br>
+						Colonia Lomas del Boulevard<br>
+						MAAR-661007-BF5<br>
+						(667) 717-21-21<br>
+					</address>
+					<br>
 						<div><a class="btn btn-primary" id="printpagebutton" ng-click="tkpctrl.borrarBotonImprimir()">Imprimir</a></div>
 				</div>
 			</div>

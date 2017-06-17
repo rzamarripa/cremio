@@ -111,11 +111,11 @@
 	  	<div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">{{caaj.caja.nombre}}</h4>
-        <!-- <a class="btn btn-primary btn-mini pull-right" ui-sref="anon.imprimirResumen({caja_id: caaj.caja._id, fechaApertura: caaj.caja.createdAt})" target="_blank">
-					<span class="fa fa-file-text-o"></span>
-				</a> -->
       </div>
   		<div class="modal-body">
+  		<a class="btn btn-primary btn-mini pull-right" ui-sref="anon.imprimirResumen({caja_id: caaj.caja._id, fechaApertura: caaj.caja.updatedAt})" target="_blank">
+					<span class="fa fa-file-text-o">Resumen</span>
+				</a>
   		<div>
 				  <!-- Nav tabs -->
 				  <ul class="nav nav-tabs" role="tablist">

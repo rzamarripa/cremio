@@ -4,37 +4,8 @@
 			<div class="row text-center">
 				<div class="col-sm-4 col-sm-offset-4">
 					<strong> <h2>Credito Mio</h2> </strong>
-					<address>
-						Rubidia Martinez Alcaraz<br>
-						Blvd Emiliano Zapata 3125 Local 12BC<br>
-						Colonia Lomas del Boulevard<br>
-						MAAR-661007-BF5<br>
-						(667) 717-21-21<br>
-					</address>
-					<div>
-						<div>
-							<strong>Folio de Pago:</strong> {{ tkpctrl.pago.folioPago }}
-						</div>		
-					</div>
-					<div>
-						<div>
-							<table class="table">
-								<tr>
-									<td><strong>FECHA:</strong> {{ tkpctrl.pago.fechaPago | date:'dd-MM-yyyy'}}</td>
-									<td><strong>Hora:</strong> {{ tkpctrl.pago.fechaPago | date:'H:mm:ss'}}</td>
-								</tr>
-							</table>
-							
-						</div>		
-					</div>
-					<br>
-
-					<strong>-----------------Recibo de Pago-----------------</strong>
+					<strong>-----------INGRESOS POR FORMA DE PAGO------------</strong>
 					<table class="table">
-						<tr>
-							<td>Tipo Pago</td>
-							<td>IMPORTE</td>
-						</tr>
 						<tr ng-repeat="(key, resu) in cj.resumen">
 							<td>
 								{{key}}
@@ -48,40 +19,49 @@
 								<strong>Total: </strong>
 							</td>
 							<td>
-								<strong>{{tkpctrl.pago.totalPago | currency}}</strong>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<strong>Pagó: </strong>
-							</td>
-							<td>
-								{{tkpctrl.pago.pago | currency}}
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<strong>Cambio: </strong>
-							</td>
-							<td>
-								{{tkpctrl.pago.cambio | currency}}
+								<strong>{{cj.total | currency}}</strong>
 							</td>
 						</tr>
 					</table>
-					<br>
+					<strong>-----------------ENTREGA DE CREDITOS-----------------</strong>
+					<table class="table">
+						<tr>
+							<td>
+								CREDITOS ENTREGADOS:
+							</td>
+							<td align="right">
+								{{cj.entregados.cantidad}}
+							</td>
+						</tr>
+						<tr ng-repeat="(key, ag) in cj.entregados.agrupados">
+							<td>
+								{{key}}
+							</td>
+							<td>
+								{{ag | currency}}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<strong>Total: </strong>
+							</td>
+							<td>
+								<strong>{{cj.entregados.total | currency}}</strong>
+							</td>
+						</tr>
+					</table>
+					<address>
+						OPERADOR (A): {{cj.caja.cajero.profile.nombreCompleto}}<br>
+						ADMINISTRADOR (A):<br>
+						VENTANILLA: {{cj.caja.nombre}}<br>
 
-					<div>
-						<table class="table">
-							<tr>
-								<td>SUCURSAL: {{tkpctrl.sucursal.nombreSucursal}}</td>
-								<td>Caja: {{tkpctrl.caja.nombre}}</td>
-							</tr>
-						</table>
-					
-						Atendio:<br>
-						{{tkpctrl.cajero.profile.nombreCompleto}}
-					</div>
-						<div><a class="btn btn-primary" id="printpagebutton" ng-click="tkpctrl.borrarBotonImprimir()">Imprimir</a></div>
+						Rubidia Martinez Alcaraz<br>
+						Blvd Emiliano Zapata 3125 Local 12BC<br>
+						Colonia Lomas del Boulevard<br>
+						MAAR-661007-BF5<br>
+						(667) 717-21-21<br>
+					</address>
+					<div><a class="btn btn-primary" id="printpagebutton" ng-click="tkpctrl.borrarBotonImprimir()">Imprimir</a></div>
 				</div>
 			</div>
 		</div>
