@@ -132,7 +132,7 @@
 		</li>		
 		
 		<li data-ui-sref-active="active">
-				<a ui-sref="root.calculadora" tilte="Credito Mio">
+				<a ui-sref="root.calculadora" tilte="Credito Mio" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador'">
 					<i class="fa fa-lg fa-fw fa-th"></i>
 					<span class="menu-item-parent">Calculadora</span>
 				</a>
@@ -167,7 +167,7 @@
 		</li>
 		
 		<li data-menu-collapse >
-			<a tilte="Credito Mio" ui-sref="root.reportes">
+			<a tilte="Credito Mio" ui-sref="root.reportes" ng-if="currentUser.roles[0] == 'Gerente'">
 		    	<i class="fa fa-lg fa-fw fa-group"></i>
 					<span class="menu-item-parent">Reportes</span>
 			</a>

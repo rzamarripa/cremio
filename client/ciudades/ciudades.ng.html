@@ -9,6 +9,7 @@
 			<form name="form" class="form-horizontal" role="form">
 		  	<div class="well">	    
 			    <div class="row">
+				    <div class="col-sm-12">
 				    	<div class="col-sm-4" valida>
 								<label >Pais</label>
 									<select name="pais" class="form-control select2" placeholder="Seleccione" ng-model="ciu.objeto.pais_id" required>
@@ -27,15 +28,17 @@
 										<option  value="{{municipio._id}}" ng-repeat="municipio in ciu.municipios">{{municipio.nombre}}</option>
 									</select>
 						  </div>
+				    </div>
 					</div>
 					<div class="row">
-						 <div class="col-sm-4" valida>
+						<div class="col-sm-12">
+							<div class="col-sm-4" valida>
 						    <label>Nombre *</label>
 					    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="ciu.objeto.nombre" required capitalize>
 					    </div>
+						</div>
 					</div>	
-				</div>
-		  	<div class="well">	    
+					<br>
 			    <div class="row">
 						<div class="col-sm-12">
 							<input type="submit" ng-click="ciu.guardar(ciu.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="ciu.action" valida-form formulario="form">
@@ -47,8 +50,7 @@
 		</div>
 	</div>
 </div>
-
-
+<br>
 <!-- List -->
 <div class="row">
 	<div class="col-sm-12">
@@ -56,13 +58,13 @@
 			<thead>
 				<tr>
 				<th width="5%"><div class="text-center">No.</div></th>
-					<th width="30%"><div class="text-center">Nombre</div></th>
-					<th width="20%">
+					<th width="40%"><div class="text-center">Nombre</div></th>
+					<th width="25%">
 						<div class="text-center">
 							Estatus
 						</div>
 					</th>
-					<th width="20%">
+					<th width="25%">
 						<div class="text-center">
 							Acciones
 						</div>

@@ -10,55 +10,53 @@
 			<form name="form" class="form-horizontal" role="form">
 			  	<div class="well">	    
 				    <div class="row">
+					    <div class="col-sm-12">
 					    	<div class="col-sm-4" valida>
 							    <label>Cuenta de Origen*</label>
 						    	<select name="origen" class="form-control select2" placeholder="Seleccione" ng-model="tincu.objeto.origen_id" required>
-									<option ng-repeat="caja in tincu.cuentas" value="{{caja._id}}">{{caja.nombre}}</option>
-								</select>
-						    	
-						   </div>
-						   <div class="col-sm-4" valida>
+										<option ng-repeat="caja in tincu.cuentas" value="{{caja._id}}">{{caja.nombre}}</option>
+									</select>
+						  	</div>
+								<div class="col-sm-4" valida>
 							    <label>Cuenta de Destino*</label>
 						    	<select name="destino" class="form-control select2" placeholder="Seleccione" ng-model="tincu.objeto.destino_id" required>
-									<option ng-repeat="cuenta in tincu.cuentas" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
-								</select>
-						    	
-						   </div>
-						   <div class="col-sm-4" valida>
+										<option ng-repeat="cuenta in tincu.cuentas" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
+									</select>
+						  	</div>
+								<div class="col-sm-4" valida>
 							    <label>Monto *</label>
 						    	<input name="monto" type="number" class="form-control" placeholder="Monto" ng-model="tincu.objeto.importe" required>
-						    	
-						   </div>
-						 
-					</div>
-					
-				</div>
-			  	<div class="well">	    
-				   		<div class="row">
-							<div class="col-sm-12">
-								<input type="submit" ng-click="tincu.guardar(tincu.objeto,form)" value="Guardar" class="btn btn-primary"  valida-form formulario="form">
-								
-							</div>
+								</div>
+					    </div>
 						</div>
-			  	</div>  
+						<br>
+						<div class="row">
+						<div class="col-sm-12">
+							<input type="submit" ng-click="tincu.guardar(tincu.objeto,form)" value="Guardar" class="btn btn-primary"  valida-form formulario="form">
+						</div>
+					</div>
+			  </div>  
 			</form>
 		</div>
 	</div>
 </div>
+<br>
 <div class="row">
 	<div class="col-sm-12">
 		<table class="table table-bordered">
 			<thead>
 				<tr>
+					<th width="5%"><div class="text-center">No.</div></th>
 					<th width="15%"><div class="text-center">Fecha</div></th>
-					<th width="30%"><div class="text-center">Cuenta Origen</div></th>
-					<th width="30%"><div class="text-center">Cuenta Destino</div></th>
+					<th width="25%"><div class="text-center">Cuenta Origen</div></th>
+					<th width="25%"><div class="text-center">Cuenta Destino</div></th>
 					<th width="15%"><div class="text-center">Monto</div></th>
 					<th width="10%"><div class="text-center">Estatus</div></th>
 				</tr>
 			</thead>
 			<tbody>
 			    <tr ng-repeat="objeto in tincu.traspasos">
+				    <td class="text-center">{{$index + 1}}</td>
 				    <td>{{objeto.createdAt | date:'medium'}}</td>
 				    <td>{{objeto.origen.nombre}}</td>
 				    <td>{{objeto.destino.nombre}}</td>
