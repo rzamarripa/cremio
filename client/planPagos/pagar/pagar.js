@@ -353,9 +353,6 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 
   };
 
-
-
-
   this.editar = function(pago) {
     this.pago = pago;
     this.action = false;
@@ -370,7 +367,6 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
       toastr.success('Cancelado correctamente.');
     }
   }
-
 
 
   this.tieneFoto = function(sexo, foto) {
@@ -388,61 +384,70 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
   }
 
 
-
-
-
   this.seleccionarPago = function(pago) {
-    console.log(pago);
     pago.pagoSeleccionado = !pago.pagoSeleccionado;
     pago.estatus = 0;
     rc.pago.totalPago = 0;
     if (!pago.pagoSeleccionado)
       pago.importepagado = 0;
     _.each(rc.planPagosViejo, function(p) {
-      if (!pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago > pago.numeroPago && p.estatus != 1) {
-        p.importepagado = 0;
-        p.pagoSeleccionado = false;
-      }
-      if (pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago <= pago.numeroPago && p.estatus != 1) {
-        p.importepagado = p.importeRegular;
-        p.pagoSeleccionado = true;
-      }
-      if (p.pagoSeleccionado != undefined) {
-        if (p.pagoSeleccionado == true) {
-          rc.pago.totalPago += p.importepagado;
-        }
-      }
-
+				if (p.verCargo)
+	      {	    
+		      if (!pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago > pago.numeroPago && p.estatus != 1) {
+		        p.importepagado = 0;
+		        p.pagoSeleccionado = false;
+		      }
+		      if (pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago <= pago.numeroPago && p.estatus != 1) {
+		        p.importepagado = p.importeRegular;
+		        p.pagoSeleccionado = true;
+		      }
+		      if (p.pagoSeleccionado != undefined) {
+		        if (p.pagoSeleccionado == true) {
+		          rc.pago.totalPago += p.importepagado;
+		        }
+		      }
+				}		
     });
   }
   this.seleccionarMontoPago = function(pago) {
     rc.pago.totalPago = 0;
     var i = 0;
     _.each(rc.planPagosViejo, function(p) {
-      if (pago.credito_id == p.credito_id && p.numeroPago < pago.numeroPago && p.estatus != 1) {
-        p.importepagado = p.importeRegular;
-        p.pagoSeleccionado = true;
-        p.estatus = 0;
-      }
-      if (pago == p) {
-        p.estatus = 0;
-        p.pagoSeleccionado = true;
-        if (p.importepagado > p.importeRegular)
-          p.importepagado = p.importeRegular
-        if (p.importepagado <= 0 || !p.importepagado || isNaN(p.importepagado)) {
-          //p.importepagado = 0
-          p.pagoSeleccionado = false;
-        }
-      }
-      if (p.pagoSeleccionado != undefined) {
-        if (p.pagoSeleccionado == true) {
-          rc.pago.totalPago += p.importepagado;
-        }
-      }
+			if (p.verCargo)
+	    {	    
+	      if (pago.credito_id == p.credito_id && p.numeroPago < pago.numeroPago && p.estatus != 1) {
+	        p.importepagado = p.importeRegular;
+	        p.pagoSeleccionado = true;
+	        p.estatus = 0;
+	      }
+	      if (pago == p) {
+	        p.estatus = 0;
+	        p.pagoSeleccionado = true;
+	        if (p.importepagado > p.importeRegular)
+	          p.importepagado = p.importeRegular
+	        if (p.importepagado <= 0 || !p.importepagado || isNaN(p.importepagado)) {
+	          //p.importepagado = 0
+	          p.pagoSeleccionado = false;
+	        }
+	      }
+	      if (p.pagoSeleccionado != undefined) {
+	        if (p.pagoSeleccionado == true) {
+	          rc.pago.totalPago += p.importepagado;
+	        }
+	      }
+	    }  
     });
   }
 
   this.guardarPago = function(pago, credito) {
+		
+		console.log(pago);	  
+	  
+	  if (pago.totalPago == 0)
+	  {
+		  	toastr.warning("No hay nada que cobrar");
+		  	return;
+	  }				
 
     var seleccionadosId = [];
     _.each(rc.planPagosViejo, function(p) {
@@ -464,37 +469,6 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
       var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
       window.open(url, '_blank');
     });
-
-    /*_.each(rc.getReactively("planPagosViejo"), function(pago){
-    		if (pago.estatus == 1) {
-    			Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
-    				//console.log("entro")
-    				
-    			})
-    		}else{
-    			
-    			rc.creditos.estatus = 4
-    		}
-    			
-    });*/
-
-    //console.log(credito)
-    // 	if (rc.creditos != undefined) {
-    // 	_.each(pagos, function(pago){
-    // 		if (pago.estatus == 1) {
-    // 			Meteor.call('cambiarEstatusCredito',credito, function(error, response) {
-    // 				//console.log("entro")
-
-    // 			})
-    // 		}else{
-
-    // 			rc.creditos.estatus = 4
-    // 		}
-    // 	});
-    // }
-
-    // console.log(rc.creditos,"el credito") 
-
 
   };
 

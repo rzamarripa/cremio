@@ -198,7 +198,7 @@ angular.module("creditoMio")
       });
       
 
-      console.log("el ARREGLO del helper historial",arreglo)
+      //console.log("el ARREGLO del helper historial",arreglo)
       return arreglo;
     },
 
@@ -217,6 +217,37 @@ angular.module("creditoMio")
     
         return creditos
       
+    },
+    cobranza :() =>{
+		  
+		  this.fechaInicial = rc.getReactively("fechaInicial");
+		  this.fechaInicial.setHours(0,0,0,0);
+	    this.fechaFinal = new Date(this.fechaInicial.getTime());
+	    this.fechaFinal.setHours(23,59,59,999);
+	    FI = this.fechaInicial;
+	    FF = this.fechaFinal;
+	    rc.verRecibos = false;
+	    
+	    Meteor.call('getCobranza', FI, FF, 1, Meteor.user().profile.sucursal_id, function(error, result) {           
+	          if (result)
+	          {
+	              //console.log("Cobranza:",result);
+	              
+	              rc.cobranza = result;
+	              rc.totalRecibos = 0;
+	              rc.totalMultas = 0;
+	              _.each(rc.cobranza,function(c){
+	                  if (c.descripcion == "Recibo")
+	                     rc.totalRecibos = rc.totalRecibos + c.importeRegular;
+	                  else if (c.descripcion == "Cargo Moratorio")    
+	                     rc.totalMultas = rc.totalMultas + c.importeRegular;
+	              });
+	              
+	              $scope.$apply();
+	          }
+	        
+	    }); 	
+	    
     },
 
   });
@@ -339,12 +370,10 @@ angular.module("creditoMio")
               rc.totalMultas = 0;
               _.each(rc.cobranza,function(c){
                   if (c.descripcion == "Recibo")
-                        rc.totalRecibos = rc.totalRecibos + c.importeRegular;
-                    else if (c.descripcion == "Cargo Moratorio")    
-                        rc.totalMultas = rc.totalMultas + c.importeRegular;
+                      rc.totalRecibos = rc.totalRecibos + c.importeRegular;
+                  else if (c.descripcion == "Cargo Moratorio")    
+                      rc.totalMultas = rc.totalMultas + c.importeRegular;
               });
-              
-              
               
               $scope.$apply();
           }
@@ -523,6 +552,7 @@ angular.module("creditoMio")
                         rc.totalRecibos = rc.totalRecibos + c.importeRegular;
                     else if (c.descripcion == "Cargo Moratorio")    
                         rc.totalMultas = rc.totalMultas + c.importeRegular;
+
                 });
                 $scope.$apply();
             }
@@ -949,13 +979,46 @@ angular.module("creditoMio")
   }
 
   this.aparecerCheck = function() {
-    console.log("muestra")
+    rc.conRespuesta = !rc.conRespuesta;
+  };
+  
+/*
+  this.porFecha = function() {
+	  
+	  console.log("Entro");
+	   	
+    this.fechaInicial.setHours(0,0,0,0);
+    this.fechaFinal = new Date(this.fechaInicial.getTime());
+    this.fechaFinal.setHours(23,59,59,999);
+    FI = this.fechaInicial;
+    FF = this.fechaFinal;
+    rc.verRecibos = false;
     
-      rc.conRespuesta = !rc.conRespuesta;
+    Meteor.call('getCobranza', FI, FF, 1, Meteor.user().profile.sucursal_id, function(error, result) {           
+          if (result)
+          {
+              console.log("Cobranza:",result);
+              
+              rc.cobranza = result;
+              rc.totalRecibos = 0;
+              rc.totalMultas = 0;
+              _.each(rc.cobranza,function(c){
+                  if (c.descripcion == "Recibo")
+                        rc.totalRecibos = rc.totalRecibos + c.importeRegular;
+                    else if (c.descripcion == "Cargo Moratorio")    
+                        rc.totalMultas = rc.totalMultas + c.importeRegular;
+              });
+              
+              
+              
+              $scope.$apply();
+          }
+        
+    }); 
+    
   }
-
-
-
+*/
+  
   
 
 };
