@@ -298,8 +298,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 		planPagos : () => {
 			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:-1}}).fetch();
-			if(rc.getReactively("creditos") && rc.creditos.length > 0 && planPagos.length > 0){
-				
+			
+			if(rc.getReactively("creditos") && rc.creditos.length > 0 && planPagos.length > 0){	
 				_.each(rc.getReactively("creditos"), function(credito){
 					credito.planPagos = [];
 					credito.pagados = 0;
@@ -309,10 +309,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					credito.pagos = 0;
 
 					_.each(planPagos, function(pago){
+						
 						if(pago.descripcion=="Recibo"){
 							credito.pagos +=pago.pago;
 						}
 						if(credito._id == pago.credito_id){
+							pago.numeroPagos = credito.numeroPagos;
 							credito.planPagos.push(pago);
 							if(pago.estatus == 0){
 								credito.pendientes++;

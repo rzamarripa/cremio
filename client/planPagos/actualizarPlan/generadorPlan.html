@@ -1,78 +1,14 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-		<h1 class="alge-title txt-color-blueDark">
-			<i class="fa fa-list fa-fw "></i>
-				Clientes &gt; Solicitud de Crédito
-		</h1>
-	</div>
-</div>
-<br>
 <!-- Cabecera del perfil de  alumno seleccionado -->
 <div class="row" ng-show="ae.cliente.profile != undefined">
 	<div class="col-sm-12">
 		<div class="well well-sm">
-			<div class="row">
-				<div class="col-sm-12 col-md-12 col-lg-12">
-					<div class="well well-light well-sm no-margin no-padding">
-						<div class="row">
-							<div class="col-sm-12">
-								<div id="myCarousel" class="carousel profile-carousel">
-									<div class="air air-bottom-right padding-10">
-										<a ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador' " ui-sref="root.clienteDetalle({objeto_id : ae.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
-									</div>
-									<div class="air air-top-left padding-10">
-										<h4 class="txt-color-white font-md"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{ae.fechaActual | date:'dd-MM-yyyy'}}</h4>
-									</div>
-									<ol class="carousel-indicators">
-									</ol>
-									<div class="carousel-inner">
-										<div class="item active">
-											<img src="img/demo/s1.jpg" alt="" style="width:100%">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-12">
-								<div class="row">
-									<div class="col-sm-2 profile-pic" style="text-align:left;width:initial;">
-										<img style="max-width:200px;" src="{{ae.tieneFoto(ae.cliente.profile.sexo, ae.cliente.profile.foto)}}" >
-									</div>
-									<div class="col-sm-6">
-										<h1>{{ae.cliente.profile.nombre}} <span class="semi-bold">{{ae.cliente.profile.apellidoPaterno}} {{ae.cliente.profile.apellidoMaterno}}</span>
-										
-										<small> (Cliente)</small></h1>
-										<ul class="list-unstyled">
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-key fa-lg"></i>&nbsp;&nbsp;
-													<span class="txt-color-darken">
-														<strong>{{ae.cliente.username}}</strong>
-													</span>
-												</p>
-											</li>
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ae.cliente.profile.particular}}</span>
-												</p>
-											</li>
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;<a href="mailto:{{ae.cliente.profile.correo}}">{{ae.cliente.profile.correo}}</a>
-												</p>
-											</li>
-											<li>
-												<p class="text-muted">
-													<i class="fa fa-birthday-cake fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{ae.cliente.profile.fechaNacimiento | date:"dd-MM-yyyy"}}</span>
-												</p>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+				<h2 class="alge-title txt-color-blueDark">
+					<i class="fa fa-list fa-fw "></i>
+						Actualización del Crédito
+				</h2>
 			</div>
+			<a  ui-sref="root.clienteDetalle({objeto_id: ae.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
 			<div class="row">
 				<div class="col-sm-12">
 					<form name="formNuevoCredito" class="form-horizontal" role="form" novalidate>
