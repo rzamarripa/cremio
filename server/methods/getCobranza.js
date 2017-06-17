@@ -114,7 +114,7 @@ Meteor.methods({
 				 			
 				 			planPago.imprimir = false;
 				 			planPago.classPago = classPago;
-				 			//planPago.folio = c.folio;
+				 			planPago.numeroPagos = c.numeroPagos;
 				 						
 					}
 					

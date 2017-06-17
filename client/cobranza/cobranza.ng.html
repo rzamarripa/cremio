@@ -95,7 +95,7 @@
 			    <td ng-click="cob.selCredito(objeto, $index + 1)">{{ $index + 1 }}</td>
 			    <td class="text-center" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.credito.folio}}</td>
 			    <td ng-click="cob.selCredito(objeto,$index + 1)">
-				    <span>{{objeto.numeroPago}} - {{objeto.numeroPagos}} </span>
+				    <span style="font-size: smaller">{{objeto.numeroPago}} - {{objeto.numeroPagos}} </span>
 				  </td>
 				  <td class="text-center" style="font-size: smaller" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.descripcion}}</td>
 				  <td class="text-center" style="font-size: small" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.fechaLimite | date:'dd-MM-yyyy'}}</td>
