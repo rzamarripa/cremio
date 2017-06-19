@@ -87,6 +87,7 @@
 						<th class="text-center" width="10%">IVA</th>
 						<th class="text-center" width="10%">Seguro</th>
 						<th class="text-center" width="10%">Importe total</th>
+						<th class="text-center" width="10%">Saldo Liquidar</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -98,6 +99,7 @@
 						<td class="text-right">{{pago.interes | currency}}</td>
 						<td class="text-right">{{pago.iva | currency}}</td>
 						<td class="text-right">{{pago.seguro | currency}}</td>
+						<td class="text-right">{{pago.importeRegular | currency}}</td>
 						<td class="text-right">{{pago.importeRegular | currency}}</td>
 					</tr>
 					<tr><td colspan="8" class="text-right">Total: {{cal.total | currency}}</td></tr>
