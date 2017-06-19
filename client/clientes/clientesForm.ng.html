@@ -1,5 +1,4 @@
 <div class="row">
-	
 	<div class="col-sm-12">
 		<form name="form" class="form-horizontal" role="form" novalidate>		
 			<div ng-show="!cli.action">
@@ -8,26 +7,28 @@
 			<br><br>
 			<h4>Información del Cliente</h4>
 			<div class="well">	    
-			<div class="row">
-				<div class="col-sm-8"> 
-							<div ng-include=" 'client/clientes/_buscarPersonaCliente.html'"></div>
+				<div class="row">
+					<div class="col-sm-12"> 
+						<label>Buscar Prospecto con Nombre (s) *</label>
+						<div ng-include=" 'client/clientes/_buscarPersonaCliente.html'"></div>
 					</div>
-			</div>
-			<div class="row">	
-				<div class="col-sm-4" valida> 					    
-					<label>Nombre (s) *</label>
-					<input name="nombre" e type="text" class="form-control" placeholder="Nombre" ng-model="cli.objeto.profile.nombre" required  capitalize>
 				</div>
-				<div class="col-sm-4" valida>					    
-					<label>Apellido Paterno *</label>
-					<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cli.objeto.profile.apellidoPaterno" required capitalize>
+				<br>
+				<div class="row">	
+					<div class="col-sm-4" valida> 					    
+						<label>Nombre (s) *</label>
+						<input name="nombre" e type="text" class="form-control" placeholder="Nombre" ng-model="cli.objeto.profile.nombre" required  capitalize>
+					</div>
+					<div class="col-sm-4" valida>					    
+						<label>Apellido Paterno *</label>
+						<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cli.objeto.profile.apellidoPaterno" required capitalize>
+					</div>
+					<div class="col-sm-4">					    
+						<label>Apellido Materno</label>
+						<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cli.objeto.profile.apellidoMaterno" capitalize>
+					</div>	    				    	    
 				</div>
-				<div class="col-sm-4">					    
-					<label>Apellido Materno</label>
-					<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cli.objeto.profile.apellidoMaterno" capitalize>
-				</div>	    				    	    
-			</div>
-			<div class="row">
+				<div class="row">
 					<div class="col-sm-4" valida> 					    
 						<label>Usuario *</label>
 						<input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="cli.objeto.username" required="">
@@ -41,60 +42,61 @@
 						<input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="cli.objeto.confirmpassword" required="">
 					  </div>
 				  <div class="col-sm-1"><br/>
-							<label for="talla">Foto</label>
-							<button class="btn btn-primary" ng-model="cli.objeto.foto" ng-click="cli.tomarFoto()"><i class="fa fa-camera"></i></button>
-							
+						<label for="talla">Foto</label>
+						<button class="btn btn-primary" ng-model="cli.objeto.foto" ng-click="cli.tomarFoto()"><i class="fa fa-camera"></i></button>
 					</div>
-					<div class="col-sm-3" ><br/>
-					<img width="300px" ng-if="cli.pic == cli.fotillo"   ng-src="{{cli.pic}}" ng-class="{'img-thumbnail': !!cli.pic}" /></div>
-			</div>  
+					<div class="col-sm-3" >
+						<br/>
+						<img width="300px" ng-if="cli.pic == cli.fotillo"   ng-src="{{cli.pic}}" ng-class="{'img-thumbnail': !!cli.pic}" />
+					</div>
+				</div>  
 			</div>
-			
 			<h4>Documentos</h4>
 			<div class="well">	    
 				<div class="row">
-				<div class="col-sm-3" >
-					<label>Archivo (máximo 512Kb)</label>
-					<input name="archivo" type="file" id="fileInput1">
-			   </div>
-				 <div class="col-sm-3">
-					<label id="id_label_single" >Seleccionar Documento</label>
-					<select class="js-example-basic-single js-states form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.objeto.profile.documento_id"
-					 ng-change="cli.getClientes(cli.objeto.profile.documento_id)">
-						<option ng-repeat="documento in cli.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
-					</select>
+					<div class="col-sm-3" >
+						<label>Archivo (máximo 512Kb)</label>
+						<input name="archivo" type="file" id="fileInput1">
+				  </div>
+					<div class="col-sm-3">
+						<label id="id_label_single" >Seleccionar Documento</label>
+						<select class="js-example-basic-single js-states form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.objeto.profile.documento_id"
+						ng-change="cli.getClientes(cli.objeto.profile.documento_id)">
+							<option ng-repeat="documento in cli.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
+						</select>
 					</div>
 					<div class="col-sm-1"><br/>
 						<a href="" class="btn btn-primary" ng-click="cli.agregarDoc(cli.objeto.profile.foto,cli.objeto.profile.documento_id)">Agregar</a>
 					</div>
-					<br/>
-			<div class="row">
-				<div class="col-sm-5">
-					<table class="table table-bordered">
-						<thead>
-							<tr>
-								<th width="5%"><div class="text-center">No.</div></th>
-								<th>Documento</th>
-								<th>Archivos</th>
-								<th width="5%"><div class="text-center">Acciones</div></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="objeto in cli.documents">
-								<td>{{$index + 1}}</td>
-								<td>{{objeto.nombre}}</td>
-								<td class="text-center">
-									<a href="" ng-click="cli.mostrarModal(objeto.imagen)">Ver Archivo</a>
-								</td>
-								<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index)"><i class="fa fa-trash"></i></a></div></td>
-							</tr>
-						</tbody>
-					</table>
 				</div>
+				<br/>
+				<div class="row">
+					<div class="col-sm-5">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th width="5%"><div class="text-center">No.</div></th>
+									<th>Documento</th>
+									<th>Archivos</th>
+									<th width="5%"><div class="text-center">Acciones</div></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="objeto in cli.documents">
+									<td>{{$index + 1}}</td>
+									<td>{{objeto.nombre}}</td>
+									<td class="text-center">
+										<a href="" ng-click="cli.mostrarModal(objeto.imagen)">Ver Archivo</a>
+									</td>
+									<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index)"><i class="fa fa-trash"></i></a></div></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				   </div>
 			   </div>
-		   </div>
-			</div>
-
+				</div>
+	
 			<div id="myModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
 			  <div class="modal-dialog modal-lg" role="document">
 				<div id="imagenDiv" class="modal-content">
