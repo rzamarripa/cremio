@@ -46,7 +46,7 @@
 					<th><div class="text-center">Fecha</div></th>
 					<th><div class="text-center">Pagare</div></th>
 					<th><div class="text-center">Recibo</div></th>
-					<!-- <th><div class="text-center">Cliente</div></th> -->
+					<th><div class="text-center">Cliente</div></th>
 					<th><div class="text-center">Nombre</div></th>
 					<th><div class="text-center">Intereses</div></th>
 					<th><div class="text-center">Abono a capital</div></th>
@@ -65,6 +65,7 @@
 			    <td>{{objeto.fechaPago  | date:"dd-MM-yyyy"}}</td>
 			    <td>{{objeto.credito.folio}}</td>
 			    <td>{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</td>
+			    <td>{{objeto.cliente.profile.folio}}</td>
 			    <td>{{objeto.nombreCompleto}}</td>
 			    <td>{{objeto.interes}}</td>
 			    <td>{{objeto.pago}}</td>

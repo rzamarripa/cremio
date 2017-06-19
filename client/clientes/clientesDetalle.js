@@ -309,6 +309,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					credito.pagos = 0;
 
 					_.each(planPagos, function(pago){
+						pago.credito = Creditos.findOne(credito._id);
 						if(pago.descripcion=="Recibo"){
 							credito.pagos +=pago.pago;
 						}

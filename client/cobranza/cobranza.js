@@ -122,6 +122,9 @@ angular.module("creditoMio")
     planPagos : () => {
       var planes = PlanPagos.find({multada:1});
       var obj = planes.length
+      // _.each(planes,function(plan){
+      //   plan.fechaLimite = moment(plan.fechaLimite).format("DD-MM-YYYY")
+      // });
 
       return planes;
     },
@@ -271,7 +274,7 @@ angular.module("creditoMio")
           this.fechaFinal.setHours(23,59,59,999);
           FI = this.fechaInicial;
           FF = this.fechaFinal;
-           rc.verRecibos = false;
+           rc.verRecibos = true;
           
           //console.log("FI:", FI);
           //console.log("FF:", FF);
@@ -836,7 +839,8 @@ angular.module("creditoMio")
   this.imprimirRecibos= function(objeto) 
   {
     var toPrint = [];
-    _.each(objeto,function(item){
+   
+    _.each(objeto,function(item, key){
       if (item.imprimir) {
         item.cliente.profile.colonia = Colonias.findOne(item.cliente.profile.colonia_id)
         item.colonia = item.cliente.profile.colonia.nombre
@@ -846,6 +850,7 @@ angular.module("creditoMio")
         item.cliente.profile.municipio = Municipios.findOne(item.cliente.profile.municipio_id)
         item.municipio = item.cliente.profile.municipio.nombre
         item.nombreCompleto = item.cliente.profile.nombreCompleto
+        item.numeroCliente = item.cliente.profile.folio
         item.planPagoNumero = item.numeroPago
         item.no = item.cliente.profile.numero
         item.nombreCompleto = item.cliente.profile.nombreCompleto
@@ -858,6 +863,15 @@ angular.module("creditoMio")
         item.telefonoOficina = item.cliente.profile.telefonoOficina
         item.folioCredito = item.credito.folio
         item.saldo = item.credito.saldoActual
+
+          
+          if (objeto[key+1]  == undefined) {
+            item.proximoPago = "No hay proximo pago"
+          }else{
+          item.proximoPago = objeto[key+1].fechaLimite
+         }
+
+        
         var saldoActual = 0;
         if (saldoActual == 0) {
           saldoActual = item.saldo
@@ -872,7 +886,7 @@ angular.module("creditoMio")
      
        
   
-    //console.log("reciboooooo:",objeto);
+    console.log("reciboooooo:",objeto);
 
 
 
