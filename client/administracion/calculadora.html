@@ -16,22 +16,20 @@
 					<form name="formNuevoCredito" class="form-horizontal" role="form" novalidate>
 				  	<div class="well">
 					  	<div class="row">  
-					  		<div class="col-sm-4" valida>
+					  		<div class="col-sm-3" valida>
 						  		<label>Nombre del cliente</label>
 						  		<input name="nombreCliente" type="text" class="form-control" placeholder="Nombre completo" ng-model="cal.credito.nombre">
 					  		</div>
-					  		<div class="col-sm-4" valida>
+					  		<div class="col-sm-3" valida>
 						    	<label>Tipo de crédito *</label>
 						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="cal.credito.tipoCredito_id" required="">
 							    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in cal.tiposCredito">{{tipoCredito.nombre}}</option>
 						    	</select>
 					    	</div>
-					    	<div class="col-sm-4" valida>
+					    	<div class="col-sm-3" valida>
 							    <label>Tasa %*</label>
 						    	<input name="tasa" type="number" class="form-control" ng-model="cal.credito.tasa" required>
 						    </div>
-					  	</div>
-					    <div class="row">
 					    	<div class="col-sm-3" valida>
 						    	<label>Periodo de pago *</label>
 						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="cal.credito.periodoPago" required="">
@@ -39,7 +37,9 @@
 							    	<option value="Quincenal">Quincenal</option>
 							    	<option value="Mensual">Mensual</option>
 						    	</select>
-					    	</div>									    	
+					    	</div>
+					  	</div>
+					    <div class="row">
 					    	<div class="col-sm-3" valida>					    
 						    	<label>Duración (Meses) *</label>
 						    	<input name="duracionMesesCreditoNuevo" type="number" class="form-control" placeholder="Duración en Meses" ng-model="cal.credito.duracionMeses" required="">
@@ -52,12 +52,13 @@
 							    <label>Importe seguro semanal *</label>
 						    	<input name="seguro" type="number" class="form-control" placeholder="Seguro" ng-model="cal.credito.seguro"  required>
 						    </div>    	
-					    </div>
-					    <div class="row">
-					    	<div class="col-sm-4" valida>
+					    	<div class="col-sm-3" valida>
 						    	<label>Capital Solicitado *</label>
 						    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="cal.credito.capitalSolicitado" required="">
 					    	</div>		
+					    </div>
+					    <div class="row">
+
 					    </div>
 						</div>
 						<div class="row">
@@ -71,43 +72,42 @@
 		</div>
 	</div>
 </div>
-<div class="row" >
-	<div class="col-sm-12" >
-	<div id="print" > 
-		<table class="table table-striped table-bordered table-condensed font-xs">
-			<caption>
-				<h4>Plan Nuevo</h4>
-			</caption>
-			<thead class="thead">
-				<tr>
-					<th class="text-center" width="5%">No.</th>
-					<th class="text-center" width="20%">Fecha de Pago</th>
-					<th class="text-center" width="15%">Pago</th>
-					<th class="text-center" width="10%">Capital</th>
-					<th class="text-center" width="10%">Interes</th>
-					<th class="text-center" width="10%">IVA</th>
-					<th class="text-center" width="10%">Seguro</th>
-					<th class="text-center" width="10%">Importe total</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-class="( pago.estatus == 1 ) ? 'success' : ( pago.fecha < cal.fechaActual && pago.estatus == 0 ) ? 'warning' : ( pago.estatus == 2 ) ? 'danger' : 'info'" ng-repeat="pago in cal.planPagos">
-					<td class="text-center">{{$index + 1}}</td>	
-					<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-					<td class="text-center">{{pago.numeroPago}} - {{cal.planPagos.length}}</td>
-					<td class="text-right">{{pago.capital | currency}}</td>
-					<td class="text-right">{{pago.interes | currency}}</td>
-					<td class="text-right">{{pago.iva | currency}}</td>
-					<td class="text-right">{{pago.seguro | currency}}</td>
-					<td class="text-right">{{pago.importeRegular | currency}}</td>
-				</tr>
-				<tr><td colspan="8" class="text-right">Total: {{cal.total | currency}}</td></tr>
-			</tbody>
-		</table>
+<div class="row">
+	<div class="col-sm-12">
+		<div id="print"> 
+			<table class="table table-striped table-bordered table-condensed font-xs">
+				<caption>
+					<h4>Plan Nuevo</h4>
+				</caption>
+				<thead class="thead">
+					<tr>
+						<th class="text-center" width="5%">No.</th>
+						<th class="text-center" width="20%">Fecha de Pago</th>
+						<th class="text-center" width="15%">Pago</th>
+						<th class="text-center" width="10%">Capital</th>
+						<th class="text-center" width="10%">Interés</th>
+						<th class="text-center" width="10%">IVA</th>
+						<th class="text-center" width="10%">Seguro</th>
+						<th class="text-center" width="10%">Importe total</th>
+						<th class="text-center" width="10%">Saldo Liquidar</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-class="( pago.estatus == 1 ) ? 'success' : ( pago.fecha < cal.fechaActual && pago.estatus == 0 ) ? 'warning' : ( pago.estatus == 2 ) ? 'danger' : 'info'" ng-repeat="pago in cal.planPagos">
+						<td class="text-center">{{$index + 1}}</td>	
+						<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+						<td class="text-center">{{pago.numeroPago}} - {{cal.planPagos.length}}</td>
+						<td class="text-right">{{pago.capital | currency}}</td>
+						<td class="text-right">{{pago.interes | currency}}</td>
+						<td class="text-right">{{pago.iva | currency}}</td>
+						<td class="text-right">{{pago.seguro | currency}}</td>
+						<td class="text-right">{{pago.importeRegular | currency}}</td>
+						<td class="text-right">{{pago.importeRegular | currency}}</td>
+					</tr>
+					<tr><td colspan="8" class="text-right">Total: {{cal.total | currency}}</td></tr>
+				</tbody>
+			</table>
 		</div>
-
 		<a class="btn btn-success" ng-click="cal.imprimirCredito(cal.planPagos,cal.credito,cal.avales,cal.garantiasGeneral)">Imprimir Plan</a>
 	</div>
 </div>
-
-

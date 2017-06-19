@@ -6,8 +6,10 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 	let rc = $reactive(this).attach($scope);
 	rc.pago = {};
 	rc.caja = {};	
+	rc.cliente = {};
 	rc.sucursal = {};
 	rc.cajero = {};
+	window.rc = rc;
 	this.subscribe('pagos',()=>{
 		return [{
 			_id : $stateParams.pago_id
@@ -17,7 +19,11 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 		onReady: function () {
 			rc.pago = Pagos.findOne($stateParams.pago_id);
 			rc.pago = rc.pago? rc.pago:{};
-			console.log(rc.pago)
+
+			Meteor.call('datosCliente', rc.pago.usuario_id ,function(err, res){
+				rc.cliente = res;
+			});
+
 			rc.subscribe('cajas',()=>{
 				return[{
 					_id : rc.pago.caja_id? rc.pago.caja_id:""
@@ -27,7 +33,6 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 				onReady: function () {
 					rc.caja = Cajas.findOne(rc.pago.caja_id);
 					rc.caja = rc.caja? rc.caja:{};
-					console.log(rc.caja)
 				}
 			});
 			rc.subscribe('cajeroId',()=>{
@@ -39,7 +44,6 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 				onReady:()=>{
 					rc.cajero = Meteor.users.findOne(rc.pago.usuarioCobro_id);
 					rc.cajero = rc.cajero? rc.cajero:{};
-					console.log(rc.cajero);
 				}
 			});
 			rc.subscribe('sucursales',()=>{
@@ -51,26 +55,16 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 				onReady:()=>{
 					rc.sucursal = Sucursales.findOne(rc.pago.sucursalPago_id);
 					rc.sucursal = rc.sucursal? rc.sucursal:{};
-					console.log(rc.sucursal);
 				}
-
-
 			});
 		}
 	});
 
 	this.borrarBotonImprimir= function()
-				{
-					var printButton = document.getElementById("printpagebutton");
-					 printButton.style.visibility = 'hidden';
-					 window.print()
-					 printButton.style.visibility = 'visible';
-					
-				};
-
-	
-
-	
-
-
+	{
+		var printButton = document.getElementById("printpagebutton");
+	 	printButton.style.visibility = 'hidden';
+	 	window.print()
+	 	printButton.style.visibility = 'visible';
+	};
 };

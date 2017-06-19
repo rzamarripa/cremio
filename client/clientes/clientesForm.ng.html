@@ -28,28 +28,32 @@
 				</div>	    				    	    
 			</div>
 			<div class="row">
-					<div class="col-sm-4" valida> 					    
+					<div class="col-sm-3" valida> 					    
 						<label>Usuario *</label>
 						<input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="cli.objeto.username" required="">
 					</div>
-					<div class="col-sm-4" valida>					    
+					<div class="col-sm-3" ng-if="!cli.action" valida>					    
 						<label>Contraseña *</label>
-						<input name="contrasena" type="password" class="form-control" placeholder="Contraseña" ng-model="cli.objeto.password" required="">
+						<input name="contrasena" type="password" class="form-control" placeholder="Contraseña" ng-model="cli.objeto.password" ng-disabled="cli.cambiarContrasena" required="">
 					</div>		    				    	    
-					<div class="col-sm-4" valida>					    
+					<div class="col-sm-3" ng-if="!cli.action" valida>					    
 						<label>Confirmar Contraseña *</label>
-						<input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="cli.objeto.confirmpassword" required="">
-					  </div>
-				  <div class="col-sm-1"><br/>
+						<input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="cli.objeto.confirmpassword" ng-if="!cli.action" ng-disabled="cli.cambiarContrasena" required="">
+					</div>
+					<br />
+					<div class="col-sm-3">
+				  	<input ng-click="cli.cambiarPassword()" value="Cambiar" class="btn btn-primary" ng-show="!cli.action"  >
+					</div>
+			</div>
+			<div class="row">
+					<div class="col-sm-1"><br/>
 							<label for="talla">Foto</label>
 							<button class="btn btn-primary" ng-model="cli.objeto.foto" ng-click="cli.tomarFoto()"><i class="fa fa-camera"></i></button>
-							
 					</div>
 					<div class="col-sm-3" ><br/>
-					<img width="300px" ng-if="cli.pic == cli.fotillo"   ng-src="{{cli.pic}}" ng-class="{'img-thumbnail': !!cli.pic}" /></div>
-			</div>  
+							<img width="300px" ng-if="cli.pic == cli.fotillo"   ng-src="{{cli.pic}}" ng-class="{'img-thumbnail': !!cli.pic}" /></div>
+					</div>
 			</div>
-			
 			<h4>Documentos</h4>
 			<div class="well">	    
 				<div class="row">
@@ -459,25 +463,25 @@
 			<div class="row">
 				<div class="col-sm-3" valida>					    
 					<label>Teléfono *</label>
-					<input name="telefonoEmpresa" type="text" class="form-control" placeholder="Teléfono Empresa" ng-model="cli.objeto.profile.telefonoEmpresa" required="">
+					<input name="telefonoEmpresa" type="text" class="form-control" placeholder="Teléfono Empresa" ng-model="cli.objeto.profile.telefonoEmpresa" required="" capitalize>
 				</div>
 				<div class="col-sm-3" valida>					    
 					<label>Tiempo Laborando *</label>
-					<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="cli.objeto.profile.tiempoLaborando" required="">
+					<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="cli.objeto.profile.tiempoLaborando" required="" capitalize>
 				</div>
 				<div class="col-sm-3" valida>					    
 					<label>Puesto *</label>
-					<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cli.objeto.profile.puesto" required="">
+					<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cli.objeto.profile.puesto" required="" capitalize>
 				</div>
 			</div>  
 			<div class="row">
 				<div class="col-sm-3" valida>					    
 					<label>Departamento *</label>
-					<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="cli.objeto.profile.departamento" required="">
+					<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="cli.objeto.profile.departamento" required="" capitalize>
 				</div>
 				<div class="col-sm-3">					    
 					<label>Jefe Inmediato</label>
-					<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cli.objeto.profile.jefeInmediato">
+					<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cli.objeto.profile.jefeInmediato" capitalize>
 				</div>
 				</div>
 			</div>  

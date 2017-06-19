@@ -16,8 +16,7 @@
 					    </div>
 					  </div>
 					</div>
-				</div>
-		  	<div class="well">	    
+					<br>
 			    <div class="row">
 						<div class="col-sm-12">
 							<input type="submit" ng-click="tictrl.guardar(tictrl.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="tictrl.action" valida-form formulario="form">
@@ -36,13 +35,14 @@
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th width="30%"><div class="text-center">Nombre</div></th>
-					<th width="30%">
+					<th width="5%"><div class="text-center">No.</div></th>
+					<th width="40%"><div class="text-center">Nombre</div></th>
+					<th width="25%">
 						<div class="text-center">
 							Estatus
 						</div>
 					</th>
-					<th width="30%">
+					<th width="25%">
 						<div class="text-center">
 							Acciones
 						</div>
@@ -51,6 +51,7 @@
 			</thead>
 			<tbody>
 		    <tr ng-repeat="objeto in tictrl.tiposIngreso">
+			    <td class="text-center">{{$index + 1}}</td>
 			    <td>{{objeto.nombre}}</td>
 			    <td>
 				    <div class="text-center">

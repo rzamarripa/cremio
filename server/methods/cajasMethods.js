@@ -406,20 +406,47 @@ Meteor.methods({
 
 		return res
 	},
-	getResumen : (caja_id, fechaInicio)=>{
+	datosCliente : (usuario_id)=>{
+		var cliente = Meteor.users.findOne(usuario_id);
+		cliente.profile.pais = Paises.findOne(cliente.profile.pais_id);
+		cliente.profile.estado = Estados.findOne(cliente.profile.estado_id);
+		cliente.profile.municipio = Municipios.findOne(cliente.profile.municipio_id);
+		cliente.profile.ciudad = Ciudades.findOne(cliente.profile.ciudad_id)
+		cliente.profile.colonia = Colonias.findOne(cliente.profile.colonia);
+		return cliente
+	},
+	getResumen : (caja_id, fechaInicio, fechaFin)=>{
 		fechaInicio = new Date(fechaInicio);
-		console.log(fechaInicio);
+		var filtroFechas = { $gte: fechaInicio };
 		var agrupados = {};
-		var pagos = Pagos.find({caja_id:caja_id, estatus: {$ne: 0}, fechaPago: { $gte: fechaInicio} }).fetch();
+		if(fechaFin){
+			filtroFechas.$lte = fechaFin
+		}
+		var pagos = Pagos.find({caja_id:caja_id, estatus: {$ne: 0}, fechaPago: filtroFechas }).fetch();
 		_.each(pagos, function(pago){
-			console.log(pago);
 			pago.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id);
 			if(agrupados[pago.tipoIngreso.nombre] == undefined){
 				agrupados[pago.tipoIngreso.nombre] = 0;
 			}
 			agrupados[pago.tipoIngreso.nombre] += pago.totalPago;
 		});
+		var	caja = Cajas.findOne(caja_id);
+		var entregados = {};
+		var movimientos = MovimientosCajas.find({monto : {$ne : 0}, origen:'Entrega de Credito', createdAt: filtroFechas}).fetch();
+		entregados.cantidad = 0;
+		entregados.total = 0;
+		entregados.agrupados = {};
 
-		return agrupados;
+		_.each(movimientos, function(mov){
+			entregados.total += (mov.monto*-1);
+			entregados.cantidad++;
+			mov.tipoIngreso = TiposIngreso.findOne(mov.cuenta_id);
+			if(entregados.agrupados[mov.tipoIngreso.nombre] == undefined){
+				entregados.agrupados[mov.tipoIngreso.nombre] = 0
+			};
+			entregados.agrupados[mov.tipoIngreso.nombre] += (mov.monto*-1);
+		});
+		caja.cajero = Meteor.users.findOne(caja.usuario_id);
+		return {resumen: agrupados, caja: caja, entregados: entregados, caja:caja};
 	}
 });

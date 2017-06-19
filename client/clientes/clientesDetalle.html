@@ -491,20 +491,20 @@
 												<tr>
 													<th width="5%">Número</th>
 													<th width="20%">Nombre</th>
-													<th width="5%">Parentezco</th>
+													<th width="5%">Parentesco</th>
 													<th width="30%">Dirección</th>
 													<th width="10%">Telefono</th>
 													<th width="10%">Tiempo</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="p in cd.referencias">
-													<td ng-repeat-start="r in p.relaciones">{{r.num}}</td>
-													<td>{{p.nombreCompleto}} </td>
-													<td>{{r.parentezco}}</td>
-													<td>{{r.direccion}}</td>
-													<td>{{r.telefono}}</td>
-													<td ng-repeat-end>{{r.tiempo}}</td>
+												<tr ng-repeat="p in cd.referenciasPersonales">
+													<td>{{p.num}}</td>
+													<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}} </td>
+													<td>{{p.parentezco}}</td>
+													<td>{{p.direccion}}</td>
+													<td>{{p.telefono}}</td>
+													<td>{{p.tiempo}}</td>
 												</tr>
 											</tbody>
 										</table>
@@ -541,27 +541,55 @@
 								    	</div>  				    	    
 								    	<div class="col-sm-6" >					    
 									    	<label>Colonia </label>
-									    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" disabled="">
+									    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cd.objeto.profile.empresa.colonia" disabled="">
 								    	</div>
 								    </div>
+								    <div class="row">
+									    <div class="col-sm-3" >					    
+									    	<label>Teléfono </label>
+									    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoEmpresa" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Código Postal </label>
+									    	<input name="codigopostal" type="text" class="form-control" placeholder="Código Postal" ng-model="cd.objeto.profile.empresa.codigoPostal" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Tiempo Laborando </label>
+									    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="cd.objeto.profile.tiempoLaborando" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Puesto </label>
+									    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cd.objeto.profile.puesto" disabled="">
+								    	</div>
+								    </div>  
+								    <div class="row">
+								    	<div class="col-sm-3" >					    
+									    	<label>Departamento </label>
+									    	<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="cd.objeto.profile.departamento" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Jefe Inmediato </label>
+									    	<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cd.objeto.profile.jefeInmediato" disabled="">
+								    	</div>
+										</div>
 										<div class="row">
 											<div class="col-sm-3" >
 													<label >Pais </label>
-													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cd.empresas.pais.nombre" disabled="">
+													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cd.objeto.profile.empresa.pais" disabled="">
 											</div>
 										  <div class="col-sm-3" >
 													<label for="seccion_id">Estado </label>
-													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cd.empresas.estado.nombre"disabled="">
+													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cd.objeto.profile.empresa.estado" disabled="">
 											</div>	
 											<div class="col-sm-3" >
 													<label >Municipio </label>
-													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cd.empresas.muncipio.nombre" disabled="">
+													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cd.objeto.profile.empresa.municipio" disabled="">
 											</div>
 											<div class="col-sm-3" >
 													<label for="seccion_id">Ciudad </label>
-													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="cd.empresas.ciudad.nombre" disabled="">
-											</div>	
-							    </div>
+													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="cd.objeto.profile.empresa.ciudad" disabled="">
+											</div>
+										</div>	
 				    </div>
 				</div>
 			</div>
@@ -837,7 +865,7 @@
 												</div>
 											</div>
 											<div class="panel-footer no-padding">						
-<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
+<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
 												<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Petición" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="cd.cancelarSeleccion(aprobado)" />
 												<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
 											</div>

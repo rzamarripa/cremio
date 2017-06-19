@@ -61,14 +61,7 @@
 						<span class="menu-item-child">Ocupaciones</span>
 					</a>
 				</li>
-<!--
-				<li data-ui-sref-active="active">
-					<a ui-sref="root.parentesco" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-shield"></i>
-						<span class="menu-item-child">Parentesco</span>
-					</a>
-				</li>
--->
+
 				<li data-ui-sref-active="active">
 					<a ui-sref="root.divisas" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-money"></i>
@@ -119,7 +112,7 @@
 				<li ng-if="currentUser.roles[0] == 'Gerente'">
 					<a ui-sref="root.cajasActivas" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-file"></i>
-						<span class="menu-item-child">Ventanillas Activas</span>
+						<span class="menu-item-child">Supervisión de Ventanillas</span>
 					</a>
 				</li>
 				<li>
@@ -132,7 +125,7 @@
 		</li>		
 		
 		<li data-ui-sref-active="active">
-				<a ui-sref="root.calculadora" tilte="Credito Mio">
+				<a ui-sref="root.calculadora" tilte="Credito Mio" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador'">
 					<i class="fa fa-lg fa-fw fa-th"></i>
 					<span class="menu-item-parent">Calculadora</span>
 				</a>
@@ -168,6 +161,7 @@
 		
 		<li data-menu-collapse >
 			<a tilte="Credito Mio" ng-if="currentUser.roles[0] == 'Gerente'">
+
 		    	<i class="fa fa-lg fa-fw fa-group"></i>
 					<span class="menu-item-parent">Reportes</span>
 			</a>
@@ -193,7 +187,7 @@
 			</ul>
 		</li>
 
-
+<!--
 		<li data-menu-collapse>
 			<a href="#" ng-show="currentUser.roles[0] == 'Gerente'">
 				<i class="fa fa-lg fa-fw fa-tags"></i>
@@ -220,6 +214,7 @@
 				</li>
 			</ul>
 		</li>
+-->
 
 
 

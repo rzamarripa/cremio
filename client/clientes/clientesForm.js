@@ -5,6 +5,7 @@ angular.module("creditoMio")
   let rc = $reactive(this).attach($scope);
   window.rc = rc;
   
+  this.cambiarContrasena = true;
   this.action = true;
   this.actionReferencia = true;
   this.nuevo = true;   
@@ -288,11 +289,19 @@ this.tomarFoto = function(objeto){
 
   this.guardar = function(objeto,form)
   {
-      console.log(objeto);
+      
       if(form.$invalid){
             toastr.error('Error al guardar los datos.');
             return;
       }
+      
+      if (this.action)
+      {
+	      	objeto.password = Math.random().toString(36).substring(2,7);		
+	      	console.log(objeto.password);			
+      }	
+			console.log(objeto);
+      
       
       objeto.profile.estatus = true;
       //rc.documentos
@@ -313,17 +322,17 @@ this.tomarFoto = function(objeto){
           rc.folio = folio
         });
      
-        console.log("el folio",rc.folio)
-
-      console.log("folio del hlper",rc.ultimoCliente)
-      if(rc.folio > 0){
-        console.log("entro")
+      //console.log("el folio",rc.folio);
+      //console.log("folio del hlper",rc.ultimoCliente);
       
+      if(rc.folio > 0){
+        	console.log("entro");
           objeto.profile.folio = rc.folio + 1
           
-        }else{
-            console.log("else")
-          objeto.profile.folio = 1
+        }
+        else{
+          console.log("else")
+					objeto.profile.folio = 1
         }
         //////////////////////////////////////////////////////////////////////////////////////
       
@@ -655,4 +664,10 @@ this.tomarFoto = function(objeto){
   {
       this.estadoCivilSeleccionado = EstadoCivil.findOne(estadoCivil_id); 
   }
+  
+  this.cambiarPassword = function()
+  {
+      this.cambiarContrasena = !this.cambiarContrasena; 
+  }
+  
 };

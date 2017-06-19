@@ -9,37 +9,35 @@
 			<form name="form" class="form-horizontal" role="form">
 		  	<div class="well">	    
 			    <div class="row">
+				    <div class="col-sm-12">					    
 				    	<div class="col-sm-4" valida>
 						    <label>Nombre *</label>
 					    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="caj.objeto.nombre" required>
-					   </div>
-					   <div class="col-sm-4" valida>
-						    <label>Cajero *</label>
-					    
+					   	</div>
+						 	<div class="col-sm-4" valida>
+						  	<label>Cajero *</label>
 					    	<select name="cajero" class="form-control select2" placeholder="Seleccione" ng-model="caj.objeto.usuario_id" required>
 									<option ng-repeat="cajero in caj.cajeros" value="{{cajero._id}}">{{cajero.profile.nombreCompleto}}</option>
 								</select>
-					   </div>
-					 
-				</div>
-				<div class="row" ng-repeat="(index, tipo) in caj.tiposIngreso">
-					   <div class="col-sm-4" valida>
-						    <label>Cuenta {{tipo.nombre}} *</label>
-					    	
-
-					    	<select name="cuenta{{$index}}" class="form-control select2" placeholder="Seleccione" ng-model="caj.objeto.cuenta[tipo._id].cuenta_id" required>
-								<option ng-repeat="cuenta in caj.cuentas[tipo._id]" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
-							</select>
-
-					   </div>
-					   <div class="col-sm-4" valida>
-						    <label>Saldo Máximo *</label>
-					    	<input name="maximoEfectivo{{$index}}" type="number" class="form-control" placeholder="Saldo Máximo" ng-model="caj.objeto.cuenta[tipo._id].maximo" required>
-					   </div>
-				</div>
-			</div>
-		  	<div class="well">	    
-			   		<div class="row">
+					   	</div>
+						</div>
+			    </div>
+					<div class="row" ng-repeat="(index, tipo) in caj.tiposIngreso">
+						<div class="col-sm-12">
+							<div class="col-sm-4" valida>
+								<label>Cuenta {{tipo.nombre}} *</label>
+								<select name="cuenta{{$index}}" class="form-control select2" placeholder="Seleccione" ng-model="caj.objeto.cuenta[tipo._id].cuenta_id" required>
+									<option ng-repeat="cuenta in caj.cuentas[tipo._id]" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
+								</select>
+						  </div>
+						  <div class="col-sm-4" valida>
+								<label>Saldo Máximo *</label>
+								<input name="maximoEfectivo{{$index}}" type="number" class="form-control" placeholder="Saldo Máximo" ng-model="caj.objeto.cuenta[tipo._id].maximo" required>
+						  </div>
+						</div>
+					</div>
+					<br>
+			   	<div class="row">
 						<div class="col-sm-12">
 							<input type="submit" ng-click="caj.guardar(caj.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="caj.action" valida-form formulario="form">
 							<input type="submit" ng-click="caj.actualizar(caj.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!caj.action" valida-form formulario="form">	
@@ -50,20 +48,21 @@
 		</div>
 	</div>
 </div>
+<br>
 <!-- List -->
 <div class="row">
 	<div class="col-sm-12">
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th width="30%"><div class="text-center">Nombre</div></th>
-					
+					<th width="5%"><div class="text-center">No.</div></th>
+					<th width="40%"><div class="text-center">Nombre</div></th>
 					<th width="10%">
 						<div class="text-center">
 							Estatus
 						</div>
 					</th>
-					<th width="10%">
+					<th width="20%">
 						<div class="text-center">
 							Abierta
 						</div>
@@ -77,6 +76,7 @@
 			</thead>
 			<tbody>
 		    <tr ng-repeat="objeto in caj.cajas">
+			    <td class="text-center">{{$index + 1}}</td>
 			    <td>{{objeto.nombre}}</td>
 			
 			    <td>
