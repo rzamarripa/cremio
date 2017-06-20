@@ -16,6 +16,8 @@
                         <label>Apellido Materno</label>
                         <input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ven.objeto.profile.apellidoMaterno" capitalize>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-4" valida>
                         <label>Usuario *</label>
                         <input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="ven.objeto.username" required="">
@@ -35,19 +37,21 @@
         <h4>Información de Contacto</h4>
         <div class="well">
             <div class="row">
-                <div class="col-sm-3" valida>
+                <div class="col-sm-4" valida>
                     <label>Teléfono *</label>
                     <input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="ven.objeto.profile.telefono" required>
                 </div>
-                <div class="col-sm-3" valida>
+                <div class="col-sm-4" valida>
                     <label>Celular *</label>
                     <input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="ven.objeto.profile.celular" required>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                     <label>Otro Teléfono</label>
                     <input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="ven.objeto.profile.otroTelefono">
                 </div>
-                <div class="col-sm-3">
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
                     <label>Correo</label>
                     <input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="ven.objeto.profile.correo" capitalize>
                 </div>
@@ -78,6 +82,8 @@
                     <label>Fecha Nacimiento *</label>
                     <input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="ven.objeto.profile.fechaNacimiento" required="">
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-4">
                     <label for="nacionalidad">Nacionalidad</label>
                     <select name="nacionalidad" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.nacionalidad_id" required>
@@ -98,6 +104,8 @@
                     <label>CURP</label>
                     <input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="ven.objeto.profile.curp" capitalize>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-4">
                     <label>Lugar de Nacimiento</label>
                     <input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="ven.objeto.profile.lugarNacimiento">
@@ -141,6 +149,8 @@
                         <option value="{{municipio._id}}" ng-repeat="municipio in ven.municipios">{{municipio.nombre}}</option>
                     </select>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-4" valida>
                     <label for="seccion_id">Ciudad *</label>
                     <select name="dirCiudad" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.ciudad_id" required ng-change="ven.cambiarCiudadObjeto()">
