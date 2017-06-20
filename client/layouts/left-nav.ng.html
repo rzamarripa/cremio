@@ -1,4 +1,5 @@
 <nav>
+
 	<ul data-smart-menu ng-if = "ro.verMenu()">
 		<!--Gerente-->
 		<li data-menu-collapse>
@@ -193,7 +194,8 @@
 			</ul>
 		</li>
 
-<!--
+        <!--
+>>>>>>> 935ce3be25a5299b2f9cf5834f2a1f9136110de8
 		<li data-menu-collapse>
 			<a href="#" ng-show="currentUser.roles[0] == 'Gerente'">
 				<i class="fa fa-lg fa-fw fa-tags"></i>
@@ -221,80 +223,75 @@
 			</ul>
 		</li>
 -->
-
-
-
-		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Verificador'">
-			<a ui-sref="root.panelVerificador" tilte="Credito Mio">
-				<i class="fa fa-lg fa-fw fa-group"></i>
-				<span class="menu-item-parent">Panel Verificadores</span>
-			</a>
-		</li>
-
-		<li data-menu-collapse>
-			<a  ng-show="currentUser.roles[0] == 'Gerente'" >
-					<i class="fa fa-lg fa-fw fa-user"></i>
-					<span class="menu-item-parent">Usuarios</span>
-			</a>
-			<ul>
-				<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
-					<a ui-sref="root.verificadoresLista" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-group"></i>
-						<span class="menu-item-child">Verificadores</span>
-					</a>
-				</li>
-				<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
-					<a ui-sref="root.cajerosLista" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-group"></i>
-						<span class="menu-item-child">Cajeros</span>
-					</a>
-				</li>
-				<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
-					<a ui-sref="root.supervisoresLista" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-group"></i>
-						<span class="menu-item-child">Supervisores</span>
-					</a>
-				</li>
-			</ul>
-		</li>
-		<li data-menu-collapse>
-			<a ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"> 
-					<i class="fa fa-lg fa-fw fa-inbox"></i>
-					<span class="menu-item-parent">Cajas</span>
-			</a>
-			<ul>				
-				<li ng-if="currentUser.roles[0] == 'Cajero'">
-					<a ui-sref="root.corteCaja" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-scissors"></i>
-						<span class="menu-item-child">Corte de Caja</span>
-					</a>
-				</li>
-				<li ng-if="currentUser.roles[0] == 'Cajero'">
-					<a ui-sref="root.cajas" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-chain-broken"></i>
-						<span class="menu-item-child">Corte Parcial</span>
-					</a>
-				</li>
-				<li ng-if="currentUser.roles[0] == 'Gerente'">
-					<a ui-sref="root.intraCajas" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-dollar"></i>
-						<span class="menu-item-child">Traspasos Entre Cajas</span>
-					</a>
-				</li>
-				<li ng-if="currentUser.roles[0] == 'Gerente'">
-					<a ui-sref="root.traspasoCajaCuenta" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-dollar"></i>
-						<span class="menu-item-child">Traspasos de Caja a Cuenta</span>
-					</a>
-				</li>
-				<li ng-if="currentUser.roles[0] == 'Gerente'">
-					<a ui-sref="root.traspasoCuentaCaja" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-dollar"></i>
-						<span class="menu-item-child">Traspasos de Cuenta a Caja</span>
-					</a>
-				</li>
-				
-			</ul>
-		</li>
-	</ul>
+        <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Verificador'">
+            <a ui-sref="root.panelVerificador" tilte="Credito Mio">
+                <i class="fa fa-lg fa-fw fa-group"></i>
+                <span class="menu-item-parent">Panel Verificadores</span>
+            </a>
+        </li>
+        <li data-menu-collapse>
+            <a ng-show="currentUser.roles[0] == 'Gerente'">
+                <i class="fa fa-lg fa-fw fa-user"></i>
+                <span class="menu-item-parent">Usuarios</span>
+            </a>
+            <ul>
+                <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
+                    <a ui-sref="root.verificadoresLista" tilte="Credito Mio">
+                        <i class="fa fa-lg fa-fw fa-group"></i>
+                        <span class="menu-item-child">Verificadores</span>
+                    </a>
+                </li>
+                <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
+                    <a ui-sref="root.cajerosLista" tilte="Credito Mio">
+                        <i class="fa fa-lg fa-fw fa-group"></i>
+                        <span class="menu-item-child">Cajeros</span>
+                    </a>
+                </li>
+                <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
+                    <a ui-sref="root.supervisoresLista" tilte="Credito Mio">
+                        <i class="fa fa-lg fa-fw fa-group"></i>
+                        <span class="menu-item-child">Supervisores</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li data-menu-collapse>
+            <a ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
+                <i class="fa fa-lg fa-fw fa-inbox"></i>
+                <span class="menu-item-parent">Cajas</span>
+            </a>
+            <ul>
+                <li ng-if="currentUser.roles[0] == 'Cajero'">
+                    <a ui-sref="root.corteCaja" tilte="Credito Mio">
+                        <i class="fa fa-lg fa-fw fa-scissors"></i>
+                        <span class="menu-item-child">Corte de Caja</span>
+                    </a>
+                </li>
+                <li ng-if="currentUser.roles[0] == 'Cajero'">
+                    <a ui-sref="root.cajas" tilte="Credito Mio">
+                        <i class="fa fa-lg fa-fw fa-chain-broken"></i>
+                        <span class="menu-item-child">Corte Parcial</span>
+                    </a>
+                </li>
+                <li ng-if="currentUser.roles[0] == 'Gerente'">
+                    <a ui-sref="root.intraCajas" tilte="Credito Mio">
+                        <i class="fa fa-lg fa-fw fa-dollar"></i>
+                        <span class="menu-item-child">Traspasos Entre Cajas</span>
+                    </a>
+                </li>
+                <li ng-if="currentUser.roles[0] == 'Gerente'">
+                    <a ui-sref="root.traspasoCajaCuenta" tilte="Credito Mio">
+                        <i class="fa fa-lg fa-fw fa-dollar"></i>
+                        <span class="menu-item-child">Traspasos de Caja a Cuenta</span>
+                    </a>
+                </li>
+                <li ng-if="currentUser.roles[0] == 'Gerente'">
+                    <a ui-sref="root.traspasoCuentaCaja" tilte="Credito Mio">
+                        <i class="fa fa-lg fa-fw fa-dollar"></i>
+                        <span class="menu-item-child">Traspasos de Cuenta a Caja</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
 </nav>
