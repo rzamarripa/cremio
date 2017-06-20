@@ -132,9 +132,6 @@ angular.module("creditoMio")
 					}else{
 						plan.garantias = "si"
 					}
-
-					
-
 				});
 			 });
 			}
@@ -177,7 +174,14 @@ angular.module("creditoMio")
 				});
 				return creditos
 		
-			}
+			},
+			// cartera : () => {
+			// 	var personas = Creditos.find({}).fetch();
+			// 	_.each(creditos,function(credito){
+			// 	});
+			// 	return creditos
+		
+			// } 
 		});
 
 	

@@ -201,7 +201,7 @@ angular.module("creditoMio")
       });
       
 
-      //console.log("el ARREGLO del helper historial",arreglo)
+      console.log("el ARREGLO del helper historial",arreglo)
       return arreglo;
     },
 
@@ -293,7 +293,7 @@ angular.module("creditoMio")
           FI.setHours(0,0,0,0);
           FF = new Date(FI.getTime() - (1 * 24 * 3600 * 1000));
           FF.setHours(23,59,59,999);
-          rc.verRecibos = true;
+          rc.verRecibos = false;
           //console.log("FI:",FI);
           //console.log("FF:",FF);
           
@@ -917,11 +917,8 @@ angular.module("creditoMio")
         toPrint.push(item);
       }
     });
-     
        
-  
     console.log("reciboooooo:",objeto);
-
 
 
     Meteor.call('getRecibos', toPrint, function(error, response) {     
@@ -998,6 +995,68 @@ angular.module("creditoMio")
 
   this.aparecerCheck = function() {
     rc.conRespuesta = !rc.conRespuesta;
+  };
+
+  this.imprimirListas= function(lista) 
+  {
+
+    var toPrint = [];
+    
+
+    _.each(lista,function(item){
+      if (item.imprimir) {
+      item.folioCredito = item.credito.folio
+      item.nombreCompleto = item.cliente.profile.nombreCompleto
+      toPrint.push(item);
+    }
+
+    });
+
+    console.log(lista,"lista")
+
+    Meteor.call('getListaCobranza', toPrint, function(error, response) {     
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+      function b64toBlob(b64Data, contentType, sliceSize) {
+          contentType = contentType || '';
+          sliceSize = sliceSize || 512;
+          var byteCharacters = atob(b64Data);
+          var byteArrays = [];
+          for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+        
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+            }
+        
+            var byteArray = new Uint8Array(byteNumbers);
+        
+            byteArrays.push(byteArray);
+          }
+            
+          var blob = new Blob(byteArrays, {type: contentType});
+          return blob;
+          }
+              
+          var blob = b64toBlob(response, "application/docx");
+          var url = window.URL.createObjectURL(blob);
+          var dlnk = document.getElementById('dwnldLnk');
+
+           dlnk.download = "LISTACOBRANZA.docx"; 
+          dlnk.href = url;
+          dlnk.click();       
+          window.URL.revokeObjectURL(url);
+   
+      }
+    
+    });
+
   };
   
   
