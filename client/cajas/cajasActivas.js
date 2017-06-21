@@ -14,6 +14,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
   this.cajasInactivas = [];
   this.fechaInicio = moment().subtract(1,'month').startOf('month').toDate();
   this.fechaFin = moment().subtract(1,'month').endOf('month').toDate();
+  this.totalResumen = 0;
   this.subscribe('cajas', () => {
     return [{ sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", estadoCaja: "Abierta" }]
   });
@@ -48,13 +49,21 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
       return Cajas.find();
     },
     pagos: () => {
+    	var agrupados = {};
+    	var total = 0;
       var pagos = Pagos.find({estatus: {$ne: 0}}).fetch();
       if (pagos.length) {
         _.each(pagos, function(pago) {
           pago.tipoIngreso = rc.tiposIngreso[pago.tipoIngreso_id].nombre;
-        });
+          if(agrupados[pago.tipoIngreso] == undefined){
+						agrupados[pago.tipoIngreso] = 0;
+					}
+					agrupados[pago.tipoIngreso] += pago.totalPago;
+					total += pago.totalPago;
+	      });
       }
-      return pagos;
+      rc.totalResumen = total;
+      return agrupados;
     },
     tiposIngreso: () => {
       var obj = {};
@@ -84,10 +93,26 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
 	        c = Cuentas.findOne(cj.cuenta[mov.cuenta_id].cuenta_id);
 	        d.cuenta = c.nombre;
 	        d.monto = mov.monto;
-	        //d.pago_id = mov.origen_id;
 	        d.pago = Pagos.findOne(mov.origen_id);
-	        ret.push(d)
-	      });
+	        //d.pago_id = mov.origen_id;
+	        if(d.pago){
+		        d.multas = 0;
+						d.capital = 0;
+						d.intereses = 0;
+						d.iva = 0;
+						d.seguro = 0;
+						_.each(d.pago.planPagos, function(plan){
+							if(plan.descripcion == "Multa"){
+								d.multas += plan.totalPago;
+							}
+							d.capital += plan.pagoCapital;
+							d.intereses += plan.pagoInteres;
+							d.iva += plan.pagoIva;
+							d.seguro += plan.pagoSeguro;
+						});
+					}
+		        ret.push(d)
+		      });
 	      rc.pagos_id = pagos_id;
     	}
       return ret
