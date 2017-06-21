@@ -29,6 +29,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.creActivos =false;
 	rc.creditoApro = false;
 	this.respuestaNotaCLiente = false;
+	rc.objeto = {};
+	rc.objeto.profile = {};
+	rc.objeto.profile.empresa = {};
 	
 	rc.creditoSeleccionado = {};
 	this.estadoCivilSeleccionado = "";
@@ -226,30 +229,80 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						console.log("modal abrir")
 						$("#notaPerfil").modal();
 					}
-
-					
-					
 				}
-
 			});
+
+
+			if (cli != undefined)
+			{
+					
+					var empresa = Empresas.findOne(cli.profile.empresa_id);
+					if (empresa != undefined)
+					{
+						var pais = Paises.findOne(empresa.pais_id);
+						
+			      if (pais != undefined) empresa.pais = pais.nombre;
+			      var edo = Estados.findOne(empresa.estado_id);
+			      if (edo != undefined) empresa.estado = edo.nombre;
+			      var mun = Municipios.findOne(empresa.municipio_id);
+			      if (mun != undefined) empresa.municipio = mun.nombre;
+			      var ciu = Ciudades.findOne(empresa.ciudad_id);
+			      if (ciu != undefined) empresa.ciudad = ciu.nombre;
+			      var col = Colonias.findOne(empresa.colonia_id);
+			      if (col != undefined) empresa.colonia = col.nombre;
+	
+						cli.profile.empresa = empresa;				
+					}	
+					
+					
+					rc.referenciasPersonales = [];
+      
+		      _.each(cli.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
+		            Meteor.call('getPersona', referenciaPersonal_id, cli._id, function(error, result){           
+		                  if (result)
+		                  {
+		                      //Recorrer las relaciones 
+		                      rc.referenciasPersonales.push({buscarPersona_id : referenciaPersonal_id,
+		                                                     nombre           : result.nombre,
+		                                                     apellidoPaterno  : result.apellidoPaterno,
+		                                                     apellidoMaterno  : result.apellidoMaterno,
+		                                                     parentezco       : result.parentezco,
+		                                                     direccion        : result.direccion,
+		                                                     telefono         : result.telefono,
+		                                                     tiempo           : result.tiempo,
+		                                                     num              : result.num,
+		                                                     cliente          : result.cliente,
+		                                                     cliente_id       : result.cliente_id,
+		                                                     tipoPersona      : result.tipoPersona,
+		                                                     estatus          : result.estatus
+		                      });
+		                      $scope.$apply();
+		                  }
+		            }); 
+		      });
+
+					
+					
+			}
+
 
 			
 			_.each(cli, function(objeto){
-				 //console.log(objeto,"objeto")
+
 				 rc.referencias = [];
 				 //rc.empresas = [];
 				
-				objeto.empresa = Empresas.findOne(objeto.empresa_id)
+				
 				// objeto.documento = Documentos.findOne(objeto.docuemnto_id)
-				objeto.documento = Documentos.findOne(objeto.documento_id)
-				objeto.pais = Paises.findOne(objeto.pais_id)
-				objeto.estado = Estados.findOne(objeto.estado_id)
-				objeto.municipio = Municipios.findOne(objeto.municipio_id)
-				objeto.ciudad = Ciudades.findOne(objeto.ciudad_id)
-				objeto.colonia = Colonias.findOne(objeto.colonia_id)
-				objeto.ocupacion = Ocupaciones.findOne(objeto.ocupacion_id)
-				objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id)
-				objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id)
+				objeto.documento = Documentos.findOne(objeto.documento_id);
+				objeto.pais = Paises.findOne(objeto.pais_id);
+				objeto.estado = Estados.findOne(objeto.estado_id);
+				objeto.municipio = Municipios.findOne(objeto.municipio_id);
+				objeto.ciudad = Ciudades.findOne(objeto.ciudad_id);
+				objeto.colonia = Colonias.findOne(objeto.colonia_id);
+				objeto.ocupacion = Ocupaciones.findOne(objeto.ocupacion_id);
+				objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id);
+				objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id);
 				
 				_.each(objeto.referenciasPersonales_ids, function(referencia){
 						Meteor.call('getReferencias', referencia, function(error, result){	
@@ -265,19 +318,21 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					});	
 				});
 
+/*
 				Meteor.call('getEmpresas', objeto.empresa_id, function(error, result){	
 					//console.log("entra aqui",referencia)					
 						if (result)
 							//console.log(result,"caraculo")
 						{
-							//console.log("entra aqui");
-							//console.log("result",result);
+							console.log("ir por la empresa");
+							console.log("result",result);
 							rc.empresa = result
 							$scope.$apply();			
 						}
-					});	
+					});
+*/	
 				
-			    });
+			});
 
 			if(cli){
 				this.ocupacion_id = cli.profile.ocupacion_id;
@@ -309,7 +364,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					credito.pagos = 0;
 
 					_.each(planPagos, function(pago){
-						
+
+						pago.credito = Creditos.findOne(credito._id);
+
 						if(pago.descripcion=="Recibo"){
 							credito.pagos +=pago.pago;
 						}
@@ -409,7 +466,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						rc.saldo-=pago.totalPago
 						arreglo.push({saldo:rc.saldo,
 							numeroPago : planPago.numeroPago,
-							//cantidad : credito.numeroPagos,
+							cantidad : credito.numeroPagos,
 							fechaSolicito : rc.credito.fechaSolicito,
 							fecha : pago.fechaPago,
 							pago : pago.totalPago, 
@@ -424,8 +481,17 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					})
 				//console.log(rc.saldo)
 			});
+			if(this.getReactively("credito_id")){
+				var filtrado = [];
+				_.each(arreglo, function(pago){
+					if(pago.credito_id == rc.credito_id){
+						filtrado.push(pago);
+					}
+				})
+				return filtrado;
+			}
 
-			console.log("el ARREGLO del helper historial",arreglo)
+			//console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
 		},
 
@@ -505,6 +571,22 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return foto;
 		}
 	}
+	
+	this.tieneFoto = function(foto, sexo){
+		
+	  if(foto === undefined){
+		  if(sexo === "Masculino")
+			  return "img/badmenprofile.png";
+			else if(sexo === "Femenino"){
+				return "img/badgirlprofile.png";
+			}else{
+				return "img/badprofile.png";
+			}
+	  }else{
+		  return foto;
+	  }
+  };
+
 	
 	this.masInformacion = function(){
 		this.masInfo = !this.masInfo;
@@ -718,27 +800,22 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		$('#imagenDiv').empty().append(imagen);
 		$("#modaldoc").modal('show');
 	};
+	
+/*
+	this.modalDoc= function(img)
+	{
+		var imagen = '<img class="img-responsive" src="'+img+'" style="margin:auto;">';
+		$('#imagenDiv').empty().append(imagen);
+		$("#modaldoc").modal('show');
+	};
+*/
 
 	this.cerrarModal= function() {
 		rc.openModal = false
 
 	};
 
-	this.tieneFoto = function(foto, sexo){
-		
-	  if(foto === undefined){
-		  if(sexo === "Masculino")
-			  return "img/badmenprofile.png";
-			else if(sexo === "Femenino"){
-				return "img/badgirlprofile.png";
-			}else{
-				return "img/badprofile.png";
-			}
-	  }else{
-		  return foto;
-	  }
-  };
-
+	
 
 
   this.generarFicha= function(objeto) 
@@ -933,12 +1010,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 	}
 
-	this.modalDoc= function(img)
-	{
-		var imagen = '<img class="img-responsive" src="'+img+'" style="margin:auto;">';
-		$('#imagenDiv').empty().append(imagen);
-		$("#modaldoc").modal('show');
-	};
+
 
 	function obtenerClaseEstatus(estatus){
 		console.log("hola", estatus);

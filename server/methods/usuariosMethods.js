@@ -8,6 +8,18 @@ Meteor.methods({
 		});
 		
 		Roles.addUsersToRoles(usuario_id, rol, grupo);
+		
+/*
+		if (rol == "Cliente")
+		{
+				Meteor.call('sendEmail',
+					usuario.profile.correo,
+					'sistema@corazonvioleta.mx',
+					'Bienvenido a Crédito Mio',
+					'Usuario: '+ usuario.username + ' contraseña: ' + usuario.password
+				);
+		}
+*/
 
 		//Insertar en personas el Cliente (Regresar el id)
 		var usuarioPersona = {};

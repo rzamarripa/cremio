@@ -1,174 +1,178 @@
 <div class="row">
-	<div class="col-sm-12">
-		<form name="form" class="form-horizontal" role="form" novalidate>		
-			<h4>Información del cajero</h4>
-			<div class="well">	    
-		    <div class="row">
-		    	<div class="col-sm-4" valida> 					    
-			    	<label>Nombre (s) *</label>
-			    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="ven.objeto.profile.nombre" required capitalize>
-		    	</div>
-		    	<div class="col-sm-4" valida>					    
-			    	<label>Apellido Paterno *</label>
-			    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ven.objeto.profile.apellidoPaterno" required capitalize>
-		    	</div>
-		    	<div class="col-sm-4">					    
-			    	<label>Apellido Materno</label>
-			    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ven.objeto.profile.apellidoMaterno" capitalize>
-		    	</div>	    				    	    
-		    </div>
-		 </div>   
-		 <div class="well">   
-		    <div class="row">
-			    <div class="col-sm-4" valida> 					    
-				    	<label>Usuario *</label>
-				    	<input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="ven.objeto.username" required="">
-			    	</div>
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Contraseña *</label>
-				    	<input name="contrasena" type="password" class="form-control" placeholder="Contraseña" ng-model="ven.objeto.password" required="">
-			    	</div>		    				    	    
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Confirmar Contraseña *</label>
-				    	<input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="ven.objeto.confirmpassword" required="">
-					  </div>
-		    </div>  
-			</div>
-			<h4>Información de Contacto</h4>
-			<div class="well">	    
-		    <div class="row">
-		    	<div class="col-sm-3" valida> 					    
-			    	<label>Teléfono *</label>
-			    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="ven.objeto.profile.telefono" required>
-		    	</div>
-		    	<div class="col-sm-3" valida>					    
-			    	<label>Celular *</label>
-			    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="ven.objeto.profile.celular" required>
-		    	</div>
-		    	<div class="col-sm-3">					    
-			    	<label>Otro Teléfono</label>
-			    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="ven.objeto.profile.otroTelefono" >
-		    	</div>	  
-		    	<div class="col-sm-3">					    
-			    	<label>Correo</label>
-			    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="ven.objeto.profile.correo" capitalize>
-		    	</div>  				    	    
-		    </div>
-			</div>
-			<h4>Particulares</h4>
-			<div class="well">
-		    <div class="row">
-					<div class="col-sm-3" valida>
-				    <label for="sexo">Sexo *</label>
-				    <select name="sexo" ng-model="ven.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" required>
-						    <option value=""></option>
-						    <option value="Masculino">Masculino</option>
-						    <option value="Femenino">Femenino</option>
-						</select>
-		    	</div>
-		    	<div class="col-sm-3">
-						<label for="estadocivil">Estado Civil *</label>
-						<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.estadoCivil_id" required>
-								<option  value="{{estadoCivil._id}}" ng-repeat="estadoCivil in ven.estadosCiviles">
-									{{estadoCivil.nombre}}
-								</option>
-							</select>
-					</div>
-						
-		    	<div class="col-sm-3">					    
-			    	<label>Fecha Nacimiento *</label>
-			    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="ven.objeto.profile.fechaNacimiento" required="">
-		    	</div>	
-					
-					<div class="col-sm-3">
-						<label for="nacionalidad">Nacionalidad</label>
-						<select name="nacionalidad" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.nacionalidad_id" required>
-								<option  value="{{nacionalidad._id}}" ng-repeat="nacionalidad in ven.nacionalidades">
-									{{nacionalidad.nombre}}
-								</option>
-							</select>
-					</div>			
-		    </div>
-		    <div class="row">
-			    <div class="col-sm-3">
-						<label for="ocupacion">Ocupación *</label>
-						<select name="ocupacion" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.ocupacion_id" required>
-								<option  value="{{ocupacion._id}}" ng-repeat="ocupacion in ven.ocupaciones">
-									{{ocupacion.nombre}}
-								</option>
-							</select>
-					</div>		
-		    	<div class="col-sm-3">					    
-			    	<label>CURP</label>
-			    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="ven.objeto.profile.curp" capitalize>
-		    	</div>
-		      <div class="col-sm-3">					    
-			    	<label>Lugar de Nacimiento</label>
-			    	<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="ven.objeto.profile.lugarNacimiento" >
-		    	</div>	
-		    </div>			 
-			</div>  
-			<h4>Dirección</h4>			
-			<div class="well">	    
-		    <div class="row">
-			    <div class="col-sm-6" valida>					    
-			    	<label>Calle *</label>
-			    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ven.objeto.profile.calle" required="" capitalize>
-		    	</div>
-		    	<div class="col-sm-3" valida>					    
-			    	<label>Numero *</label>
-			    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ven.objeto.profile.numero" required="" capitalize>
-		    	</div>
-		    	<div class="col-sm-3" valida>					    
-			    	<label>CP *</label>
-			    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="ven.objeto.profile.codigoPostal" required="">
-		    	</div>
-		    </div>
-		    <div class="row">
-			    <div class="col-sm-3" valida>
-							<label >Pais *</label>
-							<select name="dirPais" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.pais_id" required ng-change="ven.cambiarPaisObjeto()">
-									<option  value="{{pais._id}}" ng-repeat="pais in ven.paises">{{pais.nombre}}</option>
-							</select>
-					</div>
-				  <div class="col-sm-3" valida>
-							<label for="seccion_id">Estado *</label>
-							<select name="dirEstado" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.estado_id" required ng-change="ven.cambiarEstadoObjeto()">
-								<option ng-repeat="estado in ven.estados" value="{{estado._id}}">{{estado.nombre}}</option>
-							</select>
-					</div>	
-					<div class="col-sm-3" valida>
-							<label >Municipio *</label>
-							<select name="dirMunicipio" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.municipio_id" required ng-change="ven.cambiarMunicipioObjeto()">
-								<option  value="{{municipio._id}}" ng-repeat="municipio in ven.municipios">{{municipio.nombre}}</option>
-							</select>
-					</div>
-					<div class="col-sm-3" valida>
-							<label for="seccion_id">Ciudad *</label>
-							<select name="dirCiudad" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.ciudad_id" required ng-change="ven.cambiarCiudadObjeto()">
-								<option ng-repeat="ciudad in ven.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
-							</select>
-					</div>	
-		    </div>
-		    <div class="row">
-			    <div class="col-sm-3" valida>
-							<label for="seccion_id">Colonia *</label>
-							<select name="dirColonia" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.colonia_id" required>
-								<option ng-repeat="colonia in ven.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
-							</select>
-					</div>					
-		    </div>
-			</div>  	
-			<div class="well">	    
-			    <div class="row">
-						<div class="col-sm-12">
-							<input type="submit" ng-click="ven.guardar(ven.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="ven.action" valida-form formulario="form">
-							<input type="submit" ng-click="ven.actualizar(ven.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!ven.action" valida-form formulario="form">
-						</div>
-					</div>
-		  	</div> 
-		</form>
-	</div>
+    <div class="col-sm-12">
+        <form name="form" class="form-horizontal" role="form" novalidate>
+            <h4>Información del cajero</h4>
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-4" valida>
+                        <label>Nombre (s) *</label>
+                        <input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="ven.objeto.profile.nombre" required capitalize>
+                    </div>
+                    <div class="col-sm-4" valida>
+                        <label>Apellido Paterno *</label>
+                        <input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ven.objeto.profile.apellidoPaterno" required capitalize>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Apellido Materno</label>
+                        <input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ven.objeto.profile.apellidoMaterno" capitalize>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4" valida>
+                        <label>Usuario *</label>
+                        <input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="ven.objeto.username" required="">
+                    </div>
+                    <div class="col-sm-4" valida>
+                        <label>Contraseña *</label>
+                        <input name="contrasena" type="password" class="form-control" placeholder="Contraseña" ng-model="ven.objeto.password" required="">
+                    </div>
+                    <div class="col-sm-4" valida>
+                        <label>Confirmar Contraseña *</label>
+                        <input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="ven.objeto.confirmpassword" required="">
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="col-sm-12">
+        <h4>Información de Contacto</h4>
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-4" valida>
+                    <label>Teléfono *</label>
+                    <input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="ven.objeto.profile.telefono" required>
+                </div>
+                <div class="col-sm-4" valida>
+                    <label>Celular *</label>
+                    <input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="ven.objeto.profile.celular" required>
+                </div>
+                <div class="col-sm-4">
+                    <label>Otro Teléfono</label>
+                    <input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="ven.objeto.profile.otroTelefono">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <label>Correo</label>
+                    <input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="ven.objeto.profile.correo" capitalize>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <h4>Particulares</h4>
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-4" valida>
+                    <label for="sexo">Sexo *</label>
+                    <select name="sexo" ng-model="ven.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" required>
+                        <option value=""></option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label for="estadocivil">Estado Civil *</label>
+                    <select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.estadoCivil_id" required>
+                        <option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in ven.estadosCiviles">
+                            {{estadoCivil.nombre}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label>Fecha Nacimiento *</label>
+                    <input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="ven.objeto.profile.fechaNacimiento" required="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="nacionalidad">Nacionalidad</label>
+                    <select name="nacionalidad" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.nacionalidad_id" required>
+                        <option value="{{nacionalidad._id}}" ng-repeat="nacionalidad in ven.nacionalidades">
+                            {{nacionalidad.nombre}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label for="ocupacion">Ocupación *</label>
+                    <select name="ocupacion" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.ocupacion_id" required>
+                        <option value="{{ocupacion._id}}" ng-repeat="ocupacion in ven.ocupaciones">
+                            {{ocupacion.nombre}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label>CURP</label>
+                    <input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="ven.objeto.profile.curp" capitalize>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <label>Lugar de Nacimiento</label>
+                    <input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="ven.objeto.profile.lugarNacimiento">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <h4>Dirección</h4>
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-4" valida>
+                    <label>Calle *</label>
+                    <input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ven.objeto.profile.calle" required="" capitalize>
+                </div>
+                <div class="col-sm-4" valida>
+                    <label>Numero *</label>
+                    <input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ven.objeto.profile.numero" required="" capitalize>
+                </div>
+                <div class="col-sm-4" valida>
+                    <label>CP *</label>
+                    <input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="ven.objeto.profile.codigoPostal" required="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4" valida>
+                    <label>Pais *</label>
+                    <select name="dirPais" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.pais_id" required ng-change="ven.cambiarPaisObjeto()">
+                        <option value="{{pais._id}}" ng-repeat="pais in ven.paises">{{pais.nombre}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-4" valida>
+                    <label for="seccion_id">Estado *</label>
+                    <select name="dirEstado" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.estado_id" required ng-change="ven.cambiarEstadoObjeto()">
+                        <option ng-repeat="estado in ven.estados" value="{{estado._id}}">{{estado.nombre}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-4" valida>
+                    <label>Municipio *</label>
+                    <select name="dirMunicipio" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.municipio_id" required ng-change="ven.cambiarMunicipioObjeto()">
+                        <option value="{{municipio._id}}" ng-repeat="municipio in ven.municipios">{{municipio.nombre}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4" valida>
+                    <label for="seccion_id">Ciudad *</label>
+                    <select name="dirCiudad" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.ciudad_id" required ng-change="ven.cambiarCiudadObjeto()">
+                        <option ng-repeat="ciudad in ven.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-4" valida>
+                    <label for="seccion_id">Colonia *</label>
+                    <select name="dirColonia" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.colonia_id" required>
+                        <option ng-repeat="colonia in ven.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-12">
+                    <input type="submit" ng-click="ven.guardar(ven.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="ven.action" valida-form formulario="form">
+                    <input type="submit" ng-click="ven.actualizar(ven.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!ven.action" valida-form formulario="form">
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
 </div>
-
-

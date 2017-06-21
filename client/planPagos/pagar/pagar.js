@@ -10,6 +10,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 
   window.rc = rc;
   this.credito_id = "";
+  
 
 
   this.credito = {};
@@ -164,18 +165,21 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 
 			if(cli){
 				this.ocupacion_id = cli.profile.ocupacion_id;
-
-
 				return cli;
 			}		
 		},
 		historialCreditos : () => {
+			
 			var creditos = Creditos.find().fetch();
+			
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
+				//console.log(rc.creditos_id,"pollo")
 			}
 			
-			return creditos;
+			return creditos
+			
+			
 		},
 		planPagosHistorial  : () => {
 			
@@ -194,7 +198,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 			rc.saldo =0;	
 			var credito = rc.credito
 			rc.saldoMultas=0;
-			
+			//return PlanPagos.find({credito_id : this.getReactively("credito_id")}).fetch();
 
 			_.each(rc.getReactively("planPagos"), function(planPago){
 				
@@ -205,12 +209,13 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 			});
 			
 			_.each(rc.getReactively("planPagos"), function(planPago, index){
+			//	planPago.ciudad = PlanPagos.findOne(planPago.credito_id)
 				
 				//console.log("entro al segundo")
 				//console.log("credito",credito)
-
-				
-				if(planPago.descripcion=="Multa")
+			
+					
+				if(planPago.descripcion=="Multa" )
 					rc.saldo+=planPago.cargo
 				
 				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
@@ -224,17 +229,18 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 					cargo : planPago.cargo,
 					movimiento : planPago.movimiento,
 					planPago_id : planPago._id,
+					cantidad: rc.credito.numeroPagos,
 					credito_id : planPago.credito_id,
 					descripcion : planPago.descripcion,
 					importe : planPago.importeRegular,
 					pagos : planPago.pagos
 			  	});				
-				if(planPago.pagos.length>0)
+				if(planPago.pagos.length>0 )
 					_.each(planPago.pagos,function (pago) {
 						rc.saldo-=pago.totalPago
 						arreglo.push({saldo:rc.saldo,
 							numeroPago : planPago.numeroPago,
-							//cantidad : credito.numeroPagos,
+							cantidad : rc.credito.numeroPagos,
 							fechaSolicito : rc.credito.fechaSolicito,
 							fecha : pago.fechaPago,
 							pago : pago.totalPago, 
@@ -248,9 +254,22 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 					  	});
 					})
 				//console.log(rc.saldo)
+			
+			    
 			});
 
+
 			//console.log("el ARREGLO del helper historial",arreglo)
+			if(this.getReactively("credito_id")){
+				var filtrado = [];
+				_.each(arreglo, function(pago){
+					if(pago.credito_id == rc.credito_id){
+						filtrado.push(pago);
+					}
+				})
+				return filtrado;
+			}
+			
 			return arreglo;
 		},
     tiposIngreso: () => {
@@ -477,18 +496,17 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	}
 
 	this.verPagos= function(credito) {
-		//console.log(credito,"el ob ")
+		console.log(credito,"el ob ")
 		rc.credito = credito;
 		rc.credito_id = credito._id;
 		$("#modalpagos").modal();
 		credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
 		rc.pagos = credito.pagos
 		rc.openModal = true
+		
 		////console.log(rc.pagos,"pagos")
 		//console.log(rc.historial,"historial act")
-			_.each(rc.getReactively("historial"),function (pago) {
-
-			});
+			
 
 	};
 

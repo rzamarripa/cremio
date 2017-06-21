@@ -132,9 +132,6 @@ angular.module("creditoMio")
 					}else{
 						plan.garantias = "si"
 					}
-
-					
-
 				});
 			 });
 			}
@@ -177,7 +174,14 @@ angular.module("creditoMio")
 				});
 				return creditos
 		
-			}
+			},
+			// cartera : () => {
+			// 	var personas = Creditos.find({}).fetch();
+			// 	_.each(creditos,function(credito){
+			// 	});
+			// 	return creditos
+		
+			// } 
 		});
 
 	
@@ -517,18 +521,32 @@ angular.module("creditoMio")
 		this.diarioCreditos = true
 	}
 	this.imprimirReporteCobranza = function(objeto){
-
+		
+		var suma = 0
+		var sumaInter = 0
+		var sumaIva = 0
 		_.each(objeto,function(item){
+			
 			var fecha = ""
-	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
-	    	item.numerosPagos= item.credito.folio
 	    	
-
+	    	item.numerosPagos= item.credito.folio
+	    	item.numeroCliente = item.cliente.profile.folio
+	    	suma += item.pago
+	    	sumaInter += item.interes
+	    	sumaIva += item.iva 
+	    	});
+            
 	    	// item.credito = _.toArray({credito:item.credito});
 	    	
 	    	//moment(item.fechaPago).format("DD-MM-YYYY").toDate()
-	    });
-	    console.log("objeto",objeto)
+
+	    _.each(objeto,function(item){
+	     item.sumaCapital = suma 
+	     item.sumaInteres = sumaInter
+	     item.sumaIva = sumaIva  
+	 	});
+
+	    console.log("objetoooooooooooooooo",objeto)
 	    
 
 		   Meteor.call('ReporteCobranza', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
@@ -584,11 +602,21 @@ angular.module("creditoMio")
 	this.imprimirReporteCreditos = function(objeto){
 
 	    console.log("objeto",objeto)
+	     var suma = 0
+          var sumaSol = 0
 	    _.each(objeto,function(item){
 			var fecha = ""
-	    	item.fechaEntrega = moment(item.fechaEntrega).format("DD-MM-YYYY")
+	    	//item.fechaEntrega = moment(item.fechaEntrega).format("DD-MM-YYYY")
+	    	suma += item.capitalSolicitado
+	    	sumaSol += item.adeudoInicial
 	   
 	    });
+
+	     _.each(objeto,function(item){
+	     item.sumaCapital = suma 
+	     item.sumaAPagar = sumaSol
+	      
+	 	});
 	    
 		   Meteor.call('ReporteCreditos', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
 

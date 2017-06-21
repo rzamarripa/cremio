@@ -1,3 +1,4 @@
+
 <div class="row">
 	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 		<h1 class="alge-title txt-color-blueDark">
@@ -8,7 +9,6 @@
 
 </div>
 <br>
-
 
 <div class="well">
 	<div class="row">
@@ -31,52 +31,37 @@
 	</div>	
 	<br />
 </div>
-<div class="row">
 
-			
 
-	<div class="col-sm-12" >
-	<a href="" ng-click="re.imprimirReporteCobranza(re.planPagos)"  class="btn btn-primary pull-right">Imprimir</a>
-	<H5>Diario de cobranza</H5>
+<div class="col-sm-12" >
+	<H5>Cartera Vencida</H5>
+	<div>
+		<a href="" class="btn btn-primary pull-right" ng-click="re.imprimirReporteMovimiento(re.planPagos)" >Imprimir Tabla</a>
+		</div>
 		<table class="table table-bordered">
 			<thead>
 				<tr>
 				    <th width="5%"><div class="text-center">No.</div></th>
-					<!-- <th><div class="text-center">Operación</div></th> -->
-					<th><div class="text-center">Fecha</div></th>
 					<th><div class="text-center">Pagare</div></th>
+					<th><div class="text-center">Fecha</div></th>
 					<th><div class="text-center">Recibo</div></th>
-					<th><div class="text-center">Cliente</div></th>
 					<th><div class="text-center">Nombre</div></th>
-					<th><div class="text-center">Intereses</div></th>
-					<th><div class="text-center">Abono a capital</div></th>
-					<th><div class="text-center">Iva</div></th>
-					<th><div class="text-center">Seguro</div></th> 
-					<th><div class="text-center">Movimiento</div></th>
-					<th><div class="text-center">Importe</div></th>
-					<!-- <th><div class="text-center">Condonado</div></th> -->
+					<th><div class="text-center">Garantia</div></th>
+					<th><div class="text-center">Saldo Multas</div></th>
 				
 				</tr>
 			</thead>
 			<tbody>
 		    <tr ng-repeat="objeto in re.planPagos | filter:buscar">
 		    	<td>{{$index + 1}}</td>
-		    	
-			    <td>{{objeto.fechaPago  | date:"dd-MM-yyyy"}}</td>
-			    <td>{{objeto.credito.folio}}</td>
+		    	<td>{{objeto.folio}}</td>
+			    <td>{{objeto.ultimaModificacion  | date:"dd-MM-yyyy"}}</td>
 			    <td>{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</td>
-			    <td>{{objeto.cliente.profile.folio}}</td>
 			    <td>{{objeto.nombreCompleto}}</td>
-			    <td>{{objeto.interes}}</td>
-			    <td>{{objeto.pago}}</td>
-			    <td>{{objeto.iva}}</td>
-			    <td>{{objeto.seguro}}</td>
-			    <td>{{objeto.movimiento}}</td>
-			    <td>{{objeto.cargo}}</td> 
-			   
+			    <td>{{objeto.garantias}}</td>
+			    <td>{{objeto.credito.saldoMultas}}</td> 
 			
 		    </tr>
 			</tbody>
 		</table>
 	</div>
-</div>

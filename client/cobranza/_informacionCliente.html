@@ -11,15 +11,18 @@
 			    </div>
 			      <div class="panel-body">    
 						    <div class="row">
-						    	<div class="col-sm-4" > 					    
+						    <div class="col-sm-3">
+						    		<img style="max-width:200px;" src="{{cob.cliente.profile.foto}}" >
+						    	</div>
+						    	<div class="col-sm-3" > 					    
 							    	<label>Nombre (s)</label>
 							    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cob.cliente.profile.nombre" disabled="">
 						    	</div>
-						    	<div class="col-sm-4" >					    
+						    	<div class="col-sm-3" >					    
 							    	<label>Apellido Paterno</label>
 							    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cob.cliente.profile.apellidoPaterno" disabled="">
 						    	</div>
-						    	<div class="col-sm-4">					    
+						    	<div class="col-sm-3">					    
 							    	<label>Apellido Materno</label>
 							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cob.cliente.profile.apellidoMaterno" disabled="">
 						    	</div>	    				    	    
@@ -298,7 +301,7 @@
 												<tr>
 													<th width="5%">Número</th>
 													<th width="20%">Nombre</th>
-													<th width="5%">Parentezco</th>
+													<th width="5%">Parentesco</th>
 													<th width="30%">Dirección</th>
 													<th width="10%">Telefono</th>
 													<th width="10%">Tiempo</th>
@@ -327,7 +330,6 @@
 				        </a>
 				      </h4>
 				    </div>
-				   
 				      <div class="panel-body">
 				        	<div class="row">
 								    	<div class="col-sm-6" > 					    
@@ -354,7 +356,7 @@
 								    <div class="row">
 									    <div class="col-sm-3" >					    
 									    	<label>Teléfono </label>
-									    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cob.cliente.profile.empresa.telefono" disabled="">
+									    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cob.cliente.profile.telefonoEmpresa" disabled="">
 								    	</div>
 								    	<div class="col-sm-3" >					    
 									    	<label>Código Postal </label>
@@ -362,21 +364,21 @@
 								    	</div>
 								    	<div class="col-sm-3" >					    
 									    	<label>Tiempo Laborando </label>
-									    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="cob.cliente.profile.empresa.tiempoLaborando" disabled="">
+									    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="cob.cliente.profile.tiempoLaborando" disabled="">
 								    	</div>
 								    	<div class="col-sm-3" >					    
 									    	<label>Puesto </label>
-									    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cob.cliente.profile.empresa.puesto" disabled="">
+									    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cob.cliente.profile.puesto" disabled="">
 								    	</div>
 								    </div>  
 								    <div class="row">
 								    	<div class="col-sm-3" >					    
 									    	<label>Departamento </label>
-									    	<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="cob.cliente.profile.empresa.departamento" disabled="">
+									    	<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="cob.cliente.profile.departamento" disabled="">
 								    	</div>
 								    	<div class="col-sm-3" >					    
 									    	<label>Jefe Inmediato </label>
-									    	<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cob.cliente.profile.empresa.jefeInmediato" disabled="">
+									    	<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cob.cliente.profile.jefeInmediato" disabled="">
 								    	</div>
 										</div>
 										<div class="row">
