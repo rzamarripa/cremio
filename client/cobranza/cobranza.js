@@ -86,7 +86,7 @@ angular.module("creditoMio")
   });
 
    this.subscribe("planPagos", ()=>{
-    return [{ credito_id : this.getReactively("credito_id") }]
+    return [{credito_id : this.getReactively("credito_id") }]
   });
 
     this.subscribe('personas', () => {
@@ -122,6 +122,9 @@ angular.module("creditoMio")
     planPagos : () => {
       var planes = PlanPagos.find({multada:1});
       var obj = planes.length
+      // _.each(planes,function(plan){
+      //   plan.fechaLimite = moment(plan.fechaLimite).format("DD-MM-YYYY")
+      // });
 
       return planes;
     },
@@ -152,7 +155,7 @@ angular.module("creditoMio")
           rc.saldoMultas+=planPago.importeRegular;
       });
       
-      _.each(rc.getReactively("planPagosViejo"), function(planPago, index){
+      _.each(rc.getReactively("planPagosViejo"), function(planPago, index, key){
 
         
         if(planPago.descripcion=="Cargo Moratorio")
@@ -172,12 +175,15 @@ angular.module("creditoMio")
           credito_id : planPago.credito_id,
           descripcion : planPago.descripcion,
           importe : planPago.importeRegular,
-          pagos : planPago.pagos
+          pagos : planPago.pagos,
+          _id: planPago._id
+          // saldoActualizado : planPago.cargo - planPago[key+1].pago
           });
           
         
         if(planPago.pagos.length>0)
           _.each(planPago.pagos,function (pago) {
+            //console.log(pago,"pago")
             rc.saldo-=pago.totalPago
             arreglo.push({saldo:rc.saldo,
               numeroPago : planPago.numeroPago,
@@ -191,14 +197,52 @@ angular.module("creditoMio")
               credito_id : planPago.credito_id,
               descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
               importe : planPago.importeRegular,
-              pagos : planPago.pagos
+              pagos : planPago.pagos,
+             
+             // item.proximoPago = objeto[key+1].fechaLimite
               });
           })
         //console.log(rc.saldo)
       });
+
+      if(this.getReactively("credito_id")){
+        var filtrado = [];
+        var flags = {
+          abonoKey: undefined,
+          multaKey:undefined
+        };
+        _.each(arreglo, function(pago,key){
+          if(pago.descripcion == "Cargo Moratorio"){
+            flags.multaKey = key;
+          }
+          if(pago.descripcion == "Recibo"){
+            flags.abonoKey = key;
+          }
+          if(pago.descripcion == "Abono de Multa"){
+            console.log(flags);
+            console.log(arreglo[flags.multaKey].saldoActualizado);
+            if(arreglo[flags.multaKey].saldoActualizado){
+              arreglo[flags.multaKey].saldoActualizado -= pago.pago;
+            }else{
+              arreglo[flags.multaKey].saldoActualizado = arreglo[flags.multaKey].cargo - pago.pago;
+            }
+          }
+          if(pago.descripcion == "Abono"){
+            if(arreglo[flags.abonoKey].saldoActualizado){
+              arreglo[flags.abonoKey].saldoActualizado -= pago.pago;
+            }else{
+              arreglo[flags.abonoKey].saldoActualizado = arreglo[flags.abonoKey].cargo - pago.pago;
+            }
+          }
+          if(pago.credito_id == rc.credito_id){
+            filtrado.push(pago);
+          }
+        })
+        return filtrado;
+      }
       
 
-      //console.log("el ARREGLO del helper historial",arreglo)
+      console.log("el ARREGLO del helper historial",arreglo)
       return arreglo;
     },
 
@@ -290,7 +334,7 @@ angular.module("creditoMio")
           FI.setHours(0,0,0,0);
           FF = new Date(FI.getTime() - (1 * 24 * 3600 * 1000));
           FF.setHours(23,59,59,999);
-          rc.verRecibos = true;
+          rc.verRecibos = false;
           //console.log("FI:",FI);
           //console.log("FF:",FF);
           
@@ -302,7 +346,7 @@ angular.module("creditoMio")
           this.fechaFinal.setHours(23,59,59,999);
           FI = this.fechaInicial;
           FF = this.fechaFinal;
-           rc.verRecibos = false;
+           rc.verRecibos = true;
           
           //console.log("FI:", FI);
           //console.log("FF:", FF);
@@ -383,9 +427,7 @@ angular.module("creditoMio")
   
   this.selCredito=function(objeto, num)
   {
-    	//console.log(objeto,"objeto")
-
-        
+    	console.log(objeto,"objeto")
 
       rc.cliente_id = objeto.cliente._id
       //console.log(rc.cliente_id)
@@ -399,7 +441,6 @@ angular.module("creditoMio")
       //console.log("Objeto: ",objeto)
       rc.historial = objeto
 
-      
       //Información del Cliente
       rc.cliente = objeto.cliente;
       //console.log(rc.cliente);
@@ -870,7 +911,8 @@ angular.module("creditoMio")
   this.imprimirRecibos= function(objeto) 
   {
     var toPrint = [];
-    _.each(objeto,function(item){
+   
+    _.each(objeto,function(item, key){
       if (item.imprimir) {
         item.cliente.profile.colonia = Colonias.findOne(item.cliente.profile.colonia_id)
         item.colonia = item.cliente.profile.colonia.nombre
@@ -880,6 +922,7 @@ angular.module("creditoMio")
         item.cliente.profile.municipio = Municipios.findOne(item.cliente.profile.municipio_id)
         item.municipio = item.cliente.profile.municipio.nombre
         item.nombreCompleto = item.cliente.profile.nombreCompleto
+        item.numeroCliente = item.cliente.profile.folio
         item.planPagoNumero = item.numeroPago
         item.no = item.cliente.profile.numero
         item.nombreCompleto = item.cliente.profile.nombreCompleto
@@ -892,6 +935,15 @@ angular.module("creditoMio")
         item.telefonoOficina = item.cliente.profile.telefonoOficina
         item.folioCredito = item.credito.folio
         item.saldo = item.credito.saldoActual
+
+          
+          if (objeto[key+1]  == undefined) {
+            item.proximoPago = "No hay proximo pago"
+          }else{
+          
+         }
+
+        
         var saldoActual = 0;
         if (saldoActual == 0) {
           saldoActual = item.saldo
@@ -903,11 +955,8 @@ angular.module("creditoMio")
         toPrint.push(item);
       }
     });
-     
        
-  
-    //console.log("reciboooooo:",objeto);
-
+    console.log("reciboooooo:",objeto);
 
 
     Meteor.call('getRecibos', toPrint, function(error, response) {     
@@ -959,7 +1008,10 @@ angular.module("creditoMio")
 
 
   this.verPagos= function(credito) {
+
     //console.log(credito,"el ob ")
+    rc.credito = credito;
+    rc.credito_id = credito._id;
     $("#modalpagos").modal();
     credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
     rc.mostrarModal = true
@@ -984,6 +1036,68 @@ angular.module("creditoMio")
 
   this.aparecerCheck = function() {
     rc.conRespuesta = !rc.conRespuesta;
+  };
+
+  this.imprimirListas= function(lista) 
+  {
+
+    var toPrint = [];
+    
+
+    _.each(lista,function(item){
+      if (item.imprimir) {
+      item.folioCredito = item.credito.folio
+      item.nombreCompleto = item.cliente.profile.nombreCompleto
+      toPrint.push(item);
+    }
+
+    });
+
+    console.log(lista,"lista")
+
+    Meteor.call('getListaCobranza', toPrint, function(error, response) {     
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+      function b64toBlob(b64Data, contentType, sliceSize) {
+          contentType = contentType || '';
+          sliceSize = sliceSize || 512;
+          var byteCharacters = atob(b64Data);
+          var byteArrays = [];
+          for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+        
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+            }
+        
+            var byteArray = new Uint8Array(byteNumbers);
+        
+            byteArrays.push(byteArray);
+          }
+            
+          var blob = new Blob(byteArrays, {type: contentType});
+          return blob;
+          }
+              
+          var blob = b64toBlob(response, "application/docx");
+          var url = window.URL.createObjectURL(blob);
+          var dlnk = document.getElementById('dwnldLnk');
+
+           dlnk.download = "LISTACOBRANZA.docx"; 
+          dlnk.href = url;
+          dlnk.click();       
+          window.URL.revokeObjectURL(url);
+   
+      }
+    
+    });
+
   };
   
   

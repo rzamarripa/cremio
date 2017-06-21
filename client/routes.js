@@ -572,6 +572,22 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.carteraVencida', {
+			url: '/reportes/carteraVencida',
+			templateUrl: 'client/reportes/_carteraVencida.html',
+			controller: 'ReportesCtrl as re',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 
+					});
+				}]
+			}
+		})
 		.state('root.verificadoresLista', {
 			url: '/verificadores',
 			templateUrl: 'client/verificadores/verificadoresLista.ng.html',

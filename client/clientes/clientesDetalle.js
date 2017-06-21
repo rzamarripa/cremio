@@ -364,7 +364,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					credito.pagos = 0;
 
 					_.each(planPagos, function(pago){
-						
+
+						pago.credito = Creditos.findOne(credito._id);
+
 						if(pago.descripcion=="Recibo"){
 							credito.pagos +=pago.pago;
 						}
@@ -464,7 +466,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						rc.saldo-=pago.totalPago
 						arreglo.push({saldo:rc.saldo,
 							numeroPago : planPago.numeroPago,
-							//cantidad : credito.numeroPagos,
+							cantidad : credito.numeroPagos,
 							fechaSolicito : rc.credito.fechaSolicito,
 							fecha : pago.fechaPago,
 							pago : pago.totalPago, 
@@ -479,6 +481,15 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					})
 				//console.log(rc.saldo)
 			});
+			if(this.getReactively("credito_id")){
+				var filtrado = [];
+				_.each(arreglo, function(pago){
+					if(pago.credito_id == rc.credito_id){
+						filtrado.push(pago);
+					}
+				})
+				return filtrado;
+			}
 
 			//console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
