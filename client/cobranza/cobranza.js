@@ -286,6 +286,7 @@ angular.module("creditoMio")
 	                  else if (c.descripcion == "Cargo Moratorio")    
 	                     rc.totalMultas = rc.totalMultas + c.importeRegular;
 	              });
+                console.log(result,"resullltt")
 	              
 	              $scope.$apply();
 	          }
@@ -1090,6 +1091,61 @@ angular.module("creditoMio")
           var dlnk = document.getElementById('dwnldLnk');
 
            dlnk.download = "LISTACOBRANZA.docx"; 
+          dlnk.href = url;
+          dlnk.click();       
+          window.URL.revokeObjectURL(url);
+   
+      }
+    
+    });
+
+  };
+
+  this.imprimirHistorial= function(objeto) 
+  {
+
+    var toPrint = [];
+    
+
+
+
+    console.log(objeto,"objeto")
+
+    Meteor.call('getListaCobranza', objeto, function(error, response) {     
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+      function b64toBlob(b64Data, contentType, sliceSize) {
+          contentType = contentType || '';
+          sliceSize = sliceSize || 512;
+          var byteCharacters = atob(b64Data);
+          var byteArrays = [];
+          for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+        
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+            }
+        
+            var byteArray = new Uint8Array(byteNumbers);
+        
+            byteArrays.push(byteArray);
+          }
+            
+          var blob = new Blob(byteArrays, {type: contentType});
+          return blob;
+          }
+              
+          var blob = b64toBlob(response, "application/docx");
+          var url = window.URL.createObjectURL(blob);
+          var dlnk = document.getElementById('dwnldLnk');
+
+           dlnk.download = "HISTORIALCREDITICIO.docx"; 
           dlnk.href = url;
           dlnk.click();       
           window.URL.revokeObjectURL(url);
