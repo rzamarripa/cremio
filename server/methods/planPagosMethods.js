@@ -450,6 +450,7 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 			pagosId[p.id]=p.importe;
 		})
 		var pagos=PlanPagos.find({_id:{$in:idpagos}},{sort:{descripcion:1}}).fetch();
+		
 		var mfecha = moment(ahora);
 		_.each(pagos,function(p){
 			if(p.estatus!=1){
@@ -466,6 +467,7 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 						p.estatus=1;
 					else if(p.multada==1){
 						var multa = PlanPagos.findOne(p.multa_id);
+						//console.log(multa);
 						residuos.pagoInteres = p.interes-p.pagoInteres
 						residuos.pagoIva = p.pagoIva-p.pagoIva
 						multa.multa = 1;
@@ -586,7 +588,7 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus del credito
 		_.each(idCreditos,function(c){
 				var pp = PlanPagos.find({credito_id: c}).fetch();
-				console.log("pp:", pp);
+				//console.log("pp:", pp);
 				var ban = true;
 				_.each(pp,function(p){
 						if (p.importeRegular > 0)
