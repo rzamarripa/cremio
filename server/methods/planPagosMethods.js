@@ -192,8 +192,12 @@ Meteor.methods({
 					
 					importeParcial=Math.round(importeParcial * 100) / 100;
 					
+					//console.log(cliente);
 					//suma += importeParcial;
-					
+					if (cliente == undefined){
+					 cliente = {}; 
+					 cliente._id = "Prospecto";
+					}	 
 					
 					var pago = {
 						semana							: mfecha.isoWeek(),
