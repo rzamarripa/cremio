@@ -43,6 +43,10 @@
 					    	<label>Duración (Meses) *</label>
 					    	<input name="duracionMesesCreditoNuevo" type="number" class="form-control" placeholder="Duración en Meses" ng-model="cal.credito.duracionMeses" required="">
 				    	</div>				
+				    	<div class="col-sm-3" valida>
+					    	<label>Capital Solicitado *</label>
+					    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="cal.credito.capitalSolicitado" required="">
+				    	</div>
 				    	<div class="col-sm-3">					    
 					    	<label>Con Seguro</label>
 					    	<input name="conSeguro" type="checkbox" class="form-control" ng-model="cal.credito.conSeguro">
@@ -50,16 +54,12 @@
 				    	<div class="col-sm-3" ng-if="cal.credito.conSeguro" valida>
 						    <label>Importe seguro semanal *</label>
 					    	<input name="seguro" type="number" class="form-control" placeholder="Seguro" ng-model="cal.credito.seguro"  required>
-					    </div>    	
-				    	<div class="col-sm-3" valida>
-					    	<label>Capital Solicitado *</label>
-					    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="cal.credito.capitalSolicitado" required="">
-				    	</div>		
+					    </div>    					    			
 				    </div>
 				    <br>
 						<div class="row">
 							<div class="col-sm-12">
-								<div class="col-sm-offset-10 col-sm-4">
+								<div class="col-sm-4">
 									<button class="btn btn-info" ng-click="cal.generarPlanPagos(cal.credito, formNuevoCredito)" valida-form formulario="formNuevoCredito">Calcular Plan de Pagos</button>
 								</div>
 							</div>
