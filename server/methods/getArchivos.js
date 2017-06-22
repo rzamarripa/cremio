@@ -1,7 +1,7 @@
 Meteor.methods({
 		getcartaRecordatorio: function (objeto) {
 	console.log(objeto,"recordatori")
-   // var produccion = meteor_root+"/web.browser/app/plantillas/";
+   // var produccion = "/home/cremio/archivos/";
 
 		
 		
@@ -11,7 +11,7 @@ Meteor.methods({
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		////var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 		
 		
@@ -84,7 +84,7 @@ Meteor.methods({
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		////var produccion = "/home/cremio/archivos/";
-		//var produccion = "/home/cremio/archivos/";
+		var produccion = "/home/cremio/archivos/";
 				 
 		
 		
@@ -159,7 +159,7 @@ Meteor.methods({
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		////var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 		
 		
@@ -277,11 +277,8 @@ Meteor.methods({
 		////var produccion = "/home/cremio/archivos/";
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
-		////var produccion = "/home/cremio/archivos/";
-		//var produccion = "/home/cremio/archivos/";
-		
-		////var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+	
+		var produccion = "/home/cremio/archivos/";
 
 
 		var opts = {}
@@ -490,7 +487,7 @@ Meteor.methods({
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		////var produccion = "/home/cremio/archivos/";
 		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"RECIBOS.docx", "binary");
@@ -554,6 +551,7 @@ Meteor.methods({
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		////var produccion = "/home/cremio/archivos/";
 		//var produccion = "/home/cremio/archivos/";
+		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteCredito.docx", "binary");
@@ -616,7 +614,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"reporteDiarioCobranza.docx", "binary");
@@ -700,7 +698,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteDiarioCreditos.docx", "binary");
@@ -775,7 +773,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		////var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteMovimientoCuentas.docx", "binary");
@@ -839,7 +837,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				var content = fs
 					.readFileSync(produccion+"CONTRATOINTERES.docx", "binary");
 
@@ -888,7 +886,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				var content = fs
 					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO.docx", "binary");
     	   
@@ -933,7 +931,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
     	   
@@ -979,7 +977,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		////var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				var content = fs				
 					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.docx", "binary");
     	   
@@ -1022,7 +1020,7 @@ getListaCobranza: function (objeto) {
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		////var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"LISTACOBRANZA.docx", "binary");
@@ -1063,6 +1061,57 @@ getListaCobranza: function (objeto) {
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
 		
-  },  	
+  }, 
+
+  imprimirHistorial: function (objeto) {
+	
+		console.log(objeto,"planPagos")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		////var produccion = "/home/cremio/archivos/";
+		var produccion = "/home/cremio/archivos/";
+				 
+				var content = fs
+    	   .readFileSync(produccion+"HISTORIALCREDITICIO.docx", "binary");
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			return "";
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+		var fecha = new Date();
+		var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    
+	 _.each(objeto,function(item){
+      item.fechaLimite =moment(item.fechaLimite).format("DD-MM-YYYY")
+     
+	 });
+		
+			doc.setData({				items: 		objeto,
+										fecha:     fecha,
+									
+
+				  });
+								
+		doc.render();
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"HISTORIALCREDITICIOSalida.docx",buf);		
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"HISTORIALCREDITICIOSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+  }, 
 	
 });

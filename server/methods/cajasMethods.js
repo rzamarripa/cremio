@@ -389,19 +389,48 @@ Meteor.methods({
 	getCajaInactivaDetalle :(caja_id, fechaInicio, fechaFin)=>{
 		var res = {};
 		res.pagos = Pagos.find({caja_id:caja_id, fechaPago: { $gte: fechaInicio, $lte: fechaFin} }).fetch();
-		_.each(res.pagos, function(pago){
-			pago.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id);
-		});
 
+		var agrupados = {};
+  	var total = 0;
+    var pagos = Pagos.find({estatus: {$ne: 0}}).fetch();
+    if (pagos.length) {
+      _.each(pagos, function(pago) {
+        pago.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id);
+        if(agrupados[pago.tipoIngreso.nombre] == undefined){
+					agrupados[pago.tipoIngreso.nombre] = 0;
+				}
+				agrupados[pago.tipoIngreso.nombre] += pago.totalPago;
+				total += pago.totalPago;
+      });
+    }
+    res.totalResumen = total;
+    res.pagos = agrupados;
 		res.movimientosCaja = MovimientosCajas.find({
       $and: [{ caja_id: caja_id },
-      			 { createdAt: { $gte: fechaInicio, $lte: fechaFin } }, {
-        origen: {$ne: 'Apertura de Caja'}
-      }]
+      			 { createdAt: { $gte: fechaInicio, $lte: fechaFin } }, 
+      			 // {origen: {$ne: 'Apertura de Caja'}}
+      ]
     }).fetch();
 		_.each(res.movimientosCaja, function(mov){
-			mov.cuenta = Cuentas.findOne(mov.cuenta_id);
+			mov.cuenta = TiposIngreso.findOne(mov.cuenta_id);
+			//mov.tipoIngreso = TiposIngreso.findOne(mov.cuenta.tipoIngreso_id);
 			mov.pago = Pagos.findOne(mov.origen_id);
+			if(mov.pago){
+				mov.multas = 0;
+				mov.capital = 0;
+				mov.intereses = 0;
+				mov.iva = 0;
+				mov.seguro = 0;
+				_.each(mov.pago.planPagos, function(plan){
+					if(plan.descripcion = "Multa"){
+						mov.multas += plan.totalPago;
+					}
+					mov.capital += plan.pagoCapital;
+					mov.intereses += plan.pagoInteres;
+					mov.iva += plan.pagoIva;
+					mov.seguro += plan.pagoSeguro;
+				});
+			}
 		});
 
 		return res
