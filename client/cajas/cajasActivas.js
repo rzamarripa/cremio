@@ -95,14 +95,18 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
 	        d.monto = mov.monto;
 	        d.pago = Pagos.findOne(mov.origen_id);
 	        //d.pago_id = mov.origen_id;
-	        if(d.pago){
+	        if(d.pago){		        
 		        d.multas = 0;
 						d.capital = 0;
 						d.intereses = 0;
 						d.iva = 0;
 						d.seguro = 0;
+						
+						if (d.pago.tipoIngreso_id != undefined)
+								d.tipoIngreso = TiposIngreso.findOne(d.pago.tipoIngreso_id);
+
 						_.each(d.pago.planPagos, function(plan){
-							if(plan.descripcion == "Multa"){
+							if(plan.descripcion == "Cargo Moratorio"){
 								d.multas += plan.totalPago;
 							}
 							d.capital += plan.pagoCapital;
