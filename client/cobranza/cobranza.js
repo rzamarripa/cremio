@@ -101,6 +101,8 @@ angular.module("creditoMio")
 
     this.subscribe('pagos', () => {
     return [{ }];
+  });  this.subscribe('sucursales', () => {
+    return [{ }];
   });
 
 
@@ -116,6 +118,12 @@ angular.module("creditoMio")
       return Meteor.users.findOne();
     },
     creditos : () => {
+      var creditos = Creditos.find().fetch();
+      _.each(creditos, function(credito){
+        credito.cliente = Personas.findOne(credito.cliente_id)
+      });
+
+
       return Creditos.find().fetch();
     },
 
@@ -1007,7 +1015,6 @@ angular.module("creditoMio")
   };
 
 
-
   this.verPagos= function(credito) {
 
     //console.log(credito,"el ob ")
@@ -1101,15 +1108,36 @@ angular.module("creditoMio")
 
   };
 
-  this.imprimirHistorial= function(objeto) 
+  this.imprimirHistorial= function(objeto,cliente) 
   {
+  
+  
+  _.each(objeto,function(item){
+    //console.log(item,"item")
+      cliente.cliente = cliente.profile.nombreCompleto
+      cliente.clienteSucursal = Sucursales.findOne(cliente.profile.sucursal_id)
+      cliente.sucursal = cliente.clienteSucursal.nombre
+      cliente.fechaCreacion = cliente.profile.fechaCreacion
+      cliente.sexo = cliente.profile.sexo
+      cliente.clienteNacionalidad = Nacionalidades.findOne(cliente.profile.nacionalidad_id)
+      cliente.nacionalidad = cliente.clienteNacionalidad.nombre
+      cliente.estadoCivilCliente = EstadoCivil.findOne(cliente.profile.estadoCivil_id)
+      cliente.estadoCivil = cliente.estadoCivilCliente.nombre
+      cliente.fechaNa = cliente.profile.fechaNacimiento
+      cliente.lugarNacimiento = cliente.profile.lugarNacimiento
+      if (cliente.profile.lugarNacimiento) {
+        cliente.lugarNacimiento = cliente.profile.lugarNacimiento
+      }
+      cliente.ocupacionCliente = Ocupaciones.findOne(cliente.profile.ocupacion_id)
+      cliente.ocupacion = ocupacion.nombre
+      
 
+    });
+      console.log(cliente,"cliente")
+  
+ 
     var toPrint = [];
     
-
-
-
-    console.log(objeto,"objeto")
 
     Meteor.call('getListaCobranza', objeto, function(error, response) {     
        if(error)
@@ -1126,21 +1154,16 @@ angular.module("creditoMio")
           var byteArrays = [];
           for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
             var slice = byteCharacters.slice(offset, offset + sliceSize);
-        
             var byteNumbers = new Array(slice.length);
             for (var i = 0; i < slice.length; i++) {
               byteNumbers[i] = slice.charCodeAt(i);
             }
-        
             var byteArray = new Uint8Array(byteNumbers);
-        
             byteArrays.push(byteArray);
           }
-            
           var blob = new Blob(byteArrays, {type: contentType});
           return blob;
           }
-              
           var blob = b64toBlob(response, "application/docx");
           var url = window.URL.createObjectURL(blob);
           var dlnk = document.getElementById('dwnldLnk');
@@ -1149,13 +1172,8 @@ angular.module("creditoMio")
           dlnk.href = url;
           dlnk.click();       
           window.URL.revokeObjectURL(url);
-   
       }
-    
     });
-
-  };
-  
-  
+  };  
 
 };

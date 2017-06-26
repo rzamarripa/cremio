@@ -443,12 +443,8 @@ angular.module("creditoMio")
 		  
 				   }
 				});
-
-
-
-
 		
-		}
+		};
 	
-	
+	/////FINAL///
 };
