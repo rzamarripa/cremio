@@ -5,11 +5,11 @@
 window.customConfirm = function(message, buttons, resultCallback) {
   $("body").append('<div id="customConfirm" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-keyboard="false" data-backdrop="static"><div class="modal-dialog modal-md" role="document"><div class="modal-content"><div id="customConfirm_message" class="modal-body"></div><div class="modal-footer"><button id="customConfirm_false" type="button" class="btn btn-danger" data-dismiss="modal">No</button><button id="customConfirm_true" type="button" class="btn btn-primary">Si</button></div></div></div></div>');
   if(_.isFunction(message) || _.isObject(message)){
-    if(_.isFunction(buttons)){
-      resultCallback = buttons;
-    }
-    buttons = message;
-    message = 'Estás seguro';
+  	if(_.isFunction(buttons)){
+  		resultCallback = buttons;
+  	}
+  	buttons = message;
+  	message = 'Estás seguro';
   };
   
   if (!_.isFunction(buttons)) {
