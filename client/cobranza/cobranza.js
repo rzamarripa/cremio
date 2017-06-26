@@ -278,7 +278,7 @@ angular.module("creditoMio")
 	    this.fechaFinal.setHours(23,59,59,999);
 	    FI = this.fechaInicial;
 	    FF = this.fechaFinal;
-	    rc.verRecibos = false;
+	    rc.verRecibos = true;
 	    
 	    Meteor.call('getCobranza', FI, FF, 1, Meteor.user().profile.sucursal_id, function(error, result) {           
 	          if (result)
@@ -294,7 +294,7 @@ angular.module("creditoMio")
 	                  else if (c.descripcion == "Cargo Moratorio")    
 	                     rc.totalMultas = rc.totalMultas + c.importeRegular;
 	              });
-                console.log(result,"resullltt")
+                //console.log(result,"resullltt")
 	              
 	              $scope.$apply();
 	          }

@@ -14,7 +14,7 @@
 					<span class="pull-left"> POR CONCEPTO DE ABONO A SU CUENTA</span>
 					<br>
 					<strong>--------------DETALLE DEL PAGO/ABONO>-------------</strong>
-					<table class="table" ng-repeat="pago in tkpctrl.pago.planPagos">
+					<table class="table">
 						<tbody>
 							<tr>
 								<th align="center">CREDITO</th>
@@ -22,7 +22,7 @@
 								<th align="center">ABONO</th>
 								<th align="center">CONCEPTO</th>					
 							</tr>
-							<tr>
+							<tr ng-repeat="pago in tkpctrl.pago.planPagos">
 								<td align="center">{{pago.folioCredito}}</td>
 								<td align="center">{{pago.numeroPago}}</td>
 								<td align="center">{{pago.totalPago | currency:""}}</td>

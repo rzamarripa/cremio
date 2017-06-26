@@ -654,13 +654,13 @@
 														<th class="text-center" width="5%"></th>
 														<th class="text-center" width="5%">No.</th>
 														<th class="text-center" width="5%">Folio Credito</th>
-														<th class="text-center" width="15%">Movimiento</th>
-														<th class="text-center" width="15%">Fecha de Pago</th>
+														<th class="text-center" width="10%">Movimiento</th>
+														<th class="text-center" width="20%">Fecha de Pago</th>
 														<th class="text-center" width="15%">Pago</th>
 														<th class="text-center" width="10%">Capital</th>
-														<th class="text-center" width="10%">Interes</th>
+														<th class="text-center" width="5%">Interes</th>
 														<th class="text-center" width="10%">Seguro</th>
-														<th class="text-center" width="10%">IVA</th>
+														<th class="text-center" width="5%">IVA</th>
 														<th class="text-center" width="10%">Saldo</th>
 														<th class="text-center" width="5%">Pago</th>
 													</tr>
@@ -680,7 +680,7 @@
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
-														<td ><input type="number" ng-change="pvpp.seleccionarMontoPago(pago)"  ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
+														<td ><input style="width: 80px" type="number" ng-change="pvpp.seleccionarMontoPago(pago)"  ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
 													</tr>
 												</tbody>
 											</table>	
