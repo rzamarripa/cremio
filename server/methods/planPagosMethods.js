@@ -29,7 +29,7 @@ Meteor.methods({
 		if(credito.periodoPago == "Semanal")
 		{
 			totalPagos = credito.duracionMeses * 4;
-			seguro = seguro / 2;
+			//seguro = seguro / 2;
 			numeroPagosCompuesto = 4;	
 		}	
 		else if (credito.periodoPago == "Quincenal")
@@ -40,7 +40,7 @@ Meteor.methods({
 		else if(credito.periodoPago == "Mensual")
 		{
 			totalPagos = credito.duracionMeses;
-			seguro = seguro * 2;
+			//seguro = seguro * 2;
 			numeroPagosCompuesto = 1;
 		}	
 		
@@ -52,7 +52,6 @@ Meteor.methods({
 				
 				if (tipoCredito.tipoInteres == "Simple")
 				{
-						
 						
 						//  (((3000*.10)*1.16)*3+3000)/12
 						

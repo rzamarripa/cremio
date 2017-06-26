@@ -258,13 +258,13 @@
         <li data-menu-collapse>
             <a ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
                 <i class="fa fa-lg fa-fw fa-inbox"></i>
-                <span class="menu-item-parent">Cajas</span>
+                <span class="menu-item-parent">Ventanillas</span>
             </a>
             <ul>
                 <li ng-if="currentUser.roles[0] == 'Cajero'">
                     <a ui-sref="root.corteCaja" tilte="Credito Mio">
                         <i class="fa fa-lg fa-fw fa-scissors"></i>
-                        <span class="menu-item-child">Corte de Caja</span>
+                        <span class="menu-item-child">Corte de Ventanilla</span>
                     </a>
                 </li>
                 <li ng-if="currentUser.roles[0] == 'Cajero'">
@@ -276,19 +276,19 @@
                 <li ng-if="currentUser.roles[0] == 'Gerente'">
                     <a ui-sref="root.intraCajas" tilte="Credito Mio">
                         <i class="fa fa-lg fa-fw fa-dollar"></i>
-                        <span class="menu-item-child">Traspasos Entre Cajas</span>
+                        <span class="menu-item-child">Traspasos Entre Ventanillas</span>
                     </a>
                 </li>
                 <li ng-if="currentUser.roles[0] == 'Gerente'">
                     <a ui-sref="root.traspasoCajaCuenta" tilte="Credito Mio">
                         <i class="fa fa-lg fa-fw fa-dollar"></i>
-                        <span class="menu-item-child">Traspasos de Caja a Cuenta</span>
+                        <span class="menu-item-child">Traspasos de Ventanilla a Cuenta</span>
                     </a>
                 </li>
                 <li ng-if="currentUser.roles[0] == 'Gerente'">
                     <a ui-sref="root.traspasoCuentaCaja" tilte="Credito Mio">
                         <i class="fa fa-lg fa-fw fa-dollar"></i>
-                        <span class="menu-item-child">Traspasos de Cuenta a Caja</span>
+                        <span class="menu-item-child">Traspasos de Cuenta a Ventanilla</span>
                     </a>
                 </li>
             </ul>
