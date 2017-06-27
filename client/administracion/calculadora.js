@@ -142,13 +142,7 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 	 	
 		  
 	  this.generarPlanPagos = function(credito, form){
-/*
-	  	var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
-	  	if(!tipoCredito || credito.capitalSolicitado>tipoCredito.montoMaximon){
-	  			toastr.error("El monto solicitado es mayor al permitido.");
-	  			return;
-	  	}
-*/
+
 			if(form.$invalid){
 				toastr.error('Error al calcular el nuevo plan de pagos, llene todos los campos.');
 				return;

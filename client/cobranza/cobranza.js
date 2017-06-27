@@ -358,7 +358,7 @@ angular.module("creditoMio")
       }
       
       
-      //Meteor.call("generarMultas",function(err, res){console.log("Fue por multas:",res)});
+      //Meteor.call("actualizarMultas",function(err, res){console.log("Fue por multas:",res)});
       
       Meteor.call('getCobranza', FI, FF, op, Meteor.user().profile.sucursal_id, function(error, result) {           
           if (result)
@@ -383,7 +383,7 @@ angular.module("creditoMio")
   
   this.selCredito=function(objeto, num)
   {
-    console.log(objeto,"objeto")
+    	//console.log(objeto,"objeto")
 
         
 
@@ -398,7 +398,6 @@ angular.module("creditoMio")
       rc.credito_id = objeto.credito._id;
       //console.log("Objeto: ",objeto)
       rc.historial = objeto
-
 
       
       //Información del Cliente
@@ -433,6 +432,8 @@ angular.module("creditoMio")
       if (mun != undefined) rc.cliente.profile.empresa.municipio = mun.nombre;
       ciu = Ciudades.findOne(rc.cliente.profile.empresa.ciudad_id);
       if (ciu != undefined) rc.cliente.profile.empresa.ciudad = ciu.nombre;
+      col = Colonias.findOne(rc.cliente.profile.empresa.colonia_id);
+      if (col != undefined) rc.cliente.profile.empresa.colonia = col.nombre;
       
       var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
       if (ec != undefined)
@@ -487,7 +488,10 @@ angular.module("creditoMio")
       //Información del Crédito
     
       rc.credito = objeto.credito;  
-    
+      var tipocredito = TiposCredito.findOne(objeto.credito.tipoCredito_id);
+      //console.log(tipocredito);
+      objeto.credito.tipoCredito = tipocredito.nombre;
+			
       rc.avales = [];
       _.each(rc.credito.avales_ids,function(aval_id){
             Meteor.call('getPersona', aval_id, function(error, result){           
@@ -600,7 +604,7 @@ angular.module("creditoMio")
 
 	var fecha = moment();
 	this.guardarNotaCobranza=function(nota){
-			console.log(nota);			
+			//console.log(nota);			
 			nota.estatus = true;
 			nota.fecha = new Date()
 			nota.hora = moment(nota.fecha).format("hh:mm:ss a")
@@ -612,7 +616,7 @@ angular.module("creditoMio")
 			toastr.success('Guardado correctamente.');
 	};
 	this.mostrarNotaCobranza=function(objeto){
-		console.log("Nota de Cobranza:",objeto)
+		//console.log("Nota de Cobranza:",objeto)
 		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto;
 		rc.notaCobranza.folioCredito = objeto.credito.folio;
 		rc.notaCobranza.recibo = objeto.numeroPago;
@@ -981,43 +985,6 @@ angular.module("creditoMio")
   this.aparecerCheck = function() {
     rc.conRespuesta = !rc.conRespuesta;
   };
-  
-/*
-  this.porFecha = function() {
-	  
-	  console.log("Entro");
-	   	
-    this.fechaInicial.setHours(0,0,0,0);
-    this.fechaFinal = new Date(this.fechaInicial.getTime());
-    this.fechaFinal.setHours(23,59,59,999);
-    FI = this.fechaInicial;
-    FF = this.fechaFinal;
-    rc.verRecibos = false;
-    
-    Meteor.call('getCobranza', FI, FF, 1, Meteor.user().profile.sucursal_id, function(error, result) {           
-          if (result)
-          {
-              console.log("Cobranza:",result);
-              
-              rc.cobranza = result;
-              rc.totalRecibos = 0;
-              rc.totalMultas = 0;
-              _.each(rc.cobranza,function(c){
-                  if (c.descripcion == "Recibo")
-                        rc.totalRecibos = rc.totalRecibos + c.importeRegular;
-                    else if (c.descripcion == "Cargo Moratorio")    
-                        rc.totalMultas = rc.totalMultas + c.importeRegular;
-              });
-              
-              
-              
-              $scope.$apply();
-          }
-        
-    }); 
-    
-  }
-*/
   
   
 
