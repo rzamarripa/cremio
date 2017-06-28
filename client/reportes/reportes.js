@@ -603,7 +603,7 @@ angular.module("creditoMio")
 
 	    console.log("objeto",objeto)
 	     var suma = 0
-          var sumaSol = 0
+       var sumaSol = 0
 	    _.each(objeto,function(item){
 			var fecha = ""
 	    	//item.fechaEntrega = moment(item.fechaEntrega).format("DD-MM-YYYY")
