@@ -3,7 +3,7 @@ angular.module("creditoMio")
  function EntregarCreditoCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams){
  	
  	let rc = $reactive(this).attach($scope);
-	window.rc=rc
+	window.rc = rc
 	
 	this.suma =0;
 	this.verDiaPago = true;
@@ -294,9 +294,7 @@ angular.module("creditoMio")
 		};
 				
 		credito.avales = angular.copy(this.avales);
-		
-		//Duda se guardan los dos???
-		
+				
 		if (this.credito.tipoGarantia == "mobiliaria")
 				credito.garantias = angular.copy(this.garantias);
 		else

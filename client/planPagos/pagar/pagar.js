@@ -29,6 +29,10 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	
 	this.valorOrdenar = "Folio";
 	
+	
+	rc.creditoRefinanciar = {};
+	rc.creditosAutorizados = [];
+	rc.pagoR = {};
 	rc.subtotal = 0;
 	rc.cargosMoratorios = 0;
 	rc.total = 0;
@@ -51,7 +55,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
   });
 
   this.subscribe('creditos', () => {
-    return [{ cliente_id: $stateParams.objeto_id, estatus: 4 }];
+    return [{ cliente_id: $stateParams.objeto_id, estatus : {$in: [2, 4]} }];
   });
   this.subscribe('pagos', () => {
     return [{ estatus: 1 }];
@@ -457,37 +461,77 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	    }  
     });
   }
-
+  
   this.guardarPago = function(pago, credito) {
 		
-		console.log(pago);	  
+		//console.log(pago);	  
 	  
 	  if (pago.totalPago == 0)
 	  {
 		  	toastr.warning("No hay nada que cobrar");
 		  	return;
-	  }				
-
-    var seleccionadosId = [];
-    _.each(rc.planPagosViejo, function(p) {
-      if (p.pagoSeleccionado)
-        seleccionadosId.push({ id: p._id, importe: p.importepagado })
-
-    });
-    //console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
-    Meteor.call("pagoParcialCredito", seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id, $stateParams.objeto_id, function(error, success) {
-      if (!success) {
-        toastr.error('Error al guardar.');
-        return;
-      }
-      toastr.success('Guardado correctamente.');
-      rc.pago = {};
-      rc.pago.totalPago = 0;
-      rc.pago.totalito = 0
-      rc.pago.fechaEntrega = pago.fechaEntrega
-      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
-      window.open(url, '_blank');
-    });
+	  }
+	  
+	  //Validar que sea completo el crédito a pagar    
+	  var tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id);
+	  if (tipoIngreso.nombre == "REFINANCIAMIENTO")
+	  {
+		  		
+		  	//Validar si hay creditos Autorizados
+		  	rc.creditosAutorizados = Creditos.find({estatus : 2}).fetch();
+		  	//console.log(rc.creditosAutorizados);
+		  	if (rc.creditosAutorizados.length == 0)
+		  	{
+			  		toastr.warning("No existen créditos autorizados para liquidar los pagos");
+						return;
+		  	}
+				
+				//Si existen creditos Validar que alcance sobre el total
+				var ban = false;				
+			  _.each(rc.creditosAutorizados, function(ca) {
+			      if (ca.capitalSolicitado > pago.totalPago)
+			      {
+								ban = true;
+								ca.esRefinanciado = ban;
+						}		
+		    });
+		    
+		    if (!ban)
+		  	{
+			  		toastr.warning("El cliente no tiene al menos un crédito autirozado que pueda liquidar el crédito actual");
+						return;
+		  	}
+		  	rc.pagoR = pago;
+		  	//Abrir el modal de los creditos
+		  	$("#modalRefinanciamiento").modal('show');
+		  	
+		  	
+	  }
+	  else
+	  {
+		  	var seleccionadosId = [];
+		    _.each(rc.planPagosViejo, function(p) {
+		      if (p.pagoSeleccionado)
+		        seleccionadosId.push({ id: p._id, importe: p.importepagado })
+		
+		    });
+		    
+		    //console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
+		    Meteor.call("pagoParcialCredito", seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id, $stateParams.objeto_id, function(error, success) {
+		      if (!success) {
+		        toastr.error('Error al guardar.');
+		        return;
+		      }
+		      toastr.success('Guardado correctamente.');
+		      rc.pago = {};
+		      rc.pago.totalPago = 0;
+		      rc.pago.totalito = 0
+		      rc.pago.fechaEntrega = pago.fechaEntrega
+		      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
+		      window.open(url, '_blank');
+		    });
+		  
+	  }
 
   };
 
@@ -535,10 +579,6 @@ if (this.valorOrdenar == "Cliente")
 	{
 			rc.subtotal = 0;
 			rc.cargosMoratorios = 0;
-/*
-			console.log(rc.subtotal);
-			console.log(rc.cargosMoratorios);
-*/
 
 			_.each(this.planPagosViejo, function(pago) {
           if (pago.descripcion == "Cargo Moratorio")
@@ -567,15 +607,61 @@ if (this.valorOrdenar == "Cliente")
        
        
        rc.total = rc.subtotal + rc.cargosMoratorios;
-       
-/*
-       console.log(rc.subtotal);
-			 console.log(rc.cargosMoratorios);
-*/
-			
+       			
 	};
 
+	this.guardarRefinanciamiento = function() 
+	{
+			rc.creditoRefinanciar.refinanciar = rc.pagoR.totalPago;
+			
+			var seleccionadosId = [];
+	    _.each(rc.planPagosViejo, function(p) {
+	      if (p.pagoSeleccionado)
+	        seleccionadosId.push({ id: p._id, importe: p.importepagado })
+	
+	    });
+	    
+	    //console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
+	    Meteor.call("pagoParcialCredito", seleccionadosId, rc.pagoR.pagar, rc.pagoR.totalPago, rc.pagoR.tipoIngreso_id, $stateParams.objeto_id, function(error, success) {
+	      if (!success) {
+	        toastr.error('Error al guardar.');
+	        return;
+	      }
+	      
+	      //Actualizar Creditos
+	      
+	      var tempId = rc.creditoRefinanciar._id;
+	      delete rc.creditoRefinanciar._id;
+	      Creditos.update({_id: tempId},{$set:rc.creditoRefinanciar});
+	      
+	      toastr.success('Guardado correctamente.');
+	      rc.pago = {};
+	      rc.pago.totalPago = 0;
+	      rc.pago.totalito = 0
+	      rc.pago.fechaEntrega = rc.pagoR.fechaEntrega
+	      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
+	      window.open(url, '_blank');
+	      
+	    });
+			
+			
+			$("#modalRefinanciamiento").modal('hide');
+	}
+	
+	this.marcarRefinanciamiento = function(credito) 
+	{
+			rc.creditoRefinanciar = credito;
+			
+		
+	}
+	
+	this.cerrarRefinanciamiento = function() 
+	{
+			rc.modalRefinanciamiento = false;
+		
+	}
 
+	
 
 
 };
