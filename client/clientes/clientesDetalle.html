@@ -141,7 +141,7 @@
 												<div class="progress">
 													<div class="progress-bar bg-color-blue" style="width: {{(credito.tiempoPago / credito.numeroPagos) * 100}}%;"></div>
 												</div> 
-												<small><a ng-click="cd.mostrarReestructuracion(credito)" class="btn btn-primary">Reestructuración del crédito</a></small>
+												<small><a ng-click="cd.mostrarReestructuracion(credito)" ng-if="currentUser.roles[0] == 'Gerente'" class="btn btn-primary">Reestructuración del crédito</a></small>
 												<div>
 													<div >
                   <label id="id_label_single" >Seleccionar Documento</label>
@@ -866,7 +866,7 @@
 										<div class="panel panel-blueDark">
 											<div class="panel-heading">
 												<h3 class="panel-title">
-													Credito</h3>
+													Crédito</h3>
 											</div>
 											<div class="panel-body no-padding text-align-center">
 												<div class="the-price">
