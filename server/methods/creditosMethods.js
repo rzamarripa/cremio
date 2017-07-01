@@ -59,7 +59,6 @@ Meteor.methods({
 		
 		credito.avales_ids = [];
 		
-		
 		_.each(credito.avales, function(aval){
 			
 			if (aval.buscarPersona_id)
@@ -78,7 +77,7 @@ Meteor.methods({
 							_.each(p.relaciones, function(relacion){
 									if (relacion.cliente_id == cliente._id){
 
-											relacion.credito_id	     = idCredito;
+											relacion.credito_id	     = credito._id;
 											relacion.cliente_id 		 = cliente._id;
 											relacion.estadoCivil		 = aval.estadoCivil,
 											relacion.ocupacion			 = aval.ocupacion,
@@ -100,9 +99,9 @@ Meteor.methods({
 			}
 			else if (!aval.persona_id)
 			{	  	
-					console.log("Condicion de nueva PersonaId");
+					//console.log("Condicion de nueva PersonaId");
 					aval.relaciones = [];
-					aval.relaciones.push({credito_id				: idCredito, 
+					aval.relaciones.push({credito_id				: credito._id, 
 																cliente_id 				: cliente._id,
 																estadoCivil				:	aval.estadoCivil,
 																ocupacion					: aval.ocupacion,
@@ -132,7 +131,7 @@ Meteor.methods({
 			{
 					console.log("Condicion de persona existente");
 					var p = Personas.findOne({_id:aval.persona_id});
-					p.relaciones.push({		credito_id				: idCredito, 
+					p.relaciones.push({		credito_id				: credito._id, 
 																cliente_id 				: cliente._id,
 																estadoCivil				:	aval.estadoCivil,
 																ocupacion					: aval.ocupacion,
