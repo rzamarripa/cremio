@@ -9,10 +9,11 @@ angular.module("creditoMio")
 	this.verDiaPago = true;
 	rc.seleccinadorContrato = false;
 	rc.imprecion = true;
-	
 	this.objeto = {};
-	
 	this.credito = {};
+	
+	rc.cliente = {};
+	rc.cliente._id = "" ;
 	//this.credito.primerAbono = new Date();
 	
 	
@@ -63,14 +64,9 @@ angular.module("creditoMio")
 		credito : () => {
 			var c = Creditos.findOne({_id:$stateParams.credito_id}); 
 			
-
-			// _.each(c, function(credito){
-			// 	credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
-				
-			// });		
-			
 			if (c != undefined)
 			{		
+					rc.cliente._id = c.cliente_id;
 					if (c.folio)
 						  this.verDiaPago = false;
 					
@@ -149,10 +145,22 @@ angular.module("creditoMio")
 				toastr.error('Es obligatorio verificar los documentos.');
 				return
 			}
-			if(form.$invalid || rc.suma != rc.credito.capitalSolicitado){
-						toastr.error('Error al actualizar los datos.');
+			
+			if (rc.credito.esRefinanciado == undefined)
+			{
+					if(form.$invalid || rc.suma != rc.credito.capitalSolicitado){
+						toastr.error('Error verifique la cantidad a entregar.');
 						return;
+					}	
 			}
+			else if (rc.credito.esRefinanciado == true)
+			{
+					if(form.$invalid || rc.suma != (rc.credito.capitalSolicitado - rc.credito.refinanciar)){
+						toastr.error('Error verifique la cantidad a entregar.');
+						return;
+					}
+			}
+			
 			Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id,function(error,result){
 		
 				if(error){
@@ -278,7 +286,7 @@ angular.module("creditoMio")
 			adeudoInicial : this.credito.capitalSolicitado,
 			saldoActual : this.credito.capitalSolicitado,
 			periodoPago : this.credito.periodoPago,
-			fechaPrimerAbono : this.credito.primerAbono,
+			fechaPrimerAbono : this.objeto.primerAbono,
 			multasPendientes : 0,
 			saldoMultas : 0.00,
 			saldoRecibo : 0.00,
