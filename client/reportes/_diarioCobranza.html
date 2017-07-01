@@ -62,17 +62,17 @@
 		    <tr ng-repeat="objeto in re.planPagos | filter:buscar">
 		    	<td>{{$index + 1}}</td>
 		    	
-			    <td>{{objeto.fechaPago  | date:"dd-MM-yyyy"}}</td>
-			    <td>{{objeto.credito.folio}}</td>
-			    <td>{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</td>
-			    <td>{{objeto.cliente.profile.folio}}</td>
-			    <td>{{objeto.nombreCompleto}}</td>
-			    <td>{{objeto.interes}}</td>
-			    <td>{{objeto.pago}}</td>
-			    <td>{{objeto.iva}}</td>
-			    <td>{{objeto.seguro}}</td>
-			    <td>{{objeto.movimiento}}</td>
-			    <td>{{objeto.cargo}}</td> 
+			    <td><div class="text-center">{{objeto.fechaPago  | date:"dd-MM-yyyy"}}</div></td>
+			    <td><div class="text-center">{{objeto.credito.folio}}</div></td>
+			    <td><div class="text-center">{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</div></td>
+			    <td><div class="text-center">{{objeto.cliente.profile.folio}}</div></td>
+			    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
+			    <td><div class="pull-right">{{objeto.interes | currency}}</div></td>
+			    <td><div class="pull-right">{{objeto.pago | currency}}</div></td>
+			    <td><div class="pull-right">{{objeto.iva | currency}}</div></td>
+			    <td><div class="pull-right">{{objeto.seguro | currency}}</div></td>
+			    <td><div class="text-center">{{objeto.movimiento}}</div></td>
+			    <td><div class="pull-right">{{objeto.cargo | currency}}</div></td> 
 			   
 			
 		    </tr>

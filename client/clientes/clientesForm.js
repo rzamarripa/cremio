@@ -84,6 +84,9 @@ angular.module("creditoMio")
   this.subscribe('personas',()=>{
     return [{}]
   });
+  this.subscribe('configuraciones',()=>{
+    return [{}]
+  });
   
   this.subscribe('estados',()=>{
 
@@ -185,6 +188,10 @@ angular.module("creditoMio")
     },
     documentos : () => {
       return Documentos.find();
+    },
+    configuraciones : () => {
+      var config = Configuraciones.find().fetch();
+      return config[config.length - 1]
     },
      imagenesDocs : () => {
       var imagen = rc.imagenes
@@ -315,27 +322,16 @@ this.tomarFoto = function(objeto){
       var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-      ///////////////////////////////////////////////////////////////////////////////
-      var folio = 0;
-            _.each(rc.ultimoCliente, function(cliente){
-          folio = cliente.folio
-          rc.folio = folio
-        });
-     
-      //console.log("el folio",rc.folio);
-      //console.log("folio del hlper",rc.ultimoCliente);
-      
-      if(rc.folio > 0){
-        	console.log("entro");
-          objeto.profile.folio = rc.folio + 1
+      ////////////gg///////////////////////////////////////////////////////////////////
+        if(rc.configuraciones.folioCliente >= 1){
+          console.log("entro");
+          objeto.profile.folio = rc.configuraciones.folioCliente + 1
           
-        }
-        else{
-          console.log("else")
-					objeto.profile.folio = 1
+        }else{
+          objeto.profile.folio = rc.configuraciones.folioCliente 
+
         }
         //////////////////////////////////////////////////////////////////////////////////////
-      
       Meteor.call('createUsuario', objeto, "Cliente", function(e,r){
           if (r)
           {
