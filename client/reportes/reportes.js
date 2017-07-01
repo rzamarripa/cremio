@@ -116,8 +116,9 @@ angular.module("creditoMio")
 			var creditos = Creditos.find().fetch();
 	        var planes = PlanPagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
 	        this.clientes_id = _.pluck(planes, "cliente_id");
-	        console.log(this.clientes_id,"clientes")
-	         console.log(planes,"planes")
+	        //console.log(this.clientes_id,"clientes")
+	        
+	        
 	        var client = ""
 			if(planes){
 				_.each(creditos,function(credit){
@@ -135,6 +136,8 @@ angular.module("creditoMio")
 				});
 			 });
 			}
+
+			 console.log(planes,"planes")
 			return planes
 		
 		},

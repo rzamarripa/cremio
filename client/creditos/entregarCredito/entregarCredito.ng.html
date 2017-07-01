@@ -1,4 +1,5 @@
-<h2>Entregar Credito</h2>
+
+<h2>Entregar Crédito</h2>
 <a ui-sref="root.clienteDetalle({objeto_id: ecCtrl.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
 <div class="row">
   <div class="col-sm-12">
@@ -40,7 +41,7 @@
                 <div class="row">
                     <div class="col-sm-6 checkbox" >
                   <label>
-                  <input type="checkbox"  ng-model="ecCtrl.validar.contrato" name="contrato" required> Contrato de Prestamo y Garantia Prendaria.*
+                  <input type="checkbox"  ng-model="ecCtrl.validar.contrato" name="contrato" required> Contrato de Préstamo y Garantía Prendaria.*
                 </label>
                 </div>
                 <div class="col-sm-6 checkbox" >
@@ -52,7 +53,7 @@
               <div class="row ">
                 <div class="col-sm-6 checkbox" >
                   <label>
-                  <input type="checkbox"  ng-model="ecCtrl.validar.pagare" name="pagare" required> Pagare.*
+                  <input type="checkbox"  ng-model="ecCtrl.validar.pagare" name="págare" required> Pagare.*
                 </label>
                 </div>
                 <div class="col-sm-6 checkbox" >
@@ -78,10 +79,13 @@
           <div class="well">  
             <div class="row "> 
               <div class="col-sm-2" ng-show="ecCtrl.imprecion"><br/>   
-                <input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirDocumento(ecCtrl.credito)" value="Imprimir Contratos" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
+                <input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirContrato(ecCtrl.credito)" value="Imprimir Contratos" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
                  </div>
+                <!--   <div class="col-sm-2" ng-show="ecCtrl.imprecion"><br/>   
+                <input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirDocumento(ecCtrl.credito)" value="Imprimir DOCSSS" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
+                 </div> -->
 
-               <div class="col-sm-6" ng-show="ecCtrl.seleccinadorContrato">
+               <!-- <div class="col-sm-6" ng-show="ecCtrl.seleccinadorContrato">
                   <label id="id_label_single" >Seleccionar Documento</label>
                   <select class="js-example-basic-single js-states form-control" id="id_label_single" placeholder="Seleccione " ng-change="ecCtrl.imprimirContrato(ecCtrl.credito.contrato)"
                   ng-model="ecCtrl.credito.contrato"
@@ -92,7 +96,7 @@
                       <option>CONTRATO DE MUTUO CON INTERES CON GARANTIA HIPOTECARIO VFINAL</option>
                        <option>CONTRATO DE MUTUO CON INTERÉS CON GARANTÍA PRENDARIA VF</option>
                   </select>
-               </div>
+               </div> -->
               
               
              

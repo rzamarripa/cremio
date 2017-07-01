@@ -7,6 +7,8 @@ Meteor.methods({
 		        clone[ key ] = original[ key ] ;
 		    return clone ;
 		}
+		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
+		
 	
 		//console.log(fecha);
 		var mfecha = moment(credito.fechaPrimerAbono);
@@ -127,8 +129,11 @@ Meteor.methods({
 						mes									: mfecha.get('month') + 1,
 						anio								: mfecha.get('year'),
 						cargo								: importeParcial,	
-						movimiento					: "Recibo"
+						movimiento					: "Recibo",
+						//folio 						:  sucursal.folio + 1,
 					}
+
+					//Sucursales.update({_id : sucursal._id}, { $set : { folio : credito.folio}});
 					
 					plan.push(clonar(pago));
 					if(credito.periodoPago == "Semanal"){
@@ -147,6 +152,7 @@ Meteor.methods({
 						mfecha = siguienteMes;
 					}	
 				}
+
 				var suma = 0;
 
 				_.each(plan, function(pago){
@@ -252,6 +258,8 @@ Meteor.methods({
 				}
 				var suma = 0;
 
+				
+
 				_.each(plan, function(pago){
 					//console.log("entra")
 					suma += pago.cargo;
@@ -264,6 +272,21 @@ Meteor.methods({
 					_.each(plan, function(pago){
 					pago.total = val
 				});	
+
+				// 	var variable = plan[plan.length - 1];
+				// _.each(plan, function(pago){
+					
+				// 	if (variable.folio == undefined) {
+				// 		console.log("if")
+				// 		pago.folio = sucursal.folio
+				// 	}else{
+				// 		console.log("else")
+
+				// 		pago.folio = variable.folio + 1
+				// 	}
+					
+					
+				// });
 			
 		}
 		
