@@ -15,8 +15,6 @@ Meteor.methods({
 		var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
 		//console.log(tipoCredito);
 		
-		
-
 		var totalPagos = 0;
 		var seguro = tipoCredito.seguro;
 
@@ -44,7 +42,7 @@ Meteor.methods({
 			credito.estatus = 1;
 */
 		
-		
+	var suma = 0;
 		var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)
 								*credito.duracionMeses+credito.capitalSolicitado)/totalPagos)+seguro;
 		
@@ -54,6 +52,7 @@ Meteor.methods({
 		interes = parseFloat(interes.toFixed(2));
 		var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
 		importeParcial=Math.round(importeParcial * 100) / 100;
+		suma += importeParcial
 		var plan = [];
 		
 		if (cliente == undefined){
@@ -64,15 +63,15 @@ Meteor.methods({
 		for (var i = 0; i < totalPagos; i++) {
 			var pago = {
 				semana				: mfecha.isoWeek(),
-				fechaLimite		: new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
+				fechaLimite		    : new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
 				diaSemana			: mfecha.weekday(),
 				tipoPlan			: credito.periodoPago,
 				numeroPago			: i + 1,
 				importeRegular		: importeParcial,
-				iva						: iva,
+				iva					: iva,
 				interes 			: interes,
 				seguro				: seguro,
-				cliente_id		: cliente._id,
+				cliente_id		    : cliente._id,
 				capital 			: capital,
 				fechaPago			: undefined,
 				semanaPago			: undefined,
@@ -91,8 +90,8 @@ Meteor.methods({
 				mes					: mfecha.get('month') + 1,
 				anio				: mfecha.get('year'),
 				cargo				: importeParcial,
-
-				movimiento			: "Recibo"
+				//sumatoria  			: suma,
+				movimiento			: "Recibo",
 			}
 			plan.push(clonar(pago));
 			if(credito.periodoPago == "Semanal"){
@@ -113,6 +112,22 @@ Meteor.methods({
 				mfecha = siguienteMes;
 			}	
 		}
+		var suma = 0;
+
+
+		_.each(plan, function(pago){
+			console.log("entra")
+			suma += pago.cargo;
+			pago.sumatoria  = suma
+			var array = pago;
+			pago.total = val
+		});
+
+		var val = plan[plan.length - 1].sumatoria;
+			_.each(plan, function(pago){
+			pago.total = val
+		});
+		
 		return plan;
 	},
 	actualizarMultas: function(){

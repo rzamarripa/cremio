@@ -231,33 +231,33 @@ Meteor.methods({
 			console.log("esta es la referencia",referencia)
 			return referencia;
 	},
-	getEmpresas: function (idEmpresa) {
-			//console.log('hi');
-			Meteor.apply('findSomeShit',['Empresas', {_id: idEmpresa}, true], function(err, empresa){
-				Meteor.call('findSomeShit',['Ciudades', {_id: empresa.empresa_id}, true], function(err, ciudad){
-					Meteor.call('findSomeShit',['Municipios', {_id: empresa.municipio_id}, true], function(err, municipio){
-						Meteor.call('findSomeShit',['Estados', {_id: empresa.estado_id}, true], function(err, estado){
-							Meteor.call('findSomeShit',['Paises', {_id: empresa.pais_id}, true], function(err, pais){
-								Meteor.call('findSomeShit',['Colonias', {_id: empresa.colonia_id}, true], function(err, colonia){
-									empresa.ciudad = ciudad;
-									empresa.municipio = municipio;
-									empresa.estado = estado;
-									empresa.pais = pais;
-									empresa.colonia = colonia;
-									res['return'] = empresa;
-								});
-							});
-						});
-					});
-				});
-			});
-			// empresa.municipio = Municipios.findOne(empresa.municipio_id);
-			// empresa.estado = Estados.findOne(empresa.estado_id);
-			// empresa.colonia = Colonias.findOne(empresa.colonia_id);
-			// empresa.pais = Paises.findOne(empresa.pais_id);
-			// console.log("esta es la empresa",empresa)
-			return res.wait();
-	},
+	// getEmpresas: function (idEmpresa) {
+	// 		//console.log('hi');
+	// 		Meteor.apply('findSomeShit',['Empresas', {_id: idEmpresa}, true], function(err, empresa){
+	// 			Meteor.call('findSomeShit',['Ciudades', {_id: empresa.empresa_id}, true], function(err, ciudad){
+	// 				Meteor.call('findSomeShit',['Municipios', {_id: empresa.municipio_id}, true], function(err, municipio){
+	// 					Meteor.call('findSomeShit',['Estados', {_id: empresa.estado_id}, true], function(err, estado){
+	// 						Meteor.call('findSomeShit',['Paises', {_id: empresa.pais_id}, true], function(err, pais){
+	// 							Meteor.call('findSomeShit',['Colonias', {_id: empresa.colonia_id}, true], function(err, colonia){
+	// 								empresa.ciudad = ciudad;
+	// 								empresa.municipio = municipio;
+	// 								empresa.estado = estado;
+	// 								empresa.pais = pais;
+	// 								empresa.colonia = colonia;
+	// 								res['return'] = empresa;
+	// 							});
+	// 						});
+	// 					});
+	// 				});
+	// 			});
+	// 		});
+	// 		// empresa.municipio = Municipios.findOne(empresa.municipio_id);
+	// 		// empresa.estado = Estados.findOne(empresa.estado_id);
+	// 		// empresa.colonia = Colonias.findOne(empresa.colonia_id);
+	// 		// empresa.pais = Paises.findOne(empresa.pais_id);
+	// 		// console.log("esta es la empresa",empresa)
+	// 		return res.wait();
+	// },
 
 	findSomeShit: function (collection, find, findOne){
 		return findOne ? eval(collection).findOne(find) : eval(collection).find(find);
@@ -536,14 +536,15 @@ Meteor.methods({
 		
   },
 
-    getCreditoReporte: function (objeto,credito,avales,garantias) {
+    getCreditoReporte: function (objeto,credito,avales,total) {
+    	console.log(total,"total")
 	
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";
+		//var produccion = "/home/cremio/archivos/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteCredito.docx", "binary");
@@ -563,7 +564,7 @@ Meteor.methods({
 		var f = fecha;
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	 	 	_.each(objeto,function(item){
-	 	 		console.log(item,"Credito")
+	 	 		//console.log(item,"Credito")
 	 	 		item.fechaLimite = item.fechaLimite.getUTCDate()+'-'+(item.fechaLimite.getUTCMonth()+1)+'-'+item.fechaLimite.getUTCFullYear();
 	 	 		 if (item.fechaLimite.length < 2) item.fechaLimite = '0' + item.fechaLimite;
              
@@ -578,7 +579,8 @@ Meteor.methods({
 									cliente:      credito.nombre,
 									periodo:      credito.periodoPago,
 									duracion:     credito.duracionMeses,
-									capital:      credito.capitalSolicitado
+									capital:      credito.capitalSolicitado,
+									total:        total.sumatoria,
 									//tipoCredito:
 
 				  });
@@ -592,6 +594,58 @@ Meteor.methods({
 		//Pasar a base64
 		// read binary data
     var bitmap = fs.readFileSync(produccion+"ReporteCreditoSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+  },
+   imprimirReporteCreditos: function (objeto) {
+	
+		console.log(objeto,"creditos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+				 
+				var content = fs
+    	   .readFileSync(produccion+"RECIBOS.docx", "binary");
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			return "";
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+		var fecha = new Date();
+		var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    
+	 
+
+	    console.log(objeto.planPagos);
+		
+		doc.setData({				items: 		objeto,
+									fecha:     fecha,
+									
+
+				  });
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"RECIBOSSalida.docx",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"RECIBOSSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');

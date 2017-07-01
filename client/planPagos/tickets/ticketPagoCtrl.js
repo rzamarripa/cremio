@@ -53,9 +53,20 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 					rc.sucursal = rc.sucursal? rc.sucursal:{};
 					console.log(rc.sucursal);
 				}
+
+
 			});
 		}
 	});
+
+	this.borrarBotonImprimir= function()
+				{
+					var printButton = document.getElementById("printpagebutton");
+					 printButton.style.visibility = 'hidden';
+					 window.print()
+					 printButton.style.visibility = 'visible';
+					
+				};
 
 	
 

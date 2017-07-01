@@ -88,8 +88,9 @@
 			</thead>
 			<tbody>
 		    <tr ng-repeat="objeto in mun.municipios">
+		     <td>{{$index + 1}}</td>
 			    <td>{{objeto.nombre}}</td>
-			    <td>{{$index + 1}}</td>
+			   
 			    <td>
 				    <div class="text-center">
 				    	<span ng-if="objeto.estatus" class="label label-success">

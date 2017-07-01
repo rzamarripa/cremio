@@ -35,15 +35,7 @@
 								<div class="row">
 									<div class="col-sm-2 profile-pic" style="text-align:left;width:initial;">
 										<img style="max-width:200px;" src="{{pvpp.tieneFoto(pvpp.cliente.profile.sexo, pvpp.cliente.profile.foto)}}" >
-										<div class="padding-10">
-											<h4 class="font-md"><strong>0</strong>
-											<br>
-											<small>Seguidores</small></h4>
-											<br>
-											<h4 class="font-md"><strong>0</strong>
-											<br>
-											<small>Amigos</small></h4>
-										</div>
+										
 									</div>
 									<div class="col-sm-2">
 										<h1>{{pvpp.cliente.profile.nombre}} <span class="semi-bold">{{pvpp.cliente.profile.apellidoPaterno}} {{pvpp.cliente.profile.apellidoMaterno}}</span>
@@ -60,7 +52,7 @@
 											</li>
 											<li>
 												<p class="text-muted">
-													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{pvpp.cliente.profile.telefono}}</span>
+													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{pvpp.cliente.profile.particular}}</span>
 												</p>
 											</li>
 											<li>
@@ -83,236 +75,450 @@
 										</p>
 										<br>
 									</div>
-									<div class="col-sm-7" style="margin-top: 0;">
-
-									<div  role="widget"><!-- class="jarviswidget" id="wid-id-6" -->
-
-								<!-- widget div-->
-								<br/>
-
-								<div role="content">
-									<div class="widget-body">
-										<div class="tabs-right">
-											<ul class="nav nav-tabs">
-												<li class="active" >
-													<a  aria-expanded="false" href="#tab1" data-toggle="tab">Información del contacto </a>
-												</li>
-												<li>
-													<a  aria-expanded="false" href="#tab2" data-toggle="tab">Particulares</a>
-												</li>
-												<li >
-													<a  aria-expanded="false" href="#tab3" data-toggle="tab">Dirección</a>
-												</li>
-												<li>
-													<a aria-expanded="false" href="#tab4" data-toggle="tab">Información laboral</a>
-												</li>
-											</ul>
-											<div class="tab-content" >
-												<div class="tab-pane active" id="tab1" style="margin-right: 10%;">
-													<div class="table-responsive">	
-														<dl class="dl-horizontal" >
-														  <dt>Particular:</dt>
-														  <dd>Agregar al form</dd>
-														  <dt> Telefono Oficina:</dt>
-														  <dd>agregar al form</dd>
-														  <dt>e-mail:</dt>
-														  <dd>{{pvpp.cliente.profile.correo}}</dd>
-														  <dt>Movil:</dt>
-														  <dd>{{pvpp.cliente.profile.telefono}}</dd>
-														  <dt>Alternativo:</dt>
-														  <dd>{{pvpp.cliente.profile.otroTelefono}}</dd>
-														</dl>
-													</div>
-												</div>
-												<div class="tab-pane" id="tab2">
-													<div class="table-responsive">										
-														<dl class="dl-horizontal">
-														  <dt>Sexo:</dt>
-														  <dd>{{pvpp.cliente.profile.sexo}}</dd>
-														  <dt>Nacimiento:</dt>
-														  <dd>{{pvpp.cliente.profile.fechaNacimiento | date:"dd-MM-yyyy"}}</dd>
-														  <dt>Ocupación:</dt>
-														  <dd>{{pvpp.cliente.profile.ocupacion.nombre}}</dd>
-														  <dt>Estado civil:</dt>
-														  <dd>{{pvpp.cliente.profile.estadoCivil.nombre}}</dd>
-														  <dt>Nacionalidad:</dt>
-														  <dd>{{pvpp.cliente.profile.nacionalidad.nombre}}</dd>
-														</dl>
-													 </div>
-												</div>
-												<div class="tab-pane" id="tab3">
-													<div class="table-responsive">									
-														<dl class="dl-horizontal">
-														  <dt>Calle:</dt>
-														  <dd>{{pvpp.cliente.profile.calle}}</dd>
-														  <dt>Colonia:</dt>
-														  <dd>{{pvpp.cliente.profile.colonia}}</dd>
-														  <dt>Estado:</dt>
-														  <dd>{{pvpp.cliente.profile.estado.nombre}}</dd>
-														  <dt>Codigo Postal</dt>
-														  <dd>{{pvpp.cliente.profile.codigoPostal}}</dd>
-														  <dt>Señas:</dt>
-														  <dd>Falta de agregar al form</dd>
-														  <dt>Localidad:</dt>
-														  <dd>nacionalidad_id</dd>
-														  <dt>País:</dt>
-														  <dd>{{pvpp.cliente.profile.pais.nombre}}</dd>
-														  <dt>Tiempo:</dt>
-														  <dd>{{pvpp.cliente.profile.tiempoResdencia}}</dd>
-														
-														</dl>
-
-													 </div>
-													 
-												</div>
-												<div class="tab-pane" id="tab4">
-																	
-														<div class="table-responsive">				
-															<dl class="dl-horizontal">
-															  <dt>Empresa:</dt>
-															  <dd>{{pvpp.cliente.profile.empresa.nombre}}</dd>
-															  <dt>Calle:</dt>
-															  <dd>{{pvpp.cliente.profile.empresa.calle}}</dd>
-															  <dt>Colonia:</dt>
-															  <dd>{{pvpp.cliente.profile.empresa.colonia}}</dd>
-															  <dt>Estado</dt>
-															  <dd>{{pvpp.cliente.profile.estado.nombre}}</dd>
-															  <dt>Código Postal:</dt>
-															  <dd>{{pvpp.cliente.profile.empresa.codigoPostal}}</dd>
-															  <dt>Telefono:</dt>
-															  <dd>{{pvpp.cliente.profile.empresa.telefono}}</dd>
-															  <dt>Departamento:</dt>
-															  <dd>{{pvpp.cliente.profile.empresa.departamento}}</dd>
-															  <dt>Jefe inmediato:</dt>
-															  <dd>{{pvpp.cliente.profile.empresa.jefeInmediato}}</dd>
-															  <dt>Localidad:</dt>
-															  <dd>Localidad(agregar al form)</dd>
-															  <dt>País:</dt>
-															  <dd>{{pvpp.cliente.profile.pais.nombre}}</dd>
-															  <dt>Antiguedad:</dt>
-															  <dd>{{pvpp.cliente.profile.empresa.tiempoLaborando}}</dd>
-															  <dt>Numero:</dt>
-															  <dd>{{pvpp.cliente.profile.empresa.numero}}</dd>
-															
-															</dl>
-
-													 	</div>
-													
-												</div>
-											</div>
-										</div>
-				
-									</div>
-									<!-- end widget content -->
-				
-								</div>
-								<!-- end widget div -->
-				
-							</div>
-									</div>
-
-						
 								</div>
 								<div class="row">
 									<div class="col-sm-12">
-										<ul class="nav nav-tabs">
-											<li class="pull-right">
-												<a ng-click="pvpp.masInformacion()" role="button" data-toggle="collapse"
-			href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{pvpp.masInfo == true ? 'plus':'minus'}} fa-lg"></i></a>
-											</li>
-										</ul>
+											<ul class="nav nav-tabs">
+												<li class="pull-right">
+													<a ng-click="pvpp.masInformacion()" role="button" data-toggle="collapse"
+														href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{pvpp.masInfo == true ? 'plus':'minus'}} fa-lg"></i> Información del cliente</a>
+												</li>
+
+												<li class="pull-right">
+												<a ng-click="pvpp.masInformacionCrdito()" data-toggle="collapse"
+												   href="#masInformacionCredito" aria-expanded="false" aria-controls="masInformacionCredito"> <i class="fa fa-{{pvpp.masInfoCredito == true ? 'plus':'minus'}} fa-lg">
+												   </i> Historial Crediticio </a>
+												</li>
+											</ul>
 										<div class="collapse padding-10" id="masInformacion">
-											<div class="tab-pane">
-												<div class="col-sm-6">
-													<ul class="list-unstyled">															
-														<li>
-															<address>
-															  <strong>Información de la Madre</strong><br>
-															  <strong>Nombre:</strong> {{pvpp.cliente.profile.madre}}<br>
-															  <strong>Teléfono:</strong> {{pvpp.cliente.profile.telefonoMadre}}
-															  <strong>Correo:</strong> {{pvpp.cliente.profile.correoMadre}}
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Dirección</strong><br>
-															  {{pvpp.cliente.profile.calleNum}}, {{pvpp.cliente.profile.colonia}}<br>
-															  {{pvpp.cliente.profile.ciudad}}, {{pvpp.cliente.profile.estado}} {{pvpp.cliente.profile.codigoPostal}}<br>
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Lugar de Nacimiento</strong><br>
-															  {{pvpp.cliente.profile.lugarNac}}
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Escolaridad</strong><br>
-															  {{pvpp.cliente.profile.escolaridad}}
-															</address>
-														</li>		
-														<li>
-															<address>
-															  <strong>Nivel Social</strong><br>
-															  {{pvpp.cliente.profile.nivelSocial}}
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Correo para Calificaciones</strong><br>
-															  {{pvpp.cliente.profile.correoCalificaciones}}
-															</address>
-														</li>											
-													</ul>	
-												</div>
-												<div class="col-sm-6">
-													<ul class="list-unstyled">
-														<li>
-															<address>
-															  <strong>Información del Padre</strong><br>
-															  <strong>Nombre:</strong> {{pvpp.cliente.profile.padreTutor}}<br>
-															  <strong>Teléfono:</strong> {{pvpp.cliente.profile.telefonoPadre}}
-															  <strong>Correo:</strong> {{pvpp.cliente.profile.correoPadre}}
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Teléfono Secundario</strong><br>
-																{{pvpp.cliente.profile.tel2}}															  
-															</address>
-														</li>													
-														<li>
-															<address>
-															  <strong>Ocupación del Alumno</strong><br>
-															  {{pvpp.getOcupacion(pvpp.cliente.profile.ocupacion_id)}}
-															</address>
-														</li>													
-														<li>
-															<address>
-															  <strong>Cómo te enteraste de nosotros</strong><br>
-															  {{pvpp.cliente.profile.medio}}
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Talla</strong><br>
-																{{pvpp.cliente.profile.talla}}															  
-															</address>
-														</li>														
-													</ul>	
-												</div>
-											</div>											
-											<div class="tab-pane" id="pagos">												
-												<div class="row">
-													<section class="col col-sm-1 text-center padding-20" ng-repeat="semana in pvpp.misSemanas" ng-click="pvpp.seleccionarSemana(semana)" ng-class="($index == pvpp.misSemana.length) ? pvpp.obtenerEstatus(semana.pagada) : ''">
-														<label class="input text-center">
-															<label type="text" class="text-center">{{semana.numero}} / {{semana.anio}} | {{semana.pagada}}</label>
-														</label>
-													</section>													
-												</div>																		
-											</div>											
-										</div>
+   <div class="tab-pane">
+	<div class="col-sm-12">
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingOne">
+			      <h4 class="panel-title">
+			        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#href1" aria-expanded="false" aria-controls="href1">
+			          Información del Cliente
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="href1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+			      <div class="panel-body">    
+						    <div class="row">
+						    	<div class="col-sm-4" > 					    
+							    	<label>Nombre (s)</label>
+							    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="pvpp.objeto.profile.nombre" disabled="">
+						    	</div>
+						    	<div class="col-sm-4" >					    
+							    	<label>Apellido Paterno</label>
+							    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="pvpp.objeto.profile.apellidoPaterno" disabled="">
+						    	</div>
+						    	<div class="col-sm-4">					    
+							    	<label>Apellido Materno</label>
+							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="pvpp.objeto.profile.apellidoMaterno" disabled="">
+						    	</div>	    				    	    
+						    </div>
+			      </div>
+			    </div>
+			  </div>
+
+			  <!-- //////////////////////////////////////////////////////////////////////// -->
+
+			  
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingTwo">
+			      <h4 class="panel-title">
+			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href2" aria-expanded="false" aria-controls="href2">
+			          Información de contacto
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="href2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+			      <div class="panel-body">
+			        	<div class="row">
+						    	<div class="col-sm-3" > 					    
+							    	<label>Teléfono </label>
+							    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="pvpp.objeto.profile.particular"  disabled="">
+						    	</div>
+						    	<div class="col-sm-3" >					    
+							    	<label>Celular </label>
+							    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="pvpp.objeto.profile.celular" disabled="">
+						    	</div>
+						    	<div class="col-sm-3">					    
+							    	<label>Otro Teléfono</label>
+							    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="pvpp.objeto.profile.telefonoAlternativo" disabled="" >
+						    	</div>	  
+						    	<div class="col-sm-3">					    
+							    	<label>Correo</label>
+							    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="pvpp.objeto.profile.correo" disabled="">
+						    	</div>  				    	    
+						    </div>
+			      </div>
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingThree">
+			      <h4 class="panel-title">
+			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href3" aria-expanded="false" aria-controls="href3">
+			          Particulares
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="href3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+			      <div class="panel-body">
+			        	<div class="row">
+									<div class="col-sm-3" >
+								    <label for="sexo">Sexo </label>
+								    <select name="sexo" ng-model="pvpp.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" disabled>
+										    <option value=""></option>
+										    <option value="Masculino">Masculino</option>
+										    <option value="Femenino">Femenino</option>
+										</select>
+						    	</div>
+						    	<div class="col-sm-3">
+										<label for="estadocivil">Estado Civil </label>
+										<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="pvpp.objeto.profile.estadoCivil.nombre" disabled="">
+									</div>
+										
+						    	<div class="col-sm-3">					    
+							    	<label>Fecha Nacimiento </label>
+							    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="pvpp.objeto.profile.fechaNacimiento" disabled="">
+						    	</div>	
+									
+									<div class="col-sm-3">
+										<label for="nacionalidad">Nacionalidad</label>
+										<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="pvpp.objeto.profile.nacionalidad.nombre" disabled="">
+									</div>			
+						    </div>
+						    <div class="row">
+							    <div class="col-sm-3">
+										<label for="ocupacion">Ocupación </label>
+										<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="pvpp.objeto.profile.ocupacion.nombre" disabled="">
+									</div>		
+						    	<div class="col-sm-3">					    
+							    	<label>CURP</label>
+							    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="pvpp.objeto.profile.curp" disabled>
+						    	</div>
+						      <div class="col-sm-3">					    
+							    	<label>Lugar de Nacimiento</label>
+							    	<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="pvpp.objeto.profile.lugarNacimiento" disabled>
+						    	</div>	
+						    </div>		
+			      </div>
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingFour">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href4" aria-expanded="false" aria-controls="href4">
+				          Dirección
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+									    <div class="col-sm-6" >					    
+									    	<label>Calle </label>
+									    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="pvpp.objeto.profile.calle" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Numero </label>
+									    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="pvpp.objeto.profile.numero" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>CP </label>
+									    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="pvpp.objeto.profile.codigoPostal" disabled="">
+								    	</div>
+								    </div>
+								    <div class="row">
+									    <div class="col-sm-3" >
+													<label >Pais </label>
+													<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="pvpp.objeto.profile.pais.nombre" disabled>
+											</div>
+										  <div class="col-sm-3" >
+													<label for="seccion_id">Estado </label>
+													<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="pvpp.objeto.profile.estado.nombre" disabled>
+											</div>	
+											<div class="col-sm-3" >
+													<label >Municipio </label>
+													<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="pvpp.objeto.profile.municipio.nombre" disabled>
+											</div>
+											<div class="col-sm-3" >
+													<label for="seccion_id">Ciudad </label>
+													<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="pvpp.objeto.profile.ciudad.nombre" disabled>
+											</div>	
+								    </div>
+								    <div class="row">
+									    <div class="col-sm-3" >
+													<label for="seccion_id">Colonia </label>
+													<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="pvpp.objeto.profile.colonia.nombre" disabled>
+											</div>
+											<div class="col-sm-3">					    
+									    	<label>Tiempo Residencia</label>
+									    	<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="pvpp.objeto.profile.tiempoResdencia" disabled>
+								    	</div>
+								    	<div class="col-sm-2">					    
+									    	<label>Renta</label>
+									    	<input name="rentaMes" type="checkbox" class="form-control" ng-model="pvpp.objeto.profile.renta" disabled>
+								    	</div>
+								    	<div class="col-sm-3" ng-if="pvpp.objeto.profile.renta">					    
+									    	<label>Renta Mes </label>
+									    	<input name="tiempo" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="pvpp.objeto.profile.rentaMes" disabled>
+								    	</div>
+											<div class="col-sm-12">					    
+									    	<label>Señas Particulares</label>
+									    	<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="pvpp.objeto.profile.senasParticulares" disabled>
+								    	</div>
+								    </div>	
+				      </div>
+				    </div>
+				</div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingFive">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href5" aria-expanded="false" aria-controls="href5">
+				          Ingresos Mensuales
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+							    	<div class="col-sm-3" > 					    
+								    	<label>Ingresos Personales</label>
+								    	<input name="ingresosPersonales" type="text" class="form-control" placeholder="Ingresos Personales" ng-model="pvpp.objeto.profile.ingresosPersonales" disabled>
+							    	</div>
+							    	<div class="col-sm-3" >					    
+								    	<label>Ingresos Conyuge</label>
+								    	<input name="ingresosConyuge" type="text" class="form-control" placeholder="Ingresos Conyuge" ng-model="pvpp.objeto.profile.ingresosConyuge" disabled>
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Otros Ingresos</label>
+								    	<input name="otrosIngresos" type="text" class="form-control" placeholder="Otros Ingresos" ng-model="pvpp.objeto.profile.otrosIngresos" disabled>
+							    	</div>	  
+							    	<div class="col-sm-3">					    
+								    	<label>Total Ingresos</label>
+								    	<input name="totalIngresos" type="text" class="form-control" placeholder="Total Ingresos" ng-model="pvpp.objeto.profile.totalIngresos" disabled>
+							    	</div>  				    	    
+							    </div>
+							    <div class="row">
+							    	<div class="col-sm-3" > 					    
+								    	<label>Gastos Fijos</label>
+								    	<input name="gastosFijos" type="text" class="form-control" placeholder="Gastos Fijos" ng-model="pvpp.objeto.profile.gastosFijos" disabled>
+							    	</div>
+							    	<div class="col-sm-3" >					    
+								    	<label>Gastos Eventuales</label>
+								    	<input name="gastosEventuales" type="text" class="form-control" placeholder="Gastos Eventuales" ng-model="pvpp.objeto.profile.gastosEventuales" disabled>
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Total Gastos</label>
+								    	<input name="totalGastos" type="text" class="form-control" placeholder="Total Gastos" ng-model="pvpp.objeto.profile.totalGastos" disabled>
+							    	</div>	  
+							    	<div class="col-sm-3">					    
+								    	<label>Resultado Neto</label>
+								    	<input name="resultadoNeto" type="text" class="form-control" placeholder="Resultado Neto" ng-model="pvpp.objeto.profile.resultadoNeto" disabled>
+							    	</div>  				    	    
+							    </div>
+				      </div>
+				    </div>
+				</div>
+
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////// -->
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingSix">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href6" aria-expanded="false" aria-controls="href6">
+				          Referencias Personales
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th width="5%">Número</th>
+													<th width="20%">Nombre</th>
+													<th width="5%">Parentezco</th>
+													<th width="30%">Dirección</th>
+													<th width="10%">Telefono</th>
+													<th width="10%">Tiempo</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="p in pvpp.referencias">
+													<td ng-repeat-start="r in p.relaciones">{{r.num}}</td>
+													<td>{{p.nombreCompleto}} </td>
+													<td>{{r.parentezco}}</td>
+													<td>{{r.direccion}}</td>
+													<td>{{r.telefono}}</td>
+													<td ng-repeat-end>{{r.tiempo}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+				      </div>
+				    </div>
+				</div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingSeven">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href7" aria-expanded="false" aria-controls="href7">
+				          Empresa
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="href7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        	<div class="row">
+								    	<div class="col-sm-6" > 					    
+									    	<label>Nombre</label>
+									    	<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="pvpp.objeto.profile.empresa.nombre" disabled>
+								    	</div>
+								    	<div class="col-sm-6" >					    
+									    	<label>Razón Social</label>
+									    	<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="pvpp.objeto.profile.empresa.razonSocial" disabled>
+								    	</div>
+								    	<div class="col-sm-4" >					    
+									    	<label>Calle</label>
+									    	<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="pvpp.objeto.profile.empresa.calle" disabled="" >
+								    	</div>	  
+								    	<div class="col-sm-2" >					    
+									    	<label>Número </label>
+									    	<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="pvpp.objeto.profile.empresa.numero" disabled="" >
+								    	</div>  				    	    
+								    	<div class="col-sm-6" >					    
+									    	<label>Colonia </label>
+									    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" disabled="">
+								    	</div>
+								    </div>
+										<div class="row">
+											<div class="col-sm-3" >
+													<label >Pais </label>
+													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="pvpp.empresas.pais.nombre" disabled="">
+											</div>
+										  <div class="col-sm-3" >
+													<label for="seccion_id">Estado </label>
+													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="pvpp.empresas.estado.nombre"disabled="">
+											</div>	
+											<div class="col-sm-3" >
+													<label >Municipio </label>
+													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="pvpp.empresas.muncipio.nombre" disabled="">
+											</div>
+											<div class="col-sm-3" >
+													<label for="seccion_id">Ciudad </label>
+													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="pvpp.empresas.ciudad.nombre" disabled="">
+											</div>	
+							    </div>
+				      </div>
+				    </div>
+				</div>
+			</div>
+	</div>
+</div>
+</div>
+
+
+
+  <div class="collapse padding-10" id="masInformacionCredito">
+   <div class="tab-pane">
+	<div class="col-sm-12">
+		<br/>
+		<table class="table table-striped table-bordered table-condensed font-xs">
+			<thead class="thead">
+				<tr>
+					<th class="text-center" width="7%">Credito No.</th>
+					<th class="text-center" width="15%">Fecha Solicitud</th>
+					<th class="text-center" width="15%">Fecha Entrega</th>
+					<th class="text-center" width="15%">Capital Solicitado</th>
+					<th class="text-center" width="15%">Adeudo Inicial</th>
+					<th class="text-center" width="20%">Saldo Actual</th>
+					<th class="text-center" width="10%">Acciones</th>
+					<th ng-show="pvpp.openModal"></th>
+				
+					
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="credito in pvpp.historialCreditos">
+						
+					<td class="text-center">{{credito.folio}}</td>	
+					<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
+					<td class="text-center">{{credito.fechaEntrega |  date:"dd-MM-yyyy" }}</td>
+					<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
+					<td >{{credito.adeudoInicial | currency}}</td>
+					<td >{{credito.saldoActual | currency}}</td>
+					<td>
+						<div class="text-center">
+								<button type="button" class="btn btn-link" ng-click="pvpp.pagosModal(credito)">Ver Pagos</button>
+						</div>						
+					</td>
+					Pagos cliente
+<!-- modal -->
+<!-- (////////////////////////////////////////////////////////////////////////) -->
+
+
+
+
+<td ng-show="pvpp.openModal" colspan="-1">
+<div id="modalpagos" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+	  <div class="modal-dialog modal-lg" role="document">
+	    <div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Pagos</h4>
+				</div>
+				<div class="modal-body">
+				 <div>
+				   <table class="table table-striped table-bordered table-condensed font-xs">
+					<thead class="thead">
+						<tr>
+							<th class="text-center" width="7%">Recibo No.</th>
+							<th class="text-center" width="10%">Movimiento</th>
+							<th class="text-center" width="10%">Fecha</th>
+							<th class="text-center" width="10%">Cargo</th>
+							<th class="text-center" width="10%">Abono</th>
+							<th class="text-center" width="20%">Saldo</th>
+							<th class="text-center" width="20%">Nota de credito</th>
+							<th class="text-center" width="20%">Saldo actualizado</th>
+						</tr>
+					</thead>
+						<tbody>
+							<tr  ng-repeat="credito in pvpp.historial" 
+							ng-class="(credito.descripcion == 'Multa') ? 'danger' : (credito.descripcion == 'Recibo') ? 'info':'success'">
+								<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
+								<td class="text-center">{{credito.movimiento}}</td>	
+								<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
+								<td class="text-center">{{credito.cargo | currency}}</td>
+								<td class="text-right">{{credito.pago | currency}}</td>
+								<td >{{credito.saldo | currency}}</td>
+								<td >0</td>
+								<td >0</td>
+							</tr>
+						</tbody>
+					</table>
+				 	
+				 </div>
+				</div>
+				<div class="modal-footer">
+				    <button ng-click="pvpp.cerrarModal()" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+				 </div>
+			</div>
+	  </div>
+</div>
+
+
+	 </td>
+				</tr>
+			</tbody>
+		</table>	
+		
+	</div>
+   </div>
+</div>
 									</div>
 								</div>
 							</div>													
@@ -510,5 +716,8 @@
 		</div>
 	</article>
 </div>
+
+
+
 
 

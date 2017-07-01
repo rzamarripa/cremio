@@ -115,7 +115,8 @@ angular.module("creditoMio")
 		planPagos : () => {
 	        var planes = PlanPagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
 	        this.clientes_id = _.pluck(planes, "cliente_id");
-	        //console.log(this.clientes_id,"clientes")
+	        console.log(this.clientes_id,"clientes")
+	         console.log(planes,"planes")
 	        var client = ""
 			if(planes){
 				_.each(planes,function(plan){
@@ -124,17 +125,12 @@ angular.module("creditoMio")
 					console.log("variable",client)
 					plan.nombreCompleto = client.nombreCompleto
 					plan.credito = Creditos.findOne(plan.credito_id)
-					// if (plan.credito.garantias != "") {
-					// 	plan.estatusGarantia = "Si"
-					// }else{
-					// 	plan.estatusGarantia = "No"
+					if (plan.garantias == undefined) {
+						plan.garantias = "no"
+					}else{
+						plan.garantias = "si"
+					}
 
-					// }
-					// if (plan.credito.estatus == 4) {
-
-					// }else{
-					// 	planes = ""
-					// }
 				});
 			}
 			return planes
@@ -155,9 +151,9 @@ angular.module("creditoMio")
 		creditos : () => {
 			var creditos = Creditos.find().fetch();
 			_.each(creditos,function(credito){
-				console.log(credito.cliente_id);
+				//console.log(credito.cliente_id);
 				credito.cliente = Meteor.users.findOne(credito.cliente_id)
-				console.log("hola", credito.cliente)
+			//	console.log("hola", credito.cliente)
 				if(credito.cliente){
 					credito.nombreCompleto = credito.cliente.profile.nombreCompleto;
 				}
@@ -632,6 +628,11 @@ angular.module("creditoMio")
 		this.movimientoCuenta = false
 		this.diarioCreditos = true
 	}
+	this.imprimirReporte = function(){
+		
+	}
+
+	
 
 	
 

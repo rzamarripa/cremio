@@ -22,7 +22,7 @@
 <div class="well">
 	<div class="row">
 		<div class="col-sm-9">
-			<a class="btn btn-primary" ng-click="cob.AsignaFecha(0);" style="width: 130px"><i class="fa fa-table"></i> Vencido Hoy</a>	
+			<a class="btn btn-primary"  ng-click="cob.AsignaFecha(0);" style="width: 130px"><i class="fa fa-table"></i> Vencido Hoy</a>	
 			<a class="btn btn-primary" ng-click="cob.AsignaFecha(1);" style="width: 130px"><i class="fa fa-table"></i> Día</a>
 			<a class="btn btn-primary" ng-click="cob.AsignaFecha(2);" style="width: 130px"><i class="fa fa-table"></i> Semana</a>
 			<a class="btn btn-primary" ng-click="cob.AsignaFecha(3);" style="width: 130px"><i class="fa fa-table"></i> Mes</a>
@@ -54,7 +54,7 @@
 			  </div>
 		</div>
 		<div class="col-sm-6">
-			<a class="btn btn-default pull-right" ng-click="cob.imprimirRecibos(cob.cobranza)" style="width: 130px">Imprimir Recibos</a>
+			<a class="btn btn-default pull-right" ng-show="cob.verRecibos" ng-click="cob.imprimirRecibos(cob.cobranza)" style="width: 130px">Imprimir Recibos</a>
 		</div>	
 	</div>
 </div>
