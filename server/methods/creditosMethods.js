@@ -20,6 +20,7 @@ Meteor.methods({
 		c.numeroPagos = planPagos.length;
 		c.saldoActual = saldoActual;
 		c.adeudoInicial = saldoActual;
+		
 
 		var sucursal = Sucursales.findOne({_id : c.sucursal_id});
 		sucursal.folio = sucursal.folio + 1;		
@@ -43,6 +44,7 @@ Meteor.methods({
 			pago.descripcion = "Recibo";
 			PlanPagos.insert(pago);
 		});
+
 		Meteor.call("generarMultas");
 		return "hecho";
 	},

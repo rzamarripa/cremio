@@ -47,7 +47,7 @@
 						<th width="15%"> <div class="text-center">Fecha</div></th>
 						<th width="10%"><div class="text-center">Pagare</div></th>
 						<th width="10%"><div class="text-center">Recibos</div></th>
-						<!-- <th><div class="text-center">Cliente</div></th> -->
+						<th><div class="text-center">Cliente</div></th>
 						<th><div class="text-center">Nombre</div></th>
 						<th><div class="text-center">Garantia</div></th>
 						<th><div class="text-center">Solicitado</div></th>
@@ -63,6 +63,7 @@
 				    <td><div class="text-center">{{objeto.fechaSolicito  | date:"dd-MM-yyyy"}}</div></td>
 				    <td><div class="text-center">{{objeto.folio}}</div></td>
 				    <td><div class="text-center">{{objeto.numeroPagos}}</div></td>
+				    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
 				    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
 				    <td><div class="text-center">{{objeto.estatusGarantia}}</div></td>
 				    <td><div class="pull-right">{{objeto.capitalSolicitado | currency}}</div></td>

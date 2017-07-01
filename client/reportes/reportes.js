@@ -168,7 +168,10 @@ angular.module("creditoMio")
 					}else{
 						credito.estatusGarantia = "No"
 					}
+					credito.numeroCliente = credito.cliente.profile.folio
 				});
+
+				console.log("creditos",creditos)
 				return creditos
 			},
 				creditoPlanes : () => {
@@ -608,6 +611,7 @@ angular.module("creditoMio")
 	     var suma = 0
        var sumaSol = 0
 	    _.each(objeto,function(item){
+	    	console.log("item",item)
 			var fecha = ""
 	    	//item.fechaEntrega = moment(item.fechaEntrega).format("DD-MM-YYYY")
 	    	suma += item.capitalSolicitado
@@ -618,6 +622,7 @@ angular.module("creditoMio")
 	     _.each(objeto,function(item){
 	     item.sumaCapital = suma 
 	     item.sumaAPagar = sumaSol
+	    
 	      
 	 	});
 	    
