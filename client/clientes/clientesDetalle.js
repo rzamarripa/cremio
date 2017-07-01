@@ -28,6 +28,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.empresa = {}
 	rc.creActivos =false;
 	rc.creditoApro = false;
+	this.creditosRechazados = false;
 	this.respuestaNotaCLiente = false;
 	rc.objeto = {};
 	rc.objeto.profile = {};
@@ -178,6 +179,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 		creditosAprobados : () =>{
 			return Creditos.find({estatus:2});
+		},
+		creditosCancelados : () =>{
+			return Creditos.find({estatus:3});
 		},
 		creditosPendientes : () =>{
 			var creditos = Creditos.find({estatus:{$in:[0,1]}}).fetch();
@@ -595,6 +599,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.notasCre=false;
 		this.masInfoCredito = false;
 		this.creditoApro = false
+		this.creditosRechazados = false;
 	}
 	this.creditosActivos = function(){
 		this.creditoAc = !this.creditoAc;
@@ -603,6 +608,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.notasCre=false;
 		this.masInfoCredito = false;
 		this.creditoApro = false
+		this.creditosRechazados = false;
 	}
 	this.solicitudesCreditos = function(){
 		this.solicitudesCre= !this.solicitudesCre;
@@ -611,6 +617,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.notasCre=false;
 		this.masInfoCredito = false;
 		this.creditoApro = false
+		this.creditosRechazados = false;
 	}
 	this.notasCreditos = function(){
 		this.notasCre= !this.notasCre;
@@ -619,6 +626,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.masInfo = false;
 		this.masInfoCredito = false;
 		this.creditoApro = false
+		this.creditosRechazados = false;
 	}
 	this.masInformacionCrdito = function(){
 		this.masInfoCredito = !this.masInfoCredito;
@@ -627,6 +635,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.masInfo = false;
 		this.notasCre=false;
 		this.creditoApro = false;
+		this.creditosRechazados = false;
 
 	}
 	this.creAprobados = function(){
@@ -636,6 +645,18 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.solicitudesCre = false;
 		this.masInfo = false;
 		this.notasCre=false;
+		this.creditosRechazados = false
+
+	}
+	this.creRechazados = function(){
+		this.creditoApro = false;
+		this.masInfoCredito = false;
+		this.creditoAc = false;
+		this.solicitudesCre = false;
+		this.masInfo = false;
+		this.notasCre=false;
+		this.creditosRechazados = !this.creditosRechazados;
+
 
 	}
 	this.getNombreTipoNotaCredito = function (tipo_id) {
@@ -1193,15 +1214,17 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						  var url = window.URL.createObjectURL(blob);
 						  
 						  //console.log(url);
-						  if (contrato == "CONTRATO DE MUTUO CON INTERÉS") {
+						   if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
 
 						  var dlnk = document.getElementById('dwnldLnk');
+						  console.log("INTERES")
 					    dlnk.download = "CONTRATOINTERES.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 						}
-						if (contrato=="CONTRATO DE MUTUO CON INTERÉS (OBLIGADO SOLIDARIO) VFINAL") {
+						 if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
+						 	console.log("OBLIGADO SOLIDARIO")
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO.docx"; 
 							dlnk.href = url;
@@ -1209,7 +1232,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						  window.URL.revokeObjectURL(url);
 
 						}
-							if (contrato=="CONTRATO DE MUTUO CON INTERES CON GARANTIA HIPOTECARIO VFINAL") {
+							if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
+								console.log("HIPOTECARIO")
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOHIPOTECARIO.docx"; 
 							dlnk.href = url;
@@ -1217,27 +1241,42 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						  window.URL.revokeObjectURL(url);
 
 						}
-							if (contrato=="CONTRATO DE MUTUO CON INTERÉS CON GARANTÍA PRENDARIA VF") {
+							if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
+								console.log("PRENDARIA")
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOGARANTIAPRENDARIA.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 
-						}
-							if (contrato=="CONTRATO SIMPLE") {
-							var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "Documentos.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
-
-						}
-		  
+						}		  
 				   }
 				});
 		
 		};
+
+		this.recuperarCredito= function(id)
+		{
+		
+		    var r = confirm("Selecciona una opción");
+		    if (r == true) {
+		        var objeto = Creditos.findOne({_id:id});
+					if(objeto.estatus == 3)
+						objeto.estatus = 1;
+					else
+						objeto.estatus = 3;
+					
+					Creditos.update({_id: id},{$set :  {estatus : objeto.estatus}});
+
+					toastr.success('Crédito Recuperado');
+		    } else {
+	       
+	    }
+	  
+	  	
+		
+		
+	};
 	
 	
 }

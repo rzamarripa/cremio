@@ -19,7 +19,7 @@ angular.module("creditoMio")
 	this.subscribe('tiposIngreso',()=>{
 		return [{
 			estatus : true
-		}]
+		}] 
 	});
 	this.subscribe('tiposCredito',()=>{
 		return [{
@@ -315,7 +315,7 @@ angular.module("creditoMio")
 	this.imprimirDocumento = function(credito){
 		credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
     console.log(credito, "credito")
-			if (credito.tipoCredito.tipoInteres == "Simple") {
+			// if (credito.tipoCredito.tipoInteres == "Simple") {
 			
 			Meteor.call('imprimirDocumentos', $stateParams.credito_id, function(error, response) {
 				   if(error)
@@ -362,10 +362,10 @@ angular.module("creditoMio")
 		  
 				   }
 				});	
-		  }else{
-		  	rc.seleccinadorContrato = true;
-		  	rc.imprecion = false;
-		  }
+		  // }else{
+		  // 	rc.seleccinadorContrato = true;
+		  // 	// rc.imprecion = false;
+		  // }
 	  };	
 
 	  this.imprimirContrato = function(contrato){
@@ -408,15 +408,17 @@ angular.module("creditoMio")
 						  var url = window.URL.createObjectURL(blob);
 						  
 						  //console.log(url);
-						  if (contrato == "CONTRATO DE MUTUO CON INTERÉS") {
 
+						  if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
+						  console.log("INTERES")
 						  var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOINTERES.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 						}
-						if (contrato=="CONTRATO DE MUTUO CON INTERÉS (OBLIGADO SOLIDARIO) VFINAL") {
+						if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
+							 console.log("OBLIGADO SOLIDARIO");
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO.docx"; 
 							dlnk.href = url;
@@ -424,7 +426,8 @@ angular.module("creditoMio")
 						  window.URL.revokeObjectURL(url);
 
 						}
-							if (contrato=="CONTRATO DE MUTUO CON INTERES CON GARANTIA HIPOTECARIO VFINAL") {
+							if (contrato.garantias && contrato.tipoGarantia == "general") {
+								console.log("HIPOTECARIO")
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOHIPOTECARIO.docx"; 
 							dlnk.href = url;
@@ -432,7 +435,8 @@ angular.module("creditoMio")
 						  window.URL.revokeObjectURL(url);
 
 						}
-							if (contrato=="CONTRATO DE MUTUO CON INTERÉS CON GARANTÍA PRENDARIA VF") {
+							if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
+								console.log("PRENDARIA")
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOGARANTIAPRENDARIA.docx"; 
 							dlnk.href = url;

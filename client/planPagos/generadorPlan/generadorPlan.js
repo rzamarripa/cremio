@@ -337,7 +337,8 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 // 			this.con = this.con + 1;
 			this.aval.num = this.avales.length + 1;
 			
-			this.avales.push(this.aval);	
+			this.avales.push(this.aval);
+			console.log(this.avales)	
 			this.aval={};
 	};
 	

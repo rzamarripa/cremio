@@ -22,9 +22,10 @@ Meteor.methods({
 		c.adeudoInicial = saldoActual;
 
 		var sucursal = Sucursales.findOne({_id : c.sucursal_id});
-		c.folio = sucursal.folio + 1;		
+		sucursal.folio = sucursal.folio + 1;		
 			
-		Sucursales.update({_id : sucursal._id}, { $set : { folio : c.folio}});
+		c.folio = sucursal.folio;
+		Sucursales.update({_id : sucursal._id}, { $set : { folio : sucursal.folio}});
 				
 		var idTemp = c._id;
 		delete c._id;		
