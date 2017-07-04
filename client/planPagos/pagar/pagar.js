@@ -265,14 +265,52 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 
 			//console.log("el ARREGLO del helper historial",arreglo)
 			if(this.getReactively("credito_id")){
-				var filtrado = [];
-				_.each(arreglo, function(pago){
-					if(pago.credito_id == rc.credito_id){
-						filtrado.push(pago);
-					}
-				})
-				return filtrado;
-			}
+        var filtrado = [];
+        var flags = {
+          abonoKey: undefined,
+          multaKey:undefined
+        };
+			_.each(arreglo, function(pago,key){
+          if(pago.descripcion == "Cargo Moratorio"){
+            flags.multaKey = key;
+          }
+          if(pago.descripcion == "Recibo"){
+            flags.abonoKey = key;
+          }
+          if(pago.descripcion == "Abono de Multa"){
+            console.log(flags);
+            console.log(arreglo[flags.multaKey].saldoActualizado);
+            if(arreglo[flags.multaKey].saldoActualizado){
+              arreglo[flags.multaKey].saldoActualizado -= pago.pago;
+            }else{
+              arreglo[flags.multaKey].saldoActualizado = arreglo[flags.multaKey].cargo - pago.pago;
+            }
+          }
+          if(pago.descripcion == "Abono"){
+            if(arreglo[flags.abonoKey].saldoActualizado){
+              arreglo[flags.abonoKey].saldoActualizado -= pago.pago;
+            }else{
+              arreglo[flags.abonoKey].saldoActualizado = arreglo[flags.abonoKey].cargo - pago.pago;
+            }
+          }
+          if(pago.credito_id == rc.credito_id){
+            filtrado.push(pago);
+          }
+          if(pago.numeroPago % 2 == 0)
+            {
+              
+              pago.tipoPar = "par"
+            }
+            else
+            {
+              
+              pago.tipoPar = "impar"
+            }
+
+        })
+			 console.log(filtrado,"filtrado")
+        return filtrado;
+      }
 			
 			return arreglo;
 		},

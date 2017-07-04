@@ -278,8 +278,8 @@ Meteor.methods({
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
 	
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 
 		var opts = {}
@@ -314,10 +314,13 @@ Meteor.methods({
 
 		
 		var fecha = new Date();
+			    hora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+
 		fecha.setHours(0,0,0,0);
 		var fechaNaci = objeto.profile.fechaNacimiento;
+		
     	//var f = fecha;
-    	hora = fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    	
     	fechaAltaCliente = new Date(objeto.profile.fechaCreacion)
     	fechaAltaCliente.setHours(0,0,0,0)
     	fechaAlta = fechaAltaCliente.getUTCDate()+'-'+(fechaAltaCliente.getUTCMonth()+1)+'-'+fechaAltaCliente.getUTCFullYear();
@@ -360,23 +363,12 @@ Meteor.methods({
 	    var col = objeto.coloniaEmpresa;
 	    var coloniaEmpresa = col.toUpperCase();
 	    
-	    // var cas = objeto.profile.casa
-	    // var casa = cas.toUpperCase();
-	    // var loca = objeto.empresa.municipio;
-	    // var LocalidadEmpresa = loca.toUpperCase();
 
-	  //    var dep = objeto.empresa.departamento;
-		 // var departamento = dep.toUpperCase();
-		 // var pues = objeto.empresa.puesto;
-		 // var puesto = pues.toUpperCase();
-		 
-		 // var jef = objeto.empresa.jefeInmediato;
+
+diato;
 		 // var jefe = jef.toUpperCase();
 		 var cas = objeto.profile.casa;
 		 var casa = cas.toUpperCase();
-
-
-
 
 
 	    var f = String(objeto.profile.foto);
@@ -386,6 +378,13 @@ Meteor.methods({
 
 					fs.writeFileSync(produccion+".jpeg", bitmap);
 					objeto.profile.foto = produccion+".jpeg";
+						_.each(referencia,function(relacion){
+						 	if (relacion.apellidoMaterno == undefined) {
+						 		relacion.apellidoMaterno = "";
+						 	}
+						 	relacion.nombreCompleto = relacion.nombre+' '+relacion.apellidoPaterno+' '+relacion.apellidoMaterno
+
+						 });
 
 
 		doc.setData({				nombreCompleto: 		nombreCliente,//bien
@@ -423,7 +422,7 @@ Meteor.methods({
 									 gastosFijos:           objeto.profile.gastosFijos,
 									 gastoEventuales:       objeto.profile.gastosEventuales,
 									 otrosIngresos:         objeto.otrosIngresos,
-									 referencias: 			referencia,
+									 referencias: 			    referencia,
 
 
 									 /////////////////// CONTACTO //////////////////////
@@ -443,6 +442,7 @@ Meteor.methods({
 									cpEmpresa:             objeto.empresa.codigoPostal,
 									paisEmpresa:           objeto.paisEmpresa,
 									municipioEmpresa:      objeto.municipioEmpresa,
+									estadoEmpresa:         objeto.estadoEmpresa,
 									//jefe:                  jefeEmpresa,
 									//antiguedadEmpresa:      antiguedadEmpresa,      
 
@@ -615,8 +615,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"reporteDiarioCobranza.docx", "binary");
@@ -670,15 +670,16 @@ Meteor.methods({
 	
 	    console.log(objeto.planPagos);
 		
-				doc.setData({				items: 		 objeto,
-														fecha:     fecha,
-														inicial:    fInicial,
-														final:      fFinal,
-														sumaCapital: suma,
-														sumaIntereses:  sumaInter,
-														sumaIva: sumaIva,
-														totalCobranza: totalcobranza,
-				
+		      doc.setData({				
+      	            items: 		      objeto,
+										fecha:          fecha,
+										inicial:        fInicial,
+										final:          fFinal,
+										sumaCapital:    parseFloat(suma.toFixed(2)),
+										sumaIntereses:  parseFloat(sumaInter.toFixed(2)),
+										sumaIva:        parseFloat(sumaIva.toFixed(2)),
+										totalCobranza:  parseFloat(totalcobranza.toFixed(2)),
+		
 				  });
 								
 		doc.render();
@@ -704,8 +705,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteDiarioCreditos.docx", "binary");

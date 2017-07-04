@@ -13,6 +13,12 @@ angular.module("creditoMio")
   rc.buscar.nombre = "";
   rc.credito_id = "";
   this.clientes_id = [];
+  rc.sumaCapital = "";
+	rc.sumaInteres = "";
+	rc.sumaIva = "";
+	rc.totalCobranza ="";
+	rc.totalSolicitado="";
+	rc.totalPagar ="";
   
   var FI, FF;
   rc.cliente = {};
@@ -120,6 +126,9 @@ angular.module("creditoMio")
 	        
 	        
 	        var client = ""
+	        var suma = 0
+		      var sumaInter = 0
+		      var sumaIva = 0
 			if(planes){
 				_.each(creditos,function(credit){
 				_.each(planes,function(plan){
@@ -135,6 +144,30 @@ angular.module("creditoMio")
 					}
 				});
 			 });
+
+				_.each(planes,function(plan){
+					plan.numerosPagos= plan.credito.folio
+	    	plan.numeroCliente = plan.cliente.profile.folio
+	    	suma += plan.pago
+	    	sumaInter += plan.interes
+	    	sumaIva += plan.iva 
+				});
+
+
+				_.each(planes,function(plan){
+	     plan.sumaCapital = suma 
+	     plan.sumaInteres = sumaInter
+	     plan.sumaIva = sumaIva  
+	     plan.sumaCapital = parseFloat(plan.sumaCapital.toFixed(2))
+	     plan.sumaInteres = parseFloat(plan.sumaInteres.toFixed(2))
+	     plan.sumaIva = parseFloat(plan.sumaIva.toFixed(2))
+	     rc.sumaCapital = plan.sumaCapital
+	     rc.sumaInteres = plan.sumaInteres
+	     rc.sumaIva = plan.sumaIva
+	     rc.totalCobranza = plan.sumaCapital + plan.sumaInteres +sumaIva
+	     //rc.sumaCapital = plan.sumaCapital
+
+	 	});
 			}
 
 			 console.log(planes,"planes")
@@ -171,9 +204,29 @@ angular.module("creditoMio")
 					credito.numeroCliente = credito.cliente.profile.folio
 				});
 
+				var suma = 0
+        var sumaSol = 0
+	    _.each(creditos,function(credito){
+	 	   	suma += credito.capitalSolicitado
+	    	sumaSol += credito.adeudoInicial
+	   
+	    });
+
+	     _.each(creditos,function(credito){
+	     credito.sumaCapital = suma 
+	     credito.sumaAPagar = sumaSol
+	     rc.totalPagar = parseFloat(credito.sumaAPagar.toFixed(2))
+	     rc.totalSolicitado = parseFloat(credito.sumaCapital.toFixed(2))
+	  	});
+
 				console.log("creditos",creditos)
 				return creditos
 			},
+				
+
+
+
+
 				creditoPlanes : () => {
 				var creditos = Creditos.find({}).fetch();
 				_.each(creditos,function(credito){
@@ -472,27 +525,20 @@ angular.module("creditoMio")
 			 				function b64toBlob(b64Data, contentType, sliceSize) {
 								  contentType = contentType || '';
 								  sliceSize = sliceSize || 512;
-								
 								  var byteCharacters = atob(b64Data);
 								  var byteArrays = [];
-								
 								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
 								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
 								    var byteNumbers = new Array(slice.length);
 								    for (var i = 0; i < slice.length; i++) {
 								      byteNumbers[i] = slice.charCodeAt(i);
 								    }
-								
 								    var byteArray = new Uint8Array(byteNumbers);
-								
 								    byteArrays.push(byteArray);
 								  }
-								    
 								  var blob = new Blob(byteArrays, {type: contentType});
 								  return blob;
 							}
-							
 							var blob = b64toBlob(response, "application/docx");
 						  var url = window.URL.createObjectURL(blob);
 						  
@@ -503,13 +549,10 @@ angular.module("creditoMio")
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
-  
+ 
 		   }
 		});
-
-		
 	};
-
 
 	this.mostrarDiarioCobranza = function(){
 		this.diarioCobranza = true
@@ -533,27 +576,24 @@ angular.module("creditoMio")
 		var sumaIva = 0
 		_.each(objeto,function(item){
 			
-			var fecha = ""
-	    	
 	    	item.numerosPagos= item.credito.folio
 	    	item.numeroCliente = item.cliente.profile.folio
 	    	suma += item.pago
 	    	sumaInter += item.interes
 	    	sumaIva += item.iva 
 	    	});
-            
-	    	// item.credito = _.toArray({credito:item.credito});
-	    	
-	    	//moment(item.fechaPago).format("DD-MM-YYYY").toDate()
+   
 
 	    _.each(objeto,function(item){
 	     item.sumaCapital = suma 
 	     item.sumaInteres = sumaInter
 	     item.sumaIva = sumaIva  
+	     item.sumaCapital = parseFloat(item.sumaCapital.toFixed(2))
+	     item.sumaInteres = parseFloat(item.sumaInteres.toFixed(2))
+	     item.sumaIva = parseFloat(item.sumaIva.toFixed(2))
 	 	});
 
 	    console.log("objetoooooooooooooooo",objeto)
-	    
 
 		   Meteor.call('ReporteCobranza', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
 
@@ -622,9 +662,7 @@ angular.module("creditoMio")
 	     _.each(objeto,function(item){
 	     item.sumaCapital = suma 
 	     item.sumaAPagar = sumaSol
-	    
-	      
-	 	});
+	  	});
 	    
 		   Meteor.call('ReporteCreditos', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
 
@@ -635,42 +673,40 @@ angular.module("creditoMio")
 		   }
 		   else
 		   {
-			 				function b64toBlob(b64Data, contentType, sliceSize) {
-								  contentType = contentType || '';
-								  sliceSize = sliceSize || 512;
-								
-								  var byteCharacters = atob(b64Data);
-								  var byteArrays = [];
-								
-								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-								    var byteNumbers = new Array(slice.length);
-								    for (var i = 0; i < slice.length; i++) {
-								      byteNumbers[i] = slice.charCodeAt(i);
-								    }
-								
-								    var byteArray = new Uint8Array(byteNumbers);
-								
-								    byteArrays.push(byteArray);
-								  }
-								    
-								  var blob = new Blob(byteArrays, {type: contentType});
-								  return blob;
-							}
+		 				function b64toBlob(b64Data, contentType, sliceSize) {
+							  contentType = contentType || '';
+							  sliceSize = sliceSize || 512;
 							
-							var blob = b64toBlob(response, "application/docx");
-						  var url = window.URL.createObjectURL(blob);
-						  
-						  //console.log(url);
-						  var dlnk = document.getElementById('dwnldLnk');
+							  var byteCharacters = atob(b64Data);
+							  var byteArrays = [];
+							
+							  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+							    var slice = byteCharacters.slice(offset, offset + sliceSize);
+							
+							    var byteNumbers = new Array(slice.length);
+							    for (var i = 0; i < slice.length; i++) {
+							      byteNumbers[i] = slice.charCodeAt(i);
+							    }
+							
+							    var byteArray = new Uint8Array(byteNumbers);
+							
+							    byteArrays.push(byteArray);
+							  }
+							    
+							  var blob = new Blob(byteArrays, {type: contentType});
+							  return blob;
+						}
+						
+						var blob = b64toBlob(response, "application/docx");
+					  var url = window.URL.createObjectURL(blob);
+					  
+					  //console.log(url);
+					  var dlnk = document.getElementById('dwnldLnk');
 
-					    dlnk.download = "ReporteDiarioCreditos.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
-
-  
+				    dlnk.download = "ReporteDiarioCreditos.docx"; 
+						dlnk.href = url;
+						dlnk.click();		    
+					  window.URL.revokeObjectURL(url);
 		   }
 		});
 		
