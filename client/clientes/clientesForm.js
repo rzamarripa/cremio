@@ -307,8 +307,7 @@ this.tomarFoto = function(objeto){
 	      	objeto.password = Math.random().toString(36).substring(2,7);		
 	      	console.log(objeto.password);			
       }	
-			console.log(objeto);
-      
+			//console.log(objeto);
       
       objeto.profile.estatus = true;
       //rc.documentos
@@ -322,6 +321,7 @@ this.tomarFoto = function(objeto){
       var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
+/*
       ////////////gg///////////////////////////////////////////////////////////////////
         if(rc.configuraciones.folioCliente >= 1){
           console.log("entro");
@@ -332,6 +332,7 @@ this.tomarFoto = function(objeto){
 
         }
         //////////////////////////////////////////////////////////////////////////////////////
+*/
       Meteor.call('createUsuario', objeto, "Cliente", function(e,r){
           if (r)
           {
@@ -397,9 +398,8 @@ this.tomarFoto = function(objeto){
       empresa.usuarioInserto = Meteor.userId();
       //objeto.profile.foto = this.objeto.profile.foto;
       
-      
       Empresas.insert(empresa, function(error, result)
-             {
+             	{
                 if (error){
                   console.log("error: ",error);
                 }
@@ -415,9 +415,7 @@ this.tomarFoto = function(objeto){
                     $("[data-dismiss=modal]").trigger({ type: "click" });
                     
                 }
-             }
-    );
-          
+      				});
   };
     
   this.AgregarCliente = function(a){

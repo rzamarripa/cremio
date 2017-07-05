@@ -795,6 +795,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			templateUrl: 'client/cajas/resumen.ng.html',
 			controller: 'CajaResumenCtrl as cj',
 		})
+		.state('root.diasInhabiles', {
+			url: '/diasInhabiles',
+			templateUrl: 'client/administracion/diasInhabiles.ng.html',
+			controller: 'diasInhabilesCtrl as di',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 }]);
 
 function irArriba(){

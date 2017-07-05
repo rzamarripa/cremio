@@ -124,6 +124,12 @@
 						<span class="menu-item-child">Traspasos de Cuenta a Cuenta</span>
 					</a>
 				</li>
+				<li ng-if="currentUser.roles[0] == 'Gerente'">
+					<a ui-sref="root.diasInhabiles" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-calendar"></i>
+						<span class="menu-item-child">Días Inhábiles</span>
+					</a>
+				</li>
 			</ul>
 		</li>		
 		
@@ -257,6 +263,7 @@
                 </li>
             </ul>
         </li>
+<!--
         <li data-menu-collapse>
             <a ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
                 <i class="fa fa-lg fa-fw fa-inbox"></i>
@@ -295,5 +302,6 @@
                 </li>
             </ul>
         </li>
+-->
     </ul>
 </nav>

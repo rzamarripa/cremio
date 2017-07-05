@@ -763,7 +763,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.cancelarCredito = function(motivo){
 			
 			var cre = Creditos.findOne({folio : rc.cancelacion.folio});
-			Creditos.update({_id : cre._id}, { $set : {estatus : 6, motivo: motivo}});
+			Creditos.update({_id : cre._id}, { $set : {estatus : 3, motivo: motivo}});
 			toastr.success("El crédito se ha cancelado.")
 			$("[data-dismiss=modal]").trigger({ type: "click" });			
 		
