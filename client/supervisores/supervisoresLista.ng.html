@@ -15,39 +15,67 @@
 					<i class="fa fa-plus"></i> Nuevo
 				</a>
 			</div>
-			<input class="form-control" type="text" placeholder="Buscar..." ng-model="sup.buscar.nombre">
+			<input class="form-control" type="text" placeholder="Buscar..." ng-model="buscar.profile.nombreCompleto">
 		</div>
 	</div>
 </div>
 <div class="row">
-	<div class="col-lg-3" ng-repeat="supervisor in sup.supervisores">
-      <div class="contact-box center-version">
-
-          <a href="/supervisores/{{supervisor._id}}" style="text-decoration: none;">
-
-              <img alt="image" class="img-circle" ng-src="{{sup.tieneFoto(supervisor.profile.sexo, supervisor.profile.foto)}}">
-           <!--   <img alt="image" class="img-circle" ng-src="img/badmenprofile.png"> -->
-
-
-              <p class="lead font-xs text-center"><strong>{{supervisor.profile.nombre}} <br/> {{supervisor.profile.apPaterno}} {{supervisor.profile.apMaterno}}</strong></p>
-
-              <div class="font-bold">{{supervisor.username}}</div>
-              <address class="font-xs">
-                  <strong>Cliente</strong><br>
-                  {{supervisor.profile.call}} {{supervisor.profile.numero}}<br>
-                  {{supervisor.profile.colonia}}<br>
-                  <abbr title="Teléfono">T1:</abbr> {{supervisor.profile.telefono}}<br/>
-                  <abbr title="Celular">C2:</abbr> {{supervisor.profile.celular}}
-              </address>
-
-          </a>
-          <div class="contact-box-footer">
-              <div class="m-t-xs btn-group">
-                  <a href="/supervisores/{{supervisor._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
-                  <a href="/editarSupervisor/{{supervisor._id}}" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Editar</a>
+	<br/>
+  <div class="col-sm-12">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+        <th width="10%"><div class="text-center">No.</div></th>
+          <th width="30%"><div class="text-center">Nombre</div></th>
+          <th width="15%"><div class="text-center">Télefono</div></th>
+          <th width="15%"><div class="text-center">Celular</div></th>
+          <th width="10%">
+            <div class="text-center">
+              Estatus
+            </div>
+          </th>
+          <th width="15%">
+            <div class="text-center">
+              Acciones
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="objeto in sup.supervisores | orderBy:'profile.nombreCompleto'  | filter:buscar">
+        <td><div class="text-center">{{$index + 1}}</div></td>
+          <td><div class="text-center">{{objeto.profile.nombreCompleto}}</div></td>
+          <td><div class="text-center">{{objeto.profile.telefono}}</div></td>
+            <td><div class="text-center">{{objeto.profile.celular}}</div></td>
+          <td>
+           
+            <div class="text-center">
+              <span ng-if="objeto.profile.estatus" class="label label-success">
+                Activo
+              </span>
+              <span ng-if="!objeto.profile.estatus" class="label label-danger">
+                Inactivo
+              </span>
+            </div>
+          </td>
+          <td>
+            <div class="text-center">
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu text-left">
+                  <li><a href="#" ng-click="sup.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+                  <li><a href="#" ng-click="sup.cambiarEstatus(objeto._id)">
+                    <i class="fa fa-{{objeto.estatus ? 'trash' : 'check' }}"></i> {{objeto.estatus ? "Desactivar" : "Activar" }}</a>
+                  </li>
+                </ul>
               </div>
-          </div>
-
-      </div>
+            </div>            
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

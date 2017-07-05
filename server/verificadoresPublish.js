@@ -9,6 +9,6 @@ Meteor.publish("buscarVerificadores",function(options){
 		}
 });
 
-Meteor.publish("verificadores",function(options){
-  return Meteor.users.find(options.id);
+Meteor.publish("verificadores",function(params){
+  return Meteor.users.find(params);
 });
