@@ -265,6 +265,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		            Meteor.call('getPersona', referenciaPersonal_id, cli._id, function(error, result){           
 		                  if (result)
 		                  {
+		                  	if (result.apellidoMaterno == null) {
+		                  		result.apellidoMaterno = ""
+		                  	}
 		                      //Recorrer las relaciones 
 		                      rc.referenciasPersonales.push({buscarPersona_id : referenciaPersonal_id,
 		                                                     nombre           : result.nombre,
@@ -486,14 +489,52 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				//console.log(rc.saldo)
 			});
 			if(this.getReactively("credito_id")){
-				var filtrado = [];
-				_.each(arreglo, function(pago){
-					if(pago.credito_id == rc.credito_id){
-						filtrado.push(pago);
-					}
-				})
-				return filtrado;
-			}
+        var filtrado = [];
+        var flags = {
+          abonoKey: undefined,
+          multaKey:undefined
+        };
+			_.each(arreglo, function(pago,key){
+          if(pago.descripcion == "Cargo Moratorio"){
+            flags.multaKey = key;
+          }
+          if(pago.descripcion == "Recibo"){
+            flags.abonoKey = key;
+          }
+          if(pago.descripcion == "Abono de Multa"){
+            console.log(flags);
+            console.log(arreglo[flags.multaKey].saldoActualizado);
+            if(arreglo[flags.multaKey].saldoActualizado){
+              arreglo[flags.multaKey].saldoActualizado -= pago.pago;
+            }else{
+              arreglo[flags.multaKey].saldoActualizado = arreglo[flags.multaKey].cargo - pago.pago;
+            }
+          }
+          if(pago.descripcion == "Abono"){
+            if(arreglo[flags.abonoKey].saldoActualizado){
+              arreglo[flags.abonoKey].saldoActualizado -= pago.pago;
+            }else{
+              arreglo[flags.abonoKey].saldoActualizado = arreglo[flags.abonoKey].cargo - pago.pago;
+            }
+          }
+          if(pago.credito_id == rc.credito_id){
+            filtrado.push(pago);
+          }
+          if(pago.numeroPago % 2 == 0)
+            {
+              
+              pago.tipoPar = "par"
+            }
+            else
+            {
+              
+              pago.tipoPar = "impar"
+            }
+
+        });
+			 console.log(filtrado,"filtrado")
+        return filtrado;
+      }
 
 			//console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
@@ -879,7 +920,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	    objeto.ciudadEmpresa = rc.ciudades[objeto.profile.empresa.ciudad_id].nombre;
 	    objeto.municipioEmpresa = rc.municipios[objeto.profile.empresa.municipio_id].nombre;
 	    objeto.paisEmpresa = rc.paises[objeto.profile.empresa.pais_id].nombre;
+	    objeto.estadoEmpresa = rc.estados[objeto.profile.empresa.estado_id].nombre;
 	    objeto.coloniaEmpresa = rc.colonias[objeto.profile.empresa.colonia_id].nombre;
+	     _.each(rc.referencias,function(relacion){
+						 	if (relacion.apellidoMaterno == null) {
+						 		relacion.apellidoMaterno = "";
+						 	}
+
+						 });
 	   
 	    console.log("cliente",objeto)
 	  

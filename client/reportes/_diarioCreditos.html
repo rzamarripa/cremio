@@ -5,11 +5,18 @@
 				Reportes
 		</h1>
 	</div>
+	<div class="">
+			<ul id="sparks" class="">
+				<li class="sparks-info">
+					<h5>Total a Pagar <span class="txt-color-green" style="text-align: right">{{re.totalPagar | currency}}</span></h5>
+				<li class="sparks-info">
+					<h5>Total Solicitado <span class="txt-color-red" style="text-align: right">{{re.totalSolicitado | currency}}</span></h5>
+
+			</ul>
+		</div>
 
 </div>
 <br>
-
-
 <div class="well">
 	<div class="row">
 		<div class="col-sm-3">
@@ -54,7 +61,6 @@
 					<!-- 	<th><div class="text-center">T</div></th> -->
 						<th><div class="text-center">A pagar</div></th>
 						<!-- <th><div class="text-center">Condonado</div></th> -->
-					
 					</tr>
 				</thead>
 				<tbody>

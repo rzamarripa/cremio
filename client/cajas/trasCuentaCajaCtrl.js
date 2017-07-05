@@ -83,7 +83,6 @@ angular.module("creditoMio")
 			//objeto.usuarioResponsable = "";
 			var cuenta = Cuentas.findOne(objeto.origen_id);
 			Meteor.call ("traspasoCuentaCaja",objeto.origen_id,objeto.destino_id,objeto.importe,cuenta.tipoIngreso_id,function(error,result){
-		
 				if(error){
 					console.log(error);
 					toastr.error('Error al guardar los datos.');
@@ -97,8 +96,6 @@ angular.module("creditoMio")
 				form.$setUntouched();
 				//$state.go('root.cajerosLista');
 			});
-			
-		
 	};
 
 

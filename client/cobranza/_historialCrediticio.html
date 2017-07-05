@@ -36,8 +36,9 @@
 
 	   
 		    <table class="table table-striped table-bordered table-condensed font-xs">
-				<thead class="thead">
+				<thead class="thead" >
 					<tr>
+					
 						<th class="text-center" width="7%">Recibo No.</th>
 						<th class="text-center" width="10%">Movimiento</th>
 						<th class="text-center" width="10%">Fecha</th>
@@ -48,9 +49,12 @@
 						<th class="text-center" width="20%">Saldo actualizado</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr  ng-repeat="credito in cob.historialDelCredito" 
-					ng-class="(credito.descripcion == 'Cargo Moratorio') ? 'danger' : (credito.descripcion == 'Recibo') ? 'info':'success'">
+				<!-- class="btn btn-{{col.nuevo == true ? 'primary' : 'danger'}}" -->
+				<!-- <li data-ng-repeat="item in items" data-ng-class-even="'even'" data-ng-class-odd="'odd'"> -->
+				<!-- ng-class="(credito.descripcion == 'Cargo Moratorio') ? 'danger' : (credito.descripcion == 'Recibo') ? 'info':'success'"> -->
+				<tbody >
+					<tr  ng-repeat="credito in cob.historialDelCredito " 
+					   ng-class="(credito.tipoPar == 'par') ? 'default' : (credito.tipoPar == 'impar') ? 'info': 'success'"> 					 
 						<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
 						<td class="text-center">{{credito.movimiento}}</td>	
 						<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>

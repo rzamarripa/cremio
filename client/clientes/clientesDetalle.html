@@ -48,20 +48,20 @@
 		<li class="pull-right">
 			<a href="#informacionCliente" data-toggle="tab" ng-click="cd.masInformacion()">Información del Cliente</a>
 		</li>
-		<!-- <li class="pull-right">
-			<a href="#historialCrediticio" ng-click="cd.masInformacionCrdito()"  data-toggle="tab">Historial Crediticio</a>
-		</li> -->
 		<li class="pull-right">
-			<a href="#solicitudes" ng-click="cd.solicitudesCreditos()" data-toggle="tab">Solicitudes Créditos</a>
+			<a href="#historialCrediticio" ng-click="cd.masInformacionCrdito()"  data-toggle="tab">Historial Crediticio</a>
+		</li>
+		<li class="pull-right">
+			<a href="#solicitudes" ng-click="cd.solicitudesCreditos()" data-toggle="tab">Solicitudes </a>
 		</li>
 		<li class="pull-right">
 			<a href="#notasCredito" ng-click="cd.notasCreditos()" data-toggle="tab">Notas Créditos</a>
 		</li>
 		<li class="pull-right">
-			<a href="#aprobados" ng-click="cd.creAprobados()" data-toggle="tab">Créditos Aprobados</a>
+			<a href="#aprobados" ng-click="cd.creAprobados()" data-toggle="tab"><span class="badge bg-color-green txt-color-white pull-right">{{cd.creditosAprobados.length}}</span>Créditos Aprobados</a>
 		</li>
 		<li class="pull-right">
-			<a href="#rechazados" ng-click="cd.creRechazados()" data-toggle="tab">Créditos Rechazados</a>
+			<a href="#rechazados" ng-click="cd.creRechazados()" data-toggle="tab"><span class="badge bg-color-red txt-color-white pull-right">{{cd.creditosCancelados.length}}</span>Solicitudes Rechazadas</a>
 		</li>
 	</ul>
 
@@ -671,7 +671,7 @@
 							</thead>
 							<tbody>
 								<tr  ng-repeat="credito in cd.historial" 
-								ng-class="(credito.descripcion == 'Cargo Moratorio') ? 'danger' : (credito.descripcion == 'Recibo') ? 'info':'success'">
+								ng-class="(credito.tipoPar == 'par') ? 'default' : (credito.tipoPar == 'impar') ? 'info': 'success'">
 									<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
 									<td class="text-center">{{credito.movimiento}}</td>	
 									<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>

@@ -245,7 +245,20 @@ angular.module("creditoMio")
           if(pago.credito_id == rc.credito_id){
             filtrado.push(pago);
           }
+          if(pago.numeroPago % 2 == 0)
+            {
+              
+              pago.tipoPar = "par"
+            }
+            else
+            {
+              
+              pago.tipoPar = "impar"
+            }
+
         })
+
+        console.log(filtrado,"filtrado")
         return filtrado;
       }
       
@@ -1206,5 +1219,13 @@ angular.module("creditoMio")
       }
     });
   };  
+
+   this.checkValue1= function() 
+  {
+    expect(element(by.repeater('credito in rc.historialDelCredito').row(0).column('credito')).getAttribute('class')).
+      toMatch(/odd/);
+    expect(element(by.repeater('credito in rc.historialDelCredito').row(1).column('credito')).getAttribute('class')).
+      toMatch(/even/);
+  };
 
 };

@@ -6,7 +6,7 @@
 					<strong> <h2>Credito Mio</h2> </strong>
 					<strong>-----------INGRESOS POR FORMA DE PAGO------------</strong>
 					<table class="table">
-						<tr ng-repeat="(key, resu) in cj.resumen">
+						<tr ng-repeat="(key, resu) in cj.ingresosAgrupados">
 							<td>
 								{{key}}
 							</td>
@@ -19,7 +19,7 @@
 								<strong>Total: </strong>
 							</td>
 							<td>
-								<strong>{{cj.total | currency}}</strong>
+								<strong>{{cj.totalIngresos | currency}}</strong>
 							</td>
 						</tr>
 					</table>
@@ -30,10 +30,10 @@
 								CREDITOS ENTREGADOS:
 							</td>
 							<td align="right">
-								{{cj.entregados.cantidad}}
+								{{cj.creditosEntregados}}
 							</td>
 						</tr>
-						<tr ng-repeat="(key, ag) in cj.entregados.agrupados">
+						<tr ng-repeat="(key, ag) in cj.creditosAgrupados">
 							<td>
 								{{key}}
 							</td>
@@ -46,10 +46,39 @@
 								<strong>Total: </strong>
 							</td>
 							<td>
-								<strong>{{cj.entregados.total | currency}}</strong>
+								<strong>{{cj.totalCreditos | currency}}</strong>
 							</td>
 						</tr>
 					</table>
+					<strong>----------TRANSF. DE FONDOS A VENTANILLA----------</strong>
+					<table class="table">
+						<tr>
+							<td>
+								<strong>MONEDA NACIONAL: </strong>
+							</td>
+							<td>
+								<strong>{{cj.totalTransAVentanilla | currency}}</strong>
+							</td>
+						</tr>
+					</table>
+					<strong>---------TRANSF. DE FONDOS DE VENTANILLA---------</strong>
+					<table class="table">
+						<tr>
+							<td>
+								<strong>MONEDA NACIONAL: </strong>
+							</td>
+							<td>
+								<strong>{{cj.totalTransDeVentanilla | currency}}</strong>
+							</td>
+						</tr>
+					</table>
+					<div class="row">
+						<div class="col-sm-12">
+							<span class="pull-left">(=)EFECTIVO EN CAJA:</span> 
+							<span class="pull-right">{{cj.totalEnCaja | currency}}</span>
+						</div>
+					</div>
+					
 					<address>
 						OPERADOR (A): {{cj.caja.cajero.profile.nombreCompleto}}<br>
 						ADMINISTRADOR (A):<br>
