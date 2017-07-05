@@ -1,6 +1,35 @@
 Meteor.methods({
   createUsuario: function (usuario, rol, grupo) {
 	  
+	  var sucursal;
+	  if (rol == "Cliente")
+		{
+				sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
+				var numero;
+				if (sucursal.folioCliente != undefined)				
+				 	  numero = sucursal.folioCliente + 1;
+				 else	
+				 {
+						sucursal.folioCliente = 0;
+						numero = sucursal.folioCliente + 1;
+				 }
+				
+				if (numero < 10)
+					 usuario.username = sucursal.clave + '-000' + numero;
+				else if (numero < 100)
+	  			 usuario.username = sucursal.clave + '-00' + numero;
+	  		else if (numero < 1000)
+	  			 usuario.username = sucursal.clave + '-0' + numero;	 
+	  		else
+	  			 usuario.username = sucursal.clave + '-' + numero;
+	  			 	  			 	 
+	  		//usuario.contrasena = Math.random().toString(36).substring(2,7);
+	  		usuario.password = '123';
+	  		sucursal.folioCliente = numero;
+	  		usuario.profile.numeroCliente = usuario.username;
+	  		
+	  }
+
 		var usuario_id = Accounts.createUser({
 			username: usuario.username,
 			password: usuario.password,			
@@ -9,17 +38,21 @@ Meteor.methods({
 		
 		Roles.addUsersToRoles(usuario_id, rol, grupo);
 		
-/*
+
 		if (rol == "Cliente")
 		{
+				Sucursales.update({_id: sucursal._id},{$set:{folioCliente : sucursal.folioCliente}});
+				
+/*
 				Meteor.call('sendEmail',
 					usuario.profile.correo,
 					'sistema@corazonvioleta.mx',
 					'Bienvenido a Crédito Mio',
 					'Usuario: '+ usuario.username + ' contraseña: ' + usuario.password
 				);
-		}
 */
+		}
+
 
 		//Insertar en personas el Cliente (Regresar el id)
 		var usuarioPersona = {};
@@ -32,9 +65,11 @@ Meteor.methods({
 				usuarioPersona.apellidoMaterno	= usuario.profile.apellidoMaterno;
 				usuarioPersona.nombreCompleto	= usuario.profile.nombreCompleto;
 				usuarioPersona.relaciones = [];
+/*
 				if (rol == "Cliente") {
 					usuarioPersona.folio= usuario.profile.folio
 				}
+*/
 		
 				Personas.insert(usuarioPersona)
 				
