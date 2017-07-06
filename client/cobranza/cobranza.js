@@ -245,7 +245,20 @@ angular.module("creditoMio")
           if(pago.credito_id == rc.credito_id){
             filtrado.push(pago);
           }
+          if(pago.numeroPago % 2 == 0)
+            {
+              
+              pago.tipoPar = "par"
+            }
+            else
+            {
+              
+              pago.tipoPar = "impar"
+            }
+
         })
+
+        console.log(filtrado,"filtrado")
         return filtrado;
       }
       
@@ -1017,7 +1030,7 @@ angular.module("creditoMio")
 
   this.verPagos= function(credito) {
 
-    //console.log(credito,"el ob ")
+    //console.log(credito,"el credito ")
     rc.credito = credito;
     rc.credito_id = credito._id;
     $("#modalpagos").modal();
@@ -1108,11 +1121,38 @@ angular.module("creditoMio")
 
   };
 
-  this.imprimirHistorial= function(objeto,cliente) 
+  this.imprimirHistorial= function(objeto,cliente,credito) 
   {
-  
-  
-  _.each(objeto,function(item){
+
+    var sumaCargos = 0
+    var sumaAbonos = 0
+    var popo = 0
+    objeto.objetoFinal = objeto[objeto.length - 1];
+      _.each(objeto,function(item){
+
+        if (item.movimiento == "Cargo Moratorio") {
+          sumaCargos += item.importe
+          sumaAbonos += item.pago
+
+        }
+        if (item.movimiento == "Abono") {
+          sumaAbonos += item.pago
+
+        }
+      
+        // suma += item.capitalSolicitado
+        // sumaSol += item.adeudoInicial
+        popo = objeto.objetoFinal.saldo
+        item.ultimoSaldo =  popo
+     
+      });
+
+       _.each(objeto,function(item){
+       item.sumaCargos = sumaCargos
+       item.sumaAbonos = sumaAbonos
+        
+    });
+    _.each(objeto,function(item){
     //console.log(item,"item")
       cliente.cliente = cliente.profile.nombreCompleto
       cliente.clienteSucursal = Sucursales.findOne(cliente.profile.sucursal_id)
@@ -1129,17 +1169,21 @@ angular.module("creditoMio")
         cliente.lugarNacimiento = cliente.profile.lugarNacimiento
       }
       cliente.ocupacionCliente = Ocupaciones.findOne(cliente.profile.ocupacion_id)
-      cliente.ocupacion = ocupacion.nombre
+      cliente.ocupacion = cliente.ocupacionCliente.nombre
+      item.foto = cliente.profile.foto
+      cliente.foto = cliente.profile.foto
       
 
     });
-      console.log(cliente,"cliente")
+      console.log(objeto,"objeto")
+      console.log(credito,"credito")
+  
   
  
     var toPrint = [];
     
 
-    Meteor.call('getListaCobranza', objeto, function(error, response) {     
+    Meteor.call('imprimirHistorial', objeto, cliente,credito, function(error, response) {     
        if(error)
        {
         console.log('ERROR :', error);
@@ -1175,5 +1219,13 @@ angular.module("creditoMio")
       }
     });
   };  
+
+   this.checkValue1= function() 
+  {
+    expect(element(by.repeater('credito in rc.historialDelCredito').row(0).column('credito')).getAttribute('class')).
+      toMatch(/odd/);
+    expect(element(by.repeater('credito in rc.historialDelCredito').row(1).column('credito')).getAttribute('class')).
+      toMatch(/even/);
+  };
 
 };

@@ -21,10 +21,12 @@ Meteor.methods({
 		c.saldoActual = saldoActual;
 		c.adeudoInicial = saldoActual;
 
+
 		var sucursal = Sucursales.findOne({_id : c.sucursal_id});
-		c.folio = sucursal.folio + 1;		
+		sucursal.folio = sucursal.folio + 1;		
 			
-		Sucursales.update({_id : sucursal._id}, { $set : { folio : c.folio}});
+		c.folio = sucursal.folio;
+		Sucursales.update({_id : sucursal._id}, { $set : { folio : sucursal.folio}});
 				
 		var idTemp = c._id;
 		delete c._id;		
@@ -40,8 +42,10 @@ Meteor.methods({
 			pago.abono = 0;
 			pago.credito_id = idTemp;
 			pago.descripcion = "Recibo";
+			
 			PlanPagos.insert(pago);
 		});
+
 		Meteor.call("generarMultas");
 		return "hecho";
 	},
@@ -55,7 +59,6 @@ Meteor.methods({
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		
 		credito.avales_ids = [];
-		
 		
 		_.each(credito.avales, function(aval){
 			
@@ -75,7 +78,7 @@ Meteor.methods({
 							_.each(p.relaciones, function(relacion){
 									if (relacion.cliente_id == cliente._id){
 
-											relacion.credito_id	     = idCredito;
+											relacion.credito_id	     = credito._id;
 											relacion.cliente_id 		 = cliente._id;
 											relacion.estadoCivil		 = aval.estadoCivil,
 											relacion.ocupacion			 = aval.ocupacion,
@@ -97,9 +100,9 @@ Meteor.methods({
 			}
 			else if (!aval.persona_id)
 			{	  	
-					console.log("Condicion de nueva PersonaId");
+					//console.log("Condicion de nueva PersonaId");
 					aval.relaciones = [];
-					aval.relaciones.push({credito_id				: idCredito, 
+					aval.relaciones.push({credito_id				: credito._id, 
 																cliente_id 				: cliente._id,
 																estadoCivil				:	aval.estadoCivil,
 																ocupacion					: aval.ocupacion,
@@ -129,7 +132,7 @@ Meteor.methods({
 			{
 					console.log("Condicion de persona existente");
 					var p = Personas.findOne({_id:aval.persona_id});
-					p.relaciones.push({		credito_id				: idCredito, 
+					p.relaciones.push({		credito_id				: credito._id, 
 																cliente_id 				: cliente._id,
 																estadoCivil				:	aval.estadoCivil,
 																ocupacion					: aval.ocupacion,

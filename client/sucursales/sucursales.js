@@ -46,7 +46,8 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 		objeto.estatus = true;
 		objeto.usuarioInserto = Meteor.userId();
 		objeto.fechaRegistro = new Date();
-		objeto.folio = 0;
+		objeto.folioCliente = 0;
+		objeto.folioPago = 0;
 		
 		objeto_id = Sucursales.insert(this.objeto,
 																						 function(error,result)

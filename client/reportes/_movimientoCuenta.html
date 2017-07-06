@@ -42,7 +42,7 @@
 			<thead>
 				<tr>
 				    <th width="5%"><div class="text-center">No.</div></th>
-					<th><div class="text-center">Pagare</div></th>
+					<th width="5%"><div class="text-center">Pagare</div></th>
 					<th><div class="text-center">Fecha</div></th>
 					<th><div class="text-center">Recibo</div></th>
 				<!-- 	<th><div class="text-center">Cliente</div></th> -->
@@ -54,13 +54,13 @@
 			</thead>
 			<tbody>
 		    <tr ng-repeat="objeto in re.planPagos | filter:buscar">
-		    	<td>{{$index + 1}}</td>
-		    	<td>{{objeto.folio}}</td>
-			    <td>{{objeto.ultimaModificacion  | date:"dd-MM-yyyy"}}</td>
-			    <td>{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</td>
-			    <td>{{objeto.nombreCompleto}}</td>
-			    <td>{{objeto.garantias}}</td>
-			    <td>{{objeto.credito.saldoMultas}}</td> 
+		    	<td><div class="text-center">{{$index + 1}}</div></td>
+		    	<td><div class="text-center">{{objeto.credito.folio}}</div></td>
+			    <td><div class="text-center">{{objeto.ultimaModificacion  | date:"dd-MM-yyyy"}}</div></td>
+			    <td><div class="text-center">{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</div></td>
+			    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
+			    <td><div class="text-center">{{objeto.garantias}}</div></td>
+			    <td><div class="pull-right">{{objeto.credito.saldoMultas | currency}}</div></td> 
 			
 		    </tr>
 			</tbody>

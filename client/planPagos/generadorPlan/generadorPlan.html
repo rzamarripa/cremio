@@ -16,7 +16,7 @@
 						Solicitud de Crédito
 				</h2>
 			</div>
-			<a  ui-sref="root.clienteDetalle({objeto_id: ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>		
+			<a ui-sref="root.clienteDetalle({objeto_id: ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>		
 			<div class="row">				
 				<div class="col-sm-12">
 					<form name="formNuevoCredito" class="form-horizontal" role="form" novalidate>
@@ -68,7 +68,7 @@
 						    	<input name="conSeguro" type="checkbox" class="form-control" ng-model="ge.credito.conSeguro">
 					    	</div>	
 					    	<div class="col-sm-3" ng-if="ge.credito.conSeguro" valida>
-							    <label>Importe seguro semanal *</label>
+							    <label>Importe seguro *</label>
 						    	<input name="seguro" type="number" class="form-control" placeholder="Seguro" ng-model="ge.credito.seguro"  required>
 						    </div>		
 					    </div>

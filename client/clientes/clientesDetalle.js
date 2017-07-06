@@ -28,6 +28,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.empresa = {}
 	rc.creActivos =false;
 	rc.creditoApro = false;
+	this.creditosRechazados = false;
 	this.respuestaNotaCLiente = false;
 	rc.objeto = {};
 	rc.objeto.profile = {};
@@ -179,6 +180,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		creditosAprobados : () =>{
 			return Creditos.find({estatus:2});
 		},
+		creditosCancelados : () =>{
+			return Creditos.find({estatus:3});
+		},
 		creditosPendientes : () =>{
 			var creditos = Creditos.find({estatus:{$in:[0,1]}}).fetch();
 			if(creditos.length > 0){
@@ -261,6 +265,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		            Meteor.call('getPersona', referenciaPersonal_id, cli._id, function(error, result){           
 		                  if (result)
 		                  {
+		                  	if (result.apellidoMaterno == null) {
+		                  		result.apellidoMaterno = ""
+		                  	}
 		                      //Recorrer las relaciones 
 		                      rc.referenciasPersonales.push({buscarPersona_id : referenciaPersonal_id,
 		                                                     nombre           : result.nombre,
@@ -482,14 +489,52 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				//console.log(rc.saldo)
 			});
 			if(this.getReactively("credito_id")){
-				var filtrado = [];
-				_.each(arreglo, function(pago){
-					if(pago.credito_id == rc.credito_id){
-						filtrado.push(pago);
-					}
-				})
-				return filtrado;
-			}
+        var filtrado = [];
+        var flags = {
+          abonoKey: undefined,
+          multaKey:undefined
+        };
+			_.each(arreglo, function(pago,key){
+          if(pago.descripcion == "Cargo Moratorio"){
+            flags.multaKey = key;
+          }
+          if(pago.descripcion == "Recibo"){
+            flags.abonoKey = key;
+          }
+          if(pago.descripcion == "Abono de Multa"){
+            console.log(flags);
+            console.log(arreglo[flags.multaKey].saldoActualizado);
+            if(arreglo[flags.multaKey].saldoActualizado){
+              arreglo[flags.multaKey].saldoActualizado -= pago.pago;
+            }else{
+              arreglo[flags.multaKey].saldoActualizado = arreglo[flags.multaKey].cargo - pago.pago;
+            }
+          }
+          if(pago.descripcion == "Abono"){
+            if(arreglo[flags.abonoKey].saldoActualizado){
+              arreglo[flags.abonoKey].saldoActualizado -= pago.pago;
+            }else{
+              arreglo[flags.abonoKey].saldoActualizado = arreglo[flags.abonoKey].cargo - pago.pago;
+            }
+          }
+          if(pago.credito_id == rc.credito_id){
+            filtrado.push(pago);
+          }
+          if(pago.numeroPago % 2 == 0)
+            {
+              
+              pago.tipoPar = "par"
+            }
+            else
+            {
+              
+              pago.tipoPar = "impar"
+            }
+
+        });
+			 console.log(filtrado,"filtrado")
+        return filtrado;
+      }
 
 			//console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
@@ -595,6 +640,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.notasCre=false;
 		this.masInfoCredito = false;
 		this.creditoApro = false
+		this.creditosRechazados = false;
 	}
 	this.creditosActivos = function(){
 		this.creditoAc = !this.creditoAc;
@@ -603,6 +649,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.notasCre=false;
 		this.masInfoCredito = false;
 		this.creditoApro = false
+		this.creditosRechazados = false;
 	}
 	this.solicitudesCreditos = function(){
 		this.solicitudesCre= !this.solicitudesCre;
@@ -611,6 +658,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.notasCre=false;
 		this.masInfoCredito = false;
 		this.creditoApro = false
+		this.creditosRechazados = false;
 	}
 	this.notasCreditos = function(){
 		this.notasCre= !this.notasCre;
@@ -619,6 +667,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.masInfo = false;
 		this.masInfoCredito = false;
 		this.creditoApro = false
+		this.creditosRechazados = false;
 	}
 	this.masInformacionCrdito = function(){
 		this.masInfoCredito = !this.masInfoCredito;
@@ -627,6 +676,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.masInfo = false;
 		this.notasCre=false;
 		this.creditoApro = false;
+		this.creditosRechazados = false;
 
 	}
 	this.creAprobados = function(){
@@ -636,6 +686,18 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.solicitudesCre = false;
 		this.masInfo = false;
 		this.notasCre=false;
+		this.creditosRechazados = false
+
+	}
+	this.creRechazados = function(){
+		this.creditoApro = false;
+		this.masInfoCredito = false;
+		this.creditoAc = false;
+		this.solicitudesCre = false;
+		this.masInfo = false;
+		this.notasCre=false;
+		this.creditosRechazados = !this.creditosRechazados;
+
 
 	}
 	this.getNombreTipoNotaCredito = function (tipo_id) {
@@ -742,7 +804,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.cancelarCredito = function(motivo){
 			
 			var cre = Creditos.findOne({folio : rc.cancelacion.folio});
-			Creditos.update({_id : cre._id}, { $set : {estatus : 6, motivo: motivo}});
+			Creditos.update({_id : cre._id}, { $set : {estatus : 3, motivo: motivo}});
 			toastr.success("El crédito se ha cancelado.")
 			$("[data-dismiss=modal]").trigger({ type: "click" });			
 		
@@ -850,7 +912,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		objeto.estado = objeto.profile.estado
 		objeto.pais = objeto.profile.pais
 		objeto.colonia = objeto.profile.colonia
-	    objeto.ciudad = objeto.profile.ciudad
+	  objeto.ciudad = objeto.profile.ciudad
 	    objeto.sucursal = objeto.profile.ciudad
 	    objeto.municipio = objeto.profile.nombre
 	    objeto.empresa = objeto.profile.empresa
@@ -858,7 +920,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	    objeto.ciudadEmpresa = rc.ciudades[objeto.profile.empresa.ciudad_id].nombre;
 	    objeto.municipioEmpresa = rc.municipios[objeto.profile.empresa.municipio_id].nombre;
 	    objeto.paisEmpresa = rc.paises[objeto.profile.empresa.pais_id].nombre;
+	    objeto.estadoEmpresa = rc.estados[objeto.profile.empresa.estado_id].nombre;
 	    objeto.coloniaEmpresa = rc.colonias[objeto.profile.empresa.colonia_id].nombre;
+	     _.each(rc.referencias,function(relacion){
+						 	if (relacion.apellidoMaterno == null) {
+						 		relacion.apellidoMaterno = "";
+						 	}
+
+						 });
 	   
 	    console.log("cliente",objeto)
 	  
@@ -942,57 +1011,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	}
 
 
-  // $(document).ready( function() {
-		
-
-		// 	$(".Mselect2").select2();
-					
-		// 	var fileInput1 = document.getElementById('fileInput1');
-		// 	var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
-			
-			
-		// 	//JavaScript para agregar la Foto
-		// 	fileInput1.addEventListener('change', function(e) {
-		// 		var file = fileInput1.files[0];
-		// 		var imageType = /image.*/;
-	
-		// 		if (file.type.match(imageType)) {
-					
-		// 			if (file.size <= 512000)
-		// 			{
-						
-		// 				var reader = new FileReader();
-		
-		// 				reader.onload = function(e) {
-		// 					fileDisplayArea1.innerHTML = "";
-		
-		// 					var img = new Image();
-							
-							
-		// 					img.src = reader.result;
-		// 					img.width =200;
-		// 					img.height=200;
-		
-		// 					rc.objeto.profile.documento.archivo(reader.result);
-		// 					//this.folio.imagen1 = reader.result;
-							
-		// 					fileDisplayArea1.appendChild(img);
-		// 					//console.log(fileDisplayArea1);
-		// 				}
-		// 				reader.readAsDataURL(file);			
-		// 			}else {
-		// 				toastr.error("Error la Imagen supera los 512 KB");
-		// 				return;
-		// 			}
-					
-		// 		} else {
-		// 			fileDisplayArea1.innerHTML = "File not supported!";
-		// 		}
-		// 	});		
-	 //  });
-
-
-	  this.quitarNota = function(id)
+	this.quitarNota = function(id)
 	{
 
 		//console.log(nota,"seraaaaaaaaaa")
@@ -1033,16 +1052,16 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.mostrarReestructuracion= function(objeto)
 	{
-		rc.creditoSeleccionado = objeto;	
-		_.each(rc.creditoSeleccionado.planPagos,function(planPago){
-				planPago.editar = false;
-				//planPago.numeroPagos = rc.creditoSeleccionado.numeroPagos;
-		});
-		
-		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-    		$scope.$apply();
-		}
-		$("#modalReestructuracion").modal('show');
+			rc.creditoSeleccionado = objeto;	
+			_.each(rc.creditoSeleccionado.planPagos,function(planPago){
+					planPago.editar = false;
+					//planPago.numeroPagos = rc.creditoSeleccionado.numeroPagos;
+			});
+			
+			if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+	    		$scope.$apply();
+			}
+			$("#modalReestructuracion").modal('show');
 	};
 	
 	this.agregarPago= function()
@@ -1090,28 +1109,113 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.guardarplanPagos= function()
 	{		
-			//console.log(rc.creditoSeleccionado);
+			
 	    _.each(rc.creditoSeleccionado.planPagos,function(planPago){
+					
 					
 					if (planPago._id == undefined)
 					{
+						
+							var suma = planPago.capital + planPago.iva + planPago.interes + planPago.seguro;
+							
+							planPago.importeRegular = suma;
+							planPago.cargo = suma;
+							
 							PlanPagos.insert(planPago);		
+														
+							rc.creditoSeleccionado.saldoActual += suma;
+							rc.creditoSeleccionado.numeroPagos = planPago.numeroPagos;
+							Creditos.update({_id:rc.creditoSeleccionado._id},
+															{$set:{saldoActual : rc.creditoSeleccionado.saldoActual, 
+																		 numeroPagos : rc.creditoSeleccionado.numeroPagos}
+															})
+							
 					}	
 					else
 					{
+											
+							//Actualizar numero de pagos de Credito, asi como el saldo del credito??
+							var recibo = PlanPagos.findOne({_id : planPago._id});
+							
 							planPago.numeroPagos = rc.creditoSeleccionado.planPagos.length;
+							
+							var valor = 0;
+							if (recibo.capital != planPago.capital || recibo.interes != planPago.interes || recibo.iva != planPago.iva || recibo.seguro != planPago.seguro)
+							{
+									//console.log("Recibo:",recibo);
+									var suma = planPago.capital + planPago.iva + planPago.interes + planPago.seguro;
+							
+									
+									planPago.importeRegular = suma;
+									planPago.cargo = suma;
+									
+									//----------------------------------------------------------------------
+									if (recibo.capital > planPago.capital) //Sumar al saldoActual
+									{
+											valor = recibo.capital - planPago.capital;
+											rc.creditoSeleccionado.saldoActual -= valor;
+									}		
+									else if (recibo.capital < planPago.capital) //restar al saldoActual
+									{
+											valor = planPago.capital - recibo.capital
+											rc.creditoSeleccionado.saldoActual += valor;
+									}		
+									//----------------------------------------------------------------------
+									if (recibo.interes > planPago.interes) //Sumar al saldoActual
+									{
+											valor = recibo.interes - planPago.interes;
+											rc.creditoSeleccionado.saldoActual -= valor;
+									}		
+									else if (recibo.interes < planPago.interes) //restar al saldoActual
+									{
+											valor = planPago.interes - recibo.interes
+											rc.creditoSeleccionado.saldoActual += valor;
+									}	
+									//----------------------------------------------------------------------
+									if (recibo.iva > planPago.iva) //Sumar al saldoActual
+									{
+											valor = recibo.iva - planPago.iva;
+											rc.creditoSeleccionado.saldoActual -= valor;
+									}		
+									else if (recibo.iva < planPago.iva) //restar al saldoActual
+									{
+											valor = planPago.iva - recibo.iva
+											rc.creditoSeleccionado.saldoActual += valor;
+									}	
+									//----------------------------------------------------------------------
+									if (recibo.seguro > planPago.seguro) //Sumar al saldoActual
+									{
+											valor = recibo.seguro - planPago.seguro;
+											rc.creditoSeleccionado.saldoActual -= valor;
+									}		
+									else if (recibo.seguro < planPago.seguro) //restar al saldoActual
+									{
+											valor = planPago.seguro - recibo.seguro
+											rc.creditoSeleccionado.saldoActual += valor;
+									}	
+									//----------------------------------------------------------------------
+									rc.creditoSeleccionado.numeroPagos = planPago.numeroPagos;
+									Creditos.update({_id : rc.creditoSeleccionado._id},
+																	{$set:{saldoActual : rc.creditoSeleccionado.saldoActual, 
+																				 numeroPagos : rc.creditoSeleccionado.numeroPagos}
+																	})
+											
+							}
+							
+							
 							var tempId = planPago._id;
 							delete planPago._id;
-							PlanPagos.update({_id:tempId}, {$set:planPago});
+							planPago.credito = {};
+							delete planPago.credito;
 							
-							//Actualizar numero de pagos de Credito, asi como el salfo del credito??
-							
-							
-							//----------		
+							PlanPagos.update({_id:tempId}, {$set:planPago});		
+
 					}
 					
 			});	
 			toastr.success('Actualizado correctamente.');		
+
+			
 	};
 	
 	this.modificar= function(pago)
@@ -1137,9 +1241,53 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.cerrar = function()
 	{
-			var newArr = _.filter(rc.creditoSeleccionado.planPagos, function(planPago) { return planPago._id !== undefined; });
-						
+		
+			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:-1}}).fetch();
+			if(rc.creditos && rc.creditos.length > 0 && planPagos.length > 0){	
+				_.each(rc.creditos, function(credito){
+					credito.planPagos = [];
+					credito.pagados = 0;
+					credito.abonados = 0;
+					credito.condonado = 0;
+					credito.tiempoPago = 0;
+					credito.pagos = 0;
+
+					_.each(planPagos, function(pago){
+
+						pago.credito = Creditos.findOne(credito._id);
+
+						if(pago.descripcion=="Recibo"){
+							credito.pagos +=pago.pago;
+						}
+						if(credito._id == pago.credito_id){
+							pago.numeroPagos = credito.numeroPagos;
+							credito.planPagos.push(pago);
+							if(pago.estatus == 0){
+								credito.pendientes++;
+							}else if(pago.estatus == 1){
+								credito.pagados++;
+							}else if(pago.estatus == 2){
+								credito.abonado++;
+							}else if(pago.estatus == 3){
+								credito.condonado++;
+							}
+							
+							if(pago.multada == 1){
+								credito.tiempoPago++;
+							}
+						}
+					})
+				})
+			}
+			
+			rc.modalReestructuracion = false;
+
+			
+/*
+			var newArr = _.filter(rc.creditoSeleccionado.planPagos, function(planPago) { return planPago._id !== undefined; });			
 			rc.creditoSeleccionado.planPagos = newArr;
+*/
+
 		
 	}
 
@@ -1193,15 +1341,17 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						  var url = window.URL.createObjectURL(blob);
 						  
 						  //console.log(url);
-						  if (contrato == "CONTRATO DE MUTUO CON INTERÉS") {
+						   if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
 
 						  var dlnk = document.getElementById('dwnldLnk');
+						  console.log("INTERES")
 					    dlnk.download = "CONTRATOINTERES.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 						}
-						if (contrato=="CONTRATO DE MUTUO CON INTERÉS (OBLIGADO SOLIDARIO) VFINAL") {
+						 if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
+						 	console.log("OBLIGADO SOLIDARIO")
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO.docx"; 
 							dlnk.href = url;
@@ -1209,7 +1359,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						  window.URL.revokeObjectURL(url);
 
 						}
-							if (contrato=="CONTRATO DE MUTUO CON INTERES CON GARANTIA HIPOTECARIO VFINAL") {
+							if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
+								console.log("HIPOTECARIO")
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOHIPOTECARIO.docx"; 
 							dlnk.href = url;
@@ -1217,27 +1368,42 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						  window.URL.revokeObjectURL(url);
 
 						}
-							if (contrato=="CONTRATO DE MUTUO CON INTERÉS CON GARANTÍA PRENDARIA VF") {
+							if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
+								console.log("PRENDARIA")
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOGARANTIAPRENDARIA.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 
-						}
-							if (contrato=="CONTRATO SIMPLE") {
-							var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "Documentos.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
-
-						}
-		  
+						}		  
 				   }
 				});
 		
 		};
+
+		this.recuperarCredito= function(id)
+		{
+		
+		    var r = confirm("Selecciona una opción");
+		    if (r == true) {
+		        var objeto = Creditos.findOne({_id:id});
+					if(objeto.estatus == 3)
+						objeto.estatus = 1;
+					else
+						objeto.estatus = 3;
+					
+					Creditos.update({_id: id},{$set :  {estatus : objeto.estatus}});
+
+					toastr.success('Crédito Recuperado');
+		    } else {
+	       
+	    }
+	  
+	  	
+		
+		
+	};
 	
 	
 }
