@@ -17,6 +17,7 @@ angular.module("creditoMio")
   rc.pic = "";
   rc.otrafoto = ""
   rc.folio = "";
+  rc.imagen = "";
   
   this.pais_id = "";
   this.estado_id = "";
@@ -196,7 +197,7 @@ angular.module("creditoMio")
      imagenesDocs : () => {
       var imagen = rc.imagenes
       _.each(rc.getReactively("imagenes"),function(imagen){
-        imagen.archivo = rc.objeto.profile.foto
+        imagen.archivo = rc.imagen
 
       });
 
@@ -562,35 +563,11 @@ this.tomarFoto = function(objeto){
       }
   };
 
-  this.agregarDoc = function(imagen,doc)
-  {
-    //console.log("entro")
-    rc.referencias = [];
-    Meteor.call('getDocs', doc, function(error,result){
-      if (result)
-        {console.log("result",result)
-          //console.log("entra aqui");
-          //console.log("result",result);
-          rc.documents.push({imagen: imagen, nombre: result.nombre});
-          $scope.$apply();      
-        }
-
-    });
-    //console.log(imagen);
-              
-  }
-
-
   $(document).ready( function() {
-    
-
       //$(".Mselect2").select2();
-          
       var fileInput1 = document.getElementById('fileInput1');
       //var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
-      
-      
-      //JavaScript para agregar la Foto
+            //JavaScript para agregar la Foto
       fileInput1.addEventListener('change', function(e) {
         var file = fileInput1.files[0];
         var imageType = /image.*/;
@@ -602,7 +579,7 @@ this.tomarFoto = function(objeto){
             
             var reader = new FileReader();
             reader.onload = function(e) {
-              rc.objeto.profile.foto = reader.result;
+              rc.imagen = reader.result;
               //console.log(reader.result);
             }
             reader.readAsDataURL(file);     
@@ -610,12 +587,52 @@ this.tomarFoto = function(objeto){
             toastr.error("Error la Imagen supera los 512 KB");
             return;
           }
-          
         } else {
           //fileDisplayArea1.innerHTML = "File not supported!";
         }
       });   
       });
+
+  this.agregarDoc = function(doc,imagen)
+  {
+    console.log("imagen",imagen)
+    if (doc == undefined) {
+      toastr.error("Ningun documento agregado");
+
+    }else{
+      // rc.imagen = imagen
+    
+    rc.referencias = [];
+    Meteor.call('getDocs', doc, function(error,result){
+      if (result)
+        {console.log("result",result)
+          //console.log("entra aqui");
+          //console.log("result",result);
+          rc.documents.push({imagen: imagen, nombre: result.nombre});
+          $scope.$apply();      
+        }
+
+    });
+    console.log(imagen,"programador estrella");
+     }         
+  };
+
+    this.actDoc = function(doc,imagen)
+  {
+    console.log("imagen",imagen)
+      // rc.imagen = imagen
+    Meteor.call('getDocs', doc, function(error,result){
+      if (result)
+        {console.log("result",result)
+          //console.log("entra aqui");
+          //console.log("result",result);
+          rc.objeto.profile.documentos.push({imagen: imagen, nombre: result.nombre});
+          $scope.$apply();      
+        }
+
+    });
+    console.log(imagen,"programador estrella");
+     } 
 
 
   this.getDocumentos= function(documento_id)
