@@ -20,6 +20,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	  datosCreditos : () => {
 			if(Cred.ready()){
 				_.each(rc.creditos, function(credito){
+					console.log(credito,"sdsdddddsd")
 					
 						var cliente = {};
 						Meteor.call('getUsuario', credito.cliente_id, function(error, result) {

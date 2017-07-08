@@ -6,27 +6,33 @@ angular.module("creditoMio")
   this.action = true;
   this.nuevo = true;	 
   this.objeto = {}; 
-  this.buscar = {};
-  this.buscar.nombre = "";
+  //this.buscar = {};
+  //this.buscar.nombre = "";
   window.rc = rc;
   
-  this.subscribe('buscarVerificadores', () => {
-		if(this.getReactively("buscar.nombre").length > 4){
-			return [{
-		    options : { limit: 5 },
-		    where : { 
-					nombreCompleto : this.getReactively('buscar.nombre')
-				} 		   
-	    }];
-		}
-  });
+  // this.subscribe('buscarVerificadores', () => {
+		// if(this.getReactively("buscar.nombre").length > 4){
+		// 	return [{
+		//     options : { limit: 5 },
+		//     where : { 
+		// 			nombreCompleto : this.getReactively('buscar.nombre')
+		// 		} 		   
+	 //    }];
+		// }
+  // });
+  this.subscribe('verificadores', () => {
+		return [{roles:"Verificador"}]; });
   
   this.helpers({
-		verificadores : () => {
-			return Meteor.users.find({
-		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
-		  	roles : ["Verificador"]
-			}, { sort : {"profile.nombreCompleto" : 1 }});
+	// 	verificadores : () => {
+	// 		return Meteor.users.find({
+	// 	  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
+	// 	  	roles : ["Verificador"]
+	// 		}, { sort : {"profile.nombreCompleto" : 1 }});
+	// 	},
+	// });
+	verificadores : () => {
+			return Meteor.users.find({roles:"Verificador" },{ sort: {score: -1, name: 1}});
 		},
 	});
 	

@@ -9,8 +9,8 @@ Meteor.publish("buscarCajeros",function(options){
 		}
 });
 
-Meteor.publish("cajero",function(options){
-  return Meteor.users.find(options.id);
+Meteor.publish("cajero",function(params){
+  return Meteor.users.find(params);
 });
 
 Meteor.publish("allCajeros",function(){

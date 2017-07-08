@@ -13,7 +13,7 @@
 						<div ng-include=" 'client/clientes/_buscarPersonaCliente.html'"></div>
 					</div>
 				</div>
-				<br>
+				<br> 
 				<div class="row">	
 					<div class="col-sm-4" valida> 					    
 						<label>Nombre (s) *</label>
@@ -62,14 +62,15 @@
 						<input name="archivo" type="file" id="fileInput1">
 				  </div>
 					<div class="col-sm-4">
-						<label id="id_label_single" >Seleccionar Documento</label>
+						<label id="id_label_single">Seleccionar Documento</label>
 						<select class="js-example-basic-single js-states form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.objeto.profile.documento_id"
 						ng-change="cli.getClientes(cli.objeto.profile.documento_id)">
 							<option ng-repeat="documento in cli.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
 						</select>
 					</div>
 					<div class="col-sm-2"><br/>
-						<a href="" class="btn btn-primary" ng-click="cli.agregarDoc(cli.objeto.profile.foto,cli.objeto.profile.documento_id)">Agregar</a>
+						<a href="" class="btn btn-primary" ng-click="cli.agregarDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="!cli.objeto._id">Agregar</a>
+						<a href="" class="btn btn-primary" ng-click="cli.actDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="cli.objeto._id">Agregar</a>
 					</div>
 				</div>
 				<br/>
@@ -78,18 +79,26 @@
 						<table class="table table-bordered">
 							<thead>
 								<tr>
-									<th width="5%"><div class="text-center">No.</div></th>
+									<th width="5%"><div class="text-center"> No.</div></th>
 									<th width="40%"><div class="text-center">Documento</th>
 									<th width="40%"><div class="text-center">Archivos</th>
 									<th width="15%"><div class="text-center">Acciones</div></th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="objeto in cli.documents">
+								<tr ng-repeat="objeto in cli.documents" ng-if="!cli.objeto._id">
 									<td>{{$index + 1}}</td>
 									<td>{{objeto.nombre}}</td>
 									<td class="text-center">
 										<a href="" ng-click="cli.mostrarModal(objeto.imagen)">Ver Archivo</a>
+									</td>
+									<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index)"><i class="fa fa-trash"></i></a></div></td>
+								</tr>
+								<tr ng-repeat="item in cli.objeto.profile.documentos" ng-if="cli.objeto._id">
+									<td>{{$index + 1}}</td>
+									<td>{{item.nombre}}</td>
+									<td class="text-center">
+										<a href="" ng-click="cli.mostrarModal(item.imagen)">Ver Archivo</a>
 									</td>
 									<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index)"><i class="fa fa-trash"></i></a></div></td>
 								</tr>
@@ -445,7 +454,7 @@
 				<div class="row">
 					<div class="col-sm-4">
 						<br />
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Crear Empresa</button>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-empresa-modal-lg">Crear Empresa</button>
 					</div>
 				</div>
 				<br>
@@ -491,7 +500,7 @@
 	</div>
 </div>
 <!-- Modal -->
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div id="modalEmp" class="modal fade bs-empresa-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">

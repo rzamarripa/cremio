@@ -9,8 +9,8 @@ Meteor.publish("buscarSupervisores",function(options){
 		}
 });
 
-Meteor.publish("supervisor",function(options){
-  return Meteor.users.find(options.id);
+Meteor.publish("supervisor",function(params){
+  return Meteor.users.find(params);
 });
 
 Meteor.publish("allSupervisores",function(){

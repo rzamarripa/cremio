@@ -15,39 +15,67 @@
 					<i class="fa fa-plus"></i> Nuevo
 				</a>
 			</div>
-			<input class="form-control" type="text" placeholder="Buscar..." ng-model="lver.buscar.nombre">
+			<input id="filter" 
+      class="form-control" type="text" placeholder="Buscar..." ng-model="buscar.profile.nombreCompleto">
 		</div>
 	</div>
 </div>
-<div class="row">
-
-	<div class="col-lg-3" ng-repeat="verificador in lver.verificadores">
-      <div class="contact-box center-version">
-
-          <a href="/verificadors/{{verificador._id}}" style="text-decoration: none;">
-
-              <img alt="image" class="img-circle" ng-src="{{lver.tieneFoto(verificador.profile.sexo, verificador.profile.foto)}}">
-
-
-              <p class="lead font-xs text-center"><strong>{{verificador.profile.nombre}} <br/> {{verificador.profile.apPaterno}} {{verificador.profile.apMaterno}}</strong></p>
-
-              <div class="font-bold">{{verificador.username}}</div>
-              <address class="font-xs">
-                  <strong>Verificador</strong><br>
-                  {{verificador.profile.call}} {{verificador.profile.numero}}<br>
-                  {{verificador.profile.colonia}}<br>
-                  <abbr title="Teléfono">T1:</abbr> {{verificador.profile.telefono}}<br/>
-                  <abbr title="Celular">C2:</abbr> {{verificador.profile.celular}}
-              </address>
-
-          </a>
-          <div class="contact-box-footer">
-              <div class="m-t-xs btn-group">
-                  <a href="/verificadors/{{verificador._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
-                  <a href="/editarVerificador/{{verificador._id}}" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Editar</a>
+<br/>
+  <div class="col-sm-12">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+        <th width="5%"><div class="text-center">No.</div></th>
+          <th width="40%"><div class="text-center">Nombre</div></th>
+          <th width="40%"><div class="text-center">Télefono</div></th>
+          <th width="40%"><div class="text-center">Celular</div></th>
+          <th width="25%">
+            <div class="text-center">
+              Estatus
+            </div>
+          </th>
+          <th width="25%">
+            <div class="text-center">
+              Acciones
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="objeto in lver.verificadores | orderBy:'profile.nombreCompleto'  | filter:buscar">
+        <td>{{$index + 1}}</td>
+          <td>{{objeto.profile.nombreCompleto}}</td>
+          <td>{{objeto.profile.telefono}}</td>
+            <td>{{objeto.profile.celular}}</td>
+          <td>
+           
+            <div class="text-center">
+              <span ng-if="objeto.profile.estatus" class="label label-success">
+                Activo
+              </span>
+              <span ng-if="!objeto.profile.estatus" class="label label-danger">
+                Inactivo
+              </span>
+            </div>
+          </td>
+          <td>
+            <div class="text-center">
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu text-left">
+                  <li><a href="#" ng-click="lver.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+                  <li><a href="#" ng-click="lver.cambiarEstatus(objeto._id)">
+                    <i class="fa fa-{{objeto.estatus ? 'trash' : 'check' }}"></i> {{objeto.estatus ? "Desactivar" : "Activar" }}</a>
+                  </li>
+                </ul>
               </div>
-          </div>
-
-      </div>
+            </div>            
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

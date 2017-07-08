@@ -900,7 +900,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	  			// var empresa = Empresas.findOne(cliente.empresa_id);
 	  			// cliente.empresaCiudad = empresa.ciudad;
 	  			// cliente. = empresa.;
-			 	cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
+	  			
+	  			//if (cliente.ocupacion_id) {
+	  				cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
+
+	  			//}
+			 	
 				cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
 				cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
 				cliente.estado = Estados.findOne(cliente.estado_id)
@@ -912,8 +917,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				cliente.municipio = Municipios.findOne(cliente.municipio_id)
 		});
 
-		  		
-		objeto.ocupacion = objeto.profile.ocupacion
+		if (cliente.profile.ocupacion) {
+			objeto.ocupacion = objeto.profile.ocupacion
+		}  		
+		
 		objeto.estadoCivil = objeto.profile.estadoCivil 
 		objeto.nacionalidad = objeto.profile.nacionalidad
 		objeto.estado = objeto.profile.estado
