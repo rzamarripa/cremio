@@ -16,15 +16,15 @@ Meteor.startup(function () {
     Configuraciones.insert({folioCliente: 1});
   }
   
-  var multas = function () {
-      //console.log('multas!');
-      Meteor.call("actualizarMultas");
-      Meteor.call("deprecarNotasDeCredito");
-  }
+  // var multas = function () {
+  //     //console.log('multas!');
+  //     Meteor.call("actualizarMultas");
+  //     Meteor.call("deprecarNotasDeCredito");
+  // }
 
-    var cron = new Meteor.Cron( {
-      events:{
-        "0 1 * * *"  : multas
-      }
-    });
+  //   var cron = new Meteor.Cron( {
+  //     events:{
+  //       "0 1 * * *"  : multas
+  //     }
+  //   });
 });
