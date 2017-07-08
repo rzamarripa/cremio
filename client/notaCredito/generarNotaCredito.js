@@ -23,8 +23,6 @@ function GenerarNotaCredito($scope, $meteor, $reactive, $state, toastr, $statePa
 	this.subscribe('tiposNotasCredito',()=>{
 		return [{}]
 	});
-	
-	
 			
 	this.helpers({
 		
@@ -56,7 +54,7 @@ function GenerarNotaCredito($scope, $meteor, $reactive, $state, toastr, $statePa
 			}
 
 
-			Meteor.call ("crearNotaDeCredito",$stateParams.objeto_id,objeto.monto,objeto.fecha,function(error,result){
+			Meteor.call ("crearNotaDeCredito",$stateParams.objeto_id,objeto,function(error,result){
 		
 				if(error){
 					console.log(error);

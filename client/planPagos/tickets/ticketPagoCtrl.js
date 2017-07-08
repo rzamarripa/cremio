@@ -7,6 +7,7 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 	rc.pago = {};
 	rc.caja = {};	
 	rc.cliente = {};
+	rc.credito = {};
 	rc.sucursal = {};
 	rc.cajero = {};
 	window.rc = rc;
@@ -22,6 +23,10 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 
 			Meteor.call('datosCliente', rc.pago.usuario_id ,function(err, res){
 				rc.cliente = res;
+			});
+			
+			Meteor.call('getCredito', rc.pago.credito_id ,function(err, res){
+				rc.credito = res;
 			});
 
 			rc.subscribe('cajas',()=>{

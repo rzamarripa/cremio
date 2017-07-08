@@ -187,9 +187,10 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 					toastr.error('Error al calcular el nuevo plan de pagos.');
 				}
 				else{
-					
+					console.log(result);
 					_.each(result,function (pago) {
-					
+						
+						
 						//console.log(pago,"pauisa")
 						var pag = pago
 						var pa = _.toArray(pag);

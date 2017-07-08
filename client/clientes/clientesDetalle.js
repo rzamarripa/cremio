@@ -36,6 +36,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	rc.creditoSeleccionado = {};
 	this.estadoCivilSeleccionado = "";
+	rc.recibo = {};
+	rc.recibos = [];
 	
 	rc.editMode = false;
 	
@@ -114,6 +116,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('nacionalidades',()=>{
 		return [{}];
 	});
+	
+/*
+	this.subscribe('tiposCredito',()=>{
+		return [{estatus: true}];
+	});
+*/
 			
 	this.helpers({
 		ciudades : () => {
@@ -176,7 +184,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			return creditos;
 		},
-
 		creditosAprobados : () =>{
 			return Creditos.find({estatus:2});
 		},
@@ -437,9 +444,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 			_.each(rc.getReactively("planPagosHistorial"), function(planPago){
 				
-				if(planPago.descripcion=="Recibo")
+				if(planPago.descripcion == "Recibo")
 					rc.saldo+=planPago.cargo;
-				if(planPago.descripcion=="Multa")
+				if(planPago.descripcion == "Cargo Moratorio")
 					rc.saldoMultas+=planPago.importeRegular;
 			});
 			
@@ -1217,6 +1224,154 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 			
 	};
+	
+	//--------------------------------------------------------------------
+	
+	this.crearCargoMoratorio = function(objeto)
+	{
+			rc.recibo._id= "";
+			
+			rc.recibos = [];
+			rc.recibo.importe = 0.00;
+			
+			//Solo poner los recibos						
+		 
+			rc.creditoSeleccionado = objeto;
+			_.each(rc.creditoSeleccionado.planPagos,function(planPago){
+					if (planPago.descripcion == "Recibo" && planPago.multada != 1)
+							rc.recibos.push(planPago);
+			});
+			
+			$("#modalCargosMoratorios").modal('show');
+	};
+	
+	this.guardarCargoMoratorio = function(objeto)
+	{	
+			if (rc.recibo._id == "")
+			{
+					toastr.error('Debe de seleccionar un recibo.');	
+					return;	
+				
+			}
+			
+			_.each(rc.creditoSeleccionado.planPagos,function(planPago){
+					if (planPago._id == rc.recibo._id && planPago.multada == 1)
+					{
+							toastr.error('El recibo ya tiene un cargo moratorio');	
+							return;
+					}
+			});
+			
+						
+			var mfecha = moment(new Date());
+			var pago = PlanPagos.findOne(rc.recibo._id);
+			var multas = Number(rc.recibo.importe); 
+			var iva = 0;
+			var interes = 0;
+			
+/*
+			var tipoCredito = TiposCredito.findOne(rc.creditoSeleccionado.tipoCredito_id);			
+						
+			
+			if (tipoCredito.calculo == "importeSolicitado")
+			{
+					var multas = Number(rc.recibo.importe); 
+					multas = Math.round(multas * 100) / 100;
+					
+					var interes = multas / 1.16;
+					interes = Number(interes.toFixed(2));
+					var iva = multas - interes;
+					iva = Number(iva.toFixed(2));	
+
+			}
+			else if (tipoCredito.calculo == "importereciboVencido")
+			{
+					
+					var porcentaje;
+					if (credito.periodoPago == "Semanal")
+							porcentaje = 2;
+					else if (credito.periodoPago == "Quincenal")
+							porcentaje = 4;
+					else if (credito.periodoPago == "Mensual")				
+							porcentaje = 8;
+							
+					var multas = Number(rc.recibo.importe); 
+					multas=Math.round(multas * 100) / 100;
+					
+					var interes = multas / 1.16;
+					interes = Number(interes.toFixed(2));
+					var iva = multas - interes;
+					iva = Number(iva.toFixed(2));
+				
+			}	
+			else if (tipoCredito.calculo == "saldoreciboVencido")
+			{	
+								
+			
+					var porcentaje;
+					if (credito.periodoPago == "Semanal")
+							porcentaje = 2;
+					else if (credito.periodoPago == "Quincenal")
+							porcentaje = 4;
+					else if (credito.periodoPago == "Mensual")				
+							porcentaje = 8;
+							
+					var multas = Number(rc.recibo.importe); 
+					multas = Math.round(multas * 100) / 100;
+					
+					var interes = multas / 1.16;
+					interes = Number(interes.toFixed(2));
+					var iva = multas - interes;
+					iva = Number(iva.toFixed(2));			
+			}
+*/
+			
+			var multa = {
+				semana							: mfecha.isoWeek(),
+				fechaLimite					: pago.fechaLimite,
+				diaSemana						: mfecha.weekday(),
+				tipoPlan						: pago.tipoPlan,
+				numeroPago					: pago.numeroPago,
+				importeRegular			: multas,
+				cliente_id					: pago.cliente_id,
+				fechaPago						: undefined,
+				semanaPago					: undefined,
+				diaPago							: undefined,
+				iva					  			: 0,
+				interes 						: 0,
+				seguro							: 0,
+				capital 						: 0,
+				pago				  			: 0,
+				estatus							: 0,
+				multada							: 0,
+				multa 							: 0,
+				multa_id						: undefined,
+				planPago_id					: rc.recibo._id,
+				tiempoPago					: 0,
+				modificada					: false,
+				pagos 							: [],
+				descripcion					: "Cargo Moratorio",
+				ultimaModificacion	: new Date(),
+				credito_id 					: rc.creditoSeleccionado._id,
+				mes									: mfecha.get('month') + 1,
+				anio								: mfecha.get('year'),
+				cargo								: multas,
+				movimiento					: "Cargo Moratorio"
+			};
+			
+			var multa_id = PlanPagos.insert(multa);
+			PlanPagos.update({_id:rc.recibo._id},{$set:{multada : 1, multa_id : multa_id}})
+			var suma = multas + iva + interes;
+			rc.creditoSeleccionado.saldoMultas += suma;
+			rc.creditoSeleccionado.saldoMultas = Math.round(rc.creditoSeleccionado.saldoMultas * 100) / 100;
+			Creditos.update({_id:rc.creditoSeleccionado._id},{$set:{saldoMultas:rc.creditoSeleccionado.saldoMultas}})
+						
+			
+			$("#modalCargosMoratorios").modal('hide');
+			toastr.success('Actualizado correctamente.');	
+	};
+	
+	//--------------------------------------------------------------------
 	
 	this.modificar= function(pago)
 	{		

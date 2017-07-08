@@ -172,33 +172,36 @@ Meteor.methods({
 		else if (tipoCredito.tipoInteres == "Saldos Insolutos")
 		{
 				var suma = 0;
+				var pagoFijo = 0;
+				var tasaInteres = 0;
 				
+				if(credito.periodoPago == "Semanal"){						
+						tasaInteres = (credito.tasa / 4) / 100;
+				}
+				else if(credito.periodoPago == "Quincenal"){
+						tasaInteres = (credito.tasa / 2) / 100;
+				}
+				else if(credito.periodoPago == "Mensual"){
+						tasaInteres = credito.tasa / 100;
+				}
+
+				pagoFijo = parseFloat(((credito.capitalSolicitado * tasaInteres) * Math.pow(1 + tasaInteres, totalPagos) / (Math.pow(1 + tasaInteres, totalPagos) - 1)).toFixed(2));
 				var capital = parseFloat(credito.capitalSolicitado).toFixed(2);
 				var saldo = 0;
-				var amortizacion = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
 				
 				for (var i = 0; i < totalPagos; i++) {
 					
-					
-					//capital = capital - saldo;
-					
-					var iva = ((capital * (credito.tasa  / 100)*0.16)/numeroPagosCompuesto);
-					iva = parseFloat(iva.toFixed(2));
-					
-					var interes = (capital * (credito.tasa  / 100)/numeroPagosCompuesto);
+					var interes = capital * tasaInteres;
 					interes = parseFloat(interes.toFixed(2));
 					
+					var iva = interes * 0.16;
+					iva = parseFloat(iva.toFixed(2))
 					
 					if (credito.conSeguro)
-								var importeParcial = amortizacion + interes + iva + seguro;
+								var importeParcial = parseFloat(pagoFijo) + parseFloat(iva.toFixed(2)) + parseFloat(seguro.toFixed(2));
 						else
-								var importeParcial = amortizacion + interes + iva;
-										
-					
-					importeParcial=Math.round(importeParcial * 100) / 100;
-					
-					//console.log(cliente);
-					//suma += importeParcial;
+								var importeParcial = parseFloat(pagoFijo) + parseFloat(iva.toFixed(2));
+															
 					if (cliente == undefined){
 					 cliente = {}; 
 					 cliente._id = "Prospecto";
@@ -253,12 +256,11 @@ Meteor.methods({
 						mfecha = siguienteMes;
 					}	
 					
-					capital = capital - amortizacion;
+					var capitalPagado = pagoFijo - interes; 
+					capital = capital - capitalPagado;
 					
 				}
 				var suma = 0;
-
-				
 
 				_.each(plan, function(pago){
 					//console.log("entra")
@@ -272,21 +274,6 @@ Meteor.methods({
 					_.each(plan, function(pago){
 					pago.total = val
 				});	
-
-				// 	var variable = plan[plan.length - 1];
-				// _.each(plan, function(pago){
-					
-				// 	if (variable.folio == undefined) {
-				// 		console.log("if")
-				// 		pago.folio = sucursal.folio
-				// 	}else{
-				// 		console.log("else")
-
-				// 		pago.folio = variable.folio + 1
-				// 	}
-					
-					
-				// });
 			
 		}
 		
@@ -390,7 +377,7 @@ Meteor.methods({
 				
 				
 				var suma = multas + iva + interes;
-				credito.saldoMultas -= suma;
+				credito.saldoMultas += suma;
 				credito.saldoMultas=Math.round(credito.saldoMultas * 100) / 100;
 				Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 				
@@ -453,6 +440,8 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 												fechaLimite : { $lt : ahora }												
 											}
 										]}).fetch();
+		
+		console.log(pagos);
 											
 		_.each(pagos, function(pago){
 			try{
@@ -483,9 +472,9 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 						if (tipoCredito.calculo == "importeSolicitado")
 						{
 								var multas = credito.capitalSolicitado * (tipoCredito.importe / 100); 
-								multas=Math.round(multas * 100) / 100;
+								multas = Math.round(multas * 100) / 100;
 								
-								var interes = multas / 1.16
+								var interes = multas / 1.16;
 								interes = Number(interes.toFixed(2));
 								var iva = multas - interes;
 								iva = Number(iva.toFixed(2));	
@@ -506,7 +495,7 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 								var multas = reciboVencido.cargo * (porcentaje / 100); 
 								multas=Math.round(multas * 100) / 100;
 								
-								var interes = multas / 1.16
+								var interes = multas / 1.16;
 								interes = Number(interes.toFixed(2));
 								var iva = multas - interes;
 								iva = Number(iva.toFixed(2));
@@ -526,9 +515,9 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 										porcentaje = 8;
 										
 								var multas = reciboVencido.importeRegular * (porcentaje / 100); 
-								multas=Math.round(multas * 100) / 100;
+								multas = Math.round(multas * 100) / 100;
 								
-								var interes = multas / 1.16
+								var interes = multas / 1.16;
 								interes = Number(interes.toFixed(2));
 								var iva = multas - interes;
 								iva = Number(iva.toFixed(2));			
@@ -571,8 +560,8 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 						PlanPagos.update({_id:pago._id},{$set:{multada:1,multa_id:multa_id}})
 						
 						var suma = multas + iva + interes;
-						credito.saldoMultas -= suma;
-						credito.saldoMultas=Math.round(credito.saldoMultas * 100) / 100;
+						credito.saldoMultas += suma;
+						credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
 						Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 
 				}
@@ -655,17 +644,10 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 		var tingreso = TiposIngreso.findOne(tipoIngresoId);
 		if(!tingreso || !puser || !puser.profile || (tingreso.nombre =="Nota de Credito" && puser.profile.notasCredito.saldo<totalPago))
 			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
-		
-		if (tingreso.nombre == "REFINANCIAMIENTO")
-		{
-			 
-			 
 				
-		}
-		
 		if(tingreso.nombre == "Nota de Credito"){
 			//console.log (1)
-			var resmc = Meteor.call("actualizarNotaDeCredito",pusuario_id,totalPago);
+			var resmc = Meteor.call("actualizarNotaDeCredito",pusuario_id, totalPago);
 			//console.log(resmc)
 			//console.log (2)
 		}

@@ -167,9 +167,11 @@
                       <tr>
                         <th width="5%">Folio</th>
                         <th width="15%">Fecha</th>
+                        <th width="5%">N. Cliente</th>
+                        <th width="15%">Cliente</th>
                         <th width="20%">Tipo Movimiento</th>
-                        <th width="20%">Movimiento</th>
-                        <th width="20%">Cuenta</th>
+<!--                         <th width="20%">Movimiento</th> -->
+                        <th width="10%">Cuenta</th>
                         <th width="10%">Capital</th>
                         <th width="10%">Multas</th>
                         <th width="10%">Intereses</th>
@@ -184,8 +186,10 @@
                       <tr ng-repeat="mov in caaj.movimientosCaja" ng-class="mov.pago.estatus ? 'success':'danger'">
                         <td align="center">{{mov.pago.folioPago}}</td>
                         <td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
+                        <td>{{mov.numeroCliente}}</td>
+                        <td>{{mov.nombreCliente}}</td>
                         <td>{{mov.tipoMovimiento}}</td>
-                        <td>{{mov.origen}}</td>
+<!--                         <td>{{mov.origen}}</td> -->
                         <td>{{mov.cuenta}}</td>
                         <td align="right">{{mov.capital | currency}}</td>
                         <td align="right">{{mov.multas | currency}}</td>
@@ -326,12 +330,12 @@
                         <th width="20%">Tipo Movimiento</th>
                         <th width="20%">Movimiento</th>
                         <th width="20%">Cuenta</th>
-                        <th width="10%">Capital</th>
-                        <th width="10%">Multas</th>
-                        <th width="10%">Intereses</th>
-                        <th width="10%">Seguro</th>
-                        <th width="10%">Iva</th>
-                        <th width="10%">Monto</th>
+                        <th width="5%">Capital</th>
+                        <th width="5%">Multas</th>
+                        <th width="5%">Intereses</th>
+                        <th width="5%">Seguro</th>
+                        <th width="5%">Iva</th>
+                        <th width="5%">Monto</th>
                         <th width="5%"></th>
                       </tr>
                     </thead>
