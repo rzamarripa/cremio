@@ -664,6 +664,7 @@ diato;
 	        item.cargo = parseFloat(item.cargo.toFixed(2))
 	        item.interes = parseFloat(item.interes.toFixed(2))
 	        item.iva = parseFloat(item.iva.toFixed(2))
+	        item
 
 	    });
 	    
