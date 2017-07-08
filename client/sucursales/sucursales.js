@@ -48,6 +48,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 		objeto.fechaRegistro = new Date();
 		objeto.folioCliente = 0;
 		objeto.folioPago = 0;
+		objeto.folioCredito = 0; //Folio de Credito
 		
 		objeto_id = Sucursales.insert(this.objeto,
 																						 function(error,result)

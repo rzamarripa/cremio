@@ -547,6 +547,10 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	  }
 	  else
 	  {
+		  	
+		  	//Validar la nota de credito
+		  
+		  
 		  	var seleccionadosId = [];
 		    _.each(rc.planPagosViejo, function(p) {
 		      if (p.pagoSeleccionado)

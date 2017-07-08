@@ -117,16 +117,57 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
           { tipoMovimiento: 'Cancelación'}
         ]
       },).fetch();
+      	
         var cj = Cajas.findOne(rc.caja._id);
         var pagos_id = [];
         _.each(movimientos, function(mov) {
-          if (mov.origen == "Pago de Cliente") {
-            pagos_id.push(mov.origen_id);
-          }
+	        //console.log(mov);
           var d = {};
+          
+          if (mov.origen == "Pago de Cliente") {
+            	pagos_id.push(mov.origen_id);
+							var p = Pagos.findOne(mov.origen_id);
+							if (p != undefined)
+							{
+								Meteor.apply('getUsuario', [p.usuario_id], function(err, result) {
+						      if (err) {
+						        toastr.warning('Error al consultar los datos');
+						      } else {
+						        var u = result;
+						        d.numeroCliente = u.numeroCliente;
+										d.nombreCliente = u.nombreCompleto;
+						      }
+						    });
+							}
+          }
+          
+          if (mov.origen == "Entrega de Credito") {
+	          	Meteor.apply('getCredito', [mov.origen_id], function(err, result) {
+						      if (err) {
+						        toastr.warning('Error al consultar los datos');
+						      } else {
+						        var credito = result;
+						        if (credito != undefined)
+										{
+							        Meteor.apply('getUsuario', [credito.cliente_id], function(err, result) {
+									      if (err) {
+									        toastr.warning('Error al consultar los datos');
+									      } else {
+									        var u = result;
+									        d.numeroCliente = u.numeroCliente;
+													d.nombreCliente = u.nombreCompleto;
+									      }
+									    });
+									  }  
+						      }
+						  });	
+	          
+	        } 
+          
           d.createdAt = mov.createdAt;
           d.tipoMovimiento = mov.tipoMovimiento;
           d.origen = mov.origen;
+                    
           c = Cuentas.findOne(cj.cuenta[mov.cuenta_id].cuenta_id);
           if (c) {
             d.cuenta = c.nombre;
@@ -158,6 +199,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
         });
         rc.pagos_id = pagos_id;
       }
+			
       return ret
     },
     traspasos: () => {

@@ -28,25 +28,19 @@
 		 									<i class="fa fa-pencil" ></i> Modificar
 	 								  </a>&nbsp;
 	 								  <small><a ng-click="cd.generarFicha(cd.objeto,cd.objeto._id)" class="btn btn-primary">Descargar ficha</a></small>
-								
 							
-					
 							</div>
-							<div class="col-sm-12">
-							
-									
-					
-									
+							<div class="col-sm-12">				
 
 <div class="widget-body">
 	<hr class="simple">
 
-	<ul id="myTab3" class="nav nav-tabs tabs-pull-right bordered">
-		<li class="active">
-			<a href="#creditosActivos" data-toggle="tab" ng-click="cd.creditosActivos()">Créditos Activos</a>
+	<ul id="myTab3" class="nav nav-tabs tabs-pull-right bordered" style="font-size: 13px;">
+		<li class="active" >
+			<a href="#creditosActivos" data-toggle="tab" ng-click="cd.creditosActivos()" >Créditos Activos</a>
 		</li>
 		<li class="pull-right">
-			<a href="#informacionCliente" data-toggle="tab" ng-click="cd.masInformacion()">Información del Cliente</a>
+			<a href="#informacionCliente" data-toggle="tab" ng-click="cd.masInformacion()">Información Cliente</a>
 		</li>
 		<li class="pull-right">
 			<a href="#historialCrediticio" ng-click="cd.masInformacionCrdito()"  data-toggle="tab">Historial Crediticio</a>
@@ -61,7 +55,7 @@
 			<a href="#aprobados" ng-click="cd.creAprobados()" data-toggle="tab"><span class="badge bg-color-green txt-color-white pull-right">{{cd.creditosAprobados.length}}</span>Créditos Aprobados</a>
 		</li>
 		<li class="pull-right">
-			<a href="#rechazados" ng-click="cd.creRechazados()" data-toggle="tab"><span class="badge bg-color-red txt-color-white pull-right">{{cd.creditosCancelados.length}}</span>Solicitudes Rechazadas</a>
+			<a href="#rechazados" ng-click="cd.creRechazados()" data-toggle="tab"><span class="badge bg-color-red txt-color-white pull-right" style="padding-right: 12px;padding-left: 12px ">{{cd.creditosCancelados.length}}</span>Solicitudes Rechazadas</a>
 		</li>
 	</ul>
 
@@ -113,16 +107,16 @@
 												</thead>
 												<tbody>
 													<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cd.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in credito.planPagos">								
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.capital | currency}}</td>
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.interes | currency}}</td>
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.iva | currency}}</td>
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.seguro | currency}}</td>
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.cargo | currency}}</td>
-														<td ng-class="pago.descripcion == 'Multa' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular | currency}}</td>
+														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
+														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
+														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
+														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.capital | currency}}</td>
+														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.interes | currency}}</td>
+														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.iva | currency}}</td>
+														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.seguro | currency}}</td>
+														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.cargo | currency}}</td>
+														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular | currency}}</td>
 													</tr>
 												</tbody>
 											</table>	
@@ -144,9 +138,14 @@
 												<div class="progress">
 													<div class="progress-bar bg-color-blue" style="width: {{(credito.tiempoPago / credito.numeroPagos) * 100}}%;"></div>
 												</div> 
-												<small><a ng-click="cd.mostrarReestructuracion(credito)" ng-if="currentUser.roles[0] == 'Gerente'" class="btn btn-primary">Reestructuración del crédito</a></small>
 												<div>
-													
+													<small><a ng-click="cd.mostrarReestructuracion(credito)" ng-if="currentUser.roles[0] == 'Gerente'" class="btn btn-primary">Reestructuración del crédito</a></small>
+												</div>
+												<div>
+													<br/>
+													<a ng-click="cd.crearCargoMoratorio(credito)" class="btn btn-primary" ng-if="currentUser.roles[0] == 'Gerente'">
+														Nuevo Cargo M.
+													</a>&nbsp;	
 												</div>
 												<div><br/>
 													<small><a ng-click="cd.imprimirContratos(cd.creditos)" class="btn btn-primary">Imprimir Contrato</a></small>
@@ -196,8 +195,8 @@
 							    	<label>Apellido Materno</label>
 							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cd.objeto.profile.apellidoMaterno" disabled="">
 						    	</div>	 
-						    		<div class="col-sm-3">
-									<br/>
+						    	<div class="col-sm-3">
+										<br/>
 										<div class="well padding-10">
 											<h5 class="margin-top-0"><i class="fa fa-file"></i> Documentos:</h5>
 											<div class="row">
@@ -222,7 +221,10 @@
 
 										</div>
 									</div>
-						    	  				    	    
+						    	<div class="col-sm-3">					    
+							    	<label>Número cliente</label>
+							    	<input name="numeroCliente" type="text" class="form-control" placeholder="Número de Cliente" ng-model="cd.objeto.profile.numeroCliente" disabled="">
+						    	</div>  				    	    
 						    </div>
 			      </div>
 			   
@@ -614,7 +616,7 @@
 		<table class="table table-striped table-bordered table-condensed font-xs">
 			<thead class="thead">
 				<tr>
-					<th class="text-center" width="7%">Credito No.</th>
+					<th class="text-center" width="7%">Crédito No.</th>
 					<th class="text-center" width="15%">Fecha Solicitud</th>
 					<th class="text-center" width="15%">Fecha Entrega</th>
 					<th class="text-center" width="15%">Capital Solicitado</th>
@@ -791,6 +793,8 @@
 															<!-- 	<th class="text-center" width="5%"></th> -->
 																<th class="text-center" width="5%">No.</th>
 																<th class="text-center" width="20%">Tipo de Nota de Crédito</th>
+																<th class="text-center" width="20%">Causa</th>
+																<th class="text-center" width="20%">Tiene Vigencia</th>
 																<th class="text-center" width="20%">Fecha</th>
 																<th class="text-center" width="15%">Monto</th>
 																<th class="text-center" width="15%">Estatus</th>
@@ -802,7 +806,9 @@
 														<tbody>
 															<tr ng-repeat="(index,nota) in cd.notasCredito"	ng-class="nota.estatus==1? 'info':'warning'">
 																<td>{{index+1}}</td>
-																<td>{{cd.getNombreTipoNotaCredito(nota.tipoNotaCredito_id)}}</td>
+																<td>{{nota.aplica}}</td>
+																<td>{{nota.causa}}</td>
+																<td>{{nota.tieneVigencia}}</td>
 																<td>{{nota.createdAt | date:'fullDate'}}</td>
 																<td>{{nota.importe | currency}}</td>
 																<td>{{nota.estatus==1? 'Vigente': nota.estatus==0? 'Cancelada':'Vigente'}}</td>
@@ -1042,7 +1048,7 @@
 							</div>
 						</div>
 					 </div>
-	 <!--//////////////////////////////////// //////////////////////////////////////////////////////////// -->
+<!--//////////////////////////////////// //////////////////////////////////////////////////////////// -->
 
 
 
@@ -1210,6 +1216,54 @@
 	  </div>
 
 </div>
+
+<!--//////////////////////////////////// //////////////////////////////////////////////////////////// -->
+
+
+
+<!-- Modal para cancelar credito -->
+
+<div id="modalCargosMoratorios" class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Crear Cargos sMoratorios</h4>
+		    </div>
+				<div class="widget-body">
+							<form name="form2" novalidate>
+									<div class="well">	    
+								    <div class="row">
+								    		<div class="col-sm-4" valida>
+													<label >Recibo</label>
+														<select name="recibo" class="form-control select2" placeholder="Seleccione" ng-model="cd.recibo._id" required>
+															<option  value="{{recibo._id}}" ng-repeat="recibo in cd.recibos">{{recibo.numeroPago}}</option>
+														</select>
+											  </div>
+											  <div class="col-sm-4" valida>
+											    <label>Importe</label>
+										    	<input name="importe" type="number" class="form-control" placeholder="Nombre" ng-model="cd.recibo.importe" required capitalize>
+										    </div>
+								    		
+								    </div>
+									</div>
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		        <input type="submit" ng-click="cd.guardarCargoMoratorio(cd.recibo)" value="Aceptar" class="btn btn-primary" valida-form formulario="form2">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+     
+  </div>
+</div>
+
+
+
+
+<!--		 //////////////////////////////////////////////////////////// -->
+
+
 
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   
 

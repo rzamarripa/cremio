@@ -15,16 +15,16 @@ Meteor.startup(function () {
   if (Configuraciones.find().count() === 0) {
     Configuraciones.insert({folioCliente: 1});
   }
-  /*	var multas = function () {
-      console.log('multas!');
+  
+  var multas = function () {
+      //console.log('multas!');
       Meteor.call("actualizarMultas");
       Meteor.call("deprecarNotasDeCredito");
-    }
+  }
 
     var cron = new Meteor.Cron( {
       events:{
         "0 1 * * *"  : multas
       }
     });
-  */
 });
