@@ -1,3 +1,4 @@
+
 angular.module("creditoMio").run(function ($rootScope, $state, toastr) {
 	$rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
 		// We can catch the error thrown when the $requireUser promise is rejected
@@ -799,6 +800,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			url: '/diasInhabiles',
 			templateUrl: 'client/administracion/diasInhabiles.ng.html',
 			controller: 'diasInhabilesCtrl as di',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.panelNotasCredito', {
+			url: '/panelNotasCredito',
+			templateUrl: 'client/administracion/notasCredito/panelNotasCredito.ng.html',
+			controller: 'PanelNotasCreditoCtrl as pnc',
 			resolve: {
 				"currentUser": ["$meteor", function($meteor){
 					return $meteor.requireUser();

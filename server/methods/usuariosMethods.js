@@ -8,11 +8,11 @@ Meteor.methods({
 				var numero;
 				if (sucursal.folioCliente != undefined)				
 				 	  numero = sucursal.folioCliente + 1;
-				 else	
-				 {
+				else	
+				{
 						sucursal.folioCliente = 0;
 						numero = sucursal.folioCliente + 1;
-				 }
+				}
 				
 				if (numero < 10)
 					 usuario.username = sucursal.clave + '-000' + numero;

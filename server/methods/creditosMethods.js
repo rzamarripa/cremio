@@ -1,7 +1,9 @@
 Meteor.methods({
  	generarCredito : function(credito, idCredito) {
 						
+
 		var c = Creditos.findOne({_id: idCredito});
+
 		
 		c.fechaSolicito = credito.fechaSolicito;
 		c.fechaPrimerAbono = credito.fechaPrimerAbono;
@@ -23,10 +25,17 @@ Meteor.methods({
 
 
 		var sucursal = Sucursales.findOne({_id : c.sucursal_id});
-		sucursal.folio = sucursal.folio + 1;		
-			
-		c.folio = sucursal.folio;
-		Sucursales.update({_id : sucursal._id}, { $set : { folio : sucursal.folio}});
+		
+		if (sucursal.folioCredito != undefined)				
+				sucursal.folioCredito = sucursal.folioCredito + 1;
+		else	
+		{
+				sucursal.folioCredito = 0;
+				sucursal.folioCredito = sucursal.folioCredito + 1;
+		}
+					
+		c.folio = sucursal.folioCredito;
+		Sucursales.update({_id : sucursal._id}, { $set : { folioCredito : sucursal.folioCredito}});
 				
 		var idTemp = c._id;
 		delete c._id;		
@@ -49,7 +58,8 @@ Meteor.methods({
 		Meteor.call("generarMultas");
 		return "hecho";
 	},
-	generarCreditoPeticion : function(cliente, credito ) {
+	generarCreditoPeticion : function(cliente, credito) {
+		console.log(credito);
 		if(credito.requiereVerificacion == true){
 			credito.estatus = 0;
 		}else if(credito.requiereVerificacion == false){
@@ -351,22 +361,8 @@ Meteor.methods({
 
 		return "200";
 	},
-
-	// cambiarEstatusCredito : function(credito){
-	// 	//console.log(credito,"mi crdito")
-	// 	// var empleado = Empleados.findOne({_id:id});
-	// 	if(credito.estatus == 4)
-	// 		credito.estatus = 5;
-	// 	else
-	// 		credito.estatus = 4;
-		
-	// 	// Empleados.update({_id: id},{$set :  {estatus : empleado.estatus}});
-	// 	// var fechaNueva = new Date();
-	// 	// credito.fechaEntrega = fechaNueva;
-
-	// 	Creditos.update({_id:credito._id},{$set :  {estatus : credito.estatus}});
-
-	// },
-		
-	
+	getCredito: function (credito_id) {	
+	  var credito = Creditos.findOne({"_id" : credito_id});
+		return credito;
+	},
 });
