@@ -917,9 +917,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				cliente.municipio = Municipios.findOne(cliente.municipio_id)
 		});
 
-		if (cliente.profile.ocupacion) {
-			objeto.ocupacion = objeto.profile.ocupacion
-		}  		
+		
+			objeto.ocupacion = objeto.profile.ocupacion 		
 		
 		objeto.estadoCivil = objeto.profile.estadoCivil 
 		objeto.nacionalidad = objeto.profile.nacionalidad
