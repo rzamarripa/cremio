@@ -9,15 +9,15 @@ angular.module("creditoMio")
 	this.objeto = {}; 
 	
 	this.subscribe('cuentas',()=>{
-		return [{
-			estatus : 1
-		}]
+		return [{}]
+	});
+	
+	this.subscribe('cajas',()=>{
+		return [{estatus : true}]
 	});
 
 	this.subscribe('tiposIngreso',()=>{
-		return [{
-			estatus : true
-		}]
+		return [{estatus : true}]
 	});
 
 	this.helpers({
@@ -26,7 +26,10 @@ angular.module("creditoMio")
 		},
 		tiposIngreso : () => {
 			return TiposIngreso.find()
-		}
+		},
+		cajas : () => {
+			return Cajas.find();
+		},
 	}); 
 	
 	this.Nuevo = function()
@@ -42,20 +45,34 @@ angular.module("creditoMio")
 			toastr.error('Error al guardar los datos.');
 			return;
 		}
-		console.log(objeto);
-		Meteor.call ("crearCuenta",objeto,function(error,result){
-			if(error){
-				console.log(error);
-				toastr.error('Error al guardar los datos.');
-				return
-			}
-			toastr.success('Guardado correctamente.');
-			rc.objeto = {}; 
-			$('.collapse').collapse('hide');
-			rc.nuevo = true;
-			form.$setPristine();
-			form.$setUntouched();
+		
+		//Validación para que no agrege cuentas si existe una caja abierta
+		var ban = false;
+		_.each(rc.cajas, function(caja){
+				if (caja.estadoCaja == "Abierta")
+				{
+						toastr.warning('La ventanilla ' + caja.nombre + ' esta abierta es necesario cerrarla entes de crear una cuenta');		
+						ban = true;	
+						return;
+				}
 		});
+		if (!ban)
+		{
+				Meteor.call ("crearCuenta",objeto,function(error,result){
+					if(error){
+						console.log(error);
+						toastr.error('Error al guardar los datos.');
+						return
+					}
+					toastr.success('Guardado correctamente.');
+				});
+		}
+		rc.objeto = {}; 
+		$('.collapse').collapse('hide');
+		rc.nuevo = true;
+		form.$setPristine();
+		form.$setUntouched();
+		
 	};
 
 	this.editar = function(id)

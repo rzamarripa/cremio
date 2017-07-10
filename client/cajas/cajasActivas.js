@@ -228,8 +228,12 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
   }
 
   this.verCaja = function(caja_id, cajaInactiva) {
+	  console.log(caja_id);
     if (cajaInactiva) {
+	    var caja = Cajas.findOne(caja_id);
+	    console.log(caja);
       Meteor.apply('getCajaInactivaDetalle', [caja.caja._id, caja.createdAt, caja.corte.createdAt], function(err, result) {
+	      console.log(result);
         rc.cajaInactiva = result;
         rc.cajaInactiva.caja = { nombre: caja.caja.nombre, fechaApertura: caja.createdAt, fechaCierre: caja.corte.createdAt }
         $scope.$apply();

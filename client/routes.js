@@ -750,7 +750,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			}
 		})
 		.state('root.corteCaja', {
-			url: '/cajas/corte',
+			url: '/cajas/corte/:caja_id/:cajero_id',
 			templateUrl: 'client/cajas/corteCaja.ng.html',
 			controller: 'CorteCajeCtrl as corcajCtrl',
 			resolve: {
