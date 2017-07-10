@@ -109,6 +109,7 @@
 							  <ul class="dropdown-menu text-left">
 							    <li><a  ng-click="caj.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
 							    <li><a  ui-sref="root.abrirCaja({caja_id:objeto._id})"><i class="fa fa-external-link"></i> Abrir</a></li>
+							    <li><a  ui-sref="root.corteCaja({caja_id:objeto._id, cajero_id: objeto.usuario_id})"><i class="fa fa-external-link"></i> Corte</a><li>
 							    <li><a  ng-click="caj.cambiarEstatus(objeto._id)">
 								    <i class="fa fa-{{objeto.estatus ? 'trash' : 'check' }}"></i> {{objeto.estatus ? "Desactivar" : "Activar" }}</a>
 							    </li>

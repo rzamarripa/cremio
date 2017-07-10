@@ -22,9 +22,10 @@ Meteor.startup(function () {
       Meteor.call("deprecarNotasDeCredito");
   }
 
-    var cron = new Meteor.Cron( {
-      events:{
-        "0 1 * * *"  : multas
-      }
-    });
+  var cron = new Meteor.Cron( {
+    events:{
+      "0 1 * * *"  : multas
+    }
+  });
+  
 });

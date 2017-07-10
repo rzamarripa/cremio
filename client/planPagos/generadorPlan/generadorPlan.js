@@ -322,7 +322,7 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 		//Cambie el metodo		
 		Meteor.apply('generarCreditoPeticion', [this.cliente, credito], function(error, result){
 			if(result == "hecho"){
-				toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');
+				toastr.success('Se ha guardado la solicitud de crédito correctamente');
 				rc.planPagos = [];
 				this.avales = [];
 				$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});

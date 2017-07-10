@@ -1,14 +1,13 @@
 angular.module("creditoMio")
 .controller("CorteCajeCtrl", CorteCajeCtrl);
- function CorteCajeCtrl($scope, $meteor, $reactive, $state, toastr){
+ function CorteCajeCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams){
  	
  	let rc = $reactive(this).attach($scope);
 	
-
-	
-
+ 	//console.log($stateParams.caja_id);
+ 	
 	this.subscribe('cajas',()=>{
-		return [{_id: Meteor.user() != undefined ? Meteor.user().profile.caja_id : ""}]
+		return [{_id: $stateParams.caja_id}]
 	});
 
 	this.subscribe('tiposIngreso',()=>{
@@ -22,15 +21,15 @@ angular.module("creditoMio")
 		}]
 	});
 	this.subscribe('cajaMovimientosTurno',()=>{
-		return [{}]
+		return [{_id: $stateParams.cajero_id}]
 	});
 	
 
 
 	this.helpers({
 		caja : () => {
-			var caja = Cajas.findOne({_id: Meteor.user() != undefined ? Meteor.user().profile.caja_id : ""});
-			rc.objeto=caja;
+			var caja = Cajas.findOne({_id: $stateParams.caja_id});
+			rc.objeto = caja;
 			return caja;
 		},
 		movimientos : ()=>{
@@ -44,10 +43,10 @@ angular.module("creditoMio")
 
 	
 	this.cuentaNombre = (cuentaid)=>{
-		console.log("Par",cuentaid);
+		//console.log("Par",cuentaid);
 		try{
 			var cuenta_id = this.caja.cuenta[cuentaid].cuenta_id;
-			console.log("local:",cuentaid);
+			//console.log("local:",cuentaid);
 			var cuenta  = Cuentas.findOne(cuenta_id);
 			//console.log(cuenta)
 			return cuenta.nombre
@@ -65,8 +64,8 @@ angular.module("creditoMio")
 						return;
 			}
 			
-
-			Meteor.call ("corteCaja",objeto.cuenta,function(error,result){
+			console.log(objeto);
+			Meteor.call ("corteCaja",objeto.cuenta, $stateParams.cajero_id, $stateParams.caja_id,function(error,result){
 		
 				if(error){
 					console.log(error);
@@ -79,7 +78,7 @@ angular.module("creditoMio")
 				rc.nuevo = true;
 				form.$setPristine();
 				form.$setUntouched();
-				$state.go('root.abrirCaja');
+				$state.go('root.cajas');
 			});
 			
 		
