@@ -1281,7 +1281,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				mes									: mfecha.get('month') + 1,
 				anio								: mfecha.get('year'),
 				cargo								: multas,
-				movimiento					: "Cargo Moratorio"
+				movimiento					: "Cargo Moratorio",
+				tipoCargoMoratorio	: 2	//Manual
 			};
 			
 			var creditoSeleccionado = Creditos.findOne(objeto.credito_id);

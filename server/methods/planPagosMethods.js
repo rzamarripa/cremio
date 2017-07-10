@@ -556,7 +556,8 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 							mes									: mfecha.get('month') + 1,
 							anio								: mfecha.get('year'),
 							cargo								: multas,
-							movimiento					: "Cargo Moratorio"
+							movimiento					: "Cargo Moratorio",
+							tipoCargoMoratorio	: 1 //Automatica
 						};
 						
 						var multa_id = PlanPagos.insert(multa);
