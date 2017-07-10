@@ -17,7 +17,7 @@ Meteor.startup(function () {
   }
   
   var multas = function () {
-      //console.log('multas!');
+      console.log('multas!');
       Meteor.call("actualizarMultas");
       Meteor.call("deprecarNotasDeCredito");
   }
@@ -28,4 +28,5 @@ Meteor.startup(function () {
     }
   });
   
+
 });

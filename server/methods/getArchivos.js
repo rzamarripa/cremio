@@ -615,8 +615,8 @@ diato;
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"reporteDiarioCobranza.docx", "binary");
@@ -664,6 +664,7 @@ diato;
 	        item.cargo = parseFloat(item.cargo.toFixed(2))
 	        item.interes = parseFloat(item.interes.toFixed(2))
 	        item.iva = parseFloat(item.iva.toFixed(2))
+	        item
 
 	    });
 	    
@@ -705,8 +706,8 @@ diato;
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteDiarioCreditos.docx", "binary");

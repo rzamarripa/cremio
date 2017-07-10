@@ -147,7 +147,7 @@ angular.module("creditoMio")
 
 				_.each(planes,function(plan){
 					plan.numerosPagos= plan.credito.folio
-	    	plan.numeroCliente = plan.cliente.profile.folio
+	    	plan.numeroCliente = plan.cliente.profile.numeroCliente
 	    	suma += plan.pago
 	    	sumaInter += plan.interes
 	    	sumaIva += plan.iva 
@@ -201,7 +201,7 @@ angular.module("creditoMio")
 					}else{
 						credito.estatusGarantia = "No"
 					}
-					credito.numeroCliente = credito.cliente.profile.folio
+					credito.numeroCliente = credito.cliente.profile.numeroCliente
 				});
 
 				var suma = 0
@@ -577,7 +577,7 @@ angular.module("creditoMio")
 		_.each(objeto,function(item){
 			
 	    	item.numerosPagos= item.credito.folio
-	    	item.numeroCliente = item.cliente.profile.folio
+	    	item.numeroCliente = item.cliente.profile.numeroCliente
 	    	suma += item.pago
 	    	sumaInter += item.interes
 	    	sumaIva += item.iva 
