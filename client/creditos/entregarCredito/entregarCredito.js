@@ -125,9 +125,12 @@ angular.module("creditoMio")
 		}
 
 	});
+
 	this.calcular = function(){
+				
 		if(!this.objeto)
 			return 0;
+			
 		rc.suma = 0;
 		_.each(this.objeto.cuenta,function(cuenta){ 
 			if(cuenta && cuenta.saldo && cuenta.saldo>0)
@@ -137,9 +140,14 @@ angular.module("creditoMio")
 			if(caja && caja.saldo && caja.saldo>0)
 				rc.suma+= caja.saldo;
 		})
+
 	}
+
 	this.guardar = function (){
 			//console.log(rc.objeto)
+			console.log(rc.tipoIngreso);
+			console.log(rc.caja);
+			
 			if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagare!=true || this.validar.tabla!=true)
 			{
 				toastr.error('Es obligatorio verificar los documentos.');
@@ -161,6 +169,19 @@ angular.module("creditoMio")
 					}
 			}
 			
+			
+			//Validar que tenga dinero en el tipo de Ingreso	
+			var validarSaldoCaja = rc.caja.cuenta[rc.tipoIngreso._id];
+			if (validarSaldoCaja.saldo < rc.suma)
+			{
+					toastr.error('Error no tienes saldo en la ventanilla en ese tipo de ingreso.');
+					return;
+			}			
+			
+			//Validar que no tenga Cargmos Moratorios
+			
+			
+			
 			Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id,function(error,result){
 		
 				if(error){
@@ -176,6 +197,7 @@ angular.module("creditoMio")
 				form.$setPristine();
 				form.$setUntouched();
 			});	
+
 	}
 	
 	
@@ -277,6 +299,9 @@ angular.module("creditoMio")
 	
 	this.generarCredito = function(){
 		
+
+		
+		
 		var credito = {
 			//cliente_id : this.cliente._id,
 			tipoCredito_id : this.credito.tipoCredito_id,
@@ -308,7 +333,7 @@ angular.module("creditoMio")
 		else
 				credito.garantias = angular.copy(this.garantiasGeneral);
 				
-
+		
 		Meteor.apply('generarCredito', [credito, $stateParams.credito_id], function(error, result){
 			if(result == "hecho"){
 				this.avales = [];

@@ -46,11 +46,14 @@ angular.module("creditoMio")
   this.diarioCobranza = false
   this.movimientoCuenta = false
   this.diarioCreditos = false
+  this.caja = { _id: 0 };
+  this.pagos_id = [];
 
 
 
-  console.log($stateParams)
-  
+  //console.log($stateParams)
+
+ 
   this.subscribe("tiposCredito", ()=>{
 		return [{}]
 	});
@@ -80,7 +83,8 @@ angular.module("creditoMio")
 	});
 	this.subscribe("empresas", ()=>{
 		return [{}]
-	});	  
+	});
+
 
   	this.subscribe('notas',()=>{
 		return [{cliente_id:this.getReactively("cliente_id")}]
@@ -90,25 +94,71 @@ angular.module("creditoMio")
 	    return [{fechaPago : { $gte : this.getReactively("fechaInicial"), $lt : this.getReactively("fechaFinal")}}]
 	});
 
+    this.subscribe('movimientosCaja', () => {
+       return [{ createdAt:  { $gte : this.getReactively("fechaInicial"), $lt : this.getReactively("fechaFinal")}}]
+    });
+
   	this.subscribe('personas', () => {
 		return [{ }];
 	});
 		this.subscribe('creditos', () => {
 		return [{estatus:4}];
 	});
-	// 	this.subscribe('clientes', () => {
-	// 	return [{_id : {$in : this.getReactively("clientes_id")}}];
-	// });
-
 		this.subscribe('clientes', () => {
 		return [{}];
 	});
 		this.subscribe('pagos', () => {
-		return [{estatus:1  }];
+		return [{estatus:1},{ fechaPago:  { $gte : this.getReactively("fechaInicial"), $lt : this.getReactively("fechaFinal")}}];
 	});
 
+		this.subscribe('cajas',()=>{
+		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""}]
+	});
+this.subscribe('cuentas',()=>{
+		return [{estatus : 1}]});
+
+  this.subscribe('cajas', () => {
+    return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "" }]
+  });
+  this.subscribe('tiposIngreso', () => {
+    return [{}]
+  });
+  this.subscribe('allCajeros', () => {
+    return [{}]
+  });
+  this.subscribe('cuentas', () => {
+    return [{}]
+  });
+  this.subscribe('movimientosCaja', () => {
+    return [{caja_id: this.getReactively('caja._id'), createdAt: {$gte: this.getReactively('caja.ultimaApertura')} }]
+  });
 	
 	this.helpers({
+		bancos: () => {
+      var ret = [];
+      var pagos = {};
+      var pays = Pagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
+      var caja = Cajas.find().fetch();
+       //_.each(caja, function(c) {
+       	var suma = 0;
+       	_.each(pays, function(pago) {
+       //	console.log(pays,"pagos")
+       	pago.cliente = Meteor.users.findOne(pago.usuario_id);
+       	pago.nombreCompleto = pago.cliente.profile.nombreCompleto;
+       	pago.quienCobro = Meteor.users.findOne(pago.usuarioCobro_id);
+       	pago.nombreCajero = pago.quienCobro.profile.nombreCompleto;
+       	pago.numeroCliente = pago.cliente.profile.numeroCliente
+       	pago.fechaPago = moment(pago.fechaPago).format("DD-MM-YYYY")
+       	suma += pago.pago
+       	pago.acumulado = suma
+        });
+        //});
+        ret.push(pays)
+        console.log(ret,"dosthaa")
+      
+      return ret
+    },
+
 		tiposCredito : () => {
 			return TiposCredito.find();
 		},
@@ -123,7 +173,6 @@ angular.module("creditoMio")
 	        var planes = PlanPagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
 	        this.clientes_id = _.pluck(planes, "cliente_id");
 	        //console.log(this.clientes_id,"clientes")
-	        
 	        
 	        var client = ""
 	        var suma = 0
@@ -146,13 +195,12 @@ angular.module("creditoMio")
 			 });
 
 				_.each(planes,function(plan){
-					plan.numerosPagos= plan.credito.folio
+				// plan.numerosPagos= plan.credito.folio
 	    	plan.numeroCliente = plan.cliente.profile.numeroCliente
 	    	suma += plan.pago
 	    	sumaInter += plan.interes
 	    	sumaIva += plan.iva 
 				});
-
 
 				_.each(planes,function(plan){
 	     plan.sumaCapital = suma 
@@ -166,11 +214,10 @@ angular.module("creditoMio")
 	     rc.sumaIva = plan.sumaIva
 	     rc.totalCobranza = plan.sumaCapital + plan.sumaInteres +sumaIva
 	     //rc.sumaCapital = plan.sumaCapital
-
 	 	});
 			}
 
-			 console.log(planes,"planes")
+			 //console.log(planes,"planes")
 			return planes
 		
 		},
@@ -195,7 +242,6 @@ angular.module("creditoMio")
 					if(credito.cliente){
 						credito.nombreCompleto = credito.cliente.profile.nombreCompleto;
 					}
-					
 					if (credito.garantias != "") {
 						credito.estatusGarantia = "Si"
 					}else{
@@ -203,13 +249,11 @@ angular.module("creditoMio")
 					}
 					credito.numeroCliente = credito.cliente.profile.numeroCliente
 				});
-
 				var suma = 0
         var sumaSol = 0
 	    _.each(creditos,function(credito){
 	 	   	suma += credito.capitalSolicitado
 	    	sumaSol += credito.adeudoInicial
-	   
 	    });
 
 	     _.each(creditos,function(credito){
@@ -219,14 +263,10 @@ angular.module("creditoMio")
 	     rc.totalSolicitado = parseFloat(credito.sumaCapital.toFixed(2))
 	  	});
 
-				console.log("creditos",creditos)
+				//console.log("creditos",creditos)
 				return creditos
 			},
-				
-
-
-
-
+			
 				creditoPlanes : () => {
 				var creditos = Creditos.find({}).fetch();
 				_.each(creditos,function(credito){
@@ -234,6 +274,7 @@ angular.module("creditoMio")
 				return creditos
 		
 			},
+			
 			// cartera : () => {
 			// 	var personas = Creditos.find({}).fetch();
 			// 	_.each(creditos,function(credito){
@@ -243,18 +284,8 @@ angular.module("creditoMio")
 			// } 
 		});
 
-	
-
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	
-	
-	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
   this.selCredito=function(objeto)
   {
 
@@ -774,10 +805,48 @@ angular.module("creditoMio")
 		   }
 		});
 		
-	}
+	};
 
-	
+		this.imprimirReporteBancos = function(objeto){
 
-	
+	    console.log("objeto",objeto)
+		   Meteor.call('ReportesBanco', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
 
+		   if(error)
+		   {
+		    console.log('ERROR :', error);
+		    return;
+		   }
+		   else
+		   {
+		 				function b64toBlob(b64Data, contentType, sliceSize) {
+							  contentType = contentType || '';
+							  sliceSize = sliceSize || 512;							
+							  var byteCharacters = atob(b64Data);
+							  var byteArrays = [];
+							  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+							    var slice = byteCharacters.slice(offset, offset + sliceSize);
+							    var byteNumbers = new Array(slice.length);
+							    for (var i = 0; i < slice.length; i++) {
+							      byteNumbers[i] = slice.charCodeAt(i);
+							    }							
+							    var byteArray = new Uint8Array(byteNumbers);
+							    byteArrays.push(byteArray);
+							  }
+							  var blob = new Blob(byteArrays, {type: contentType});
+							  return blob;
+						}
+						var blob = b64toBlob(response, "application/docx");
+					  var url = window.URL.createObjectURL(blob);
+					  
+					  //console.log(url);
+					  var dlnk = document.getElementById('dwnldLnk');
+
+				    dlnk.download = "ReporteBancos.docx"; 
+						dlnk.href = url;
+						dlnk.click();		    
+					  window.URL.revokeObjectURL(url);
+		   }
+		});
+	};
 };

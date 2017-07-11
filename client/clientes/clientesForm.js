@@ -11,6 +11,7 @@ angular.module("creditoMio")
   this.nuevo = true;   
   this.objeto = {}; 
   this.objeto.profile = {};
+  this.ocupacion = {};
   this.objeto.profile.empresa_id = "";
   this.empresa = {}; 
   this.objeto_id = ""
@@ -83,7 +84,7 @@ angular.module("creditoMio")
     return [{estatus: true}]
   });
   this.subscribe('personas',()=>{
-    return [{}]
+    return [{rol:"Cliente"}]
   });
   this.subscribe('configuraciones',()=>{
     return [{}]
@@ -417,6 +418,35 @@ this.tomarFoto = function(objeto){
                     
                 }
       				});
+  };
+   this.guardarOcupacion = function(ocupacion, objeto,form)
+  {
+      if(form.$invalid){
+            toastr.error('Error al guardar los datos.');
+            return;
+      }
+      ocupacion.estatus = true;
+      ocupacion.usuarioInserto = Meteor.userId();
+      //objeto.profile.foto = this.objeto.profile.foto;
+      
+      Ocupaciones.insert(ocupacion, function(error, result)
+              {
+                if (error){
+                  console.log("error: ",error);
+                }
+                if (result)
+                {
+                    objeto.profile.ocupacion_id = result;
+                    toastr.success('Guardado correctamente.');
+                    this.ocupacion = {}; 
+                    $('.collapse').collapse('hide');
+                    this.nuevo = true;
+                    form.$setPristine();
+                    form.$setUntouched();
+                    $("[data-dismiss=modal]").trigger({ type: "click" });
+                    
+                }
+              });
   };
     
   this.AgregarCliente = function(a){

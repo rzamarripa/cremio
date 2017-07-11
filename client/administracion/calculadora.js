@@ -569,16 +569,13 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 	    	console.log(objeto,"objeto")
 	    	console.log(credito,"credito")
 
-
-						var pag = objeto
-						var pa = _.toArray(pag);
-						var all = pa[pa.length - 1]
-						console.log(all,"all")
-						rc.total = all
+				var pag = objeto
+				var pa = _.toArray(pag);
+				var all = pa[pa.length - 1]
+				console.log(all,"all")
+				rc.total = all
 
 			  Meteor.call('getCreditoReporte', objeto,credito,avales,all, function(error, response) {
-
-
 
 		   if(error)
 		   {

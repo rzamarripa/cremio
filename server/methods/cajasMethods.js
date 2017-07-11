@@ -218,7 +218,6 @@ Meteor.methods({
 
     return "200";
   },
-
   abrirCaja: function(caja) {
     caja.estadoCaja = "Abierta";
     var cajaid = caja._id;
@@ -271,9 +270,15 @@ Meteor.methods({
     })
     return ret
   },
-  corteCaja: (montos) => {
-    var user = Meteor.user();
-    var caja = Cajas.findOne(user.profile.caja_id);
+  corteCaja: (montos, cajeroId, cajaId) => {
+	
+		console.log(cajeroId);
+    var user = Meteor.users.findOne({_id: cajeroId});
+    console.log("User:", user);
+    
+		var caja = Cajas.findOne({_id: cajaId});
+    console.log("Caja:", caja);
+    
     caja.updated = true;
     caja.updatedAt = new Date();
     caja.updatedBy = user._id;
@@ -310,7 +315,7 @@ Meteor.methods({
       delete cuenta._id
       Cuentas.update({ _id: cuentaid }, { $set: cuenta });
       var movimiento = {
-        tipoMovimiento: "Deposito",
+        tipoMovimiento: "DEPOSITO",
         origen: "Corte de Caja",
         origen_id: corteid,
         monto: monto.saldo,
@@ -328,7 +333,7 @@ Meteor.methods({
     });
 
     var where = {
-      $and: [{ caja_id: user.profile.caja_id }, {
+      $and: [{ caja_id: cajaId }, {
         $or: [
           { estatus: 1 },
           { estatus: 2 }
@@ -348,10 +353,11 @@ Meteor.methods({
     }
 
     delete caja._id;
-    Cajas.update({ _id: user.profile.caja_id }, { $set: caja });
+    Cajas.update({ _id: cajaId }, { $set: caja });
 
     delete objeto._id
     CortesCaja.update({ _id: corteid }, { $set: objeto });
+
   },
   getHistorialCajas: (fechaInicio, fechaFin, sucursal_id) => {
     var movimientosCajas = MovimientosCajas.find({ sucursal_id: sucursal_id, origen: "Apertura de Caja", createdAt: { $gte: fechaInicio, $lte: fechaFin }, estatus: 3 }).fetch();
@@ -369,7 +375,7 @@ Meteor.methods({
   getCajaInactivaDetalle: (caja_id, fechaInicio, fechaFin) => {
     var res = {};
     res.pagos = Pagos.find({ caja_id: caja_id, fechaPago: { $gte: fechaInicio, $lte: fechaFin } }).fetch();
-
+		console.log(caja_id);
     var agrupados = {};
     var total = 0;
     var pagos = Pagos.find({ estatus: { $ne: 0 } }).fetch();

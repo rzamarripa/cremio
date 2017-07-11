@@ -54,7 +54,7 @@ angular.module("creditoMio")
     return [{}]
   });
   this.subscribe("estadoCivil", ()=>{
-    return [{}]
+    return [{estatus : true}]
   });
   this.subscribe("nacionalidades", ()=>{
     return [{}]
@@ -307,7 +307,7 @@ angular.module("creditoMio")
 	                  else if (c.descripcion == "Cargo Moratorio")    
 	                     rc.totalMultas = rc.totalMultas + c.importeRegular;
 	              });
-                //console.log(result,"resullltt")
+                console.log(result,"resullltt")
 	              
 	              $scope.$apply();
 	          }
@@ -429,7 +429,7 @@ angular.module("creditoMio")
       Meteor.call('getCobranza', FI, FF, op, Meteor.user().profile.sucursal_id, function(error, result) {           
           if (result)
           {
-              console.log("Cobranza:",result);
+              //console.log("Cobranza:",result);
               
               rc.cobranza = result;
               rc.totalRecibos = 0;
@@ -641,28 +641,50 @@ angular.module("creditoMio")
 					
 	};
 	
-	this.sumarSeleccionados = function(objeto)
+	this.sumarSeleccionados = function()
 	{		
-		//console.log(objeto,"caaaaaaa")	
-		   // rc.selectRecibo = !rc.cobranza.estatus;
-
-			rc.seleccionadoRecibos = 0;
-			rc.seleccionadoMultas = 0;
-			_.each(objeto,function(c){
-				//console.log(c,"caaaaaaacahuateee")	
 			
-					if (c.imprimir == true)
-					{
-							if (c.descripcion == "Recibo")
-									rc.seleccionadoRecibos += c.importeRegular;
-							else if (c.descripcion == "Cargo Moratorio")		
-									rc.seleccionadoMultas += c.importeRegular;
-					}		
-			});
-		//	console.log(rc.cobranza)
-
+		   // rc.selectRecibo = !rc.cobranza.estatus;
+			if (rc.cobranza != undefined)
+			{
+					//console.log(objeto,"caaaaaaa");
+					rc.seleccionadoRecibos = 0;
+					rc.seleccionadoMultas = 0;
+					_.each(rc.cobranza,function(c){
+						//console.log(c,"caaaaaaacahuateee")	
+							if (c.imprimir == true)
+							{
+									if (c.descripcion == "Recibo")
+											rc.seleccionadoRecibos += c.importeRegular;
+									else if (c.descripcion == "Cargo Moratorio")		
+											rc.seleccionadoMultas += c.importeRegular;
+							}		
+					});
+			}
 	};
-
+	
+	this.Seleccionar = function(objeto)
+	{
+			if (objeto != undefined)
+			{
+					if (objeto.imprimir)
+					{
+							if (objeto.descripcion == "Recibo")
+									rc.seleccionadoRecibos += objeto.importeRegular;
+							else if (objeto.descripcion == "Cargo Moratorio")		
+									rc.seleccionadoMultas += objeto.importeRegular;
+						
+					}
+					else
+					{
+							if (objeto.descripcion == "Recibo")
+									rc.seleccionadoRecibos -= objeto.importeRegular;
+							else if (objeto.descripcion == "Cargo Moratorio")		
+									rc.seleccionadoMultas -= objeto.importeRegular;
+						
+					}	
+			}
+	}
 
 
 	var fecha = moment();
@@ -704,7 +726,7 @@ angular.module("creditoMio")
 
   }
   this.guardarNotaCliente=function(nota){
-      console.log(nota);      
+      //console.log(nota);      
       nota.estatus = true;
       nota.fecha = new Date()
       nota.hora = moment(nota.fecha).format("hh:mm:ss a")
@@ -729,7 +751,7 @@ angular.module("creditoMio")
     rc.notaCobranza.recibo= objeto.numeroPago
      rc.cobranza_id = objeto.credito._id
      rc.notaCobranza.cliente_id = objeto.cliente._id
-     console.log("rc.cobranza_id",rc.cobranza_id)
+     //console.log("rc.cobranza_id",rc.cobranza_id)
      $("#modalCuenta").modal();
 
   }

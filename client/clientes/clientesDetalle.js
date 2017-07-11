@@ -8,7 +8,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	this.fechaActual = new Date();
 	this.creditos = [];
-	this.creditos_id = [];
+	rc.creditos_id = [];
+	//rc.creditos_idH = [];
 	rc.credito_id = ""
 	rc.credito = "";
 	rc.notaCuenta = []
@@ -44,27 +45,18 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe("ocupaciones",()=>{
 		return [{_id : this.getReactively("ocupacion_id"), estatus : true }]
 	});
-	
 	this.subscribe('cliente', () => {
-		return [{
-			_id : $stateParams.objeto_id
-		}];
+		return [{_id : $stateParams.objeto_id}];
 	});
-	
 	this.subscribe('creditos', () => {
-		return [{
-			cliente_id : $stateParams.objeto_id
-		}];
+		return [{cliente_id : $stateParams.objeto_id}];
 	});
 	this.subscribe('notasCredito', () => {
-		return [{
-			cliente_id : $stateParams.objeto_id
-		}];
+		return [{cliente_id : $stateParams.objeto_id}];
 	});
-	
 	this.subscribe('planPagos', () => {
 		return [{
-			cliente_id : $stateParams.objeto_id, credito_id : { $in : this.getCollectionReactively("creditos_id")}
+			cliente_id : $stateParams.objeto_id, credito_id : { $in : rc.getReactively("creditos_id")}
 		}];
 	});
 	// this.subscribe('planPagos', () => {
@@ -83,38 +75,38 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		return [{}];
 	});
 	this.subscribe('documentos',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('personas',()=>{
-		return [{}];
+		return [{rol:"Cliente"}];
 	});
 
 	this.subscribe('ciudades',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('municipios',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('colonias',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('estadoCivil',()=>{
-		return [{}]
+		return [{estatus:true}]
 	 });
 	this.subscribe('paises',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('sucursales',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('empresas',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('estados',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('nacionalidades',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	
 /*
@@ -159,29 +151,23 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			});
 			return colonias
 		},
-		
-		// referencias : () => {
-		// 	var referencias = {};
-		// 	_.each(Personas.find().fetch(), function(referencia){
-		// 		referencias[referencia._id] = referencia;
-		// 	});
-		// 	return referencias
-		// },
+
 		creditos : () => {
 			var creditos = Creditos.find({estatus:4}).fetch();
+/*
 			if(creditos != undefined){
-				rc.creditos_id = _.pluck(creditos, "cliente_id");
+				rc.creditos_id = _.pluck(creditos, "_id");
+				console.log("En C:", rc.creditos_id);
 			}
-			
+*/			
 			return creditos;
 		},
 
 		historialCreditos : () => {
-			var creditos = Creditos.find({estatus: 4}).fetch();
+			var creditos = Creditos.find({estatus: {$in: [4,5]}}).fetch();
 			if(creditos != undefined){
-				rc.creditos_id = _.pluck(creditos, "cliente_id");
-			}
-			
+				rc.creditos_id = _.pluck(creditos, "_id");
+			}	
 			return creditos;
 		},
 		creditosAprobados : () =>{
@@ -198,14 +184,25 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				})
 			}
 			
-			
 			return creditos;
 		},
 		notasCredito : () =>{
-			return NotasCredito.find({},{sort:{fecha:1}});
+			var notas = NotasCredito.find({},{sort:{fecha:1}});
+			return notas
+
 		},
 		notaPerfil: () => {
 			var nota = Notas.find({perfil : "perfil",estatus:true}).fetch()
+
+			_.each(rc.getReactively("notasCredito"), function(nota){
+				console.log("notas de credito compilla",nota)
+				if (nota.tieneVigencia == true ) {
+					nota.tieneVigencia = "Si"
+				}else{
+					nota.tieneVigencia = "No"
+				}
+
+			});
 
 			return nota[nota.length - 1];
 		
@@ -214,12 +211,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			var nota = Notas.find({tipo : "Cuenta"}).fetch()
 			_.each(nota, function(notita){
 				if (notita.estatus == true && notita.cliente_id == rc.objeto._id) {
-					console.log("entro aqui al notaCuenta1")
 					$("#myModal").modal(); 
-					
 				}
-				
-
 			 });
 			return nota[nota.length - 1];
 			
@@ -360,9 +353,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 		
 		ocupaciones : () => {
+/*
 			if(this.getReactively("creditos")){
 				this.creditos_id = _.pluck(rc.creditos, "_id");
 			}
+*/
 			return Ocupaciones.find();
 		},
 		planPagos : () => {
@@ -429,7 +424,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			//rc.creditos_id = _.pluck(planes, "cliente_id");
 			//console.log("kaka",planes)
 
-
 			return planes
 
 		},
@@ -456,7 +450,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				console.log("credito",credito)
 
 				
-				if(planPago.descripcion=="Multa")
+				if(planPago.descripcion=="Cargo Moratorio")
 					rc.saldo+=planPago.cargo
 				
 				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
@@ -485,10 +479,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 							fecha : pago.fechaPago,
 							pago : pago.totalPago, 
 							cargo : 0,
-							movimiento : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							movimiento : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
 							planPago_id : planPago._id,
 							credito_id : planPago.credito_id,
-							descripcion : planPago.descripcion=="Multa"? "Abono de Multa":"Abono",
+							descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
 							importe : planPago.importeRegular,
 							pagos : planPago.pagos
 					  	});
@@ -508,7 +502,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
           if(pago.descripcion == "Recibo"){
             flags.abonoKey = key;
           }
-          if(pago.descripcion == "Abono de Multa"){
+          if(pago.descripcion == "Abono de Cargo Moratorio"){
             console.log(flags);
             console.log(arreglo[flags.multaKey].saldoActualizado);
             if(arreglo[flags.multaKey].saldoActualizado){
@@ -811,7 +805,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.cancelarCredito = function(motivo){
 			
 			var cre = Creditos.findOne({folio : rc.cancelacion.folio});
-			Creditos.update({_id : cre._id}, { $set : {estatus : 3, motivo: motivo}});
+			Creditos.update({_id : cre._id}, { $set : {estatus : 6, motivo: motivo}});
 			toastr.success("El crédito se ha cancelado.")
 			$("[data-dismiss=modal]").trigger({ type: "click" });			
 		
@@ -848,7 +842,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	};
 
 	this.verPagos= function(credito) {
-		console.log(credito,"el ob ")
+
 		rc.credito = credito;
 		rc.credito_id = credito._id;
 		$("#modalpagos").modal();
@@ -1232,22 +1226,15 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	};
 	
 	//--------------------------------------------------------------------
-	
-	this.crearCargoMoratorio = function(objeto)
+	this.getRecibos = function(credito_id)
 	{
-			rc.recibo._id= "";
-			
-			rc.recibos = [];
+			rc.recibos = PlanPagos.find({credito_id: credito_id}).fetch();			
+	};
+	
+	this.crearCargoMoratorio = function()
+	{
+			rc.recibo._id= "";		
 			rc.recibo.importe = 0.00;
-			
-			//Solo poner los recibos						
-		 
-			rc.creditoSeleccionado = objeto;
-			_.each(rc.creditoSeleccionado.planPagos,function(planPago){
-					if (planPago.descripcion == "Recibo" && planPago.multada != 1)
-							rc.recibos.push(planPago);
-			});
-			
 			$("#modalCargosMoratorios").modal('show');
 	};
 	
@@ -1259,78 +1246,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					return;	
 				
 			}
-			
-			_.each(rc.creditoSeleccionado.planPagos,function(planPago){
-					if (planPago._id == rc.recibo._id && planPago.multada == 1)
-					{
-							toastr.error('El recibo ya tiene un cargo moratorio');	
-							return;
-					}
-			});
-			
-						
+
 			var mfecha = moment(new Date());
 			var pago = PlanPagos.findOne(rc.recibo._id);
 			var multas = Number(rc.recibo.importe); 
 			var iva = 0;
 			var interes = 0;
-			
-/*
-			var tipoCredito = TiposCredito.findOne(rc.creditoSeleccionado.tipoCredito_id);			
-						
-			
-			if (tipoCredito.calculo == "importeSolicitado")
-			{
-					var multas = Number(rc.recibo.importe); 
-					multas = Math.round(multas * 100) / 100;
-					
-					var interes = multas / 1.16;
-					interes = Number(interes.toFixed(2));
-					var iva = multas - interes;
-					iva = Number(iva.toFixed(2));	
-
-			}
-			else if (tipoCredito.calculo == "importereciboVencido")
-			{
-					
-					var porcentaje;
-					if (credito.periodoPago == "Semanal")
-							porcentaje = 2;
-					else if (credito.periodoPago == "Quincenal")
-							porcentaje = 4;
-					else if (credito.periodoPago == "Mensual")				
-							porcentaje = 8;
-							
-					var multas = Number(rc.recibo.importe); 
-					multas=Math.round(multas * 100) / 100;
-					
-					var interes = multas / 1.16;
-					interes = Number(interes.toFixed(2));
-					var iva = multas - interes;
-					iva = Number(iva.toFixed(2));
-				
-			}	
-			else if (tipoCredito.calculo == "saldoreciboVencido")
-			{	
-								
-			
-					var porcentaje;
-					if (credito.periodoPago == "Semanal")
-							porcentaje = 2;
-					else if (credito.periodoPago == "Quincenal")
-							porcentaje = 4;
-					else if (credito.periodoPago == "Mensual")				
-							porcentaje = 8;
-							
-					var multas = Number(rc.recibo.importe); 
-					multas = Math.round(multas * 100) / 100;
-					
-					var interes = multas / 1.16;
-					interes = Number(interes.toFixed(2));
-					var iva = multas - interes;
-					iva = Number(iva.toFixed(2));			
-			}
-*/
 			
 			var multa = {
 				semana							: mfecha.isoWeek(),
@@ -1358,21 +1279,25 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				pagos 							: [],
 				descripcion					: "Cargo Moratorio",
 				ultimaModificacion	: new Date(),
-				credito_id 					: rc.creditoSeleccionado._id,
+				credito_id 					: objeto.credito_id,
 				mes									: mfecha.get('month') + 1,
 				anio								: mfecha.get('year'),
 				cargo								: multas,
-				movimiento					: "Cargo Moratorio"
+				movimiento					: "Cargo Moratorio",
+				tipoCargoMoratorio	: 2	//Manual
 			};
 			
+			var creditoSeleccionado = Creditos.findOne(objeto.credito_id);
+			//console.log(creditoSeleccionado);
+						
+
 			var multa_id = PlanPagos.insert(multa);
 			PlanPagos.update({_id:rc.recibo._id},{$set:{multada : 1, multa_id : multa_id}})
 			var suma = multas + iva + interes;
-			rc.creditoSeleccionado.saldoMultas += suma;
-			rc.creditoSeleccionado.saldoMultas = Math.round(rc.creditoSeleccionado.saldoMultas * 100) / 100;
-			Creditos.update({_id:rc.creditoSeleccionado._id},{$set:{saldoMultas:rc.creditoSeleccionado.saldoMultas}})
-						
-			
+			creditoSeleccionado.saldoMultas += suma;
+			creditoSeleccionado.saldoMultas = Math.round(creditoSeleccionado.saldoMultas * 100) / 100;
+			Creditos.update({_id:objeto.credito_id},{$set:{saldoMultas:creditoSeleccionado.saldoMultas, estatus: 4}})
+
 			$("#modalCargosMoratorios").modal('hide');
 			toastr.success('Actualizado correctamente.');	
 	};

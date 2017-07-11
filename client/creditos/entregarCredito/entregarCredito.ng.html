@@ -29,13 +29,12 @@
         <form name="form" class="form-horizontal" role="form">
             <div class="well">      
               <div class="row ">
-                <div class="col-sm-6">
-                  <div class="row " ng-repeat="(index, tipo) in ecCtrl.tiposIngreso">
-                    <div class="col-sm-12" ng-if="tipo.nombre == 'EFECTIVO'" valida>
-                      <label>Monto en {{tipo.nombre}} de Caja *</label>
-                      <input name="tipo._id" type="number" class="form-control" placeholder="Monto" ng-model="ecCtrl.objeto.caja[tipo._id].saldo" ng-change="ecCtrl.calcular()"  required>
-                    </div>
-                </div>
+                <div class="col-sm-4">
+									<label >Forma de pago</label>
+									<select name="tiposIngresos" class="form-control select2" placeholder="Seleccione" ng-model="ecCtrl.tipoIngreso._id" required>
+										<option value="{{tipoIngreso._id}}" ng-repeat="tipoIngreso in ecCtrl.tiposIngreso">{{tipoIngreso.nombre}}</option>
+									</select>
+									<input name="tipo._id" type="number" class="form-control" placeholder="Monto" ng-model="ecCtrl.objeto.caja[ecCtrl.tipoIngreso._id].saldo" ng-change="ecCtrl.calcular()"  required>
                 </div>
                 <div class="col-sm-6">
                 <div class="row">
@@ -97,8 +96,6 @@
                        <option>CONTRATO DE MUTUO CON INTERÉS CON GARANTÍA PRENDARIA VF</option>
                   </select>
                </div> -->
-              
-              
              
             </div><br/>
             </div>

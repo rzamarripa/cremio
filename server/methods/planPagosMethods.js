@@ -186,16 +186,19 @@ Meteor.methods({
 				}
 
 				pagoFijo = parseFloat(((credito.capitalSolicitado * tasaInteres) * Math.pow(1 + tasaInteres, totalPagos) / (Math.pow(1 + tasaInteres, totalPagos) - 1)).toFixed(2));
-				var capital = parseFloat(credito.capitalSolicitado).toFixed(2);
+				var saldoInicial = parseFloat(credito.capitalSolicitado).toFixed(2);
+				
 				var saldo = 0;
 				
 				for (var i = 0; i < totalPagos; i++) {
 					
-					var interes = capital * tasaInteres;
+					var interes = saldoInicial * tasaInteres;
 					interes = parseFloat(interes.toFixed(2));
 					
 					var iva = interes * 0.16;
 					iva = parseFloat(iva.toFixed(2))
+					
+					var capital = pagoFijo - interes;
 					
 					if (credito.conSeguro)
 								var importeParcial = parseFloat(pagoFijo) + parseFloat(iva.toFixed(2)) + parseFloat(seguro.toFixed(2));
@@ -257,7 +260,7 @@ Meteor.methods({
 					}	
 					
 					var capitalPagado = pagoFijo - interes; 
-					capital = capital - capitalPagado;
+					saldoInicial = saldoInicial - capitalPagado;
 					
 				}
 				var suma = 0;
@@ -553,7 +556,8 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 							mes									: mfecha.get('month') + 1,
 							anio								: mfecha.get('year'),
 							cargo								: multas,
-							movimiento					: "Cargo Moratorio"
+							movimiento					: "Cargo Moratorio",
+							tipoCargoMoratorio	: 1 //Automatica
 						};
 						
 						var multa_id = PlanPagos.insert(multa);

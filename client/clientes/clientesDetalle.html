@@ -8,16 +8,19 @@
 						<div class="row">
 							<div class="col-sm-12">
 							<a ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;">
-								<i class="fa fa-plus"></i> Nueva Solicitud
+								<i class="fa fa-plus"></i> N. Solicitud
 							</a>&nbsp;
-							<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
-								<i class="fa fa-plus"></i> Nueva Nota de Credito
+							<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px;">
+								<i class="fa fa-plus"></i> N. Nota de Credito
 							</a>&nbsp;
 							<a ng-click="cd.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
-								<i class="fa fa-plus"></i> Nueva Nota de Cliente
+								<i class="fa fa-plus"></i> N. Nota de Cliente
 							</a>&nbsp;
+							<a ng-click="cd.crearCargoMoratorio(credito)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px">
+								 <i class="fa fa-plus"></i> N. Cargo Moratorio
+							</a>&nbsp;	
 							<a ui-sref="root.pagarPlanPagos({objeto_id : cd.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
-								<i class="fa fa-plus"></i> Nuevo Pago
+								<i class="fa fa-plus"></i> N. Pago
 							</a>&nbsp;
 							<div class="col-sm-2">
 										<h1>{{cd.objeto.profile.nombre}} <span class="semi-bold">{{cd.objeto.profile.apellidoPaterno}} {{cd.objeto.profile.apellidoMaterno}}</span>
@@ -46,10 +49,11 @@
 			<a href="#historialCrediticio" ng-click="cd.masInformacionCrdito()"  data-toggle="tab">Historial Crediticio</a>
 		</li>
 		<li class="pull-right">
-			<a href="#solicitudes" ng-click="cd.solicitudesCreditos()" data-toggle="tab">Solicitudes </a>
+			<a href="#solicitudes" ng-click="cd.solicitudesCreditos()" data-toggle="tab"><span class="badge bg-color-green txt-color-white pull-right">{{cd.creditosPendientes.length}}</span>Solicitudes </a>
 		</li>
 		<li class="pull-right">
-			<a href="#notasCredito" ng-click="cd.notasCreditos()" data-toggle="tab">Notas Créditos</a>
+			<a href="#notasCredito" ng-click="cd.notasCreditos()" data-toggle="tab">
+			<span class="badge bg-color-green txt-color-white pull-right">{{cd.notasCredito.length}}</span>Notas Créditos</a>
 		</li>
 		<li class="pull-right">
 			<a href="#aprobados" ng-click="cd.creAprobados()" data-toggle="tab"><span class="badge bg-color-green txt-color-white pull-right">{{cd.creditosAprobados.length}}</span>Créditos Aprobados</a>
@@ -96,7 +100,7 @@
 														<th class="text-center" width="5%">No.</th>
 														<th class="text-center" width="20%">Movimiento</th>
 														<th class="text-center" width="20%">Fecha de Pago</th>
-														<th class="text-center" width="10%">vv</th>
+														<th class="text-center" width="10%">N. Pago</th>
 														<th class="text-center" width="10%">Capital</th>
 														<th class="text-center" width="10%">Interes</th>
 														<th class="text-center" width="10%">IVA</th>
@@ -140,12 +144,6 @@
 												</div> 
 												<div>
 													<small><a ng-click="cd.mostrarReestructuracion(credito)" ng-if="currentUser.roles[0] == 'Gerente'" class="btn btn-primary">Reestructuración del crédito</a></small>
-												</div>
-												<div>
-													<br/>
-													<a ng-click="cd.crearCargoMoratorio(credito)" class="btn btn-primary" ng-if="currentUser.roles[0] == 'Gerente'">
-														Nuevo Cargo M.
-													</a>&nbsp;	
 												</div>
 												<div><br/>
 													<small><a ng-click="cd.imprimirContratos(cd.creditos)" class="btn btn-primary">Imprimir Contrato</a></small>
@@ -642,7 +640,7 @@
 								<button type="button" class="btn btn-link" ng-click="cd.verPagos(credito)">Ver Pagos</button>
 						</div>						
 					</td>
-					Pagos cliente
+
 <!-- modal -->
 <!-- (////////////////////////////////////////////////////////////////////////) -->
 
@@ -715,19 +713,13 @@
 							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
 							<h2>Solicitudes de Crédito</h2>
 			
-			
 						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-			
 						<!-- widget div-->
 						<div class="no-padding" role="content">
 							<!-- widget edit box -->
-						
-							<!-- end widget edit box -->
-			
 							<div class="widget-body">
 								<!-- content -->
-								
-
+							
 								<div class="row ">
 									<br/>
 									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="pendiente in cd.creditosPendientes">
@@ -810,7 +802,7 @@
 																<td>{{nota.causa}}</td>
 																<td>{{nota.tieneVigencia}}</td>
 																<td>{{nota.createdAt | date:'fullDate'}}</td>
-																<td>{{nota.importe | currency}}</td>
+																<td>{{nota.saldo | currency}}</td>
 																<td>{{nota.estatus==1? 'Vigente': nota.estatus==0? 'Cancelada':'Vigente'}}</td>
 															</tr>
 														</tbody>
@@ -1235,6 +1227,12 @@
 									<div class="well">	    
 								    <div class="row">
 								    		<div class="col-sm-4" valida>
+													<label >Credito</label>
+														<select name="recibo" class="form-control select2" placeholder="Seleccione" ng-model="cd.recibo.credito_id" ng-change="cd.getRecibos(cd.recibo.credito_id)" required>
+															<option  value="{{credito._id}}" ng-repeat="credito in cd.historialCreditos" >{{credito.folio}}</option>
+														</select>
+											  </div>
+								    		<div class="col-sm-4" valida>
 													<label >Recibo</label>
 														<select name="recibo" class="form-control select2" placeholder="Seleccione" ng-model="cd.recibo._id" required>
 															<option  value="{{recibo._id}}" ng-repeat="recibo in cd.recibos">{{recibo.numeroPago}}</option>
@@ -1242,7 +1240,7 @@
 											  </div>
 											  <div class="col-sm-4" valida>
 											    <label>Importe</label>
-										    	<input name="importe" type="number" class="form-control" placeholder="Nombre" ng-model="cd.recibo.importe" required capitalize>
+										    	<input name="importe" type="number" class="form-control" placeholder="Nombre" ng-model="cd.recibo.importe" required>
 										    </div>
 								    		
 								    </div>

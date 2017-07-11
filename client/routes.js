@@ -589,6 +589,22 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.reportesBanco', {
+			url: '/reportes/reportesBanco',
+			templateUrl: 'client/reportes/_reportesBanco.html',
+			controller: 'ReportesCtrl as re',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 
+					});
+				}]
+			}
+		})
 		.state('root.verificadoresLista', {
 			url: '/verificadores',
 			templateUrl: 'client/verificadores/verificadoresLista.ng.html',
@@ -750,7 +766,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			}
 		})
 		.state('root.corteCaja', {
-			url: '/cajas/corte',
+			url: '/cajas/corte/:caja_id/:cajero_id',
 			templateUrl: 'client/cajas/corteCaja.ng.html',
 			controller: 'CorteCajeCtrl as corcajCtrl',
 			resolve: {
