@@ -59,18 +59,17 @@ Meteor.methods({
 		
 		if (!usuario.profile.persona_id)
 		{
-				
 				usuarioPersona.nombre	= usuario.profile.nombre;
 				usuarioPersona.apellidoPaterno	= usuario.profile.apellidoPaterno;
 				usuarioPersona.apellidoMaterno	= usuario.profile.apellidoMaterno;
 				usuarioPersona.nombreCompleto	= usuario.profile.nombreCompleto;
+				usuarioPersona.rol = rol;
 				usuarioPersona.relaciones = [];
 /*
 				if (rol == "Cliente") {
 					usuarioPersona.folio= usuario.profile.folio
 				}
 */
-		
 				Personas.insert(usuarioPersona)
 				
 		}

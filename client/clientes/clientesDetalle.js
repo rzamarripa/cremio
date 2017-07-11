@@ -45,26 +45,16 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe("ocupaciones",()=>{
 		return [{_id : this.getReactively("ocupacion_id"), estatus : true }]
 	});
-	
 	this.subscribe('cliente', () => {
-		return [{
-			_id : $stateParams.objeto_id
-		}];
+		return [{_id : $stateParams.objeto_id}];
 	});
-	
 	this.subscribe('creditos', () => {
-		return [{
-			cliente_id : $stateParams.objeto_id
-		}];
+		return [{cliente_id : $stateParams.objeto_id}];
 	});
 	this.subscribe('notasCredito', () => {
-		return [{
-			cliente_id : $stateParams.objeto_id
-		}];
+		return [{cliente_id : $stateParams.objeto_id}];
 	});
-	
 	this.subscribe('planPagos', () => {
-
 		return [{
 			cliente_id : $stateParams.objeto_id, credito_id : { $in : rc.getReactively("creditos_id")}
 		}];
@@ -85,38 +75,38 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		return [{}];
 	});
 	this.subscribe('documentos',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('personas',()=>{
-		return [{}];
+		return [{rol:"Cliente"}];
 	});
 
 	this.subscribe('ciudades',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('municipios',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('colonias',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('estadoCivil',()=>{
-		return [{}]
+		return [{estatus:true}]
 	 });
 	this.subscribe('paises',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('sucursales',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('empresas',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('estados',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	this.subscribe('nacionalidades',()=>{
-		return [{}];
+		return [{estatus:true}];
 	});
 	
 /*
@@ -197,10 +187,22 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return creditos;
 		},
 		notasCredito : () =>{
-			return NotasCredito.find({},{sort:{fecha:1}});
+			var notas = NotasCredito.find({},{sort:{fecha:1}});
+			return notas
+
 		},
 		notaPerfil: () => {
 			var nota = Notas.find({perfil : "perfil",estatus:true}).fetch()
+
+			_.each(rc.getReactively("notasCredito"), function(nota){
+				console.log("notas de credito compilla",nota)
+				if (nota.tieneVigencia == true ) {
+					nota.tieneVigencia = "Si"
+				}else{
+					nota.tieneVigencia = "No"
+				}
+
+			});
 
 			return nota[nota.length - 1];
 		

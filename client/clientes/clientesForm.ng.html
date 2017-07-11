@@ -183,6 +183,21 @@
 								{{nacionalidad.nombre}}
 							</option>
 						</select>
+					</div>	
+					<div class="col-sm-4">					    
+						<label>CURP</label>
+						<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="cli.objeto.profile.curp" capitalize>
+					</div>
+					<div class="col-sm-4">					    
+						<label>RFC</label>
+						<input name="rfc" type="text" class="form-control" placeholder="RFC" ng-model="cli.objeto.profile.rfc" capitalize >
+					</div>
+				</div>
+				<div class="row">
+					
+				  <div class="col-sm-4">					    
+						<label>Lugar de Nacimiento *</label>
+						<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="cli.objeto.profile.lugarNacimiento" capitalize required="" >
 					</div>
 					<div class="col-sm-4">
 						<label for="ocupacion">Ocupación *</label>
@@ -191,20 +206,10 @@
 								{{ocupacion.nombre}}
 							</option>
 						</select>
-					</div>		
-					<div class="col-sm-4">					    
-						<label>CURP</label>
-						<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="cli.objeto.profile.curp" capitalize>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-4">					    
-						<label>RFC</label>
-						<input name="rfc" type="text" class="form-control" placeholder="RFC" ng-model="cli.objeto.profile.rfc" capitalize >
-					</div>
-				  <div class="col-sm-4">					    
-						<label>Lugar de Nacimiento *</label>
-						<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="cli.objeto.profile.lugarNacimiento" capitalize required="" >
+					<div class="col-sm-4">
+						<br/>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-ocupacion-modal-lg">Crear Ocupación</button>
 					</div>
 				</div>
 			</div>  
@@ -568,6 +573,35 @@
 								</select>
 							</div>
 						</div>	 
+					</div>
+				</form>
+			</div>
+			<br>
+			<div class="modal-footer"s>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				<input type="submit" ng-click="cli.guardarEmpresa(cli.empresa, cli.objeto,form2)" value="Guardar" class="btn btn-primary" valida-form formulario="form2">
+		  </div>
+		</div>
+	</div>
+</div>
+<div id="modalEmp" class="modal fade bs-empresa-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Agregar Empresa</h4>
+			</div>
+			<div class="widget-body">
+				<form name="form2" novalidate>
+					<div class="well">	    
+						<div class="row">
+							<div class="col-sm-6" valida> 					    
+								<label>Nombre *</label>
+								<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="cli.empresa.nombre" required capitalize>
+							</div>
+						
+						</div>
+			 
 					</div>
 				</form>
 			</div>
