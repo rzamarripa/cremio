@@ -1,0 +1,87 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Reportes
+		</h1>
+	</div>
+	<div class="">
+			<ul id="sparks" class="">
+				<li class="sparks-info">
+					<h5>Total a Pagar <span class="txt-color-green" style="text-align: right">{{re.totalPagar | currency}}</span></h5>
+				<li class="sparks-info">
+					<h5>Total Solicitado <span class="txt-color-red" style="text-align: right">{{re.totalSolicitado | currency}}</span></h5>
+
+			</ul>
+		</div>
+
+</div>
+<br>
+<div class="well">
+	<div class="row">
+		<div class="col-sm-3">
+			<form class="form-inline">
+				<div class="form-group">
+					<label for="fecha">Fecha Inicial:</label>
+					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaInicial"/>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-3 pull-left">
+			<form class="form-inline">
+				<div class="form-group">
+					<label for="fecha">Fecha Final:</label>
+					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaFinal"/>
+				</div>
+			</form>
+		</div>
+	</div>	
+	<br />
+</div>
+
+<div class="row">
+	<div class="col-sm-12" >
+		<H5>Reporte de Bancos</H5>
+		<div>
+		<a href="" class="btn btn-primary pull-right" ng-click="re.imprimirReporteBancos(re.bancos[0])" >Imprimir Tabla</a>
+		</div>
+		
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+					    <th width="5%"><div class="text-center">No.</div></th>
+						<th width="15%"> <div class="text-center">Nombre</div></th>
+						<th width="10%"><div class="text-center">Numero del cliente</div></th>
+						<th width="10%"><div class="text-center">Fecha del deposito</div></th>
+						<th><div class="text-center">Aplicación del deposito</div></th>
+						<th><div class="text-center">Importe del deposito</div></th>
+						<th><div class="text-center">Ventanilla que aplico el deposito</div></th>
+						<th><div class="text-center">Interes</div></th>
+						<th><div class="text-center">Capital</div></th>
+						<th><div class="text-center">IVA</div></th>
+						<th><div class="text-center">Acumulado por dia</div></th>
+						<th><div class="text-center">Acumulado</div></th>
+						<th><div class="text-center">Checar</div></th>
+					</tr>
+				</thead>
+				<tbody>
+			    <tr ng-repeat="objeto in re.bancos[0] | filter:buscar">
+			    	<td><div class="text-center">{{$index + 1}}</div></td>
+				    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
+				    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
+				    
+				    <td><div class="text-center">{{objeto.fechaPago}}</div></td>
+				    <td><div class="text-center">{{objeto.pago}}</div></td>
+				    <td><div class="text-center">{{objeto.fechaPago}}</div></td>
+				    <td><div class="pull-right">{{objeto.nombreCajero}}</div></td>
+				    <td><div class="pull-right">""</div></td>
+				    <td><div class="pull-right">""</div></td> 	
+				    <td><div class="pull-right">""</div></td> 	
+				    <td><div class="pull-right">{{objeto.acumulado}}</div></td>
+				    <td><div class="pull-right">Acumulado</div></td>
+				    <td><div class="text-center">{{objeto.pago}}</div></td>				
+			    </tr>
+				</tbody>
+			</table>
+		</div>
+	</div>

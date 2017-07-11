@@ -142,6 +142,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
           }
           
           if (mov.origen == "Entrega de Credito") {
+         
 	          	Meteor.apply('getCredito', [mov.origen_id], function(err, result) {
 						      if (err) {
 						        toastr.warning('Error al consultar los datos');
@@ -169,6 +170,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
           d.origen = mov.origen;
                     
           c = Cuentas.findOne(cj.cuenta[mov.cuenta_id].cuenta_id);
+         
           if (c) {
             d.cuenta = c.nombre;
           }
@@ -182,7 +184,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
             d.iva = 0;
             d.seguro = 0;
 
-            if (d.pago.tipoIngreso_id != undefined)
+            if (d.pago.tipoIngreso_id != undefined)console.log("kakakaakak")
               d.tipoIngreso = TiposIngreso.findOne(d.pago.tipoIngreso_id);
 
             _.each(d.pago.planPagos, function(plan) {

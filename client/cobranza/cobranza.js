@@ -54,7 +54,7 @@ angular.module("creditoMio")
     return [{}]
   });
   this.subscribe("estadoCivil", ()=>{
-    return [{}]
+    return [{estatus : true}]
   });
   this.subscribe("nacionalidades", ()=>{
     return [{}]

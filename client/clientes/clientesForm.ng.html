@@ -467,6 +467,7 @@
 					<div class="col-sm-4" valida>
 						<label for="seccion_id">Empresa *</label>
 						<select name="empresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.empresa_id" required>
+						<option ng-repeat="empresa in cli.empresas" value="{{empresa._id}}">OTRO</option>
 							<option ng-repeat="empresa in cli.empresas" value="{{empresa._id}}">{{empresa.nombre}}</option>
 						</select>
 					</div>
@@ -584,20 +585,20 @@
 		</div>
 	</div>
 </div>
-<div id="modalEmp" class="modal fade bs-empresa-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div id="modalOcupacion" class="modal fade bs-ocupacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Agregar Empresa</h4>
+				<h4 class="modal-title" id="myModalLabel">Agregar Ocupación</h4>
 			</div>
 			<div class="widget-body">
-				<form name="form2" novalidate>
+				<form name="form3" novalidate>
 					<div class="well">	    
 						<div class="row">
 							<div class="col-sm-6" valida> 					    
 								<label>Nombre *</label>
-								<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="cli.empresa.nombre" required capitalize>
+								<input name="nombreOcupacion" type="text" class="form-control" placeholder="Nombre" ng-model="cli.ocupacion.nombre" required capitalize>
 							</div>
 						
 						</div>
@@ -605,10 +606,9 @@
 					</div>
 				</form>
 			</div>
-			<br>
 			<div class="modal-footer"s>
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<input type="submit" ng-click="cli.guardarEmpresa(cli.empresa, cli.objeto,form2)" value="Guardar" class="btn btn-primary" valida-form formulario="form2">
+				<input type="submit" ng-click="cli.guardarOcupacion(cli.ocupacion, cli.objeto,form3)" value="Guardar" class="btn btn-primary" valida-form formulario="form3">
 		  </div>
 		</div>
 	</div>
