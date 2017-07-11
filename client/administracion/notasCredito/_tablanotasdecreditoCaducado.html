@@ -1,23 +1,25 @@
-<!-- Tabla de Visitados Analistas -->
-<table class="table table-bordered">
-	<thead>
-		<tr>
-			<th class="text-center" width="10%">No.</th>
-			<th ><div class="text-center">Credito</div></th>
-			<th ><div class="text-center">Capital Solicitado</div></th>
-			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
-			<th class="text-center" width="10%"><div class="text-center">Turno</div></th>
-		</tr>
-	</thead>
-	<tbody>
-    <tr ng-repeat="credito in pver.creditosVerificados">
-	    <td class="text-center">{{$index + 1}}</td>
-	    <td>{{credito.nombreCliente}}</td>
-	    <td class="text-right">{{credito.capitalSolicitado | currency}}</td>
-	    <td class="text-center">{{credito.fechaSolicito.getUTCDate() +"/"+ (credito.fechaSolicito.getUTCMonth()+1) +"/"+ credito.fechaSolicito.getUTCFullYear()}} </td>
-	    <td class="text-center">{{credito.fechaVerificacion.getUTCDate() +"/"+ (credito.fechaVerificacion.getUTCMonth()+1) +"/"+ credito.fechaVerificacion.getUTCFullYear()}} </td>
-	    <td class="text-center">{{credito.turno}}</td>
-    </tr>
-	</tbody>
-</table>º
-		
+<table class="table table-striped table-bordered table-condensed font-xs">
+		<thead class="thead">
+			<tr>
+			<!-- 	<th class="text-center" width="5%"></th> -->
+				<th class="text-center" width="5%">No.</th>
+				<th class="text-center" width="20%">Tipo de Nota de Crédito</th>
+				<th class="text-center" width="20%">Causa</th>
+				<th class="text-center" width="20%">Tiene Vigencia</th>
+				<th class="text-center" width="20%">Fecha</th>
+				<th class="text-center" width="15%">Monto</th>
+				<th class="text-center" width="15%">Estatus</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="(index,nota) in pnc.notasCreditoCaducadas">
+				<td>{{index+1}}</td>
+				<td>{{nota.aplica}}</td>
+				<td>{{nota.causa}}</td>
+				<td>{{nota.tieneVigencia}}</td>
+				<td>{{nota.vigencia | date:'fullDate'}}</td>
+				<td>{{nota.saldo | currency}}</td>
+				<td>{{nota.estatus==1? 'Vigente': nota.estatus==0? 'Cancelada':'Vigente'}}</td>
+			</tr>
+		</tbody>
+</table>		
