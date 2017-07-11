@@ -7,54 +7,24 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 	
 	window = rc;
 	
-  //this.action = true;
-	let Cred = this.subscribe('creditos',()=>{
-			return [{requiereVerificacion : true , estatus: 0}]
+	rc.fecha = "";
+	rc.fecha = new Date();
+  rc.fecha.setHours(0,0,0,0);
+	
+	this.subscribe('notasCredito',()=>{
+			return [{}]
 	});
-		
-		
+				
   this.helpers({
-	  creditos : () => {
-		  return Creditos.find();
+	  notasCreditoConSaldo : () => {
+		  return NotasCredito.find({saldo : {$gte: 0}});
 	  },
-	  datosCreditos : () => {
-			if(Cred.ready()){
-				_.each(rc.creditos, function(credito){
-					
-						var cliente = {};
-						Meteor.call('getUsuario', credito.cliente_id, function(error, result) {
-						   if(error)
-						   {
-							    console.log('ERROR :', error);
-							    return;
-						   }
-						   if(result)
-						   {	
-								 		cliente = result;
-										credito.nombreCliente = cliente.nombreCompleto;
-										$scope.$apply();
-							 }
-						});
-						
-						Meteor.call('getVerificacion', credito.cliente_id, function(error, result) {
-						   if(error)
-						   {
-							    console.log('ERROR :', error);
-							    return;
-						   }
-						   if(result)
-						   {	
-								 		cliente = result;
-										credito.nombreCliente = cliente.nombreCompleto;
-										$scope.$apply();
-							 }
-						});
-						
-						
-						
-				})
-			}
-	  }
+	  notasCreditoCaducadas : () => {
+		  return NotasCredito.find({tieneVigencia: true, vigencia: {$lt: rc.fecha}});
+	  },
+	  notasCreditoAplicadas : () => {
+		  return NotasCredito.find({saldo : 0});
+	  },
   });
   
 };
