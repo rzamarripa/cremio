@@ -1,24 +1,27 @@
 <table class="table table-striped table-bordered table-condensed font-xs">
 		<thead class="thead">
 			<tr>
-			<!-- 	<th class="text-center" width="5%"></th> -->
 				<th class="text-center" width="5%">No.</th>
-				<th class="text-center" width="20%">Tipo de Nota de Crédito</th>
-				<th class="text-center" width="20%">Causa</th>
-				<th class="text-center" width="20%">Tiene Vigencia</th>
-				<th class="text-center" width="20%">Fecha</th>
-				<th class="text-center" width="15%">Monto</th>
-				<th class="text-center" width="15%">Estatus</th>
+				<th class="text-center" width="5%">No. Cliente</th>
+				<th class="text-center" width="20%">Cliente</th>
+				<th class="text-center" width="10%">Tipo de Nota de Crédito</th>
+				<th class="text-center" width="10%">Causa</th>
+				<th class="text-center" width="5%">Tiene Vigencia</th>
+				<th class="text-center" width="10%">Fecha</th>
+				<th class="text-center" width="10%">Monto</th>
+				<th class="text-center" width="5%">Estatus</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="(index,nota) in pnc.notasCreditoAplicadas">
 				<td>{{index+1}}</td>
+				<td>{{nota.numeroCliente}}</td>
+				<td>{{nota.nombreCliente}}</td>
 				<td>{{nota.aplica}}</td>
 				<td>{{nota.causa}}</td>
-				<td>{{nota.tieneVigencia}}</td>
-				<td>{{nota.vigencia | date:'fullDate'}}</td>
-				<td>{{nota.saldo | currency}}</td>
+				<td style="text-align: center">{{nota.tieneVigenciaTexto}}</td>
+				<td style="text-align: center">{{nota.vigencia | date:'dd/MM/yyyy'}}</td>
+				<td style="text-align: right">{{nota.saldo | currency}}</td>
 				<td>{{nota.estatus==1? 'Vigente': nota.estatus==0? 'Cancelada':'Vigente'}}</td>
 			</tr>
 		</tbody>

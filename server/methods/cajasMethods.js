@@ -7,7 +7,7 @@ Meteor.methods({
     if (usuario.profile.caja_id) {
       var cajavieja = Cajas.findOne(usuario.profile.caja_id);
       if (cajavieja.estadoCaja == "Abierta")
-        throw new Meteor.Error(500, 'Error 500: Conflicto', 'Caja Abierta');
+        throw new Meteor.Error(500, 'Error 500: Conflicto', 'El usuario tiene una Caja Abierta');
     }
     caja.sucursal_id = user.profile.sucursal_id;
     caja.createdBy = user._id;

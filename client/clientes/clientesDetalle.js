@@ -59,12 +59,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			cliente_id : $stateParams.objeto_id, credito_id : { $in : rc.getReactively("creditos_id")}
 		}];
 	});
-	// this.subscribe('planPagos', () => {
-	// 	return [{
-	// 		cliente_id : $stateParams.objeto_id, credito_id : this.getCollectionReactively("credito_id")
-	// 	}];
-	// });
-		 this.subscribe('notas',()=>{
+	this.subscribe('notas',()=>{
 		return [{cliente_id:this.getReactively("cliente_id")}]
 	});
 
@@ -108,12 +103,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('nacionalidades',()=>{
 		return [{estatus:true}];
 	});
-	
-/*
-	this.subscribe('tiposCredito',()=>{
-		return [{estatus: true}];
-	});
-*/
 			
 	this.helpers({
 		ciudades : () => {
@@ -195,7 +184,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			var nota = Notas.find({perfil : "perfil",estatus:true}).fetch()
 
 			_.each(rc.getReactively("notasCredito"), function(nota){
-				console.log("notas de credito compilla",nota)
+				//console.log("notas de credito compilla",nota)
 				if (nota.tieneVigencia == true ) {
 					nota.tieneVigencia = "Si"
 				}else{
@@ -291,8 +280,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					
 					
 			}
-
-
 			
 			_.each(cli, function(objeto){
 

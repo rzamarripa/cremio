@@ -17,13 +17,68 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 				
   this.helpers({
 	  notasCreditoConSaldo : () => {
-		  return NotasCredito.find({saldo : {$gte: 0}});
+		  	var ncs =  NotasCredito.find({saldo : {$gte: 0}}).fetch();		 
+		  	if (ncs != undefined)
+		  	{
+				  	_.each(ncs, function(nc){
+					  		Meteor.call('getUsuario', nc.cliente_id, function(error, result) {           
+					          if (result)
+					          {
+						          	console.log(result);
+						          	nc.nombreCliente = result.nombreCompleto;
+						          	nc.numeroCliente = result.numeroCliente;
+						          	$scope.$apply();
+					          }
+			    			}); 	
+			    			if (nc.tieneVigencia)
+			    					nc.tieneVigenciaTexto = "Si";
+			    			else
+			    					nc.tieneVigenciaTexto = "No";
+				  	});
+		  	}
+		  return ncs;
 	  },
 	  notasCreditoCaducadas : () => {
-		  return NotasCredito.find({tieneVigencia: true, vigencia: {$lt: rc.fecha}});
+		  	var ncs =  NotasCredito.find({tieneVigencia: true, vigencia: {$lt: rc.fecha}}).fetch();		 
+		  	if (ncs != undefined)
+		  	{
+				  	_.each(ncs, function(nc){
+					  		Meteor.call('getUsuario', nc.cliente_id, function(error, result) {           
+					          if (result)
+					          {
+						          	nc.nombreCliente = result.nombreCompleto;
+						          	nc.numeroCliente = result.numeroCliente;
+						          	$scope.$apply();
+					          }
+			    			}); 	
+			    			if (nc.tieneVigencia)
+			    					nc.tieneVigenciaTexto = "Si";
+			    			else
+			    					nc.tieneVigenciaTexto = "No";
+				  	});
+		  	}		  
+		  return ncs;
 	  },
 	  notasCreditoAplicadas : () => {
-		  return NotasCredito.find({saldo : 0});
+		  var ncs = NotasCredito.find({saldo : 0}).fetch();		 
+		  	if (ncs != undefined)
+		  	{
+				  	_.each(ncs, function(nc){
+					  		Meteor.call('getUsuario', nc.cliente_id, function(error, result) {           
+					          if (result)
+					          {
+						          	nc.nombreCliente = result.nombreCompleto;
+						          	nc.numeroCliente = result.numeroCliente;
+						          	$scope.$apply();
+					          }
+			    			}); 	
+			    			if (nc.tieneVigencia)
+			    					nc.tieneVigenciaTexto = "Si";
+			    			else
+			    					nc.tieneVigenciaTexto = "No";
+				  	});
+		  	}		  
+		  return ncs;
 	  },
   });
   

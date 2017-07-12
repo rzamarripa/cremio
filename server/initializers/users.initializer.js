@@ -15,7 +15,7 @@ Meteor.startup(function () {
   if (Configuraciones.find().count() === 0) {
     Configuraciones.insert({folioCliente: 1});
   }
-  
+      
   var multas = function () {
       console.log('multas!');
       Meteor.call("actualizarMultas");
