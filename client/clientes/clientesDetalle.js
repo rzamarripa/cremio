@@ -41,6 +41,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.recibos = [];
 	
 	rc.editMode = false;
+	rc.puedeSolicitar = true
 	
 	this.subscribe("ocupaciones",()=>{
 		return [{_id : this.getReactively("ocupacion_id"), estatus : true }]
@@ -154,6 +155,20 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 		creditos : () => {
 			var creditos = Creditos.find({estatus:4}).fetch();
+			_.each(creditos, function(credito){
+				if (credito.saldoMultas == 0) {
+					rc.puedeSolicitar = true
+				}else{
+					rc.puedeSolicitar = false
+
+				}
+				if (creditos == "") {
+					rc.puedeSolicitar = false
+
+				}
+				console.log(rc.puedeSolicitar)
+			});
+
 /*
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "_id");
@@ -1484,12 +1499,19 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					toastr.success('Crédito Recuperado');
 		    } else {
 	       
-	    }
-	  
-	  	
+		   	}		
+		};
+		this.CreditoSolicitar= function(id)
+		{
+			console.log(rc.puedeSolicitar)
 		
-		
-	};
+		    if (rc.puedeSolicitar == true) {
+		    	$state.go("root.generadorPlan",{objeto_id : id});
+		    }else{
+		    	toastr.error('Este cliente todavía cuenta con cargos');
+		    }	
+		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
+		};
 	
 	
 }

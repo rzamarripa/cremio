@@ -49,10 +49,7 @@ angular.module("creditoMio")
   this.caja = { _id: 0 };
   this.pagos_id = [];
 
-
-
   //console.log($stateParams)
-
  
   this.subscribe("tiposCredito", ()=>{
 		return [{}]
@@ -85,7 +82,6 @@ angular.module("creditoMio")
 		return [{}]
 	});
 
-
   	this.subscribe('notas',()=>{
 		return [{cliente_id:this.getReactively("cliente_id")}]
 	});
@@ -102,7 +98,7 @@ angular.module("creditoMio")
 		return [{ }];
 	});
 		this.subscribe('creditos', () => {
-		return [{estatus:4}];
+		return [{fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}];
 	});
 		this.subscribe('clientes', () => {
 		return [{}];
@@ -213,11 +209,13 @@ this.subscribe('cuentas',()=>{
 	     rc.sumaInteres = plan.sumaInteres
 	     rc.sumaIva = plan.sumaIva
 	     rc.totalCobranza = plan.sumaCapital + plan.sumaInteres +sumaIva
+
+	     plan.tipoIngreso = TiposIngreso.findOne(plan.tipoIngreso_id);
 	     //rc.sumaCapital = plan.sumaCapital
 	 	});
 			}
 
-			 //console.log(planes,"planes")
+			 console.log(planes,"planes")
 			return planes
 		
 		},
@@ -235,6 +233,39 @@ this.subscribe('cuentas',()=>{
 		},
 		creditos : () => {
 				var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:4}).fetch();
+				_.each(creditos,function(credito){
+					//console.log(credito.cliente_id);
+					credito.cliente = Meteor.users.findOne(credito.cliente_id)
+				//	console.log("hola", credito.cliente)
+					if(credito.cliente){
+						credito.nombreCompleto = credito.cliente.profile.nombreCompleto;
+					}
+					if (credito.garantias != "") {
+						credito.estatusGarantia = "Si"
+					}else{
+						credito.estatusGarantia = "No"
+					}
+					credito.numeroCliente = credito.cliente.profile.numeroCliente
+				});
+				var suma = 0
+        var sumaSol = 0
+	    _.each(creditos,function(credito){
+	 	   	suma += credito.capitalSolicitado
+	    	sumaSol += credito.adeudoInicial
+	    });
+
+	     _.each(creditos,function(credito){
+	     credito.sumaCapital = suma 
+	     credito.sumaAPagar = sumaSol
+	     rc.totalPagar = parseFloat(credito.sumaAPagar.toFixed(2))
+	     rc.totalSolicitado = parseFloat(credito.sumaCapital.toFixed(2))
+	  	});
+
+				//console.log("creditos",creditos)
+				return creditos
+			},
+			creditosLiquidados : () => {
+				var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:5}).fetch();
 				_.each(creditos,function(credito){
 					//console.log(credito.cliente_id);
 					credito.cliente = Meteor.users.findOne(credito.cliente_id)
