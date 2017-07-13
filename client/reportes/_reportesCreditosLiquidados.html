@@ -1,0 +1,81 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Reportes
+		</h1>
+	</div>
+	<div class="">
+			<ul id="sparks" class="">
+				<li class="sparks-info">
+					<h5>Total a Pagar <span class="txt-color-green" style="text-align: right">{{re.totalPagar | currency}}</span></h5>
+				<li class="sparks-info">
+					<h5>Total Solicitado <span class="txt-color-red" style="text-align: right">{{re.totalSolicitado | currency}}</span></h5>
+
+			</ul>
+		</div>
+
+</div>
+<br>
+<div class="well">
+	<div class="row">
+		<div class="col-sm-3">
+			<form class="form-inline">
+				<div class="form-group">
+					<label for="fecha">Fecha Inicial:</label>
+					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaInicial"/>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-3 pull-left">
+			<form class="form-inline">
+				<div class="form-group">
+					<label for="fecha">Fecha Final:</label>
+					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaFinal"/>
+				</div>
+			</form>
+		</div>
+	</div>	
+	<br />
+</div>
+
+<div class="row">
+	<div class="col-sm-12" >
+		<H4>Diario de creditos Liquidados</H4>
+		<div>
+		<a href="" class="btn btn-primary pull-right" ng-click="re.imprimirReporteCreditos(re.creditosLiquidados)" >Imprimir Tabla</a>
+		</div>
+		
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+					    <th width="5%"><div class="text-center">No.</div></th>
+						<!-- <th><div class="text-center">Operación</div></th> -->
+						<th width="15%"> <div class="text-center">Fecha</div></th>
+						<th width="10%"><div class="text-center">Pagare</div></th>
+						<th width="10%"><div class="text-center">Recibos</div></th>
+						<th><div class="text-center">Cliente</div></th>
+						<th><div class="text-center">Nombre</div></th>
+						<th><div class="text-center">Garantia</div></th>
+						<th><div class="text-center">Solicitado</div></th>
+					<!-- 	<th><div class="text-center">T</div></th> -->
+						<th><div class="text-center">A pagar</div></th>
+						<!-- <th><div class="text-center">Condonado</div></th> -->
+					</tr>
+				</thead>
+				<tbody>
+			    <tr ng-repeat="objeto in re.creditosLiquidados | filter:buscar">
+			    	<td><div class="text-center">{{$index + 1}}</div></td>
+				    <td><div class="text-center">{{objeto.fechaSolicito  | date:"dd-MM-yyyy"}}</div></td>
+				    <td><div class="text-center">{{objeto.folio}}</div></td>
+				    <td><div class="text-center">{{objeto.numeroPagos}}</div></td>
+				    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
+				    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
+				    <td><div class="text-center">{{objeto.estatusGarantia}}</div></td>
+				    <td><div class="pull-right">{{objeto.capitalSolicitado | currency}}</div></td>
+				    <td><div class="pull-right">{{objeto.adeudoInicial | currency }}</div></td> 				
+			    </tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
