@@ -302,23 +302,24 @@ Meteor.methods({
 												descripcion : "Cargo Moratorio"
 											},
 											{
-												ultimaModificacion : { $lt : ahora }
+												fechaLimite : { $lt : ahora }
 											}
 										]}).fetch();
 										
+		//console.log("Pagos: ",pagos);
 		
 		_.each(pagos, function(pago){
 			try{
-				//console.log(pago._id);
-				//if (pago._id == "7L2n8XvNiPHRdhxX5")
-						
+									
 				//Define la Multa
+				var multas = 0;
 				var credito = Creditos.findOne(pago.credito_id);
 				var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
+				//console.log("TC :",tipoCredito);
 					
 				if (tipoCredito.calculo == "importeSolicitado")
 				{
-						var multas = credito.capitalSolicitado * (tipoCredito.importe / 100); 
+						multas = credito.capitalSolicitado * (tipoCredito.importe / 100); 
 						multas=Math.round(multas * 100) / 100;
 						
 						var interes = multas / 1.16
@@ -339,7 +340,7 @@ Meteor.methods({
 						else if (credito.periodoPago == "Mensual")				
 								porcentaje = 8;
 								
-						var multas = reciboVencido.cargo * (porcentaje / 100); 
+						multas = reciboVencido.cargo * (porcentaje / 100); 
 						multas=Math.round(multas * 100) / 100;
 						
 						var interes = multas / 1.16
@@ -353,6 +354,7 @@ Meteor.methods({
 						
 					
 						var reciboVencido = PlanPagos.findOne({_id : pago.planPago_id});
+						console.log("RV:",reciboVencido);
 						
 						var porcentaje;
 						if (credito.periodoPago == "Semanal")
@@ -362,7 +364,7 @@ Meteor.methods({
 						else if (credito.periodoPago == "Mensual")				
 								porcentaje = 8;
 								
-						var multas = reciboVencido.importeRegular * (porcentaje / 100); 
+						multas = reciboVencido.importeRegular * (porcentaje / 100); 
 						multas=Math.round(multas * 100) / 100;
 						
 						var interes = multas / 1.16
@@ -372,14 +374,19 @@ Meteor.methods({
 				}	
 				
 				
-
-				pago.importeRegular += multas;
+				var suma = multas + iva + interes;
+				//console.log("Act", multas);
+				//console.log("Antes", pago.importeRegular);
+				
+				pago.importeRegular += suma;
 				pago.iva += iva;
 				pago.interes += interes;
-				pago.cargo = pago.importeRegular;
+				pago.capital += multas;
+				pago.cargo += suma;
 				
+				//console.log("desp", pago.importeRegular);
 				
-				var suma = multas + iva + interes;
+				//var suma = multas + iva + interes;
 				credito.saldoMultas += suma;
 				credito.saldoMultas=Math.round(credito.saldoMultas * 100) / 100;
 				Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
@@ -388,36 +395,7 @@ Meteor.methods({
 				var idTemp = pago._id;
 				delete pago._id;	
 				PlanPagos.update({_id:idTemp},{$set : pago});	
-				
-				
-				//console.log(ahora,pago.ultimaModificacion,mfecha.diff(pago.ultimaModificacion, "days"))
-				/*
-var dias = mfecha.diff(pago.ultimaModificacion, "days");
-				var credito = Creditos.findOne(pago.credito_id);
-				var multas = (dias/100) * credito.capitalSolicitado; 
-				pago.ultimaModificacion = ahora
-				pago.fechaLimite = ahora
-				multas=Math.round(multas * 100) / 100;
-				//console.log(pago._id,multas,pago.importeRegular,pago.ultimaModificacion);
-				pago.importeRegular += multas;
-				pago.importeRegular=Math.round(pago.importeRegular * 100) / 100;
-				
-				var interes = multas / 1.16
-				interes = Number(interes.toFixed(2));
-				var iva = multas - interes;
-				iva = Number(iva.toFixed(2));
-				if(isNaN(pago.iva))
-					pago.iva=0;
-				if(isNaN(pago.interes))
-					pago.interes=0;
-
-				pago.iva += iva;
-				pago.interes += interes;
-				pago.cargo += multas;
-				pago.cargo=Math.round(pago.cargo * 100) / 100;
-
-				PlanPagos.update({_id:pago._id},{$set:{cargo:pago.cargo,importeRegular:pago.importeRegular,ultimaModificacion:ahora,fechaLimite:ahora}})
-*/
+								
 			}catch(e){
 				console.log(e)
 			}
@@ -428,7 +406,7 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 		//ahora.setHours(23,59,59,999);
-		console.log("Fecha:",ahora);
+		//console.log("Fecha:",ahora);
 		var pagos = PlanPagos.find({$and:[
 											{
 												$or:[
@@ -444,7 +422,7 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 											}
 										]}).fetch();
 		
-		console.log(pagos);
+		//console.log("PGO GM: ",pagos);
 											
 		_.each(pagos, function(pago){
 			try{
@@ -457,24 +435,16 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 						var mfecha = moment(ahora);
 						limite = new Date (pago.fechaLimite.getFullYear(),pago.fechaLimite.getMonth(),pago.fechaLimite.getDate());
 						var dias = mfecha.diff(limite, "days");
-						
-/*
-						//Define la Multa
-						var multas = (dias/100) * credito.capitalSolicitado; 
-						multas=Math.round(multas * 100) / 100;
-						var interes = multas / 1.16
-						interes = Number(interes.toFixed(2));
-						var iva = multas - interes;
-						iva = Number(iva.toFixed(2));
-*/
-
+	
+						var multas = 0;
+	
 						//Define la Multa
 						var credito = Creditos.findOne(pago.credito_id);
 						var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
 							
 						if (tipoCredito.calculo == "importeSolicitado")
 						{
-								var multas = credito.capitalSolicitado * (tipoCredito.importe / 100); 
+								multas = credito.capitalSolicitado * (tipoCredito.importe / 100); 
 								multas = Math.round(multas * 100) / 100;
 								
 								var interes = multas / 1.16;
@@ -485,7 +455,7 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 						}
 						else if (tipoCredito.calculo == "importereciboVencido")
 						{
-								var reciboVencido = PlanPagos.findOne({_id : pago.planPago_id});
+								var reciboVencido = PlanPagos.findOne({_id : pago._id});
 								
 								var porcentaje;
 								if (credito.periodoPago == "Semanal")
@@ -495,7 +465,7 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 								else if (credito.periodoPago == "Mensual")				
 										porcentaje = 8;
 										
-								var multas = reciboVencido.cargo * (porcentaje / 100); 
+								multas = reciboVencido.cargo * (porcentaje / 100); 
 								multas=Math.round(multas * 100) / 100;
 								
 								var interes = multas / 1.16;
@@ -507,7 +477,8 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 						else if (tipoCredito.calculo == "saldoreciboVencido")
 						{	
 											
-								var reciboVencido = PlanPagos.findOne({_id : pago.planPago_id});
+								var reciboVencido = PlanPagos.findOne({_id : pago._id});
+								console.log("RV:",reciboVencido);
 						
 								var porcentaje;
 								if (credito.periodoPago == "Semanal")
@@ -517,7 +488,7 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 								else if (credito.periodoPago == "Mensual")				
 										porcentaje = 8;
 										
-								var multas = reciboVencido.importeRegular * (porcentaje / 100); 
+								multas = reciboVencido.importeRegular * (porcentaje / 100); 
 								multas = Math.round(multas * 100) / 100;
 								
 								var interes = multas / 1.16;
@@ -526,13 +497,17 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 								iva = Number(iva.toFixed(2));			
 						}
 						
+						//console.log(multas);
+						
+						var suma = multas + iva + interes;
+						
 						var multa = {
 							semana							: mfecha.isoWeek(),
 							fechaLimite					: pago.fechaLimite,
 							diaSemana						: mfecha.weekday(),
 							tipoPlan						: pago.tipoPlan,
 							numeroPago					: pago.numeroPago,
-							importeRegular			: multas,
+							importeRegular			: suma,
 							cliente_id					: pago.cliente_id,
 							fechaPago						: undefined,
 							semanaPago					: undefined,
@@ -540,7 +515,7 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 							iva					  			: iva,
 							interes 						: interes,
 							seguro							: 0,
-							capital 						: 0,
+							capital 						: multas,
 							pago				  			: 0,
 							estatus							: 0,
 							multada							: 0,
@@ -555,7 +530,7 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 							credito_id 					: credito._id,
 							mes									: mfecha.get('month') + 1,
 							anio								: mfecha.get('year'),
-							cargo								: multas,
+							cargo								: suma,
 							movimiento					: "Cargo Moratorio",
 							tipoCargoMoratorio	: 1 //Automatica
 						};
@@ -563,75 +538,11 @@ var dias = mfecha.diff(pago.ultimaModificacion, "days");
 						var multa_id = PlanPagos.insert(multa);
 						PlanPagos.update({_id:pago._id},{$set:{multada:1,multa_id:multa_id}})
 						
-						var suma = multas + iva + interes;
 						credito.saldoMultas += suma;
 						credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
 						Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 
 				}
-/*
-				else if (pago.descripcion == "Cargo Moratorio")
-				{
-						
-						//Define la Multa
-						var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
-							
-						if (tipoCredito.calculo == "importeSolicitado")
-						{
-								var multas = credito.capitalSolicitado * (tipoCredito.importe / 100); 
-								multas=Math.round(multas * 100) / 100;
-								
-								var interes = multas / 1.16
-								interes = Number(interes.toFixed(2));
-								var iva = multas - interes;
-								iva = Number(iva.toFixed(2));	
-
-						}
-						else if (tipoCredito.calculo == "importereciboVencido")
-						{
-								var reciboVencido = PlanPagos.findOne({_id : pago.planPago_id});
-								
-								var porcentaje;
-								if (credito.periodoPago == "Semanal")
-										porcentaje = 2;
-								else if (credito.periodoPago == "Quincenal")
-										porcentaje = 4;
-								else if (credito.periodoPago == "Mensual")				
-										porcentaje = 8;
-										
-								var multas = reciboVencido.importeRegular * (porcentaje / 100); 
-								multas=Math.round(multas * 100) / 100;
-								
-								var interes = multas / 1.16
-								interes = Number(interes.toFixed(2));
-								var iva = multas - interes;
-								iva = Number(iva.toFixed(2));
-							
-						}	
-						else if (tipoCredito.calculo == "saldoreciboVencido")
-						{	
-								var multas = 0; //Por definir---------
-								multas=Math.round(multas * 100) / 100;
-								
-								var interes = multas / 1.16
-								interes = Number(interes.toFixed(2));
-								var iva = multas - interes;
-								iva = Number(iva.toFixed(2));					
-						}	
-						
-						
-
-						pago.importeRegular += multas;
-						pago.iva += iva;
-						pago.interes += interes;
-						pago.cargo = pago.importeRegular;
-														
-						var idTemp = pago._id;
-						delete pago._id;	
-						PlanPagos.update({_id:idTemp},{$set : pago});	
-					
-				}
-*/
 
 			}catch(e){
 				console.log(e);

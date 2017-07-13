@@ -83,7 +83,7 @@ angular.module("creditoMio")
 		
 				if(error){
 					console.log(error);
-					toastr.error('Error al guardar los datos.');
+					toastr.waring('Error al guardar los datos. ' + error.details);
 					return
 				}
 				toastr.success('Guardado correctamente.');
