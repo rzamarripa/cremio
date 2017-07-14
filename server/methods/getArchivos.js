@@ -578,6 +578,10 @@ diato;
 	 	 		   item.liquidar = parseFloat(item.liquidar.toFixed(2))
 	 	 		    item.capital = parseFloat(item.capital.toFixed(2))
 	 	 		// item.liquidar =              
+	 	 		if (item.estatus = 5) {
+	 	 			item.formaPago = item.tipoIngreso.nombre
+
+	 	 		}
 	 	 	});
 
 		
@@ -705,7 +709,7 @@ diato;
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
+		
 		var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
@@ -741,20 +745,17 @@ diato;
 	    	item.adeudoInicial = parseFloat(item.adeudoInicial.toFixed(2))
 	    	item.saldoActual = parseFloat(item.saldoActual.toFixed(2))
 
-
-	    	
-
 	    });
 
 	    // console.log(objeto.planPagos);
 		
 		doc.setData({				
-								items: 		 objeto,
-								fecha:     fecha,
-								inicial:    fInicial,
-								final:      fFinal,
-								sumaCapital : suma,
-								sumaAPagar: sumaSol,
+						items: 		 objeto,
+						fecha:     fecha,
+						inicial:    fInicial,
+						final:      fFinal,
+						sumaCapital : suma,
+						sumaAPagar: sumaSol,
 													
 				
 				  });
@@ -783,7 +784,6 @@ diato;
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		////var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
@@ -843,9 +843,8 @@ diato;
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		////var produccion = "/home/cremio/archivos/";
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 		var content = fs
     	   .readFileSync(produccion+"ReporteBancos.docx", "binary");
@@ -905,7 +904,6 @@ diato;
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				var content = fs
@@ -952,7 +950,6 @@ diato;
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				var content = fs

@@ -7,7 +7,7 @@
 					<div class="well well-light well-sm no-margin no-padding">
 						<div class="row">
 							<div class="col-sm-12">
-							<a ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;">
+							<a ng-click="cd.CreditoSolicitar(cd.objeto._id)"  class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;">
 								<i class="fa fa-plus"></i> N. Solicitud
 							</a>&nbsp;
 							<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px;">

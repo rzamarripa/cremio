@@ -573,6 +573,7 @@ Meteor.methods({
 		
 		var mfecha = moment(ahora);
 		_.each(pagos,function(p){
+			p.tipoIngreso_id = tipoIngresoId;
 			
 			if(p.estatus != 1)
 			{
@@ -650,8 +651,7 @@ Meteor.methods({
 					//console.log("Parcial",p._id,p.descripcion)
 					ttpago = pagosId[p._id];
 					abono = pagosId[p._id]
-					
-					
+
 					
 					p.importeRegular = p.importeRegular - abono;
 					//p.importeRegular =Number(p.importeRegular.toFixed(2))
