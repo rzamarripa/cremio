@@ -4,7 +4,6 @@ angular
 function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
 
 	let rc = $reactive(this).attach($scope);
-	
 	window = rc;
 	
 	rc.fecha = "";
@@ -17,14 +16,14 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 				
   this.helpers({
 	  notasCreditoConSaldo : () => {
-		  	var ncs =  NotasCredito.find({saldo : {$gte: 0}}).fetch();		 
+		  	var ncs =  NotasCredito.find({estatus: 1, saldo : {$gt: 0}}).fetch();		 
 		  	if (ncs != undefined)
 		  	{
 				  	_.each(ncs, function(nc){
 					  		Meteor.call('getUsuario', nc.cliente_id, function(error, result) {           
 					          if (result)
 					          {
-						          	console.log(result);
+						          	//console.log(result);
 						          	nc.nombreCliente = result.nombreCompleto;
 						          	nc.numeroCliente = result.numeroCliente;
 						          	$scope.$apply();
@@ -39,7 +38,7 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 		  return ncs;
 	  },
 	  notasCreditoCaducadas : () => {
-		  	var ncs =  NotasCredito.find({tieneVigencia: true, vigencia: {$lt: rc.fecha}}).fetch();		 
+		  	var ncs =  NotasCredito.find({tieneVigencia: true, vigencia: {$lt: rc.fecha}, estatus: 2 }).fetch();		 
 		  	if (ncs != undefined)
 		  	{
 				  	_.each(ncs, function(nc){
