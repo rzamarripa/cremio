@@ -15,6 +15,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 
   this.credito = {};
   this.pago = {};
+  this.pago.pagar = 0;
   this.pago.totalPago = 0;
   this.pago.totalito = 0
   this.creditos = [];
@@ -55,7 +56,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
   });
 
   this.subscribe('creditos', () => {
-    return [{ cliente_id: $stateParams.objeto_id, estatus : {$in: [2, 4]} }];
+    return [{ cliente_id: $stateParams.objeto_id, estatus : {$in: [2, 4]}}];
   });
   this.subscribe('pagos', () => {
     return [{ estatus: 1 }];
@@ -87,7 +88,13 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
       estatus: true
     }]
   });
-
+  
+  this.subscribe('notasCreditoTop1', () => {
+    return [{
+					cliente_id: $stateParams.objeto_id, saldo : {$gt: 0}, estatus : 1
+    }]
+  });
+		
 
   this.helpers({
 
@@ -107,6 +114,9 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
         })
       }
       return clientes;
+    },
+    notasCredito : ()=>{
+	   	return  NotasCredito.find({cliente_id: $stateParams.objeto_id, saldo : {$gt: 0}, estatus : 1}).fetch();
     },
     objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
@@ -190,8 +200,6 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
 			//rc.creditos_id = _.pluck(planes, "cliente_id");
 			//console.log("kaka",planes)
-
-
 			return planes
 
 		},
@@ -502,7 +510,23 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
   
   this.guardarPago = function(pago, credito) {
 		
-		//console.log(pago);	  
+	  if (this.pago.tipoIngreso_id == undefined)
+	  {
+		  	toastr.warning("Seleccione una forma de pago");
+		  	return;
+	  }
+	  
+	  if (pago.pagar == undefined || pago.pagar <= 0)
+	  {
+		  	toastr.warning("Ingrese la cantidad a cobrar correctamente");
+		  	return;
+	  }
+	  
+	  if (pago.pagar < pago.totalPago)
+	  {
+		  	toastr.warning("No alcanza a pagar con el total ingresado");
+		  	return;
+	  }
 	  
 	  if (pago.totalPago == 0)
 	  {
@@ -536,7 +560,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		    
 		    if (!ban)
 		  	{
-			  		toastr.warning("El cliente no tiene al menos un crédito autirozado que pueda liquidar el crédito actual");
+			  		toastr.warning("El cliente no tiene al menos un crédito autorizado que pueda liquidar el crédito actual");
 						return;
 		  	}
 		  	rc.pagoR = pago;
@@ -549,15 +573,42 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	  {
 		  	
 		  	//Validar la nota de credito
-		  
+		  	
+		  	//Revisar que tenga notas de credito si no para que ir al Metodo
+				var nc = NotasCredito.findOne({});
+				if (nc.length == 0)
+				{
+						toastr.warning("El cliente no tiene notas de credito por aplicar");
+						return;					
+				}
+								
+				//Validar que es lo que se va a pagar recibo, cargo o ambos
+				var sePagaraRecibo = false;
+				var sePagaraCargo = false;
 		  
 		  	var seleccionadosId = [];
 		    _.each(rc.planPagosViejo, function(p) {
-		      if (p.pagoSeleccionado)
-		        seleccionadosId.push({ id: p._id, importe: p.importepagado })
-		
+		      if (p.pagoSeleccionado){
+						 if (p.descripcion == "Recibo") sePagaraRecibo = true;
+						 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
+			       seleccionadosId.push({ id: p._id, importe: p.importepagado })
+		      }		        
 		    });
 		    
+				    
+		    if (nc.aplica == "RECIBO" &&  sePagaraCargo == true)
+		    {
+			    	toastr.warning("La nota de crédito es solo para recibos");
+						return;
+		    }
+		    
+		    if (nc.aplica == "CARGO MORATORIO" && sePagaraRecibo == true)
+		    {
+			    	toastr.warning("La nota de crédito es solo para cargos moratorios");
+						return;
+		    }
+		    
+
 		    //console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
 		    Meteor.call("pagoParcialCredito", seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id, $stateParams.objeto_id, function(error, success) {
 		      if (!success) {
@@ -608,9 +659,12 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	{
 		
 			if (this.valorOrdenar == "Folio")
-	    		return ['folio','numeroPago'];
+	    		return ['folio'];
 	    if (this.valorOrdenar == "Fecha")
 	    		return ['fechaLimite'];
+	    if (this.valorOrdenar == "Recibo")
+	    		return ['numeroPago'];
+	    		
 	    /*
 if (this.valorOrdenar == "Cliente")
 	    		return ['cliente.nombreCompleto'];		
@@ -693,8 +747,6 @@ if (this.valorOrdenar == "Cliente")
 	this.marcarRefinanciamiento = function(credito) 
 	{
 			rc.creditoRefinanciar = credito;
-			
-		
 	}
 	
 	this.cerrarRefinanciamiento = function() 
@@ -702,7 +754,33 @@ if (this.valorOrdenar == "Cliente")
 			rc.modalRefinanciamiento = false;
 		
 	}
+	
+	this.seleccionTipoIngreso = function(tipoIngreso) 
+	{
 
+			var ti = TiposIngreso.findOne(tipoIngreso);
+			var nc = NotasCredito.findOne({cliente_id: $stateParams.objeto_id, saldo : {$gt: 0}, estatus : 1});
+
+			if (ti.nombre == "Nota de Credito" && nc != undefined)
+			{
+					this.pago.pagar = nc.saldo;
+					var p = document.getElementById('cobro');
+					p.disabled = true;
+					
+			}
+			else
+			{
+					var p = document.getElementById('cobro');
+					p.disabled = false;
+					this.pago.pagar = 0;
+			}		
+			
+	}
+	
+	//Quita el mouse wheels 
+	$(document).ready(function(){  	
+    	document.getElementById('cobro').onwheel = function(){ return false; }
+	});
 	
 
 

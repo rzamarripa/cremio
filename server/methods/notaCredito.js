@@ -48,24 +48,26 @@ Meteor.methods({
 	actualizarNotaDeCredito : function(user_id, monto){
 		//console.log(user_id,monto)
 		var user=Meteor.user();
+		var exito = false;
 		//console.log(user);
-		if(user.roles[0] != "Gerente" && user.roles[0] != "Cajero")
+		//if(user.roles[0] != "Gerente" && user.roles[0] != "Cajero")
+		if(user.roles[0] != "Cajero")
 			throw new Meteor.Error(403, 'Error 403: Permiso denegado', 'Permiso denegado');
 		//console.log("asdasd")
 		var nuser = Meteor.users.findOne(user_id);
 		//console.log(nuser)
 		//console.log(user_id)
-		if(!nuser || monto<1 || monto > nuser.profile.notasCredito.saldo)
+		if(!nuser || monto < 1 || monto > nuser.profile.notasCredito.saldo)
 			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
 		
 		nuser.profile.notasCredito.saldo -= monto;
 		//console.log("asd")
 		Meteor.users.update({_id:user_id},{$set:{'profile':nuser.profile}})
 
-		var notas =  NotasCredito.find({estatus : 1, cliente_id : user_id}).fetch();
+		var notas =  NotasCredito.find({cliente_id : user_id, saldo : {$gt: 0},estatus : 1}, {limit: 1},{sort:{createdAt:-1}}).fetch();
 		//console.log(notas)
 		_.each(notas,function(nota){
-			if(monto>0){
+			if(monto > 0){
 				if(nota.saldo < monto){
 					monto -= nota.saldo;
 					nota.saldo = 0;
@@ -84,7 +86,7 @@ Meteor.methods({
 	deprecarNotasDeCredito : function(){
 		var fecha = new Date();
 		fecha = new Date(fecha.getFullYear(),fecha.getMonth(),fecha.getDate(),0,0,0,0);
-		var notas =  NotasCredito.find({estatus:1,fecha:{$gt:fecha}}).fetch();
+		var notas =  NotasCredito.find({estatus:1,vigencia:{$gt:fecha}}).fetch();
 
 		_.each(notas,function(nota){
 			var usuario = Meteor.users.findOne(notas.cliente_id);

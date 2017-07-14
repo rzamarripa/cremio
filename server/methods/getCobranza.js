@@ -199,7 +199,6 @@ Meteor.methods({
 			return arreglo;
 		
 	},	
-
 	getreportesPagos: function (credito_id) {
 			var arreglo = [];
 			

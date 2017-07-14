@@ -21,7 +21,6 @@ Meteor.methods({
     Meteor.users.update({ _id: caja.usuario_id }, { $set: { 'profile.caja_id': cajaid } })
     return cajaid;
   },
-
   actualizarCaja: function(caja) {
     var user = Meteor.user();
     if (user.roles[0] != "Gerente")

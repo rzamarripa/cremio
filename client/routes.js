@@ -83,7 +83,8 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 		})
 		.state('root.home', {
 			url: '/',
-			templateUrl: 'client/home/home.ng.html',			
+			templateUrl: 'client/home/home.ng.html',
+			controller: 'HomeCtrl as ho',	
 			resolve: {
 				"currentUser": ["$meteor", function($meteor){
 					return $meteor.requireUser();
