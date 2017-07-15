@@ -467,11 +467,14 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		        p.pagoSeleccionado = false;
 		      }
 		      if (pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago <= pago.numeroPago && p.estatus != 1) {
-		        p.importepagado = p.importeRegular;
+			      
+			      p.importeRegular = Number(p.importeRegular).toFixed(2);
+		        p.importepagado = parseFloat(p.importeRegular);
 		        p.pagoSeleccionado = true;
 		      }
 		      if (p.pagoSeleccionado != undefined) {
 		        if (p.pagoSeleccionado == true) {
+			        p.importeRegular = Number(p.importeRegular).toFixed(2);
 		          rc.pago.totalPago += p.importepagado;
 		        }
 		      }
@@ -485,7 +488,8 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 			if (p.verCargo)
 	    {	    
 	      if (pago.credito_id == p.credito_id && p.numeroPago < pago.numeroPago && p.estatus != 1) {
-	        p.importepagado = p.importeRegular;
+		      p.importeRegular = Number(p.importeRegular).toFixed(2);
+	        p.importepagado = parseFloat(p.importeRegular);
 	        p.pagoSeleccionado = true;
 	        p.estatus = 0;
 	      }
@@ -493,7 +497,8 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	        p.estatus = 0;
 	        p.pagoSeleccionado = true;
 	        if (p.importepagado > p.importeRegular)
-	          p.importepagado = p.importeRegular
+	        	p.importeRegular = Number(p.importeRegular).toFixed(2);
+	          p.importepagado = parseFloat(p.importeRegular);
 	        if (p.importepagado <= 0 || !p.importepagado || isNaN(p.importepagado)) {
 	          //p.importepagado = 0
 	          p.pagoSeleccionado = false;
@@ -571,42 +576,43 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	  }
 	  else
 	  {
-		  	
-		  	//Validar la nota de credito
-		  	
-		  	//Revisar que tenga notas de credito si no para que ir al Metodo
-				var nc = NotasCredito.findOne({});
-				if (nc.length == 0)
+		  	if (tipoIngreso.nombre == "Nota de Credito")
 				{
-						toastr.warning("El cliente no tiene notas de credito por aplicar");
-						return;					
-				}
-								
-				//Validar que es lo que se va a pagar recibo, cargo o ambos
-				var sePagaraRecibo = false;
-				var sePagaraCargo = false;
-		  
-		  	var seleccionadosId = [];
-		    _.each(rc.planPagosViejo, function(p) {
-		      if (p.pagoSeleccionado){
-						 if (p.descripcion == "Recibo") sePagaraRecibo = true;
-						 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
-			       seleccionadosId.push({ id: p._id, importe: p.importepagado })
-		      }		        
-		    });
-		    
+				  	//Revisar que tenga notas de credito si no para que ir al Metodo
+						var nc = NotasCredito.findOne({});
+						if (nc.length == 0)
+						{
+								toastr.warning("El cliente no tiene notas de credito por aplicar");
+								return;					
+						}
+										
+						//Validar que es lo que se va a pagar recibo, cargo o ambos
+						var sePagaraRecibo = false;
+						var sePagaraCargo = false;
+				  
+				  	var seleccionadosId = [];
+				    _.each(rc.planPagosViejo, function(p) {
+				      if (p.pagoSeleccionado){
+								 if (p.descripcion == "Recibo") sePagaraRecibo = true;
+								 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
+					       seleccionadosId.push({ id: p._id, importe: p.importepagado })
+				      }		        
+				    });
 				    
-		    if (nc.aplica == "RECIBO" &&  sePagaraCargo == true)
-		    {
-			    	toastr.warning("La nota de crédito es solo para recibos");
-						return;
-		    }
-		    
-		    if (nc.aplica == "CARGO MORATORIO" && sePagaraRecibo == true)
-		    {
-			    	toastr.warning("La nota de crédito es solo para cargos moratorios");
-						return;
-		    }
+						    
+				    if (nc.aplica == "RECIBO" &&  sePagaraCargo == true)
+				    {
+					    	toastr.warning("La nota de crédito es solo para recibos");
+								return;
+				    }
+				    
+				    if (nc.aplica == "CARGO MORATORIO" && sePagaraRecibo == true)
+				    {
+					    	toastr.warning("La nota de crédito es solo para cargos moratorios");
+								return;
+				    }					
+				}
+				
 		    
 
 		    //console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)

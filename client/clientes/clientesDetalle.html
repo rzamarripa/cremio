@@ -24,7 +24,7 @@
 							</a>&nbsp;
 							<div class="col-sm-2">
 										<h1>{{cd.objeto.profile.nombre}} <span class="semi-bold">{{cd.objeto.profile.apellidoPaterno}} {{cd.objeto.profile.apellidoMaterno}}</span>
-										<br>
+										<h5>{{cd.objeto.profile.numeroCliente}}</h5>
 									</div>
 								
 										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
@@ -98,12 +98,13 @@
 												<thead class="thead">
 													<tr>
 														<th class="text-center" width="5%">No.</th>
+														<th class="text-center" width="5%">Folio Crédito</th>
 														<th class="text-center" width="20%">Movimiento</th>
 														<th class="text-center" width="20%">Fecha de Pago</th>
 														<th class="text-center" width="10%">N. Pago</th>
 														<th class="text-center" width="10%">Capital</th>
 														<th class="text-center" width="10%">Interes</th>
-														<th class="text-center" width="10%">IVA</th>
+														<th class="text-center" width="5%">IVA</th>
 														<th class="text-center" width="10%">Seguro</th>
 														<th class="text-center" width="15%">Pago</th>
 														<th class="text-center" width="10%">Saldo</th>
@@ -112,6 +113,7 @@
 												<tbody>
 													<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cd.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in credito.planPagos">								
 														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
+														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{credito.folio}}</td>
 														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
 														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
@@ -727,7 +729,7 @@
 											<div class="panel-heading">
 												<h3 class="panel-title">
 													Crédito</h3>
-										</div>
+											</div>
 											<div class="panel-body no-padding text-align-center">
 												<div class="the-price">
 													<h1>
@@ -737,8 +739,10 @@
 														{{pendiente.duracionMeses}}
 														<span class="subscript">/meses</span>
 													</h2>
-													<small>Plan: {{pendiente.periodoPago}}</small>
-													<small>Fecha: {{pendiente.fechaSolicito.getUTCDate() +"/"+ (pendiente.fechaSolicito.getUTCMonth()+1) +"/"+ pendiente.fechaSolicito.getUTCFullYear()}}</small>
+													<small>Plan: {{pendiente.periodoPago}}</small><br>
+													<small>Fecha: {{pendiente.fechaSolicito | date:'dd/MM/yyyy'}}</small><br>
+													<small ng-if="pendiente.requiereVerificacion == true">Con Verificación <!-- {{pendiente.fechaVerificacion | date:'dd/MM/yyyy'}} --></small>
+													<small ng-if="pendiente.requiereVerificacion == undefined">Sin Verificación</small>
 												</div>
 											</div>
 											
@@ -801,7 +805,7 @@
 																<td>{{nota.aplica}}</td>
 																<td>{{nota.causa}}</td>
 																<td>{{nota.tieneVigencia}}</td>
-																<td>{{nota.createdAt | date:'fullDate'}}</td>
+																<td>{{nota.createdAt | date:'dd/MM/yyyy'}}</td>
 																<td>{{nota.saldo | currency}}</td>
 																<td>{{nota.estatus==1? 'Vigente': nota.estatus==0? 'Cancelada':'Vigente'}}</td>
 															</tr>
@@ -1213,7 +1217,7 @@
 
 
 
-<!-- Modal para cancelar credito -->
+<!-- Modal para cargos Moratorios -->
 
 <div id="modalCargosMoratorios" class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">

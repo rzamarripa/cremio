@@ -1230,7 +1230,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	//--------------------------------------------------------------------
 	this.getRecibos = function(credito_id)
 	{
-			rc.recibos = PlanPagos.find({credito_id: credito_id}).fetch();			
+			rc.recibos = PlanPagos.find({credito_id: credito_id, descripcion: "Recibo"}).fetch();
+					
 	};
 	
 	this.crearCargoMoratorio = function()

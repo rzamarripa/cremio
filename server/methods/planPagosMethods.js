@@ -750,8 +750,6 @@ Meteor.methods({
 		
 		//Actualizar el Credito SaldoActual
 		
-		
-		
 		//console.log("idCreditos:",idCreditos);
 		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus del credito
 		_.each(idCreditos,function(c){
