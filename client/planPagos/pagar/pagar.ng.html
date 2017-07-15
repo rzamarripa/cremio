@@ -662,7 +662,7 @@
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
-														<td ><input style="width: 80px" type="number" ng-change="pvpp.seleccionarMontoPago(pago)"  ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
+														<td ><input style="width: 80px" type="number" ng-change="pvpp.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
 													</tr>
 												</tbody>
 											</table>	
