@@ -623,6 +623,7 @@ Meteor.methods({
 					abono -= p.importeRegular;
 					abono=Math.round(abono * 100) / 100;
 					
+					
 					//Decrementar el pago en el Saldo Actual Pago total
 					if (p.descripcion == "Recibo")
 					{

@@ -467,14 +467,11 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		        p.pagoSeleccionado = false;
 		      }
 		      if (pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago <= pago.numeroPago && p.estatus != 1) {
-			      
-			      p.importeRegular = Number(p.importeRegular).toFixed(2);
-		        p.importepagado = parseFloat(p.importeRegular);
+		        p.importepagado = p.importeRegular;
 		        p.pagoSeleccionado = true;
 		      }
 		      if (p.pagoSeleccionado != undefined) {
 		        if (p.pagoSeleccionado == true) {
-			        p.importeRegular = Number(p.importeRegular).toFixed(2);
 		          rc.pago.totalPago += p.importepagado;
 		        }
 		      }
@@ -488,8 +485,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 			if (p.verCargo)
 	    {	    
 	      if (pago.credito_id == p.credito_id && p.numeroPago < pago.numeroPago && p.estatus != 1) {
-		      p.importeRegular = Number(p.importeRegular).toFixed(2);
-	        p.importepagado = parseFloat(p.importeRegular);
+	        p.importepagado = p.importeRegular;
 	        p.pagoSeleccionado = true;
 	        p.estatus = 0;
 	      }
@@ -497,8 +493,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	        p.estatus = 0;
 	        p.pagoSeleccionado = true;
 	        if (p.importepagado > p.importeRegular)
-	        	p.importeRegular = Number(p.importeRegular).toFixed(2);
-	          p.importepagado = parseFloat(p.importeRegular);
+	          p.importepagado = p.importeRegular
 	        if (p.importepagado <= 0 || !p.importepagado || isNaN(p.importepagado)) {
 	          //p.importepagado = 0
 	          p.pagoSeleccionado = false;
@@ -575,7 +570,8 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		  	
 	  }
 	  else
-	  {
+	  {		
+		  	
 		  	if (tipoIngreso.nombre == "Nota de Credito")
 				{
 				  	//Revisar que tenga notas de credito si no para que ir al Metodo
@@ -589,17 +585,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 						//Validar que es lo que se va a pagar recibo, cargo o ambos
 						var sePagaraRecibo = false;
 						var sePagaraCargo = false;
-				  
-				  	var seleccionadosId = [];
-				    _.each(rc.planPagosViejo, function(p) {
-				      if (p.pagoSeleccionado){
-								 if (p.descripcion == "Recibo") sePagaraRecibo = true;
-								 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
-					       seleccionadosId.push({ id: p._id, importe: p.importepagado })
-				      }		        
-				    });
-				    
-						    
+				    	    
 				    if (nc.aplica == "RECIBO" &&  sePagaraCargo == true)
 				    {
 					    	toastr.warning("La nota de crédito es solo para recibos");
@@ -613,9 +599,17 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 				    }					
 				}
 				
-		    
-
+				var seleccionadosId = [];
+		    _.each(rc.planPagosViejo, function(p) {
+		      if (p.pagoSeleccionado){
+						 if (p.descripcion == "Recibo") sePagaraRecibo = true;
+						 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
+			       seleccionadosId.push({ id: p._id, importe: p.importepagado })
+		      }		        
+		    });
+				
 		    //console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
+
 		    Meteor.call("pagoParcialCredito", seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id, $stateParams.objeto_id, function(error, success) {
 		      if (!success) {
 		        toastr.error('Error al guardar.');
@@ -629,6 +623,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
 		      window.open(url, '_blank');
 		    });
+
 		  
 	  }
 
