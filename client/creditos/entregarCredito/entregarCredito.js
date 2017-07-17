@@ -38,7 +38,6 @@ angular.module("creditoMio")
 	this.validar={};
 
 	this.helpers({
-
 		tiposIngreso : () => {
 			var tipos = TiposIngreso.find().fetch();
 			_.each(tipos,(tipo)=>{
@@ -71,39 +70,34 @@ angular.module("creditoMio")
 					
 					if (c.periodoPago == "Quincenal")
 					{
-							var fecha = new Date();
+							var fecha;
+							var date = new Date();
+							var check = moment(date, 'YYYY/MM/DD');
+							var numeroDia   = check.format('D');
+							var numeroMes   = check.format('MM');
+							var numeroAnio   = check.format('YYYY');
 							
-							//Hacer los calculos
-							var semana = moment().isoWeek();
-							var anio = fecha.getFullYear();
-							//this.calcularSemana(semana, anio);
-							
-							var ini, fin;
-				
-					    var simple = new Date(anio, 0, 1 + (semana) * 7);
-					    fecha = new Date(simple);
-					    //FF = new Date(moment(simple).add(7,"days"));
-					    
-					    //console.log(fecha);
-					    //FF.setHours(23,59,59,999);
-							this.objeto.primerAbono = fecha;
-							
+							if (numeroDia <=15)
+							{
+									var f = numeroMes + "/15/" + numeroAnio;							
+									fecha = new Date(f);
+							}
+							else
+							{
+									var ultimoDiaMes = moment().daysInMonth();
+									var f = numeroMes + "/"+ultimoDiaMes+"/" + numeroAnio;							
+									fecha = new Date(f);
+							}							
+							this.objeto.primerAbono = fecha;						
 					}
 					else if (c.periodoPago == "Mensual")
 					{
-							var fecha = new Date();
-						
-							var anio = fecha.getFullYear();
-							var mes = fecha.getMonth();
-							
-							var startDate = moment([anio, mes]);
-							var endDate = moment(startDate).endOf('month');
-					    fecha = endDate.toDate();
-					    fecha.setHours(0,0,0,0);					    					    
+							var ultimoDiaMes = moment().daysInMonth();
+							var f = numeroMes + "/"+ultimoDiaMes+"/" + numeroAnio;							
+							fecha = new Date(f);	    					    
 					    this.objeto.primerAbono = fecha;
 					}		
-				 
-					
+	
 			}			
 			return c
 		}
@@ -129,13 +123,20 @@ angular.module("creditoMio")
 
 	this.guardar = function (){
 			//console.log(rc.objeto)
-			console.log(rc.tipoIngreso);
-			console.log(rc.caja);
 			
 			if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagare!=true || this.validar.tabla!=true)
 			{
 				toastr.error('Es obligatorio verificar los documentos.');
 				return
+			}
+			
+			//Validar que no sea Nota de Credito ni refinanciamiento
+			var ti = TiposIngreso.findOne(rc.tipoIngreso._id);
+
+			if (ti.nombre == "Nota de Credito" || ti.nombre == "REFINANCIAMIENTO")
+			{
+					toastr.error('Error No se puede entregar un crédito con esta forma de pago.');
+						return;
 			}
 			
 			if (rc.credito.esRefinanciado == undefined)
@@ -153,7 +154,6 @@ angular.module("creditoMio")
 					}
 			}
 			
-			
 			//Validar que tenga dinero en el tipo de Ingreso	
 			var validarSaldoCaja = rc.caja.cuenta[rc.tipoIngreso._id];
 			if (validarSaldoCaja.saldo < rc.suma)
@@ -162,8 +162,17 @@ angular.module("creditoMio")
 					return;
 			}			
 			
-			//Validar que no tenga Cargmos Moratorios
-			
+			//Validar que no tenga Cargos Moratorios
+			console.log(rc.credito.cliente_id);
+			Meteor.call ("validarCreditosSaldoEnMultas",rc.credito.cliente_id,function(error,result){
+					
+					console.log(result);
+					if (!result)
+					{
+							toastr.error('El cliente tiene Cargos Moratorios Activos no es posible Entregarle el crédito.');
+							return;		
+					}
+			});
 			
 			
 			Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id,function(error,result){
@@ -241,49 +250,9 @@ angular.module("creditoMio")
 					rc.objeto.primerAbono = fecha;
 
 			}
-/*
-			else if (periodoPago == "Quincenal")
-			{
-					//Hacer los calculos
-					var semana = moment().isoWeek();
-					var anio = FI.getFullYear();
-					//this.calcularSemana(semana, anio);
-					
-					var ini, fin;
-		
-			    var simple = new Date(anio, 0, 1 + (semana - 1) * 7);
-			    FI = new Date(simple);
-			    //FF = new Date(moment(simple).add(7,"days"));
-			    
-			    console.log(FI);
-			    //FF.setHours(23,59,59,999);
-					
-					
-			}
-*/
-/*
-			else if (periodoPago == "Mensual")
-			{
-					var FI = new Date();
-				
-					var anio = FI.getFullYear();
-					var mes = FI.getMonth();
-					
-					var startDate = moment([anio, mes]);
-					var endDate = moment(startDate).endOf('month');
-			    FI = endDate.toDate();
-			    //FF = endDate.toDate();
-			    FI.setHours(0,0,0,0);
-			    //console.log(FI);
-
-					
-			}	
-*/
 	};
 	
 	this.generarCredito = function(){
-		
-
 		
 		
 		var credito = {

@@ -3,20 +3,37 @@
 	<thead>
 		<tr>
 			<th class="text-center" width="10%">No.</th>
-			<th ><div class="text-center">Credito</div></th>
-			<th ><div class="text-center">Capital Solicitado</div></th>
+			<th ><div class="text-center">Cliente</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
-			<th class="text-center" width="10%"><div class="text-center">Turno</div></th>
+			<th><div class="text-center">Tipo Verificación</div></th>
+			<th class="text-center" width="10%"><div class="text-center">Acción</div></th>
 		</tr>
 	</thead>
 	<tbody>
-    <tr ng-repeat="credito in pver.creditosVerificados">
+    <tr ng-repeat="verificacion in pver.verificacionesHechas">
 	    <td class="text-center">{{$index + 1}}</td>
-	    <td>{{credito.nombreCliente}}</td>
-	    <td class="text-right">{{credito.capitalSolicitado | currency}}</td>
-	    <td class="text-center">{{credito.fechaSolicito.getUTCDate() +"/"+ (credito.fechaSolicito.getUTCMonth()+1) +"/"+ credito.fechaSolicito.getUTCFullYear()}} </td>
-	    <td class="text-center">{{credito.fechaVerificacion.getUTCDate() +"/"+ (credito.fechaVerificacion.getUTCMonth()+1) +"/"+ credito.fechaVerificacion.getUTCFullYear()}} </td>
-	    <td class="text-center">{{credito.turno}}</td>
+	    <td>{{verificacion.nombreCliente}}</td>
+	    <td class="text-center">{{verificacion.fechaVerificacion | date:"dd-MM-yyyy" }} </td>
+	    <td class="text-center">{{verificacion.tipoVerificacion}}</td>
+	    <td>
+		    	<div class="text-center">
+				    <div class="btn-group">
+						  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    <span class="caret"></span>
+						    <span class="sr-only">Toggle Dropdown</span>
+						  </button>
+						  <ul class="dropdown-menu dropdown-menu-right text-left">
+<!-- 						    <li><a ui-sref="root.verificacionVecino({id: verificacion.credito_id, verificacion_id: verificacion._id})"> <i class="fa fa-eye"></i> Ver</a></li>  -->
+						    <li ng-if ="verificacion.tipoVerificacion == 'vecino'">
+						    		<a ui-sref="root.verificacionVecino({id: verificacion.credito_id, verificacion_id: verificacion._id})"><i class="fa fa-pencil"></i> Editar</a>
+						    </li>
+						    <li ng-if ="verificacion.tipoVerificacion == 'solicitante o aval'">
+						    		<a ui-sref="root.verificacion({id: verificacion.credito_id, verificacion_id: verificacion._id})"><i class="fa fa-pencil"></i> Editar</a>
+						    </li>
+						  </ul>
+						</div>
+			    </div>
+	    </td>
     </tr>
 	</tbody>
 </table>º

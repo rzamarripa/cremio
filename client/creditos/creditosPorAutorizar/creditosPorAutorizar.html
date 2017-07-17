@@ -13,11 +13,12 @@
             <thead>
                 <tr>
                     <th style='width: 5%' class="text-center">No.</th>
-                    <th style='width: 20%' class="text-center">Cliente</th>
-                    <th style='width: 15%' class="text-center">Capital Solicitado</th>
+                    <th style='width: 10%' class="text-center">Cliente</th>
+                    <th style='width: 10%' class="text-center">Capital Solicitado</th>
                     <th style='width: 10%' class="text-center">Fecha Solicitud</th>
                     <th style='width: 10%' class="text-center">Verificación</th>
                     <th style='width: 15%' class="text-center">Verificación Estatus</th>
+                    <th style='width: 15%' class="text-center">Valoración</th>
                     <th style='width: 10%' class="text-center">Acciones</th>
                 </tr>
             </thead>
@@ -26,9 +27,22 @@
                     <td class="text-center">{{$index + 1}}</td>
                     <td><a href="javascript:void(0);" ui-sref="root.clienteDetalle({objeto_id : credito.cliente_id})">{{credito.cliente.profile.nombreCompleto}}</a></td>
                     <td class="text-center">{{credito.capitalSolicitado | currency}}</td>
-                    <td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy hh:mm:sss"}}</td>
-                    <td class="text-center"><a href="javascript:void(0);" ui-sref="root.verificacion({id : credito._id})" ng-if="credito.requiereVerificacion">verificación</a></td>
+                    <td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
+                    <td class="text-center"><ul ng-if="credito.requiereVerificacion">
+	                    												<li ng-repeat="v in credito.verificaciones">
+			                    											<a ng-if = "v.tipoVerificacion == 'vecino'" 
+			                    												 href="javascript:void(0);" 
+				                    											 ui-sref="root.verificacionVecino({id : credito._id, verificacion_id: v._id})">{{v.tipoVerificacion}}
+					                    									</a>
+					                    									<a ng-if = "v.tipoVerificacion == 'solicitante o aval'" 
+			                    												 href="javascript:void(0);" 
+				                    											 ui-sref="root.verificacion({id : credito._id, verificacion_id: v._id})">{{v.tipoVerificacion}}
+					                    									</a>
+	                    												</li>
+                    												</ul>		
+			              </td>
                     <td class="text-center">{{credito.verificacionEstatus}}</td>
+                    <td class="text-center">{{credito.indicacion}}</td>
                     <td class="text-center">
                         <button ng-click="cpa.autorizar(credito._id)" class="btn btn-primary">Autorizar</button>
                         <button ng-click="cpa.mostrarRechazoCredito(credito._id)" class="btn btn-warning">Rechazar</button>
