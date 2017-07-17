@@ -7,6 +7,7 @@
 				<th class="text-center" width="20%">Cliente</th>
 				<th class="text-center" width="10%">Tipo de Nota de Crédito</th>
 				<th class="text-center" width="10%">Causa</th>
+				<th class="text-center" width="10%">Creada</th>
 				<th class="text-center" width="5%">Tiene Vigencia</th>
 				<th class="text-center" width="10%">Fecha</th>
 				<th class="text-center" width="10%">Monto</th>
@@ -20,6 +21,7 @@
 				<td>{{nota.nombreCliente}}</td>
 				<td>{{nota.aplica}}</td>
 				<td>{{nota.causa}}</td>
+				<td style="text-align: center">{{nota.createdAt | date:'dd/MM/yyyy'}}</td>
 				<td style="text-align: center">{{nota.tieneVigenciaTexto}}</td>
 				<td style="text-align: center">{{nota.vigencia | date:'dd/MM/yyyy'}}</td>
 				<td style="text-align: right">{{nota.saldo | currency}}</td>

@@ -83,7 +83,8 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 		})
 		.state('root.home', {
 			url: '/',
-			templateUrl: 'client/home/home.ng.html',			
+			templateUrl: 'client/home/home.ng.html',
+			controller: 'HomeCtrl as ho',	
 			resolve: {
 				"currentUser": ["$meteor", function($meteor){
 					return $meteor.requireUser();
@@ -662,7 +663,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			}
 		})
 		.state('root.verificacion', {
-			url: '/verificacion/:id',
+			url: '/verificacion/:id/:verificacion_id',
 			templateUrl: 'client/verificadores/verificacion.ng.html',
 			controller: 'VerificacionCtrl as ver',
 			resolve: {
@@ -672,7 +673,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			}
 		})
 		.state('root.verificacionVecino', {
-			url: '/verificacionVecino/:id',
+			url: '/verificacionVecino/:id/:verificacion_id',
 			templateUrl: 'client/verificadores/verificacionVecino.ng.html',
 			controller: 'VerificacionVecinoCtrl as verV',
 			resolve: {

@@ -605,6 +605,7 @@
 													    <option value=""></option>
 													    <option value="Folio">Folio</option>
 													    <option value="Fecha">Fecha</option>
+													    <option value="Recibo">Recibo</option>
 													</select>
 									  	</div>
 									  	<div class="col-sm-2">					    
@@ -623,26 +624,7 @@
 															<h5> Total <span class="txt-color-green" style="text-align: right">{{pvpp.total | currency}}</span></h5>
 														</li>	
 													</ul>
-											</div>
-<!--
-									  	<div class="col-sm-2">					    
-									    	<label>Ocultar Multas</label>
-									    	<input name="ocultarMultas" type="checkbox" class="form-control" ng-click="pvpp.ocultar()" ng-model="pvpp.ocultarMultas">
-								    	</div>
-									  	<div class="col-sm-2">					    
-									    	<label>Sub Total</label>
-									    	<span>{{pvpp.subtotal}}</span>
-								    	</div>
-								    	<div class="col-sm-2">					    
-									    	<label>Cargos Moratorios</label>
-									    	<span>{{pvpp.cargosMoratorios}}</span>
-								    	</div>
-								    	<div class="col-sm-2">					    
-									    	<label>Total</label>
-									    	<span>{{pvpp.total}}</span>
-								    	</div>
--->
-									  	
+											</div>									  	
 									</div>	
 									<div class="row"><br/>
 										
@@ -653,7 +635,7 @@
 													<tr>
 														<th class="text-center" width="5%"></th>
 														<th class="text-center" width="5%">No.</th>
-														<th class="text-center" width="5%">Folio Credito</th>
+														<th class="text-center" width="5%">Folio Crédito</th>
 														<th class="text-center" width="10%">Movimiento</th>
 														<th class="text-center" width="20%">Fecha de Pago</th>
 														<th class="text-center" width="5%">Recibo</th>
@@ -680,25 +662,25 @@
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
-														<td ><input style="width: 80px" type="number" ng-change="pvpp.seleccionarMontoPago(pago)"  ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
+														<td ><input style="width: 80px" type="number" ng-change="pvpp.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
 													</tr>
 												</tbody>
 											</table>	
 										</div>
 										<br/>
-										<div class="col-sm-3 pull-right">
+										<div class="col-sm-3 pull-right" valida>
 											<h4>Total a pagar: {{pvpp.pago.totalPago | currency }}</h4>
 											<br/>
 											<caption>Forma de Pago: </caption> 
-											<select name="TipoIngreso" class="form-control select2" placeholder="Seleccione" ng-model="pvpp.pago.tipoIngreso_id" required>
+											<select name="TipoIngreso" class="form-control select2" placeholder="Seleccione" ng-model="pvpp.pago.tipoIngreso_id" ng-change = "pvpp.seleccionTipoIngreso(pvpp.pago.tipoIngreso_id)" required>
 												<option ng-repeat="tipo in pvpp.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
 											</select>
 											<br/>
-											<caption>Paga con: </caption> <input  type="number" class="form-control" placeholder="Pagar" ng-model="pvpp.pago.pagar">
+											<caption>Paga con: </caption> <input id="cobro"  type="number" class="form-control" placeholder="Pagar" ng-model="pvpp.pago.pagar" required="true">
 											<br/>
 											<h4>Cambio: {{pvpp.pago.pagar - pvpp.pago.totalPago | currency }}</h4>
 											<br/>
-											<a class="btn btn-primary pull-right" ng-click="pvpp.guardarPago(pvpp.pago,pvpp.credito)">Guardar</a>
+											<a class="btn btn-primary pull-right" ng-click="pvpp.guardarPago(pvpp.pago,pvpp.credito)">Hacer Cobro</a>
 										</div>
 									</div>
 								</div>
@@ -757,6 +739,7 @@
 	  </div>
 
 </div>
+
 
 
 

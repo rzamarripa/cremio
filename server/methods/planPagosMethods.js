@@ -321,12 +321,6 @@ Meteor.methods({
 				{
 						multas = credito.capitalSolicitado * (tipoCredito.importe / 100); 
 						multas=Math.round(multas * 100) / 100;
-						
-						var interes = multas / 1.16
-						interes = Number(interes.toFixed(2));
-						var iva = multas - interes;
-						iva = Number(iva.toFixed(2));	
-
 				}
 				else if (tipoCredito.calculo == "importereciboVencido")
 				{
@@ -342,19 +336,12 @@ Meteor.methods({
 								
 						multas = reciboVencido.cargo * (porcentaje / 100); 
 						multas=Math.round(multas * 100) / 100;
-						
-						var interes = multas / 1.16
-						interes = Number(interes.toFixed(2));
-						var iva = multas - interes;
-						iva = Number(iva.toFixed(2));
-					
+											
 				}	
 				else if (tipoCredito.calculo == "saldoreciboVencido")
 				{	
 						
-					
-						var reciboVencido = PlanPagos.findOne({_id : pago.planPago_id});
-						console.log("RV:",reciboVencido);
+						var reciboVencido = PlanPagos.findOne({_id : pago.planPago_id});						
 						
 						var porcentaje;
 						if (credito.periodoPago == "Semanal")
@@ -367,27 +354,19 @@ Meteor.methods({
 						multas = reciboVencido.importeRegular * (porcentaje / 100); 
 						multas=Math.round(multas * 100) / 100;
 						
-						var interes = multas / 1.16
-						interes = Number(interes.toFixed(2));
-						var iva = multas - interes;
-						iva = Number(iva.toFixed(2));					
 				}	
 				
 				
-				var suma = multas + iva + interes;
 				//console.log("Act", multas);
 				//console.log("Antes", pago.importeRegular);
 				
-				pago.importeRegular += suma;
-				pago.iva += iva;
-				pago.interes += interes;
-				pago.capital += multas;
-				pago.cargo += suma;
+				pago.importeRegular += multas;
+				pago.cargo += multas;
 				
 				//console.log("desp", pago.importeRegular);
 				
 				//var suma = multas + iva + interes;
-				credito.saldoMultas += suma;
+				credito.saldoMultas += multas;
 				credito.saldoMultas=Math.round(credito.saldoMultas * 100) / 100;
 				Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 				
@@ -446,12 +425,7 @@ Meteor.methods({
 						{
 								multas = credito.capitalSolicitado * (tipoCredito.importe / 100); 
 								multas = Math.round(multas * 100) / 100;
-								
-								var interes = multas / 1.16;
-								interes = Number(interes.toFixed(2));
-								var iva = multas - interes;
-								iva = Number(iva.toFixed(2));	
-		
+										
 						}
 						else if (tipoCredito.calculo == "importereciboVencido")
 						{
@@ -467,18 +441,12 @@ Meteor.methods({
 										
 								multas = reciboVencido.cargo * (porcentaje / 100); 
 								multas=Math.round(multas * 100) / 100;
-								
-								var interes = multas / 1.16;
-								interes = Number(interes.toFixed(2));
-								var iva = multas - interes;
-								iva = Number(iva.toFixed(2));
 							
 						}	
 						else if (tipoCredito.calculo == "saldoreciboVencido")
 						{	
 											
 								var reciboVencido = PlanPagos.findOne({_id : pago._id});
-								console.log("RV:",reciboVencido);
 						
 								var porcentaje;
 								if (credito.periodoPago == "Semanal")
@@ -491,31 +459,24 @@ Meteor.methods({
 								multas = reciboVencido.importeRegular * (porcentaje / 100); 
 								multas = Math.round(multas * 100) / 100;
 								
-								var interes = multas / 1.16;
-								interes = Number(interes.toFixed(2));
-								var iva = multas - interes;
-								iva = Number(iva.toFixed(2));			
 						}
 						
-						//console.log(multas);
-						
-						var suma = multas + iva + interes;
-						
+												
 						var multa = {
 							semana							: mfecha.isoWeek(),
 							fechaLimite					: pago.fechaLimite,
 							diaSemana						: mfecha.weekday(),
 							tipoPlan						: pago.tipoPlan,
 							numeroPago					: pago.numeroPago,
-							importeRegular			: suma,
+							importeRegular			: multas,
 							cliente_id					: pago.cliente_id,
 							fechaPago						: undefined,
 							semanaPago					: undefined,
 							diaPago							: undefined,
-							iva					  			: iva,
-							interes 						: interes,
+							iva					  			: 0,
+							interes 						: 0,
 							seguro							: 0,
-							capital 						: multas,
+							capital 						: 0,
 							pago				  			: 0,
 							estatus							: 0,
 							multada							: 0,
@@ -530,7 +491,7 @@ Meteor.methods({
 							credito_id 					: credito._id,
 							mes									: mfecha.get('month') + 1,
 							anio								: mfecha.get('year'),
-							cargo								: suma,
+							cargo								: multas,
 							movimiento					: "Cargo Moratorio",
 							tipoCargoMoratorio	: 1 //Automatica
 						};
@@ -538,7 +499,7 @@ Meteor.methods({
 						var multa_id = PlanPagos.insert(multa);
 						PlanPagos.update({_id:pago._id},{$set:{multada:1,multa_id:multa_id}})
 						
-						credito.saldoMultas += suma;
+						credito.saldoMultas += multas;
 						credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
 						Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 
@@ -661,6 +622,7 @@ Meteor.methods({
 					
 					abono -= p.importeRegular;
 					abono=Math.round(abono * 100) / 100;
+					
 					
 					//Decrementar el pago en el Saldo Actual Pago total
 					if (p.descripcion == "Recibo")
@@ -788,8 +750,6 @@ Meteor.methods({
 		});
 		
 		//Actualizar el Credito SaldoActual
-		
-		
 		
 		//console.log("idCreditos:",idCreditos);
 		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus del credito

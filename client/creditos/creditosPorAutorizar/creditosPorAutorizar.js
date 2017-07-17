@@ -7,6 +7,7 @@ angular.module("creditoMio")
   this.nuevo = true;	 
   this.objeto = {}; 
 	this.clientes_ids = [];
+	this.verificaciones_ids = [];
 	this.creditoRechazar = "";
 	this.motivo = "";
 	
@@ -19,23 +20,45 @@ angular.module("creditoMio")
   this.subscribe('creditos', () => {
 		return [{ estatus : 1 }]
   });
-  
+    
   this.helpers({
 		creditosPorAutorizar : () => {
 			var creditos = Creditos.find({estatus : 1}).fetch();
 			if(creditos){
 				rc.clientes_ids = _.pluck(creditos, "cliente_id");
-			
+				
+				
 				_.each(creditos, function(credito){
-					credito.cliente = Meteor.users.findOne({_id : credito.cliente_id});
+						credito.cliente = Meteor.users.findOne({_id : credito.cliente_id});
+						credito.verificaciones = [];
+						
+						Meteor.call('getVerificacionesCredito', credito._id, function(error, result) {
+						   if(error)
+						   {
+							    console.log('ERROR :', error);
+							    return;
+						   }
+						   if(result)
+						   {	
+								 		_.each(result, function(v){
+									 			credito.verificaciones.push(v);
+								 		});
+								 		$scope.$apply();
+							 }
+						});
+						
+						
 				})
 			}
 						
 			return creditos;
 			
-		}
+		},
+		
+		
 	});
 	
+/*
 	this.tieneFoto = function(sexo, foto){
 	  if(foto === undefined){
 		  if(sexo === "Masculino")
@@ -50,6 +73,7 @@ angular.module("creditoMio")
 		  return foto;
 	  }
   };
+*/
   
   this.autorizar = function(credito_id){
 	  Creditos.update({_id : credito_id}, { $set : {estatus : 2}});
