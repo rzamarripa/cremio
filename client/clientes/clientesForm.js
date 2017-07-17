@@ -626,6 +626,10 @@ this.tomarFoto = function(objeto){
   this.agregarDoc = function(doc,imagen)
   {
     console.log("imagen",imagen)
+    if (imagen == false) {
+       toastr.error("Ninguna imagen agregada");
+
+    }else{
     if (doc == undefined) {
       toastr.error("Ningun documento agregado");
 
@@ -644,7 +648,8 @@ this.tomarFoto = function(objeto){
 
     });
     console.log(imagen,"programador estrella");
-     }         
+     }  
+    }       
   };
 
     this.actDoc = function(doc,imagen)

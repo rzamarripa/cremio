@@ -491,7 +491,7 @@
 
 								<div class="row ">
 									<br/>
-									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="aprobado in pvpp.creditos">
+									<div class="col-xs-12 col-sm-4 col-md-2"  ng-repeat="aprobado in pvpp.creditos">
 										<div class="panel panel-blueDark">
 											<div class="panel-heading">
 												<h3 class="panel-title">
@@ -648,7 +648,7 @@
 													</tr>
 												</thead>
 												<tbody>
-													<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < pvpp.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in pvpp.planPagosViejo | orderBy: pvpp.funcionOrdenar()" ng-if="pago.verCargo">
+													<tr ng-class="(pago.tipoPar == 'par') ? 'default' : (pago.tipoPar == 'impar') ? 'info': 'success'" ng-repeat="pago in pvpp.planPagosViejo | orderBy: pvpp.funcionOrdenar()" ng-if="pago.verCargo">
 							
 														<td ><a ng-model="pago.pagoSeleccionado" ng-click="pvpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
 

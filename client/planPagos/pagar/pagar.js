@@ -351,6 +351,17 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 			rc.cargosMoratorios = 0;
 			
 			_.each(pp, function(pago) {
+				pago.credito = Creditos.findOne(pago.credito_id);
+				 if(pago.credito.folio % 2 == 0)
+	            {
+	              
+	              pago.tipoPar = "par"
+	            }
+	            else
+	            {
+	              
+	              pago.tipoPar = "impar"
+	            }
 
           var credito = Creditos.findOne({_id:pago.credito_id});
 	        pago.verCargo = true;
@@ -379,6 +390,8 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
         _.each(creditos, function(credito) {
           credito.planPagos = PlanPagos.find({ credito_id: credito._id }, { sort: { numeroPago: -1 } }).fetch();
           credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
+				
+           
         })
       }
 

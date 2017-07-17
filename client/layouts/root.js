@@ -10,6 +10,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	this.referencias = [];
 	this.hoy = new Date();
 	this.caja = {};
+	this.nombreCliente = "";
 	//var cmd = require('node-cmd');
 	
 	
@@ -27,12 +28,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		}
 		else if (this.getReactively("buscar.nombre").length  == 0 )
 			this.buscando = false;		
-  });
-
-
-
-	
-  
+  });  
   	this.helpers({
 		clientesRoot : () => {
 			var clientes = Meteor.users.find({
@@ -46,6 +42,17 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 					cliente.profile.creditos = Creditos.find({cliente_id : cliente._id, estatus : 4}).fetch();
 				})
 			}
+						
+			return clientes;
+			
+		},
+		clienteUsuario: () => {
+			var clientes = Meteor.users.find().fetch()
+			_.each(clientes, function(cliente){
+				root.nombreCliente = cliente.profile.nombreCompleto
+
+			});
+			console.log(clientes)
 						
 			return clientes;
 			
