@@ -52,7 +52,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 				root.nombreCliente = cliente.profile.nombreCompleto
 
 			});
-			console.log(clientes)
+			//console.log(clientes)
 						
 			return clientes;
 			

@@ -44,7 +44,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.puedeSolicitar = true
 	
 	this.subscribe("ocupaciones",()=>{
-		return [{_id : this.getReactively("ocupacion_id"), estatus : true }]
+		return [{ estatus : true }]
 	});
 	this.subscribe('cliente', () => {
 		return [{_id : $stateParams.objeto_id}];
@@ -354,14 +354,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			}		
 		},
 		
-		ocupaciones : () => {
+		//ocupaciones : () => {
 /*
 			if(this.getReactively("creditos")){
 				this.creditos_id = _.pluck(rc.creditos, "_id");
 			}
 */
-			return Ocupaciones.find();
-		},
+		// 	return Ocupaciones.find();
+		// },
 		planPagos : () => {
 			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:-1}}).fetch();
 			

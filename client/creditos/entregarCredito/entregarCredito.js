@@ -14,6 +14,7 @@ angular.module("creditoMio")
 	
 	rc.cliente = {};
 	rc.cliente._id = "" ;
+	rc.datosCliente = ""
 	//this.credito.primerAbono = new Date();
 	
 	this.subscribe('tiposIngreso',()=>{
@@ -34,6 +35,9 @@ angular.module("creditoMio")
 	});
 	this.subscribe('cuentas',()=>{
 		return [{estatus : 1}]
+	});
+	this.subscribe('personas',()=>{
+		return [{rol : "Cliente"}]
 	});
 	this.validar={};
 
@@ -61,9 +65,11 @@ angular.module("creditoMio")
 		},
 		credito : () => {
 			var c = Creditos.findOne({_id:$stateParams.credito_id}); 
+			console.log(c,"credito")
 			
 			if (c != undefined)
 			{		
+
 					rc.cliente._id = c.cliente_id;
 					if (c.folio)
 						  this.verDiaPago = false;
@@ -352,10 +358,24 @@ angular.module("creditoMio")
 		  // }
 	  };	
 
-	  this.imprimirContrato = function(contrato){
-	  	console.log("contrato",contrato)
+	  this.imprimirContrato = function(contrato,cliente){
+	  	console.log("contrato y persona",contrato,cliente)
+	  		    Meteor.call('getPeople',cliente._id, function(error, result){           					
+									if (result)
+										//console.log(result,"caraculo")
+									{
+					
+										console.log("result",result);
+											
+										rc.datosCliente = result
+										$scope.$apply();			
+									}
+				
+		            });
+	  		    console.log("clientttt",contrato)
+           
 
-	  		Meteor.call('contratos', contrato, $stateParams.credito_id, function(error, response) {
+	  		Meteor.call('contratos', contrato, $stateParams.credito_id,rc.datosCliente, function(error, response) {
 				   if(error)
 				   {
 					    console.log('ERROR :', error);
@@ -363,6 +383,8 @@ angular.module("creditoMio")
 				   }
 				   else
 				   {
+
+				   		console.log(rc.datosCliente,"el clientaso")
 					   
 			 				function b64toBlob(b64Data, contentType, sliceSize) {
 								  contentType = contentType || '';
