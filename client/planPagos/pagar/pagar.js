@@ -351,6 +351,17 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 			rc.cargosMoratorios = 0;
 			
 			_.each(pp, function(pago) {
+				pago.credito = Creditos.findOne(pago.credito_id);
+				 if(pago.credito.folio % 2 == 0)
+	            {
+	              
+	              pago.tipoPar = "par"
+	            }
+	            else
+	            {
+	              
+	              pago.tipoPar = "impar"
+	            }
 
           var credito = Creditos.findOne({_id:pago.credito_id});
 	        pago.verCargo = true;
@@ -379,6 +390,8 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
         _.each(creditos, function(credito) {
           credito.planPagos = PlanPagos.find({ credito_id: credito._id }, { sort: { numeroPago: -1 } }).fetch();
           credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
+				
+           
         })
       }
 
@@ -467,7 +480,8 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		        p.pagoSeleccionado = false;
 		      }
 		      if (pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago <= pago.numeroPago && p.estatus != 1) {
-		        p.importepagado = p.importeRegular;
+			      p.importeRegular = Number(p.importeRegular).toFixed(2);
+		        p.importepagado = parseFloat(p.importeRegular);
 		        p.pagoSeleccionado = true;
 		      }
 		      if (p.pagoSeleccionado != undefined) {
@@ -485,7 +499,8 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 			if (p.verCargo)
 	    {	    
 	      if (pago.credito_id == p.credito_id && p.numeroPago < pago.numeroPago && p.estatus != 1) {
-	        p.importepagado = p.importeRegular;
+		      p.importeRegular = Number(p.importeRegular).toFixed(2);
+	        p.importepagado = parseFloat(p.importeRegular);
 	        p.pagoSeleccionado = true;
 	        p.estatus = 0;
 	      }
@@ -493,7 +508,10 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	        p.estatus = 0;
 	        p.pagoSeleccionado = true;
 	        if (p.importepagado > p.importeRegular)
-	          p.importepagado = p.importeRegular
+	        {
+	         	p.importeRegular = Number(p.importeRegular).toFixed(2);
+	          p.importepagado = parseFloat(p.importeRegular);
+	        }  
 	        if (p.importepagado <= 0 || !p.importepagado || isNaN(p.importepagado)) {
 	          //p.importepagado = 0
 	          p.pagoSeleccionado = false;

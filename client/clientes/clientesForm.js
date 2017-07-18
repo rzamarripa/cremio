@@ -19,12 +19,14 @@ angular.module("creditoMio")
   rc.otrafoto = ""
   rc.folio = "";
   rc.imagen = "";
+  $(".js-example-basic-single").select2();
   
   this.pais_id = "";
   this.estado_id = "";
   this.municipio_id = "";
   this.ciudad_id = "";
   this.empresa_id = "";
+  rc.ocupacionSeleccionado = ""
   
   this.con = 0;
   this.num = 0;
@@ -626,6 +628,10 @@ this.tomarFoto = function(objeto){
   this.agregarDoc = function(doc,imagen)
   {
     console.log("imagen",imagen)
+    if (imagen == false) {
+       toastr.error("Ninguna imagen agregada");
+
+    }else{
     if (doc == undefined) {
       toastr.error("Ningun documento agregado");
 
@@ -644,7 +650,8 @@ this.tomarFoto = function(objeto){
 
     });
     console.log(imagen,"programador estrella");
-     }         
+     }  
+    }       
   };
 
     this.actDoc = function(doc,imagen)
@@ -710,5 +717,12 @@ this.tomarFoto = function(objeto){
   {
       this.cambiarContrasena = !this.cambiarContrasena; 
   }
+
+    this.getOcupaciones= function(ocupacion_id)
+  {
+    console.log(ocupacion_id);
+    rc.ocupacionSeleccionado = Ocupaciones.findOne(ocupacion_id);
+    
+  };
   
 };

@@ -365,4 +365,13 @@ Meteor.methods({
 	  var credito = Creditos.findOne({"_id" : credito_id});
 		return credito;
 	},
+	validarCreditosSaldoEnMultas: function (cliente_id) {	
+	  var creditos = Creditos.find({cliente_id : cliente_id}).fetch();
+	  var ban = true;
+	  _.each(creditos, function(c){
+		  	if (c.saldoMultas > 0)
+		  			ban = false;
+	  });	  
+		return ban;
+	},
 });

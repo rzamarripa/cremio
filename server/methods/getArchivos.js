@@ -233,6 +233,16 @@ Meteor.methods({
 			//console.log("esta es la referencia",referencia)
 			return referencia;
 	},
+	getPeople: function (idReferencia) {
+			var persona = Meteor.users.findOne(idReferencia);
+				_.each(persona, function(objeto){
+					objeto.nacionalidadCliente = Nacionalidades.findOne(objeto.nacionalidad_id);
+
+
+				});
+			//console.log("esta es la referencia",referencia)
+			return persona;
+	},
 	// getEmpresas: function (idEmpresa) {
 	// 		//console.log('hi');
 	// 		Meteor.apply('findSomeShit',['Empresas', {_id: idEmpresa}, true], function(err, empresa){
@@ -896,10 +906,20 @@ diato;
     return new Buffer(bitmap).toString('base64');
 		
   },
-  contratos: function (contrato,credito) {
+  contratos: function (contrato,credito,cliente) {
+  
+  	_.each(cliente,function(c)
+    	{
+    		if (cliente.nacionalidadCliente) {
+    			c.nacionalidad = c.nacionalidadCliente.nombre
+    		}
+    		
+    	});
+  		console.log(cliente,"cliente")
   	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
 	
-		console.log(contrato,"contratos ")
+		//
+		//console.log(contrato,"contratos ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -925,6 +945,7 @@ diato;
 	 
 	    
 	  		doc.setData({			items: 	   contrato,
+	  								cliente:  cliente,
 									fecha:     fecha,
 											
 													
@@ -1042,7 +1063,7 @@ diato;
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		////var produccion = "/home/cremio/archivos/";
+		//var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				var content = fs				

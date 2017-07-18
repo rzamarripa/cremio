@@ -9,36 +9,24 @@ function VerificacionVecinoCtrl($scope, $meteor, $reactive,  $state, $stateParam
 	
 	this.action = true;
   rc.objeto = {};
-	
-/*
-	
+  
+
+	if ($stateParams.verificacion_id == "-1")
+		 this.action = true;
+	else
+		 this.action = false;		 	
+
+		
 	this.subscribe('verificaciones',()=>{
-			return [{credito_id : $stateParams.id }]
+			return [{_id : $stateParams.verificacion_id }]
 	});
-	
-	
-	this.subscribe('creditos',()=>{
-			return [{_id : $stateParams.id }]
-	});
-	
+		
   this.helpers({
 	  verificaciones : () => {
-		  
-		  rc.objeto = Verificaciones.findOne();
-		  if (rc.objeto != undefined)
-		  {
-				  if (rc.objeto.tipoGarantia == "general")
-				  	 this.garantiasGeneral = angular.copy(rc.objeto.garantias);
-				  else if (rc.objeto.tipoGarantia == "mobiliario")	 
-				  	 this.garantias = angular.copy(rc.objeto.garantias); 
-		  }
+		  		rc.objeto = Verificaciones.findOne();
+			return rc.objeto;	  
 	  }, 
-	  creditos : () => {
-			return Creditos.find().fetch();
-		},
   });
-*/
-
   
   this.guardar = function(obj, form)
 	{	
@@ -59,11 +47,35 @@ function VerificacionVecinoCtrl($scope, $meteor, $reactive,  $state, $stateParam
 			toastr.success('Guardado correctamente.');
 			this.objeto = {}; 
 			$('.collapse').collapse('hide');
-			this.nuevo = true;
+
 			form.$setPristine();
 	    form.$setUntouched();
 	    $state.go('root.panelVerificador');
 			
 	}
+	
+	this.actualizar = function(obj, form)
+	{	
+			
+			if(form.$invalid){
+		        toastr.error('Error al guardar los datos.');
+		        return;
+		  }
+		  
+			var idTemp = obj._id;
+			delete obj._id;		
+			obj.usuarioActualizo = Meteor.userId(); 
+			Verificaciones.update({_id:idTemp},{$set : obj});
+														
+			toastr.success('Actualizado correctamente.');
+			this.obj = {}; 
+			$('.collapse').collapse('hide');
+
+			form.$setPristine();
+	    form.$setUntouched();
+	    $state.go('root.panelVerificador');
+			
+	}
+	
     
 };

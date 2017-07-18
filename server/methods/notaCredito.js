@@ -86,10 +86,11 @@ Meteor.methods({
 	deprecarNotasDeCredito : function(){
 		var fecha = new Date();
 		fecha = new Date(fecha.getFullYear(),fecha.getMonth(),fecha.getDate(),0,0,0,0);
-		var notas =  NotasCredito.find({estatus:1,vigencia:{$gt:fecha}}).fetch();
-
+		var notas =  NotasCredito.find({estatus:1,vigencia:{$lt:fecha}}).fetch();
+		
+		console.log(notas);
 		_.each(notas,function(nota){
-			var usuario = Meteor.users.findOne(notas.cliente_id);
+			var usuario = Meteor.users.findOne(nota.cliente_id);
 			usuario.profile.notasCredito.saldo -= nota.saldo;
 			//nota.saldo = 0;
 			nota.estatus = 2;

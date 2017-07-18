@@ -7,12 +7,19 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	
 	window = rc;
 	
-  //this.action = true;
+	rc.creditoSeleccionado = "";
+	rc.objeto = {};
+	rc.objeto.evaluacion = "";
+	rc.objeto.indicacion = "";
+	rc.verificacionesHechas = [];
+	rc.conVecino = 0;
+	rc.conSolicitanteAval = 0;
+	
+  
 	let Cred = this.subscribe('creditos',()=>{
 			return [{requiereVerificacion : true , estatus: 0}]
 	});
-		
-		
+					
   this.helpers({
 	  creditos : () => {
 		  return Creditos.find();
@@ -20,8 +27,8 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	  datosCreditos : () => {
 			if(Cred.ready()){
 				_.each(rc.creditos, function(credito){
-					console.log(credito,"sdsdddddsd")
-					
+					//console.log(credito,"sdsdddddsd")
+
 						var cliente = {};
 						Meteor.call('getUsuario', credito.cliente_id, function(error, result) {
 						   if(error)
@@ -37,7 +44,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 							 }
 						});
 						
-						Meteor.call('getVerificacion', credito.cliente_id, function(error, result) {
+						Meteor.call('getVerificacionesCredito', credito._id, function(error, result) {
 						   if(error)
 						   {
 							    console.log('ERROR :', error);
@@ -45,24 +52,78 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 						   }
 						   if(result)
 						   {	
-								 		cliente = result;
-										credito.nombreCliente = cliente.nombreCompleto;
-										$scope.$apply();
+								 		_.each(result, function(v){
+									 			v.nombreCliente = credito.nombreCliente;
+									 			rc.verificacionesHechas.push(v);
+								 		});
+								 		$scope.$apply();
 							 }
 						});
-						
-						
-						
 				})
 			}
 	  }
   });
   
-  
-  this.finalizarVerificacion = function(credito_id, tipo)
+  this.mostrarEvaluacion = function(credito_id)
 	{
+			rc.creditoSeleccionado = credito_id;
+			$("#modalEvaluarVerificacion").modal('show');	
+	}	
+  
+  this.finalizarVerificacion = function(objeto)
+	{
+			
+			if (objeto == undefined)
+					return;	
+			if (objeto.evaluacion == undefined || objeto.indicacion == undefined)
+					return;		
+			if (objeto.evaluacion == "" || objeto.indicacion == "")
+			{
+					toastr.error('faltan datos por llenar.');	
+					return;	
+			}
+			//Validar que el credito tengo las dos verifiaciones antes de guardar la verificación
+			
+			rc.conVecino = 0;
+			rc.conSolicitanteAval = 0;
+			Meteor.call('getVerificacionesCredito', rc.creditoSeleccionado, function(error, result) {
+				   if(error)
+				   {
+					    console.log('ERROR :', error);
+					    return;
+				   }
+				   if(result)
+				   {	
+						 		_.each(result, function(v){
 
-			Creditos.update({_id:credito_id}, {$set: {estatus: 1, verificacionEstatus: tipo}});
+							 			if (v.tipoVerificacion == "vecino")
+							 			{
+							 					rc.conVecino +=  1;
+							 			}		
+							 			if (v.tipoVerificacion == "solicitante o aval")
+							 			{
+							 					rc.conSolicitanteAval += 1;		
+							 			}
+						 		});
+
+						 		if (rc.conVecino == 0 || rc.conSolicitanteAval == 0)
+								{
+										toastr.warning('El crédito no tiene las suficientes verificaciones para finalizar la verficación');	
+										return;	
+								}
+								else
+								{
+									 
+									 Creditos.update({_id:rc.creditoSeleccionado}, {$set: {estatus: 1, verificacionEstatus: objeto.evaluacion, indicacion: objeto.indicacion}});
+									 rc.verificacionesHechas = _.reject(rc.verificacionesHechas, function(d){ return d.credito_id === rc.creditoSeleccionado; });
+									 
+								}
+						 		
+					 }
+			});		 	
+			
+			$("#modalEvaluarVerificacion").modal('hide');
+			
 			
 	};
   

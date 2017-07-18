@@ -10,7 +10,14 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 	rc.credito = {};
 	rc.sucursal = {};
 	rc.cajero = {};
+	rc.tipoIngreso = {};
+	
 	window.rc = rc;
+	
+	this.subscribe('tiposIngreso',()=>{
+		return [{}]
+	});
+		
 	this.subscribe('pagos',()=>{
 		return [{
 			_id : $stateParams.pago_id
@@ -19,7 +26,9 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 	{
 		onReady: function () {
 			rc.pago = Pagos.findOne($stateParams.pago_id);
+			rc.tipoIngreso = TiposIngreso.findOne(rc.pago.tipoIngreso_id);
 			rc.pago = rc.pago? rc.pago:{};
+
 
 			Meteor.call('datosCliente', rc.pago.usuario_id ,function(err, res){
 				rc.cliente = res;
@@ -28,7 +37,7 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 			Meteor.call('getCredito', rc.pago.credito_id ,function(err, res){
 				rc.credito = res;
 			});
-
+				
 			rc.subscribe('cajas',()=>{
 				return[{
 					_id : rc.pago.caja_id? rc.pago.caja_id:""

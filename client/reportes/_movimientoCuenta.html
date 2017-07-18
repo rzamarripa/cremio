@@ -8,8 +8,19 @@
 	</div>
 
 </div>
+	  <div class="">
+				<ul id="sparks" class="">
+					<li class="sparks-info">
+						<h5>Total Capital <span class="txt-color-green" style="text-align: right">{{re.sumaCapital | currency}}</span></h5>
+					<li class="sparks-info">
+						<h5>Total Intereses <span class="txt-color-red" style="text-align: right">{{re.sumaInteres | currency}}</span></h5>
+					<li class="sparks-info">
+						<h5>total IVA <span class="txt-color-green" style="text-align: right">{{re.sumaIva | currency}}</span></h5>
+					<li class="sparks-info">
+						<h5>Total Cobranza <span class="txt-color-red" style="text-align: right">{{re.totalCobranza | currency}}</span></h5>
+				</ul>
+		</div>
 <br>
-
 <div class="well">
 	<div class="row">
 		<div class="col-sm-3">
@@ -47,6 +58,7 @@
 					<th><div class="text-center">Recibo</div></th>
 				<!-- 	<th><div class="text-center">Cliente</div></th> -->
 					<th><div class="text-center">Nombre</div></th>
+					<th><div class="text-center">Forma de pago</div></th>
 					<th><div class="text-center">Garantia</div></th>
 					<th><div class="text-center">Saldo Multas</div></th>
 				
@@ -59,6 +71,7 @@
 			    <td><div class="text-center">{{objeto.ultimaModificacion  | date:"dd-MM-yyyy"}}</div></td>
 			    <td><div class="text-center">{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</div></td>
 			    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
+			     <td><div class="pull-right">{{objeto.tipoIngreso.nombre}}</div></td><td><div class="text-center">{{objeto.movimiento}}</div></td>
 			    <td><div class="text-center">{{objeto.garantias}}</div></td>
 			    <td><div class="pull-right">{{objeto.credito.saldoMultas | currency}}</div></td> 
 			
