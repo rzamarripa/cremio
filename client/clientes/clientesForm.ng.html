@@ -1,629 +1,514 @@
 <div class="row">
-	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
-		<h2 class="page-title txt-color-blueDark">
-			<i class="fa fa-pencil-square-o fa-fw"></i> 
-				Asistente de Registro de Clientes
-		</h2>
-	</div>
-</div>
-<div class="row">
-	<div ng-show="!cli.action">
-			<a  ui-sref="root.clienteDetalle({objeto_id: cli.objeto_id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
-	</div>
 	<div class="col-sm-12">
-		<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" role="widget">
-			
-			<header role="heading">
-				<span class="widget-icon"> <i class="fa fa-check"></i> </span>
-				<h2>Proceso de Alta de Clientes </h2>
-	
-			<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-	
-			<div role="content">
-	
-				<div class="jarviswidget-editbox">
-	
+		<form name="form" class="form-horizontal" role="form" novalidate>		
+			<div ng-show="!cli.action">
+					<a  ui-sref="root.clienteDetalle({objeto_id: cli.objeto_id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
+			</div>
+			<br><br>
+			<h4>Información del Cliente</h4>
+			<div class="well">	    
+				<div class="row">
+					<div class="col-sm-12"> 
+						<label>Buscar Prospecto con Nombre (s) *</label>
+						<div ng-include=" 'client/clientes/_buscarPersonaCliente.html'"></div>
+					</div>
 				</div>
-
-				<div class="widget-body fuelux">
-						<div class="wizard">
-								<ul class="steps">
-									<li class="active" data-target="#step1">
-										<a href="#step1" data-toggle="tab"> <span class="badge badge-info">1</span> <span class="title">Información del Cliente</span></a>
-									</li>
-									<li data-target="#step2">
-										<a href="#step2" data-toggle="tab"> <span class="badge badge-info">2</span> <span class="title">Documentos</span></a>
-									</li>
-									<li data-target="#step3">
-										<a href="#step3" data-toggle="tab"> <span class="badge badge-info">3</span> <span class="title">Información de Contacto</span></a>
-									</li>
-									<li data-target="#step4">
-										<a href="#step4" data-toggle="tab"> <span class="badge badge-info">4</span> <span class="title">Particulares</span></a>
-									</li>
-									<li data-target="#step5">
-										<a href="#step5" data-toggle="tab"> <span class="badge badge-info">5</span> <span class="title">Dirección</span></a>
-									</li>
-									<li data-target="#step6">
-										<a href="#step6" data-toggle="tab"> <span class="badge badge-info">6</span> <span class="title">Ingresos Mensuales</span></a>
-									</li>
-									<li data-target="#step7">
-										<a href="#step7" data-toggle="tab"> <span class="badge badge-info">7</span> <span class="title">Información del Cónyuge</span></a>
-									</li>
-									<li data-target="#step8">
-										<a href="#step8" data-toggle="tab"> <span class="badge badge-info">8</span> <span class="title">Referencias Personales</span></a>
-									</li>
-									<li data-target="#step9">
-										<a href="#step9" data-toggle="tab"> <span class="badge badge-info">9</span> <span class="title">Empresa</span></a>
-									</li>
-									<li data-target="#step10">
-										<a href="#step10" data-toggle="tab"> <span class="badge badge-info">10</span> <span class="title">Finalizar Registro</span></a>
-									</li>
-								</ul>
-								<div class="actions">
-									<button type="button" class="btn btn-sm btn-primary btn-prev" disabled="disabled">
-										<i class="fa fa-arrow-left"></i>
-									</button>
-									<button type="button" class="btn btn-sm btn-success btn-next" data-last="Finish"><i class="fa fa-arrow-right"></i></button>
-								</div>
-							</div>
-							<div class="step-content">
-								<form name="form" class="form-horizontal" role="form" novalidate>
-									<div class="step-pane active" id="step1">
-										<br>
-										<h3><strong>Paso 1 </strong> - Información del Cliente</h3>
-										<div class="row">
-											<div class="col-sm-12"> 
-												<label>Buscar Prospecto con Nombre (s) *</label>
-												<div ng-include=" 'client/clientes/_buscarPersonaCliente.html'"></div>
-											</div>
-										</div>
-										<br> 
-										<div class="row">	
-											<div class="col-sm-4" valida> 					    
-												<label>Nombre (s) *</label>
-												<input name="nombre" e type="text" class="form-control" placeholder="Nombre" ng-model="cli.objeto.profile.nombre" required  capitalize>
-											</div>
-											<div class="col-sm-4" valida>					    
-												<label>Apellido Paterno *</label>
-												<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cli.objeto.profile.apellidoPaterno" required capitalize>
-											</div>
-											<div class="col-sm-4">					    
-												<label>Apellido Materno</label>
-												<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cli.objeto.profile.apellidoMaterno" capitalize>
-											</div>	    				    	    
-										</div>
-										<div class="row" ng-if="!cli.action">
-											<div class="col-sm-4" valida> 					    
-												<label>Usuario *</label>
-												<input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="cli.objeto.username" required="" disabled="true">
-											</div>
-											<div class="col-sm-4" valida>					    
-												<label>Contraseña *</label>
-												<input name="contrasena" type="password" class="form-control" placeholder="Contraseña" ng-model="cli.objeto.password" required="">
-											</div>		    				    	    
-											<div class="col-sm-4" valida>					    
-												<label>Confirmar Contraseña *</label>
-												<input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="cli.objeto.confirmpassword" required="">
-											</div>
-										</div>
-										<br/>
-										<div class="row">
-										  <div class="col-sm-1">
-												<label for="talla">Foto</label>
-												<button class="btn btn-primary" ng-model="cli.objeto.foto" ng-click="cli.tomarFoto()"><i class="fa fa-camera"></i></button>
-											</div>
-											<div class="col-sm-3" >
-												<br/>
-												<img width="300px" ng-if="cli.pic == cli.fotillo"   ng-src="{{cli.pic}}" ng-class="{'img-thumbnail': !!cli.pic}" />
-											</div>
-										</div>  
-									</div>
-									<div class="step-pane" id="step2">
-										<br>
-										<h3><strong>Paso 2</strong> - Documentos</h3>
-										<div class="well">
-												<div class="row">
-													<div class="col-sm-4" >
-														<label>Archivo (máximo 512Kb)</label>
-														<input name="archivo" type="file" id="fileInput1">
-												  </div>
-													<div class="col-sm-4">
-														<label id="id_label_single">Seleccionar Documento</label>
-														<select class="js-example-basic-single js-states form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.objeto.profile.documento_id"
-														ng-change="cli.getClientes(cli.objeto.profile.documento_id)">
-															<option ng-repeat="documento in cli.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
-														</select>
-													</div>
-													<div class="col-sm-2"><br/>
-														<a href="" class="btn btn-primary" ng-click="cli.agregarDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="!cli.objeto._id">Agregar</a>
-														<a href="" class="btn btn-primary" ng-click="cli.actDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="cli.objeto._id">Agregar</a>
-													</div>
-												</div>
-												<br/>
-												<div class="row">
-													<div class="col-sm-12">
-														<table class="table table-bordered">
-															<thead>
-																<tr>
-																	<th width="5%"><div class="text-center"> No.</div></th>
-																	<th width="40%"><div class="text-center">Documento</div></th>
-																	<th width="40%"><div class="text-center">Archivos</div></th>
-																	<th width="15%"><div class="text-center">Acciones</div></th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr ng-repeat="objeto in cli.documents" ng-if="!cli.objeto._id">
-																	<td>{{$index + 1}}</td>
-																	<td>{{objeto.nombre}}</td>
-																	<td class="text-center">
-																		<a href="" ng-click="cli.mostrarModal(objeto.imagen)">Ver Archivo</a>
-																	</td>
-																	<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index)"><i class="fa fa-trash"></i></a></div></td>
-																</tr>
-																<tr ng-repeat="item in cli.objeto.profile.documentos" ng-if="cli.objeto._id">
-																	<td>{{$index + 1}}</td>
-																	<td>{{item.nombre}}</td>
-																	<td class="text-center">
-																		<a href="" ng-click="cli.mostrarModal(item.imagen)">Ver Archivo</a>
-																	</td>
-																	<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index)"><i class="fa fa-trash"></i></a></div></td>
-																</tr>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<div id="myModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-												<div class="modal-dialog modal-lg" role="document">
-													<div id="imagenDiv" class="modal-content">
-													</div>
-											  </div>
-											</div>
-										</div>	
-									<div class="step-pane" id="step3">
-										<br>
-										<h3><strong>Paso 3</strong> - Información de Contacto</h3>
-										<div class="well">	    
-												<div class="row">
-													<div class="col-sm-4" valida> 					    
-														<label>Teléfono Particular *</label>
-														<input name="telefonoParticular" type="text" class="form-control" placeholder="Teléfono Particular" ng-model="cli.objeto.profile.particular" required>
-													</div>
-													<div class="col-sm-4" valida> 					    
-														<label>Teléfono Oficina *</label>
-														<input name="telefonoOficina" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoOficina" required capitalize>
-													</div>
-													<div class="col-sm-4" valida>					    
-														<label>Celular *</label>
-														<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="cli.objeto.profile.celular" required capitalize>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-sm-4">					    
-														<label>Teléfono Alternativo</label>
-														<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cli.objeto.profile.telefonoAlternativo" capitalize>
-													</div>	  
-													<div class="col-sm-4">					    
-														<label>Dueño</label>
-														<input name="otroTelefono" type="text" class="form-control" placeholder="Dueño" ng-model="cli.objeto.profile.duenoAlternativo" capitalize>
-													</div>
-													<div class="col-sm-4">					    
-														<label>Parentesco</label>
-														<input name="otroTelefono" type="text" class="form-control" placeholder="Parentezco" ng-model="cli.objeto.profile.parentescoAlternativo" capitalize>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-sm-4">
-														<label>Correo</label>
-														<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="cli.objeto.profile.correo" capitalize>
-													</div>  
-												</div>  
-											</div>
-									</div>
-									<div class="step-pane" id="step4">
-										<br>
-										<h3><strong>Paso 4</strong> - Particulares</h3>
-										<div class="well">
-											<div class="row">
-												<div class="col-sm-4" valida>
-													<label for="sexo">Sexo *</label>
-													<select name="sexo" ng-model="cli.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" required >
-															<option value=""></option>
-															<option value="Masculino">Masculino</option>
-															<option value="Femenino">Femenino</option>
-													</select>
-												</div>
-												<div class="col-sm-4">
-													<label for="estadocivil">Estado Civil *</label>
-													<!-- 	<select  name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.estadoCivil_id" required> -->
-													<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-change="cli.seleccionarEstadoCivil(cli.objeto.profile.estadoCivil_id)" ng-model="cli.objeto.profile.estadoCivil_id" required>
-														<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in cli.estadosCiviles">
-															{{estadoCivil.nombre}}
-														</option>
-													</select>
-												</div>
-												<div class="col-sm-4">					    
-													<label>Fecha Nacimiento *</label>
-													<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="cli.objeto.profile.fechaNacimiento" required="">
-												</div>	
-											</div>
-											<div class="row">	
-												<div class="col-sm-4">
-													<label for="nacionalidad">Nacionalidad</label>
-													<select name="nacionalidad" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.nacionalidad_id" required>
-														<option  value="{{nacionalidad._id}}" ng-repeat="nacionalidad in cli.nacionalidades">
-															{{nacionalidad.nombre}}
-														</option>
-													</select>
-												</div>	
-												<div class="col-sm-4">					    
-													<label>CURP</label>
-													<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="cli.objeto.profile.curp" capitalize>
-												</div>
-												<div class="col-sm-4">					    
-													<label>RFC</label>
-													<input name="rfc" type="text" class="form-control" placeholder="RFC" ng-model="cli.objeto.profile.rfc" capitalize >
-												</div>
-											</div>
-											<div class="row">
-												
-											  <div class="col-sm-4">					    
-													<label>Lugar de Nacimiento *</label>
-													<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="cli.objeto.profile.lugarNacimiento" capitalize required=""  >
-												</div>
-												<!-- <div class="col-sm-4">
-													<label for="ocupacion">Ocupación *</label>
-													<select name="ocupacion" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.ocupacion_id" required>
-														<option  value="{{ocupacion._id}}" ng-repeat="ocupacion in cli.ocupaciones">
-															{{ocupacion.nombre}}
-														</option>
-													</select>
-												</div> -->
-												<div class="col-sm-4">
+				<br> 
+				<div class="row">	
+					<div class="col-sm-4" valida> 					    
+						<label>Nombre (s) *</label>
+						<input name="nombre" e type="text" class="form-control" placeholder="Nombre" ng-model="cli.objeto.profile.nombre" required  capitalize>
+					</div>
+					<div class="col-sm-4" valida>					    
+						<label>Apellido Paterno *</label>
+						<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cli.objeto.profile.apellidoPaterno" required capitalize>
+					</div>
+					<div class="col-sm-4">					    
+						<label>Apellido Materno</label>
+						<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cli.objeto.profile.apellidoMaterno" capitalize>
+					</div>	    				    	    
+				</div>
+				<div class="row" ng-if="!cli.action">
+					<div class="col-sm-4" valida> 					    
+						<label>Usuario *</label>
+						<input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="cli.objeto.username" required="" disabled="true">
+					</div>
+					<div class="col-sm-4" valida>					    
+						<label>Contraseña *</label>
+						<input name="contrasena" type="password" class="form-control" placeholder="Contraseña" ng-model="cli.objeto.password" required="">
+					</div>		    				    	    
+					<div class="col-sm-4" valida>					    
+						<label>Confirmar Contraseña *</label>
+						<input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="cli.objeto.confirmpassword" required="">
+					</div>
+				</div>
+				<br/>
+				<div class="row">
+				  <div class="col-sm-1">
+						<label for="talla">Foto</label>
+						<button class="btn btn-primary" ng-model="cli.objeto.foto" ng-click="cli.tomarFoto()"><i class="fa fa-camera"></i></button>
+					</div>
+					<div class="col-sm-3" >
+						<br/>
+						<img width="300px" ng-if="cli.pic == cli.fotillo"   ng-src="{{cli.pic}}" ng-class="{'img-thumbnail': !!cli.pic}" />
+					</div>
+				</div>  
+			</div>
+			<h4>Documentos</h4>
+			<div class="well">	    
+				<div class="row">
+					<div class="col-sm-4" >
+						<label>Archivo (máximo 512Kb)</label>
+						<input name="archivo" type="file" id="fileInput1">
+				  </div>
+					<div class="col-sm-4">
+						<label id="id_label_single">Seleccionar Documento</label>
+						<select class="js-example-basic-single js-states form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.objeto.profile.documento_id"
+						ng-change="cli.getClientes(cli.objeto.profile.documento_id)">
+							<option ng-repeat="documento in cli.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
+						</select>
+					</div>
+					<div class="col-sm-2"><br/>
+						<a href="" class="btn btn-primary" ng-click="cli.agregarDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="!cli.objeto._id">Agregar</a>
+						<a href="" class="btn btn-primary" ng-click="cli.actDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="cli.objeto._id">Agregar</a>
+					</div>
+				</div>
+				<br/>
+				<div class="row">
+					<div class="col-sm-12">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th width="5%"><div class="text-center"> No.</div></th>
+									<th width="40%"><div class="text-center">Documento</div></th>
+									<th width="40%"><div class="text-center">Archivos</div></th>
+									<th width="15%"><div class="text-center">Acciones</div></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="objeto in cli.documents" ng-if="!cli.objeto._id">
+									<td>{{$index + 1}}</td>
+									<td>{{objeto.nombre}}</td>
+									<td class="text-center">
+										<a href="" ng-click="cli.mostrarModal(objeto.imagen)">Ver Archivo</a>
+									</td>
+									<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index)"><i class="fa fa-trash"></i></a></div></td>
+								</tr>
+								<tr ng-repeat="item in cli.objeto.profile.documentos" ng-if="cli.objeto._id">
+									<td>{{$index + 1}}</td>
+									<td>{{item.nombre}}</td>
+									<td class="text-center">
+										<a href="" ng-click="cli.mostrarModal(item.imagen)">Ver Archivo</a>
+									</td>
+									<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index)"><i class="fa fa-trash"></i></a></div></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="myModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+				<div class="modal-dialog modal-lg" role="document">
+					<div id="imagenDiv" class="modal-content">
+					</div>
+			  </div>
+			</div>
+			<h4>Información de Contacto</h4>
+			<div class="well">	    
+				<div class="row">
+					<div class="col-sm-4" valida> 					    
+						<label>Teléfono Particular *</label>
+						<input name="telefonoParticular" type="text" class="form-control" placeholder="Teléfono Particular" ng-model="cli.objeto.profile.particular" required>
+					</div>
+					<div class="col-sm-4" valida> 					    
+						<label>Teléfono Oficina *</label>
+						<input name="telefonoOficina" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoOficina" required capitalize>
+					</div>
+					<div class="col-sm-4" valida>					    
+						<label>Celular *</label>
+						<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="cli.objeto.profile.celular" required capitalize>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">					    
+						<label>Teléfono Alternativo</label>
+						<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cli.objeto.profile.telefonoAlternativo" capitalize>
+					</div>	  
+					<div class="col-sm-4">					    
+						<label>Dueño</label>
+						<input name="otroTelefono" type="text" class="form-control" placeholder="Dueño" ng-model="cli.objeto.profile.duenoAlternativo" capitalize>
+					</div>
+					<div class="col-sm-4">					    
+						<label>Parentesco</label>
+						<input name="otroTelefono" type="text" class="form-control" placeholder="Parentezco" ng-model="cli.objeto.profile.parentescoAlternativo" capitalize>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<label>Correo</label>
+						<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="cli.objeto.profile.correo" capitalize>
+					</div>  
+				</div>  
+			</div>
+			<h4>Particulares</h4>
+			<div class="well">
+				<div class="row">
+					<div class="col-sm-4" valida>
+						<label for="sexo">Sexo *</label>
+						<select name="sexo" ng-model="cli.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" required >
+								<option value=""></option>
+								<option value="Masculino">Masculino</option>
+								<option value="Femenino">Femenino</option>
+						</select>
+					</div>
+					<div class="col-sm-4">
+						<label for="estadocivil">Estado Civil *</label>
+						<!-- 	<select  name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.estadoCivil_id" required> -->
+						<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-change="cli.seleccionarEstadoCivil(cli.objeto.profile.estadoCivil_id)" ng-model="cli.objeto.profile.estadoCivil_id" required>
+							<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in cli.estadosCiviles">
+								{{estadoCivil.nombre}}
+							</option>
+						</select>
+					</div>
+					<div class="col-sm-4">					    
+						<label>Fecha Nacimiento *</label>
+						<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="cli.objeto.profile.fechaNacimiento" required="">
+					</div>	
+				</div>
+				<div class="row">	
+					<div class="col-sm-4">
+						<label for="nacionalidad">Nacionalidad</label>
+						<select name="nacionalidad" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.nacionalidad_id" required>
+							<option  value="{{nacionalidad._id}}" ng-repeat="nacionalidad in cli.nacionalidades">
+								{{nacionalidad.nombre}}
+							</option>
+						</select>
+					</div>	
+					<div class="col-sm-4">					    
+						<label>CURP</label>
+						<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="cli.objeto.profile.curp" capitalize>
+					</div>
+					<div class="col-sm-4">					    
+						<label>RFC</label>
+						<input name="rfc" type="text" class="form-control" placeholder="RFC" ng-model="cli.objeto.profile.rfc" capitalize >
+					</div>
+				</div>
+				<div class="row">
+					
+				  <div class="col-sm-4">					    
+						<label>Lugar de Nacimiento *</label>
+						<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="cli.objeto.profile.lugarNacimiento" capitalize required="" >
+					</div>
+						<div class="col-sm-4">
 							<label for="id_label_single" >Ocupaciones *</label>
 							
-                 <select  ng-options="ocupacion._id as ocupacion.nombre for ocupacion in cli.ocupaciones" 
+                			 <select  ng-options="ocupacion._id as ocupacion.nombre for ocupacion in cli.ocupaciones" 
              				ng-model="cli.objeto.profile.ocupacion_id" class="js-example-basic-single js-states form-control" placeholder="Seleccione" ng-change="cli.getOcupaciones(cli.ocupacionSeleccionado._id)" style="width: 300px;" ></select>
 
 						</div>
-												<div class="col-sm-4">
-													<br/>
-													<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-ocupacion-modal-lg">Crear Ocupación</button>
-												</div>
-											</div>
-										</div>  
-									</div>
-									<div class="step-pane" id="step5">
-										<br>
-										<h3><strong>Paso 5</strong> - Dirección</h3>
-										<div class="well">
-											<div class="row">
-												<div class="col-sm-4" valida>					    
-													<label>Calle *</label>
-													<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="cli.objeto.profile.calle" required="" capitalize>
-												</div>
-												<div class="col-sm-4" valida>					    
-													<label>Numero *</label>
-													<input name="numero" type="number" class="form-control" placeholder="Número" ng-model="cli.objeto.profile.numero" required="">
-												</div>
-												<div class="col-sm-4" valida>					    
-													<label>CP *</label>
-													<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="cli.objeto.profile.codigoPostal" required="">
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-sm-4" valida>
-													<label >Pais *</label>
-													<select name="dirPais" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.pais_id" required ng-change="cli.cambiarPaisObjeto()">
-														<option  value="{{pais._id}}" ng-repeat="pais in cli.paises">{{pais.nombre}}</option>
-													</select>
-												</div>
-												<div class="col-sm-4" valida>
-													<label for="seccion_id">Estado *</label>
-													<select name="dirEstado" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.estado_id" required ng-change="cli.cambiarEstadoObjeto()">
-														<option ng-repeat="estado in cli.estados" value="{{estado._id}}">{{estado.nombre}}</option>
-													</select>
-												</div>	
-												<div class="col-sm-4" valida>
-													<label >Municipio *</label>
-													<select name="dirMunicipio" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.municipio_id" required ng-change="cli.cambiarMunicipioObjeto()">
-														<option  value="{{municipio._id}}" ng-repeat="municipio in cli.municipios">{{municipio.nombre}}</option>
-													</select>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-sm-4" valida>
-													<label for="seccion_id">Ciudad *</label>
-													<select name="dirCiudad" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.ciudad_id" required ng-change="cli.cambiarCiudadObjeto()">
-														<option ng-repeat="ciudad in cli.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
-													</select>
-												</div>	
-												<div class="col-sm-4" valida>
-													<label for="seccion_id">Colonia *</label>
-													<select name="dirColonia" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.colonia_id" required>
-														<option ng-repeat="colonia in cli.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
-													</select>
-												</div>
-												<div class="col-sm-4">					    
-													<label>Tiempo Residencia</label>
-													<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="cli.objeto.profile.tiempoResdencia" capitalize>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-sm-4">
-													  <label for="casa">Casa</label>
-														<input name="casa" type="input" class="form-control" ng-model="cli.objeto.profile.casa">
-													</div>
-												<div class="col-sm-4">					    
-													<label>Renta</label>
-													<input name="renta" type="checkbox" class="form-control" ng-model="cli.objeto.profile.renta">
-												</div>
-												<div class="col-sm-4" ng-if="cli.objeto.profile.renta">					    
-													<label>Renta Mes </label>
-													<input name="rentaMes" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="cli.objeto.profile.rentaMes">
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-sm-12">					    
-													<label>Señas Particulares</label>
-													<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="cli.objeto.profile.senasParticulares" capitalize>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="step-pane" id="step6">
-										<br>
-										<h3><strong>Paso 6</strong> - Ingresos Mensuales</h3>
-										<div class="well">	    
-										<div class="row">
-											<div class="col-sm-4" valida> 					    
-												<label>Ingresos Personales</label>
-												<input name="ingresosPersonales" type="number" class="form-control" placeholder="Ingresos Personales" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.ingresosPersonales" value="0">
-											</div>
-											<div class="col-sm-4" valida>					    
-												<label>Ingresos Cónyuge</label>
-												<input name="ingresosConyuge" type="number" class="form-control" placeholder="Ingresos Conyuge" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.ingresosConyuge">
-											</div>
-											<div class="col-sm-4">					    
-												<label>Otros Ingresos</label>
-												<input name="otrosIngresos" type="number" class="form-control" placeholder="Otros Ingresos" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.otrosIngresos" >
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-4">
-												<label>Total Ingresos</label>
-												<input name="totalIngresos" type="number" class="form-control" placeholder="Total Ingresos" ng-model="cli.objeto.profile.totalIngresos" disabled="" >
-											</div>  				    	    
-											<div class="col-sm-4" valida> 					    
-												<label>Gastos Fijos</label>
-												<input name="gastosFijos" type="number" class="form-control" placeholder="Gastos Fijos" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.gastosFijos">
-											</div>
-											<div class="col-sm-4" valida>					    
-												<label>Gastos Eventuales</label>
-												<input name="gastosEventuales" type="number" class="form-control" placeholder="Gastos Eventuales" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.gastosEventuales">
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-4">					    
-												<label>Total Gastos</label>
-												<input name="totalGastos" type="number" class="form-control" placeholder="Total Gastos" ng-model="cli.objeto.profile.totalGastos" disabled="">
-											</div>	  
-											<div class="col-sm-4">					    
-												<label>Resultado Neto</label>
-												<input name="resultadoNeto" type="number" class="form-control" placeholder="Resultado Neto" ng-model="cli.objeto.profile.resultadoNeto" disabled="">
-											</div>  				    	    
-										</div>
-									</div>
-									</div>
-									<div class="step-pane" id="step7">
-										<br>
-										<h3><strong>Paso 7</strong> - Información del Cónyuge</h3>
-										<div ng-if="cli.estadoCivilSeleccionado.nombre == 'CASADO (A)'">
-											<div class="well">
-												<div class="row">
-													<div class="col-sm-4" valida> 					    
-														<label>Nombre *</label>
-														<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cli.objeto.profile.nombreConyuge" required="" capitalize>
-													</div>
-													<div class="col-sm-4" valida>					    
-														<label>Dirección *</label>
-														<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyuge" required="" capitalize>
-													</div>
-													<div class="col-sm-4" valida>					    
-														<label>Dirección del trabajo *</label>
-														<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyugeTrabajo" required="" capitalize>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-sm-4" valida>					    
-														<label>Puesto *</label>
-														<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cli.objeto.profile.puestoConyuge" required="" capitalize>
-													</div>
-													<div class="col-sm-4" valida>					    
-														<label>Teléfono Particular *</label>
-														<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyuge" required="">
-													</div>
-													<div class="col-sm-4">					    
-														<label>Teléfono del trabajo</label>
-														<input name="telefonoConyugeTrabajo" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyugeTrabajo" >
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-sm-4">					    
-														<label>Ocupación</label>
-														<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cli.objeto.profile.ocupacionConyuge" capitalize>
-													</div>	
-													<div class="col-sm-4">					    
-														<label>Dirección Trabajo</label>
-														<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion" ng-model="cli.objeto.profile.direccionTrabajoConyuge" capitalize>
-													</div>		   				    	    
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="step-pane" id="step8">
-										<br>
-										<h3><strong>Paso 8</strong> - Referencias Personales</h3>
-										<div class="well">
-											<div class="row">
-												<div class="col-sm-12"> 
-													<div ng-include=" 'client/clientes/_buscarPersonaReferencia.html'"></div>
-												</div>
-											</div>
-											<br>
-											<div class="row">
-												<div class="col-sm-4"> 					    
-													<label>Nombre</label>
-													<input name="nombreParentezco" type="text" class="form-control" placeholder="Nombre" ng-model="cli.parentezco.nombre" capitalize>
-												</div>
-												<div class="col-sm-4"> 					    
-													<label>Apellido Paterno</label>
-													<input name="apellidoPaternoParentezco" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cli.parentezco.apellidoPaterno" capitalize>
-												</div>
-												<div class="col-sm-4"> 					    
-													<label>Apellido Materno</label>
-													<input name="apellidoMaternoParentezco" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cli.parentezco.apellidoMaterno" capitalize>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-sm-4">					    
-													<label>Parentesco</label>
-													<input name="parentezco" type="text" class="form-control" placeholder="Parentezco" ng-model="cli.parentezco.parentezco" capitalize>
-												</div>
-												<div class="col-sm-4">					    
-													<label>Dirección</label>
-													<input name="direccionParentezco" type="text" class="form-control" placeholder="Dirección" ng-model="cli.parentezco.direccion" capitalize>
-												</div>
-												<div class="col-sm-4">					    
-													<label>Telefono</label>
-													<input name="telefonoParentezco" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.parentezco.telefono">
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-sm-4">					    
-													<label>Tiempo</label>
-													<input name="tiempoParentezco" type="text" class="form-control" placeholder="Tiempo" ng-model="cli.parentezco.tiempo" capitalize>
-												</div>
-											</div>
-											<br>
-											<div class="row">		
-												<div class="col-sm-3">
-													<input type="button" ng-click="cli.insertarReferencia()" value="Agregar" ng-show="cli.actionReferencia" class="btn btn-primary">
-													<input type="button" ng-click="cli.borrarReferencia()" value="Quitar Referenciado" ng-show="cli.parentezco.persona_id" class="btn btn-warning"> 	
-													<input type="button" ng-click="cli.actualizarReferencia(cli.parentezco)" value="Actualizar" ng-show="!cli.actionReferencia" class="btn btn-primary">
-													<input type="button" ng-click="cli.cancelarReferencia()" value="Cancelar" ng-show="!cli.actionReferencia" class="btn btn-danger">	   				
-												</div>
-											</div>
-											<br>
-											<div class="row">
-												<table class="table table-bordered">
-													<thead>
-														<tr>
-															<th width="5%">No.</th>
-															<th width="30%">Nombre</th>
-															<th width="10%">Parentesco</th>
-															<th width="30%">Dirección</th>
-															<th width="10%">Teléfono</th>
-															<th width="10%">Tiempo</th>
-															<th width="5%">Quitar</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr ng-repeat="p in cli.referenciasPersonales">
-															<td>{{p.num}}</td>
-															<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}}  </td>
-															<td>{{p.parentezco}}</td>
-															<td>{{p.direccion}}</td>
-															<td>{{p.telefono}}</td>
-															<td>{{p.tiempo}}</td>
-															<td>
-																<a href="#" ng-click="cli.quitarReferencia(p.num)"><i class="fa fa-trash"></i></a>
-																<a href="#" ng-click="cli.editarReferencia(p)"><i class="fa fa-pencil"></i></a>
-															</td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-									<div class="step-pane" id="step9">
-										<br>
-										<h3><strong>Paso 9</strong> - Empresa</h3>
-										<div class="well">
-											<div class="row">
-												<div class="col-sm-4">
-													<br />
-													<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-empresa-modal-lg">Crear Empresa</button>
-												</div>
-												<div class="col-sm-4">
-													<br />
-												<!-- 	<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-empresaVer-modal-lg">Ver Empresa</button> -->
-												</div>
-											</div>
-											<br>
-											<div class="row">
-												<div class="col-sm-4" valida>
-													<label for="seccion_id">Empresa *</label>
-													<select name="empresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.empresa_id" required>
-													<option ng-repeat="empresa in cli.empresas" value="{{empresa._id}}">OTRO</option>
-														<option ng-repeat="empresa in cli.empresas" value="{{empresa._id}}">{{empresa.nombre}}</option>
-													</select>
-												</div>
-												<div class="col-sm-4" valida>					    
-													<label>Teléfono *</label>
-													<input name="telefonoEmpresa" type="text" class="form-control" placeholder="Teléfono Empresa" ng-model="cli.objeto.profile.telefonoEmpresa" required="">
-												</div>
-												<div class="col-sm-4" valida>					    
-													<label>Tiempo Laborando *</label>
-													<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="cli.objeto.profile.tiempoLaborando" required="" capitalize>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-sm-4" valida>					    
-													<label>Puesto *</label>
-													<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cli.objeto.profile.puesto" required="" capitalize>
-												</div>
-												<div class="col-sm-4" valida>					    
-													<label>Departamento *</label>
-													<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="cli.objeto.profile.departamento" required="" capitalize>
-												</div>
-												<div class="col-sm-4">					    
-													<label>Jefe Inmediato</label>
-													<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cli.objeto.profile.jefeInmediato" capitalize>
-												</div>
-											</div>
-											<br>
-										</div>
-									</div>
-									<div class="step-pane" id="step10">
-										<div class="row">
-											<div class="col-sm-12">
-												<br>
-												<h3><strong>Paso 10</strong> - Guardar Cliente</h3>
-												<br>
-												<div class="text-center">
-													<h4>Click en Guardar o Actualizar para Finalizar</h4>
-													<br/>
-													<div class="row">
-														<div class="col-sm-12">
-															<input type="submit" ng-click="cli.guardar(cli.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="cli.action" valida-form formulario="form">
-															<input type="submit" ng-click="cli.actualizarForm(cli.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!cli.action" valida-form formulario="form">
-														</div>
-													</div>
-													<br>
-													<br> 	
-												</div>												
-											</div>
-										</div>										
-									</div>	
-								</form>	
-							</div>
+					<div class="col-sm-4">
+						<br/>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-ocupacion-modal-lg">Crear Ocupación</button>
+					</div>
+				</div>
+			</div>  
+			<h4>Dirección</h4>
+			<div class="well">
+				<div class="row">
+					<div class="col-sm-4" valida>					    
+						<label>Calle *</label>
+						<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="cli.objeto.profile.calle" required="" capitalize>
+					</div>
+					<div class="col-sm-4" valida>					    
+						<label>Numero *</label>
+						<input name="numero" type="number" class="form-control" placeholder="Número" ng-model="cli.objeto.profile.numero" required="">
+					</div>
+					<div class="col-sm-4" valida>					    
+						<label>CP *</label>
+						<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="cli.objeto.profile.codigoPostal" required="">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4" valida>
+						<label >Pais *</label>
+						<select name="dirPais" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.pais_id" required ng-change="cli.cambiarPaisObjeto()">
+							<option  value="{{pais._id}}" ng-repeat="pais in cli.paises">{{pais.nombre}}</option>
+						</select>
+					</div>
+					<div class="col-sm-4" valida>
+						<label for="seccion_id">Estado *</label>
+						<select name="dirEstado" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.estado_id" required ng-change="cli.cambiarEstadoObjeto()">
+							<option ng-repeat="estado in cli.estados" value="{{estado._id}}">{{estado.nombre}}</option>
+						</select>
+					</div>	
+					<div class="col-sm-4" valida>
+						<label >Municipio *</label>
+						<select name="dirMunicipio" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.municipio_id" required ng-change="cli.cambiarMunicipioObjeto()">
+							<option  value="{{municipio._id}}" ng-repeat="municipio in cli.municipios">{{municipio.nombre}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4" valida>
+						<label for="seccion_id">Ciudad *</label>
+						<select name="dirCiudad" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.ciudad_id" required ng-change="cli.cambiarCiudadObjeto()">
+							<option ng-repeat="ciudad in cli.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
+						</select>
+					</div>	
+					<div class="col-sm-4" valida>
+						<label for="seccion_id">Colonia *</label>
+						<select name="dirColonia" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.colonia_id" required>
+							<option ng-repeat="colonia in cli.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
+						</select>
+					</div>
+					<div class="col-sm-4">					    
+						<label>Tiempo Residencia</label>
+						<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="cli.objeto.profile.tiempoResdencia" capitalize>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						  <label for="casa">Casa</label>
+							<input name="casa" type="input" class="form-control" ng-model="cli.objeto.profile.casa">
 						</div>
+					<div class="col-sm-4">					    
+						<label>Renta</label>
+						<input name="renta" type="checkbox" class="form-control" ng-model="cli.objeto.profile.renta">
+					</div>
+					<div class="col-sm-4" ng-if="cli.objeto.profile.renta">					    
+						<label>Renta Mes </label>
+						<input name="rentaMes" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="cli.objeto.profile.rentaMes">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">					    
+						<label>Señas Particulares</label>
+						<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="cli.objeto.profile.senasParticulares" capitalize>
+					</div>
+				</div>
 			</div>
-		</div>
+			<h4>Ingresos Mensuales</h4>
+			<div class="well">	    
+				<div class="row">
+					<div class="col-sm-4" valida> 					    
+						<label>Ingresos Personales</label>
+						<input name="ingresosPersonales" type="number" class="form-control" placeholder="Ingresos Personales" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.ingresosPersonales" value="0">
+					</div>
+					<div class="col-sm-4" valida>					    
+						<label>Ingresos Cónyuge</label>
+						<input name="ingresosConyuge" type="number" class="form-control" placeholder="Ingresos Conyuge" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.ingresosConyuge">
+					</div>
+					<div class="col-sm-4">					    
+						<label>Otros Ingresos</label>
+						<input name="otrosIngresos" type="number" class="form-control" placeholder="Otros Ingresos" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.otrosIngresos" >
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<label>Total Ingresos</label>
+						<input name="totalIngresos" type="number" class="form-control" placeholder="Total Ingresos" ng-model="cli.objeto.profile.totalIngresos" disabled="" >
+					</div>  				    	    
+					<div class="col-sm-4" valida> 					    
+						<label>Gastos Fijos</label>
+						<input name="gastosFijos" type="number" class="form-control" placeholder="Gastos Fijos" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.gastosFijos">
+					</div>
+					<div class="col-sm-4" valida>					    
+						<label>Gastos Eventuales</label>
+						<input name="gastosEventuales" type="number" class="form-control" placeholder="Gastos Eventuales" ng-change="cli.calcularTotales()" ng-model="cli.objeto.profile.gastosEventuales">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">					    
+						<label>Total Gastos</label>
+						<input name="totalGastos" type="number" class="form-control" placeholder="Total Gastos" ng-model="cli.objeto.profile.totalGastos" disabled="">
+					</div>	  
+					<div class="col-sm-4">					    
+						<label>Resultado Neto</label>
+						<input name="resultadoNeto" type="number" class="form-control" placeholder="Resultado Neto" ng-model="cli.objeto.profile.resultadoNeto" disabled="">
+					</div>  				    	    
+				</div>
+			</div>
+			<div ng-if="cli.estadoCivilSeleccionado.nombre == 'CASADO (A)'">
+				<h4>Información del Cónyuge</h4 >
+				<div class="well">
+					<div class="row">
+						<div class="col-sm-4" valida> 					    
+							<label>Nombre *</label>
+							<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cli.objeto.profile.nombreConyuge" required="" capitalize>
+						</div>
+						<div class="col-sm-4" valida>					    
+							<label>Dirección *</label>
+							<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyuge" required="" capitalize>
+						</div>
+						<div class="col-sm-4" valida>					    
+							<label>Dirección del trabajo *</label>
+							<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyugeTrabajo" required="" capitalize>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4" valida>					    
+							<label>Puesto *</label>
+							<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cli.objeto.profile.puestoConyuge" required="" capitalize>
+						</div>
+						<div class="col-sm-4" valida>					    
+							<label>Teléfono Particular *</label>
+							<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyuge" required="">
+						</div>
+						<div class="col-sm-4">					    
+							<label>Teléfono del trabajo</label>
+							<input name="telefonoConyugeTrabajo" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyugeTrabajo" >
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4">					    
+							<label>Ocupación</label>
+							<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cli.objeto.profile.ocupacionConyuge" capitalize>
+						</div>	
+						<div class="col-sm-4">					    
+							<label>Dirección Trabajo</label>
+							<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion" ng-model="cli.objeto.profile.direccionTrabajoConyuge" capitalize>
+						</div>		   				    	    
+					</div>
+				</div>
+			</div>
+			<h4>Referencias Personales</h4>
+			<div class="well">
+				<div class="row">
+					<div class="col-sm-12"> 
+						<div ng-include=" 'client/clientes/_buscarPersonaReferencia.html'"></div>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-sm-4"> 					    
+						<label>Nombre</label>
+						<input name="nombreParentezco" type="text" class="form-control" placeholder="Nombre" ng-model="cli.parentezco.nombre" capitalize>
+					</div>
+					<div class="col-sm-4"> 					    
+						<label>Apellido Paterno</label>
+						<input name="apellidoPaternoParentezco" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cli.parentezco.apellidoPaterno" capitalize>
+					</div>
+					<div class="col-sm-4"> 					    
+						<label>Apellido Materno</label>
+						<input name="apellidoMaternoParentezco" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cli.parentezco.apellidoMaterno" capitalize>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">					    
+						<label>Parentesco</label>
+						<input name="parentezco" type="text" class="form-control" placeholder="Parentezco" ng-model="cli.parentezco.parentezco" capitalize>
+					</div>
+					<div class="col-sm-4">					    
+						<label>Dirección</label>
+						<input name="direccionParentezco" type="text" class="form-control" placeholder="Dirección" ng-model="cli.parentezco.direccion" capitalize>
+					</div>
+					<div class="col-sm-4">					    
+						<label>Telefono</label>
+						<input name="telefonoParentezco" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.parentezco.telefono">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">					    
+						<label>Tiempo</label>
+						<input name="tiempoParentezco" type="text" class="form-control" placeholder="Tiempo" ng-model="cli.parentezco.tiempo" capitalize>
+					</div>
+				</div>
+				<br>
+				<div class="row">		
+					<div class="col-sm-3">
+						<input type="button" ng-click="cli.insertarReferencia()" value="Agregar" ng-show="cli.actionReferencia" class="btn btn-primary">
+						<input type="button" ng-click="cli.borrarReferencia()" value="Quitar Referenciado" ng-show="cli.parentezco.persona_id" class="btn btn-warning"> 	
+						<input type="button" ng-click="cli.actualizarReferencia(cli.parentezco)" value="Actualizar" ng-show="!cli.actionReferencia" class="btn btn-primary">
+						<input type="button" ng-click="cli.cancelarReferencia()" value="Cancelar" ng-show="!cli.actionReferencia" class="btn btn-danger">	   				
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th width="5%">No.</th>
+								<th width="30%">Nombre</th>
+								<th width="10%">Parentesco</th>
+								<th width="30%">Dirección</th>
+								<th width="10%">Teléfono</th>
+								<th width="10%">Tiempo</th>
+								<th width="5%">Quitar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="p in cli.referenciasPersonales">
+								<td>{{p.num}}</td>
+								<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}}  </td>
+								<td>{{p.parentezco}}</td>
+								<td>{{p.direccion}}</td>
+								<td>{{p.telefono}}</td>
+								<td>{{p.tiempo}}</td>
+								<td>
+									<a href="#" ng-click="cli.quitarReferencia(p.num)"><i class="fa fa-trash"></i></a>
+									<a href="#" ng-click="cli.editarReferencia(p)"><i class="fa fa-pencil"></i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<h4>Empresa</h4>
+			<div class="well">
+				<div class="row">
+					<div class="col-sm-4">
+						<br />
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-empresa-modal-lg">Crear Empresa</button>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-empresaVer-modal-lg" ng-click="cli.getEmpresa(cli.objeto.profile.empresa_id)" ng-show="cli.objeto.profile.empresa_id" >Ver Empresa</button>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-sm-4" valida>
+						<label for="seccion_id">Empresa *</label>
+						<select name="empresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.empresa_id" required>
+						<option ng-repeat="empresa in cli.empresas" value="{{empresa._id}}">OTRO</option>
+							<option ng-repeat="empresa in cli.empresas" value="{{empresa._id}}">{{empresa.nombre}}</option>
+						</select>
+					</div>
+					<div class="col-sm-4" valida>					    
+						<label>Teléfono *</label>
+						<input name="telefonoEmpresa" type="text" class="form-control" placeholder="Teléfono Empresa" ng-model="cli.objeto.profile.telefonoEmpresa" required="">
+					</div>
+					<div class="col-sm-4" valida>					    
+						<label>Tiempo Laborando *</label>
+						<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="cli.objeto.profile.tiempoLaborando" required="" capitalize>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4" valida>					    
+						<label>Puesto *</label>
+						<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cli.objeto.profile.puesto" required="" capitalize>
+					</div>
+					<div class="col-sm-4" valida>					    
+						<label>Departamento *</label>
+						<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="cli.objeto.profile.departamento" required="" capitalize>
+					</div>
+					<div class="col-sm-4">					    
+						<label>Jefe Inmediato</label>
+						<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cli.objeto.profile.jefeInmediato" capitalize>
+					</div>
+					<div class="col-sm-4">					    
+						<label>Télefono del Jefe</label>
+						<input name="telefonoJefe" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cli.objeto.profile.telefonoJefe" capitalize>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-sm-12">
+						<input type="submit" ng-click="cli.guardar(cli.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="cli.action" valida-form formulario="form">
+						<input type="submit" ng-click="cli.actualizarForm(cli.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!cli.action" valida-form formulario="form">
+					</div>
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
-
 <!-- Modal -->
 <div id="modalEmp" class="modal fade bs-empresa-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -631,7 +516,9 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="myModalLabel">Agregar Empresa</h4>
+
 			</div>
+
 			<div class="widget-body">
 				<form name="form2" novalidate>
 					<div class="well">	    
@@ -705,7 +592,7 @@
 	</div>
 </div>
 <!-- VER EMPRESA Modal -->
-<div id="modalEmp" class="modal fade bs-empresa-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div id="modalEmp" class="modal fade bs-empresaVer-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
   <div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -718,43 +605,43 @@
 						<div class="row">
 							<div class="col-sm-6" valida> 					    
 								<label>Nombre *</label>
-								<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="cli.empresa.nombre" required capitalize>
+								<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="cli.empresa.nombre" required capitalize disabled="">
 							</div>
 							<div class="col-sm-6" valida>					    
 								<label>Razón Social *</label>
-								<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="cli.empresa.razonSocial" required capitalize>
+								<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="cli.empresa.razonSocial" required capitalize disabled="">
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-4" valida>					    
 								<label>Calle *</label>
-								<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="cli.empresa.calle" required="" capitalize >
+								<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="cli.empresa.calle" required="" capitalize disabled="">
 							</div>	  
 							<div class="col-sm-4" valida>					    
 								<label>Número *</label>
-								<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="cli.empresa.numero" required="" >
+								<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="cli.empresa.numero" required="" disabled="" >
 							</div>  
 							<div class="col-sm-4" valida>					    
 								<label>Código Postal *</label>
-								<input name="codigopostal" type="text" class="form-control" placeholder="Código Postal" ng-model="cli.empresa.codigoPostal" required="" capitalize>
+								<input name="codigopostal" type="text" class="form-control" placeholder="Código Postal" ng-model="cli.empresa.codigoPostal" required="" capitalize disabled="">
 							</div>				    	    
 						</div>
 						<div class="row">
 							<div class="col-sm-4" valida>
 								<label >Pais *</label>
-								<select name="dirPaisEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.pais_id" required ng-change="cli.cambiarPaisEmpresa()">
+								<select name="dirPaisEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.pais_id" required ng-change="cli.cambiarPaisEmpresa()" disabled="">
 									<option  value="{{pais._id}}" ng-repeat="pais in cli.paises">{{pais.nombre}}</option>
 								</select>
 							</div>
 							<div class="col-sm-4" valida>
 								<label for="seccion_id">Estado *</label>
-								<select name="dirEstadoEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.estado_id" required ng-change="cli.cambiarEstadoEmpresa()">
+								<select name="dirEstadoEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.estado_id" required ng-change="cli.cambiarEstadoEmpresa()" disabled="">
 									<option ng-repeat="estado in cli.estados" value="{{estado._id}}">{{estado.nombre}}</option>
 								</select>
 							</div>	
 							<div class="col-sm-4" valida>
 								<label >Municipio *</label>
-								<select name="dirMunicipioEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.municipio_id" required ng-change="cli.cambiarMunicipioEmpresa()">
+								<select name="dirMunicipioEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.municipio_id" required ng-change="cli.cambiarMunicipioEmpresa()" disabled="">
 									<option  value="{{municipio._id}}" ng-repeat="municipio in cli.municipios">{{municipio.nombre}}</option>
 								</select>
 							</div>
@@ -762,13 +649,13 @@
 						<div class="row">
 							<div class="col-sm-4" valida>
 								<label for="seccion_id">Ciudad *</label>
-								<select name="dirCiudadEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.ciudad_id" required ng-change="cli.cambiarCiudadEmpresa()">
+								<select name="dirCiudadEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.ciudad_id" required ng-change="cli.cambiarCiudadEmpresa()" disabled="">
 									<option ng-repeat="ciudad in cli.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
 								</select>
 							</div>	
 							<div class="col-sm-4" valida>
 								<label for="seccion_id">Colonia *</label>
-								<select name="dirColoniaEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.colonia_id" required ng-change="cli.cambiarColoniaEmpresa()">
+								<select name="dirColoniaEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.colonia_id" required ng-change="cli.cambiarColoniaEmpresa()" disabled="">
 									<option ng-repeat="colonia in cli.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
 								</select>
 							</div>

@@ -42,6 +42,7 @@ angular.module("creditoMio")
   this.documents = []
   
   this.estadoCivil = "";
+    this.empresaSeleccionada = "";
 
   this.estadoCivilSeleccionado = {};
 
@@ -261,9 +262,13 @@ angular.module("creditoMio")
       
        return Personas.find({}, {sort: {folio: -1}, limit: 1});
     },
+      empresa : () => {
+     
+      
+      return Empresas.findOne(rc.objeto.profile.empresa_id)
+    },
       
   }); 
-
 
 this.tomarFoto = function(objeto){
       console.log(objeto)
@@ -677,6 +682,14 @@ this.tomarFoto = function(objeto){
   
     console.log(documento_id);
     rc.documento = Documentos.findOne(documento_id);
+    //rc.nota.unidad = Unidades.findOne(rc.nota.unidad_id);
+  };
+
+   this.getEmpresa= function(empresa_id)
+  {
+  
+    console.log(empresa_id);
+    rc.empresa = Empresas.findOne(empresa_id);
     //rc.nota.unidad = Unidades.findOne(rc.nota.unidad_id);
   };
 

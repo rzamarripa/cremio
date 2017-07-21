@@ -1,0 +1,54 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Distribuidores &gt; Buscar
+		</h1>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="input-group">
+			<div class="input-group-btn">
+				<a href="./distribuidoresForm" class="btn btn-default btn-primary">
+					<i class="fa fa-plus"></i> Nuevo
+				</a>
+			</div>
+			<input class="form-control" type="text" placeholder="Buscar..." ng-model="dis.buscar.nombre">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-3" ng-repeat="distribuidor in dis.distribuidores">
+      <div class="contact-box center-version">
+
+          <a href="/distribuidores/{{distribuidor._id}}" style="text-decoration: none;">
+
+              <img alt="image" class="img-circle" ng-src="{{dis.tieneFoto(distribuidor.profile.sexo, distribuidor.profile.foto)}}">
+
+
+              <p class="lead font-xs text-center"><strong>{{distribuidor.profile.nombre}} <br/> {{distribuidor.profile.apPaterno}} {{distribuidor.profile.apMaterno}}</strong></p>
+
+              <div class="font-bold">{{distribuidor.username}}</div>
+              <address class="font-xs">
+                  <strong>Cliente</strong><br>
+                  {{distribuidor.profile.call}} {{distribuidor.profile.numero}}<br>
+                  {{distribuidor.profile.colonia}}<br>
+                  <abbr title="Teléfono">T1:</abbr> {{distribuidor.profile.telefono}}<br/>
+                  <abbr title="Celular">C2:</abbr> {{distribuidor.profile.celular}}
+              </address>
+
+          </a>
+          <div class="contact-box-footer">
+              <div class="m-t-xs btn-group">
+                  <a href="/clientes/{{distribuidor._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
+                  <a href="/editarCliente/{{distribuidor._id}}" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Editar</a>
+                 <!--  <a href="/verPlanPagos/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-money"></i> Pagos</a> -->
+
+              </div>
+          </div>
+
+      </div>
+  </div>
+</div>

@@ -96,7 +96,6 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		objeto.fechaFinal = objeto.objetoFinal.fechaSolicito
 		//console.log(objeto,"actualizado")
 
-
 	};
 
 	//Funcion Evalua la sessión del usuario
@@ -105,6 +104,50 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
     	$state.go('anon.login');
     }    
   });	
+
+
+	 this.descargarFormato = function() 
+  {
+    Meteor.call('formaSolicitud', function(error, response) {     
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+      function b64toBlob(b64Data, contentType, sliceSize) {
+          contentType = contentType || '';
+          sliceSize = sliceSize || 512;
+          var byteCharacters = atob(b64Data);
+          var byteArrays = [];
+          for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+        
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+            }
+            var byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+          }
+          var blob = new Blob(byteArrays, {type: contentType});
+          return blob;
+          }
+          var blob = b64toBlob(response, "application/docx");
+          var url = window.URL.createObjectURL(blob);
+          var dlnk = document.getElementById('dwnldLnk');
+
+           dlnk.download = "FormatoSol.docx"; 
+          dlnk.href = url;
+          dlnk.click();       
+          window.URL.revokeObjectURL(url);
+   
+      }
+    
+    });
+
+  };
 
 
 
