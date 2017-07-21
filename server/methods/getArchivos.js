@@ -1298,5 +1298,47 @@ getListaCobranza: function (objeto) {
     return new Buffer(bitmap).toString('base64');
 		
   }, 
+
+  formaSolicitud: function () {
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+				 
+				var content = fs
+    	   .readFileSync(produccion+"FormatoSol.docx", "binary");
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			return "";
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		
+		var fecha = new Date();
+		var f = fecha;
+	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	   
+			doc.setData({				
+
+				  });
+								
+		doc.render();
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccion+"FormatuSolSalida.docx",buf);		
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"FormatuSolSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+  }, 
 	
 });

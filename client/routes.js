@@ -141,6 +141,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.empresas', {
+			url: '/empresas',
+			templateUrl: 'client/empresas/empresas.ng.html',
+			controller: 'EmpresasCtrl as emp',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.paises', {
 			url: '/paises',
 			templateUrl: 'client/paises/paises.ng.html',
@@ -311,6 +321,26 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 						}					 	
 				 });
 			 }]
+			}
+		})
+		.state('root.distribuidoresLista', {
+			url: '/distribuidores',
+			templateUrl: 'client/distribuidores/distribuidoresLista.ng.html',
+			controller: 'DistribuidoresListaCtrl as dis',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.distribuidoresForm', {
+			url: '/distribuidoresForm',
+			templateUrl: 'client/distribuidores/distribuidoresForm.ng.html',
+			controller: 'DistribuidoresFormCtrl as dis',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
 			}
 		})
 		.state('root.generadorPlan', {
