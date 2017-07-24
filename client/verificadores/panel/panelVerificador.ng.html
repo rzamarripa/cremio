@@ -6,7 +6,7 @@
 		<ul id="widget-tab-1" class="nav nav-tabs pull-left">
 
 			<li class="active">
-				<a data-toggle="tab" href="#hr1" aria-expanded="false"> <i class="fa fa-lg fa-circle-o"></i> <span class="hidden-mobile hidden-tablet"> Créditos por Verificar <span class="badge bg-color-blue txt-color-white">{{pver.creditos.length}}</span></span></a>
+				<a data-toggle="tab" href="#hr1" aria-expanded="false"> <i class="fa fa-lg fa-circle-o"></i> <span class="hidden-mobile hidden-tablet"> Verificaciones pendientes <span class="badge bg-color-blue txt-color-white">{{pver.creditos.length}}</span></span></a>
 			</li>
 			
 
@@ -38,27 +38,22 @@
 				
 				<div class="tab-pane fade active in" id="hr1">
 					
-					<h4 class="alert alert-success"> Créditos por verificar. </h4>
+					<h4 class="alert alert-success"> Verificaciones Pendientes. </h4>
 					<div ng-include="'client/verificadores/panel/_tablaPorVerificar.html'"></div>
 					
 				</div>
 				
 				<div class="tab-pane fade" id="hr2">
-					
 					<h4 class="alert alert-success"> Folios verificados visitados. </h4>
 					<div ng-include="'client/verificadores/panel/_tablaVerificados.html'"></div>
 					
 				</div>
-				
 			</div>
-			
 			<!-- end widget body text-->
 			
 			<!-- widget footer -->
 			<div class="widget-footer text-right">
-				
 				Panel de Verificadores
-		
 			</div>
 			<!-- end widget footer -->
 			

@@ -8,7 +8,9 @@ Meteor.publish("buscarAvales",function(options){
 			}
 });
 
+/*
 Meteor.publish("avales",function(options){
   return Avales.find(options);
 });
+*/
 

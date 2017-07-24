@@ -18,7 +18,6 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.cliente_id = "";
 	this.planPagos = [];
 	this.credito = {};
-	//this.credito.primerAbono = new Date(moment().add(1, "weeks"));
 	this.pago = {};
 
 	this.con = 0;
@@ -42,7 +41,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.personas_ids = [];
 	
 	
-	this.subscribe('buscarPersonas', () => {
+	this.subscribe('buscarAvales', () => {
 		if(this.getReactively("buscar.nombre").length > 3){
 			this.buscando = true;
 			return [{
@@ -76,21 +75,11 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 
 	
 	this.helpers({
-		personasTipos : () => {
-			var personas = Personas.find({
-		  	"nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
+		avales : () => {
+			var aval = Avales.find({
+		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
 			}, { sort : {"nombreCompleto" : 1 }}).fetch();
-			/*
-			if(personas){
-				this.personas_ids = _.pluck(personas, "_id");
-			
-				_.each(personas, function(persona){
-					cliente.creditos = Personas.find({cliente_id : cliente._id, estatus : 2}).fetch();
-				})
-			}
-			*/	
-				
-			return personas;
+			return aval;
 		},
 		cliente : () => {
 			return Meteor.users.findOne({roles : ["Cliente"]});

@@ -234,13 +234,13 @@ angular.module("creditoMio")
           //eturn objeto;
       }  
     },
-    personasTipos : () => {
-      var personas = Personas.find({
+    avales : () => {
+      var avales = Avales.find({
         "nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
       }, { sort : {"nombreCompleto" : 1 }}).fetch();
-      return personas;
+      return avales;
     },
-       ultimoCliente : () => {   
+    ultimoCliente : () => {   
        return Personas.find({}, {sort: {folio: -1}, limit: 1});
     },
       
@@ -446,27 +446,12 @@ angular.module("creditoMio")
   this.insertarReferencia = function()
   {
 	  	
-      /*
       //Validar que no venga vacio
-      if (this.mes==null) 
+      if (this.parentezco.nombre == undefined || this.parentezco.apellidoPaterno == undefined || this.parentezco.parentezco == undefined || this.parentezco.tiempo == undefined)
       {
-        toastr.error('Seleccionar Mes.');
-        return;
-      } 
-      //validar que vengan mes y cantidad
-      if (this.mes.nombre == null || this.mes.cantidad == null) 
-      {
-        toastr.error('Seleccionar Mes y Cantidad');
-        return;
-      } 
-      
-      */
-      //console.log(this.referenciasPersonales.length);
-      
-      //incremeneto
-      //this.con = this.con + 1;
-      
-      //console.log(this.parentezco);
+	      	toastr.warning('Favor de completar los datos en referencias personales.');
+          return;
+      }
       
       
       this.parentezco.num = this.referenciasPersonales.length + 1;

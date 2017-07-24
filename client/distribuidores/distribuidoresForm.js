@@ -1,8 +1,8 @@
 angular.module("creditoMio")
-.controller("ClientesFormCtrl", ClientesFormCtrl);
- function ClientesFormCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams){
-  
-  let rc = $reactive(this).attach($scope);
+.controller("DistribuidoresFormCtrl", DistribuidoresFormCtrl);
+ function DistribuidoresFormCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams){
+ 	rc = $reactive(this).attach($scope);
+let rc = $reactive(this).attach($scope);
   window.rc = rc;
   
   this.cambiarContrasena = true;
@@ -330,18 +330,6 @@ this.tomarFoto = function(objeto){
       var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-/*
-      ////////////gg///////////////////////////////////////////////////////////////////
-        if(rc.configuraciones.folioCliente >= 1){
-          console.log("entro");
-          objeto.profile.folio = rc.configuraciones.folioCliente + 1
-          
-        }else{
-          objeto.profile.folio = rc.configuraciones.folioCliente 
-
-        }
-        //////////////////////////////////////////////////////////////////////////////////////
-*/
       Meteor.call('createUsuario', objeto, "Cliente", function(e,r){
           if (r)
           {
@@ -483,15 +471,31 @@ this.tomarFoto = function(objeto){
   
   this.insertarReferencia = function()
   {
-      
+      /*
       //Validar que no venga vacio
-      if (this.parentezco.nombre == undefined || this.parentezco.apellidoPaterno == undefined || this.parentezco.parentezco == undefined || this.parentezco.tiempo == undefined)
+      if (this.mes==null) 
       {
-	      	toastr.warning('Favor de completar los datos en referencias personales.');
-          return;
-      }		
+        toastr.error('Seleccionar Mes.');
+        return;
+      } 
+      //validar que vengan mes y cantidad
+      if (this.mes.nombre == null || this.mes.cantidad == null) 
+      {
+        toastr.error('Seleccionar Mes y Cantidad');
+        return;
+      } 
+      
+      */
+      //console.log(this.referenciasPersonales.length);
+      
+      //incremeneto
+      //this.con = this.con + 1;
+      
+      //console.log(this.parentezco);
+      
       
       this.parentezco.num = this.referenciasPersonales.length + 1;
+      
       this.referenciasPersonales.push(this.parentezco); 
       this.parentezco={};
   };
@@ -721,12 +725,5 @@ this.tomarFoto = function(objeto){
     rc.ocupacionSeleccionado = Ocupaciones.findOne(ocupacion_id);
     
   };
-  
-  this.createEmpresa = function()
-  {
-      this.empresa = {};    
-
-  }
-
   
 };

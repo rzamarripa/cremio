@@ -5,6 +5,4 @@ Meteor.methods({
 		return verificaciones;
 	},
 	
-	
-	
 });

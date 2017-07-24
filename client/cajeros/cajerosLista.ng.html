@@ -66,7 +66,7 @@
                   <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu text-left">
-                  <li><a href="#" ng-click="lven.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+                  <li><a href="#" ui-sref="root.editarCajero({objeto_id : objeto._id})"><i class="fa fa-pencil"></i> Editar</a></li>
                   <li><a href="#" ng-click="lven.cambiarEstatus(objeto._id)">
                     <i class="fa fa-{{objeto.estatus ? 'trash' : 'check' }}"></i> {{objeto.estatus ? "Desactivar" : "Activar" }}</a>
                   </li>

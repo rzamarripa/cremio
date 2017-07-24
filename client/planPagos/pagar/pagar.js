@@ -335,22 +335,32 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
       return TiposCredito.find();
     },
     planPagosViejo: () => {
-
-      //rc.credito_id = $stateParams.credito_id;
-/*
-      var fechaActual = moment();
-      var pagos = PlanPagos.find({
-        cliente_id: $stateParams.objeto_id,
-        credito_id: { $in: this.getCollectionReactively("creditos_id") }
-      }, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
-					
-*/			
-				
+	
 			var pp = PlanPagos.find({importeRegular : {$gt : 0},}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
       rc.subtotal = 0;
 			rc.cargosMoratorios = 0;
 			
 			_.each(pp, function(pago) {
+				pago.credito = Creditos.findOne(pago.credito_id);
+				 if(pago.credito.folio % 2 == 0)
+	            {
+	              
+	              pago.tipoPar = "par"
+	            }
+	            else
+	            {
+	              
+	              pago.tipoPar = "impar"
+	            }
+	            
+	            	_.each(rc.creditos, function(credito) {
+		            	if(credito[0]){
+			            	credito.color = "Amarillo"
+		            	}
+		            	
+	            	});
+	            
+	            
 
           var credito = Creditos.findOne({_id:pago.credito_id});
 	        pago.verCargo = true;
@@ -379,6 +389,8 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
         _.each(creditos, function(credito) {
           credito.planPagos = PlanPagos.find({ credito_id: credito._id }, { sort: { numeroPago: -1 } }).fetch();
           credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
+				
+           
         })
       }
 

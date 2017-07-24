@@ -39,12 +39,13 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.estadoCivilSeleccionado = "";
 	rc.recibo = {};
 	rc.recibos = [];
+	rc.empresaSeleccionada = ""
 	
 	rc.editMode = false;
 	rc.puedeSolicitar = true
 	
 	this.subscribe("ocupaciones",()=>{
-		return [{_id : this.getReactively("ocupacion_id"), estatus : true }]
+		return [{ estatus : true }]
 	});
 	this.subscribe('cliente', () => {
 		return [{_id : $stateParams.objeto_id}];
@@ -222,6 +223,17 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			
 		},
+		// empresa: () => {
+		// 	var nota = Notas.find({tipo : "Cuenta"}).fetch()
+		// 	_.each(nota, function(notita){
+		// 		if (notita.estatus == true && notita.cliente_id == rc.objeto._id) {
+		// 			$("#myModal").modal(); 
+		// 		}
+		// 	 });
+		// 	return nota[nota.length - 1];
+			
+			
+		// },
 		objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
 			
@@ -327,19 +339,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					});	
 				});
 
-/*
-				Meteor.call('getEmpresas', objeto.empresa_id, function(error, result){	
-					//console.log("entra aqui",referencia)					
-						if (result)
-							//console.log(result,"caraculo")
-						{
-							console.log("ir por la empresa");
-							console.log("result",result);
-							rc.empresa = result
-							$scope.$apply();			
-						}
-					});
-*/	
+                     
 				
 			});
 
@@ -354,14 +354,15 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			}		
 		},
 		
-		ocupaciones : () => {
+		//ocupaciones : () => {
 /*
 			if(this.getReactively("creditos")){
 				this.creditos_id = _.pluck(rc.creditos, "_id");
 			}
 */
-			return Ocupaciones.find();
-		},
+		// 	return Ocupaciones.find();
+		// },
+	
 		planPagos : () => {
 			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:-1}}).fetch();
 			
@@ -1464,11 +1465,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
-
 						}		  
 				   }
 				});
-		
 		};
 
 		this.recuperarCredito= function(id)
@@ -1491,13 +1490,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		};
 		this.CreditoSolicitar= function(id)
 		{
-			console.log(rc.puedeSolicitar)
-		
-		    if (rc.puedeSolicitar == true) {
-		    	$state.go("root.generadorPlan",{objeto_id : id});
-		    }else{
-		    	toastr.error('Este cliente todavía cuenta con cargos');
-		    }	
+
+	    	$state.go("root.generadorPlan",{objeto_id : id});
+		  
 		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
 		};
 	
