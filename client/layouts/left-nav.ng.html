@@ -167,6 +167,13 @@
 			</a>
 		</li>
 		
+		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador'" >
+			<a ui-sref="root.avalesLista" tilte="Credito Mio">
+				<i class="fa fa-lg fa-fw fa-gavel"></i>
+				<span class="menu-item-parent">Avales</span>
+			</a>
+		</li>
+		
 		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'" >
 			<a ui-sref="root.creditosPorAutorizar" tilte="Credito Mio">
 				<i class="fa fa-lg fa-fw fa-check-square"></i>
@@ -251,7 +258,7 @@
 -->
         <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Verificador'">
             <a ui-sref="root.panelVerificador" tilte="Credito Mio">
-                <i class="fa fa-lg fa-fw fa-group"></i>
+                <i class="fa fa-lg fa-fw fa-th-list"></i>
                 <span class="menu-item-parent">Panel Verificadores</span>
             </a>
         </li>

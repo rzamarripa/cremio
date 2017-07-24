@@ -38,7 +38,7 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 		  return ncs;
 	  },
 	  notasCreditoCaducadas : () => {
-		  	var ncs =  NotasCredito.find({tieneVigencia: true, vigencia: {$lt: rc.fecha}, estatus: 2 }).fetch();		 
+		  	var ncs =  NotasCredito.find({tieneVigencia: true, estatus: 2 }).fetch();		 
 		  	if (ncs != undefined)
 		  	{
 				  	_.each(ncs, function(nc){

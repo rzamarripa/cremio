@@ -297,6 +297,42 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			 }]
 			}
 		})
+		.state('root.avalesLista', {
+			url: '/avales',
+			templateUrl: 'client/avales/avalesLista.ng.html',
+			controller: 'AvalesListaCtrl as lava',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.avalesForm', {
+			url: '/avalesForm',
+			templateUrl: 'client/avales/avalesForm.ng.html',
+			controller: 'AvalesFormCtrl as ava',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.editarAval', {
+			url: '/editarAval/:objeto_id',
+			templateUrl: 'client/avales/avalesForm.ng.html',
+			controller: 'AvalesFormCtrl as ava',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 	
+				 });
+			 }]
+			}
+		})
 		.state('root.clienteDetalle', {
 			url: '/clientes/:objeto_id',
 			templateUrl: 'client/clientes/clientesDetalle.html',
