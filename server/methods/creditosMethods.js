@@ -3,11 +3,9 @@ Meteor.methods({
 						
 
 		var c = Creditos.findOne({_id: idCredito});
-
-		
+				
 		c.fechaSolicito = credito.fechaSolicito;
 		c.fechaPrimerAbono = credito.fechaPrimerAbono;
-		
 		
 		var cliente = {};
 		cliente._id = c.cliente_id;
@@ -59,7 +57,7 @@ Meteor.methods({
 		return "hecho";
 	},
 	generarCreditoPeticion : function(cliente, credito) {
-		//console.log(credito);
+
 		if(credito.requiereVerificacion == true){
 			credito.estatus = 0;
 		}else if(credito.requiereVerificacion == false){
@@ -67,11 +65,16 @@ Meteor.methods({
 		}
 
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
-		
 		credito.avales_ids = [];
 		
-		_.each(credito.avales, function(aval){
-			
+		
+		_.each(credito.avales, function(aval){		
+			if (aval.estatus == "N") aval.estatus = "G";
+				 credito.avales_ids.push({num: aval.num, aval_id: aval._id, parentesco: aval.parentesco, tiempoConocerlo: aval.tiempoConocerlo, estatus: aval.estatus});
+		});
+		
+		/*
+	
 			if (aval.buscarPersona_id)
 			{
 							//console.log("Condicion de buscarPersona");
@@ -97,7 +100,7 @@ Meteor.methods({
 											relacion.puesto					 = aval.puesto, 
 											relacion.antiguedad			 = aval.antiguedad, 
 											relacion.direccionEmpresa= aval.direccionEmpresa, 
-											relacion.parentezco			 = aval.parentezco;
+											relacion.parentesco			 = aval.parentesco;
 											relacion.tiempoConocerlo = aval.tiempoConocerlo;
 											relacion.num						 = aval.num;
 											relacion.tipoPersona		 = "Aval"; 
@@ -121,7 +124,7 @@ Meteor.methods({
 																puesto						: aval.puesto, 
 																antiguedad				: aval.antiguedad, 
 																direccionEmpresa	: aval.direccionEmpresa, 
-																parentezco				: aval.parentezco, 
+																parentesco				: aval.parentesco, 
 																tiempoConocerlo		:	aval.tiempoConocerlo, 
 																num				 				: aval.num,
 															  tipoPersona				: "Aval", 
@@ -151,7 +154,7 @@ Meteor.methods({
 																puesto						: aval.puesto, 
 																antiguedad				: aval.antiguedad, 
 																direccionEmpresa	: aval.direccionEmpresa, 
-																parentezco				: aval.parentezco, 
+																parentesco				: aval.parentesco, 
 																tiempoConocerlo		:	aval.tiempoConocerlo, 
 																num				 				: aval.num,
 															  tipoPersona				: "Aval", 
@@ -161,14 +164,21 @@ Meteor.methods({
 					Personas.update({_id: aval.persona_id},{$set:p});
 					credito.avales_ids.push(aval.persona_id);
 			}
-		});
+*/
 		
-
 		delete credito['avales'];
 		var credito_id = Creditos.insert(credito);
-		
+		_.each(credito.avales_ids, function(aval){
+				var a = Avales.findOne(aval.aval_id);
+				a.profile.creditos = [];
+				a.profile.creditos.push({credito_id: credito_id, parentesco: aval.parentesco, tiempoConocerlo: aval.tiempoConocerlo});	
+				var idTemp = a._id;
+				delete a._id;
+				Avales.update({_id: idTemp}, {$set:{profile: a.profile}})	
+		});
+
 		return "hecho";
-	},
+	},//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	actualizarCredito : function(cliente, credito, idCredito ) {
 		
 		if (credito.estatus != 4){		
@@ -181,13 +191,53 @@ Meteor.methods({
 		
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		var c = Creditos.findOne(idCredito);
-		credito.avales_ids = c.avales_ids;
+		
+		//credito.avales_ids = c.avales_ids; Con lo anterior de personas
 		
 		
 		//console.log(credito.avales);		
 		_.each(credito.avales, function(aval){
-			
-			if (aval.buscarPersona_id)
+				if (aval.estatus == "N"){					
+						aval.estatus = "G";
+						c.avales_ids.push({num: aval.num, aval_id: aval._id, parentesco: aval.parentesco, tiempoConocerlo: aval.tiempoConocerlo, estatus: aval.estatus});
+						
+						var a = Avales.findOne(aval.aval_id);
+						a.profile.creditos = [];
+						a.profile.creditos.push({credito_id: idCredito, parentesco: aval.parentesco, tiempoConocerlo: aval.tiempoConocerlo});	
+						var idTemp = a._id;
+						delete a._id;
+						Avales.update({_id: idTemp}, {$set:{profile: a.profile}});
+						
+				} 
+				else if (aval.estatus == "A"){
+						console.log(aval.num);
+						//Buscar el avales_ids y actualizarlo						
+						_.each(c.avales_ids, function(aval_ids){
+								//console.log(aval_ids);
+								if (aval_ids.num == aval.num)
+								{		
+										//console.log(aval_ids);
+										aval_ids.parentesco = aval.parentesco;
+										aval_ids.tiempoConocerlo = aval.tiempoConocerlo;
+										aval_ids.estatus = "G";
+										
+										var a = Avales.findOne(aval.aval_id);
+										_.each(a.profile.creditos, function(credito){
+												if (credito.credito_id == idCredito)
+												{
+														credito.parentesco = 	aval.parentesco;
+														credito.tiempoConocerlo = aval.tiempoConocerlo						
+												}
+										});
+										var idTemp = a._id;
+										delete a._id;
+										Avales.update({_id: idTemp}, {$set:{profile: a.profile}});
+								}
+						});				
+				}
+				
+			/*
+if (aval.buscarPersona_id)
 			{
 							//console.log("Condicion de buscarPersona");
 							//console.log(referenciaPersonal.buscarPersona_id);
@@ -212,7 +262,7 @@ Meteor.methods({
 											relacion.puesto					 = aval.puesto, 
 											relacion.antiguedad			 = aval.antiguedad, 
 											relacion.direccionEmpresa= aval.direccionEmpresa, 
-											relacion.parentezco			 = aval.parentezco;
+											relacion.parentesco			 = aval.parentesco;
 											relacion.tiempoConocerlo = aval.tiempoConocerlo;
 											relacion.num						 = aval.num;
 											relacion.tipoPersona		 = "Aval"; 
@@ -236,7 +286,7 @@ Meteor.methods({
 																puesto						: aval.puesto, 
 																antiguedad				: aval.antiguedad, 
 																direccionEmpresa	: aval.direccionEmpresa, 
-																parentezco				: aval.parentezco, 
+																parentesco				: aval.parentesco, 
 																tiempoConocerlo		:	aval.tiempoConocerlo, 
 																num				 				: aval.num,
 															  tipoPersona				: "Aval", 
@@ -268,7 +318,7 @@ Meteor.methods({
 																puesto						: aval.puesto, 
 																antiguedad				: aval.antiguedad, 
 																direccionEmpresa	: aval.direccionEmpresa, 
-																parentezco				: aval.parentezco, 
+																parentesco				: aval.parentesco, 
 																tiempoConocerlo		:	aval.tiempoConocerlo, 
 																num				 				: aval.num,
 															  tipoPersona				: "Aval", 
@@ -280,13 +330,15 @@ Meteor.methods({
 					Personas.update({_id: aval.persona_id},{$set:p});
 					credito.avales_ids.push(aval.persona_id);
 			}
+*/
 		});
+		//console.log(c.avales_ids);
 		
-		
+
 		delete credito['avales'];
 		delete credito._id;	
-		Creditos.update({_id:idCredito},{$set:credito});
-		
+		Creditos.update({_id:idCredito},{$set:c});
+				
 		
 		return "hecho";
 	},

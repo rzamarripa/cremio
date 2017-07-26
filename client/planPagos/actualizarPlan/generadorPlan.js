@@ -24,7 +24,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	this.con = 0;
 	this.num = 0;
 	this.avales = [];
-	this.aval = {};
+	rc.aval = {};
 	this.conG = 0;
 	this.numG = 0;
 	this.conGen = 0;
@@ -41,7 +41,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	this.personas_ids = [];
 	
 	
-	this.subscribe('buscarPersonas', () => {
+	this.subscribe('buscarAvales', () => {
 		if(this.getReactively("buscar.nombre").length > 3){
 			this.buscando = true;
 			return [{
@@ -73,36 +73,35 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		return [{ _id:$stateParams.credito_id}];
 	},{
 		onReady:()=>{
-			rc.credito = Creditos.findOne($stateParams.credito_id)
+			rc.credito = Creditos.findOne($stateParams.credito_id);
 			
-			console.log(rc.credito);
+			//console.log(rc.credito);
 			rc.avales = [];
 	  	
-	  	_.each(rc.credito.avales_ids,function(aval_id){
-						Meteor.call('getPersona', aval_id, rc.credito.cliente_id, function(error, result){						
+	  	_.each(rc.credito.avales_ids,function(aval){
+						Meteor.call('getAval', aval.aval_id, rc.credito.cliente_id, function(error, result){						
 									if (result)
 									{
 											//Recorrer las relaciones 
-											console.log("Aval Get Persona:",result);
+											console.log("Aval Get Persona:",aval);
 											
-											rc.avales.push({buscarPersona_id	: aval_id,
+											rc.avales.push({aval_id						: aval.aval_id,
 																		  nombreCompleto		: result.nombreCompleto,
 																		  nombre						: result.nombre,
 																		  apellidoPaterno	  : result.apellidoPaterno,
 																		  apellidoMaterno		: result.apellidoMaterno,
 																		  estadoCivil				: result.estadoCivil,
 																		  ocupacion					: result.ocupacion,
-																		  direccion					: result.direccion,
-																		  empresa						: result.empresa,
+																		  direccion					: result.calle + " Num:" + result.numero + " CP:" + result.codigoPostal,
+																		  empresa						: result.empresa.nombre,
 																		  puesto						: result.puesto,
-																		  antiguedad				: result.antiguedad,
-																		  direccionEmpresa	: result.direccionEmpresa,
-																		  parentezco				: result.parentezco,
-																		  tiempoConocerlo		: result.tiempoConocerlo,
-																		  num								: result.num,
-																		  cliente_id				: result.cliente_id,
-																		  tipoPersona				: result.tipoPersona,
-																		  estatus						: result.estatus
+																		  tiempoLaborando		: result.tiempoLaborando,
+																		  direccionEmpresa	: result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal, 
+																		  parentesco				: aval.parentesco,
+																		  tiempoConocerlo		: aval.tiempoConocerlo,
+																		  num								: aval.num,
+																		  //cliente_id				: result.cliente_id,
+																		  estatus						: aval.estatus
 											});
 											$scope.$apply();
 									}
@@ -116,21 +115,11 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	});
 	
 	this.helpers({
-		personasTipos : () => {
-			var personas = Personas.find({
-		  	"nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
+		avalesHelper : () => {
+			var aval = Avales.find({
+		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
 			}, { sort : {"nombreCompleto" : 1 }}).fetch();
-			/*
-			if(personas){
-				this.personas_ids = _.pluck(personas, "_id");
-			
-				_.each(personas, function(persona){
-					cliente.creditos = Personas.find({cliente_id : cliente._id, estatus : 2}).fetch();
-				})
-			}
-			*/	
-				
-			return personas;
+			return aval;
 		},
 		cliente : () => {
 			return Meteor.users.findOne({roles : ["Cliente"]});
@@ -293,7 +282,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		Meteor.apply('actualizarCredito', [this.cliente, credito, $stateParams.credito_id], function(error, result){
 			//console.log(result,error)
 			if(result == "hecho"){
-				toastr.success('Se crearon correctamente los ' + rc.planPagos.length + ' pagos');
+				toastr.success('Se actualizó correctamente la solicitud de crédito');
 				rc.planPagos = [];
 				this.avales = [];
 				$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
@@ -305,11 +294,16 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	this.insertarAval = function()
 	{
-// 			this.con = this.con + 1;
-			this.aval.num = this.avales.length + 1;
-			
-			this.avales.push(this.aval);	
-			this.aval={};
+			if (rc.aval.nombre == undefined || rc.aval.parentesco == undefined || rc.aval.tiempoConocerlo == undefined || rc.aval.parentesco == "" || rc.aval.tiempoConocerlo == "")
+			{
+					toastr.warning("Favor de agregar al datos del Aval, Parentesco y Tiempo de Conocerlo...");
+					return;					
+			}
+		
+			rc.aval.num = this.avales.length + 1;
+			this.avales.push(rc.aval);
+			rc.aval.estatus = "N";
+			rc.aval={};
 	};
 	
 	this.actualizarAval = function(a)
@@ -319,19 +313,19 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			if (av.num == a.num)
 			{
 				av.nombre = a.nombre;
-				av.apellidoPaterno = a.apellidoPaterno;
-				av.apellidoMaterno = a.apellidoMaterno;
 				av.estadoCivil = a.estadoCivil;
 				av.ocupacion = a.ocupacion;			
 				av.direccion = a.direccion;
 				av.empresa = a.empresa;
 				av.puesto = a.puesto;
-				av.antiguedad = a.antiguedad;
+				av.tiempoLaborando = a.tiempoLaborando;
 				av.direccionEmpresa = a.direccionEmpresa;
-				av.parentezco = a.parentezco;
+				av.parentesco = a.parentesco;
 				av.tiempoConocerlo = a.tiempoConocerlo;
+				av.estatus = "A";
 			}
 		})
+		
 		this.aval={};
 		this.num=0;
 		this.actionAval = true;
@@ -339,7 +333,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	
 	this.cancelarAval = function()
 	{
-		this.aval={};
+		rc.aval={};
 		this.num = -1;
 		this.actionAval = true;
 	};
@@ -347,71 +341,80 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	this.quitarAval = function(numero)
 	{
 		pos = functiontofindIndexByKeyValue(this.avales, "num", numero);
+		//Eliminar el Aval del credito y del AVAl
+		
+		console.log("Eliminar:", this.avales[pos]);
+		
+/*
 		this.avales.splice(pos, 1);
 		if (this.avales.length == 0)
 			this.con = 0;
+*/
  
-	    functiontoOrginiceNum(this.avales, "num");
+	  //functiontoOrginiceNum(this.avales, "num");
 	};
 	
 	this.editarAval = function(a)
 	{
-		this.aval.nombre = a.nombre;
-		this.aval.apellidoPaterno = a.apellidoPaterno;
-		this.aval.apellidoMaterno = a.apellidoMaterno;
-		this.aval.estadoCivil = a.estadoCivil;
-		this.aval.ocupacion = a.ocupacion;		
-		this.aval.puesto = a.puesto;	
-		this.aval.direccion = a.direccion;
-		this.aval.empresa = a.empresa;
-		this.aval.antiguedad = a.antiguedad;
-		this.aval.direccionEmpresa = a.direccionEmpresa;
-		this.aval.parentezco = a.parentezco;
-		this.aval.tiempoConocerlo = a.tiempoConocerlo;
+		rc.aval.nombre = a.nombre;
+		rc.aval.estadoCivil = a.estadoCivil;
+		rc.aval.ocupacion = a.ocupacion;			
+		rc.aval.direccion = a.direccion;
+		rc.aval.empresa = a.empresa;
+		rc.aval.puesto = a.puesto;
+		rc.aval.tiempoLaborando = a.tiempoLaborando;
+		rc.aval.direccionEmpresa = a.direccionEmpresa;
+		rc.aval.parentesco = a.parentesco;
+		rc.aval.tiempoConocerlo = a.tiempoConocerlo;
 		
 		this.num = a.num;
-	    this.actionAval = false;
+	  this.actionAval = false;
 	};
 	
 	this.borrarReferencia = function()
 	{
-			this.aval.nombre = "";
-			this.aval.apellidoPaterno = "";
-			this.aval.apellidoMaterno = "";
-			this.aval.estadoCivil = "";
-			this.aval.ocupacion = "";
-			this.aval.direccion = "";
-			this.aval.parentezco = "";
-			this.aval.tiempoConocerlo = "";
-			this.aval.empresa = "";
-			this.aval.puesto = "";
-			this.aval.antiguedad = "";
-			this.aval.direccionEmpresa = "";
-			this.aval.parentezco = "";
-			this.aval.tiempoConocerlo = "";
-			delete this.aval["persona_id"];
+			rc.aval.nombre = "";
+			rc.aval.apellidoPaterno = "";
+			rc.aval.apellidoMaterno = "";
+			rc.aval.estadoCivil = "";
+			rc.aval.ocupacion = "";
+			rc.aval.direccion = "";
+			rc.aval.parentesco = "";
+			rc.aval.tiempoLaborando = "";
+			rc.aval.empresa = "";
+			rc.aval.puesto = "";
+			rc.aval.antiguedad = "";
+			rc.aval.direccionEmpresa = "";
+			rc.aval.tiempoConocerlo = "";
+			delete rc.aval["_id"];
 
 	};
 	
 	this.AgregarAval = function(a){
-		this.aval.nombre = a.nombre;
-		this.aval.apellidoPaterno = a.apellidoPaterno;
-		this.aval.apellidoMaterno = a.apellidoMaterno;
-		this.aval.estadoCivil = a.estadoCivil;
-		this.aval.ocupacion = a.ocupacion;
-		this.aval.direccion = a.direccion;
-		this.aval.empresa = a.empresa;
-		this.aval.puesto = a.puesto;
-		this.aval.antiguedad = a.antiguedad;
-		this.aval.direccionEmpresa = a.direccionEmpresa;
-		this.aval.parentezco = a.parentezco;
-		this.aval.tiempoConocerlo = a.tiempoConocerlo;
-		this.aval.persona_id = a._id;
-		this.buscar.nombre = "";
+		
+		rc.aval.nombre = a.profile.nombre;
+		rc.aval.apellidoPaterno = a.profile.apellidoPaterno;
+		rc.aval.apellidoMaterno = a.profile.apellidoMaterno;
+		
+		Meteor.call('getAval', a._id, function(error, result){
+			if(result){					
+					rc.aval.ocupacion = result.ocupacion;
+					rc.aval.direccion = result.calle + " Num:" + result.numero + " CP:" + result.codigoPostal;
+					rc.aval.estadoCivil = result.estadoCivil;
+					rc.aval.empresa = result.empresa.nombre;
+					rc.aval.direccionEmpresa = result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;;
+					rc.aval.puesto = result.puesto;
+					rc.aval.tiempoLaborando = result.tiempoLaborando;
+					$scope.$apply();
+			}
+		});
+		
+		this.buscar.nombre = ""
+		rc.aval._id = a._id;
+		
 	};
 	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+	////////////////////////////////////////////////////////////////////////////////////////////////////	
 	this.insertarGarantia = function(tipo)
 	{
 			if (tipo == "mobiliaria")
@@ -560,9 +563,6 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 					fecha.setDate(fecha.getDate() + 7);
 			rc.credito.primerAbono = fecha;
 	};
-	
-	
-	
 	
 	this.editarGarantia = function(tipo, a)
 	{

@@ -1,11 +1,3 @@
-<!-- <div class="row">
-	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-		<h1 class="alge-title txt-color-blueDark">
-			<i class="fa fa-list fa-fw "></i>
-				Clientes &gt; Solicitud de Crédito
-		</h1>
-	</div>
-</div> -->
 <!-- Cabecera del perfil de  alumno seleccionado -->
 <div class="row" ng-show="ge.cliente.profile != undefined">
 	<div class="col-sm-12">
@@ -29,9 +21,7 @@
 					  		</div>
 					  		<div class="col-sm-6">
 										<h1>{{ge.cliente.profile.nombre}} <span class="semi-bold">{{ge.cliente.profile.apellidoPaterno}} {{ge.cliente.profile.apellidoMaterno}}</span>
-										
 										<small> (Cliente)</small></h1>
-										
 									</div>
 					  	</div>
 					    <div class="row">
@@ -94,74 +84,71 @@
 						<h4>Avales</h4>			
 						<div class="well">	    
 							<div class="row">
-								<div class="col-sm-8"> 
-									<!--<form class="header-search pull-right">
-								    <div class="form-group" style="width: 800px;">-->
-											<div ng-include=" 'client/planPagos/generadorPlan/_buscarPersona.html' "></div>
-								  <!--  </div>	    
-									</form>-->
+								<div class="col-sm-6"> 
+										<div ng-include=" 'client/planPagos/generadorPlan/_buscarAval.html' "></div>
 								</div>
 							</div>
 					    <div class="row">
-					    	<div class="col-sm-3"> 					    
+					    	<div class="col-sm-4"> 					    
 						    	<label>Nombre</label>
-						    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ge.aval.nombre">
+						    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ge.aval.nombre" disabled="true">
 					    	</div>
-					    	<div class="col-sm-3"> 					    
+					    	<div class="col-sm-4"> 					    
 						    	<label>Apellido Paterno</label>
-						    	<input name="apellidoPaternoAval" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ge.aval.apellidoPaterno">
+						    	<input name="apellidoPaternoAval" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ge.aval.apellidoPaterno" disabled="true">
 					    	</div>
-					    	<div class="col-sm-3"> 					    
+					    	<div class="col-sm-4"> 					    
 						    	<label>Apellido Materno</label>
-						    	<input name="apellidoMaternoAval" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ge.aval.apellidoMaterno">
-					    	</div>
-					    	<div class="col-sm-3"> 					    
-						    	<label>Estado Civil</label>
-						    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="ge.aval.estadoCivil">
+						    	<input name="apellidoMaternoAval" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ge.aval.apellidoMaterno" disabled="true">
 					    	</div>
 					    </div>
 					    <div class="row">	
+						    <div class="col-sm-8">					    
+						    	<label>Dirección</label>
+						    	<input name="direccion" type="text" class="form-control" placeholder="Dirección" ng-model="ge.aval.direccion" disabled="true">
+					    	</div>
+						    <div class="col-sm-4"> 					    
+						    	<label>Estado Civil</label>
+						    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="ge.aval.estadoCivil" disabled="true">
+					    	</div>
+					    </div>
+					    <div class="row">		
 						    <div class="col-sm-3"> 					    
 						    	<label>Ocupación</label>
-						    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="ge.aval.ocupacion">
-					    	</div>
-						    <div class="col-sm-4">					    
-						    	<label>Dirección</label>
-						    	<input name="direccion" type="text" class="form-control" placeholder="Dirección" ng-model="ge.aval.direccion">
+						    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="ge.aval.ocupacion" disabled="true">
 					    	</div>
 					    	<div class="col-sm-3">					    
 						    	<label>Empresa</label>
-						    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="ge.aval.empresa">
+						    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="ge.aval.empresa" disabled="true">
 					    	</div>
-					    	<div class="col-sm-2">					    
+					    	<div class="col-sm-3">					    
 						    	<label>Puesto</label>
-						    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ge.aval.puesto">
+						    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ge.aval.puesto" disabled="true">
+					    	</div>					    	
+					    	<div class="col-sm-3">					    
+						    	<label>Tiempo Laborando</label>
+						    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="ge.aval.tiempoLaborando" disabled="true">
 					    	</div>
-					    	
 					    </div>
 					    <div class="row">	
-						    <div class="col-sm-2">					    
-						    	<label>Antiguedad</label>
-						    	<input name="antiguedad" type="text" class="form-control" placeholder="Antiguedad" ng-model="ge.aval.antiguedad">
-					    	</div>
-						    <div class="col-sm-4">					    
+						    <div class="col-sm-5">					    
 						    	<label>Dirección Empresa</label>
-						    	<input name="direccionEmpresa" type="text" class="form-control" placeholder="Dirección Empresa" ng-model="ge.aval.direccionEmpresa">
+						    	<input name="direccionEmpresa" type="text" class="form-control" placeholder="Dirección Empresa" ng-model="ge.aval.direccionEmpresa" disabled="true">
 					    	</div>
-					    	<div class="col-sm-4">					    
+					    	<div class="col-sm-3">					    
 						    	<label>Parentezco</label>
-						    	<input name="parentezco" type="text" class="form-control" placeholder="Parentezco" ng-model="ge.aval.parentezco">
+						    	<input name="parentesco" type="text" class="form-control" placeholder="Parentezco" ng-model="ge.aval.parentesco" CAPITALIZE>
 					    	</div>
-					    	<div class="col-sm-2">					    
+					    	<div class="col-sm-3">					    
 						    	<label>Tiempo de Conocerlo</label>
-						    	<input name="tiempoConocerlo" type="text" class="form-control" placeholder="Tiempo en Conocerlo" ng-model="ge.aval.tiempoConocerlo">
+						    	<input name="tiempoConocerlo" type="text" class="form-control" placeholder="Tiempo en Conocerlo" ng-model="ge.aval.tiempoConocerlo" CAPITALIZE>
 					    	</div>
 					    	<!--<input type="hidden" name="aval_id" ng-model="ge.aval._id" value="">-->
 					    </div>
 					    <div class="row">		
 					    	<div class="col-sm-3">
 							   	<input type="button" ng-click="ge.insertarAval()" value="Agregar" ng-show="ge.actionAval" class="btn btn-primary"> 	
-							   	<input type="button" ng-click="ge.borrarReferencia()" value="Quitar Referenciado" ng-show="ge.aval.persona_id" class="btn btn-warning">
+							   	<input type="button" ng-click="ge.borrarReferencia()" value="Quitar Aval" ng-show="ge.aval._id" class="btn btn-warning">
 							   	<input type="button" ng-click="ge.actualizarAval(ge.aval)" value="Actualizar" ng-show="!ge.actionAval" class="btn btn-primary">
 							   	<input type="button" ng-click="ge.cancelarAval()" value="Cancelar" ng-show="!ge.actionAval" class="btn btn-danger">	   				
 								</div>
@@ -179,9 +166,9 @@
 												<th width="15%">Dirección</th>
 												<th width="10%">Empresa</th>
 												<th width="5%">Puesto</th>
-												<th width="5%">Antiguedad</th>
+												<th width="5%">Tiempo Laborando</th>
 												<th width="15%">Dirección Empresa</th>
-												<th width="10%">Parentezco</th>
+												<th width="10%">Parentesco</th>
 												<th width="10%">Tiempo Conocerlo</th>
 												<th width="5%">Quitar</th>
 											</tr>
@@ -195,9 +182,9 @@
 												<td>{{aval.direccion}}</td>
 												<td>{{aval.empresa}}</td>
 												<td>{{aval.puesto}}</td>
-												<td>{{aval.antiguedad}}</td>
+												<td>{{aval.tiempoLaborando}}</td>
 												<td>{{aval.direccionEmpresa}}</td>
-												<td>{{aval.parentezco}}</td>
+												<td>{{aval.parentesco}}</td>
 												<td>{{aval.tiempoConocerlo}}</td>
 												<td>
 														<a href="#" ng-click="ge.quitarAval(aval.num)"><i class="fa fa-trash"></i></a>
@@ -209,8 +196,7 @@
 								</div>
 							</div>
 						</div>
-						
-												
+																		
 						<h4>Garantias</h4>
 						<div class="well">	    
 							<div class="row">
@@ -222,8 +208,7 @@
 							    	</select>
 						    </div>
 							</div>
-							
-							
+														
 							<div  ng-if="ge.credito.tipoGarantia == 'mobiliaria'">
 								
 								<div class="row">
@@ -354,10 +339,11 @@
 						</div> <!--Fin del wel-->
 						<div class="row">
 							<div class="col-sm-12">
-								<button class="btn btn-info" ng-click="ge.generarPlanPagos(ge.credito, formNuevoCredito)" valida-form formulario="formNuevoCredito">Calcular Plan de Pagos</button>
+								<button class="btn btn-success" ng-click="ge.generarCredito()" valida-form formulario="formNuevoCredito">Guardar Solicitud de Crédito</button>
 							</div>
 						</div>	  
-				  </form>
+					
+					</form>
 				</div>
 			</div>
 		</div>
@@ -365,6 +351,7 @@
 </div>
 <div class="row" >
 	<div class="col-sm-12" >
+	<button class="btn btn-info" ng-click="ge.generarPlanPagos(ge.credito, formNuevoCredito)" valida-form formulario="formNuevoCredito">Calcular Plan de Pagos</button>	
 	<div id="print" > 
 		<table class="table table-striped table-bordered table-condensed font-xs">
 			<caption>
@@ -396,12 +383,6 @@
 			</tbody>
 		</table>
 		</div>
-
-		<button class="btn btn-success" ng-click="ge.generarCredito()">Guardar Solicitud de Crédito</button>
-		<!-- <a class="btn btn-primary" ng-click="ge.imprecion('print')" target="_blank" ng-show="ge.tablaAmort"
-		>Imprimir Tabla</a>	 -->						
 	</div>
 </div>
-<!-- ui-sref="anon.imprimirTabla({objeto_id : ge.cliente._id})" -->
-<!-- ng-click="ge.imprecion(ge.planPagos)" -->
 
