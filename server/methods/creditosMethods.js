@@ -210,7 +210,6 @@ Meteor.methods({
 						
 				} 
 				else if (aval.estatus == "A"){
-						console.log(aval.num);
 						//Buscar el avales_ids y actualizarlo						
 						_.each(c.avales_ids, function(aval_ids){
 								//console.log(aval_ids);
