@@ -132,13 +132,10 @@ this.subscribe('cuentas',()=>{
 	this.helpers({
 		bancos: () => {
       var ret = [];
-      var pagos = {};
-      var pays = Pagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
-      var caja = Cajas.find().fetch();
-       //_.each(caja, function(c) {
+      var pays = Pagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal"),}}).fetch();
+      console.log("sddss",pays)
        	var suma = 0;
        	_.each(pays, function(pago) {
-       //	console.log(pays,"pagos")
        	pago.cliente = Meteor.users.findOne(pago.usuario_id);
        	pago.nombreCompleto = pago.cliente.profile.nombreCompleto;
        	pago.quienCobro = Meteor.users.findOne(pago.usuarioCobro_id);
@@ -147,14 +144,36 @@ this.subscribe('cuentas',()=>{
        	pago.fechaPago = moment(pago.fechaPago).format("DD-MM-YYYY")
        	suma += pago.pago
        	pago.acumulado = suma
+       	pago.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id)
+       	pago.forma = pago.tipoIngreso.nombre
         });
-        //});
-        ret.push(pays)
+          ret.push(pays)
         console.log(ret,"dosthaa")
-      
-      return ret
-    },
+        _.each(pays, function(pago) {
+        	console.log(pago,"paguillo")
+        	if (pago.forma == 'DEPOSITO') {
+        		
 
+        	}
+        });
+
+        return ret
+       
+        		 	
+    	  
+       
+    },
+    // depositos: () => {
+    // 	var ret = rc.getReactively("bancos")
+    // 	_.each(ret, function(bank) {
+
+    // 		if (bank.forma == "DEPOSITO") {
+    // 			console.log(bank,"entro")
+    // 			return ret
+    // 		}
+    // 	});
+
+    // },
 		tiposCredito : () => {
 			return TiposCredito.find();
 		},
@@ -229,7 +248,15 @@ this.subscribe('cuentas',()=>{
 				return rc.historialCrediticio[rc.historialCrediticio.length - 1];	
 		},
 		pagos : () =>{
-			return Pagos.find().fetch()
+			 
+			var pagos = Pagos.find({}).fetch()
+
+			// _.each(pagos,function(p){
+			// 	p.tipoIngreso = TiposIngreso.findOne(p.tipoIngreso_id)
+
+			// });
+
+			return pagos
 		},
 		creditos : () => {
 				var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:4}).fetch();

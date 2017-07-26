@@ -149,42 +149,67 @@
 												<thead>
 													<tr>
 														<th width="5%">Número</th>
-														<th width="15%">Tipo</th>
-														<th width="15%">Marca</th>
-														<th width="15%">Modelo</th>
-														<th width="15%">Serie</th>
-														<th width="15%">Color</th>
-														<th width="15%">Estado Actual</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr ng-repeat="garantia in cob.credito.garantias">
-														<td>{{garantia.num}}</td>
-														<td>{{garantia.tipo}}</td>
-														<td>{{garantia.marca}}</td>
-														<td>{{garantia.modelo}}</td>
-														<td>{{garantia.serie}}</td>
-														<td>{{garantia.color}}</td>
-														<td>{{garantia.estadoActual}}</td>
-													</tr>
-												</tbody>
-											</table>
-											<table class="table table-bordered" ng-if="cob.credito.tipoGarantia=='general'">
-												<thead>
-													<tr>
-														<th width="5%">Número</th>
-														<th width="15%">Descripción</th>
-														<th width="15%">Valor estimado</th>
+													<th width="15%">Descripción genérica</th>
+													<th width="15%">Características</th>
+													<th width="15%">Avalúo</th>
+													<th width="15%">Préstamo</th>
+													<th width="15%">Préstamo sobre avalúo</th>
+													<th width="15%">Monto del avalúo</th>
+													<th width="15%">Porcentaje del préstamo sobre el avalúo</th>
+													<th width="15%">Fecha de inicio de comercialización</th>
+													<th width="15%">Fecha limite de finiquito</th>
 													</tr>
 												</thead>
 												<tbody>
 													<tr ng-repeat="garantia in cob.credito.garantias">
 														<td>{{garantia.num}}</td>
 														<td>{{garantia.descripcion}}</td>
-														<td>{{garantia.valorEstimado}}</td>
+														<td>{{garantia.caracteristicas}}</td>
+														<td>{{garantia.avaluo}}</td>
+														<td>{{garantia.prestamo}}</td>
+														<td>{{garantia.prestamoPorcentaje}}</td>
+														<td>{{garantia.monto}}</td>
+														<td>{{garantia.porcentaje}}</td>
+														<td>{{garantia.fechaComercializacion | date:"dd-MM-yyyy"}}</td>
+														<td>{{garantia.fechaFiniquito | date:"dd-MM-yyyy"}}</td>
 													</tr>
 												</tbody>
 											</table>
+											<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th width="5%">Número</th>
+													<th width="15%">Sup. de terreno y construcción</th>
+													<th width="15%">Medidas, colindancias, clave astral</th>
+													<th width="15%">Avalúo</th>
+													<th width="15%">Préstamo</th>
+													<th width="15%">Préstamo sobre avalúo</th>
+													<th width="15%">Monto de avalúo</th>
+													<th width="15%">% Porcentaje del préstamo sobre el avaluo</th>
+													<th width="15%">Comisión y gastos</th>
+													<th width="15%">Por escrituración e inscripción de registro público</th>
+													<th width="5%">Acción</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="garantia in cob.credito.garantias">
+													<td>{{garantia.num}}</td>
+													<td>{{garantia.terrenoYconstruccion}}</td>
+													<td>{{garantia.medidasColindancias}}</td>
+													<td>{{garantia.avaluo}}</td>
+													<td>{{garantia.prestamo}}</td>
+													<td>{{garantia.prestamoSobreAvaluo}}</td>
+													<td>{{garantia.montoAvaluo}}</td>
+													<td>{{garantia.porcentajePrestamo}}</td>
+													<td>{{garantia.comisionGastos}}</td>
+													<td>{{garantia.escrituracion}}</td>
+													<td>
+															<a href="#" ng-click="cob.quitarGarantia(cob.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
+															<a href="#" ng-click="cob.editarGarantia(cob.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
+													</td>
+												</tr>
+											</tbody>
+										</table>
 										</div>
 									</div>
 				      </div>

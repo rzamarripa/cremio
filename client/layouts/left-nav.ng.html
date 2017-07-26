@@ -173,6 +173,12 @@
 			</a>
 		</li>
 		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador'" >
+			<a ui-sref="root.avalesLista" tilte="Credito Mio">
+				<i class="fa fa-lg fa-fw fa-group"></i>
+				<span class="menu-item-parent">Avales</span>
+			</a>
+		</li>
+		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador'" >
 			<a ui-sref="root.distribuidoresLista" tilte="Credito Mio">
 				<i class="fa fa-lg fa-fw fa-group"></i>
 				<span class="menu-item-parent">Distribuidores</span>
@@ -232,35 +238,7 @@
 			</ul>
 		</li>
 
-        <!--
->>>>>>> 935ce3be25a5299b2f9cf5834f2a1f9136110de8
-		<li data-menu-collapse>
-			<a href="#" ng-show="currentUser.roles[0] == 'Gerente'">
-				<i class="fa fa-lg fa-fw fa-tags"></i>
-				<span class="menu-item-parent">Administración</span>
-			</a>
-			<ul>
-				<li ng-if="currentUser.roles[0] == 'Gerente'">
-					<a ui-sref="root.cajas" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-file"></i>
-						<span class="menu-item-child">Ventanillas</span>
-					</a>
-				</li>
-				<li ng-if="currentUser.roles[0] == 'Gerente'">
-					<a ui-sref="root.cajasActivas" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-file"></i>
-						<span class="menu-item-child">Ventanillas Activas</span>
-					</a>
-				</li>
-				<li>
-					<a ui-sref="root.traspasoCuentaCuenta" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-dollar"></i>
-						<span class="menu-item-child">Traspasos de Cuenta a Cuenta</span>
-					</a>
-				</li>
-			</ul>
-		</li>
--->
+
         <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Verificador'">
             <a ui-sref="root.panelVerificador" tilte="Credito Mio">
                 <i class="fa fa-lg fa-fw fa-group"></i>
@@ -299,45 +277,5 @@
                         <span class="menu-item-child">Formato de Solicitud</span>
                     </a>
                 </li>
-<!--
-        <li data-menu-collapse>
-            <a ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">
-                <i class="fa fa-lg fa-fw fa-inbox"></i>
-                <span class="menu-item-parent">Ventanillas</span>
-            </a>
-            <ul>
-                <li ng-if="currentUser.roles[0] == 'Cajero'">
-                    <a ui-sref="root.corteCaja" tilte="Credito Mio">
-                        <i class="fa fa-lg fa-fw fa-scissors"></i>
-                        <span class="menu-item-child">Corte de Ventanilla</span>
-                    </a>
-                </li>
-                <li ng-if="currentUser.roles[0] == 'Cajero'">
-                    <a ui-sref="root.cajas" tilte="Credito Mio">
-                        <i class="fa fa-lg fa-fw fa-chain-broken"></i>
-                        <span class="menu-item-child">Corte Parcial</span>
-                    </a>
-                </li>
-                <li ng-if="currentUser.roles[0] == 'Gerente'">
-                    <a ui-sref="root.intraCajas" tilte="Credito Mio">
-                        <i class="fa fa-lg fa-fw fa-dollar"></i>
-                        <span class="menu-item-child">Traspasos Entre Ventanillas</span>
-                    </a>
-                </li>
-                <li ng-if="currentUser.roles[0] == 'Gerente'">
-                    <a ui-sref="root.traspasoCajaCuenta" tilte="Credito Mio">
-                        <i class="fa fa-lg fa-fw fa-dollar"></i>
-                        <span class="menu-item-child">Traspasos de Ventanilla a Cuenta</span>
-                    </a>
-                </li>
-                <li ng-if="currentUser.roles[0] == 'Gerente'">
-                    <a ui-sref="root.traspasoCuentaCaja" tilte="Credito Mio">
-                        <i class="fa fa-lg fa-fw fa-dollar"></i>
-                        <span class="menu-item-child">Traspasos de Cuenta a Ventanilla</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
--->
     </ul>
 </nav>
