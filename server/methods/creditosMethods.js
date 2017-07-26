@@ -59,7 +59,7 @@ Meteor.methods({
 		return "hecho";
 	},
 	generarCreditoPeticion : function(cliente, credito) {
-		console.log(credito);
+		//console.log(credito);
 		if(credito.requiereVerificacion == true){
 			credito.estatus = 0;
 		}else if(credito.requiereVerificacion == false){
@@ -74,7 +74,7 @@ Meteor.methods({
 			
 			if (aval.buscarPersona_id)
 			{
-							console.log("Condicion de buscarPersona");
+							//console.log("Condicion de buscarPersona");
 							//console.log(referenciaPersonal.buscarPersona_id);
 							var p = Personas.findOne({_id:aval.buscarPersona_id});
 							
@@ -140,7 +140,7 @@ Meteor.methods({
 			}
 			else
 			{
-					console.log("Condicion de persona existente");
+					//console.log("Condicion de persona existente");
 					var p = Personas.findOne({_id:aval.persona_id});
 					p.relaciones.push({		credito_id				: credito._id, 
 																cliente_id 				: cliente._id,
@@ -189,7 +189,7 @@ Meteor.methods({
 			
 			if (aval.buscarPersona_id)
 			{
-							console.log("Condicion de buscarPersona");
+							//console.log("Condicion de buscarPersona");
 							//console.log(referenciaPersonal.buscarPersona_id);
 							var p = Personas.findOne({_id:aval.buscarPersona_id});
 							
@@ -225,7 +225,7 @@ Meteor.methods({
 			}
 			else if (!aval.persona_id)
 			{	  	
-					console.log("Condicion de nueva PersonaId");
+					//console.log("Condicion de nueva PersonaId");
 					aval.relaciones = [];
 					aval.relaciones.push({credito_id				: idCredito, 
 																cliente_id 				: cliente._id,
@@ -257,7 +257,7 @@ Meteor.methods({
 			}
 			else
 			{
-					console.log("Condicion de persona existente");
+					//console.log("Condicion de persona existente");
 					var p = Personas.findOne({_id:aval.persona_id});
 					p.relaciones.push({		credito_id				: idCredito, 
 																cliente_id 				: cliente._id,

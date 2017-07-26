@@ -16,52 +16,52 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	rc.conSolicitanteAval = 0;
 	
   
-	let Cred = this.subscribe('creditos',()=>{
+	this.subscribe('creditos',()=>{
 			return [{requiereVerificacion : true , estatus: 0}]
 	});
 					
   this.helpers({
 	  creditos : () => {
-		  return Creditos.find();
+		  var cre = Creditos.find().fetch();
+		  if (cre != undefined)
+		  {
+			  _.each(cre, function(credito){
+	
+							var cliente = {};
+							Meteor.call('getUsuario', credito.cliente_id, function(error, result) {
+							   if(error)
+							   {
+								    console.log('ERROR :', error);
+								    return;
+							   }
+							   if(result)
+							   {	
+									 		cliente = result;
+											credito.nombreCliente = cliente.nombreCompleto;
+											$scope.$apply();
+								 }
+							});
+							
+							Meteor.call('getVerificacionesCredito', credito._id, function(error, result) {
+							   if(error)
+							   {
+								    console.log('ERROR :', error);
+								    return;
+							   }
+							   if(result)
+							   {	
+									 		_.each(result, function(v){
+										 			v.nombreCliente = credito.nombreCliente;
+										 			rc.verificacionesHechas.push(v);
+									 		});
+									 		$scope.$apply();
+								 }
+							});
+					})
+		  }
+		  return cre;
 	  },
-	  datosCreditos : () => {
-			if(Cred.ready()){
-				_.each(rc.creditos, function(credito){
-					//console.log(credito,"sdsdddddsd")
 
-						var cliente = {};
-						Meteor.call('getUsuario', credito.cliente_id, function(error, result) {
-						   if(error)
-						   {
-							    console.log('ERROR :', error);
-							    return;
-						   }
-						   if(result)
-						   {	
-								 		cliente = result;
-										credito.nombreCliente = cliente.nombreCompleto;
-										$scope.$apply();
-							 }
-						});
-						
-						Meteor.call('getVerificacionesCredito', credito._id, function(error, result) {
-						   if(error)
-						   {
-							    console.log('ERROR :', error);
-							    return;
-						   }
-						   if(result)
-						   {	
-								 		_.each(result, function(v){
-									 			v.nombreCliente = credito.nombreCliente;
-									 			rc.verificacionesHechas.push(v);
-								 		});
-								 		$scope.$apply();
-							 }
-						});
-				})
-			}
-	  }
   });
   
   this.mostrarEvaluacion = function(credito_id)

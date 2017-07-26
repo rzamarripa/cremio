@@ -1,16 +1,13 @@
 <div class="row">
 	<div class="col-sm-12">
 		<form name="form" class="form-horizontal" role="form" novalidate>		
-			<div ng-show="!cli.action">
-					<a  ui-sref="root.clienteDetalle({objeto_id: cli.objeto_id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
-			</div>
 			<br><br>
-			<h4>Información del Cliente</h4>
+			<h4>Información del Aval</h4>
 			<div class="well">	    
 				<div class="row">
 					<div class="col-sm-12"> 
-						<label>Buscar Prospecto con Nombre (s) *</label>
-						<div ng-include=" 'client/clientes/_buscarPersonaCliente.html'"></div>
+						<label>Buscar Aval con Nombre (s) *</label>
+						<div ng-include=" 'client/avales/_buscarAvales.html'"></div>
 					</div>
 				</div>
 				<br> 
@@ -27,20 +24,6 @@
 						<label>Apellido Materno</label>
 						<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cli.objeto.profile.apellidoMaterno" capitalize>
 					</div>	    				    	    
-				</div>
-				<div class="row" ng-if="!cli.action">
-					<div class="col-sm-4" valida> 					    
-						<label>Usuario *</label>
-						<input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="cli.objeto.username" required="" disabled="true">
-					</div>
-					<div class="col-sm-4" valida>					    
-						<label>Contraseña *</label>
-						<input name="contrasena" type="password" class="form-control" placeholder="Contraseña" ng-model="cli.objeto.password" required="">
-					</div>		    				    	    
-					<div class="col-sm-4" valida>					    
-						<label>Confirmar Contraseña *</label>
-						<input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="cli.objeto.confirmpassword" required="">
-					</div>
 				</div>
 				<br/>
 				<div class="row">

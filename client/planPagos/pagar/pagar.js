@@ -334,8 +334,6 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
       return TiposCredito.find();
     },
     planPagosViejo: () => {
-
-				
 			var pp = PlanPagos.find({importeRegular : {$gt : 0},}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
       rc.subtotal = 0;
 			rc.cargosMoratorios = 0;
@@ -352,6 +350,15 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 	              
 	              pago.credito.tipoPar = "impar"
 	            }
+	            
+	            	_.each(rc.creditos, function(credito) {
+		            	if(credito[0]){
+			            	credito.color = "Amarillo"
+		            	}
+		            	
+	            	});
+	            
+	            
 
 	   //           for (var i = 0; i <= pp.length -1; i++) {
 				// if(i){

@@ -27,31 +27,34 @@ Meteor.methods({
 				seguro = 0;		
 				
 		var numeroPagosCompuesto = 0;
-
+		var tasaInteres = 0;
+		
+		
 		if(credito.periodoPago == "Semanal")
 		{
 			totalPagos = credito.duracionMeses * 4;
-			//seguro = seguro / 2;
 			numeroPagosCompuesto = 4;	
+			tasaInteres = (credito.tasa / 4) / 100;
 		}	
 		else if (credito.periodoPago == "Quincenal")
 		{
 			totalPagos = credito.duracionMeses * 2;
 			numeroPagosCompuesto = 2;
+			tasaInteres = (credito.tasa / 2) / 100;
 		}	
 		else if(credito.periodoPago == "Mensual")
 		{
 			totalPagos = credito.duracionMeses;
-			//seguro = seguro * 2;
 			numeroPagosCompuesto = 1;
+			tasaInteres = credito.tasa / 100;
 		}	
-		
+				
 		
 		var plan = [];
 		
 		if (tipoCredito.tipoInteres == "Compuesto" || tipoCredito.tipoInteres == "Simple")
 		{
-				
+				var importeParcial = 0;
 				if (tipoCredito.tipoInteres == "Simple")
 				{
 						
@@ -74,23 +77,33 @@ Meteor.methods({
 				}
 				else if(tipoCredito.tipoInteres == "Compuesto")
 				{
-
-						var suma = 0;
 						
-						var iva = ((credito.capitalSolicitado * (credito.tasa  / 100)*0.16))/numeroPagosCompuesto;
-						iva = parseFloat(iva.toFixed(2));
-						var interes = (credito.capitalSolicitado * (credito.tasa  / 100))/numeroPagosCompuesto;
-						interes = parseFloat(interes.toFixed(2));
-						var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
+						var FV = 0;
+						var pagoFijo = 0;
+						var suma = 0;						
+						FV = 	parseFloat(credito.capitalSolicitado * Math.pow(1 + tasaInteres, totalPagos)).toFixed(2);
+						pagoFijo = parseFloat(FV / totalPagos).toFixed(2);
+						var interes = parseFloat(pagoFijo * tasaInteres).toFixed(2);
+						var capital = parseFloat((pagoFijo - interes) / 1.16).toFixed(2);
+						var iva = parseFloat(capital * 0.16).toFixed(2);
 						
+/*
+						console.log("pagoFijo:", pagoFijo);
+						console.log("FV:", FV);
+						console.log("Cap:", capital);
+						console.log("int:", interes);
+						console.log("IVA:", iva);
+*/
+												
 						if (credito.conSeguro)
-								var importeParcial = capital + interes + iva + seguro;
+								importeParcial = parseFloat(capital) + parseFloat(interes) + parseFloat(iva) + parseFloat(seguro);
 						else
-								var importeParcial = capital + interes + iva;
+								importeParcial = parseFloat(capital) + parseFloat(interes) + parseFloat(iva);
 						
+						importeParcial = Math.round(importeParcial * 100) / 100;
 						
-						importeParcial=Math.round(importeParcial * 100) / 100;
-						suma += importeParcial;
+//						console.log("importeParcial:", importeParcial);
+						
 						
 				}
 			
