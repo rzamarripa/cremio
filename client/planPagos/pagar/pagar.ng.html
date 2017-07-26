@@ -630,7 +630,7 @@
 										
 										<div class="col-sm-8">
 
-											<table class="table table-striped table-bordered table-condensed font-xs">
+											<table class="table table-bordered table-condensed font-xs">
 												<thead class="thead">
 													<tr>
 														<th class="text-center" width="5%"></th>
@@ -648,12 +648,12 @@
 													</tr>
 												</thead>
 												<tbody>
-													<tr ng-class="(pago.tipoPar == 'par') ? 'default' : (pago.tipoPar == 'impar') ? 'info': 'success'" ng-repeat="pago in pvpp.planPagosViejo | orderBy: pvpp.funcionOrdenar()" ng-if="pago.verCargo">
+													<tr ng-class="pago.color" ng-repeat="pago in pvpp.planPagosViejo | orderBy: pvpp.funcionOrdenar()" ng-if="pago.verCargo">
 							
 														<td ><a ng-model="pago.pagoSeleccionado" ng-click="pvpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
 
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	
-														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.folio}}</td>
+														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.movimiento }}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pvpp.getnumeroPagos(pago.credito_id)}}</td>

@@ -2,7 +2,7 @@ angular
   .module("creditoMio")
   .controller("PagarPlanPagosCtrl", PagarPlanPagosCtrl);
 
-function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr) {
+function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams, toastr) {
 
   let rc = $reactive(this).attach($scope);
   this.action = false;
@@ -11,8 +11,6 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
   window.rc = rc;
   this.credito_id = "";
   
-
-
   this.credito = {};
   this.pago = {};
   this.pago.pagar = 0;
@@ -27,6 +25,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
   this.masInfo = true;
   this.masInfoCredito = true;
   rc.openModal = false
+  rc.foliosCreditos = [];
 	
 	this.valorOrdenar = "Folio";
 	
@@ -335,47 +334,36 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
       return TiposCredito.find();
     },
     planPagosViejo: () => {
-	
+    	var colores = ['active', 'info', 'warning', 'success', 'danger'];
+    	var asignados = [];
 			var pp = PlanPagos.find({importeRegular : {$gt : 0},}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
       rc.subtotal = 0;
 			rc.cargosMoratorios = 0;
 			
 			_.each(pp, function(pago) {
 				pago.credito = Creditos.findOne(pago.credito_id);
-				 if(pago.credito.folio % 2 == 0)
-	            {
-	              
-	              pago.tipoPar = "par"
-	            }
-	            else
-	            {
-	              
-	              pago.tipoPar = "impar"
-	            }
-	            
-	            	_.each(rc.creditos, function(credito) {
-		            	if(credito[0]){
-			            	credito.color = "Amarillo"
-		            	}
-		            	
-	            	});
-	            
-	            
+				pago.color = colores[0];
+        var credito = Creditos.findOne({_id:pago.credito_id});
+        pago.verCargo = true;
+        
+        if (pago.descripcion == "Recibo")
+        		rc.subtotal +=  pago.importeRegular;
+        else 
+        		rc.cargosMoratorios +=  pago.importeRegular;
+        
+        pago.folio = pago.credito.folio;
 
-          var credito = Creditos.findOne({_id:pago.credito_id});
-	        pago.verCargo = true;
-	        
-	        if (pago.descripcion == "Recibo")
-	        		rc.subtotal +=  pago.importeRegular;
-	        else 
-	        		rc.cargosMoratorios +=  pago.importeRegular;
-	        
-					if (credito)
-							pago.folio = credito.folio;
-       });
-       
-       rc.total = rc.subtotal + rc.cargosMoratorios;
-					
+      });
+      pp = $filter('orderBy')(pp, 'folio')
+  		_.each(pp, function(pago) {
+				if(asignados[pago.credito.folio] == undefined){
+						ultimo = _.last(asignados);
+						asignados[pago.credito.folio] = (ultimo == undefined ? 0 : ultimo+1 > 4 ? ultimo-4 : ultimo+1);
+					}
+					pago.color = colores[asignados[pago.credito.folio]];
+
+	      rc.total = rc.subtotal + rc.cargosMoratorios;
+			});
       //return PlanPagos.find({}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } })
       
       return pp;
@@ -393,10 +381,15 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
            
         })
       }
+      _.each(rc.getReactively("planPagosViejo"), function(pp) {
+    
 
+      })
 
       if (creditos) {
         _.each(creditos, function(credito) {
+        	// credito[0].color = credito.folio
+        	
 
           _.each(credito.avales_ids, function(aval) {
             credito.aval = Personas.findOne(aval)
@@ -405,6 +398,7 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 
         })
       }
+
       return creditos;
     },
     pagos: () => {
@@ -525,6 +519,17 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
     });
   }
   
+  this.funcionOrdenar = function() 
+	{
+		
+			if (this.valorOrdenar == "Folio")
+	    		return ['folio'];
+	    if (this.valorOrdenar == "Fecha")
+	    		return ['fechaLimite'];
+	    if (this.valorOrdenar == "Recibo")
+	    		return ['numeroPago'];
+	};
+
   this.guardarPago = function(pago, credito) {
 		
 	  if (this.pago.tipoIngreso_id == undefined)
@@ -673,21 +678,6 @@ function PagarPlanPagosCtrl($scope, $meteor, $reactive, $state, $stateParams, to
     
 		});
 
-	this.funcionOrdenar = function() 
-	{
-		
-			if (this.valorOrdenar == "Folio")
-	    		return ['folio'];
-	    if (this.valorOrdenar == "Fecha")
-	    		return ['fechaLimite'];
-	    if (this.valorOrdenar == "Recibo")
-	    		return ['numeroPago'];
-	    		
-	    /*
-if (this.valorOrdenar == "Cliente")
-	    		return ['cliente.nombreCompleto'];		
-*/
-	};
 
 	this.ocultar = function() 
 	{

@@ -924,8 +924,8 @@ diato;
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				var content = fs
 					.readFileSync(produccion+"CONTRATOINTERES.docx", "binary");
 		var zip = new JSZip(content);
@@ -971,8 +971,8 @@ diato;
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				var content = fs
 					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO.docx", "binary");
     	   
@@ -1017,8 +1017,7 @@ diato;
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
     	   
@@ -1064,8 +1063,8 @@ diato;
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				var content = fs				
 					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.docx", "binary");
     	   
@@ -1099,49 +1098,6 @@ diato;
     return new Buffer(bitmap).toString('base64');
 
    }
-  //   if (contrato=="CONTRATO SIMPLE") {
-  //  		console.log(contrato,"contratos ")
-		// var fs = require('fs');
-  //   	var Docxtemplater = require('docxtemplater');
-		// var JSZip = require('jszip');
-		// var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		// ////var produccion = "/home/cremio/archivos/";
-		
-		// //var produccion = "/home/cremio/archivos/";
-		// var produccion = meteor_root+"/web.browser/app/plantillas/";
-		// 		var content = fs				
-		// 			.readFileSync(produccion+"Documentos.docx", "binary");
-    	   
-		// var zip = new JSZip(content);
-		// var doc=new Docxtemplater()
-		// 						.loadZip(zip).setOptions({nullGetter: function(part) {
-		// 	if (!part.module) {
-		// 	}
-		// 	if (part.module === "rawxml") {
-		// 	return "";
-		// 	}
-		// 	return "";
-		// }});
-		
-		// 	var fecha = new Date();
-		// 	var f = fecha;
-	 //    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    
-	 //  		doc.setData({				items: 	   contrato,
-		// 							    fecha:     fecha,
-		// 		});
-								
-		// doc.render();
- 
-		// var buf = doc.getZip()
-  //            		 .generate({type:"nodebuffer"});
-		// fs.writeFileSync(produccion+"DcumentosSalida.docx",buf);		
-
-  //   var bitmap = fs.readFileSync(produccion+"DcumentosSalida.docx");
-    
-  //   return new Buffer(bitmap).toString('base64');
-
-  //  }
 },
 getListaCobranza: function (objeto) {
 	

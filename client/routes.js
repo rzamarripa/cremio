@@ -379,6 +379,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+	
 		.state('root.generadorPlan', {
 			url: '/generadorPlan/:objeto_id',
 			templateUrl: 'client/planPagos/generadorPlan/generadorPlan.html',

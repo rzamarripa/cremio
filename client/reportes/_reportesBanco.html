@@ -65,11 +65,10 @@
 					</tr>
 				</thead>
 				<tbody>
-			    <tr ng-repeat="objeto in re.bancos[0] | filter:buscar">
+			    <tr ng-repeat="objeto in re.bancos | filter:buscar">
 			    	<td><div class="text-center">{{$index + 1}}</div></td>
 				    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
 				    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
-				    
 				    <td><div class="text-center">{{objeto.fechaPago}}</div></td>
 				    <td><div class="text-center">{{objeto.pago}}</div></td>
 				    <td><div class="text-center">{{objeto.fechaPago}}</div></td>
