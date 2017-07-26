@@ -42,7 +42,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.empresaSeleccionada = ""
 	
 	rc.editMode = false;
-	rc.puedeSolicitar = true
+	rc.puedeSolicitar = true;
 	
 	this.subscribe("ocupaciones",()=>{
 		return [{ estatus : true }]
@@ -150,13 +150,27 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					rc.puedeSolicitar = true
 				}else{
 					rc.puedeSolicitar = false
-
 				}
 				if (creditos == "") {
 					rc.puedeSolicitar = false
 
 				}
-				console.log(rc.puedeSolicitar)
+					//console.log(rc.puedeSolicitar)
+				credito.tieneAvales = false;
+				//recorre los avales
+				_.each(credito.avales_ids, function(aval){
+						credito.tieneAvales = true;
+						Meteor.apply('getAval', [aval.aval_id], function(error, result){
+							if(result){
+								console.log(result.nombreCompleto);
+								aval.nombreCompleto = result.nombreCompleto;
+								aval.celular = result.celular;
+							}
+							$scope.$apply();
+						});
+					
+				})
+				
 			});
 
 /*
