@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="javascript:void(0);"> {{persona.profile.nombreCompleto}}</a>
-                            <a href="javascript:void(0);" ng-click="ava.AgregarCliente(persona);ava.buscando = false"> Agregar</a>
+                            <a href="javascript:void(0);" ng-click="ava.AgregarAval(persona);ava.buscando = false"> Agregar</a>
                             <div class="btn-group btn-xs btn-group-justified">
                                 <a href="javascript:void(0);" class="btn btn-default" ng-repeat="relacion in persona.relaciones"><span ng-show="relacion.tipoPersona=='Aval'">{{relacion.credito}}</span>
 																								 <span ng-show="relacion.tipoPersona!='Aval'">{{relacion.cliente}}</span> - {{relacion.tipoPersona}} - <span ng-class = "relacion.estatus==0?'text-success':'text-danger'"><i ng-if="relacion.estatus==0" class="fa fa-check"></i><i ng-if="relacion.estatus!=0" class="fa fa-times"></span></a>

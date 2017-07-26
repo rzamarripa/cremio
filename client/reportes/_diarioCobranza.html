@@ -79,9 +79,9 @@
 			    <td><div class="text-center">{{objeto.cliente.profile.numeroCliente}}</div></td>
 			    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
 			    <td><div class="pull-right">{{objeto.interes | currency}}</div></td>
-			    <td><div class="pull-right">{{objeto.pago | currency}}</div></td>
-			    <td><div class="pull-right">{{objeto.iva | currency}}</div></td>
-			    <td><div class="pull-right">{{objeto.seguro | currency}}</div></td>
+			    <td><div class="pull-right">{{objeto.pagos[0].pagoCapital | currency}}</div></td>
+			    <td><div class="pull-right">{{objeto.pagos[0].pagoIva | currency}}</div></td>
+			    <td><div class="pull-right">{{objeto.pagos[0].pagoSeguro | currency}}</div></td>
 			    <td><div class="pull-right">{{objeto.tipoIngreso.nombre}}</div></td><td><div class="text-center">{{objeto.movimiento}}</div></td>
 			    <td><div class="pull-right">{{objeto.cargo | currency}}</div></td> 
 			   

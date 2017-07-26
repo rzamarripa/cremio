@@ -131,14 +131,12 @@ this.subscribe('cuentas',()=>{
 	
 	this.helpers({
 		bancos: () => {
-      var ret = [];
-      var pagos = {};
-      var pays = Pagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
-      var caja = Cajas.find().fetch();
-       //_.each(caja, function(c) {
+      //var ret = [];
+      var pays = Pagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal"),}}).fetch();
+      //console.log("sddss",pays)
+      if(pays.length){
        	var suma = 0;
        	_.each(pays, function(pago) {
-       //	console.log(pays,"pagos")
        	pago.cliente = Meteor.users.findOne(pago.usuario_id);
        	pago.nombreCompleto = pago.cliente.profile.nombreCompleto;
        	pago.quienCobro = Meteor.users.findOne(pago.usuarioCobro_id);
@@ -147,12 +145,17 @@ this.subscribe('cuentas',()=>{
        	pago.fechaPago = moment(pago.fechaPago).format("DD-MM-YYYY")
        	suma += pago.pago
        	pago.acumulado = suma
+       	pago.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id)
+       	pago.forma = pago.tipoIngreso.nombre
         });
-        //});
-        ret.push(pays)
-        console.log(ret,"dosthaa")
-      
-      return ret
+          //ret.push(pays)
+        for (var i = 0; i <= pays.length; i++) {
+        	if (pays[i].forma != 'DEPOSITO') {
+        		pays.splice(i, 1);
+        	}
+        }
+    }
+        return pays
     },
 
 		tiposCredito : () => {
@@ -194,8 +197,8 @@ this.subscribe('cuentas',()=>{
 				// plan.numerosPagos= plan.credito.folio
 	    	plan.numeroCliente = plan.cliente.profile.numeroCliente
 	    	suma += plan.pago
-	    	sumaInter += plan.interes
-	    	sumaIva += plan.iva 
+	    	sumaInter += plan.pagos[0].pagoInteres
+	    	sumaIva += plan.pagos[0].pagoIva 
 				});
 
 				_.each(planes,function(plan){
@@ -220,7 +223,6 @@ this.subscribe('cuentas',()=>{
 		
 		},
 		pagosVencidos : () => {
-			_.each(rc.getReactively("planPagos"),function(plan){});
 			return rc.planPagos.length
 		},
 		historialCredito : () => {
@@ -229,7 +231,15 @@ this.subscribe('cuentas',()=>{
 				return rc.historialCrediticio[rc.historialCrediticio.length - 1];	
 		},
 		pagos : () =>{
-			return Pagos.find().fetch()
+			 
+			var pagos = Pagos.find({}).fetch()
+
+			// _.each(pagos,function(p){
+			// 	p.tipoIngreso = TiposIngreso.findOne(p.tipoIngreso_id)
+
+			// });
+
+			return pagos
 		},
 		creditos : () => {
 				var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:4}).fetch();
@@ -261,7 +271,9 @@ this.subscribe('cuentas',()=>{
 	     rc.totalSolicitado = parseFloat(credito.sumaCapital.toFixed(2))
 	  	});
 
-				//console.log("creditos",creditos)
+	     	rc.numeroCreditos = creditos.length
+
+				console.log("creditos",rc.numeroCreditos)
 				return creditos
 			},
 			creditosLiquidados : () => {
@@ -295,6 +307,8 @@ this.subscribe('cuentas',()=>{
 	  	});
 
 				//console.log("creditos",creditos)
+
+				rc.numeroCreditosL = creditos.length
 				return creditos
 			},
 			

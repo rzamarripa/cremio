@@ -585,8 +585,13 @@ Meteor.methods({
 		var pagos = PlanPagos.find({_id:{$in:idpagos}},{sort:{descripcion:1}}).fetch();
 		
 		var mfecha = moment(ahora);
+		
 		_.each(pagos,function(p){
 			p.tipoIngreso_id = tipoIngresoId;
+			
+
+			// pago.tipoIngreso = TiposIngreso.findOne(p.tipoIngreso_id)
+			// pago.formaPagopago.tipoIngreso.nombre
 			
 			if(p.estatus != 1)
 			{

@@ -418,7 +418,7 @@ angular.module("creditoMio")
               });
   };
     
-  this.AgregarCliente = function(a){
+  this.AgregarAval = function(a){
 
     this.objeto = {}; 
     this.objeto.profile = {};
@@ -430,6 +430,7 @@ angular.module("creditoMio")
     this.objeto.profile.persona_id = a._id;
 
     this.buscar.nombre = "";
+    
   };
   
   this.AgregarReferencia = function(a){

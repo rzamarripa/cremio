@@ -46,17 +46,17 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 			return clientes;
 			
 		},
-		clienteUsuario: () => {
-			var clientes = Meteor.users.find().fetch()
-			_.each(clientes, function(cliente){
-				root.nombreCliente = cliente.profile.nombreCompleto
+		// clienteUsuario: () => {
+		// 	var clientes = Meteor.users.find().fetch()
+		// 	_.each(clientes, function(cliente){
+		// 		root.nombreCliente = cliente.profile.nombreCompleto
 
-			});
-			//console.log(clientes)
+		// 	});
+		// 	//console.log(clientes)
 						
-			return clientes;
+		// 	return clientes;
 			
-		}
+		// }
 	});
 
 	this.verMenu =()=>{

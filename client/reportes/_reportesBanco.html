@@ -7,10 +7,10 @@
 	</div>
 	<div class="">
 			<ul id="sparks" class="">
-				<li class="sparks-info">
-					<h5>Total a Pagar <span class="txt-color-green" style="text-align: right">{{re.totalPagar | currency}}</span></h5>
-				<li class="sparks-info">
-					<h5>Total Solicitado <span class="txt-color-red" style="text-align: right">{{re.totalSolicitado | currency}}</span></h5>
+			<!-- 	<li class="sparks-info">
+					<h5>Total a Pagar <span class="txt-color-green" style="text-align: right">{{re.totalPagar | currency}}</span></h5> -->
+				<!-- <li class="sparks-info">
+					<h5>Total Acumulado <span class="txt-color-red" style="text-align: right">{{re.totalSolicitado | currency}}</span></h5> -->
 
 			</ul>
 		</div>
@@ -65,18 +65,17 @@
 					</tr>
 				</thead>
 				<tbody>
-			    <tr ng-repeat="objeto in re.bancos[0] | filter:buscar">
+			    <tr ng-repeat="objeto in re.bancos | filter:buscar">
 			    	<td><div class="text-center">{{$index + 1}}</div></td>
 				    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
 				    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
-				    
 				    <td><div class="text-center">{{objeto.fechaPago}}</div></td>
 				    <td><div class="text-center">{{objeto.pago}}</div></td>
 				    <td><div class="text-center">{{objeto.fechaPago}}</div></td>
 				    <td><div class="pull-right">{{objeto.nombreCajero}}</div></td>
-				    <td><div class="pull-right">""</div></td>
-				    <td><div class="pull-right">""</div></td> 	
-				    <td><div class="pull-right">""</div></td> 	
+				    <td><div class="pull-right">{{objeto.planPagos[0].pagoInteres}}</div></td>
+				    <td><div class="pull-right">{{objeto.planPagos[0].pagoCapital}}</div></td> 	
+				    <td><div class="pull-right">{{objeto.planPagos[0].pagoIva}}</div></td> 	
 				    <td><div class="pull-right">{{objeto.acumulado}}</div></td>
 				    <!-- <td><div class="pull-right">Acumulado</div></td>
 				    <td><div class="text-center">{{objeto.pago}}</div></td>	 -->			
