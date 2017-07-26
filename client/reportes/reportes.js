@@ -131,9 +131,10 @@ this.subscribe('cuentas',()=>{
 	
 	this.helpers({
 		bancos: () => {
-      var ret = [];
+      //var ret = [];
       var pays = Pagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal"),}}).fetch();
-      console.log("sddss",pays)
+      //console.log("sddss",pays)
+      if(pays.length){
        	var suma = 0;
        	_.each(pays, function(pago) {
        	pago.cliente = Meteor.users.findOne(pago.usuario_id);
@@ -147,18 +148,21 @@ this.subscribe('cuentas',()=>{
        	pago.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id)
        	pago.forma = pago.tipoIngreso.nombre
         });
-          ret.push(pays)
-        console.log(ret,"dosthaa")
-        _.each(pays, function(pago) {
-        	console.log(pago,"paguillo")
-        	if (pago.forma == 'DEPOSITO') {
-        		
-
+          //ret.push(pays)
+        for (var i = 0; i <= pays.length; i++) {
+        	if (pays[i].forma != 'DEPOSITO') {
+        		pays.splice(i, 1);
         	}
-        });
-
-        return ret
-       
+        }
+    }
+        return pays
+        // console.log(pays,"dosthaa")
+        // _.each(pays, function(pago) {
+        // 	console.log(pago,"paguillo")
+        // 	if (pago.forma == 'DEPOSITO') {
+        // 		//return ret
+        // 	}
+        // });
         		 	
     	  
        
@@ -239,7 +243,6 @@ this.subscribe('cuentas',()=>{
 		
 		},
 		pagosVencidos : () => {
-			_.each(rc.getReactively("planPagos"),function(plan){});
 			return rc.planPagos.length
 		},
 		historialCredito : () => {

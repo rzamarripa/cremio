@@ -379,26 +379,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
-		.state('root.avalesLista', {
-			url: '/avales',
-			templateUrl: 'client/avales/avalesLista.ng.html',
-			controller: 'AvalesListaCtrl as aval',
-			resolve: {
-				"currentUser": ["$meteor", function($meteor){
-					return $meteor.requireUser();
-				}]
-			}
-		})
-		.state('root.avalesForm', {
-			url: '/avalesForm',
-			templateUrl: 'client/avales/avalesForm.ng.html',
-			controller: 'AvalessFormCtrl as dis',
-			resolve: {
-				"currentUser": ["$meteor", function($meteor){
-					return $meteor.requireUser();
-				}]
-			}
-		})
+	
 		.state('root.generadorPlan', {
 			url: '/generadorPlan/:objeto_id',
 			templateUrl: 'client/planPagos/generadorPlan/generadorPlan.html',
