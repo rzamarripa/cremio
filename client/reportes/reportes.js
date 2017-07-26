@@ -156,28 +156,8 @@ this.subscribe('cuentas',()=>{
         }
     }
         return pays
-        // console.log(pays,"dosthaa")
-        // _.each(pays, function(pago) {
-        // 	console.log(pago,"paguillo")
-        // 	if (pago.forma == 'DEPOSITO') {
-        // 		//return ret
-        // 	}
-        // });
-        		 	
-    	  
-       
     },
-    // depositos: () => {
-    // 	var ret = rc.getReactively("bancos")
-    // 	_.each(ret, function(bank) {
 
-    // 		if (bank.forma == "DEPOSITO") {
-    // 			console.log(bank,"entro")
-    // 			return ret
-    // 		}
-    // 	});
-
-    // },
 		tiposCredito : () => {
 			return TiposCredito.find();
 		},
@@ -217,8 +197,8 @@ this.subscribe('cuentas',()=>{
 				// plan.numerosPagos= plan.credito.folio
 	    	plan.numeroCliente = plan.cliente.profile.numeroCliente
 	    	suma += plan.pago
-	    	sumaInter += plan.interes
-	    	sumaIva += plan.iva 
+	    	sumaInter += plan.pagos[0].pagoInteres
+	    	sumaIva += plan.pagos[0].pagoIva 
 				});
 
 				_.each(planes,function(plan){
@@ -291,7 +271,9 @@ this.subscribe('cuentas',()=>{
 	     rc.totalSolicitado = parseFloat(credito.sumaCapital.toFixed(2))
 	  	});
 
-				//console.log("creditos",creditos)
+	     	rc.numeroCreditos = creditos.length
+
+				console.log("creditos",rc.numeroCreditos)
 				return creditos
 			},
 			creditosLiquidados : () => {
@@ -325,6 +307,8 @@ this.subscribe('cuentas',()=>{
 	  	});
 
 				//console.log("creditos",creditos)
+
+				rc.numeroCreditosL = creditos.length
 				return creditos
 			},
 			
