@@ -110,7 +110,8 @@
 													</tr>
 												</thead>
 												<tbody>
-													<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cd.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in credito.planPagos">								
+<!-- 													(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cd.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info' -->
+													<tr ng-repeat="pago in credito.planPagos">								
 														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
 														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
 														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
@@ -126,10 +127,9 @@
 											</table>	
 									</div>
 									<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 show-stats">
-
 										<div class="row">
 											<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-												<span class="text"> Folio Crédito - <strong>{{credito.folio}}</strong></span>
+												<span class="text"> Folio de Crédito - <strong>{{credito.folio}}</strong></span>
 											</div>	
 											<br><br>
 											<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> Pagos <span class="pull-right">{{credito.pagados}}/{{credito.numeroPagos}}</span> </span>
@@ -152,6 +152,17 @@
 												<div><br/>
 													<small><a ng-click="cd.imprimirContratos(cd.creditos)" class="btn btn-primary">Imprimir Contrato</a></small>
 												</div>
+											</div>
+										</div>
+										<div class="row" ng-if = "credito.tieneAvales == true">
+											<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12 container">
+											  <h2>Aval</h2>
+											  <ul class="list-group" ng-repeat = "aval in credito.avales_ids">
+											    <li class="list-group-item">{{aval.nombreCompleto}}</li>
+											    <li class="list-group-item">Cel: {{aval.celular}}</li>
+											    <li class="list-group-item">{{aval.parentesco}}</li>
+											    <li class="list-group-item">{{aval.tiempoConocerlo}}</li>
+											  </ul>
 											</div>
 										</div>
 									</div>

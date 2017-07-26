@@ -14,21 +14,20 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	rc.verificacionesHechas = [];
 	rc.conVecino = 0;
 	rc.conSolicitanteAval = 0;
+	rc.creditos = [];
 	
-  
 	this.subscribe('creditos',()=>{
 			return [{requiereVerificacion : true , estatus: 0}]
-	});
-					
-  this.helpers({
-	  creditos : () => {
-		  var cre = Creditos.find().fetch();
-		  if (cre != undefined)
+	},{
+		onReady:()=>{
+			
+		  rc.creditos = Creditos.find().fetch();
+		  if (rc.creditos != undefined)
 		  {
-			  _.each(cre, function(credito){
+			  _.each(rc.creditos, function(credito){
 	
 							var cliente = {};
-							Meteor.call('getUsuario', credito.cliente_id, function(error, result) {
+							Meteor.apply('getUsuario', [credito.cliente_id], function(error, result) {
 							   if(error)
 							   {
 								    console.log('ERROR :', error);
@@ -42,7 +41,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 								 }
 							});
 							
-							Meteor.call('getVerificacionesCredito', credito._id, function(error, result) {
+							Meteor.apply('getVerificacionesCredito', [credito._id], function(error, result) {
 							   if(error)
 							   {
 								    console.log('ERROR :', error);
@@ -57,13 +56,12 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 									 		$scope.$apply();
 								 }
 							});
+							
 					})
 		  }
-		  return cre;
-	  },
-
-  });
-  
+		}	
+	});
+					  
   this.mostrarEvaluacion = function(credito_id)
 	{
 			rc.creditoSeleccionado = credito_id;

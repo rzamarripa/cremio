@@ -23,7 +23,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.con = 0;
 	this.num = 0;
 	this.avales = [];
-	this.aval = {};
+	rc.aval = {};
 	this.conG = 0;
 	this.numG = 0;
 	this.conGen = 0;
@@ -39,6 +39,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.buscando = false;
 	this.personasTipos = [];
 	this.personas_ids = [];
+	
+	rc.ocupacion = "";
 	
 	
 	this.subscribe('buscarAvales', () => {
@@ -75,7 +77,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 
 	
 	this.helpers({
-		avales : () => {
+		avalesHelper : () => {
 			var aval = Avales.find({
 		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
 			}, { sort : {"nombreCompleto" : 1 }}).fetch();
@@ -126,65 +128,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		$('#collapseNuevoPago').collapse('hide');
 		$('#collapseReestructuracion').collapse('hide');
 	};
- 	/*
-	this.guardar = function(convenio,form)
-	{
-		if(form.$invalid){
-			toastr.error('Error al guardar los datos.');
-			return;
-		}
-		convenio.estatus = 0;
-		convenio.campus_id = Meteor.user().profile.campus_id;
-		convenio.usuarioInserto = Meteor.userId();
-		convenio.cliente_id = rc.objeto._id;
-		PlanPlagos.insert({});
-		toastr.success('Guardado correctamente.');
-		this.escuela = {}; 
-		$('.collapse').collapse('hide');
-		this.nuevo = true;
-		form.$setPristine();
-		form.$setUntouched();	
-	};
-	*/
 
-	/*
-	this.editar = function(pago)
-	{
-	    this.pago = pago;
-	    this.action = false;
-	    $('.collapse').collapse('show');
-	    this.nuevo = false;
-	};
-	*/
-	
-	/*
-	this.cambiarEstatus = function(pago, estatus, tipoMov){
-		var res = confirm("Está seguro que quiere " + tipoMov + " el pago?");
-		if(res == true){
-			PlanPagos.update(pago._id, { $set : {estatus : estatus}});
-			toastr.success('Cancelado correctamente.');
-		}
-	}
-	*/
-	/*
-	this.actualizar = function(pago,form)
-	{
-		if(form.$invalid){
-      toastr.error('Error al actualizar los datos.');
-      return;
-	  }
-		var idTemp = pago._id;
-		delete pago._id;		
-		pago.usuarioActualizo = Meteor.userId(); 
-		pago.convenio = 1;
-		PlanPagos.update({_id:idTemp},{$set:pago});
-		toastr.success('Actualizado correctamente.');
-		$('.collapse').collapse('hide');
-		this.nuevo = true;
-		form.$setPristine();
-    form.$setUntouched();
-	};
-	*/
 	
 	this.tieneFoto = function(sexo, foto){
 		if(foto === undefined){
@@ -270,6 +214,11 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 	}
 	
 	this.generarCredito = function(){
+						
+		if(formNuevoCredito.$invalid){
+			toastr.error('Error al guardar la solicitud de crédito, llene todos los campos.');
+			return;
+		}		
 		
 		var credito = {
 			cliente_id : this.cliente._id,
@@ -323,12 +272,17 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	this.insertarAval = function()
 	{
-// 			this.con = this.con + 1;
-			this.aval.num = this.avales.length + 1;
+			if (rc.aval.nombre == undefined || rc.aval.parentesco == undefined || rc.aval.tiempoConocerlo == undefined || rc.aval.parentesco == "" || rc.aval.tiempoConocerlo == "")
+			{
+					toastr.warning("Favor de agregar al datos del Aval, Parentesco y Tiempo de Conocerlo...");
+					return;					
+			}
+		
+			rc.aval.num = this.avales.length + 1;
+			rc.aval.estatus = "N";
+			this.avales.push(rc.aval);
 			
-			this.avales.push(this.aval);
-			console.log(this.avales)	
-			this.aval={};
+			rc.aval={};
 	};
 	
 	this.actualizarAval = function(a)
@@ -343,9 +297,9 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 				av.direccion = a.direccion;
 				av.empresa = a.empresa;
 				av.puesto = a.puesto;
-				av.antiguedad = a.antiguedad;
+				av.tiempoLaborando = a.tiempoLaborando;
 				av.direccionEmpresa = a.direccionEmpresa;
-				av.parentezco = a.parentezco;
+				av.parentesco = a.parentesco;
 				av.tiempoConocerlo = a.tiempoConocerlo;
 			}
 		})
@@ -356,7 +310,7 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 	
 	this.cancelarAval = function()
 	{
-		this.aval={};
+		rc.aval={};
 		this.num = -1;
 		this.actionAval = true;
 	};
@@ -373,55 +327,62 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 	
 	this.editarAval = function(a)
 	{
-		this.aval.nombre = a.nombre;
-		this.aval.estadoCivil = a.estadoCivil;
-		this.aval.ocupacion = a.ocupacion;			
-		this.aval.direccion = a.direccion;
-		this.aval.empresa = a.empresa;
-		this.aval.antiguedad = a.antiguedad;
-		this.aval.direccionEmpresa = a.direccionEmpresa;
-		this.aval.parentezco = a.parentezco;
-		this.aval.tiempoConocerlo = a.tiempoConocerlo;
+		rc.aval.nombre = a.nombre;
+		rc.aval.estadoCivil = a.estadoCivil;
+		rc.aval.ocupacion = a.ocupacion;			
+		rc.aval.direccion = a.direccion;
+		rc.aval.empresa = a.empresa;
+		rc.aval.puesto = a.puesto;
+		rc.aval.tiempoLaborando = a.tiempoLaborando;
+		rc.aval.direccionEmpresa = a.direccionEmpresa;
+		rc.aval.parentesco = a.parentesco;
+		rc.aval.tiempoConocerlo = a.tiempoConocerlo;
 		
 		this.num = a.num;
-	    this.actionAval = false;
+	  this.actionAval = false;
 	};
 	
 	this.borrarReferencia = function()
 	{
-			this.aval.nombre = "";
-			this.aval.apellidoPaterno = "";
-			this.aval.apellidoMaterno = "";
-			this.aval.estadoCivil = "";
-			this.aval.ocupacion = "";
-			this.aval.direccion = "";
-			this.aval.parentezco = "";
-			this.aval.tiempoConocerlo = "";
-			this.aval.empresa = "";
-			this.aval.puesto = "";
-			this.aval.antiguedad = "";
-			this.aval.direccionEmpresa = "";
-			this.aval.parentezco = "";
-			this.aval.tiempoConocerlo = "";
-			delete this.aval["persona_id"];
+			rc.aval.nombre = "";
+			rc.aval.apellidoPaterno = "";
+			rc.aval.apellidoMaterno = "";
+			rc.aval.estadoCivil = "";
+			rc.aval.ocupacion = "";
+			rc.aval.direccion = "";
+			rc.aval.parentesco = "";
+			rc.aval.tiempoLaborando = "";
+			rc.aval.empresa = "";
+			rc.aval.puesto = "";
+			rc.aval.antiguedad = "";
+			rc.aval.direccionEmpresa = "";
+			rc.aval.tiempoConocerlo = "";
+			delete rc.aval["_id"];
 
 	};
 	
 	this.AgregarAval = function(a){
-		this.aval.nombre = a.nombre;
-		this.aval.apellidoPaterno = a.apellidoPaterno;
-		this.aval.apellidoMaterno = a.apellidoMaterno;
-		this.aval.estadoCivil = a.estadoCivil;
-		this.aval.ocupacion = a.ocupacion;
-		this.aval.direccion = a.direccion;
-		this.aval.empresa = a.empresa;
-		this.aval.puesto = a.puesto;
-		this.aval.antiguedad = a.antiguedad;
-		this.aval.direccionEmpresa = a.direccionEmpresa;
-		this.aval.parentezco = a.parentezco;
-		this.aval.tiempoConocerlo = a.tiempoConocerlo;
-		this.aval.persona_id = a._id;
-		this.buscar.nombre = "";
+		
+		rc.aval.nombre = a.profile.nombre;
+		rc.aval.apellidoPaterno = a.profile.apellidoPaterno;
+		rc.aval.apellidoMaterno = a.profile.apellidoMaterno;
+		
+		Meteor.call('getAval', a._id, function(error, result){
+			if(result){					
+					rc.aval.ocupacion = result.ocupacion;
+					rc.aval.direccion = result.calle + " Num:" + result.numero + " CP:" + result.codigoPostal;
+					rc.aval.estadoCivil = result.estadoCivil;
+					rc.aval.empresa = result.empresa.nombre;
+					rc.aval.direccionEmpresa = result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;
+					rc.aval.puesto = result.puesto;
+					rc.aval.tiempoLaborando = result.tiempoLaborando;
+					$scope.$apply();
+			}
+		});
+		
+		this.buscar.nombre = ""
+		rc.aval._id = a._id;
+		
 	};
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -593,9 +554,6 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 					//Hacer los calculos
 			}	
 	};
-	
-	
-	
 	
 	this.editarGarantia = function(tipo, a)
 	{
