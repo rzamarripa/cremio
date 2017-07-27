@@ -15,19 +15,46 @@ Meteor.methods({
 				}
 				
 				if (numero < 10)
-					 usuario.username = sucursal.clave + '-000' + numero;
+					 usuario.username = sucursal.clave + '-C000' + numero;
 				else if (numero < 100)
-	  			 usuario.username = sucursal.clave + '-00' + numero;
+	  			 usuario.username = sucursal.clave + '-C00' + numero;
 	  		else if (numero < 1000)
-	  			 usuario.username = sucursal.clave + '-0' + numero;	 
+	  			 usuario.username = sucursal.clave + '-C0' + numero;	 
 	  		else
-	  			 usuario.username = sucursal.clave + '-' + numero;
+	  			 usuario.username = sucursal.clave + '-C' + numero;
 	  			 	  			 	 
 	  		//usuario.contrasena = Math.random().toString(36).substring(2,7);
 	  		usuario.password = '123';
 	  		sucursal.folioCliente = numero;
 	  		usuario.profile.numeroCliente = usuario.username;
 	  		
+	  } 
+	  else if (rol == "Distribuidor")
+	  {
+		  	sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
+				var numero;
+				if (sucursal.folioDistribuidor != undefined)				
+				 	  numero = sucursal.folioDistribuidor + 1;
+				else	
+				{
+						sucursal.folioDistribuidor = 0;
+						numero = sucursal.folioDistribuidor + 1;
+				}
+				
+				if (numero < 10)
+					 usuario.username = sucursal.clave + '-D000' + numero;
+				else if (numero < 100)
+	  			 usuario.username = sucursal.clave + '-D00' + numero;
+	  		else if (numero < 1000)
+	  			 usuario.username = sucursal.clave + '-D0' + numero;	 
+	  		else
+	  			 usuario.username = sucursal.clave + '-D' + numero;
+	  			 	  			 	 
+	  		//usuario.contrasena = Math.random().toString(36).substring(2,7);
+	  		usuario.password = '123';
+	  		sucursal.folioCliente = numero;
+	  		usuario.profile.numeroCliente = usuario.username;
+		  
 	  }
 
 		var usuario_id = Accounts.createUser({

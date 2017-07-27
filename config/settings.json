@@ -1,5 +1,5 @@
 {
   "public": {
-    "staleSessionInactivityTimeout": 1000,
+    "staleSessionInactivityTimeout": 300000,
   }
 }

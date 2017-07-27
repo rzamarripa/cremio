@@ -319,7 +319,7 @@ Meteor.methods({
 											}
 										]}).fetch();
 										
-		//console.log("Pagos: ",pagos);
+		//console.log("Actualizar Multas: ",pagos);
 		
 		_.each(pagos, function(pago){
 			try{
@@ -332,8 +332,8 @@ Meteor.methods({
 					
 				if (tipoCredito.calculo == "importeSolicitado")
 				{
-						multas = credito.capitalSolicitado * (tipoCredito.importe / 100); 
-						multas=Math.round(multas * 100) / 100;
+						multas = Number(parseFloat(credito.capitalSolicitado * (tipoCredito.importe / 100)).toFixed(2)); 
+						multas = Math.round(multas * 100) / 100;
 				}
 				else if (tipoCredito.calculo == "importereciboVencido")
 				{
@@ -347,8 +347,8 @@ Meteor.methods({
 						else if (credito.periodoPago == "Mensual")				
 								porcentaje = 8;
 								
-						multas = reciboVencido.cargo * (porcentaje / 100); 
-						multas=Math.round(multas * 100) / 100;
+						multas = parseFloat(reciboVencido.cargo * (porcentaje / 100)).toFixed(2); 
+						multas= Math.round(multas * 100) / 100;
 											
 				}	
 				else if (tipoCredito.calculo == "saldoreciboVencido")
@@ -364,23 +364,19 @@ Meteor.methods({
 						else if (credito.periodoPago == "Mensual")				
 								porcentaje = 8;
 								
-						multas = reciboVencido.importeRegular * (porcentaje / 100); 
-						multas=Math.round(multas * 100) / 100;
+						multas = parseFloat(reciboVencido.importeRegular * (porcentaje / 100)).toFixed(2); 
+						multas = Math.round(multas * 100) / 100;
 						
 				}	
-				
-				
-				//console.log("Act", multas);
+								
+				//console.log("Act Multas:", multas);
 				//console.log("Antes", pago.importeRegular);
 				
-				pago.importeRegular += multas;
-				pago.cargo += multas;
+				pago.importeRegular = parseFloat(pago.importeRegular) + parseFloat(multas);
+				pago.cargo = parseFloat(pago.cargo) + parseFloat(multas);
 				
-				//console.log("desp", pago.importeRegular);
-				
-				//var suma = multas + iva + interes;
-				credito.saldoMultas += multas;
-				credito.saldoMultas=Math.round(credito.saldoMultas * 100) / 100;
+				credito.saldoMultas = parseFloat(credito.saldoMultas) + parseFloat(multas);;
+				//credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
 				Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 				
 												
@@ -436,7 +432,7 @@ Meteor.methods({
 							
 						if (tipoCredito.calculo == "importeSolicitado")
 						{
-								multas = credito.capitalSolicitado * (tipoCredito.importe / 100); 
+								multas = parseFloat(credito.capitalSolicitado * (tipoCredito.importe / 100)).toFixed(2); 
 								multas = Math.round(multas * 100) / 100;
 										
 						}
@@ -452,7 +448,7 @@ Meteor.methods({
 								else if (credito.periodoPago == "Mensual")				
 										porcentaje = 8;
 										
-								multas = reciboVencido.cargo * (porcentaje / 100); 
+								multas = parseFloat(reciboVencido.cargo * (porcentaje / 100)).toFixed(2); 
 								multas=Math.round(multas * 100) / 100;
 							
 						}	
@@ -469,7 +465,7 @@ Meteor.methods({
 								else if (credito.periodoPago == "Mensual")				
 										porcentaje = 8;
 										
-								multas = reciboVencido.importeRegular * (porcentaje / 100); 
+								multas = parseFloat(reciboVencido.importeRegular * (porcentaje / 100)).toFixed(2); 
 								multas = Math.round(multas * 100) / 100;
 								
 						}
@@ -512,7 +508,10 @@ Meteor.methods({
 						var multa_id = PlanPagos.insert(multa);
 						PlanPagos.update({_id:pago._id},{$set:{multada:1,multa_id:multa_id}})
 						
+						
 						credito.saldoMultas += multas;
+						
+						credito.saldoMultas = parseFloat(credito.saldoMultas).toFixed(2);
 						credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
 						Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 
@@ -534,7 +533,7 @@ Meteor.methods({
 		if(!tingreso || !puser || !puser.profile || (tingreso.nombre =="Nota de Credito" && puser.profile.notasCredito.saldo<totalPago))
 			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
 				
-		if(tingreso.nombre == "Nota de Credito"){
+		if (tingreso.nombre == "Nota de Credito"){
 			//console.log (1)
 			var resmc = Meteor.call("actualizarNotaDeCredito",pusuario_id, totalPago);
 			//console.log(resmc)
@@ -605,15 +604,15 @@ Meteor.methods({
 				
 				if(p.importeRegular <= pagosId[p._id])
 				{
-					//console.log("Total",p._id,p.descripcion)
+					//console.log("Total",p._id,p.descripcion, p.importeRegular)
 					if(p.descripcion=="Cargo Moratorio" && p.multa == 1)
 						 p.estatus = 1;
 					else if(p.multada == 1)
 					{
 						var multa = PlanPagos.findOne(p.multa_id);
 						//console.log(multa);
-						residuos.pagoInteres = p.interes-p.pagoInteres
-						residuos.pagoIva = p.pagoIva-p.pagoIva
+						residuos.pagoInteres = p.interes - p.pagoInteres
+						residuos.pagoIva = p.pagoIva -p.pagoIva
 						multa.multa = 1;
 						p.estatus = 1;
 						if(multa.importeRegular == 0)
@@ -626,27 +625,26 @@ Meteor.methods({
 					
 					if(p.descripcion=="Recibo"){
 						p.estatus=1
-						residuos.pagoSeguro =p.seguro-p.pagoSeguro
-						residuos.pagoInteres =p.interes-p.pagoInteres
-						residuos.pagoIva =p.pagoIva-p.pagoIva
-						residuos.pagoCapital =p.capital-p.pagoCapital
-						p.pagoInteres = p.interes
-						p.pagoIva = p.iva
-						p.pagoCapital = p.capital
-						p.pagoSeguro = p.seguro
+						residuos.pagoSeguro 	= p.seguro - p.pagoSeguro;
+						residuos.pagoInteres 	= p.interes - p.pagoInteres;
+						residuos.pagoIva 			= p.pagoIva - p.pagoIva;
+						residuos.pagoCapital 	= p.capital - p.pagoCapital;
+						p.pagoInteres 				= p.interes;
+						p.pagoIva 						= p.iva;
+						p.pagoCapital 				= p.capital;
+						p.pagoSeguro 					= p.seguro;
 					}
-
-					
 					
 					abono -= p.importeRegular;
-					abono=Math.round(abono * 100) / 100;
-					
-					
+					abono = parseFloat(abono).toFixed(2);
+					abono = Math.round(abono * 100) / 100;
+
 					//Decrementar el pago en el Saldo Actual Pago total
 					if (p.descripcion == "Recibo")
 					{
 							var credito = Creditos.findOne(p.credito_id);
 							credito.saldoActual -= p.importeRegular;
+							credito.saldoActual = parseFloat(credito.saldoActual).toFixed(2);
 							credito.saldoActual=Math.round(credito.saldoActual * 100) / 100;
 							Creditos.update({_id:credito._id},{$set:{saldoActual:credito.saldoActual}})
 					}
@@ -654,6 +652,7 @@ Meteor.methods({
 					{
 							var credito = Creditos.findOne(p.credito_id);
 							credito.saldoMultas -= p.importeRegular;
+							credito.saldoMultas = parseFloat(credito.saldoMultas).toFixed(2);
 							credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
 							Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 					}
@@ -667,23 +666,24 @@ Meteor.methods({
 				else
 				{
 					
-					//console.log("Parcial",p._id,p.descripcion)
+					//console.log("Parcial",p._id,p.descripcion, p.importeRegular)
 					ttpago = pagosId[p._id];
 					abono = pagosId[p._id]
 
 					
 					p.importeRegular = p.importeRegular - abono;
-					//p.importeRegular =Number(p.importeRegular.toFixed(2))
+					p.importeRegular =parseFloat(p.importeRegular).toFixed(2);
 					p.importeRegular=Math.round(p.importeRegular * 100) / 100;
 
 					p.pago += abono
-					p.pago=Math.round(p.pago * 100) / 100;
+					p.pago = Math.round(p.pago * 100) / 100;
 					
 					//Decrementar el pago en el Saldo Actual Pago Parcial
 					if (p.descripcion == "Recibo")
 					{
 							var credito = Creditos.findOne(p.credito_id);
 							credito.saldoActual -= abono;
+							credito.saldoActual = parseFloat(credito.saldoActual).toFixed(2);
 							credito.saldoActual=Math.round(credito.saldoActual * 100) / 100;
 							Creditos.update({_id:credito._id},{$set:{saldoActual:credito.saldoActual}})
 					}
@@ -691,15 +691,15 @@ Meteor.methods({
 					{
 							var credito = Creditos.findOne(p.credito_id);
 							credito.saldoMultas -= p.importeRegular;
+							credito.saldoMultas = parseFloat(credito.saldoMultas).toFixed(2);
 							credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
 							Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 					}
 					
 					p.estatus = 2;
-					
 
 					if(p.seguro-p.pagoSeguro>abono){
-						residuos.pagoSeguro= abono
+						residuos.pagoSeguro = abono
 						p.pagoSeguro+=abono
 						abono=0;
 					}
@@ -738,6 +738,7 @@ Meteor.methods({
 					abono=0;
 					
 				}
+				
 				pago.credito_id =p.credito_id;
 				p.modificada = 1;
 				p.ultimaModificacion = ahora;

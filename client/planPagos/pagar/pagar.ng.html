@@ -11,10 +11,11 @@
 							</div>
 							<div class="col-sm-12">
 								<div class="row">
-								<a style="margin: 5px;" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.clienteDetalle({objeto_id : pvpp.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;						
+								<a style="margin: 5px;" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.clienteDetalle({objeto_id : pvpp.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;						
 									<div class="col-sm-2">
-										<h1>{{pvpp.cliente.profile.nombre}} <span class="semi-bold">{{pvpp.cliente.profile.apellidoPaterno}} {{pvpp.cliente.profile.apellidoMaterno}}</span>
+										<h1>{{pvpp.objeto.profile.nombre}} <span class="semi-bold">{{pvpp.objeto.profile.apellidoPaterno}} {{pvpp.objeto.profile.apellidoMaterno}}</span>
 										<small> (Cliente)</small></h1>
+										<h5>{{pvpp.objeto.profile.numeroCliente}}</h5>
 									</div>
 								</div>
 								<div class="row">
@@ -33,7 +34,7 @@
 												<li class="pull-right">
 												<a ng-click="pvpp.creditosAprobados()" data-toggle="collapse"
 												   href="#creditosAprobados" aria-expanded="false" aria-controls="creditosAprobados"> <i class="fa fa-{{pvpp.creditoAp == true ? 'plus':'minus'}} fa-lg">
-												   </i> Creditos Aprobados </a>
+												   </i> Créditos Aprobados </a>
 												</li>
 											</ul>
 										<div class="collapse padding-10" id="masInformacion">
@@ -662,7 +663,7 @@
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
-														<td ><input style="width: 80px" type="number" ng-change="pvpp.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
+														<td ><input style="width: 80px" min="0" type="number" ng-change="pvpp.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
 													</tr>
 												</tbody>
 											</table>	
@@ -676,7 +677,7 @@
 												<option ng-repeat="tipo in pvpp.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
 											</select>
 											<br/>
-											<caption>Paga con: </caption> <input id="cobro"  type="number" class="form-control" placeholder="Pagar" ng-model="pvpp.pago.pagar" required="true">
+											<caption>Paga con: </caption> <input id="cobro" min="0" type="number" class="form-control" placeholder="Pagar" ng-model="pvpp.pago.pagar" required="true">
 											<br/>
 											<h4>Cambio: {{pvpp.pago.pagar - pvpp.pago.totalPago | currency }}</h4>
 											<br/>
