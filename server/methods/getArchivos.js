@@ -918,6 +918,17 @@ diato;
   	cliente.estado = cliente.estadoCliente.nombre
   	cliente.ocupacion = cliente.ocupacionCliente.nombre
   	cliente.ciudad = cliente.ciudadCliente.nombre
+  	 _.each(planPagos,function(pp){
+		 	pp.importeRegular = parseFloat(pp.importeRegular.toFixed(2))
+		 	pp.iva = parseFloat(pp.iva.toFixed(2))
+		 	pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))
+		 	pp.total = parseFloat(pp.total.toFixed(2))
+		 	pp.capital = parseFloat(pp.capital.toFixed(2))
+		 	pp.liquidar = parseFloat(pp.liquidar.toFixed(2))
+		 	pp.fechaLimite = moment(pp.fechaLimite).format("DD-MM-YYYY")
+
+
+		 });
 
   
   		
@@ -950,8 +961,10 @@ diato;
 	 
 	    
 	  		doc.setData({			items: 	   contrato,
-	  								cliente:  cliente,
 									fecha:     fecha,
+									cliente: cliente,
+									contrato: contrato,
+									pp: planPagos,
 											
 													
 				});
@@ -1042,17 +1055,7 @@ diato;
 		}});
 		
 		
-		 _.each(planPagos,function(pp){
-		 	pp.importeRegular = parseFloat(pp.importeRegular.toFixed(2))
-		 	pp.iva = parseFloat(pp.iva.toFixed(2))
-		 	pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))
-		 	pp.total = parseFloat(pp.total.toFixed(2))
-		 	pp.capital = parseFloat(pp.capital.toFixed(2))
-		 	pp.liquidar = parseFloat(pp.liquidar.toFixed(2))
-		 	pp.fechaLimite = moment(pp.fechaLimite).format("DD-MM-YYYY")
-
-
-		 });
+		
 			var fecha = new Date();
 			var f = fecha;
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
@@ -1109,6 +1112,8 @@ diato;
 	  		doc.setData({				items: 	   contrato,
 									    fecha:     fecha,
 									    cliente:   cliente,
+										contrato: contrato,
+										pp: planPagos,
 				});
 								
 		doc.render();
