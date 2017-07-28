@@ -237,6 +237,12 @@ Meteor.methods({
 			var persona = Meteor.users.findOne(idReferencia);
 				_.each(persona, function(objeto){
 					objeto.nacionalidadCliente = Nacionalidades.findOne(objeto.nacionalidad_id);
+					objeto.coloniaCliente = Colonias.findOne(objeto.colonia_id);
+					objeto.estadoCliente = Estados.findOne(objeto.estado_id);
+					objeto.municipioCliente = Municipios.findOne(objeto.municipio_id);
+					objeto.ocupacionCliente = Ocupaciones.findOne(objeto.ocupacion_id);
+					objeto.ciudadCliente = Ciudades.findOne(objeto.ciudad_id);
+					//objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id).nombre;
 
 
 				});
@@ -906,16 +912,15 @@ diato;
     return new Buffer(bitmap).toString('base64');
 		
   },
-  contratos: function (contrato,credito,cliente) {
+  contratos: function (contrato,credito,cliente,planPagos) {
+  	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
+  	cliente.colonia = cliente.coloniaCliente.nombre
+  	cliente.estado = cliente.estadoCliente.nombre
+  	cliente.ocupacion = cliente.ocupacionCliente.nombre
+  	cliente.ciudad = cliente.ciudadCliente.nombre
+
   
-  	_.each(cliente,function(c)
-    	{
-    		if (cliente.nacionalidadCliente) {
-    			c.nacionalidad = c.nacionalidadCliente.nombre
-    		}
-    		
-    	});
-  		console.log(cliente,"cliente")
+  		
   	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
 	
 		//
@@ -993,6 +998,8 @@ diato;
 	    
 	  		doc.setData({				items: 		 contrato,
 									    fecha:     fecha,
+									    cliente:    cliente,
+									    nacionalidad: cliente.nacionalidadCliente.nombre
 											
 													
 				});
@@ -1011,12 +1018,14 @@ diato;
     return new Buffer(bitmap).toString('base64');
    }
   if (contrato.garantias && contrato.tipoGarantia == "general") {
-   	console.log(contrato,"contratos ")
+   	//console.log(contrato,"contratos ")
+   	console.log("hipotecarios")
+   	console.log(cliente,"cliente")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
+		///var produccion = "/home/cremio/archivos/";
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -1032,6 +1041,18 @@ diato;
 			return "";
 		}});
 		
+		
+		 _.each(planPagos,function(pp){
+		 	pp.importeRegular = parseFloat(pp.importeRegular.toFixed(2))
+		 	pp.iva = parseFloat(pp.iva.toFixed(2))
+		 	pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))
+		 	pp.total = parseFloat(pp.total.toFixed(2))
+		 	pp.capital = parseFloat(pp.capital.toFixed(2))
+		 	pp.liquidar = parseFloat(pp.liquidar.toFixed(2))
+		 	pp.fechaLimite = moment(pp.fechaLimite).format("DD-MM-YYYY")
+
+
+		 });
 			var fecha = new Date();
 			var f = fecha;
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
@@ -1039,6 +1060,9 @@ diato;
 	    
 	  		doc.setData({		    items: 	   contrato,
 									fecha:     fecha,
+									cliente: cliente,
+									contrato: contrato,
+									pp: planPagos,
 													
 				});
 								
@@ -1057,12 +1081,11 @@ diato;
 
    }
    if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
-   		console.log(contrato,"contratos ")
+   		console.log(cliente,"cliente ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
 		//var produccion = "/home/cremio/archivos/";
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				var content = fs				
@@ -1085,6 +1108,7 @@ diato;
 	    
 	  		doc.setData({				items: 	   contrato,
 									    fecha:     fecha,
+									    cliente:   cliente,
 				});
 								
 		doc.render();

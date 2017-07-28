@@ -358,24 +358,97 @@ angular.module("creditoMio")
 		  // }
 	  };	
 
-	  this.imprimirContrato = function(contrato,cliente){
-	  	console.log("contrato y persona",contrato,cliente)
-	  		    Meteor.call('getPeople',cliente._id, function(error, result){           					
-									if (result)
-										//console.log(result,"caraculo")
-									{
-					
-										console.log("result",result);
-											
-										rc.datosCliente = result
-										$scope.$apply();			
-									}
-				
-		            });
-	  		    console.log("clientttt",contrato)
-           
+	
 
-	  		Meteor.call('contratos', contrato, $stateParams.credito_id,rc.datosCliente, function(error, response) {
+
+		  this.imprimirContrato = function(contrato,cliente){
+
+
+		  	rc.planPagos = [];
+			this.tablaAmort = true;
+				
+			if(rc.credito.requiereVerificacion == true)
+				rc.credito.estatus = 0;
+			else
+				rc.credito.estatus = 1;
+
+
+			var _credito = {
+				cliente: this.credito.nombre,
+				//cliente_id : this.cliente._id,
+				tipoCredito_id : this.credito.tipoCredito_id,
+				fechaSolicito : new Date(),
+				duracionMeses : this.credito.duracionMeses,
+				capitalSolicitado : this.credito.capitalSolicitado,
+				adeudoInicial : this.credito.capitalSolicitado,
+				saldoActual : this.credito.capitalSolicitado,
+				periodoPago : this.credito.periodoPago,
+				fechaPrimerAbono : this.credito.primerAbono,
+				multasPendientes : 0,
+				saldoMultas : 0.00,
+				saldoRecibo : 0.00,
+				estatus : 1,
+				requiereVerificacion: this.credito.requiereVerificacion,
+				sucursal_id : Meteor.user().profile.sucursal_id,
+				fechaVerificacion: this.credito.fechaVerificacion,
+				turno: this.credito.turno,
+				tasa: this.credito.tasa,
+				conSeguro : this.credito.conSeguro,
+				seguro: this.credito.seguro
+			};
+
+			Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
+			
+				if(error){
+					console.log(error);
+					toastr.error('Error al calcular el nuevo plan de pagos.');
+				}
+				else{
+					console.log(result);
+					_.each(result,function (pago) {
+						
+						
+						//console.log(pago,"pauisa")
+						var pag = pago
+						var pa = _.toArray(pag);
+						var all = pa[pa.length - 1]
+						rc.total = all
+						//console.log(all,"all 12344")
+
+						rc.planPagos.push(pago)
+						$scope.$apply();
+					});
+					
+					var total = rc.total;
+					_.each(rc.planPagos,function (pago) {
+						
+						pago.liquidar = total;  						
+						total -= pago.importeRegular;
+						
+						
+					//	$scope.$apply();
+					});
+					
+					
+					//console.log("Prueba",rc.planPagos)
+				}
+					
+		
+
+			
+
+	  	console.log("contrato",contrato)
+	  		    Meteor.call('getPeople',cliente._id, function(error, result){           					
+							if (result)
+							{
+									
+								rc.datosCliente = result.profile
+									
+
+								console.log(rc.datosCliente,"el clientaso")
+								console.lo
+				Meteor.call('contratos', contrato, $stateParams.credito_id,rc.datosCliente,rc.planPagos, function(error, response) {
+				  
 				   if(error)
 				   {
 					    console.log('ERROR :', error);
@@ -383,8 +456,6 @@ angular.module("creditoMio")
 				   }
 				   else
 				   {
-
-				   		console.log(rc.datosCliente,"el clientaso")
 					   
 			 				function b64toBlob(b64Data, contentType, sliceSize) {
 								  contentType = contentType || '';
@@ -453,6 +524,17 @@ angular.module("creditoMio")
 		  
 				   }
 				});
+										
+							}
+            });
+
+            $scope.$apply();	
+
+	  		 });
+
+			return rc.planPagos;
+	  		   // console.log("contr",contrato)
+	  	
 		
 		};
 	
