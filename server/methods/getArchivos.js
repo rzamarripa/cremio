@@ -929,13 +929,13 @@ diato;
 
 
 		 });
+  	var garantias = contrato.garantias[0]
 
   
   		
   	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
 	
-		//
-		//console.log(contrato,"contratos ")
+	    //console.log(contrato,"contratos ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -965,7 +965,6 @@ diato;
 									cliente: cliente,
 									contrato: contrato,
 									pp: planPagos,
-											
 													
 				});
 								
@@ -1066,6 +1065,7 @@ diato;
 									cliente: cliente,
 									contrato: contrato,
 									pp: planPagos,
+									garantias: garantias,
 													
 				});
 								
@@ -1114,6 +1114,7 @@ diato;
 									    cliente:   cliente,
 										contrato: contrato,
 										pp: planPagos,
+										//garantias: 
 				});
 								
 		doc.render();
