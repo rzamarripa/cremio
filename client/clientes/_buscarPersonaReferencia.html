@@ -1,5 +1,5 @@
 <div class="input-group"> 
-	<input type="text" class="form-control" ng-model="cli.buscar.nombre">
+	<input type="text" class="form-control" ng-model="cli.buscar.nombre" capitalize>
 	<span class="input-group-btn">
 		<button class="btn btn-default" type="button" style="height: 34px;">
 			<i class="fa fa-search"></i>
@@ -12,7 +12,7 @@
 		<div class="alert alert-transparent">
 			<div class="tab-pane fade active in" id="a2">
 				
-				<div class="user well" title="{{persona.nombreCompleto}}" ng-repeat="persona in cli.personasTipos" style="width: 100%">
+				<div class="user well" title="{{persona.nombreCompleto}}" ng-repeat="persona in cli.referenciasPersonalesHelper" style="width: 100%">
 					<div class="row">
 						<div class="col-sm-12">
 							<a href="javascript:void(0);"> {{persona.nombreCompleto}}</a> 
@@ -32,7 +32,6 @@
 			</div>
 		</div>
 	</div>
-	
 	<span> 
 		<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="cli.buscando = false; cli.buscar.nombre = ''">
 			<i class="fa fa-times"></i>

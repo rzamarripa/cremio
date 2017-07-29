@@ -916,6 +916,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.validacionCARP', {
+			url: '/validacionCARP',
+			templateUrl: 'client/validacionCARP/validacionCARP.ng.html',
+			controller: 'validacionCARPCtrl as valcarp',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 }]);
 
 function irArriba(){

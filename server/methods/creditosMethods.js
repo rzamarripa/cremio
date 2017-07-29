@@ -70,7 +70,12 @@ Meteor.methods({
 		
 		_.each(credito.avales, function(aval){		
 			if (aval.estatus == "N") aval.estatus = "G";
-				 credito.avales_ids.push({num: aval.num, aval_id: aval._id, parentesco: aval.parentesco, tiempoConocerlo: aval.tiempoConocerlo, estatus: aval.estatus});
+				 credito.avales_ids.push({num							: aval.num, 
+					 												aval_id					: aval._id, 
+					 												nombreCompleto	: aval.nombreCompleto,
+					 												parentesco			: aval.parentesco, 
+					 												tiempoConocerlo	: aval.tiempoConocerlo, 
+					 												estatus					: aval.estatus});
 		});
 		
 		/*
@@ -171,7 +176,10 @@ Meteor.methods({
 		_.each(credito.avales_ids, function(aval){
 				var a = Avales.findOne(aval.aval_id);
 				a.profile.creditos = [];
-				a.profile.creditos.push({credito_id: credito_id, parentesco: aval.parentesco, tiempoConocerlo: aval.tiempoConocerlo});	
+				a.profile.creditos.push({credito_id				: credito_id,
+																 folio						: credito.folio,
+																 parentesco				: aval.parentesco, 
+																 tiempoConocerlo	: aval.tiempoConocerlo});	
 				var idTemp = a._id;
 				delete a._id;
 				Avales.update({_id: idTemp}, {$set:{profile: a.profile}})	
@@ -215,7 +223,6 @@ Meteor.methods({
 								//console.log(aval_ids);
 								if (aval_ids.num == aval.num)
 								{		
-										//console.log(aval_ids);
 										aval_ids.parentesco = aval.parentesco;
 										aval_ids.tiempoConocerlo = aval.tiempoConocerlo;
 										aval_ids.estatus = "G";

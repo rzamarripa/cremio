@@ -106,7 +106,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
   });	
 
 
-	 this.descargarFormato = function() 
+	this.descargarFormato = function() 
   {
     Meteor.call('formaSolicitud', function(error, response) {     
        if(error)

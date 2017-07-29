@@ -238,8 +238,6 @@
 				</li> -->
 			</ul>
 		</li>
-
-
         <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Verificador'">
             <a ui-sref="root.panelVerificador" tilte="Credito Mio">
                 <i class="fa fa-lg fa-fw fa-th-list"></i>
@@ -272,11 +270,17 @@
                 </li>
             </ul>
         </li>
-        <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
-                    <a ng-click="ro.descargarFormato()" tilte="Credito Mio">
-                        <i class="fa fa-lg fa-fw fa-download"></i>
-                        <span class="menu-item-child">Formato de Solicitud</span>
-                    </a>
-                </li>
+        <li data-ui-sref-active="active">
+              <a ng-click="ro.descargarFormato()" tilte="Credito Mio">
+                  <i class="fa fa-lg fa-fw fa-download"></i>
+                  <span class="menu-item-parent">Formato de Solicitud</span>
+              </a>
+        </li>
+        <li data-ui-sref-active="active">
+              <a ui-sref="root.validacionCARP" tilte="Credito Mio">
+                  <i class="fa fa-lg fa-fw fa-lock"></i>
+                  <span class="menu-item-parent">Validación Personas</span>
+              </a>
+        </li>
     </ul>
 </nav>

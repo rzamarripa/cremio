@@ -29,11 +29,17 @@ angular.module("creditoMio")
 		}]
 	});
 
-
-
 	this.helpers({
 		cajas : () => {
-			return Cajas.find();
+			var c = Cajas.find().fetch();
+			console.log(c);
+			
+			_.each(c, function(caja){
+					var cajero = Meteor.users.findOne({_id: caja.usuario_id});
+					caja.cajero = cajero.profile.nombreCompleto;
+			})
+
+			return c;
 		},
 		tiposIngreso : () => {
 			return TiposIngreso.find()
@@ -42,14 +48,16 @@ angular.module("creditoMio")
 			return Meteor.users.find({roles : ["Cajero"]});
 		},
 		cuentas : () =>{
-			var cuentas  = Cuentas.find({}).fetch();
+			var cuentasInterno  = Cuentas.find({}).fetch();
 			var retorno = {};
-			_.each(cuentas,function(cuenta){
-				if(!retorno[cuenta.tipoIngreso_id])
-					retorno[cuenta.tipoIngreso_id]=[]
-				retorno[cuenta.tipoIngreso_id].push(cuenta);
-			})
-			console.log("retorno",retorno)
+			if (cuentasInterno != undefined)
+			{
+				_.each(cuentasInterno,function(cuenta){
+					if(!retorno[cuenta.tipoIngreso_id])
+						retorno[cuenta.tipoIngreso_id]=[]
+					retorno[cuenta.tipoIngreso_id].push(cuenta);
+				});
+			}
 			return retorno;
 		}
 
@@ -110,11 +118,14 @@ angular.module("creditoMio")
 						toastr.error('Error al actualizar los datos.');
 						return;
 			}
+			
+			
+			
 			Meteor.call ("actualizarCaja",objeto,function(error,result){
 		
 				if(error){
 					console.log(error);
-					toastr.error('Error al guardar los datos.');
+					toastr.error('Error al guardar los datos.: ', error.details);
 					return
 				}
 				toastr.success('Actualizado correctamente.');
@@ -126,8 +137,13 @@ angular.module("creditoMio")
 			});
 	};
 
-	this.cambiarEstatus = function(id)
+	this.cambiarEstatus = function(id, estatus)
 	{
+			if (estatus == "Abierta")
+			{
+					toastr.error('Error no se puede desactivar si la ventanilla esta abierta.');
+					return;	
+			}
 			var objeto = Cajas.findOne({_id:id});
 			if(objeto.estatus == true)
 				objeto.estatus = false;
