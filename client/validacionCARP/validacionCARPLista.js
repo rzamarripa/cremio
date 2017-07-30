@@ -3,41 +3,49 @@ angular.module("creditoMio")
  function validacionCARPCtrl($scope, $meteor, $reactive, $state, toastr){
  	
  	let rc = $reactive(this).attach($scope);
-  this.action = true;
-  this.nuevo = true;	 
+
   this.objeto = {}; 
   this.buscar = {};
   this.buscar.nombre = "";
+  
+  rc.personas = [];
+  
   window.rc = rc;
-  
-  this.subscribe('buscarClientes', () => {
-	  
-		if(this.getReactively("buscar.nombre").length > 4){
-			return [{
-		    options : { limit: 20 },
-		    where : { 
-					nombreCompleto : this.getReactively('buscar.nombre')
-				} 		   
-	    }];
-		}
-  });
-  
-  this.helpers({
-		clientes : () => {
-			return Meteor.users.find({
-		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
-		  	roles : ["Cliente"]
-			}, { sort : {"profile.nombreCompleto" : 1 }});
-		},
-	});
+  	
+	this.buscarPersona = function(nombre){
+			if(nombre.length > 4){
+					Meteor.call('getPersonas', nombre, function(error, result) {           
+	          if (result)
+	          {
+	              //console.log("Personas:", result);
+								rc.personas = [];
+								_.each(result.clientes, function(cliente){
+										rc.personas.push(cliente);
+								});
+								_.each(result.avales, function(aval){
+										rc.personas.push(aval);
+								});
+								_.each(result.referenciasPersonales, function(referenciaPersonal){
+										rc.personas.push(referenciaPersonal);
+								});
+								
+	              $scope.$apply();
+	          }
+	        
+					}); 	
+			} else { rc.personas = [];}
+
+	}
 	
 	this.tieneFoto = function(sexo, foto){
+		
 	  if(foto === undefined){
-		  if(sexo === "Masculino")
+		  if(sexo === "MASCULINO")
 			  return "img/badmenprofile.png";
-			else if(sexo === "Femenino"){
+			else if(sexo === "FEMENINO"){
 				return "img/badgirlprofile.png";
 			}else{
+				//console.log(foto);		
 				return "img/badprofile.png";
 			}
 			  

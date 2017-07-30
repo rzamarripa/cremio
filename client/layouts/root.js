@@ -16,8 +16,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	
 
 	this.subscribe('buscarClientes', () => {
-		if(this.getReactively("buscar.nombre").length > 3){
-			//console.log(root.buscar.nombre);
+		if(this.getReactively("buscar.nombre").length > 4){
 			root.buscando = true;
 			return [{
 		    options : { limit: 20 },

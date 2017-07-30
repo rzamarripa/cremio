@@ -411,5 +411,25 @@ if (referenciaPersonal.buscarPersona_id)
 	getReferenciaPersonal: function (id) {	
 	  var RP = ReferenciasPersonales.findOne({_id : id});
 		return RP;
+	},
+	getPersonas: function (nombre) {	
+	  var personas = {};
+	  personas.clientes = [];
+	  personas.avales = [];
+	  personas.referenciasPersonales = [];
+	  personas.clientes = Meteor.users.find({ "profile.nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' },roles : ["Cliente"]}, 
+	  																			{ fields: {"profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1 }}, 
+																					{ sort : {"profile.nombreCompleto" : 1 }}, {"profile.nombreCompleto":1, "profile.referenciasPersonales_ids":1}).fetch();
+									 
+		personas.avales = Avales.find({ "profile.nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }}, 
+																	{ fields: {"profile.nombreCompleto":1, "profile.sexo": 1, "profile.foto": 1, "profile.creditos": 1 }},
+																	{ sort : {"profile.nombreCompleto" : 1 }}).fetch();
+									 
+		personas.referenciasPersonales = ReferenciasPersonales.find({ nombreCompleto: { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }}, 
+																																{ fields: {nombreCompleto:1, clientes: 1 }}, 
+																																{ sort : {nombreCompleto : 1 }}).fetch();							 							 
+	  //console.log(personas);
+	  return personas;
 	}
+	
 });

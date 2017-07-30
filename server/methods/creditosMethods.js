@@ -56,7 +56,7 @@ Meteor.methods({
 		Meteor.call("generarMultas");
 		return "hecho";
 	},
-	generarCreditoPeticion : function(cliente, credito) {
+	generarCreditoPeticion : function(cliente, credito){
 
 		if(credito.requiereVerificacion == true){
 			credito.estatus = 0;
@@ -207,11 +207,19 @@ Meteor.methods({
 		_.each(credito.avales, function(aval){
 				if (aval.estatus == "N"){					
 						aval.estatus = "G";
-						c.avales_ids.push({num: aval.num, aval_id: aval._id, parentesco: aval.parentesco, tiempoConocerlo: aval.tiempoConocerlo, estatus: aval.estatus});
+						c.avales_ids.push({num							: aval.num, 
+															 aval_id					: aval._id, 
+															 nombreCompleto		: aval.nombreCompleto,
+															 parentesco				: aval.parentesco, 
+															 tiempoConocerlo	: aval.tiempoConocerlo, 
+															 estatus					: aval.estatus});
 						
 						var a = Avales.findOne(aval.aval_id);
 						a.profile.creditos = [];
-						a.profile.creditos.push({credito_id: idCredito, parentesco: aval.parentesco, tiempoConocerlo: aval.tiempoConocerlo});	
+						a.profile.creditos.push({credito_id				: idCredito, 
+																		 folio						: c.folio,
+																		 parentesco				: aval.parentesco, 
+																		 tiempoConocerlo	: aval.tiempoConocerlo});	
 						var idTemp = a._id;
 						delete a._id;
 						Avales.update({_id: idTemp}, {$set:{profile: a.profile}});
