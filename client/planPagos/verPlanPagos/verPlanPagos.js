@@ -17,11 +17,13 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.creditos = [];
 	this.creditos_id = []
 	this.total = 0;
+	
+	console.log($stateParams)
 
 	// this.informacionContacto = tr; 
 	
   this.subscribe("planPagos", ()=>{
-		return [{ credito_id : $stateParams.credito_id,credito_id: this.getReactively('credito_id') }]
+		return [{ credito_id : this.getReactively("credito_id") }]
 	});
 	
 	this.subscribe("tiposCredito", ()=>{
@@ -29,11 +31,11 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	});
 	
 	this.subscribe('cliente', () => {
-		return [{ id : $stateParams.cliente_id }];
+		return [{ _id : $stateParams.objeto_id }];
 	});
 	
 	this.subscribe('creditos', () => {
-		return [{ cliente_id : $stateParams.objeto_id, estatus : 1 }];
+		return [{ _id : $stateParams.credito_id}];
 	});
 	this.subscribe('pagos', () => {
 		return [{  }];
@@ -52,6 +54,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		planPagosViejo : () => {
 			//var diferentes = c_ids.diff(p_ids)
 		//	var fechaPago = moment(pago.fecha).add(-1, "days");
+			rc.credito_id = $stateParams.credito_id;
 			var fechaActual = moment();
 			 pagos = PlanPagos.find({},{sort : {numeroPago : 1}}).fetch();
 			 _.each(pagos, function(p){ 
@@ -92,15 +95,29 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			}
 			 	
 			});
-			pagos.sort(function(a,b) {return (a.numeroPago > b.numeroPago) ? 1 : ((b.numeroPago > a.numeroPago) ? -1 : 0);} );
+//			pagos.sort(function(a,b) {return (a.numeroPago > b.numeroPago) ? 1 : ((b.numeroPago > a.numeroPago) ? -1 : 0);} );
+			pagos.sort(fieldSorter(['numeroPago', 'descripcion']));
 			//console.log("helpers",pagos)
+			
+			function fieldSorter(fields) {
+			    return function (a, b) {
+			        return fields
+			            .map(function (o) {
+			                var dir = 1;
+			                if (o[0] === '-') {
+			                   dir = -1;
+			                   o=o.substring(1);
+			                }
+			                if (a[o] > b[o]) return dir;
+			                if (a[o] < b[o]) return -(dir);
+			                return 0;
+			            })
+			            .reduce(function firstNonZeroValue (p,n) {
+			                return p ? p : n;
+			            }, 0);
+			    };
+			}
 
-			 return pagos
-		},
-
-
-		planPagosTrue : () => {	 
-			 pagos = PlanPagos.find({multa:1},{sort : {numeroPago : 1}}).fetch();
 			 return pagos
 		},
 		creditos : () => {
@@ -492,13 +509,6 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
        
 	};
 
-	
-
-	this.mostrarPagos = function(id){
-		console.log(id)
-		this.credito_id = id;
-	};
-
 	this.download = function(participantes) 
   {
 	  	
@@ -552,11 +562,4 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		   }
 		});
 	};
-
-
-
-
-
-
-
 };
