@@ -491,14 +491,14 @@ angular.module("creditoMio")
 							}
 						  if (contrato.tipoInteres.tipoInteres == "Saldo Insolutos") {
 						  var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "CONTRATOINTERES(SSI).docx"; 
+					    dlnk.download = "CONTRATOINTERESSSI.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 							}
 							if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
 						  var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "CONTRATOINTERES(COMPUESTO).docx"; 
+					    dlnk.download = "CONTRATOINTERESCOMPUESTO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
@@ -518,14 +518,14 @@ angular.module("creditoMio")
 						  }
 						   if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
 							var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO(COMPUESTO).docx"; 
+					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIOCOMPUESTO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 						  }
 						   if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
 							var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO(SSI).docx"; 
+					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIOSSI.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
@@ -543,14 +543,14 @@ angular.module("creditoMio")
 						}
 							if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
 							var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "CONTRATOHIPOTECARIO(SSI).docx"; 
+					    dlnk.download = "CONTRATOHIPOTECARIOSSI.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 						}
 							if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
 							var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "CONTRATOHIPOTECARIO(COMPUESTO).docx"; 
+					    dlnk.download = "CONTRATOHIPOTECARIOCOMPUESTO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
@@ -568,14 +568,14 @@ angular.module("creditoMio")
 							}
 								if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
 							var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "CONTRATOGARANTIAPRENDARIA(COMPUESTO).docx"; 
+					    dlnk.download = "CONTRATOGARANTIAPRENDARIACOMPUESTO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 							}
 								if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
 							var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "CONTRATOGARANTIAPRENDARIA(SSI).docx"; 
+					    dlnk.download = "CONTRATOGARANTIAPRENDARIASSI.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
