@@ -27,6 +27,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 			  _.each(rc.creditos, function(credito){
 	
 							var cliente = {};
+
 							Meteor.apply('getUsuario', [credito.cliente_id], function(error, result) {
 							   if(error)
 							   {
@@ -53,9 +54,10 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 										 			v.nombreCliente = credito.nombreCliente;
 										 			rc.verificacionesHechas.push(v);
 									 		});
-									 		$scope.$apply();
+									 		//$scope.$apply();
 								 }
 							});
+
 							
 					})
 		  }

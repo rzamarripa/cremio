@@ -31,10 +31,10 @@
 		              <strong ng-if="persona.profile != undefined">{{persona.profile.nombreCompleto}}</strong>
 		              <strong ng-if="persona.profile == undefined">{{persona.nombreCompleto}}</strong>
 		            </p>
-	              <address class="font-xs">
-	                  <h4><strong ng-if="persona.profile.referenciasPersonales_ids != undefined">Cliente</strong></h4>
-	                  <h4><strong ng-if="persona.profile.creditos != undefined">Aval</strong></h4>
-	                  <h4><strong ng-if="persona.profile == undefined">Referencia Personal</strong></h4>
+	              <address class="font-sm">
+	                  <strong ng-if="persona.profile.referenciasPersonales_ids != undefined">Cliente</strong>
+	                  <strong ng-if="persona.profile.creditos != undefined">Aval</strong>
+	                  <strong ng-if="persona.profile == undefined">Referencia Personal</strong>
 	              </address>
 								<!--Clientes -->
 								<div ng-if="persona.profile.referenciasPersonales_ids != undefined">

@@ -72,11 +72,11 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	}
 
 	this.tieneFoto = function(foto, sexo){
-		
+		//console.log("Aui es");
 	  if(foto === undefined){
-		  if(sexo === "Masculino")
+		  if(sexo === "MASCULINO")
 			  return "img/badmenprofile.png";
-			else if(sexo === "Femenino"){
+			else if(sexo === "FEMENINO"){
 				return "img/badgirlprofile.png";
 			}else{
 				return "img/badprofile.png";
