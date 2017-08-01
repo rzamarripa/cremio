@@ -352,16 +352,13 @@ angular.module("creditoMio")
 		  
 				   }
 				});	
-		  // }else{
-		  // 	rc.seleccinadorContrato = true;
-		  // 	// rc.imprecion = false;
-		  // }
 	  };	
-
-	
 
 
 		  this.imprimirContrato = function(contrato,cliente){
+		
+				contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
+								
 
 
 		  	rc.planPagos = [];
@@ -433,11 +430,7 @@ angular.module("creditoMio")
 					//console.log("Prueba",rc.planPagos)
 				}
 					
-		
-
-			
-
-	  	console.log("contrato",contrato)
+	  
 	  		    Meteor.call('getPeople',cliente._id, function(error, result){           					
 							if (result)
 							{
@@ -446,7 +439,8 @@ angular.module("creditoMio")
 									
 
 								console.log(rc.datosCliente,"el clientaso")
-								console.lo
+									
+										console.log("contrato",contrato)
 				Meteor.call('contratos', contrato, $stateParams.credito_id,rc.datosCliente,rc.planPagos, function(error, response) {
 				  
 				   if(error)
@@ -485,40 +479,107 @@ angular.module("creditoMio")
 						  var url = window.URL.createObjectURL(blob);
 						  
 						  //console.log(url);
-
+						  //CONTRATO SIMPLE ////////////////////////////////////////////////////
 						  if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
-						  console.log("INTERES")
+						  console.log("INTERES","INTERES:",contrato.tipoInteres.tipoInteres)
+						   if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
 						  var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOINTERES.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
+							}
+						  if (contrato.tipoInteres.tipoInteres == "Saldo Insolutos") {
+						  var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOINTERESSSI.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+							}
+							if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+						  var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOINTERESCOMPUESTO.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+							}
 						}
+						//////////////////////////////////////////////////////////////////////////////////////////////////////
+						/////////CONTRATO SOLIDARIO//////////////////////////////////////////
+
 						if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
-							 console.log("OBLIGADO SOLIDARIO");
+							 console.log("OBLIGADO SOLIDARIO","INTERES:",contrato.tipoInteres.tipoInteres);
+							 if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
+						  }
+						   if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIOCOMPUESTO.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+						  }
+						   if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIOSSI.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+						  }
 
 						}
 							if (contrato.garantias && contrato.tipoGarantia == "general") {
-								console.log("HIPOTECARIO")
+								console.log("HIPOTECARIO","INTERES:",contrato.tipoInteres.tipoInteres)
+								if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOHIPOTECARIO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
+						}
+							if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOHIPOTECARIOSSI.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+						}
+							if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOHIPOTECARIOCOMPUESTO.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+						}
 
 						}
 							if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
-								console.log("PRENDARIA")
+								console.log("PRENDARIA","INTERES:",contrato.tipoInteres.tipoInteres)
+								if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOGARANTIAPRENDARIA.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
+							}
+								if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOGARANTIAPRENDARIACOMPUESTO.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+							}
+								if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOGARANTIAPRENDARIASSI.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+							}
 
 						}
 		  

@@ -147,11 +147,14 @@ this.subscribe('cuentas',()=>{
        	pago.acumulado = suma
        	pago.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id)
        	pago.forma = pago.tipoIngreso.nombre
+
         });
-          //ret.push(pays)
+        console.log("pagos",pays)
+          
         for (var i = 0; i <= pays.length; i++) {
-        	if (pays[i].forma != 'DEPOSITO') {
-        		pays.splice(i, 1);
+        	console.log("pagos",pays)
+        	if (pays[i].forma != "DEPOSITO") {
+        			pays.splice(i, 1);
         	}
         }
     }
