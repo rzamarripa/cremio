@@ -8,8 +8,7 @@
 		<div class="collapse" id="collapseExample">
 			<form name="form" class="form-horizontal" role="form">
 				<div class="well">			
-					<div class="row">
-						<div class="col-sm-12">							
+					<div class="row">	
 							<div class="col-sm-4" valida>
 								<label>Nombre *</label>
 								<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="ctactrl.objeto.nombre" required capitalize>
@@ -24,8 +23,22 @@
 								<label>Saldo *</label>
 								<input name="saldo" type="number" class="form-control" placeholder="saldo" ng-model="ctactrl.objeto.saldo" required>
 							</div>
-						</div>
 					</div>
+					<div class="row">
+							<div class="col-sm-4" valida>
+					    	<label>Tipo de Cuenta *</label>
+					    	<select name="tipoCuenta" class="form-control" ng-model="ctactrl.objeto.tipoCuenta" required="">
+						    	<option value="Consignia">Consignia</option>
+						    	<option value="Banco">Banco</option>
+						    	<option value="Documento">Documento</option>
+					    	</select>
+				    	</div>
+							<div class="col-sm-2" ng-if = "ctactrl.objeto.tipoCuenta == 'Banco'" valida>
+								<label>Banco *</label>
+								<input name="banco" type="text" class="form-control" placeholder="Banco" ng-model="ctactrl.objeto.banco" required capitalize>
+							</div>
+															
+					</div>		
 					<br>
 					<div class="row">
 						<div class="col-sm-12">
@@ -84,7 +97,7 @@
 									<span class="caret"></span>
 									<span class="sr-only">Toggle Dropdown</span>
 								</button>
-								<ul class="dropdown-menu text-left">
+								<ul class="dropdown-menu dropdown-menu-right text-left">
 									<li><a href="#" ng-click="ctactrl.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
 									<li><a href="#" ng-click="ctactrl.cambiarEstatus(objeto._id)">
 										<i class="fa fa-{{objeto.estatus ? 'trash' : 'check' }}"></i> {{objeto.estatus ? "Desactivar" : "Activar" }}</a>

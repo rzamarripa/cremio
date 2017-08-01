@@ -304,7 +304,7 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 			}
 		})
 		this.aval={};
-		this.num=0;
+		this.num = 0;
 		this.actionAval = true;
 	};
 	

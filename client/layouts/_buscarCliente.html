@@ -1,5 +1,5 @@
 <div class="input-group"> 
-	<input type="text" class="form-control" ng-model="ro.buscar.nombre">
+	<input type="text" class="form-control" ng-model="ro.buscar.nombre" capitalize>
 	<span class="input-group-btn">
 		<button class="btn btn-default" type="button" style="height: 34px;">
 			<i class="fa fa-search"></i>
@@ -26,7 +26,6 @@
 						<div class="col-sm-1">
 							<img class="online" src="{{ro.tieneFoto(cliente.profile.foto, cliente.profile.sexo)}}">
 						</div>
-						
 						<div class="col-sm-12">
 							<a href="javascript:void(0);" ui-sref="root.clienteDetalle({objeto_id : cliente._id})" ng-click="ro.buscando = false;ro.buscar.nombre=''"> {{cliente.profile.nombreCompleto}}</a>
 							<div class="btn-group btn-xs btn-group-justified">

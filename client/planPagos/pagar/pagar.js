@@ -96,24 +96,6 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		
 
   this.helpers({
-
-    cliente: () => {
-      var clientes = Meteor.users.findOne({ roles: ["Cliente"] });
-      if (clientes) {
-        _.each(clientes, function(cliente) {
-
-          cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
-          cliente.estadoCivil = EstadoCivil.findOne(cliente.estadoCivil_id)
-          cliente.nacionalidad = Nacionalidades.findOne(cliente.nacionalidad_id)
-          cliente.estado = Estados.findOne(cliente.estado_id)
-          cliente.pais = Paises.findOne(cliente.pais_id)
-          cliente.empresa = Empresas.findOne(cliente.empresa_id)
-
-
-        })
-      }
-      return clientes;
-    },
     notasCredito : ()=>{
 	   	return  NotasCredito.find({cliente_id: $stateParams.objeto_id, saldo : {$gt: 0}, estatus : 1}).fetch();
     },
@@ -124,13 +106,10 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 				//console.log(rc.notaPerfil.cliente_id,"nota a l avga")
 				if (cli._id == rc.notaPerfil.cliente_id) {
 					//console.log("entro aqui compilla")
-					$("#notaPerfil").modal();
-					
+					$("#notaPerfil").modal();	
 				}
-
 			});
 
-			
 			_.each(cli, function(objeto){
 				 //console.log(objeto,"objeto")
 				 rc.referencias = [];
@@ -150,9 +129,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 				
 				_.each(objeto.referenciasPersonales_ids, function(referencia){
 						Meteor.call('getReferencias', referencia, function(error, result){	
-					//console.log("entra aqui",referencia)					
 							if (result)
-								//console.log(result,"caraculo")
 							{
 								//console.log("entra aqui");
 								//console.log("result",result);
@@ -163,12 +140,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 					});
 	
 					Meteor.call('getEmpresas', objeto.empresa_id, function(error, result){	
-						//console.log("entra aqui",referencia)					
-							if (result)
-								//console.log(result,"caraculo")
-							{
-								//console.log("entra aqui");
-								//console.log("result",result);
+						if (result)
+						{
 								rc.empresa = result
 								$scope.$apply();			
 							}
@@ -176,18 +149,16 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 					
 				});
 
-			if(cli){
-				this.ocupacion_id = cli.profile.ocupacion_id;
-				return cli;
-			}		
+				if(cli){
+					this.ocupacion_id = cli.profile.ocupacion_id;
+					return cli;
+				}		
 		},
 		historialCreditos : () => {
 			
 			var creditos = Creditos.find().fetch();
-			
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "cliente_id");
-				//console.log(rc.creditos_id,"pollo")
 			}
 			
 			return creditos
@@ -199,7 +170,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
 			//rc.creditos_id = _.pluck(planes, "cliente_id");
 			//console.log("kaka",planes)
-			return planes
+			return planes;
 
 		},
 		historial : () => {
@@ -208,29 +179,34 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 			var saldoActual = 0; 
 			rc.saldo =0;	
 			var credito = rc.credito
-			rc.saldoMultas=0;
+			rc.saldoMultas = 0;
 			//return PlanPagos.find({credito_id : this.getReactively("credito_id")}).fetch();
 
+/*
 			_.each(rc.getReactively("planPagos"), function(planPago){
 				
-				if(planPago.descripcion=="Recibo")
-					rc.saldo+=planPago.cargo;
-				if(planPago.descripcion=="Cargo Moratorio")
-					rc.saldoMultas+=planPago.importeRegular;
+				if(planPago.descripcion == "Recibo")
+					rc.saldo += planPago.cargo;
+				if(planPago.descripcion == "Cargo Moratorio")
+					rc.saldoMultas += planPago.importeRegular;
 			});
+*/
 			
-			_.each(rc.getReactively("planPagos"), function(planPago, index){
-			//	planPago.ciudad = PlanPagos.findOne(planPago.credito_id)
+			_.each(rc.planPagos, function(planPago, index){
+				//planPago.ciudad = PlanPagos.findOne(planPago.credito_id);
+				//console.log("entro al segundo");
+				//console.log("credito",credito);
 				
-				//console.log("entro al segundo")
-				//console.log("credito",credito)
-			
+				if(planPago.descripcion == "Recibo")
+					rc.saldo += planPago.cargo;
+				if(planPago.descripcion == "Cargo Moratorio")
+					rc.saldoMultas += planPago.importeRegular;
 					
-				if(planPago.descripcion=="Multa" )
-					rc.saldo+=planPago.cargo
+				if(planPago.descripcion == "Cargo Moratorio" )
+					rc.saldo += planPago.cargo;
 				
-				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
-				//console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
+				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite;
+
 				arreglo.push({saldo:rc.saldo,
 					numeroPago : planPago.numeroPago,
 					cantidad : rc.credito.numeroPagos,
@@ -245,38 +221,37 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 					descripcion : planPago.descripcion,
 					importe : planPago.importeRegular,
 					pagos : planPago.pagos
-			  	});				
-				if(planPago.pagos.length>0 )
+			  });				
+				
+				if(planPago.pagos.length > 0)
 					_.each(planPago.pagos,function (pago) {
-						rc.saldo-=pago.totalPago
-						arreglo.push({saldo:rc.saldo,
-							numeroPago : planPago.numeroPago,
-							cantidad : rc.credito.numeroPagos,
-							fechaSolicito : rc.credito.fechaSolicito,
-							fecha : pago.fechaPago,
-							pago : pago.totalPago, 
-							cargo : 0,
-							movimiento : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
-							planPago_id : planPago._id,
-							credito_id : planPago.credito_id,
-							descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
-							importe : planPago.importeRegular,
-							pagos : planPago.pagos
+							rc.saldo -= pago.totalPago;
+							arreglo.push({saldo:rc.saldo,
+														numeroPago : planPago.numeroPago,
+														cantidad : rc.credito.numeroPagos,
+														fechaSolicito : rc.credito.fechaSolicito,
+														fecha : pago.fechaPago,
+														pago : pago.totalPago, 
+														cargo : 0,
+														movimiento : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
+														planPago_id : planPago._id,
+														credito_id : planPago.credito_id,
+														descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
+														importe : planPago.importeRegular,
+														pagos : planPago.pagos
 					  	});
 					})
 				//console.log(rc.saldo)
-			
-			    
+
 			});
 
-
-			//console.log("el ARREGLO del helper historial",arreglo)
 			if(this.getReactively("credito_id")){
         var filtrado = [];
         var flags = {
           abonoKey: undefined,
           multaKey:undefined
-        };
+      };
+        
 			_.each(arreglo, function(pago,key){
           if(pago.descripcion == "Cargo Moratorio"){
             flags.multaKey = key;
@@ -285,8 +260,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
             flags.abonoKey = key;
           }
           if(pago.descripcion == "Abono de Multa"){
-            console.log(flags);
-            console.log(arreglo[flags.multaKey].saldoActualizado);
+            //console.log(flags);
+            //console.log(arreglo[flags.multaKey].saldoActualizado);
             if(arreglo[flags.multaKey].saldoActualizado){
               arreglo[flags.multaKey].saldoActualizado -= pago.pago;
             }else{
@@ -315,7 +290,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
             }
 
         })
-			 console.log(filtrado,"filtrado")
+			  //console.log(filtrado,"filtrado")
         return filtrado;
       }
 			
@@ -336,35 +311,41 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
     planPagosViejo: () => {
     	var colores = ['active', 'info', 'warning', 'success', 'danger'];
     	var asignados = [];
-			var pp = PlanPagos.find({importeRegular : {$gt : 0},}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
+			var pp = PlanPagos.find({importeRegular : {$gt : 0}}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
+			//console.log(pp);
       rc.subtotal = 0;
 			rc.cargosMoratorios = 0;
 			
-			_.each(pp, function(pago) {
-				pago.credito = Creditos.findOne(pago.credito_id);
-				pago.color = colores[0];
-        var credito = Creditos.findOne({_id:pago.credito_id});
-        pago.verCargo = true;
-        
-        if (pago.descripcion == "Recibo")
-        		rc.subtotal +=  pago.importeRegular;
-        else 
-        		rc.cargosMoratorios +=  pago.importeRegular;
-        
-        pago.folio = pago.credito.folio;
-
-      });
-      pp = $filter('orderBy')(pp, 'folio')
-  		_.each(pp, function(pago) {
-				if(asignados[pago.credito.folio] == undefined){
-						ultimo = _.last(asignados);
-						asignados[pago.credito.folio] = (ultimo == undefined ? 0 : ultimo+1 > 4 ? ultimo-4 : ultimo+1);
-					}
-					pago.color = colores[asignados[pago.credito.folio]];
-
-	      rc.total = rc.subtotal + rc.cargosMoratorios;
-			});
-      //return PlanPagos.find({}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } })
+			if (pp != undefined)
+			{
+					_.each(pp, function(pago){
+						pago.credito = Creditos.findOne(pago.credito_id);
+						pago.color = colores[0];
+		        //var credito = Creditos.findOne({_id:pago.credito_id});
+		        pago.verCargo = true;
+		        
+		        if (pago.descripcion == "Recibo")
+		        		rc.subtotal +=  pago.importeRegular;
+		        else if (pago.descripcion == "Cargo Moratorio")
+		        {
+		        		rc.cargosMoratorios +=  pago.importeRegular;
+		        		console.log("Entro: CM", pago)
+		        }
+		        pago.folio = pago.credito.folio;
+		        		
+		      								
+		      });
+		      
+		      pp = $filter('orderBy')(pp, 'folio')
+		  		_.each(pp, function(pago) {
+						if(asignados[pago.credito.folio] == undefined){
+								ultimo = _.last(asignados);
+								asignados[pago.credito.folio] = (ultimo == undefined ? 0 : ultimo+1 > 4 ? ultimo-4 : ultimo+1);
+						}
+							pago.color = colores[asignados[pago.credito.folio]];
+			      rc.total = rc.subtotal + rc.cargosMoratorios;
+					});
+			}		
       
       return pp;
       
@@ -373,23 +354,22 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
       var creditos = Creditos.find({}).fetch();
       if (creditos != undefined) {
         rc.creditos_id = _.pluck(creditos, "_id");
-        //console.log("ids", rc.creditos_id)
+
         _.each(creditos, function(credito) {
           credito.planPagos = PlanPagos.find({ credito_id: credito._id }, { sort: { numeroPago: -1 } }).fetch();
-          credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
-				
-           
+          credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
         })
       }
+/*
       _.each(rc.getReactively("planPagosViejo"), function(pp) {
     
 
       })
+*/
 
       if (creditos) {
         _.each(creditos, function(credito) {
         	// credito[0].color = credito.folio
-        	
 
           _.each(credito.avales_ids, function(aval) {
             credito.aval = Personas.findOne(aval)
@@ -407,8 +387,6 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
     pagosReporte: () => {
       _.each(rc.planPagosViejo, function(pp) {
         var pagos = pp.pagos
-
-
       });
 
       return Pagos.find().fetch()
@@ -422,6 +400,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
     return credito ? credito.folio : "";
 
   };
+  
   this.getnumeroPagos = function(credito_id) {
     var credito = Creditos.findOne(credito_id);
     return credito ? credito.numeroPagos : "";
@@ -485,6 +464,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 				}		
     });
   }
+  
   this.seleccionarMontoPago = function(pago) {
     rc.pago.totalPago = 0;
     var i = 0;
@@ -656,7 +636,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 	}
 
 	this.verPagos= function(credito) {
-		console.log(credito,"el ob ")
+		//console.log(credito,"el ob ")
 		rc.credito = credito;
 		rc.credito_id = credito._id;
 		$("#modalpagos").modal();
@@ -671,12 +651,14 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 	};
 
 
-    $(document).ready(function() {
-      $('body').addClass("hidden-menu");
+  $(document).ready(function() {
+    $('body').addClass("hidden-menu");
+		
+		//Quita el mouse wheels 
+		document.getElementById('cobro').onwheel = function(){ return false; }
+  
 
-    
-    
-		});
+	});
 
 
 	this.ocultar = function() 
@@ -785,11 +767,5 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 			
 	}
 	
-	//Quita el mouse wheels 
-	$(document).ready(function(){  	
-    	document.getElementById('cobro').onwheel = function(){ return false; }
-	});
-	
-
 
 };

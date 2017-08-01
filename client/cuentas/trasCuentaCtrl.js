@@ -35,8 +35,6 @@ angular.module("creditoMio")
 	});
 
 
-
-
 	this.helpers({
 		cajas : () => {
 			return Cajas.find();
@@ -44,8 +42,6 @@ angular.module("creditoMio")
 		cuentas : () => {
 			return Cuentas.find();
 		},
-		
-		
 	
 		traspasos : () => {
 			var traspasos = Traspasos.find({},{order: {createdAt: -1}}).fetch();
@@ -101,15 +97,4 @@ angular.module("creditoMio")
 		
 	};
 
-
-	/*this.cambiarEstatus = function(id)
-	{
-			var objeto = Cajas.findOne({_id:id});
-			if(objeto.estatus == true)
-				objeto.estatus = false;
-			else
-				objeto.estatus = true;
-			
-			Cajas.update({_id: id},{$set :	{estatus : objeto.estatus}});
-	};	*/
 };

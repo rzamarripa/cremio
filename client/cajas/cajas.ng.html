@@ -32,7 +32,7 @@
 						  </div>
 						  <div class="col-sm-4" valida>
 								<label>Saldo Máximo *</label>
-								<input name="maximoEfectivo{{$index}}" type="number" class="form-control" placeholder="Saldo Máximo" ng-model="caj.objeto.cuenta[tipo._id].maximo" required>
+								<input name="maximoEfectivo {{$index}}" type="number" class="form-control" placeholder="Saldo Máximo" ng-model="caj.objeto.cuenta[tipo._id].maximo" required>
 						  </div>
 						</div>
 					</div>
@@ -56,18 +56,21 @@
 			<thead>
 				<tr>
 					<th width="5%"><div class="text-center">No.</div></th>
-					<th width="40%"><div class="text-center">Nombre</div></th>
-					<th width="10%">
+					<th width="15%"><div class="text-center">Nombre</div></th>
+					<th width="20%"><div class="text-center">Cajero</div></th>
+<!--
+					<th width="5%">
 						<div class="text-center">
 							Estatus
 						</div>
 					</th>
+-->
 					<th width="20%">
 						<div class="text-center">
-							Abierta
+							Estado Ventanilla
 						</div>
 					</th>
-					<th width="20%">
+					<th width="10%">
 						<div class="text-center">
 							Acciones
 						</div>
@@ -78,7 +81,8 @@
 		    <tr ng-repeat="objeto in caj.cajas">
 			    <td class="text-center">{{$index + 1}}</td>
 			    <td>{{objeto.nombre}}</td>
-			
+					<td>{{objeto.cajero}}</td>
+<!--
 			    <td>
 				    <div class="text-center">
 				    	<span ng-if="objeto.estatus" class="label label-success">
@@ -89,6 +93,7 @@
 							</span>
 				    </div>
 			    </td>
+-->
 			    <td>
 				    <div class="text-center">
 				    	<span ng-if="objeto.estadoCaja=='Abierta'" class="label label-success">
@@ -106,13 +111,15 @@
 							    <span class="caret"></span>
 							    <span class="sr-only">Toggle Dropdown</span>
 							  </button>
-							  <ul class="dropdown-menu text-left">
+							  <ul class="dropdown-menu dropdown-menu-right text-left">
 							    <li><a  ng-click="caj.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
 							    <li><a  ui-sref="root.abrirCaja({caja_id:objeto._id})"><i class="fa fa-external-link"></i> Abrir</a></li>
 							    <li><a  ui-sref="root.corteCaja({caja_id:objeto._id, cajero_id: objeto.usuario_id})"><i class="fa fa-external-link"></i> Corte</a><li>
-							    <li><a  ng-click="caj.cambiarEstatus(objeto._id)">
+<!--
+							    <li><a  ng-click="caj.cambiarEstatus(objeto._id, objeto.estadoCaja)">
 								    <i class="fa fa-{{objeto.estatus ? 'trash' : 'check' }}"></i> {{objeto.estatus ? "Desactivar" : "Activar" }}</a>
 							    </li>
+-->
 							  </ul>
 							</div>
 				    </div>				    

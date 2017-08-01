@@ -15,7 +15,7 @@
 					<i class="fa fa-plus"></i> Nuevo
 				</a>
 			</div>
-			<input class="form-control" type="text" placeholder="Buscar..." ng-model="lcli.buscar.nombre">
+			<input class="form-control" type="text" placeholder="Buscar..." ng-model="lcli.buscar.nombre" capitalize> 
 		</div>
 	</div>
 </div>
@@ -24,28 +24,19 @@
       <div class="contact-box center-version">
 
           <a href="/clientes/{{cliente._id}}" style="text-decoration: none;">
-
               <img alt="image" class="img-circle" ng-src="{{lcli.tieneFoto(cliente.profile.sexo, cliente.profile.foto)}}">
-
-
-              <p class="lead font-xs text-center"><strong>{{cliente.profile.nombre}} <br/> {{cliente.profile.apPaterno}} {{cliente.profile.apMaterno}}</strong></p>
-
+              <p class="lead font-xs text-center"><strong>{{cliente.profile.nombre}} <br/> {{cliente.profile.apellidoPaterno}} {{cliente.profile.apellidoMaterno}}</strong></p>
               <div class="font-bold">{{cliente.username}}</div>
               <address class="font-xs">
                   <strong>Cliente</strong><br>
-                  {{cliente.profile.call}} {{cliente.profile.numero}}<br>
-                  {{cliente.profile.colonia}}<br>
-                  <abbr title="Teléfono">T1:</abbr> {{cliente.profile.telefono}}<br/>
-                  <abbr title="Celular">C2:</abbr> {{cliente.profile.celular}}
+                  <abbr title="Teléfono">Teléfono:</abbr> {{cliente.profile.telefono}}<br/>
+                  <abbr title="Celular">Celular:</abbr> {{cliente.profile.celular}}
               </address>
-
           </a>
           <div class="contact-box-footer">
               <div class="m-t-xs btn-group">
                   <a href="/clientes/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
                   <a href="/editarCliente/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Editar</a>
-                 <!--  <a href="/verPlanPagos/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-money"></i> Pagos</a> -->
-
               </div>
           </div>
 

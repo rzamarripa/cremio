@@ -3,7 +3,6 @@
 <div class="row" >
 	<div class="col-sm-12">
 		<input type="button" class="btn btn-{{tincu.action == false ? 'primary' : 'danger'}}"  ng-click="tincu.nuevo()" value ="{{tincu.action == false ? 'Nuevo' : 'Cancelar'}}" >
-
 		<br/>
 		<br/>
 		<div ng-show="tincu.action">
@@ -12,13 +11,13 @@
 				    <div class="row">
 					    <div class="col-sm-12">
 					    	<div class="col-sm-4" valida>
-							    <label>Cuenta de Origen*</label>
+							    <label>Cuenta de Origen *</label>
 						    	<select name="origen" class="form-control select2" placeholder="Seleccione" ng-model="tincu.objeto.origen_id" required>
 										<option ng-repeat="caja in tincu.cuentas" value="{{caja._id}}">{{caja.nombre}}</option>
 									</select>
 						  	</div>
 								<div class="col-sm-4" valida>
-							    <label>Cuenta de Destino*</label>
+							    <label>Cuenta de Destino *</label>
 						    	<select name="destino" class="form-control select2" placeholder="Seleccione" ng-model="tincu.objeto.destino_id" required>
 										<option ng-repeat="cuenta in tincu.cuentas" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
 									</select>

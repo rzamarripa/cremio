@@ -237,6 +237,12 @@ Meteor.methods({
 			var persona = Meteor.users.findOne(idReferencia);
 				_.each(persona, function(objeto){
 					objeto.nacionalidadCliente = Nacionalidades.findOne(objeto.nacionalidad_id);
+					objeto.coloniaCliente = Colonias.findOne(objeto.colonia_id);
+					objeto.estadoCliente = Estados.findOne(objeto.estado_id);
+					objeto.municipioCliente = Municipios.findOne(objeto.municipio_id);
+					objeto.ocupacionCliente = Ocupaciones.findOne(objeto.ocupacion_id);
+					objeto.ciudadCliente = Ciudades.findOne(objeto.ciudad_id);
+					//objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id).nombre;
 
 
 				});
@@ -906,28 +912,50 @@ diato;
     return new Buffer(bitmap).toString('base64');
 		
   },
-  contratos: function (contrato,credito,cliente) {
+  contratos: function (contrato,credito,cliente,planPagos) {
+  	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
+  	cliente.colonia = cliente.coloniaCliente.nombre
+  	cliente.estado = cliente.estadoCliente.nombre
+  	cliente.ocupacion = cliente.ocupacionCliente.nombre
+  	cliente.ciudad = cliente.ciudadCliente.nombre
+  	 _.each(planPagos,function(pp){
+		 	pp.importeRegular = parseFloat(pp.importeRegular.toFixed(2))
+		 	pp.iva = parseFloat(pp.iva.toFixed(2))
+		 	pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))
+		 	pp.total = parseFloat(pp.total.toFixed(2))
+		 	pp.capital = parseFloat(pp.capital.toFixed(2))
+		 	pp.liquidar = parseFloat(pp.liquidar.toFixed(2))
+		 	pp.fechaLimite = moment(pp.fechaLimite).format("DD-MM-YYYY")
+
+
+		 });
+  	var garantias = contrato.garantias[0]
+
   
-  	_.each(cliente,function(c)
-    	{
-    		if (cliente.nacionalidadCliente) {
-    			c.nacionalidad = c.nacionalidadCliente.nombre
-    		}
-    		
-    	});
-  		console.log(cliente,"cliente")
+  		
   	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
 	
-		//
-		//console.log(contrato,"contratos ")
+	    //console.log(contrato,"contratos ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
-				var content = fs
+				
+				if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+					var content = fs
 					.readFileSync(produccion+"CONTRATOINTERES.docx", "binary");
+				}
+				if (contrato.tipoInteres.tipoInteres == "Saldo Insolutos") {
+					var content = fs
+					.readFileSync(produccion+"CONTRATOINTERES(SSI).docx", "binary");
+				}
+				if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+					var content = fs
+					.readFileSync(produccion+"CONTRATOINTERES(COMPUESTO).docx", "binary");
+				}
+					
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
 								.loadZip(zip).setOptions({nullGetter: function(part) {
@@ -945,9 +973,10 @@ diato;
 	 
 	    
 	  		doc.setData({			items: 	   contrato,
-	  								cliente:  cliente,
 									fecha:     fecha,
-											
+									cliente: cliente,
+									contrato: contrato,
+									pp: planPagos,
 													
 				});
 								
@@ -955,11 +984,20 @@ diato;
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"CONTRATOINTERESSalida.docx",buf);		
-				
-		//Pasar a base64
-		// read binary data
-    var bitmap = fs.readFileSync(produccion+"CONTRATOINTERESSalida.docx");
+			
+ 		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+     		 	fs.writeFileSync(produccion+"CONTRATOINTERESSalida(SSI)Salida.docx",buf);
+     		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOINTERESSalida(SSI)Salida.docx");
+     		 }
+     		 if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+     		 	fs.writeFileSync(produccion+"CONTRATOINTERESSalida.docx",buf);
+     		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOINTERESSalida.docx");
+     		 }
+     		 if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+     		 	fs.writeFileSync(produccion+"CONTRATOINTERESSalida(COMPUESTO)Salida.docx",buf);
+     		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOINTERESSalida(COMPUESTO)Salida.docx");
+     		 }		
+
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -973,8 +1011,19 @@ diato;
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
-				var content = fs
+
+	    if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+			var content = fs
 					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO.docx", "binary");
+		}
+		if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+			var content = fs
+					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO(COMPUESTO).docx", "binary");
+		}
+		if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+			var content = fs
+					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO(SSI).docx", "binary");
+		}
     	   
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
@@ -993,33 +1042,55 @@ diato;
 	    
 	  		doc.setData({				items: 		 contrato,
 									    fecha:     fecha,
-											
-													
+									    cliente:    cliente,
+									    nacionalidad: cliente.nacionalidadCliente.nombre
 				});
 								
 		doc.render();
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.docx",buf);		
+ 	           		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+             		 	fs.writeFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida(SSI)Salida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida(SSI)Salida.docx");
+             		 }
+             		 if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+             		 	fs.writeFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.docx");
+             		 }
+             		 if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+             		 	fs.writeFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida(COMPUESTO)Salida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida(COMPUESTO)Salida.docx");
+             		 }	
 				
-		//Pasar a base64
-		// read binary data
-    var bitmap = fs.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.docx");
-    
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
    }
+
+
   if (contrato.garantias && contrato.tipoGarantia == "general") {
-   	console.log(contrato,"contratos ")
+   	//console.log(contrato,"contratos ")
+   	console.log("hipotecarios")
+   	console.log(cliente,"cliente")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
+		///var produccion = "/home/cremio/archivos/";
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
-				var content = fs
+		if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+			var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
+		}
+		if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+			var content = fs
+					.readFileSync(produccion+"CONTRATOHIPOTECARIO(COMPUESTO).docx", "binary");
+		}
+		if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+			var content = fs
+					.readFileSync(produccion+"CONTRATOHIPOTECARIO(SSI).docx", "binary");
+		}
+				
     	   
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
@@ -1032,6 +1103,8 @@ diato;
 			return "";
 		}});
 		
+		
+		
 			var fecha = new Date();
 			var f = fecha;
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
@@ -1039,15 +1112,33 @@ diato;
 	    
 	  		doc.setData({		    items: 	   contrato,
 									fecha:     fecha,
+									cliente: cliente,
+									contrato: contrato,
+									pp: planPagos,
+									garantias: garantias,
 													
 				});
 								
 		doc.render();
  
-		var buf = doc.getZip()
+			
+				var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalida.docx",buf);		
-				
+             		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+             		 	console.log(",monndddrigoo")
+             		 	fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalida(SSI)Salida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalida(SSI)Salida.docx");
+             		 }
+             		 if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+             		 	fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalida.docx");
+             		 }
+             		 if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+             		 	fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalida(COMPUESTO)Salida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalida(COMPUESTO)Salida.docx");
+             		 }
+				    
+    return new Buffer(bitmap).toString('base64');	
 		//Pasar a base64
 		// read binary data
     var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalida.docx");
@@ -1057,16 +1148,30 @@ diato;
 
    }
    if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
-   		console.log(contrato,"contratos ")
+   		console.log(contrato,"contr ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		//var produccion = "/home/cremio/archivos/";
+
 		var produccion = meteor_root+"/web.browser/app/plantillas/";
-				var content = fs				
+		if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+			console.log("entra SIMPLE")
+			var content = fs				
 					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.docx", "binary");
+		}
+		if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+			console.log("entra saldos")
+			var content = fs				
+					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA(SSI).docx", "binary");
+		}
+		if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+			console.log("entra COMPUESTO")
+			var content = fs				
+					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA(COMPUESTO).docx", "binary");
+		}
+				
     	   
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
@@ -1085,15 +1190,32 @@ diato;
 	    
 	  		doc.setData({				items: 	   contrato,
 									    fecha:     fecha,
+									    cliente:   cliente,
+										contrato: contrato,
+										pp: planPagos,
+										//garantias: 
 				});
 								
 		doc.render();
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx",buf);		
+             		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+             		 	console.log(",monndddrigoo")
+             		 	fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIA(SSI)Salida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA(SSI)Salida.docx");
+             		 }
+             		 if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+             		 	fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx");
+             		 }
+             		 if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+             		 	fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIA(COMPUESTO)Salida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA(COMPUESTO)Salida.docx");
+             		 }
+				
 
-    var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx");
+    //var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx");
     
     return new Buffer(bitmap).toString('base64');
 

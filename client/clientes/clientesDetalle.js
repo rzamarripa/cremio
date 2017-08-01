@@ -162,7 +162,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						credito.tieneAvales = true;
 						Meteor.apply('getAval', [aval.aval_id], function(error, result){
 							if(result){
-								console.log(result.nombreCompleto);
+								//console.log(result.nombreCompleto);
 								aval.nombreCompleto = result.nombreCompleto;
 								aval.celular = result.celular;
 							}
@@ -1056,7 +1056,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 
 	function obtenerClaseEstatus(estatus){
-		console.log("hola", estatus);
+		//console.log("hola", estatus);
 		if(estatus == 0){
 			return "danger";
 		}else if(estatus == 1){

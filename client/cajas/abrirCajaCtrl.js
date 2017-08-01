@@ -30,7 +30,10 @@ angular.module("creditoMio")
 		objeto : () => {
 			var caja = Cajas.findOne($stateParams.caja_id);
 			if(caja.estadoCaja=="Abierta")
-				$state.go('root.clientesLista');
+			{
+				 toastr.error("La ventanilla ya se encuentra Abierta");
+				 $state.go('root.cajas');
+			}	
 			return caja;
 		}
 	});

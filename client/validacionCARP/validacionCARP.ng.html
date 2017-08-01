@@ -1,0 +1,67 @@
+<div class="row">
+	<div class="col-sm-12">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Validación de Clientes, Avales y Referencias Personales
+		</h1>
+	</div>
+</div>
+<br>
+	<div class="well">
+		<div class="row">
+			<label>Escriba el nombre de la persona</label>
+			<div class="input-group col-sm-12"> 
+				<input type="text" class="form-control" ng-change="valcarp.buscarPersona(valcarp.buscar.nombre)" ng-model="valcarp.buscar.nombre" capitalize>
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" style="height: 34px;">
+						<i class="fa fa-search"></i>
+					</button> 
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="well">
+	<div class="row">
+		<div class="col-lg-3" ng-repeat="persona in valcarp.personas">
+	      <div class="contact-box center-version">
+	          <a href="javascript:void(0);" style="text-decoration: none;">
+	              <img alt="image" class="img-circle" ng-src="{{valcarp.tieneFoto(persona.profile.sexo, persona.profile.foto)}}">	
+	              <p class="lead font-xs text-center">
+		              <strong ng-if="persona.profile != undefined">{{persona.profile.nombreCompleto}}</strong>
+		              <strong ng-if="persona.profile == undefined">{{persona.nombreCompleto}}</strong>
+		            </p>
+	              <address class="font-xs">
+	                  <h4><strong ng-if="persona.profile.referenciasPersonales_ids != undefined">Cliente</strong></h4>
+	                  <h4><strong ng-if="persona.profile.creditos != undefined">Aval</strong></h4>
+	                  <h4><strong ng-if="persona.profile == undefined">Referencia Personal</strong></h4>
+	              </address>
+								<!--Clientes -->
+								<div ng-if="persona.profile.referenciasPersonales_ids != undefined">
+									<ul style="padding: 0">
+										<label>Referencias Personales:</label>
+										<li ng-repeat="referenciaPersonal in persona.profile.referenciasPersonales_ids"><small>{{referenciaPersonal.nombreCompleto}} - {{referenciaPersonal.parentesco}} - {{referenciaPersonal.tiempoConocerlo}}</small></li>
+									</ul>	
+								</div>
+								<!--avales -->
+								<div ng-if="persona.profile.creditos != undefined">
+									<ul style="padding: 0">
+										<label>Cliente:</label>
+										<li ng-repeat="aval in persona.profile.creditos"><small>{{aval.nombreCompleto}} - {{aval.parentesco}} - {{aval.tiempoConocerlo}}</small></li>
+									</ul>	
+								</div>
+								<!--Referencias Personales -->
+								<div ng-if="persona.profile == undefined">
+									<ul style="padding: 0">
+										<label>Clientes:</label>
+										<li ng-repeat="cliente in persona.clientes"><small>{{cliente.nombreCompleto}} - {{cliente.parentesco}} - {{cliente.tiempoConocerlo}}</small></li>
+									</ul>	
+								</div>		                  
+	          </a>
+	          <div class="contact-box-footer">
+		          	
+	          </div>	
+	      </div>
+	  </div>
+	</div>
+</div>
