@@ -14,7 +14,7 @@ angular.module("creditoMio")
 	});	 
 	this.helpers({
 	  diasInhabiles : () => {
-		  return DiasInhabiles.find().fetch();
+		  return DiasInhabiles.find({}, {sort: {dia:  -1,fecha: -1}}).fetch();
 	  },
   });
   
@@ -33,6 +33,16 @@ angular.module("creditoMio")
 		  }
 			objeto.estatus = true;
 			objeto.usuarioInserto = Meteor.userId();
+			
+			if (objeto.tipo == "FECHA")
+			{
+					var f = new Date(objeto.fecha);
+					console.log(f);
+					objeto.fecha = f;
+					console.log(objeto.fecha);
+			}
+				
+			
 			DiasInhabiles.insert(objeto);
 			toastr.success('Guardado correctamente.');
 			this.objeto = {}; 
@@ -78,4 +88,21 @@ angular.module("creditoMio")
 			
 			DiasInhabiles.update({_id: id},{$set :  {estatus : objeto.estatus}});
   };	
+  
+  this.getDia = function(numeroDia)
+	{
+			var nombreDia = "";
+			switch(numeroDia){
+				case	1: nombreDia = "LUNES";break;
+				case	2: nombreDia = "MARTES";break;
+				case	3: nombreDia = "MIÉRCOLES";break;
+				case	4: nombreDia = "JUEVES";break;
+				case	5: nombreDia = "VIERNES";break;
+				case	6: nombreDia = "SÁBADO";break;
+				case	7: nombreDia = "DOMINGO";break;
+				
+			}
+			return nombreDia;
+	}	
+  
 };

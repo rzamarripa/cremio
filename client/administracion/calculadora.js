@@ -187,7 +187,7 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 					toastr.error('Error al calcular el nuevo plan de pagos.');
 				}
 				else{
-					console.log(result);
+					//console.log(result);
 					_.each(result,function (pago) {
 						
 						
@@ -441,9 +441,11 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 				var fecha = new Date();
 				var dif = diaActual - diaSeleccionado;
 				
+/*
 				console.log("Actual:", diaActual);
 				console.log("Seleccionado:",diaSeleccionado);
 				console.log("dif:",dif);
+*/
 				
 				
 				if (periodoPago == "Semanal")
@@ -566,13 +568,15 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 	    this.imprimirCredito = function(objeto,credito,avales,garantias){
 
 	    	
+/*
 	    	console.log(objeto,"objeto")
 	    	console.log(credito,"credito")
+*/
 
 				var pag = objeto
 				var pa = _.toArray(pag);
 				var all = pa[pa.length - 1]
-				console.log(all,"all")
+				//console.log(all,"all")
 				rc.total = all
 
 			  Meteor.call('getCreditoReporte', objeto,credito,avales,all, function(error, response) {

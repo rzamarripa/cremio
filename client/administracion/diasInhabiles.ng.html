@@ -21,13 +21,13 @@
 								<label for="dia">Seleccione día</label>
 								<select name="tipo" ng-model="di.objeto.dia" data-placeholder="Seleccione" class="form-control" required >
 										<option value=""></option>
-										<option value="LUNES">LUNES</option>
-										<option value="MARTES">MARTES</option>
-										<option value="MIERCOLES">MIÉRCOLES</option>
-										<option value="JUEVES">JUEVES</option>
-										<option value="VIERNES">VIERNES</option>
-										<option value="SABADO">SÁBADO</option>
-										<option value="DOMINGO">DOMINGO</option>
+										<option value="1">LUNES</option>
+										<option value="2">MARTES</option>
+										<option value="3">MIÉRCOLES</option>
+										<option value="4">JUEVES</option>
+										<option value="5">VIERNES</option>
+										<option value="6">SÁBADO</option>
+										<option value="7">DOMINGO</option>
 								</select>
 							</div>	
 							<div class="col-sm-2" ng-if="di.objeto.tipo == 'FECHA'" valida>
@@ -74,7 +74,7 @@
 		    <tr ng-repeat="objeto in di.diasInhabiles">
 		    <td>{{$index + 1}}</td>
 			    <td style="text-align: center">{{objeto.tipo}}</td>
-			    <td>{{objeto.dia}} {{objeto.fecha | date:'dd/MM/yyyy' }} </td>
+			    <td>{{di.getDia(objeto.dia)}} {{objeto.fecha | date:'dd/MM/yyyy' }} </td>
 			    <td>
 				    <div class="text-center">
 				    	<span ng-if="objeto.estatus" class="label label-success">

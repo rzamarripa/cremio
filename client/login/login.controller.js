@@ -12,7 +12,14 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
     $meteor.loginWithPassword(this.credentials.username, this.credentials.password).then(
       function () {
 	      toastr.success("Bienvenido al Sistema");
-        $state.go('root.home');        
+/*
+				console.log(Meteor.userId());
+				console.log(Meteor.user());
+*/
+	      if (Meteor.user().roles[0] == "Verificador")
+        	 $state.go('root.panelVerificador');        
+        else 	 
+        	$state.go('root.home');
       },
       function (error) {
         toastr.error(error.reason);

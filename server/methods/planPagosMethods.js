@@ -8,14 +8,16 @@ Meteor.methods({
 		    return clone ;
 		}
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
-		
 	
 		//console.log(fecha);
+		
 		var mfecha = moment(credito.fechaPrimerAbono);
-		var inicio = mfecha.toDate();
-		//console.log(credito);
+		mfecha.set({hour:0,minute:0,second:0,millisecond:0});
+		
+		var fechaLimite;// = mfecha;
+		
 		var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
-		//console.log(tipoCredito);
+
 		
 		var totalPagos = 0;
 		
@@ -28,6 +30,7 @@ Meteor.methods({
 				
 		var numeroPagosCompuesto = 0;
 		var tasaInteres = 0;
+		var semanaQuincena = 0;
 		
 		
 		if(credito.periodoPago == "Semanal")
@@ -35,20 +38,69 @@ Meteor.methods({
 			totalPagos = credito.duracionMeses * 4;
 			numeroPagosCompuesto = 4;	
 			tasaInteres = (credito.tasa / 4) / 100;
+			
+			
+			
 		}	
 		else if (credito.periodoPago == "Quincenal")
 		{
 			totalPagos = credito.duracionMeses * 2;
 			numeroPagosCompuesto = 2;
 			tasaInteres = (credito.tasa / 2) / 100;
+			
+			var fechaMes = new Date(moment(credito.fechaPrimerAbono));
+			var diaMes = fechaMes.getDate();
+			if (diaMes <= 15)
+			{
+		 	 	 mfecha = mfecha.date(15);
+		 	 	 semanaQuincena	= 2;
+		 	} 	 
+		  else if (diaMes > 15)
+		  {
+			   diaMes = moment(credito.fechaPrimerAbono).daysInMonth();
+				 mfecha = mfecha.date(diaMes);
+				 semanaQuincena = 1;
+		  }
+		  
 		}	
 		else if(credito.periodoPago == "Mensual")
 		{
 			totalPagos = credito.duracionMeses;
 			numeroPagosCompuesto = 1;
 			tasaInteres = credito.tasa / 100;
-		}	
+		  
+		  var diaMes = moment(credito.fechaPrimerAbono).daysInMonth();
+		  mfecha = mfecha.date(diaMes);
+		}
+		
+		////////////////////////////////////////////////////////////////////////////////
+		verificarDiaInhabil = function(fecha){
+				var diaFecha = fecha.isoWeekday();
+				var diaInhabiles = DiasInhabiles.find({tipo: "DIA"}).fetch();
+	
+				_.each(diaInhabiles, function(dia){
+						if (dia.dia == diaFecha)
+							 return true;
+				})
+				var fechaBuscar = new Date(fecha);
 				
+				var fechaInhabil = DiasInhabiles.findOne({tipo: "FECHA", fecha: fechaBuscar});
+				if (fechaInhabil != undefined)
+					 return true;	
+	
+				return false;
+		};
+		
+		////////////////////////////////////////////////////////////////////////////////
+		//Evaluar la validación de dia inhabil
+	  var validaFecha = true;
+	  fechaLimite = moment(mfecha);
+	  while(validaFecha)
+	  {				
+				validaFecha = verificarDiaInhabil(fechaLimite);
+				if (validaFecha == true)
+							fechaLimite = fechaLimite.add(1, 'days');					 
+	  }	
 		
 		var plan = [];
 		
@@ -87,13 +139,6 @@ Meteor.methods({
 						var capital = parseFloat((pagoFijo - interes) / 1.16).toFixed(2);
 						var iva = parseFloat(capital * 0.16).toFixed(2);
 						
-/*
-						console.log("pagoFijo:", pagoFijo);
-						console.log("FV:", FV);
-						console.log("Cap:", capital);
-						console.log("int:", interes);
-						console.log("IVA:", iva);
-*/
 												
 						if (credito.conSeguro)
 								importeParcial = parseFloat(capital) + parseFloat(interes) + parseFloat(iva) + parseFloat(seguro);
@@ -101,8 +146,6 @@ Meteor.methods({
 								importeParcial = parseFloat(capital) + parseFloat(interes) + parseFloat(iva);
 						
 						importeParcial = Math.round(importeParcial * 100) / 100;
-						
-//						console.log("importeParcial:", importeParcial);
 						
 						
 				}
@@ -112,11 +155,12 @@ Meteor.methods({
 					 cliente._id = "Prospecto";
 				}	 
 		
-				for (var i = 0; i < totalPagos; i++) {
+				for (var i = 0; i < totalPagos; i++) {					
+					
 					var pago = {
-						semana							: mfecha.isoWeek(),
-						fechaLimite					: new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
-						diaSemana						: mfecha.weekday(),
+						semana							: fechaLimite.isoWeek(),
+						fechaLimite					: new Date(new Date(fechaLimite.toDate().getTime()).setHours(23,59,59)),
+						diaSemana						: fechaLimite.weekday(),
 						tipoPlan						: credito.periodoPago,
 						numeroPago					: i + 1,
 						importeRegular			: importeParcial,
@@ -139,31 +183,54 @@ Meteor.methods({
 						descripcion					: "Recibo",
 						ultimaModificacion	: new Date(),
 						credito_id 					: credito._id,
-						mes									: mfecha.get('month') + 1,
-						anio								: mfecha.get('year'),
+						mes									: fechaLimite.get('month') + 1,
+						anio								: fechaLimite.get('year'),
 						cargo								: importeParcial,	
 						movimiento					: "Recibo",
-						//folio 						:  sucursal.folio + 1,
+						//folio 						:  sucursal.folioCredito + 1,
 					}
-
-					//Sucursales.update({_id : sucursal._id}, { $set : { folio : credito.folio}});
 					
 					plan.push(clonar(pago));
 					if(credito.periodoPago == "Semanal"){
 						mfecha = mfecha.add(7, 'days');
+						
 					}
 					else if(credito.periodoPago == "Quincenal"){
-						mfecha = mfecha.add(15, 'days');	
+						
+						if (semanaQuincena == 1)
+						{
+							 mfecha = moment(mfecha).add(1, 'days');
+							 	
+					 	 	 mfecha = mfecha.date(15);
+					 	 	 semanaQuincena	= 2;
+					 	} 	 
+					  else if (semanaQuincena == 2)
+					  {
+							   
+						   diaMes = moment(mfecha).daysInMonth();
+							 mfecha = mfecha.date(diaMes);
+							 semanaQuincena = 1;							 
+							 
+					  }
 					}
 					else if(credito.periodoPago == "Mensual"){
-						var siguienteMes = moment(mfecha).add(1, 'M');
-						var finalSiguienteMes = moment(siguienteMes).endOf('month');
+						var siguienteFecha = moment(mfecha).add(1, 'M');
 						
-						if(mfecha.date() != siguienteMes.date() && siguienteMes.isSame(finalSiguienteMes.format('YYYY-MM-DD'))) 
-							siguienteMes = siguienteMes.add(1, 'd');
+						var diaMes = moment(siguienteFecha).daysInMonth();
+						siguienteFecha = siguienteFecha.date(diaMes);
 						
-						mfecha = siguienteMes;
+						mfecha = siguienteFecha;
 					}	
+					
+					validaFecha = true;
+					fechaLimite = moment(mfecha);
+				  while(validaFecha)
+				  {							
+							validaFecha = verificarDiaInhabil(fechaLimite);
+							if (validaFecha == true)
+									fechaLimite = fechaLimite.add(1, 'days');	
+				  }
+					
 				}
 
 				var suma = 0;
@@ -264,7 +331,10 @@ Meteor.methods({
 					}
 					else if(credito.periodoPago == "Mensual"){
 						var siguienteMes = moment(mfecha).add(1, 'M');
+						
 						var finalSiguienteMes = moment(siguienteMes).endOf('month');
+						
+						
 						
 						if(mfecha.date() != siguienteMes.date() && siguienteMes.isSame(finalSiguienteMes.format('YYYY-MM-DD'))) 
 							siguienteMes = siguienteMes.add(1, 'd');
