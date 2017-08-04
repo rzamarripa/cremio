@@ -512,7 +512,7 @@ Meteor.methods({
 	    
 	 
 
-	    console.log(objeto.planPagos);
+	  //console.log(objeto.planPagos);
 		
 		doc.setData({				items: 		objeto,
 									fecha:     fecha,

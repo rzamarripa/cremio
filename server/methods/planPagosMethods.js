@@ -17,116 +17,242 @@ Meteor.methods({
 		
 		var totalPagos = 0;
 		var seguro = tipoCredito.seguro;
+		var numeroPagosCompuesto = 0;
 
 		if(credito.periodoPago == "Semanal")
 		{
 			totalPagos = credito.duracionMeses * 4;
-			seguro = seguro / 2;	
+			seguro = seguro / 2;
+			numeroPagosCompuesto = 4;	
 		}	
 		else if (credito.periodoPago == "Quincenal")
 		{
 			totalPagos = credito.duracionMeses * 2;
+			numeroPagosCompuesto = 2;
 		}	
 		else if(credito.periodoPago == "Mensual")
 		{
 			totalPagos = credito.duracionMeses;
 			seguro = seguro * 2;
-		
+			numeroPagosCompuesto = 1;
 		}	
 		
 		
-/*
-		if(credito.requiereVerificacion == true)
-			credito.estatus = 0;
-		else
-			credito.estatus = 1;
-*/
-		
-	var suma = 0;
-		var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)
-								*credito.duracionMeses+credito.capitalSolicitado)/totalPagos)+seguro;
-		
-		var iva = ((credito.capitalSolicitado * (tipoCredito.tasa / 100)*0.16)*credito.duracionMeses)/totalPagos;
-		iva = parseFloat(iva.toFixed(2));
-		var interes = (credito.capitalSolicitado * (tipoCredito.tasa / 100) *credito.duracionMeses)/totalPagos;
-		interes = parseFloat(interes.toFixed(2));
-		var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
-		importeParcial=Math.round(importeParcial * 100) / 100;
-		suma += importeParcial
 		var plan = [];
 		
-		if (cliente == undefined){
-			 cliente = {}; 
-			 cliente._id = "Prospecto";
-		}	 
+		if (tipoCredito.tipoInteres == "Compuesto" || tipoCredito.tipoInteres == "Simple")
+		{
+				
+				if (tipoCredito.tipoInteres == "Simple")
+				{
+						var suma = 0;
+						if (tipoCredito.conSeguro)
+								var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)*credito.duracionMeses+credito.capitalSolicitado)/totalPagos)+seguro;
+						else
+								var importeParcial = (((credito.capitalSolicitado * (tipoCredito.tasa / 100)*1.16)*credito.duracionMeses+credito.capitalSolicitado)/totalPagos);
+						
+						var iva = ((credito.capitalSolicitado * (tipoCredito.tasa / 100)*0.16)*credito.duracionMeses)/totalPagos;
+						iva = parseFloat(iva.toFixed(2));
+						var interes = (credito.capitalSolicitado * (tipoCredito.tasa / 100) *credito.duracionMeses)/totalPagos;
+						interes = parseFloat(interes.toFixed(2));
+						var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
+						importeParcial=Math.round(importeParcial * 100) / 100;
+						suma += importeParcial;
+				}
+				else if(tipoCredito.tipoInteres == "Compuesto")
+				{
+						var suma = 0;
+						
+						var iva = ((credito.capitalSolicitado * (tipoCredito.tasa / 100)*0.16))/numeroPagosCompuesto;
+						iva = parseFloat(iva.toFixed(2));
+						var interes = (credito.capitalSolicitado * (tipoCredito.tasa / 100))/numeroPagosCompuesto;
+						interes = parseFloat(interes.toFixed(2));
+						var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
+						
+						if (tipoCredito.conSeguro)
+								var importeParcial = capital + interes + iva + seguro;
+						else
+								var importeParcial = capital + interes + iva;
+						
+						
+						importeParcial=Math.round(importeParcial * 100) / 100;
+						suma += importeParcial;
+						
+				}
+			
+				if (cliente == undefined){
+					 cliente = {}; 
+					 cliente._id = "Prospecto";
+				}	 
+		
+				for (var i = 0; i < totalPagos; i++) {
+					var pago = {
+						semana				: mfecha.isoWeek(),
+						fechaLimite		    : new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
+						diaSemana			: mfecha.weekday(),
+						tipoPlan			: credito.periodoPago,
+						numeroPago		: i + 1,
+						importeRegular: importeParcial,
+						iva						: iva,
+						interes 			: interes,
+						seguro				: (tipoCredito.conSeguro?seguro:0),
+						cliente_id		: cliente._id,
+						capital 			: capital,
+						fechaPago			: undefined,
+						semanaPago		: undefined,
+						diaPago				: undefined,
+						pago					: 0,
+						estatus				: 0,
+						multada				: 0,
+						multa_id			: undefined,
+						planPago_id		: undefined,
+						tiempoPago		: 0,
+						modificada		: false,
+						pagos 				: [],
+						descripcion		: "Recibo",
+						ultimaModificacion	: new Date(),
+						credito_id 			: credito._id,
+						mes					: mfecha.get('month') + 1,
+						anio				: mfecha.get('year'),
+						cargo				: importeParcial,
+						//sumatoria  			: suma,
+						movimiento			: "Recibo"
+					}
+					
+					plan.push(clonar(pago));
+					if(credito.periodoPago == "Semanal"){
+						mfecha = mfecha.add(7, 'days');
+					}
+					else if(credito.periodoPago == "Quincenal"){
+						mfecha = mfecha.add(15, 'days');	
+					}
+					else if(credito.periodoPago == "Mensual"){
+						var siguienteMes = moment(mfecha).add(1, 'M');
+						var finalSiguienteMes = moment(siguienteMes).endOf('month');
+						
+						if(mfecha.date() != siguienteMes.date() && siguienteMes.isSame(finalSiguienteMes.format('YYYY-MM-DD'))) 
+							siguienteMes = siguienteMes.add(1, 'd');
+						
+						mfecha = siguienteMes;
+					}	
+				}
+				var suma = 0;
 
-		for (var i = 0; i < totalPagos; i++) {
-			var pago = {
-				semana				: mfecha.isoWeek(),
-				fechaLimite		    : new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
-				diaSemana			: mfecha.weekday(),
-				tipoPlan			: credito.periodoPago,
-				numeroPago			: i + 1,
-				importeRegular		: importeParcial,
-				iva					: iva,
-				interes 			: interes,
-				seguro				: seguro,
-				cliente_id		    : cliente._id,
-				capital 			: capital,
-				fechaPago			: undefined,
-				semanaPago			: undefined,
-				diaPago				: undefined,
-				pago				: 0,
-				estatus				: 0,
-				multada				: 0,
-				multa_id			: undefined,
-				planPago_id			: undefined,
-				tiempoPago			: 0,
-				modificada			: false,
-				pagos 				: [],
-				descripcion			: "Recibo",
-				ultimaModificacion	: new Date(),
-				credito_id 			: credito._id,
-				mes					: mfecha.get('month') + 1,
-				anio				: mfecha.get('year'),
-				cargo				: importeParcial,
-				//sumatoria  			: suma,
-				movimiento			: "Recibo",
-			}
-			plan.push(clonar(pago));
-			if(credito.periodoPago == "Semanal"){
-				mfecha = mfecha.add(7, 'days');
-			}
-			else if(credito.periodoPago == "Quincenal"){
-				mfecha = mfecha.add(15, 'days');
-				
-			}
-			else if(credito.periodoPago == "Mensual"){
-				var siguienteMes = moment(mfecha).add(1, 'M');
-				var finalSiguienteMes = moment(siguienteMes).endOf('month');
-				
-				if(mfecha.date() != siguienteMes.date() && siguienteMes.isSame(finalSiguienteMes.format('YYYY-MM-DD'))) 
-					siguienteMes = siguienteMes.add(1, 'd');
-				
-				
-				mfecha = siguienteMes;
-			}	
+				_.each(plan, function(pago){
+					//console.log("entra")
+					suma += pago.cargo;
+					pago.sumatoria  = suma
+					var array = pago;
+					pago.total = val
+				});
+		
+				var val = plan[plan.length - 1].sumatoria;
+					_.each(plan, function(pago){
+					pago.total = val
+				});
+			
 		}
-		var suma = 0;
+		else if (tipoCredito.tipoInteres == "Saldos Insolutos")
+		{
+				var suma = 0;
+				
+				var capital = parseFloat(credito.capitalSolicitado).toFixed(2);
+				var saldo = 0;
+				var amortizacion = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
+				
+				for (var i = 0; i < totalPagos; i++) {
+					
+					
+					//capital = capital - saldo;
+					
+					var iva = ((capital * (tipoCredito.tasa / 100)*0.16));
+					iva = parseFloat(iva.toFixed(2));
+					
+					var interes = (capital * (tipoCredito.tasa / 100));
+					interes = parseFloat(interes.toFixed(2));
+					
+					
+					if (tipoCredito.conSeguro)
+								var importeParcial = amortizacion + interes + iva + seguro;
+						else
+								var importeParcial = amortizacion + interes + iva;
+										
+					
+					importeParcial=Math.round(importeParcial * 100) / 100;
+					
+					//suma += importeParcial;
+					
+					
+					var pago = {
+						semana							: mfecha.isoWeek(),
+						fechaLimite					: new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
+						diaSemana						: mfecha.weekday(),
+						tipoPlan						: credito.periodoPago,
+						numeroPago					: i + 1,
+						importeRegular			: importeParcial,
+						iva									: iva,
+						interes 						: interes,
+						seguro							: (tipoCredito.conSeguro?seguro:0),
+						cliente_id					: cliente._id,
+						capital 						: capital,
+						fechaPago						: undefined,
+						semanaPago					: undefined,
+						diaPago							: undefined,
+						pago								: 0,
+						estatus							: 0,
+						multada							: 0,
+						multa_id						: undefined,
+						planPago_id					: undefined,
+						tiempoPago					: 0,
+						modificada					: false,
+						pagos 							: [],
+						descripcion					: "Recibo",
+						ultimaModificacion	: new Date(),
+						credito_id 					: credito._id,
+						mes									: mfecha.get('month') + 1,
+						anio								: mfecha.get('year'),
+						cargo								: importeParcial,
+						//sumatoria  			: suma,
+						movimiento					: "Recibo",
+					}
+					
+					plan.push(clonar(pago));
+					if(credito.periodoPago == "Semanal"){
+						mfecha = mfecha.add(7, 'days');
+					}
+					else if(credito.periodoPago == "Quincenal"){
+						mfecha = mfecha.add(15, 'days');	
+					}
+					else if(credito.periodoPago == "Mensual"){
+						var siguienteMes = moment(mfecha).add(1, 'M');
+						var finalSiguienteMes = moment(siguienteMes).endOf('month');
+						
+						if(mfecha.date() != siguienteMes.date() && siguienteMes.isSame(finalSiguienteMes.format('YYYY-MM-DD'))) 
+							siguienteMes = siguienteMes.add(1, 'd');
+						
+						mfecha = siguienteMes;
+					}	
+					
+					capital = capital - amortizacion;
+					
+				}
+				var suma = 0;
 
-
-		_.each(plan, function(pago){
-			console.log("entra")
-			suma += pago.cargo;
-			pago.sumatoria  = suma
-			var array = pago;
-			pago.total = val
-		});
-
-		var val = plan[plan.length - 1].sumatoria;
-			_.each(plan, function(pago){
-			pago.total = val
-		});
+				_.each(plan, function(pago){
+					//console.log("entra")
+					suma += pago.cargo;
+					pago.sumatoria  = suma
+					var array = pago;
+					pago.total = val
+				});
+		
+				var val = plan[plan.length - 1].sumatoria;
+					_.each(plan, function(pago){
+					pago.total = val
+				});	
+			
+		}
+		
 		
 		return plan;
 	},
@@ -457,7 +583,7 @@ Meteor.methods({
 					tiempoPago			: 0,
 					modificada			: false,
 					pagos 				: [],
-					descripcion			: "Multa",
+					descripcion			: "Cargo Moratorio",
 					ultimaModificacion	: ahora,
 					credito_id 			: credito._id,
 					mes					: mfecha.get('month') + 1,

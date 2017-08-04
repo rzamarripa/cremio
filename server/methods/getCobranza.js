@@ -124,8 +124,12 @@ Meteor.methods({
 			{
 					_.each(persona.relaciones, function(relacion){
 							if (relacion.cliente_id == idCliente){
-									p = relacion;
-									p.nombreCompleto = persona.nombreCompleto;
+									
+									p 								 	= relacion;
+									p.nombre				 		= persona.nombre;
+									p.apellidoPaterno		= persona.apellidoPaterno;
+									p.apellidoMaterno		= persona.apellidoMaterno; 
+									p.nombreCompleto 		= persona.nombreCompleto;
 							}
 					});	
 					return p;

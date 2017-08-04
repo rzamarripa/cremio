@@ -135,7 +135,7 @@
 								<div class="col-sm-8"> 
 									<!--<form class="header-search pull-right">
 								    <div class="form-group" style="width: 800px;">-->
-											<div ng-include=" 'client/planPagos/generadorPlan/_buscarPersona.html' "></div>
+											<div ng-include=" 'client/planPagos/actualizarPlan/_buscarPersona.html' "></div>
 								  <!--  </div>	    
 									</form>-->
 								</div>
@@ -227,7 +227,7 @@
 										<tbody>
 											<tr ng-repeat="aval in ae.avales">
 												<td>{{aval.num}}</td>
-												<td>{{aval.nombre}}</td>
+												<td>{{aval.nombre}} {{aval.apellidoPaterno}} {{aval.apellidoMaterno}} </td>
 												<td>{{aval.estadoCivil}}</td>
 												<td>{{aval.ocupacion}}</td>
 												<td>{{aval.direccion}}</td>
@@ -415,8 +415,8 @@
 					<th class="text-center" width="15%">Pago</th>
 					<th class="text-center" width="10%">Capital</th>
 					<th class="text-center" width="10%">Interes</th>
-					<th class="text-center" width="10%">Seguro</th>
 					<th class="text-center" width="10%">IVA</th>
+					<th class="text-center" width="10%">Seguro</th>
 					<th class="text-center" width="10%">Importe total</th>
 				</tr>
 			</thead>
@@ -427,8 +427,8 @@
 					<td class="text-center">{{pago.numeroPago}} - {{ae.planPagos.length}}</td>
 					<td class="text-right">{{pago.capital | currency}}</td>
 					<td class="text-right">{{pago.interes | currency}}</td>
-					<td class="text-right">{{pago.seguro | currency}}</td>
 					<td class="text-right">{{pago.iva | currency}}</td>
+					<td class="text-right">{{pago.seguro | currency}}</td>
 					<td class="text-right">{{pago.importeRegular | currency}}</td>
 				</tr>
 			</tbody>
