@@ -29,7 +29,6 @@ angular.module("creditoMio")
  
   rc.cobranza_id = "";
   rc.notaCobranza = {};
-  
   rc.totalRecibos = 0;
   rc.totalMultas = 0;
   rc.seleccionadoRecibos = 0;
@@ -343,6 +342,11 @@ angular.module("creditoMio")
 	
   this.selCredito=function(objeto, num)
   {
+  	console.log(objeto,"objeto")
+
+  	    objeto.nombreCompleto = objeto.cliente.profile.nombreCompleto
+  	    objeto.calle = objeto.cliente.profile.calle
+  	    objeto.cliente.profile = objeto.cliente.profile.colonia
 
   		rc.cliente_id = objeto.cliente._id
   		//console.log(rc.cliente_id)
@@ -356,12 +360,6 @@ angular.module("creditoMio")
 	  	//console.log("Objeto: ",objeto)
 	  	rc.historial = objeto
 
-
-	  	_.each(rc.getReactively("planPagos"), function(item){
-	  	//	console.log(item,"lewa")
-
-
-	  	});
 
 	  	
 	  	//Información del Cliente
@@ -480,7 +478,7 @@ angular.module("creditoMio")
   
   this.isSelected=function(objeto){
 
-	  	this.sumarSeleccionados();
+	  this.sumarSeleccionados();
       return this.selected_numero===objeto;
 
   };

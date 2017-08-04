@@ -40,6 +40,7 @@ Meteor.methods({
 
 				 			//planPago.cliente = u.profile.nombreCompleto;
 				 			planPago.cliente = Meteor.users.findOne({_id: planPago.cliente_id});
+				 			planPago.nombreCompleto = Meteor.users.findOne({_id: planPago.cliente_id}).nombreCompleto;
 				 			planPago.credito = Creditos.findOne({_id: planPago.credito_id});
 				 			
 				 			planPago.imprimir = false;
