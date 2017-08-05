@@ -1066,33 +1066,33 @@
 																		</td>	
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
-																			<div ng-hide="pago.editar">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="pago.fechaLimite" /></div>
+																			<div ng-hide="pago.editar" >{{pago.fechaLimite | date:"dd-MM-yyyy"}}</div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" date-time format="dd-MM-yyyy" style="width: 100%; padding-left: 0%; padding-right: 0%" class="form-control" view="date" max-view="year" min-view="date" ng-model="pago.fechaLimite" /></div>
 																		</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
 																			<div ng-hide="pago.editar">{{pago.capital | currency}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.capital" /></div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.capital" style="width: 100%; padding-left: 0%; padding-right: 0%" /></div>
 																		</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
 																			<div ng-hide="pago.editar">{{pago.interes | currency}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.interes" /></div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.interes" style="width: 100%; padding-left: 0%; padding-right: 0%" /></div>
 																		</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
 																			<div ng-hide="pago.editar">{{pago.iva | currency}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.iva" /></div>
+																			<div ng-show="pago.editar"><input style="width: 100%; padding-left: 0%; padding-right: 0%" class="col-sm-10" type="text" ng-model="pago.iva"  /></div>
 																		</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
 																			<div ng-hide="pago.editar">{{pago.seguro | currency}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.seguro" /></div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.seguro" style="width: 100%; padding-left: 0%; padding-right: 0%" /></div>
 																		</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
 																			<div ng-hide="pago.editar">{{pago.cargo | currency}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.cargo" /></div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.cargo" style="width: 100%; padding-left: 0%; padding-right: 0%" /></div>
 																		</td>
 																		<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
-																			<div ng-hide="pago.editar">{{pago.importeRegular | currency}}</div>
-																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.importeRegular" /></div>
+																			<div ng-hide="pago.editar" style="width: 100%; padding-left: 0%; padding-right: 0%">{{pago.importeRegular | currency}}</div>
+																			<div ng-show="pago.editar"><input class="col-sm-10" type="text" ng-model="pago.importeRegular" style="width: 100%; padding-left: 0%; padding-right: 0%" /></div>
 																		</td>
 																		<td>
 																				<a ng-hide="pago.editar" ng-click="cd.modificar(pago)" class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;">
@@ -1119,6 +1119,32 @@
 	  </div>
 
 </div>
+
+<!-- 
+<div class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		    </div>
+				<div class="widget-body">
+							<form name="form2" novalidate>
+									<div class="well">	    
+								    <div class="row">
+								    	<div class="col-sm-6" valida> 					    
+												  <label for="comment">Motivo:</label>
+												  <textarea class="form-control" rows="5" ng-model="cd.motivo" required="" name="comment"></textarea>
+								    	</div>
+								    </div>
+									</div>
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		  
+		     </div>
+     </div>
+     
+  </div>
+</div> -->
 
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   
 
