@@ -252,14 +252,23 @@
 				          <p>Recibo: <strong>{{cob.notaCobranza.recibo}}</strong></p>
 				          <p>Multa: <strong>Pendiente</strong></p>
 				        </div>
+
+
 					        <div class="modal-footer">
-					      	 <!--  	<label class="checkbox-inline pull-left"><input  type="checkbox"   ng-click="cob.cambioEstatusRespuesta()"/> Requiere respuesta</label>
-					      	  	<br/><br/> -->
+					      	  	 <label ng-if="cuenta" class="checkbox-inline pull-left"><input  type="checkbox"   ng-click="cob.cambioEstatusRespuesta()" > Requiere respuesta</label>
+					      	  	<label class="pull-left">Tipo de nota</label>
+									   <!--  <select name="nota Cliente" ng-model="cob.notaCobranza.notaTipo" data-placeholder="Seleccione" class="form-control">
+											    <option id="cuenta" >Cuenta</option>
+											    <option >Cliente</option>
+											</select> -->
+							    	
 					        	<label class="pull-left">Título de la nota</label>
 					        	<input  type="text" class="form-control" placeholder="Nombre" ng-model="cob.notaCobranza.titulo" >
 					        	<label class="pull-left">nota</label>
 					        	<textarea type="text" class="form-control" placeholder="Escribe la nota aqui" 
 		    	 				ng-model="cob.notaCobranza.descripcion" >
+		    	 				
+					      	  	
 
 
 		    	 										 

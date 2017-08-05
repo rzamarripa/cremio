@@ -40,6 +40,9 @@ angular.module("creditoMio")
   this.ban = false;
   this.respuestaNotaCLiente = false;
   rc.verRecibos = false;
+  rc.selectRecibo = false
+  rc.conRespuesta = false
+  //rc.cobranza.estatus = 
 	
 	this.estadoCivilSeleccionado = "";
 	this.valorOrdenar = "Folio";
@@ -344,9 +347,7 @@ angular.module("creditoMio")
   {
   	console.log(objeto,"objeto")
 
-  	    objeto.nombreCompleto = objeto.cliente.profile.nombreCompleto
-  	    objeto.calle = objeto.cliente.profile.calle
-  	    objeto.cliente.profile = objeto.cliente.profile.colonia
+  	    
 
   		rc.cliente_id = objeto.cliente._id
   		//console.log(rc.cliente_id)
@@ -398,6 +399,23 @@ angular.module("creditoMio")
 	  	var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
 			if (ec != undefined)
 					this.estadoCivilSeleccionado = 	ec.nombre;
+
+				 objeto.nombreCompleto = rc.cliente.profile.nombreCompleto
+  	     objeto.calle = rc.cliente.profile.calle
+  	     objeto.colonia = rc.cliente.profile.colonia
+  	     objeto.municipio = rc.cliente.profile.municipio
+  	     objeto.estado = rc.cliente.profile.estado
+  	     objeto.pais = rc.cliente.profile.pais
+  	     objeto.cantidadPagos = objeto.credito.numeroPagos
+  	     objeto.telefono = rc.cliente.profile.particular
+  	     objeto.telefonoOficina = rc.cliente.profile.telefonoOficina
+  	     objeto.celular = rc.cliente.profile.celular
+  	     objeto.folioCredito = objeto.credito.folio
+  	     objeto.saldoActual = objeto.credito.saldoActual
+
+  	     //objeto.municipio = rc.cliente.profile.municipio
+
+    	 //_.each(obj,function(item){});
 	  	
 	  	rc.referenciasPersonales = [];
 	  	
@@ -505,26 +523,28 @@ angular.module("creditoMio")
 	this.cambiar = function() 
   {
 
-			var chkImprimir = document.getElementById('todos');
+			var chkxr = document.getElementById('todos');
 				
 			_.each(rc.cobranza, function(cobranza){
 				cobranza.imprimir = chkImprimir.checked;
-				//rc.cobranza.estatus = !this.estatus.estatus;
+				//rc.cobranza.estatus = !rc.estatus.estatus;
 			})
 			
 			this.sumarSeleccionados();
-		//	console.log(rc.cobranza)
+			console.log(rc.cobranza)
 					
 	};
 	
 	this.sumarSeleccionados = function(objeto)
 	{		
-		    //rc.cobranza.estatus = !rc.cobranza.estatus;
-		    _.each(objeto, function(cobranza){});
+		//console.log(objeto,"caaaaaaa")	
+		   // rc.selectRecibo = !rc.cobranza.estatus;
 
 			rc.seleccionadoRecibos = 0;
 			rc.seleccionadoMultas = 0;
-			_.each(rc.cobranza,function(c){	
+			_.each(objeto,function(c){
+				//console.log(c,"caaaaaaacahuateee")	
+			
 					if (c.imprimir == true)
 					{
 							if (c.descripcion == "Recibo")
@@ -533,7 +553,7 @@ angular.module("creditoMio")
 									rc.seleccionadoMultas += c.importeRegular;
 					}		
 			});
-			//console.log(rc.cobranza)
+		//	console.log(rc.cobranza)
 
 	};
 
@@ -806,83 +826,48 @@ angular.module("creditoMio")
 
 	this.imprimirRecibos= function(objeto) 
   {
-  	
-	  	
-			console.log("objeto:", objeto);
-		 _.each(objeto,function(item){
-		 	
-		 	if (item.imprimir == true) {
-		 		//console.log(item,"objetos")
-		 		rc.recibo.push(item)
-		 
-		 		_.each(item.credito,function(credito){
-		 	     console.log(credito,"credito_id")
-		     		_.each(item.perfil,function(cliente){
-		     			
-			 				_.each(item.planPagos,function(plan){
-			 				
-	
-			 				cliente.colonia = Colonias.findOne(cliente.colonia_id)
-			 				plan.colonia = cliente.colonia.nombre
-			 				plan.calle = cliente.calle
-			 				cliente.estado = Estados.findOne(cliente.estado_id)
-							plan.estado = cliente.estado.nombre
-							cliente.municipio = Municipios.findOne(cliente.municipio_id)
-							plan.municipio = cliente.municipio.nombre
-			 				plan.nombreCompleto = cliente.nombreCompleto
-							plan.planPagoNumero = plan.numeroPago
-							plan.no = cliente.numero
-							plan.nombreCompleto = cliente.nombreCompleto
-							plan.telefono = cliente.telefono
-							plan.celular = cliente.celular
-							plan.telefonoOficina = cliente.telefonoOficina
-							plan.cantidadPagos = item.planPagos.length
-	
-							
-							//plan.saldo = saldoActual 
-							
-	
-							//plan.credito.numero = credito.numeroPagos
-			 			});
-
-		 		});
-		 	});
-		  }else{
-		  	item = undefined
-		  }
-		 
-		});
-
-		 var saldoActual = 0;
-		 _.each(objeto,function(item){
-
-		 	_.each(item.planPagos,function(plan){
-		 		
+  	var toPrint = [];
+		_.each(objeto,function(item){
+		 	if (item.imprimir) {
+	 			item.cliente.profile.colonia = Colonias.findOne(item.cliente.profile.colonia_id)
+ 				item.colonia = item.cliente.profile.colonia.nombre
+ 				item.calle = item.cliente.profile.calle
+ 				item.cliente.profile.estado = Estados.findOne(item.cliente.profile.estado_id)
+				item.estado = item.cliente.profile.estado.nombre
+				item.cliente.profile.municipio = Municipios.findOne(item.cliente.profile.municipio_id)
+				item.municipio = item.cliente.profile.municipio.nombre
+ 				item.nombreCompleto = item.cliente.profile.nombreCompleto
+				item.planPagoNumero = item.numeroPago
+				item.no = item.cliente.profile.numero
+				item.nombreCompleto = item.cliente.profile.nombreCompleto
+				item.telefono = item.cliente.profile.telefono
+				item.celular = item.cliente.profile.celular
+				item.telefonoOficina = item.cliente.profile.telefonoOficina
+				item.cantidadPagos = item.credito.numeroPagos
+				item.telefono = item.cliente.profile.particular
+				item.celular = item.cliente.profile.celular
+				item.telefonoOficina = item.cliente.profile.telefonoOficina
+				item.folioCredito = item.credito.folio
+				item.saldo = item.credito.saldoActual
+		 		var saldoActual = 0;
 		 		if (saldoActual == 0) {
-				 saldoActual = item.saldo
-				 console.log("entro")
-
+				  saldoActual = item.saldo
 				}else{
-				saldoActual = saldoActual - plan.cargo
-				 console.log("else")
-			   }
-			   plan.saldoAnterior = parseFloat(saldoActual.toFixed(2))
-			   plan.saldoActualizado = parseFloat((saldoActual - plan.cargo).toFixed(2))
-
-		 		   
-				
-				console.log(saldoActual)
-
-		 });
+					saldoActual = saldoActual - item.cargo
+			  }
+			   item.saldoAnterior = parseFloat(saldoActual.toFixed(2))
+			   item.saldoActual = parseFloat((saldoActual - item.cargo).toFixed(2));
+			  toPrint.push(item);
+			}
 		});
 		 
 	     
 	
-		console.log("2:",rc.recibo);
+		//console.log("reciboooooo:",objeto);
 
 
 
-		Meteor.call('getRecibos', objeto, function(error, response) {		 
+		Meteor.call('getRecibos', toPrint, function(error, response) {		 
 		   if(error)
 		   {
 		    console.log('ERROR :', error);
@@ -952,6 +937,12 @@ angular.module("creditoMio")
 	    		return ['fechaLimite'];
 	    if (this.valorOrdenar == "Cliente")
 	    		return ['cliente.nombreCompleto'];		
+	}
+
+	this.aparecerCheck = function() {
+		console.log("muestra")
+		
+			rc.conRespuesta = !rc.conRespuesta;
 	}
 
 
