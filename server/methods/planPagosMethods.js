@@ -545,6 +545,9 @@ Meteor.methods({
 											}
 										]}).fetch();
 		//console.log("si entre")
+		
+		
+		
 		_.each(pagos, function(pago){
 			try{
 				var mfecha = moment(ahora);
@@ -553,12 +556,15 @@ Meteor.methods({
 				var dias = mfecha.diff(limite, "days");
 				var credito = Creditos.findOne(pago.credito_id);
 				
+				//Define la Multa
 				var multas = (dias/100) * credito.capitalSolicitado; 
 				multas=Math.round(multas * 100) / 100;
 				var interes = multas / 1.16
 				interes = Number(interes.toFixed(2));
 				var iva = multas - interes;
 				iva = Number(iva.toFixed(2));
+				
+				
 				var multa = {
 					semana				: mfecha.isoWeek(),
 					fechaLimite			: ahora,

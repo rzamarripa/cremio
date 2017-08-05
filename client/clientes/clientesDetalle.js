@@ -28,8 +28,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.empresa = {}
 	rc.creActivos =false;
 	rc.creditoApro = false;
-
+	
+	rc.creditoSeleccionado = {};
 	this.estadoCivilSeleccionado = "";
+	
+	rc.editMode = false;
 	
 	this.subscribe("ocupaciones",()=>{
 		return [{_id : this.getReactively("ocupacion_id"), estatus : true }]
@@ -303,14 +306,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			}
 
 			_.each(rc.empresas, function(empresa){
-				console.log("akakakakkakkakkaakakaak")
+				//console.log("akakakakkakkakkaakakaak")
 					empresa.ciudad = Ciudades.findOne(empresa.ciudad_id)
 					empresa.colonia = Colonias.findOne(empresa.colonia_id)
 					empresa.estado = Estados.findOne(empresa.estado_id)
 					empresa.municipio = Municipios.findOne(empresa.municipio_id)
 					empresa.pais = Paises.findOne(empresa.pais_id)
 
-					console.log(empresa,"empresaaaaaaaaaa")
+				//	console.log(empresa,"empresaaaaaaaaaa")
 
 
 				});
@@ -331,7 +334,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
 			//rc.creditos_id = _.pluck(planes, "cliente_id");
-			console.log("kaka",planes)
+			//console.log("kaka",planes)
 
 
 			return planes
@@ -586,10 +589,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 		this.nota = Notas.findOne({_id:id});
 
-		console.log(this.nota)
+		//console.log(this.nota)
 		
 		if (rc.notaCobranza.respuestaNota != undefined) {
-			console.log("entro")
+			//console.log("entro")
 			this.nota.respuestaNota = rc.notaCobranza.respuestaNota
 			var idTemp = this.nota._id;
 			delete this.nota._id;
@@ -698,7 +701,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		rc.pagos = credito.pagos
 		rc.openModal = true
 		////console.log(rc.pagos,"pagos")
-		console.log(rc.historial,"historial act")
+		//console.log(rc.historial,"historial act")
 			_.each(rc.getReactively("historial"),function (pago) {
 
 			});
@@ -917,7 +920,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	  this.quitarNota = function(id)
 	{
 
-		console.log(nota,"seraaaaaaaaaa")
+		//console.log(nota,"seraaaaaaaaaa")
 		var nota = Notas.findOne({_id:id});
 			if(nota.respuesta == true)
 				nota.respuesta = false;
@@ -952,7 +955,47 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		}else if(estatus == 6){
 			return "danger";
 		}
-	}
-
+	};
+	
+	this.mostrarReestructuracion= function(objeto)
+	{
+		rc.creditoSeleccionado = objeto;	
+		_.each(rc.creditoSeleccionado.planPagos,function(planPago){
+				planPago.editar = false;
+				planPago.numeroPagos = rc.creditoSeleccionado.numeroPagos;
+		});
+		
+		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+    		$scope.$apply();
+		}
+		$("#modalReestructuracion").modal('show');
+	};
+	
+	this.agregarPago= function()
+	{		
+	    var nuevoPago = {
+				movimiento : 'Recibo',
+				fechaLimite : new Date(),
+	      numeroPago: rc.creditoSeleccionado.planPagos.length + 1,
+	      capital: 0,
+	      interes: 0,
+	      iva:	0,
+	      seguro: 0,
+	      cargo: 0,
+	      importeRegular: 0
+	    };
+	    rc.creditoSeleccionado.planPagos.push(nuevoPago);
+			
+	};
+	
+	this.modificar= function(pago)
+	{		
+	    pago.editar = true;
+	};
+	this.actualizar= function(pago)
+	{		
+	    pago.editar = false;
+	};
+	
 	
 }
