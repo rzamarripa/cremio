@@ -924,7 +924,8 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 				if (ban)
 				{
 						//console.log("Acualizar Credito");
-						Creditos.update({_id : c},{$set : {estatus : 5 }})
+						var fecha = new Date();
+						Creditos.update({_id : c},{$set : {estatus : 5 , fechaLiquidacion : fecha}})
 				}
 				/*
 				else
