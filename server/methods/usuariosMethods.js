@@ -1,3 +1,5 @@
+
+
 Meteor.methods({
   createUsuario: function (usuario, rol, grupo) {
 	  
@@ -412,7 +414,7 @@ if (referenciaPersonal.buscarPersona_id)
 	  var RP = ReferenciasPersonales.findOne({_id : id});
 		return RP;
 	},
-	getPersonas: function (nombre) {	
+	getPersonas: function (nombre) {	//Se hizo para la validacion de Clientes, Avales y Referencias Personales
 	  var personas = {};
 	  personas.clientes = [];
 	  personas.avales = [];
@@ -427,8 +429,7 @@ if (referenciaPersonal.buscarPersona_id)
 									 
 		personas.referenciasPersonales = ReferenciasPersonales.find({ nombreCompleto: { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }}, 
 																																{ fields: {nombreCompleto:1, clientes: 1 }}, 
-																																{ sort : {nombreCompleto : 1 }}).fetch();							 							 
-	  //console.log(personas);
+																																{ sort : {nombreCompleto : 1 }}).fetch();
 	  return personas;
 	}
 	

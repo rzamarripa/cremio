@@ -153,9 +153,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				}
 				if (creditos == "") {
 					rc.puedeSolicitar = false
-
 				}
-					//console.log(rc.puedeSolicitar)
+				
+				//console.log(rc.puedeSolicitar)
 				credito.tieneAvales = false;
 				//recorre los avales
 				_.each(credito.avales_ids, function(aval){
@@ -413,6 +413,19 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 								credito.tiempoPago++;
 							}
 						}
+						
+						if (pago.pagoSeguro !=  undefined)
+							 pago.seguro = pago.seguro -  pago.pagoSeguro;
+						
+						if (pago.pagoIva !=  undefined)
+							 pago.iva = pago.iva -  pago.pagoIva;
+							 
+						if (pago.pagoInteres !=  undefined)
+							 pago.interes = pago.interes -  pago.pagoInteres;
+							 
+						if (pago.pagoCapital !=  undefined)
+							 pago.capital = pago.capital -  pago.pagoCapital;	
+						
 					})
 				})
 			}

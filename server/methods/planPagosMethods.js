@@ -7,9 +7,8 @@ Meteor.methods({
 		        clone[ key ] = original[ key ] ;
 		    return clone ;
 		}
+		
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
-	
-		//console.log(fecha);
 		
 		var mfecha = moment(credito.fechaPrimerAbono);
 		mfecha.set({hour:0,minute:0,second:0,millisecond:0});
@@ -18,7 +17,6 @@ Meteor.methods({
 		
 		var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
 
-		
 		var totalPagos = 0;
 		
 		var seguro;
@@ -31,16 +29,13 @@ Meteor.methods({
 		var numeroPagosCompuesto = 0;
 		var tasaInteres = 0;
 		var semanaQuincena = 0;
-		
-		
+				
 		if(credito.periodoPago == "Semanal")
 		{
 			totalPagos = credito.duracionMeses * 4;
 			numeroPagosCompuesto = 4;	
 			tasaInteres = (credito.tasa / 4) / 100;
-			
-			
-			
+								
 		}	
 		else if (credito.periodoPago == "Quincenal")
 		{
@@ -61,7 +56,7 @@ Meteor.methods({
 				 mfecha = mfecha.date(diaMes);
 				 semanaQuincena = 1;
 		  }
-		  
+	  
 		}	
 		else if(credito.periodoPago == "Mensual")
 		{
@@ -333,9 +328,7 @@ Meteor.methods({
 						var siguienteMes = moment(mfecha).add(1, 'M');
 						
 						var finalSiguienteMes = moment(siguienteMes).endOf('month');
-						
-						
-						
+												
 						if(mfecha.date() != siguienteMes.date() && siguienteMes.isSame(finalSiguienteMes.format('YYYY-MM-DD'))) 
 							siguienteMes = siguienteMes.add(1, 'd');
 						
@@ -351,14 +344,15 @@ Meteor.methods({
 				_.each(plan, function(pago){
 					//console.log("entra")
 					suma += pago.cargo;
+					suma = parseFloat(suma).toFixed(2);
 					pago.sumatoria  = suma
 					var array = pago;
-					pago.total = val
+					pago.total = val;
 				});
 		
 				var val = plan[plan.length - 1].sumatoria;
 					_.each(plan, function(pago){
-					pago.total = val
+						pago.total = val;
 				});	
 			
 		}
@@ -631,7 +625,7 @@ Meteor.methods({
 		pago.pago = abono;
 		pago.totalPago = totalPago;
 		pago.cambio = abono - totalPago;
-		pago.cambio = pago.cambio<0? 0:pago.cambio;
+		pago.cambio = pago.cambio < 0 ? 0: Number(parseFloat(pago.cambio).toFixed(2));
 		pago.diaPago = ffecha.weekday();
 		pago.semanaPago = ffecha.isoWeek();
 		pago.semanaPago = ahora.getMonth();
@@ -658,7 +652,6 @@ Meteor.methods({
 		_.each(pagos,function(p){
 			p.tipoIngreso_id = tipoIngresoId;
 			
-
 			// pago.tipoIngreso = TiposIngreso.findOne(p.tipoIngreso_id)
 			// pago.formaPagopago.tipoIngreso.nombre
 			
@@ -666,11 +659,22 @@ Meteor.methods({
 			{
 				var ttpago = 0;
 				//console.log(p.importeRegular,abono)
-				var residuos 	= {pagoSeguro:0,pagoInteres:0,pagoIva:0,pagoCapital:0};
-				p.pagoInteres = p.pagoInteres? p.pagoInteres:0;
-				p.pagoIva 		= p.pagoIva? p.pagoIva:0;
-				p.pagoCapital = p.pagoCapital? p.pagoCapital:0;
-				p.pagoSeguro 	= p.pagoSeguro? p.pagoSeguro:0; 
+				var residuos 	= {pagoSeguro	:0,
+												 pagoInteres:0,
+												 pagoIva		:0,
+												 pagoCapital:0};
+												 
+				var abonos	 	= {pagoSeguro	:0,
+												 pagoInteres:0,
+												 pagoIva		:0,
+												 pagoCapital:0};								 
+				
+				//el pago que se ha hecho
+				p.pagoInteres = p.pagoInteres? 	p.pagoInteres	:0;
+				p.pagoIva 		= p.pagoIva? 		 	p.pagoIva			:0;
+				p.pagoCapital = p.pagoCapital? 	p.pagoCapital	:0;
+				p.pagoSeguro 	= p.pagoSeguro? 	p.pagoSeguro	:0; 
+				
 				
 				if(p.importeRegular <= pagosId[p._id])
 				{
@@ -681,28 +685,24 @@ Meteor.methods({
 					{
 						var multa = PlanPagos.findOne(p.multa_id);
 						//console.log(multa);
-						residuos.pagoInteres = p.interes - p.pagoInteres
-						residuos.pagoIva = p.pagoIva -p.pagoIva
+						residuos.pagoInteres = p.interes - p.pagoInteres;
+						residuos.pagoIva = p.pagoIva -p.pagoIva;
 						multa.multa = 1;
 						p.estatus = 1;
-						if(multa.importeRegular == 0)
-							multa.estatus = 1;
+						if (multa.importeRegular == 0)
+							 multa.estatus = 1;
 		
 						delete multa._id;
 						PlanPagos.update({_id:p.multa_id},{$set:multa});
 						
-					}
+					}					
 					
-					if(p.descripcion=="Recibo"){
-						p.estatus=1
-						residuos.pagoSeguro 	= p.seguro - p.pagoSeguro;
-						residuos.pagoInteres 	= p.interes - p.pagoInteres;
-						residuos.pagoIva 			= p.pagoIva - p.pagoIva;
-						residuos.pagoCapital 	= p.capital - p.pagoCapital;
-						p.pagoInteres 				= p.interes;
-						p.pagoIva 						= p.iva;
-						p.pagoCapital 				= p.capital;
-						p.pagoSeguro 					= p.seguro;
+					if (p.descripcion == "Recibo"){
+						 p.estatus 					  = 1;
+						 abonos.pagoSeguro 	  = p.seguro;
+						 abonos.pagoInteres 	= p.interes;
+						 abonos.pagoIva 			= p.iva;
+						 abonos.pagoCapital 	= p.capital;
 					}
 					
 					abono -= p.importeRegular;
@@ -729,23 +729,29 @@ Meteor.methods({
 
 					ttpago = p.importeRegular;
 					p.pago += p.importeRegular;
-					p.pago=Math.round(p.pago * 100) / 100;
+					p.pago = Math.round(p.pago * 100) / 100;
 					p.importeRegular = 0;
 					
 				}	
 				else
 				{
+					//console.log("parcial",p._id,p.descripcion, p.importeRegular)
 					
-					//console.log("Parcial",p._id,p.descripcion, p.importeRegular)
+				  residuos.pagoSeguro 	= Number((parseFloat(p.seguro).toFixed(2) - parseFloat(p.pagoSeguro).toFixed(2)).toFixed(2));
+				  residuos.pagoInteres  = Number((parseFloat(p.interes).toFixed(2) -parseFloat(p.pagoInteres).toFixed(2)).toFixed(2));
+				  residuos.pagoIva 		  = Number((parseFloat(p.iva).toFixed(2) - parseFloat(p.pagoIva).toFixed(2)).toFixed(2));
+				  residuos.pagoCapital  = Number((parseFloat(p.capital).toFixed(2) - parseFloat(p.pagoCapital).toFixed(2)).toFixed(2));
+
+										
 					ttpago = pagosId[p._id];
-					abono = pagosId[p._id]
-
-					
+					abono  = pagosId[p._id];
+															
 					p.importeRegular = p.importeRegular - abono;
-					p.importeRegular =parseFloat(p.importeRegular).toFixed(2);
-					p.importeRegular=Math.round(p.importeRegular * 100) / 100;
-
-					p.pago += abono
+					p.importeRegular = parseFloat(p.importeRegular).toFixed(2);
+					p.importeRegular = Math.round(p.importeRegular * 100) / 100;
+	
+					p.pago += abono;
+					p.pago = parseFloat(p.pago).toFixed(2);
 					p.pago = Math.round(p.pago * 100) / 100;
 					
 					//Decrementar el pago en el Saldo Actual Pago Parcial
@@ -754,7 +760,7 @@ Meteor.methods({
 							var credito = Creditos.findOne(p.credito_id);
 							credito.saldoActual -= abono;
 							credito.saldoActual = parseFloat(credito.saldoActual).toFixed(2);
-							credito.saldoActual=Math.round(credito.saldoActual * 100) / 100;
+							credito.saldoActual = Math.round(credito.saldoActual * 100) / 100;
 							Creditos.update({_id:credito._id},{$set:{saldoActual:credito.saldoActual}})
 					}
 					else //Cargo Moratorio
@@ -767,67 +773,131 @@ Meteor.methods({
 					}
 					
 					p.estatus = 2;
-
-					if(p.seguro-p.pagoSeguro>abono){
-						residuos.pagoSeguro = abono
-						p.pagoSeguro+=abono
-						abono=0;
-					}
-					else if(p.seguro-p.pagoSeguro>0){
-						abono -= (p.seguro-p.pagoSeguro)
-						residuos.pagoSeguro= (p.seguro-p.pagoSeguro)
-						p.pagoSeguro = p.seguro
-					}
-					if(((p.interes-p.pagoInteres) + (p.iva-p.pagoIva))>abono){
-						p.pagoInteres += abono / 1.16;
-						p.pagoIva += abono - (abono / 1.16)
-						residuos.pagoInteres = abono / 1.16;
-						residuos.pagoIva = abono - (abono / 1.16)
-						abono=0
-					}
-					else if( ((p.interes-p.pagoInteres) + (p.iva-p.pagoIva))>0){
-						abono -= ((p.interes-p.pagoInteres) + (p.iva-p.pagoIva))
-						residuos.pagoInteres= (p.interes-p.pagoInteres)
-						residuos.pagoIva= (p.iva-p.pagoIva)
-						p.pagoInteres = p.interes
-						p.iva = p.iva
-					}
-
-					if(p.capital-p.pagoCapital>abono){
-						residuos.pagoCapital= abono
-						p.pagoCapital+=abono
-						abono=0;
-					}
-					else if(p.capital-p.pagoCapital>0){
-						abono -= (p.capital-p.pagoCapital)
-						residuos.pagoCapital= (p.seguro-p.pagoCapital)
-						p.pagoCapital = p.capital
-					}
-
 					
-					abono=0;
+					//console.log("P.: ", p);
+					
+					//Seguro					
+					if (abono > 0 && residuos.pagoSeguro > abono){
+						p.pagoSeguro += Number(abono);
+					  p.pagoSeguro = Number(parseFloat(p.pagoSeguro).toFixed(2));
+					  abonos.pagoSeguro = Number(parseFloat(abono).toFixed(2));
+						abono = 0;
+					}
+					else if(abono > 0 && residuos.pagoSeguro > 0){
+						p.pagoSeguro = Number(parseFloat(p.seguro).toFixed(2));
+						abonos.pagoSeguro = Number(parseFloat(residuos.pagoSeguro).toFixed(2));
+						abono -= Number(abono.pagoSeguro);
+						abono = Number(parseFloat(abono).toFixed(2));	
+					}
+					
+					//IVA					
+					if(abono > 0 && residuos.pagoIva > abono){
+						p.pagoIva += Number(abono);
+						p.pagoIva = Number(parseFloat(p.pagoIva).toFixed(2));
+						abonos.pagoIva = Number(parseFloat(abono).toFixed(2));
+						abono = 0;
+					}
+					else if(abono > 0 && residuos.pagoIva > 0){
+						p.pagoIva = Number(parseFloat(p.iva).toFixed(2));
+						abonos.pagoIva = Number(parseFloat(residuos.pagoIva).toFixed(2));
+						abono -= Number(residuos.pagoIva);
+						abono = Number(parseFloat(abono).toFixed(2));
+					}
+					
+					//Interes
+					/*
+if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
+						console.log("tres");
+						p.pagoInteres += abono / 1.16;
+						p.pagoInteres = parseFloat(p.pagoInteres).toFixed(2);
+						p.pagoIva += abono - (abono / 1.16);
+						p.pagoIva = parseFloat(p.pagoIva).toFixed(2);
+						residuos.pagoInteres = abono / 1.16;
+						residuos.pagoInteres = parseFloat(residuos.pagoInteres).toFixed(2);
+						residuos.pagoIva = abono - (abono / 1.16);
+						residuos.pagoIva = parseFloat(residuos.pagoIva).toFixed(2);
+						abono = 0;
+					}
+					else if( ((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > 0){
+						console.log("cuatro");
+						abono = abono - ((p.interes - p.pagoInteres) + (p.iva - p.pagoIva));
+						abono = parseFloat(abono).toFixed(2);
+						residuos.pagoInteres = (p.interes - p.pagoInteres);
+						residuos.pagoInteres = parseFloat(residuos.pagoInteres).toFixed(2);						
+						residuos.pagoIva = (p.iva - p.pagoIva);
+						residuos.pagoIva = parseFloat(residuos.pagoIva).toFixed(2);
+						p.pagoInteres = p.interes;
+						p.iva = p.iva;
+					}
+*/ //Como estaba
+					if(abono > 0 && residuos.pagoInteres > abono){
+						p.pagoInteres += Number(abono);
+						p.pagoInteres = Number(parseFloat(p.pagoInteres).toFixed(2));
+						abonos.pagoInteres = Number(parseFloat(abono).toFixed(2));
+						abono = 0;
+					}
+					else if(abono > 0 && residuos.pagoInteres > 0){
+						p.pagoInteres = Number(parseFloat(p.interes).toFixed(2));
+						abonos.pagoInteres = Number(parseFloat(residuos.pagoInteres).toFixed(2));
+						abono -= Number(residuos.pagoInteres);
+						abono = Number(parseFloat(abono).toFixed(2));
+					}
+					//Capital
+					if (abono > 0 && residuos.pagoCapital > abono){
+						p.pagoCapital += Number(abono);
+						p.pagoCapital = Number(parseFloat(p.pagoCapital).toFixed(2));
+						abonos.pagoCapital = Number(parseFloat(abono).toFixed(2));
+						abono = 0;
+					}
+					else if (abono > 0 && residuos.pagoCapital > 0){
+						p.pagoCapital = Number(parseFloat(p.capital).toFixed(2));
+						abonos.pagoCapital = Number(parseFloat(residuos.pagoCapital).toFixed(2));
+						abono -= Number(residuos.pagoCapital);
+						abono = Number(parseFloat(abono).toFixed(2));
+					}
+										
+					abono = 0;
 					
 				}
 				
-				pago.credito_id =p.credito_id;
-				p.modificada = 1;
-				p.ultimaModificacion = ahora;
-				p.fechaPago = ahora;
-				semanaPago = mfecha.isoWeek();
-				diaPago	= mfecha.weekday();
+				pago.credito_id 			= p.credito_id;
+				p.modificada 					= 1;
+				p.ultimaModificacion 	= ahora;
+				p.fechaPago 					= ahora;
+				semanaPago 						= mfecha.isoWeek();
+				diaPago								= mfecha.weekday();
 
-				var npp={pago_id:pago_id,totalPago:ttpago,estatus:p.estatus,fechaPago:pago.fechaPago, 
-						 numeroPago : p.numeroPago,movimiento:p.movimiento,cargo:p.importe,planPago_id:p._id,
-						 pagoCapital : p.pagoCapital, pagoInteres: p.pagoInteres,
-						 pagoIva : p.pagoIva, pagoSeguro : p.pagoSeguro, usuario_id:pusuario_id};
+				var npp={ pago_id		 	: pago_id,
+									totalPago	 	: ttpago,
+									estatus		 	: p.estatus,
+									fechaPago  	: pago.fechaPago, 
+									numeroPago 	: p.numeroPago,
+									movimiento	: p.movimiento,
+									cargo				: p.importe,
+									planPago_id	: p._id,
+									pagoCapital : abonos.pagoCapital, 
+									pagoInteres	: abonos.pagoInteres,
+									pagoIva 		: abonos.pagoIva, 
+									pagoSeguro 	: abonos.pagoSeguro, 
+									usuario_id	: pusuario_id};
 
 				p.pagos.push(npp);
+				
 				credit = Creditos.findOne(pago.credito_id);
-				var npago={planPago_id:p._id,totalPago:ttpago,estatus:p.estatus, descripcion:p.descripcion,
-						 fechaPago:pago.fechaPago, numeroPago : p.numeroPago,folioCredito:credit.folio,
-						 pagoCapital : p.pagoCapital, pagoInteres: p.pagoInteres,
-						 pagoIva : p.pagoIva, pagoSeguro : p.pagoSeguro,usuario_id:pusuario_id};
-				pago.planPagos.push(npago);
+				var npago= { planPago_id	: p._id,
+										 totalPago		: ttpago,
+										 estatus			: p.estatus, 
+										 descripcion	: p.descripcion,
+										 fechaPago		: pago.fechaPago, 
+										 numeroPago 	: p.numeroPago,
+										 folioCredito	: credit.folio,
+										 pagoCapital 	: abonos.pagoCapital, 
+										 pagoInteres	: abonos.pagoInteres,
+										 pagoIva 		  : abonos.pagoIva, 
+										 pagoSeguro 	: abonos.pagoSeguro,
+										 usuario_id		: pusuario_id};
+				
+				pago.planPagos.push(npago); 
 
 				var pid = p._id;
 				delete p._id;

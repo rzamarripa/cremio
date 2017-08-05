@@ -30,7 +30,7 @@
 					    	</div>
 					    	<div class="col-sm-4" valida>
 							    <label>Tasa %*</label>
-						    	<input name="tasa" type="number" class="form-control" ng-model="ae.credito.tasa" required>
+						    	<input name="tasa" type="number" min="0" class="form-control" ng-model="ae.credito.tasa" required>
 						    </div>
 					    	<div class="col-sm-4" valida>
 						    	<label>Periodo de pago *</label>
@@ -44,11 +44,11 @@
 					    <div class="row">
 						    <div class="col-sm-3" valida>					    
 						    	<label>Duración (Meses) *</label>
-						    	<input name="duracionMesesCreditoNuevo" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ae.credito.duracionMeses" required="">
+						    	<input name="duracionMesesCreditoNuevo" type="number" min="0" max="12" class="form-control" placeholder="Duración en Meses" ng-model="ae.credito.duracionMeses" required="">
 					    	</div>
 					    	<div class="col-sm-3" valida>
 						    	<label>Capital Solicitado *</label>
-						    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ae.credito.capitalSolicitado" required="">
+						    	<input name="capitalSolicitadoCreditoNuevo" type="number" min="0" class="form-control" placeholder="Capital Solicitado" ng-model="ae.credito.capitalSolicitado" required="">
 					    	</div>
 					    	<div class="col-sm-3">					    
 						    	<label>Con Seguro</label>
@@ -56,7 +56,7 @@
 					    	</div>	
 					    	<div class="col-sm-3" ng-if="ae.credito.conSeguro" valida>
 							    <label>Importe seguro semanal *</label>
-						    	<input name="seguro" type="number" class="form-control" placeholder="Seguro" ng-model="ae.credito.seguro"  required>
+						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ae.credito.seguro"  required>
 						    </div>		
 					    </div>
 					    <div class="row">

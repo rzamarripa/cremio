@@ -93,13 +93,13 @@ angular.module("creditoMio")
 	{
 			var nombreDia = "";
 			switch(numeroDia){
-				case	1: nombreDia = "LUNES";break;
-				case	2: nombreDia = "MARTES";break;
+				case	1: nombreDia = "LUNES";		 break;
+				case	2: nombreDia = "MARTES";	 break;
 				case	3: nombreDia = "MIÉRCOLES";break;
-				case	4: nombreDia = "JUEVES";break;
-				case	5: nombreDia = "VIERNES";break;
-				case	6: nombreDia = "SÁBADO";break;
-				case	7: nombreDia = "DOMINGO";break;
+				case	4: nombreDia = "JUEVES";	 break;
+				case	5: nombreDia = "VIERNES";	 break;
+				case	6: nombreDia = "SÁBADO";	 break;
+				case	7: nombreDia = "DOMINGO";	 break;
 				
 			}
 			return nombreDia;

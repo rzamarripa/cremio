@@ -11,11 +11,11 @@ Meteor.methods({
 
 			
 			if (op == 0)
-					var planPagos = PlanPagos.find({fechaLimite: {$lte: fechaFinal}, credito_id: { $in: creditos_ids }, estatus: { $ne: 1 }}).fetch();
+					var planPagos = PlanPagos.find({credito_id: { $in: creditos_ids }, fechaLimite: {$lte: fechaFinal} , estatus: { $ne: 1 }}).fetch();
 			else if (op == 1)
-					var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, descripcion: "Recibo", credito_id: { $in: creditos_ids }, estatus: { $ne: 1 }}).fetch();
+					var planPagos = PlanPagos.find({credito_id: { $in: creditos_ids }, fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, descripcion: "Recibo", estatus: { $ne: 1 }}).fetch();
 			else
-					var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, credito_id: { $in: creditos_ids }, estatus: { $ne: 1 }}).fetch();
+					var planPagos = PlanPagos.find({credito_id: { $in: creditos_ids }, fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, estatus: { $ne: 1 }}).fetch();
 			
 					
 			var hoy = new Date();
@@ -41,7 +41,7 @@ Meteor.methods({
 				 			
 				 			planPago.imprimir = false;
 				 			planPago.classPago = classPago;
-				 			planPago.numeroPagos = c.numeroPagos;					 			
+				 			planPago.numeroPagos = c.numeroPagos;		
 
 					}
 

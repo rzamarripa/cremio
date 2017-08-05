@@ -332,8 +332,19 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		        		console.log("Entro: CM", pago)
 		        }
 		        pago.folio = pago.credito.folio;
-		        		
-		      								
+		        
+		        if (pago.pagoSeguro !=  undefined)
+							 pago.seguro = pago.seguro -  pago.pagoSeguro;
+						
+						if (pago.pagoIva !=  undefined)
+							 pago.iva = pago.iva -  pago.pagoIva;
+							 
+						if (pago.pagoInteres !=  undefined)
+							 pago.interes = pago.interes -  pago.pagoInteres;
+							 
+						if (pago.pagoCapital !=  undefined)
+							 pago.capital = pago.capital -  pago.pagoCapital;	 	 
+		        				      								
 		      });
 		      
 		      pp = $filter('orderBy')(pp, 'folio')

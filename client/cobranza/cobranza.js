@@ -263,7 +263,7 @@ angular.module("creditoMio")
       }
       
 
-      console.log("el ARREGLO del helper historial",arreglo)
+      //console.log("el ARREGLO del helper historial",arreglo)
       return arreglo;
     },
 
@@ -307,7 +307,7 @@ angular.module("creditoMio")
 	                  else if (c.descripcion == "Cargo Moratorio")    
 	                     rc.totalMultas = rc.totalMultas + c.importeRegular;
 	              });
-                console.log(result,"resullltt")
+                //console.log(result,"resullltt")
 	              
 	              $scope.$apply();
 	          }
@@ -440,7 +440,7 @@ angular.module("creditoMio")
                   else if (c.descripcion == "Cargo Moratorio")    
                       rc.totalMultas = rc.totalMultas + c.importeRegular;
               });
-              
+
               $scope.$apply();
           }
         
@@ -449,7 +449,7 @@ angular.module("creditoMio")
   
   this.selCredito=function(objeto, num)
   {
-    	console.log(objeto,"objeto")
+    	//console.log(objeto,"objeto")
 
       rc.cliente_id = objeto.cliente._id
       //console.log(rc.cliente_id)
@@ -771,12 +771,9 @@ angular.module("creditoMio")
   }
   
 
-
-
   this.download = function(objeto) 
-
   {
-    console.log("entro:", objeto);
+    //console.log("entro:", objeto);
     objeto.credito.saldoActualizado = rc.historialCredito.saldo
     objeto.credito.avales = rc.avales;
     objeto.credito.pagosVencidos = rc.pagosVencidos;
@@ -832,13 +829,10 @@ angular.module("creditoMio")
     
   };
 
-
-
   this.downloadCartaUrgente = function(objeto) 
-
   {
       
-    console.log("entro:", objeto);
+    //console.log("entro:", objeto);
     objeto.credito.saldoActualizado = rc.historialCredito.saldo
     objeto.credito.avales = rc.avales;
     objeto.credito.pagosVencidos = rc.pagosVencidos;
@@ -893,11 +887,7 @@ angular.module("creditoMio")
     
   };
 
-
-
-
   this.downloadCartaCertificado= function(objeto) 
-
   {
       
     console.log("entro:", objeto);
@@ -1000,7 +990,7 @@ angular.module("creditoMio")
       }
     });
        
-    console.log("reciboooooo:",objeto);
+    //console.log("reciboooooo:",objeto);
 
 
     Meteor.call('getRecibos', toPrint, function(error, response) {     
@@ -1074,7 +1064,7 @@ angular.module("creditoMio")
       if (this.valorOrdenar == "Fecha")
           return ['fechaLimite'];
       if (this.valorOrdenar == "Cliente")
-          return ['cliente.nombreCompleto'];    
+          return ['cliente.profile.nombreCompleto', 'credito.folio', 'numeroPago'];    
   }
 
   this.aparecerCheck = function() {
@@ -1096,7 +1086,7 @@ angular.module("creditoMio")
 
     });
 
-    console.log(lista,"lista")
+    //console.log(lista,"lista")
 
     Meteor.call('getListaCobranza', toPrint, function(error, response) {     
        if(error)

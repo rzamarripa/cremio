@@ -32,13 +32,15 @@ angular.module("creditoMio")
 	this.helpers({
 		cajas : () => {
 			var c = Cajas.find().fetch();
-			console.log(c);
+			//console.log(c);
 			
-			_.each(c, function(caja){
-					var cajero = Meteor.users.findOne({_id: caja.usuario_id});
-					caja.cajero = cajero.profile.nombreCompleto;
-			})
-
+			if (c != undefined){
+				_.each(c, function(caja){
+						var cajero = Meteor.users.findOne({_id: caja.usuario_id});
+						if (cajero != undefined)
+							 caja.cajero = cajero.profile.nombreCompleto;
+				})
+			}	
 			return c;
 		},
 		tiposIngreso : () => {

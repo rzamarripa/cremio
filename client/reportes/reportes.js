@@ -9,16 +9,21 @@ angular.module("creditoMio")
   this.fechaInicial.setHours(0,0,0,0);
   this.fechaFinal = new Date();
   this.fechaFinal.setHours(23,0,0,0);
+  
   rc.buscar = {};
   rc.buscar.nombre = "";
   rc.credito_id = "";
   this.clientes_id = [];
-  rc.sumaCapital = "";
-	rc.sumaInteres = "";
-	rc.sumaIva = "";
-	rc.totalCobranza ="";
-	rc.totalSolicitado="";
-	rc.totalPagar ="";
+  rc.sumaCapital = 0;
+	rc.sumaInteres = 0;
+	rc.sumaIva = 0;
+	rc.sumaSeguro = 0;
+	
+	rc.totalCobranza = 0;
+	rc.totalSolicitado= 0;
+	rc.totalPagar = 0;
+	
+	rc.numeroCreditos = 0;
   
   var FI, FF;
   rc.cliente = {};
@@ -27,8 +32,8 @@ angular.module("creditoMio")
   rc.reportesPago = {};
   rc.cobranza = {};
   
-  rc.avales = [];
-  rc.referenciasPersonales = [];
+  
+  rc.planPagos = [];   
   rc.ihistorialCrediticio = [];
  
   rc.cobranza_id = "";
@@ -54,6 +59,7 @@ angular.module("creditoMio")
   this.subscribe("tiposCredito", ()=>{
 		return [{}]
 	});
+/*
 	this.subscribe("estadoCivil", ()=>{
 		return [{}]
 	});
@@ -63,6 +69,7 @@ angular.module("creditoMio")
 	this.subscribe("ocupaciones", ()=>{
 		return [{}]
 	});
+
 	this.subscribe("paises", ()=>{
 		return [{}]
 	});
@@ -82,35 +89,38 @@ angular.module("creditoMio")
 		return [{}]
 	});
 
-  	this.subscribe('notas',()=>{
+  this.subscribe('notas',()=>{
 		return [{cliente_id:this.getReactively("cliente_id")}]
 	});
+	*/
 
+/*
 	this.subscribe("planPagos", ()=>{
-	    return [{fechaPago : { $gte : this.getReactively("fechaInicial"), $lt : this.getReactively("fechaFinal")}}]
+	    return [{fechaPago : { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}]
 	});
+*/
 
-    this.subscribe('movimientosCaja', () => {
-       return [{ createdAt:  { $gte : this.getReactively("fechaInicial"), $lt : this.getReactively("fechaFinal")}}]
-    });
+  this.subscribe('movimientosCaja', () => {
+     return [{ createdAt:  { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}]
+  });
 
-  	this.subscribe('personas', () => {
-		return [{ }];
+	this.subscribe('creditos', () => {
+		return [{fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lte : rc.getReactively("fechaFinal")}}];
 	});
-		this.subscribe('creditos', () => {
-		return [{fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}];
-	});
-		this.subscribe('clientes', () => {
+	
+/*
+	this.subscribe('clientes', () => {
 		return [{}];
 	});
+*/
 		this.subscribe('pagos', () => {
-		return [{estatus:1},{ fechaPago:  { $gte : this.getReactively("fechaInicial"), $lt : this.getReactively("fechaFinal")}}];
+		return [{estatus:1},{ fechaPago:  { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}];
 	});
 
-		this.subscribe('cajas',()=>{
+	this.subscribe('cajas',()=>{
 		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""}]
 	});
-this.subscribe('cuentas',()=>{
+	this.subscribe('cuentas',()=>{
 		return [{estatus : 1}]});
 
   this.subscribe('cajas', () => {
@@ -119,9 +129,11 @@ this.subscribe('cuentas',()=>{
   this.subscribe('tiposIngreso', () => {
     return [{}]
   });
+/*
   this.subscribe('allCajeros', () => {
     return [{}]
   });
+*/
   this.subscribe('cuentas', () => {
     return [{}]
   });
@@ -130,99 +142,134 @@ this.subscribe('cuentas',()=>{
   });
 	
 	this.helpers({
+		/*
 		bancos: () => {
       //var ret = [];
-      var pays = Pagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal"),}}).fetch();
-      //console.log("sddss",pays)
-      if(pays.length){
-       	var suma = 0;
-       	_.each(pays, function(pago) {
-       	pago.cliente = Meteor.users.findOne(pago.usuario_id);
-       	pago.nombreCompleto = pago.cliente.profile.nombreCompleto;
-       	pago.quienCobro = Meteor.users.findOne(pago.usuarioCobro_id);
-       	pago.nombreCajero = pago.quienCobro.profile.nombreCompleto;
-       	pago.numeroCliente = pago.cliente.profile.numeroCliente
-       	pago.fechaPago = moment(pago.fechaPago).format("DD-MM-YYYY")
-       	suma += pago.pago
-       	pago.acumulado = suma
-       	pago.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id)
-       	pago.forma = pago.tipoIngreso.nombre
-
-        });
-        console.log("pagos",pays)
-          
-        for (var i = 0; i <= pays.length; i++) {
-        	console.log("pagos",pays)
-        	if (pays[i].forma != "DEPOSITO") {
-        			pays.splice(i, 1);
-        	}
-        }
-    }
-        return pays
+      var pays = Pagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lte : rc.getReactively("fechaFinal"),}}).fetch();
+      
+      if (pays != undefined)
+      {
+	      //console.log("sddss",pays)
+	      if(pays.length){
+	       	var suma = 0;
+	       	_.each(pays, function(pago) {
+	       	pago.cliente = Meteor.users.findOne(pago.usuario_id);
+	       	pago.nombreCompleto = pago.cliente.profile.nombreCompleto;
+	       	pago.quienCobro = Meteor.users.findOne(pago.usuarioCobro_id);
+	       	pago.nombreCajero = pago.quienCobro.profile.nombreCompleto;
+	       	pago.numeroCliente = pago.cliente.profile.numeroCliente
+	       	pago.fechaPago = moment(pago.fechaPago).format("DD-MM-YYYY")
+	       	suma += pago.pago
+	       	pago.acumulado = suma
+	       	pago.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id)
+	       	pago.forma = pago.tipoIngreso.nombre
+	
+	        });
+	        //console.log("pagos",pays)
+	          
+	        for (var i = 0; i <= pays.length; i++) {
+	        	//console.log("pagos",pays)
+	        	if (pays[i].forma != "DEPOSITO") {
+	        			pays.splice(i, 1);
+	        	}
+	        }
+	    	}
+	    	return pays
+	    }
     },
 
 		tiposCredito : () => {
 			return TiposCredito.find();
-		},
-		notas : () => {
-			return Notas.find().fetch();
-		},
-		usuario : () => {
+		},*/
+		/*
+usuario : () => {
 			return Meteor.users.find();
 		},
-		planPagos : () => {
-			var creditos = Creditos.find().fetch();
-	        var planes = PlanPagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")}}).fetch();
-	        this.clientes_id = _.pluck(planes, "cliente_id");
-	        //console.log(this.clientes_id,"clientes")
-	        
-	        var client = ""
-	        var suma = 0
-		      var sumaInter = 0
-		      var sumaIva = 0
+*/
+		/*
+planPagos : () => {
+			//var creditos = Creditos.find().fetch();
+			console.log(this.fechaInicial);
+			console.log(this.fechaFinal);
+      var planes = PlanPagos.find({fechaPago : { $gte : rc.getReactively("fechaInicial"), $lte : rc.getReactively("fechaFinal")}}).fetch();
+      //this.clientes_id = _.pluck(planes, "cliente_id");      
+      //console.log("Creditos 1 :", creditos);
+      //var cliente = ""
+      var suma = 0;
+      var sumaInter = 0;
+      var sumaIva = 0;
+			
 			if(planes){
-				_.each(creditos,function(credit){
-				_.each(planes,function(plan){
-					plan.cliente = Meteor.users.findOne(plan.cliente_id);
-					client = plan.cliente.profile
-					//console.log("variable",client)
-					plan.nombreCompleto = client.nombreCompleto
-					plan.credito = Creditos.findOne(plan.credito_id)
-					if (plan.garantias == undefined) {
-						plan.garantias = "no"
-					}else{
-						plan.garantias = "si"
-					}
-				});
+				
+
+_.each(creditos,function(credit){
+						_.each(planes,function(plan){
+							var cliente = Meteor.users.findOne(plan.cliente_id);
+							console.log("Plan		 1:", plan);
+							console.log("Cliente 1:", cliente);					
+							if (cliente != undefined)
+							{
+									plan.cliente.profile = cliente;
+									//console.log("variable",client)
+									plan.nombreCompleto = cliente.nombreCompleto;
+									plan.credito = Creditos.findOne(plan.credito_id);
+									if (plan.garantias == undefined) {
+										plan.garantias = "no";
+									}else{
+										plan.garantias = "si";
+									}		
+							}
+						});
 			 });
 
+
 				_.each(planes,function(plan){
-				// plan.numerosPagos= plan.credito.folio
-	    	plan.numeroCliente = plan.cliente.profile.numeroCliente
-	    	suma += plan.pago
-	    	sumaInter += plan.pagos[0].pagoInteres
-	    	sumaIva += plan.pagos[0].pagoIva 
+						console.log("Plan				2:", plan);
+						console.log("Cliente_id	2:", plan.cliente_id);
+						//var cliente = Meteor.users.findOne(plan.cliente_id);
+						
+						var cliente = undefined;
+
+						Meteor.call("getUsuarioReportes", plan.cliente_id, function(error, result){
+							if  (result)
+							{
+									console.log(result);
+									cliente = result;
+							}
+						});
+							
+						console.log("Cliente		2:", cliente);					
+
+			
+			if (plan.cliente != undefined)
+						{
+			    		 plan.numeroCliente = cliente.profile.numeroCliente;
+							 plan.cliente = cliente;
+			    	}	
+
+
+			    	suma += plan.pago;
+			    	sumaInter += plan.pagos[0].pagoInteres;
+			    	sumaIva += plan.pagos[0].pagoIva;
+			    	
+			    	plan.sumaCapital = suma 
+				    plan.sumaInteres = sumaInter
+				    plan.sumaIva = sumaIva  
+				    plan.sumaCapital = parseFloat(plan.sumaCapital.toFixed(2))
+				    plan.sumaInteres = parseFloat(plan.sumaInteres.toFixed(2))
+				    plan.sumaIva = parseFloat(plan.sumaIva.toFixed(2))
+				    rc.sumaCapital = plan.sumaCapital
+				    rc.sumaInteres = plan.sumaInteres
+				    rc.sumaIva = plan.sumaIva
+				    rc.totalCobranza = plan.sumaCapital + plan.sumaInteres +sumaIva
+			
+				    plan.tipoIngreso = TiposIngreso.findOne(plan.tipoIngreso_id);
+				    //rc.sumaCapital = plan.sumaCapital
+		    	  
 				});
 
-				_.each(planes,function(plan){
-	     plan.sumaCapital = suma 
-	     plan.sumaInteres = sumaInter
-	     plan.sumaIva = sumaIva  
-	     plan.sumaCapital = parseFloat(plan.sumaCapital.toFixed(2))
-	     plan.sumaInteres = parseFloat(plan.sumaInteres.toFixed(2))
-	     plan.sumaIva = parseFloat(plan.sumaIva.toFixed(2))
-	     rc.sumaCapital = plan.sumaCapital
-	     rc.sumaInteres = plan.sumaInteres
-	     rc.sumaIva = plan.sumaIva
-	     rc.totalCobranza = plan.sumaCapital + plan.sumaInteres +sumaIva
-
-	     plan.tipoIngreso = TiposIngreso.findOne(plan.tipoIngreso_id);
-	     //rc.sumaCapital = plan.sumaCapital
-	 	});
+				return planes;	
 			}
-
-			 console.log(planes,"planes")
-			return planes
 		
 		},
 		pagosVencidos : () => {
@@ -236,36 +283,37 @@ this.subscribe('cuentas',()=>{
 		pagos : () =>{
 			 
 			var pagos = Pagos.find({}).fetch()
-
-			// _.each(pagos,function(p){
-			// 	p.tipoIngreso = TiposIngreso.findOne(p.tipoIngreso_id)
-
-			// });
-
 			return pagos
 		},
 		creditos : () => {
-				var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:4}).fetch();
-				_.each(creditos,function(credito){
-					//console.log(credito.cliente_id);
-					credito.cliente = Meteor.users.findOne(credito.cliente_id)
-				//	console.log("hola", credito.cliente)
-					if(credito.cliente){
-						credito.nombreCompleto = credito.cliente.profile.nombreCompleto;
-					}
-					if (credito.garantias != "") {
-						credito.estatusGarantia = "Si"
-					}else{
-						credito.estatusGarantia = "No"
-					}
-					credito.numeroCliente = credito.cliente.profile.numeroCliente
-				});
+				var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lte : rc.getReactively("fechaFinal")},estatus:4}).fetch();
+				
+				if (creditos != undefined)
+				{
+					_.each(creditos,function(credito){
+						//console.log(credito);
+						credito.cliente = Meteor.users.findOne(credito.cliente_id)
+						if (credito.cliente != undefined)
+						{
+							if(credito.cliente){
+								credito.nombreCompleto = credito.cliente.profile.nombreCompleto;
+							}
+							if (credito.garantias != "") {
+								credito.estatusGarantia = "Si"
+							}else{
+								credito.estatusGarantia = "No"
+							}
+							
+							credito.numeroCliente = credito.cliente.profile.numeroCliente;
+						}	
+					});
+				}	
 				var suma = 0
         var sumaSol = 0
-	    _.each(creditos,function(credito){
-	 	   	suma += credito.capitalSolicitado
-	    	sumaSol += credito.adeudoInicial
-	    });
+		    _.each(creditos,function(credito){
+		 	   	suma += credito.capitalSolicitado
+		    	sumaSol += credito.adeudoInicial
+		    });
 
 	     _.each(creditos,function(credito){
 	     credito.sumaCapital = suma 
@@ -279,8 +327,8 @@ this.subscribe('cuentas',()=>{
 				console.log("creditos",rc.numeroCreditos)
 				return creditos
 			},
-			creditosLiquidados : () => {
-				var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lt : rc.getReactively("fechaFinal")},estatus:5}).fetch();
+		creditosLiquidados : () => {
+				var creditos = Creditos.find({fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lte : rc.getReactively("fechaFinal")},estatus:5}).fetch();
 				_.each(creditos,function(credito){
 					//console.log(credito.cliente_id);
 					credito.cliente = Meteor.users.findOne(credito.cliente_id)
@@ -311,28 +359,125 @@ this.subscribe('cuentas',()=>{
 
 				//console.log("creditos",creditos)
 
-				rc.numeroCreditosL = creditos.length
+				rc.numeroCreditos = creditos.length
 				return creditos
 			},
-			
-				creditoPlanes : () => {
+		creditoPlanes : () => {
 				var creditos = Creditos.find({}).fetch();
 				_.each(creditos,function(credito){
 				});
-				return creditos
-		
+				return creditos;
 			},
-			
-			// cartera : () => {
-			// 	var personas = Creditos.find({}).fetch();
-			// 	_.each(creditos,function(credito){
-			// 	});
-			// 	return creditos
-		
-			// } 
+		*/
 		});
+		
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	this.diarioCobranza = function(){
+
+		var usuario = Meteor.user();
+				
+	  rc.fechaInicial.setHours(0,0,0,0);
+		rc.fechaFinal.setHours(23,0,0,0);
+		
+		rc.sumaCapital = 0;
+    rc.sumaInteres = 0;
+    rc.sumaIva = 0;
+    rc.sumaSeguro = 0;
+    
+    rc.totalCobranza = 0;
+				
+		Meteor.call("getCobranzaDiaria", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
+				if  (result)
+				{
+						rc.planPagos = result;
+						_.each(rc.planPagos, function(plan){
+							if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
+							rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
+							if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
+							rc.sumaSeguro += Number(parseFloat(plan.pagoSeguro).toFixed(2));
+							if (plan.pagoIva == undefined) plan.pagoIva = 0;
+							rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
+							if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
+							rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
+						});
+						rc.totalCobranza = rc.sumaCapital + rc.sumaInteres + rc.sumaIva + rc.sumaSeguro;
+						$scope.$apply();
+				}
+		});
+		
+	};
+	
+	this.creditosEntregadosFecha = function(){
+
+		var usuario = Meteor.user();
+				
+	  rc.fechaInicial.setHours(0,0,0,0);
+		rc.fechaFinal.setHours(23,0,0,0);
+		
+		rc.totalSolicitado = 0;
+    rc.totalPagar = 0;
+    rc.numeroCreditos = 0;
+    
+				
+		Meteor.call("getCreditosEntregados", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
+				if  (result)
+				{
+						rc.creditosEntregados = result;
+						
+						_.each(rc.creditosEntregados, function(credito){
+							
+							if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
+							rc.totalSolicitado += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+							if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
+							rc.totalPagar += Number(parseFloat(credito.adeudoInicial).toFixed(2));
+							
+							rc.numeroCreditos += 1;
+							
+							
+						});
+
+						$scope.$apply();
+				}
+		});
+		
+	};
+	
+	this.creditosLiquidadosFecha = function(){
+
+		var usuario = Meteor.user();
+				
+	  rc.fechaInicial.setHours(0,0,0,0);
+		rc.fechaFinal.setHours(23,0,0,0);
+		
+		rc.totalSolicitado = 0;
+    rc.totalPagar = 0;
+    rc.numeroCreditos = 0;    
+				
+		Meteor.call("getCreditosLiquidados", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
+				if  (result)
+				{
+						rc.creditosLiquidados = result;
+						
+						_.each(rc.creditosLiquidados, function(credito){
+							
+							if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
+							rc.totalSolicitado += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+							if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
+							rc.totalPagar += Number(parseFloat(credito.adeudoInicial).toFixed(2));
+							
+							rc.numeroCreditos += 1;
+							
+							
+						});
+
+						$scope.$apply();
+				}
+		});
+		
+	};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
   this.selCredito=function(objeto)
   {
@@ -495,8 +640,6 @@ this.subscribe('cuentas',()=>{
 
 	};
 
-
-
 	var fecha = moment();
 	this.guardarNotaCobranza=function(nota){
 			console.log(nota);			
@@ -580,13 +723,9 @@ this.subscribe('cuentas',()=>{
 			toastr.success('Guardado correctamente.');
 	}
 	
-
-
-
 	this.download = function(objeto) 
-
   {
-		console.log("entro:", objeto);
+		//console.log("entro:", objeto);
 		objeto.credito.saldoActualizado = rc.historialCredito.saldo
 		objeto.credito.avales = rc.avales;
 		objeto.credito.pagosVencidos = rc.pagosVencidos;
@@ -672,7 +811,7 @@ this.subscribe('cuentas',()=>{
 	     item.sumaIva = parseFloat(item.sumaIva.toFixed(2))
 	 	});
 
-	    console.log("objetoooooooooooooooo",objeto)
+	     //console.log("objetoooooooooooooooo",objeto)
 
 		   Meteor.call('ReporteCobranza', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
 
@@ -723,7 +862,6 @@ this.subscribe('cuentas',()=>{
 		});
 		
 	}
-
 	this.imprimirReporteCreditos = function(objeto){
 
 	    console.log("objeto",objeto)
@@ -790,8 +928,6 @@ this.subscribe('cuentas',()=>{
 		});
 		
 	}
-
-
 	this.imprimirReporteMovimiento = function(objeto){
 
 	   
@@ -803,7 +939,7 @@ this.subscribe('cuentas',()=>{
 	    	item.numeroPagos = item.credito.numeroPagos
 	   
 	    });
-	     console.log("objeto",objeto)
+	     //console.log("objeto",objeto)
 	    
 		   Meteor.call('ReporteMovimientoCuenta', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
 
@@ -854,8 +990,7 @@ this.subscribe('cuentas',()=>{
 		});
 		
 	};
-
-		this.imprimirReporteBancos = function(objeto){
+	this.imprimirReporteBancos = function(objeto){
 
 	    console.log("objeto",objeto)
 		   Meteor.call('ReportesBanco', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
