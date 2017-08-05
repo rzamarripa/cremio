@@ -1007,6 +1007,11 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="col-sm-12">
+								<label class="pull-left">Tipo de nota</label>
+								 <select name="nota Cliente" ng-model="cd.nota.notaTipo" data-placeholder="Seleccione" class="form-control">
+											    <option id="cuenta" >Cuenta</option>
+											    <option >Cliente</option>
+											</select>
 									<label class="pull-left">Escribir Nota:</label>
 										<textarea type="text" class="form-control"	ng-model="cd.nota.nombre" >
 									</div>
@@ -1017,8 +1022,6 @@
 						</div>
 			  </div>
 			  <div class="modal-footer">
-
-							  
 				          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 				        </div>
 		</div>
