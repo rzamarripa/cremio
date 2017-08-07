@@ -20,7 +20,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
     return [{ sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "" }]
   });
   this.subscribe('tiposIngreso', () => {
-    return [{}]
+    return [{estatus: true}]
   });
   this.subscribe('allCajeros', () => {
     return [{}]

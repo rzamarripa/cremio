@@ -32,8 +32,7 @@ angular.module("creditoMio")
 	this.helpers({
 		cajas : () => {
 			var c = Cajas.find().fetch();
-			//console.log(c);
-			
+						
 			if (c != undefined){
 				_.each(c, function(caja){
 						var cajero = Meteor.users.findOne({_id: caja.usuario_id});
@@ -62,7 +61,6 @@ angular.module("creditoMio")
 			}
 			return retorno;
 		}
-
 	});
 
 	
@@ -84,7 +82,6 @@ angular.module("creditoMio")
 			}
 			objeto.estatus = true;
 
-			//objeto.usuarioResponsable = "";
 			_.each(this.tiposIngreso,function(tipo){
 				objeto.cuenta[tipo._id].saldo = 0;
 			});
