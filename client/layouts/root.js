@@ -31,6 +31,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		clientesRoot : () => {
 			
 			var clientes = Meteor.users.find({
+				"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
 		  	roles : {$in : ["Cliente", "Distribuidor"]}
 			}, { sort : {"profile.nombreCompleto" : 1 }}).fetch();
 	
