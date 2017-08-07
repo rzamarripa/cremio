@@ -1,6 +1,5 @@
 Meteor.methods({
  	generarCredito : function(credito, idCredito) {
-						
 
 		var c = Creditos.findOne({_id: idCredito});
 				
@@ -39,8 +38,6 @@ Meteor.methods({
 		delete c._id;		
 		Creditos.update({_id:idTemp},{$set : c});
 		
-		
-		//var credito_id = Creditos.insert(credito);
 		
 		//-----------------------------------------------------------//
 		_.each(planPagos, function(pago){
@@ -200,10 +197,27 @@ Meteor.methods({
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		var c = Creditos.findOne(idCredito);
 		
+		c = {
+				tipoCredito_id 				: credito.tipoCredito_id,
+				duracionMeses 				: credito.duracionMeses,
+				capitalSolicitado 		: credito.capitalSolicitado,
+				adeudoInicial 				: credito.capitalSolicitado,
+				saldoActual 					: credito.capitalSolicitado,
+				periodoPago 					: credito.periodoPago,
+				fechaPrimerAbono 			: credito.primerAbono,
+				estatus 							: credito.estatus,
+				requiereVerificacion	: credito.requiereVerificacion,
+				turno 								: credito.turno,
+				fechaVerificacion			: credito.fechaVerificacion,
+				tipoGarantia 					: credito.tipoGarantia,
+				tasa									: credito.tasa,
+				conSeguro 						: credito.conSeguro,
+				seguro								: credito.seguro
+		};
+	
+		
 		//credito.avales_ids = c.avales_ids; Con lo anterior de personas
-		
-		
-		//console.log(credito.avales);		
+				
 		_.each(credito.avales, function(aval){
 				if (aval.estatus == "N"){					
 						aval.estatus = "G";
@@ -352,7 +366,6 @@ if (aval.buscarPersona_id)
 		delete credito['avales'];
 		delete credito._id;	
 		Creditos.update({_id:idCredito},{$set:c});
-				
 		
 		return "hecho";
 	},

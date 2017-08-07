@@ -9,6 +9,8 @@ angular.module("creditoMio")
   this.buscar = {};
   this.buscar.nombre = "";
   window.rc = rc;
+  rc.clientes = [];
+  
   
   this.subscribe('buscarClientes', () => {
 	  

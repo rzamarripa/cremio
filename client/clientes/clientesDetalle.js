@@ -198,8 +198,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		creditosPendientes : () =>{
 			var creditos = Creditos.find({estatus:{$in:[0,1]}}).fetch();
 			if(creditos.length > 0){
-				_.each(creditos, function(credito){
-					credito.estatusClase = obtenerClaseEstatus(credito.estatus);
+				_.each(creditos, function(credito){				
+					 credito.estatusClase = obtenerClaseEstatus(credito.requiereVerificacion);
 				})
 			}
 			
@@ -1068,9 +1068,17 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 
 
-	function obtenerClaseEstatus(estatus){
-		//console.log("hola", estatus);
-		if(estatus == 0){
+	function obtenerClaseEstatus(valor){
+		
+		console.log(valor);
+		if (valor )
+			 return "warning";
+		else
+			 return "info";  	
+		
+		
+		/*
+if(estatus == 0){
 			return "danger";
 		}else if(estatus == 1){
 			return "warning";
@@ -1085,6 +1093,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		}else if(estatus == 6){
 			return "danger";
 		}
+*/
 	};
 	
 	this.mostrarReestructuracion= function(objeto)

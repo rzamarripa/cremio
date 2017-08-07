@@ -15,7 +15,6 @@ angular.module("creditoMio")
 	rc.cliente = {};
 	rc.cliente._id = "" ;
 	rc.datosCliente = ""
-	//this.credito.primerAbono = new Date();
 	
 	this.subscribe('tiposIngreso',()=>{
 		return [{
@@ -34,11 +33,13 @@ angular.module("creditoMio")
 		return [{_id : $stateParams.credito_id}]
 	});
 	this.subscribe('cuentas',()=>{
-		return [{estatus : 1}]
+		return [{estatus : true}]
 	});
+/*
 	this.subscribe('personas',()=>{
 		return [{rol : "Cliente"}]
 	});
+*/
 	this.validar={};
 
 	this.helpers({
@@ -57,7 +58,7 @@ angular.module("creditoMio")
 		cuentas : () => {
 			var cuentas = Cuentas.find().fetch();
 			_.each(cuentas,(cuenta)=>{
-				rc.objeto.cuenta =rc.objeto.cuenta? rc.objeto.cuenta :{};
+				rc.objeto.cuenta = rc.objeto.cuenta? rc.objeto.cuenta :{};
 				rc.objeto.cuenta[cuenta._id] = rc.objeto.cuenta[cuenta._id]? rc.objeto.cuenta[cuenta._id] :{};
 				rc.objeto.cuenta[cuenta._id].saldo = rc.objeto.cuenta[cuenta._id].saldo? rc.objeto.cuenta[cuenta._id].saldo :0;
 			});
@@ -65,7 +66,7 @@ angular.module("creditoMio")
 		},
 		credito : () => {
 			var c = Creditos.findOne({_id:$stateParams.credito_id}); 
-			console.log(c,"credito")
+			//console.log(c,"credito")
 			
 			if (c != undefined)
 			{		
@@ -107,7 +108,6 @@ angular.module("creditoMio")
 			}			
 			return c
 		}
-
 	});
 
 	this.calcular = function(){
@@ -128,12 +128,11 @@ angular.module("creditoMio")
 	}
 
 	this.guardar = function (){
-			//console.log(rc.objeto)
-			
+						
 			if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagare!=true || this.validar.tabla!=true)
 			{
-				toastr.error('Es obligatorio verificar los documentos.');
-				return
+					toastr.error('Es obligatorio verificar los documentos.');
+					return
 			}
 			
 			//Validar que no sea Nota de Credito ni refinanciamiento
@@ -142,7 +141,7 @@ angular.module("creditoMio")
 			if (ti.nombre == "Nota de Credito" || ti.nombre == "REFINANCIAMIENTO")
 			{
 					toastr.error('Error No se puede entregar un crédito con esta forma de pago.');
-						return;
+					return;
 			}
 			
 			if (rc.credito.esRefinanciado == undefined)
@@ -169,33 +168,37 @@ angular.module("creditoMio")
 			}			
 			
 			//Validar que no tenga Cargos Moratorios
-			console.log(rc.credito.cliente_id);
+			//console.log(rc.credito.cliente_id);
 			Meteor.call ("validarCreditosSaldoEnMultas",rc.credito.cliente_id,function(error,result){
-					
-					console.log(result);
+					console.log("Resultado:", result);
 					if (!result)
 					{
 							toastr.error('El cliente tiene Cargos Moratorios Activos no es posible Entregarle el crédito.');
+							esValidoEntregar = result;
 							return;		
 					}
+					else if (result)
+					{
+						
+							Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id,function(error,result){
+								if(error){
+									console.log(error);
+									toastr.error('Error al guardar los datos.');
+									return
+								}
+								toastr.success('Operacion Realizada.');
+								$state.go("root.clienteDetalle",{objeto_id : rc.credito.cliente_id});
+								rc.objeto = {}; 
+								$('.collapse').collapse('hide');
+								rc.nuevo = true;
+								form.$setPristine();
+								form.$setUntouched();
+							});	
+						
+					}
+					
 			});
 			
-			
-			Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id,function(error,result){
-		
-				if(error){
-					console.log(error);
-					toastr.error('Error al guardar los datos.');
-					return
-				}
-				toastr.success('Operacion Realizada.');
-				$state.go("root.clienteDetalle",{objeto_id : rc.credito.cliente_id});
-				rc.objeto = {}; 
-				$('.collapse').collapse('hide');
-				rc.nuevo = true;
-				form.$setPristine();
-				form.$setUntouched();
-			});	
 
 	}
 	
@@ -260,29 +263,28 @@ angular.module("creditoMio")
 	
 	this.generarCredito = function(){
 		
-		
 		var credito = {
-			//cliente_id : this.cliente._id,
-			tipoCredito_id : this.credito.tipoCredito_id,
-			fechaSolicito : new Date(),
-			duracionMeses : this.credito.duracionMeses,
-			capitalSolicitado : this.credito.capitalSolicitado,
-			adeudoInicial : this.credito.capitalSolicitado,
-			saldoActual : this.credito.capitalSolicitado,
-			periodoPago : this.credito.periodoPago,
-			fechaPrimerAbono : this.objeto.primerAbono,
-			multasPendientes : 0,
-			saldoMultas : 0.00,
-			saldoRecibo : 0.00,
-			estatus : 1,
+
+			tipoCredito_id 			: this.credito.tipoCredito_id,
+			fechaSolicito 			: new Date(),
+			duracionMeses 			: this.credito.duracionMeses,
+			capitalSolicitado 	: this.credito.capitalSolicitado,
+			adeudoInicial 			: this.credito.capitalSolicitado,
+			saldoActual 				: this.credito.capitalSolicitado,
+			periodoPago 				: this.credito.periodoPago,
+			fechaPrimerAbono 		: this.objeto.primerAbono,
+			multasPendientes 		: 0.00,
+			saldoMultas 				: 0.00,
+			saldoRecibo 				: 0.00,
+			estatus 						: 1,
 			requiereVerificacion: this.credito.requiereVerificacion,
-			sucursal_id : Meteor.user().profile.sucursal_id,
-			fechaVerificacion: this.credito.fechaVerificacion,
-			turno : this.credito.turno,
-			tipoGarantia : this.credito.tipoGarantia,
-			tasa: this.credito.tasa,
-			conSeguro : this.credito.conSeguro,
-			seguro: this.credito.seguro
+			sucursal_id 				: Meteor.user().profile.sucursal_id,
+			fechaVerificacion		: this.credito.fechaVerificacion,
+			turno 							: this.credito.turno,
+			tipoGarantia 				: this.credito.tipoGarantia,
+			tasa								: this.credito.tasa,
+			conSeguro 					: this.credito.conSeguro,
+			seguro							: this.credito.seguro
 		};
 				
 		credito.avales = angular.copy(this.avales);
@@ -354,8 +356,7 @@ angular.module("creditoMio")
 				});	
 	  };	
 
-
-		  this.imprimirContrato = function(contrato,cliente){
+	this.imprimirContrato = function(contrato,cliente){
 		
 				contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
 								

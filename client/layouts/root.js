@@ -11,13 +11,12 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	this.hoy = new Date();
 	this.caja = {};
 	this.nombreCliente = "";
-	//var cmd = require('node-cmd');
 	
 	
 
-	this.subscribe('buscarClientes', () => {
+	this.subscribe('buscarRootClientesDistribuidores', () => {
 		if(this.getReactively("buscar.nombre").length > 4){
-			root.buscando = true;
+			root.buscando = true;			
 			return [{
 		    options : { limit: 20 },
 		    where : { 
@@ -30,10 +29,11 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
   });  
   	this.helpers({
 		clientesRoot : () => {
+			
 			var clientes = Meteor.users.find({
-		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
-		  	roles : ["Cliente"]
+		  	roles : {$in : ["Cliente", "Distribuidor"]}
 			}, { sort : {"profile.nombreCompleto" : 1 }}).fetch();
+	
 			if(clientes){
 				this.clientes_ids = _.pluck(clientes, "_id");
 			
@@ -45,17 +45,6 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 			return clientes;
 			
 		},
-		// clienteUsuario: () => {
-		// 	var clientes = Meteor.users.find().fetch()
-		// 	_.each(clientes, function(cliente){
-		// 		root.nombreCliente = cliente.profile.nombreCompleto
-
-		// 	});
-		// 	//console.log(clientes)
-						
-		// 	return clientes;
-			
-		// }
 	});
 
 	this.verMenu =()=>{
@@ -86,6 +75,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 	  }
   };
  
+/*
 
 	this.diarioCobranza= function(objeto) {
 
@@ -96,6 +86,7 @@ angular.module("creditoMio").controller("RootCtrl", ['$scope', '$meteor', '$reac
 		//console.log(objeto,"actualizado")
 
 	};
+*/
 
 	//Funcion Evalua la sessión del usuario
 	this.autorun(function() {

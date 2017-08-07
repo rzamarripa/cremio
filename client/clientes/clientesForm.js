@@ -27,6 +27,8 @@ angular.module("creditoMio")
   this.ciudad_id = "";
   this.empresa_id = "";
   rc.ocupacionSeleccionado = ""
+  rc.coloniaSeleccionado = ""
+  
   
   this.con = 0;
   this.num = 0;
@@ -708,12 +710,16 @@ angular.module("creditoMio")
       this.cambiarContrasena = !this.cambiarContrasena; 
   }
 
-    this.getOcupaciones= function(ocupacion_id)
+  this.getOcupaciones= function(ocupacion_id)
   {
-    console.log(ocupacion_id);
-    rc.ocupacionSeleccionado = Ocupaciones.findOne(ocupacion_id);
-    
+    rc.ocupacionSeleccionado = Ocupaciones.findOne(ocupacion_id); 
   };
+  
+  this.getColonias = function(colonia_id)
+  {
+    rc.coloniaSeleccionado = Colonias.findOne(colonia_id); 
+  };
+  
   
   this.createEmpresa = function()
   {

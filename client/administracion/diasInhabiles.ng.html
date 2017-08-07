@@ -74,7 +74,7 @@
 		    <tr ng-repeat="objeto in di.diasInhabiles">
 		    <td>{{$index + 1}}</td>
 			    <td style="text-align: center">{{objeto.tipo}}</td>
-			    <td>{{di.getDia(objeto.dia)}} {{objeto.fecha | date:'dd/MM/yyyy' }} </td>
+			    <td style="text-align: center">{{di.getDia(objeto.dia)}} {{objeto.fecha | date:'dd/MM/yyyy' }} </td>
 			    <td>
 				    <div class="text-center">
 				    	<span ng-if="objeto.estatus" class="label label-success">

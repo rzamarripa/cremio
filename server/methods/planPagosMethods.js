@@ -45,15 +45,15 @@ Meteor.methods({
 			
 			var fechaMes = new Date(moment(credito.fechaPrimerAbono));
 			var diaMes = fechaMes.getDate();
-			if (diaMes <= 15)
+			if (diaMes > 2 && diaMes <= 16)
 			{
-		 	 	 mfecha = mfecha.date(15);
+		 	 	 mfecha = mfecha.date(16);
 		 	 	 semanaQuincena	= 2;
 		 	} 	 
-		  else if (diaMes > 15)
+		  else 
 		  {
-			   diaMes = moment(credito.fechaPrimerAbono).daysInMonth();
-				 mfecha = mfecha.date(diaMes);
+				 mfecha = moment(mfecha).add(1, 'M');
+				 mfecha = mfecha.date(1);
 				 semanaQuincena = 1;
 		  }
 	  
@@ -64,26 +64,32 @@ Meteor.methods({
 			numeroPagosCompuesto = 1;
 			tasaInteres = credito.tasa / 100;
 		  
-		  var diaMes = moment(credito.fechaPrimerAbono).daysInMonth();
-		  mfecha = mfecha.date(diaMes);
+		  //var diaMes = moment(credito.fechaPrimerAbono).daysInMonth();
+		  //mfecha = mfecha.date(diaMes);
 		}
 		
 		////////////////////////////////////////////////////////////////////////////////
 		verificarDiaInhabil = function(fecha){
 				var diaFecha = fecha.isoWeekday();
-				var diaInhabiles = DiasInhabiles.find({tipo: "DIA"}).fetch();
-	
+				var diaInhabiles = DiasInhabiles.find({tipo: "DIA", estatus: true}).fetch();
+				var ban = false;
 				_.each(diaInhabiles, function(dia){
-						if (dia.dia == diaFecha)
-							 return true;
+
+						if (Number(dia.dia) === diaFecha)
+						{
+							 ban = true;	
+							 return;							 
+						}	 
 				})
 				var fechaBuscar = new Date(fecha);
 				
-				var fechaInhabil = DiasInhabiles.findOne({tipo: "FECHA", fecha: fechaBuscar});
+				var fechaInhabil = DiasInhabiles.findOne({tipo: "FECHA", fecha: fechaBuscar, estatus: true});
 				if (fechaInhabil != undefined)
-					 return true;	
-	
-				return false;
+				{
+					 ban = true;
+					 return;	
+				}
+				return ban;
 		};
 		
 		////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +97,7 @@ Meteor.methods({
 	  var validaFecha = true;
 	  fechaLimite = moment(mfecha);
 	  while(validaFecha)
-	  {				
+	  {		
 				validaFecha = verificarDiaInhabil(fechaLimite);
 				if (validaFecha == true)
 							fechaLimite = fechaLimite.add(1, 'days');					 
@@ -104,8 +110,6 @@ Meteor.methods({
 				var importeParcial = 0;
 				if (tipoCredito.tipoInteres == "Simple")
 				{
-						
-						//  (((3000*.10)*1.16)*3+3000)/12
 						
 						var suma = 0;
 						if (credito.conSeguro)
@@ -120,6 +124,7 @@ Meteor.methods({
 						var capital = parseFloat((credito.capitalSolicitado / totalPagos).toFixed(2));
 						importeParcial=Math.round(importeParcial * 100) / 100;
 						suma += importeParcial;
+						suma = Math.round(suma * 100) / 100;
 												
 				}
 				else if(tipoCredito.tipoInteres == "Compuesto")
@@ -128,17 +133,17 @@ Meteor.methods({
 						var FV = 0;
 						var pagoFijo = 0;
 						var suma = 0;						
-						FV = 	parseFloat(credito.capitalSolicitado * Math.pow(1 + tasaInteres, totalPagos)).toFixed(2);
-						pagoFijo = parseFloat(FV / totalPagos).toFixed(2);
-						var interes = parseFloat(pagoFijo * tasaInteres).toFixed(2);
-						var capital = parseFloat((pagoFijo - interes) / 1.16).toFixed(2);
-						var iva = parseFloat(capital * 0.16).toFixed(2);
+						FV = 	Number(parseFloat(credito.capitalSolicitado * Math.pow(1 + tasaInteres, totalPagos)).toFixed(2));
+						pagoFijo = Number(parseFloat(FV / totalPagos).toFixed(2));
+						var interes = Number(parseFloat(pagoFijo * tasaInteres).toFixed(2));
+						var capital = Number(parseFloat((pagoFijo - interes) / 1.16).toFixed(2));
+						var iva 		= Number(parseFloat(capital * 0.16).toFixed(2));
 						
 												
 						if (credito.conSeguro)
-								importeParcial = parseFloat(capital) + parseFloat(interes) + parseFloat(iva) + parseFloat(seguro);
+								importeParcial = Number(parseFloat(capital) + parseFloat(interes) + parseFloat(iva) + parseFloat(seguro));
 						else
-								importeParcial = parseFloat(capital) + parseFloat(interes) + parseFloat(iva);
+								importeParcial = Number(parseFloat(capital) + parseFloat(interes) + parseFloat(iva));
 						
 						importeParcial = Math.round(importeParcial * 100) / 100;
 						
@@ -182,11 +187,10 @@ Meteor.methods({
 						anio								: fechaLimite.get('year'),
 						cargo								: importeParcial,	
 						movimiento					: "Recibo",
-						//folio 						:  sucursal.folioCredito + 1,
 					}
 					
 					plan.push(clonar(pago));
-					if(credito.periodoPago == "Semanal"){
+					if (credito.periodoPago == "Semanal"){
 						mfecha = mfecha.add(7, 'days');
 						
 					}
@@ -194,26 +198,18 @@ Meteor.methods({
 						
 						if (semanaQuincena == 1)
 						{
-							 mfecha = moment(mfecha).add(1, 'days');
-							 	
-					 	 	 mfecha = mfecha.date(15);
+					 	 	 mfecha = mfecha.date(16);					 	 	 
 					 	 	 semanaQuincena	= 2;
 					 	} 	 
 					  else if (semanaQuincena == 2)
-					  {
-							   
-						   diaMes = moment(mfecha).daysInMonth();
-							 mfecha = mfecha.date(diaMes);
-							 semanaQuincena = 1;							 
-							 
+					  {  
+						   mfecha = moment(mfecha).add(1, 'M');
+							 mfecha = mfecha.date(1);
+							 semanaQuincena = 1;	 
 					  }
 					}
 					else if(credito.periodoPago == "Mensual"){
 						var siguienteFecha = moment(mfecha).add(1, 'M');
-						
-						var diaMes = moment(siguienteFecha).daysInMonth();
-						siguienteFecha = siguienteFecha.date(diaMes);
-						
 						mfecha = siguienteFecha;
 					}	
 					
@@ -221,6 +217,7 @@ Meteor.methods({
 					fechaLimite = moment(mfecha);
 				  while(validaFecha)
 				  {							
+
 							validaFecha = verificarDiaInhabil(fechaLimite);
 							if (validaFecha == true)
 									fechaLimite = fechaLimite.add(1, 'days');	
@@ -231,9 +228,8 @@ Meteor.methods({
 				var suma = 0;
 
 				_.each(plan, function(pago){
-					//console.log("entra")
 					suma += pago.cargo;
-					pago.sumatoria  = suma
+					pago.sumatoria  = Number(parseFloat(suma).toFixed(2));
 					var array = pago;
 					pago.total = val
 				});
@@ -260,26 +256,28 @@ Meteor.methods({
 						tasaInteres = credito.tasa / 100;
 				}
 
-				pagoFijo = parseFloat(((credito.capitalSolicitado * tasaInteres) * Math.pow(1 + tasaInteres, totalPagos) / (Math.pow(1 + tasaInteres, totalPagos) - 1)).toFixed(2));
-				var saldoInicial = parseFloat(credito.capitalSolicitado).toFixed(2);
-				
+				pagoFijo = Number(parseFloat(((credito.capitalSolicitado * tasaInteres) * Math.pow(1 + tasaInteres, totalPagos) / (Math.pow(1 + tasaInteres, totalPagos) - 1)).toFixed(2)));
+				var saldoInicial = Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+
 				var saldo = 0;
 				
 				for (var i = 0; i < totalPagos; i++) {
 					
 					var interes = saldoInicial * tasaInteres;
-					interes = parseFloat(interes.toFixed(2));
+					interes = Number(parseFloat(interes.toFixed(2)));
 					
 					var iva = interes * 0.16;
-					iva = parseFloat(iva.toFixed(2))
+					iva = Number(parseFloat(iva.toFixed(2)));
 					
-					var capital = pagoFijo - interes;
+					var capital = Number(parseFloat(pagoFijo - interes).toFixed(2));
+					
+					//var importeParcial = 0;
 					
 					if (credito.conSeguro)
-								var importeParcial = parseFloat(pagoFijo) + parseFloat(iva.toFixed(2)) + parseFloat(seguro.toFixed(2));
-						else
-								var importeParcial = parseFloat(pagoFijo) + parseFloat(iva.toFixed(2));
-															
+								var importeParcial = Number(parseFloat(pagoFijo + iva + seguro).toFixed(2));
+					else
+								var importeParcial = Number(parseFloat(pagoFijo + iva).toFixed(2));
+										
 					if (cliente == undefined){
 					 cliente = {}; 
 					 cliente._id = "Prospecto";
@@ -318,22 +316,38 @@ Meteor.methods({
 					}
 					
 					plan.push(clonar(pago));
-					if(credito.periodoPago == "Semanal"){
+					if (credito.periodoPago == "Semanal"){
 						mfecha = mfecha.add(7, 'days');
+						
 					}
 					else if(credito.periodoPago == "Quincenal"){
-						mfecha = mfecha.add(15, 'days');	
+						
+						if (semanaQuincena == 1)
+						{
+					 	 	 mfecha = mfecha.date(16);					 	 	 
+					 	 	 semanaQuincena	= 2;
+					 	} 	 
+					  else if (semanaQuincena == 2)
+					  {  
+						   mfecha = moment(mfecha).add(1, 'M');
+							 mfecha = mfecha.date(1);
+							 semanaQuincena = 1;	 
+					  }
 					}
 					else if(credito.periodoPago == "Mensual"){
-						var siguienteMes = moment(mfecha).add(1, 'M');
-						
-						var finalSiguienteMes = moment(siguienteMes).endOf('month');
-												
-						if(mfecha.date() != siguienteMes.date() && siguienteMes.isSame(finalSiguienteMes.format('YYYY-MM-DD'))) 
-							siguienteMes = siguienteMes.add(1, 'd');
-						
-						mfecha = siguienteMes;
+						var siguienteFecha = moment(mfecha).add(1, 'M');
+						mfecha = siguienteFecha;
 					}	
+					
+					validaFecha = true;
+					fechaLimite = moment(mfecha);
+				  while(validaFecha)
+				  {							
+
+							validaFecha = verificarDiaInhabil(fechaLimite);
+							if (validaFecha == true)
+									fechaLimite = fechaLimite.add(1, 'days');	
+				  }	
 					
 					var capitalPagado = pagoFijo - interes; 
 					saldoInicial = saldoInicial - capitalPagado;
@@ -342,10 +356,9 @@ Meteor.methods({
 				var suma = 0;
 
 				_.each(plan, function(pago){
-					//console.log("entra")
+
 					suma += pago.cargo;
-					suma = parseFloat(suma).toFixed(2);
-					pago.sumatoria  = suma
+					pago.sumatoria = Number(parseFloat(suma).toFixed(2));
 					var array = pago;
 					pago.total = val;
 				});
@@ -397,7 +410,7 @@ Meteor.methods({
 				if (tipoCredito.calculo == "importeSolicitado")
 				{
 						multas = Number(parseFloat(credito.capitalSolicitado * (tipoCredito.importe / 100)).toFixed(2)); 
-						multas = Math.round(multas * 100) / 100;
+						//multas = Math.round(multas * 100) / 100;
 				}
 				else if (tipoCredito.calculo == "importereciboVencido")
 				{
@@ -411,8 +424,8 @@ Meteor.methods({
 						else if (credito.periodoPago == "Mensual")				
 								porcentaje = 8;
 								
-						multas = parseFloat(reciboVencido.cargo * (porcentaje / 100)).toFixed(2); 
-						multas= Math.round(multas * 100) / 100;
+						multas = Number(parseFloat(reciboVencido.cargo * (porcentaje / 100)).toFixed(2)); 
+						//multas= Math.round(multas * 100) / 100;
 											
 				}	
 				else if (tipoCredito.calculo == "saldoreciboVencido")
@@ -428,19 +441,18 @@ Meteor.methods({
 						else if (credito.periodoPago == "Mensual")				
 								porcentaje = 8;
 								
-						multas = parseFloat(reciboVencido.importeRegular * (porcentaje / 100)).toFixed(2); 
-						multas = Math.round(multas * 100) / 100;
+						multas = Number(parseFloat(reciboVencido.importeRegular * (porcentaje / 100)).toFixed(2)); 
+						//multas = Math.round(multas * 100) / 100;
 						
 				}	
 								
 				//console.log("Act Multas:", multas);
 				//console.log("Antes", pago.importeRegular);
 				
-				pago.importeRegular = parseFloat(pago.importeRegular) + parseFloat(multas);
-				pago.cargo = parseFloat(pago.cargo) + parseFloat(multas);
+				pago.importeRegular = Number(parseFloat(pago.importeRegular + multas).toFixed(2));
+				pago.cargo = Number(parseFloat(pago.cargo + multas).toFixed(2));
 				
-				credito.saldoMultas = parseFloat(credito.saldoMultas) + parseFloat(multas);;
-				//credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
+				credito.saldoMultas = Number(parseFloat(credito.saldoMultas + multas));
 				Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 				
 												
@@ -496,8 +508,8 @@ Meteor.methods({
 							
 						if (tipoCredito.calculo == "importeSolicitado")
 						{
-								multas = parseFloat(credito.capitalSolicitado * (tipoCredito.importe / 100)).toFixed(2); 
-								multas = Math.round(multas * 100) / 100;
+								multas = Number(parseFloat(credito.capitalSolicitado * (tipoCredito.importe / 100)).toFixed(2)); 
+								//multas = Math.round(multas * 100) / 100;
 										
 						}
 						else if (tipoCredito.calculo == "importereciboVencido")
@@ -512,8 +524,8 @@ Meteor.methods({
 								else if (credito.periodoPago == "Mensual")				
 										porcentaje = 8;
 										
-								multas = parseFloat(reciboVencido.cargo * (porcentaje / 100)).toFixed(2); 
-								multas=Math.round(multas * 100) / 100;
+								multas = Number(parseFloat(reciboVencido.cargo * (porcentaje / 100)).toFixed(2)); 
+								//multas = Math.round(multas * 100) / 100;
 							
 						}	
 						else if (tipoCredito.calculo == "saldoreciboVencido")
@@ -529,8 +541,8 @@ Meteor.methods({
 								else if (credito.periodoPago == "Mensual")				
 										porcentaje = 8;
 										
-								multas = parseFloat(reciboVencido.importeRegular * (porcentaje / 100)).toFixed(2); 
-								multas = Math.round(multas * 100) / 100;
+								multas = Number(parseFloat(reciboVencido.importeRegular * (porcentaje / 100)).toFixed(2)); 
+								//multas = Math.round(multas * 100) / 100;
 								
 						}
 						
@@ -679,7 +691,7 @@ Meteor.methods({
 				if(p.importeRegular <= pagosId[p._id])
 				{
 					//console.log("Total",p._id,p.descripcion, p.importeRegular)
-					if(p.descripcion=="Cargo Moratorio" && p.multa == 1)
+					if (p.descripcion == "Cargo Moratorio" && p.multa == 1)
 						 p.estatus = 1;
 					else if(p.multada == 1)
 					{
@@ -706,30 +718,26 @@ Meteor.methods({
 					}
 					
 					abono -= p.importeRegular;
-					abono = parseFloat(abono).toFixed(2);
-					abono = Math.round(abono * 100) / 100;
+					abono = Number(parseFloat(abono).toFixed(2));
+					//abono = Math.round(abono * 100) / 100;
 
 					//Decrementar el pago en el Saldo Actual Pago total
 					if (p.descripcion == "Recibo")
 					{
 							var credito = Creditos.findOne(p.credito_id);
-							credito.saldoActual -= p.importeRegular;
-							credito.saldoActual = parseFloat(credito.saldoActual).toFixed(2);
-							credito.saldoActual=Math.round(credito.saldoActual * 100) / 100;
+							credito.saldoActual -= Number(parseFloat(p.importeRegular).toFixed(2));
 							Creditos.update({_id:credito._id},{$set:{saldoActual:credito.saldoActual}})
 					}
 					else //Cargo Moratorio
 					{
 							var credito = Creditos.findOne(p.credito_id);
-							credito.saldoMultas -= p.importeRegular;
-							credito.saldoMultas = parseFloat(credito.saldoMultas).toFixed(2);
-							credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
+							credito.saldoMultas -= Number(parseFloat(p.importeRegular).toFixed(2));
 							Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 					}
 
 					ttpago = p.importeRegular;
-					p.pago += p.importeRegular;
-					p.pago = Math.round(p.pago * 100) / 100;
+					p.pago += Number(parseFloat(p.importeRegular).toFixed(2));
+					//p.pago = Math.round(p.pago * 100) / 100;
 					p.importeRegular = 0;
 					
 				}	
@@ -747,12 +755,12 @@ Meteor.methods({
 					abono  = pagosId[p._id];
 															
 					p.importeRegular = p.importeRegular - abono;
-					p.importeRegular = parseFloat(p.importeRegular).toFixed(2);
-					p.importeRegular = Math.round(p.importeRegular * 100) / 100;
+					p.importeRegular = Number(parseFloat(p.importeRegular).toFixed(2));
+					//p.importeRegular = Math.round(p.importeRegular * 100) / 100;
 	
 					p.pago += abono;
-					p.pago = parseFloat(p.pago).toFixed(2);
-					p.pago = Math.round(p.pago * 100) / 100;
+					p.pago = Number(parseFloat(p.pago).toFixed(2));
+					//p.pago = Math.round(p.pago * 100) / 100;
 					
 					//Decrementar el pago en el Saldo Actual Pago Parcial
 					if (p.descripcion == "Recibo")
@@ -773,8 +781,6 @@ Meteor.methods({
 					}
 					
 					p.estatus = 2;
-					
-					//console.log("P.: ", p);
 					
 					//Seguro					
 					if (abono > 0 && residuos.pagoSeguro > abono){

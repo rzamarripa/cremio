@@ -37,9 +37,7 @@ angular.module("creditoMio")
 			if (objeto.tipo == "FECHA")
 			{
 					var f = new Date(objeto.fecha);
-					console.log(f);
 					objeto.fecha = f;
-					console.log(objeto.fecha);
 			}
 				
 			
@@ -91,15 +89,16 @@ angular.module("creditoMio")
   
   this.getDia = function(numeroDia)
 	{
+			if (numeroDia == undefined) return;
 			var nombreDia = "";
 			switch(numeroDia){
-				case	1: nombreDia = "LUNES";		 break;
-				case	2: nombreDia = "MARTES";	 break;
-				case	3: nombreDia = "MIÉRCOLES";break;
-				case	4: nombreDia = "JUEVES";	 break;
-				case	5: nombreDia = "VIERNES";	 break;
-				case	6: nombreDia = "SÁBADO";	 break;
-				case	7: nombreDia = "DOMINGO";	 break;
+				case	"1": nombreDia = "LUNES";		 break;
+				case	"2": nombreDia = "MARTES";	 break;
+				case	"3": nombreDia = "MIÉRCOLES";break;
+				case	"4": nombreDia = "JUEVES";	 break;
+				case	"5": nombreDia = "VIERNES";	 break;
+				case	"6": nombreDia = "SÁBADO";	 break;
+				case	"7": nombreDia = "DOMINGO";	 break;
 				
 			}
 			return nombreDia;

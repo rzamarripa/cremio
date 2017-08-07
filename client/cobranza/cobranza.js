@@ -9,6 +9,7 @@ angular.module("creditoMio")
   this.fechaInicial.setHours(0,0,0,0);
   this.fechaFinal = new Date();
   this.fechaFinal.setHours(23,0,0,0);
+  
   rc.buscar = {};
   rc.buscar.nombre = "";
   rc.credito_id = "";
@@ -20,7 +21,6 @@ angular.module("creditoMio")
   rc.credito = {};
   rc.historialCrediticio = {};
   rc.cobranza = {};
-  
 
   rc.avales = [];
   rc.referenciasPersonales = [];
@@ -53,9 +53,11 @@ angular.module("creditoMio")
   this.subscribe("tiposCredito", ()=>{
     return [{}]
   });
+  
   this.subscribe("estadoCivil", ()=>{
     return [{estatus : true}]
   });
+  
   this.subscribe("nacionalidades", ()=>{
     return [{}]
   });
@@ -81,27 +83,25 @@ angular.module("creditoMio")
     return [{}]
   });   
 
-    this.subscribe('notas',()=>{
+  this.subscribe('notas',()=>{
     return [{cliente_id:this.getReactively("cliente_id"),}]
   });
 
-   this.subscribe("planPagos", ()=>{
+  this.subscribe("planPagos", ()=>{
     return [{credito_id : this.getReactively("credito_id") }]
   });
 
     this.subscribe('personas', () => {
     return [{ }];
   });
-  //  this.subscribe('clientes', () => {
-  //  return [{_id : {$in : this.getReactively("clientes_id")}}];
-  // });
-    this.subscribe('creditos', () => {
+  this.subscribe('creditos', () => {
     return [{cliente_id : rc.getReactively("cliente_id")}];
   });
 
-    this.subscribe('pagos', () => {
+  this.subscribe('pagos', () => {
     return [{ }];
-  });  this.subscribe('sucursales', () => {
+  });  
+  this.subscribe('sucursales', () => {
     return [{ }];
   });
 
@@ -449,10 +449,12 @@ angular.module("creditoMio")
   
   this.selCredito=function(objeto, num)
   {
-    	//console.log(objeto,"objeto")
-
+			
+			//objeto.classPago = "text-primary";
+			//console.log(objeto);
+			
       rc.cliente_id = objeto.cliente._id
-      //console.log(rc.cliente_id)
+
       Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
 
       objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
@@ -581,13 +583,13 @@ angular.module("creditoMio")
       //-----------------------------------------------------------------------------
       
       
-      this.selected_numero=num;
+      this.selected_numero = num;
   };
 
    this.selCredito2=function(objeto)
   {
 
-        //objeto.fechaEntrega = new Date();
+      //objeto.fechaEntrega = new Date();
       rc.cliente_id = objeto.cliente._id
       //console.log(rc.cliente_id)
       Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
@@ -600,9 +602,20 @@ angular.module("creditoMio")
     }
   
   this.isSelected=function(objeto){
-
+		
+		
+		
+		if (this.selected_numero === objeto)
+		{
+				console.log("isSelected:", objeto); 	
+				console.log(objeto);
+		}
+		
+		
     this.sumarSeleccionados();
       return this.selected_numero===objeto;
+      
+    
 
   };
   

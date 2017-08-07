@@ -198,8 +198,14 @@
 					</div>
 						<div class="col-sm-4">
 							<label for="id_label_single" >Ocupaciones *</label>
-                			 <select  ng-options="ocupacion._id as ocupacion.nombre for ocupacion in cli.ocupaciones" 
-             				ng-model="cli.objeto.profile.ocupacion_id" class="js-example-basic-single js-states form-control" placeholder="Seleccione" ng-change="cli.getOcupaciones(cli.ocupacionSeleccionado._id)" style="width: 300px;" ></select>
+                		<select ng-options="ocupacion._id as ocupacion.nombre for ocupacion in cli.ocupaciones" 
+             								ng-model="cli.objeto.profile.ocupacion_id" 
+	             							class="js-example-basic-single js-states form-control" 
+		             						placeholder="Seleccione" 
+			             					ng-change="cli.getOcupaciones(cli.ocupacionSeleccionado._id)" 
+				             				style="width: 300px;" >
+					             	
+				            </select>
 
 						</div>
 					<div class="col-sm-4">
@@ -253,7 +259,11 @@
 					</div>	
 					<div class="col-sm-4" valida>
 						<label for="seccion_id">Colonia *</label>
-						<select name="dirColonia" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.colonia_id" required>
+						<select name="dirColonia" 
+										class="js-example-basic-single js-states form-control" 
+										placeholder="Seleccione" 
+										ng-model="cli.objeto.profile.colonia_id" 
+										ng-change="cli.getColonia(cli.ocupacionSeleccionado._id)"	required>
 							<option ng-repeat="colonia in cli.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
 						</select>
 					</div>
