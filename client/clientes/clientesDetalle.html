@@ -784,7 +784,7 @@
 						
 						<header role="heading">
 							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-							<h2>Notas de credito</h2>
+							<h2>Notas de Crédito</h2>
 							<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
 			
 						<!-- widget div-->
@@ -801,7 +801,8 @@
 																<th class="text-center" width="20%">Tipo de Nota de Crédito</th>
 																<th class="text-center" width="20%">Causa</th>
 																<th class="text-center" width="20%">Tiene Vigencia</th>
-																<th class="text-center" width="20%">Fecha</th>
+																<th class="text-center" width="20%">Fecha Creación</th>
+																<th class="text-center" width="20%">Fecha Vigencia</th>
 																<th class="text-center" width="15%">Monto</th>
 																<th class="text-center" width="15%">Estatus</th>
 																
@@ -816,6 +817,7 @@
 																<td>{{nota.causa}}</td>
 																<td>{{nota.tieneVigencia}}</td>
 																<td>{{nota.createdAt | date:'dd/MM/yyyy'}}</td>
+																<td>{{nota.vigencia | date:'dd/MM/yyyy'}}</td>
 																<td>{{nota.saldo | currency}}</td>
 																<td>{{nota.estatus==1? 'Vigente': nota.estatus==0? 'Cancelada':'Vigente'}}</td>
 															</tr>

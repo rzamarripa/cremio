@@ -606,14 +606,12 @@ Meteor.methods({
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 		var puser = Meteor.users.findOne(pusuario_id);
 		var tingreso = TiposIngreso.findOne(tipoIngresoId);
-		if(!tingreso || !puser || !puser.profile || (tingreso.nombre =="Nota de Credito" && puser.profile.notasCredito.saldo<totalPago))
+		
+		if(!tingreso || !puser || !puser.profile)
 			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
-				
+		
 		if (tingreso.nombre == "Nota de Credito"){
-			//console.log (1)
 			var resmc = Meteor.call("actualizarNotaDeCredito",pusuario_id, totalPago);
-			//console.log(resmc)
-			//console.log (2)
 		}
 		
 		var cajaid = Meteor.user().profile.caja_id;

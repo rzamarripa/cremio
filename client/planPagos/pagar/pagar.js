@@ -625,7 +625,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 
 		    Meteor.call("pagoParcialCredito", seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id, $stateParams.objeto_id, function(error, success) {
 		      if (!success) {
-		        toastr.error('Error al guardar.');
+			      
+		        toastr.error('Error al guardar.', success);
 		        return;
 		      }
 		      toastr.success('Guardado correctamente.');
@@ -760,14 +761,22 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 	{
 
 			var ti = TiposIngreso.findOne(tipoIngreso);
-			var nc = NotasCredito.findOne({cliente_id: $stateParams.objeto_id, saldo : {$gt: 0}, estatus : 1});
-
-			if (ti.nombre == "Nota de Credito" && nc != undefined)
+		
+			
+			
+			console.log(nc);
+			
+			if (ti.nombre == "Nota de Credito")
 			{
-					this.pago.pagar = nc.saldo;
 					var p = document.getElementById('cobro');
 					p.disabled = true;
 					
+					var nc = NotasCredito.findOne({cliente_id: $stateParams.objeto_id, saldo : {$gt: 0}, estatus : 1});
+					if (nc != undefined)
+					{
+							console.log(nc.saldo);
+							this.pago.pagar = Number(parseFloat(nc.saldo).toFixed(2));		
+					}					
 			}
 			else
 			{

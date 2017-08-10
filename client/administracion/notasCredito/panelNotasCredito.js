@@ -23,7 +23,7 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 					  		Meteor.call('getUsuario', nc.cliente_id, function(error, result) {           
 					          if (result)
 					          {
-						          	//console.log(result);
+						          	console.log(result);
 						          	nc.nombreCliente = result.nombreCompleto;
 						          	nc.numeroCliente = result.numeroCliente;
 						          	$scope.$apply();

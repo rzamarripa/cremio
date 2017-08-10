@@ -389,7 +389,7 @@ if (referenciaPersonal.buscarPersona_id)
 		Accounts.setPassword(user._id, usuario.password, {logout: false});		
 	},
 	getUsuario: function (usuario) {	
-	  var user = Meteor.users.findOne({"_id" : usuario}, {fields: {"profile.nombreCompleto":1}});
+	  var user = Meteor.users.findOne({"_id" : usuario}, {fields: {"profile.nombreCompleto":1, "profile.numeroCliente": 1 }});
 	  
 		return user.profile;
 	},

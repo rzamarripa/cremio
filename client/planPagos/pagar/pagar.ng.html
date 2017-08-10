@@ -12,7 +12,7 @@
 							<div class="col-sm-12">
 								<div class="row">
 								<a style="margin: 5px;" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ui-sref="root.clienteDetalle({objeto_id : pvpp.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;						
-									<div class="col-sm-2">
+									<div class="col-sm-8">
 										<h1>{{pvpp.objeto.profile.nombre}} <span class="semi-bold">{{pvpp.objeto.profile.apellidoPaterno}} {{pvpp.objeto.profile.apellidoMaterno}}</span>
 										<small> (Cliente)</small></h1>
 										<h5>{{pvpp.objeto.profile.numeroCliente}}</h5>
@@ -616,13 +616,13 @@
 									  	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 													<ul id="sparks" class="">
 														<li class="sparks-info">
-															<h5> Subtotal <span class="txt-color-green" style="text-align: right">{{pvpp.subtotal | currency}}</span></h5>
+															<h5 style="text-align: center"> Subtotal <span class="txt-color-green" style="text-align: right">{{pvpp.subtotal | currency}}</span></h5>
 														</li>	
 														<li class="sparks-info">
-															<h5> Total Cargos Moratorios <span class="txt-color-red" style="text-align: right">{{pvpp.cargosMoratorios | currency}}</span></h5>
+															<h5 style="text-align: center"> Total Cargos Moratorios <span class="txt-color-red" style="text-align: right">{{pvpp.cargosMoratorios | currency}}</span></h5>
 														</li>	
 														<li class="sparks-info">
-															<h5> Total <span class="txt-color-green" style="text-align: right">{{pvpp.total | currency}}</span></h5>
+															<h5 style="text-align: center"> Total <span class="txt-color-green" style="text-align: right">{{pvpp.total | currency}}</span></h5>
 														</li>	
 													</ul>
 											</div>									  	
