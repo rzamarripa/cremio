@@ -16,7 +16,6 @@ angular.module("creditoMio")
 	rc.cliente._id = "" ;
 	//this.credito.primerAbono = new Date();
 	
-	
 	this.subscribe('tiposIngreso',()=>{
 		return [{
 			estatus : true
@@ -49,8 +48,8 @@ angular.module("creditoMio")
 			});
 			return tipos;
 		},
-		caja : () => {
-			return Cajas.findOne(Meteor.user() != undefined ? Meteor.user().profile.caja_id : "")
+		caja : () => {			
+			return Cajas.findOne(Meteor.user() != undefined ? Meteor.user().profile.caja_id : "");
 		},
 		cuentas : () => {
 			var cuentas = Cuentas.find().fetch();
@@ -100,23 +99,8 @@ angular.module("creditoMio")
 							var startDate = moment([anio, mes]);
 							var endDate = moment(startDate).endOf('month');
 					    fecha = endDate.toDate();
-					    //FF = endDate.toDate();
-					    fecha.setHours(0,0,0,0);					    
-					    
-					    //console.log(fecha);
-					    
+					    fecha.setHours(0,0,0,0);					    					    
 					    this.objeto.primerAbono = fecha;
-					    //this.getReactively("objeto.primerAbono");
-/*
-							if(!$scope.$$phase) {
-						 		//$digest or $apply
-						 		rc.credito.primerAbono = fecha;
-						 		$scope.$apply();		
-							}
-*/
-							
-							//console.log("Control:",this.objeto.primerAbono);
-							
 					}		
 				 
 					

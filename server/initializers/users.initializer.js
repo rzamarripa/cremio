@@ -24,7 +24,7 @@ Meteor.startup(function () {
 
   var cron = new Meteor.Cron( {
     events:{
-      "0 1 * * *"  : multas
+      "*/1 * * * *"  : multas
     }
   });
   

@@ -2,19 +2,27 @@ angular.module("creditoMio")
 .controller("TiposIngresoCtrl", TiposIngresoCtrl);
  function TiposIngresoCtrl($scope, $meteor, $reactive, $state, toastr){
  	
- 	$reactive(this).attach($scope);
+ 	let rc = $reactive(this).attach($scope);
+
 	this.action = true;
 	this.nuevo = true;	 
 	this.objeto = {}; 
 	
 	this.subscribe('tiposIngreso',()=>{
 		return [{}]
-	 });
+	});
+	
+	this.subscribe('cajas',()=>{
+		return [{estatus : true}]
+	}); 
 	 
 	this.helpers({
 		tiposIngreso : () => {
 			return TiposIngreso.find();
-		}
+		},
+		cajas : () => {
+			return Cajas.find();
+		},
 	}); 
 	
 	this.Nuevo = function()
@@ -30,16 +38,29 @@ angular.module("creditoMio")
 			toastr.error('Error al guardar los datos.');
 			return;
 		}
-		console.log(objeto);
-		objeto.estatus = true;
-		objeto.usuarioInserto = Meteor.userId();
-		TiposIngreso.insert(objeto);
-		toastr.success('Guardado correctamente.');
-		this.objeto = {}; 
-		$('.collapse').collapse('hide');
-		this.nuevo = true;
-		form.$setPristine();
-		form.$setUntouched();
+		
+		//Validación para que no agrege tipos de Ingreso si existe una caja abierta
+		var ban = false;
+		_.each(rc.cajas, function(caja){
+				if (caja.estadoCaja == "Abierta")
+				{
+						toastr.warning('La ventanilla ' + caja.nombre + ' esta abierta es necesario cerrarla entes de crear un tipo de ingreso');		
+						ban = true;	
+						return;
+				}
+		});
+		if (!ban)
+		{		
+				objeto.estatus = true;
+				objeto.usuarioInserto = Meteor.userId();
+				TiposIngreso.insert(objeto);
+				toastr.success('Guardado correctamente.');
+				this.objeto = {}; 
+				$('.collapse').collapse('hide');
+				this.nuevo = true;
+				form.$setPristine();
+				form.$setUntouched();
+		}		
 		
 	};
 
