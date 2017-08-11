@@ -301,11 +301,8 @@ angular.module("creditoMio")
 	      	objeto.password = Math.random().toString(36).substring(2,7);		
 	      	console.log(objeto.password);			
       }	
-			//console.log(objeto);
-      
       objeto.profile.estatus = true;
-      //rc.documentos
-      objeto.profile.documentos = rc.documents
+      objeto.profile.documentos = rc.documents;
       objeto.profile.foto = rc.pic;
       objeto.profile.usuarioInserto = Meteor.userId();
       objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;

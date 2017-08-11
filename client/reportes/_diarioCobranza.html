@@ -67,7 +67,7 @@
 				</tr>
 			</thead>
 			<tbody style="font-size: small">
-		    <tr ng-repeat="objeto in re.planPagos">
+		    <tr ng-repeat="objeto in re.planPagos" ng-show="objeto.mostrar">
 		    	<td>{{$index + 1}}</td>
 			    <td><div class="text-center">{{objeto.fechaPago  | date:"dd-MM-yyyy"}}</div></td>
 			    <td><div class="text-center">{{objeto.folio}}</div></td>

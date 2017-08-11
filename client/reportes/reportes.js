@@ -392,16 +392,23 @@ _.each(creditos,function(credit){
 				if  (result)
 				{
 						rc.planPagos = result;
+						
 						_.each(rc.planPagos, function(plan){
-							if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
-							rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
-							if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
-							rc.sumaSeguro += Number(parseFloat(plan.pagoSeguro).toFixed(2));
-							if (plan.pagoIva == undefined) plan.pagoIva = 0;
-							rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
-							if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
-							rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
+							
+							if (plan.tipoCuenta == "Consignia")
+							{							
+								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
+								rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
+								if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
+								rc.sumaSeguro += Number(parseFloat(plan.pagoSeguro).toFixed(2));
+								if (plan.pagoIva == undefined) plan.pagoIva = 0;
+								rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
+								if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
+								rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
+							}
+								
 						});
+						
 						rc.totalCobranza = rc.sumaCapital + rc.sumaInteres + rc.sumaIva + rc.sumaSeguro;
 						$scope.$apply();
 				}
@@ -479,7 +486,8 @@ _.each(creditos,function(credit){
 	};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-  this.selCredito=function(objeto)
+  /*
+this.selCredito=function(objeto)
   {
 
 	  	this.ban = !this.ban;
@@ -625,6 +633,7 @@ _.each(creditos,function(credit){
 			this.sumarSeleccionados();
 					
 	};
+*/
 	
 	this.sumarSeleccionados = function()
 	{
@@ -641,7 +650,8 @@ _.each(creditos,function(credit){
 	};
 
 	var fecha = moment();
-	this.guardarNotaCobranza=function(nota){
+	/*
+this.guardarNotaCobranza=function(nota){
 			console.log(nota);			
 			nota.estatus = true;
 			nota.fecha = new Date()
@@ -723,6 +733,7 @@ _.each(creditos,function(credit){
 			toastr.success('Guardado correctamente.');
 	}
 	
+*/
 	this.download = function(objeto) 
   {
 		//console.log("entro:", objeto);

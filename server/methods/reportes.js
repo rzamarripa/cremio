@@ -14,11 +14,18 @@ Meteor.methods({
 							var pp = PlanPagos.findOne(plan.planPago_id);
 							var credito = Creditos.findOne(pp.credito_id);
 							var tipoIngreso = TiposIngreso.findOne(cd.tipoIngreso_id);
-														 
+							var cuenta = Cuentas.findOne({tipoIngreso_id: cd.tipoIngreso_id});
+							
 							plan.folio = credito.folio;
 							plan.numeroPago = pp.numeroPago;
 							plan.numeroPagos = credito.numeroPagos;
 							plan.tipoIngreso = tipoIngreso.nombre;
+							plan.tipoCuenta = cuenta.tipoCuenta;
+							
+							if (plan.tipoCuenta == "Consignia")
+								plan.mostrar = true;
+							else
+								plan.mostrar = false;	 
 							
 							var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
 	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
