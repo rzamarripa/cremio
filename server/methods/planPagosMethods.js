@@ -684,19 +684,25 @@ Meteor.methods({
 				p.pagoIva 		= p.pagoIva? 		 	p.pagoIva			:0;
 				p.pagoCapital = p.pagoCapital? 	p.pagoCapital	:0;
 				p.pagoSeguro 	= p.pagoSeguro? 	p.pagoSeguro	:0; 
-				
-				
+								
 				if(p.importeRegular <= pagosId[p._id])
 				{
+					
 					//console.log("Total",p._id,p.descripcion, p.importeRegular)
+					
+					residuos.pagoSeguro 	= Number((parseFloat(p.seguro).toFixed(2) - parseFloat(p.pagoSeguro).toFixed(2)).toFixed(2));
+				  residuos.pagoInteres  = Number((parseFloat(p.interes).toFixed(2) -parseFloat(p.pagoInteres).toFixed(2)).toFixed(2));
+				  residuos.pagoIva 		  = Number((parseFloat(p.iva).toFixed(2) - parseFloat(p.pagoIva).toFixed(2)).toFixed(2));
+				  residuos.pagoCapital  = Number((parseFloat(p.capital).toFixed(2) - parseFloat(p.pagoCapital).toFixed(2)).toFixed(2));
+					
 					if (p.descripcion == "Cargo Moratorio" && p.multa == 1)
 						 p.estatus = 1;
 					else if(p.multada == 1)
 					{
 						var multa = PlanPagos.findOne(p.multa_id);
 						//console.log(multa);
-						residuos.pagoInteres = p.interes - p.pagoInteres;
-						residuos.pagoIva = p.pagoIva -p.pagoIva;
+						//residuos.pagoInteres = p.interes - p.pagoInteres;
+						//residuos.pagoIva = p.pagoIva -p.pagoIva;
 						multa.multa = 1;
 						p.estatus = 1;
 						if (multa.importeRegular == 0)
@@ -709,10 +715,16 @@ Meteor.methods({
 					
 					if (p.descripcion == "Recibo"){
 						 p.estatus 					  = 1;
-						 abonos.pagoSeguro 	  = p.seguro;
-						 abonos.pagoInteres 	= p.interes;
-						 abonos.pagoIva 			= p.iva;
-						 abonos.pagoCapital 	= p.capital;
+						 abonos.pagoSeguro 	  = residuos.pagoSeguro;
+						 abonos.pagoInteres 	= residuos.pagoInteres;
+						 abonos.pagoIva 			= residuos.pagoIva;
+						 abonos.pagoCapital 	= residuos.pagoCapital;
+						 
+						 p.pagoSeguro 				= p.seguro;
+						 p.pagoInteres 				= p.interes;
+						 p.pagoIva 						= p.iva;
+						 p.pagoCapital 				= p.capital;
+						 	 
 					}
 					
 					abono -= p.importeRegular;
@@ -871,7 +883,7 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 				semanaPago 						= mfecha.isoWeek();
 				diaPago								= mfecha.weekday();
 
-				var npp={ pago_id		 	: pago_id,
+				var npp = { pago_id		 	: pago_id,
 									totalPago	 	: ttpago,
 									estatus		 	: p.estatus,
 									fechaPago  	: pago.fechaPago, 

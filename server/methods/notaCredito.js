@@ -20,7 +20,6 @@ Meteor.methods({
 			importe 			: Number(parseFloat(nota.monto).toFixed(2)),
 			saldo 				: Number(parseFloat(nota.monto).toFixed(2)),
 			causa					: nota.causa,
-			tieneVigencia : nota.tieneVigencia,
 			aplica				:	nota.aplicaA,
 			estatus 		  : 1,
 			cliente_id 	  : user_id,
@@ -40,10 +39,11 @@ Meteor.methods({
 			};
 		}
 
+/*
 		nuser.profile.notasCredito.saldo += Number(parseFloat(nota.monto).toFixed(2));
 		nuser.profile.notasCredito.referencias.push(nota_id);
-
 		Meteor.users.update({_id:user_id},{$set:{'profile':nuser.profile}})
+*/
 
 		return "200";
 	},
@@ -60,28 +60,36 @@ Meteor.methods({
 		if(!nuser || monto < 1 )
 			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
 
+/*
 		nuser.profile.notasCredito.saldo -= Number(parseFloat(monto).toFixed(2));
 		nuser.profile.notasCredito.saldo = Number(parseFloat(nuser.profile.notasCredito.saldo).toFixed(2));
+*/
 		
 		Meteor.users.update({_id:user_id},{$set:{'profile':nuser.profile}})
 
 		var notas =  NotasCredito.find({cliente_id : user_id, saldo : {$gt: 0},estatus : 1}, {limit: 1},{sort:{createdAt:-1}}).fetch();
-		//console.log(notas)
+
+		
 		_.each(notas,function(nota){
 			if(monto > 0){
 				if(nota.saldo < monto){
 					monto -= Number(parseFloat(nota.saldo).toFixed(2));
 					monto = Number(parseFloat(monto).toFixed(2));
 					nota.saldo = 0;
-					NotasCredito.update({_id:nota._id},{$set:{saldo:0}});
+
+					nota.estatus = 3;
+					NotasCredito.update({_id:nota._id},{$set:{saldo:0, estatus : nota.estatus}});
 				}
-				else{
+				else{					
 					
 					nota.saldo -= Number(parseFloat(monto).toFixed(2));
 					nota.saldo = Number(parseFloat(nota.saldo).toFixed(2));
-	
 					monto = 0;
-					NotasCredito.update({_id:nota._id},{$set:{saldo:nota.saldo}});
+					
+					if (nota.saldo == 0)
+						 nota.estatus = 3;
+						 
+					NotasCredito.update({_id:nota._id},{$set: { saldo:nota.saldo, estatus : nota.estatus}});
 				}
 			}
 		});
@@ -90,7 +98,7 @@ Meteor.methods({
 	deprecarNotasDeCredito : function(){
 		var fecha = new Date();
 		fecha = new Date(fecha.getFullYear(),fecha.getMonth(),fecha.getDate(),0,0,0,0);
-		var notas =  NotasCredito.find({estatus:1,vigencia:{$lt:fecha}}).fetch();
+		var notas =  NotasCredito.find({estatus:1, vigencia:{$lt:fecha}, saldo : {$gt: 0}}).fetch();
 		
 		//console.log(notas);
 		_.each(notas,function(nota){

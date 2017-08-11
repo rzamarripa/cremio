@@ -89,7 +89,6 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		tiposCredito : () => {
 			return TiposCredito.find();
 		},
-
 		pagos : () => {
 			return Pagos.find();
 		},

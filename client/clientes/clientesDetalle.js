@@ -145,6 +145,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 		creditos : () => {
 			var creditos = Creditos.find({estatus:4}).fetch();
+			
 			_.each(creditos, function(credito){
 				if (credito.saldoMultas == 0) {
 					rc.puedeSolicitar = true
@@ -155,9 +156,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					rc.puedeSolicitar = false
 				}
 				
-				//console.log(rc.puedeSolicitar)
 				credito.tieneAvales = false;
-				//recorre los avales
+				
 				_.each(credito.avales_ids, function(aval){
 						credito.tieneAvales = true;
 						Meteor.apply('getAval', [aval.aval_id], function(error, result){
@@ -226,7 +226,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return nota[nota.length - 1];
 		
 		},
-			notaCuenta1: () => {
+		notaCuenta1: () => {
 			var nota = Notas.find({tipo : "Cuenta"}).fetch()
 			_.each(nota, function(notita){
 				if (notita.estatus == true && notita.cliente_id == rc.objeto._id) {
@@ -384,9 +384,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				_.each(rc.getReactively("creditos"), function(credito){
 					credito.planPagos = [];
 					credito.pagados = 0;
-					credito.abonados = 0;
-					credito.condonado = 0;
-					credito.tiempoPago = 0;
+					credito.pagadosCargoM = 0;
+					credito.sumaPagosRecibos = 0;
+					credito.sumaCargoMoratorios = 0;
+					credito.sumaPendientesCargoM = 0;
+					credito.tieneCargoMoratorio = false;
+					
 					credito.pagos = 0;
 
 					_.each(planPagos, function(pago){
@@ -396,52 +399,50 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						if(pago.descripcion=="Recibo"){
 							credito.pagos +=pago.pago;
 						}
+						
 						if(credito._id == pago.credito_id){
+							
+							
 							pago.numeroPagos = credito.numeroPagos;
+							
 							credito.planPagos.push(pago);
-							if(pago.estatus == 0){
-								credito.pendientes++;
-							}else if(pago.estatus == 1){
-								credito.pagados++;
-							}else if(pago.estatus == 2){
-								credito.abonado++;
-							}else if(pago.estatus == 3){
-								credito.condonado++;
+							if (pago.descripcion == "Recibo")
+							{
+								if (pago.importeRegular == 0)
+								{
+									  credito.pagados++;
+									  credito.sumaPagosRecibos += pago.cargo;
+								}
 							}
 							
-							if(pago.multada == 1){
-								credito.tiempoPago++;
+							if (pago.descripcion == "Cargo Moratorio")
+							{
+								credito.tieneCargoMoratorio = true;	
+								if (pago.importeRegular == 0)
+								{
+									  credito.pagadosCargoM++;
+									  credito.sumaPendientesCargoM += pago.cargo;
+								}
+								 
+								 credito.sumaCargoMoratorios += pago.cargo;
 							}
+								
 						}
-						
-						if (pago.pagoSeguro !=  undefined)
-							 pago.seguro = pago.seguro -  pago.pagoSeguro;
-						
-						if (pago.pagoIva !=  undefined)
-							 pago.iva = pago.iva -  pago.pagoIva;
-							 
-						if (pago.pagoInteres !=  undefined)
-							 pago.interes = pago.interes -  pago.pagoInteres;
-							 
-						if (pago.pagoCapital !=  undefined)
-							 pago.capital = pago.capital -  pago.pagoCapital;	
 						
 					})
 				})
 			}
 
 			_.each(rc.empresas, function(empresa){
-				//console.log("akakakakkakkakkaakakaak")
+
 					empresa.ciudad = Ciudades.findOne(empresa.ciudad_id)
 					empresa.colonia = Colonias.findOne(empresa.colonia_id)
 					empresa.estado = Estados.findOne(empresa.estado_id)
 					empresa.municipio = Municipios.findOne(empresa.municipio_id)
 					empresa.pais = Paises.findOne(empresa.pais_id)
 
-				//	console.log(empresa,"empresaaaaaaaaaa")
 
-
-				});
+			});
 			return planPagos
 		},
 	
@@ -452,7 +453,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
 			//rc.creditos_id = _.pluck(planes, "cliente_id");
-			//console.log("kaka",planes)
 
 			return planes
 
@@ -571,16 +571,16 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return arreglo;
 		},
 
-		   imagenesDocs : () => {
-		   	var imagen = rc.imagenes
-		   	_.each(rc.getReactively("imagenes"),function(imagen){
-		   		imagen.archivo = rc.objeto.profile.foto
+    imagenesDocs : () => {
+   	var imagen = rc.imagenes
+   	_.each(rc.getReactively("imagenes"),function(imagen){
+   		imagen.archivo = rc.objeto.profile.foto
 
-		   	});
+   	});
 
 
-		  		return imagen
-	  		},
+  		return imagen
+		},
 				
 	});
 //////////////////////////////////////////////////////////////////////////////////////////

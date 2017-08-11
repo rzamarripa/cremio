@@ -10,13 +10,16 @@
 										<h1>{{gnc.objeto.profile.nombre}} <span class="semi-bold">{{gnc.objeto.profile.apellidoPaterno}} {{gnc.objeto.profile.apellidoMaterno}}</span>
 										<small> (Cliente)</small></h1>
 									</div>
+									<div class="col-sm-6">
+										<a ui-sref="root.clienteDetalle({objeto_id: gnc.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
+									</div>
 								</div>
 							</div>
+							
 							<div class="col-sm-12">
-								<form name="form" class="form-horizontal" role="form">
-											
+								<form name="form" class="form-horizontal" role="form">											
 										<div class="row">																		
-											<div class="col-sm-4" valida>
+											<div class="col-sm-3" valida>
 													<label>Causa *</label>
 											    <select name="causa" ng-model="gnc.nota.causa" data-placeholder="Causa..." class="form-control" required="" >
 													    <option value="DESCUENTO">DESCUENTO</option>
@@ -28,7 +31,7 @@
 												<label>Monto *</label>
 												<input name="Monto" type="number" min="0" class="form-control" placeholder="Monto..." ng-model="gnc.nota.monto" required="">
 											</div>
-											<div class="col-sm-4" valida>
+											<div class="col-sm-3" valida>
 													<label>Aplica a *</label>
 											    <select name="aplicaa" ng-model="gnc.nota.aplicaA" data-placeholder="Aplica a..." class="form-control" required="">
 													    <option value="AMBOS">AMBOS</option>
@@ -36,26 +39,17 @@
 													    <option value="CARGO MORATORIO">CARGO MORATORIO</option>
 													</select>
 									  	</div>
-										</div>
-										<div class="row">	
-											<div class="col-sm-4">					    
-												<label>Vigencia</label>
-												<input name="vigencia" type="checkbox" class="form-control" ng-model="gnc.nota.tieneVigencia">
-											</div>
-											<div class="col-sm-4" ng-if="gnc.nota.tieneVigencia" valida>
+									  	<div class="col-sm-3" valida>
 												<label>Vigencia Hasta *</label>
 												<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="gnc.nota.fecha" name="fecha" required/>
 											</div>
 										</div>
-										
-								
 										<div class="row"><br/>
 											<div class="col-sm-12">
 												<input type="submit" ng-click="gnc.guardar(gnc.nota,form)" value="Guardar" class="btn btn-primary" ng-show="gnc.action" valida-form formulario="form">
 												<input type="submit" ng-click="gnc.actualizar(gnc.nota,form)" value="Actualizar" class="btn btn-primary" ng-show="!gnc.action" valida-form formulario="form">	
 											</div>
-										</div>
-										
+										</div>										
 								</form>
 							</div>												
 						</div>

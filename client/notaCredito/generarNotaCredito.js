@@ -53,7 +53,6 @@ function GenerarNotaCredito($scope, $meteor, $reactive, $state, toastr, $statePa
 						return;
 			}
 
-
 			Meteor.call ("crearNotaDeCredito",$stateParams.objeto_id,objeto,function(error,result){
 		
 				if(error){

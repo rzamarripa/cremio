@@ -23,22 +23,17 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 					  		Meteor.call('getUsuario', nc.cliente_id, function(error, result) {           
 					          if (result)
 					          {
-						          	console.log(result);
 						          	nc.nombreCliente = result.nombreCompleto;
 						          	nc.numeroCliente = result.numeroCliente;
 						          	$scope.$apply();
 					          }
 			    			}); 	
-			    			if (nc.tieneVigencia)
-			    					nc.tieneVigenciaTexto = "Si";
-			    			else
-			    					nc.tieneVigenciaTexto = "No";
 				  	});
 		  	}
 		  return ncs;
 	  },
 	  notasCreditoCaducadas : () => {
-		  	var ncs =  NotasCredito.find({tieneVigencia: true, estatus: 2 }).fetch();		 
+		  	var ncs =  NotasCredito.find({estatus: 2 }).fetch();		 
 		  	if (ncs != undefined)
 		  	{
 				  	_.each(ncs, function(nc){
@@ -50,16 +45,12 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 						          	$scope.$apply();
 					          }
 			    			}); 	
-			    			if (nc.tieneVigencia)
-			    					nc.tieneVigenciaTexto = "Si";
-			    			else
-			    					nc.tieneVigenciaTexto = "No";
 				  	});
 		  	}		  
 		  return ncs;
 	  },
 	  notasCreditoAplicadas : () => {
-		  var ncs = NotasCredito.find({saldo : 0}).fetch();		 
+		  var ncs = NotasCredito.find({estatus: 3 , saldo : 0}).fetch();		 
 		  	if (ncs != undefined)
 		  	{
 				  	_.each(ncs, function(nc){
@@ -71,10 +62,6 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 						          	$scope.$apply();
 					          }
 			    			}); 	
-			    			if (nc.tieneVigencia)
-			    					nc.tieneVigenciaTexto = "Si";
-			    			else
-			    					nc.tieneVigenciaTexto = "No";
 				  	});
 		  	}		  
 		  return ncs;

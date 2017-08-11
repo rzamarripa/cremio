@@ -761,10 +761,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 	{
 
 			var ti = TiposIngreso.findOne(tipoIngreso);
-		
-			
-			
-			console.log(nc);
+					//console.log(nc);
 			
 			if (ti.nombre == "Nota de Credito")
 			{
@@ -774,7 +771,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 					var nc = NotasCredito.findOne({cliente_id: $stateParams.objeto_id, saldo : {$gt: 0}, estatus : 1});
 					if (nc != undefined)
 					{
-							console.log(nc.saldo);
+							//console.log(nc.saldo);
 							this.pago.pagar = Number(parseFloat(nc.saldo).toFixed(2));		
 					}					
 			}
