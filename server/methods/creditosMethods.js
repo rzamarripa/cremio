@@ -381,28 +381,33 @@ if (aval.buscarPersona_id)
 		if(!caja)
 			throw new Meteor.Error(500, 'Error 500: Conflicto', 'Usuario Sin Caja Asignada');
 
-		credito.entrega={movimientosCaja:[],movimientosCuentas:[]};
-
+		credito.entrega = {movimientosCaja:[],movimientosCuentas:[]};		
+		
 		_.each(montos.caja,(monto,index)=>{
-			var movimiento = {
-				tipoMovimiento : "Retiro",
-				origen : "Entrega de Credito",
-				origen_id :creditoid,
-				caja_id : cajaid,
-				cuenta_id :index,
-				monto : monto.saldo * -1,
-				sucursal_id : user.profile.sucursal_id,
-				createdAt : new Date(),
-				createdBy : user._id,
-				updated : false,
-				estatus : 1
-			}
-			caja.cuenta[index].saldo -= monto.saldo;
+			
+			if (Number(monto.saldo) > 0)
+			{
+			
+					var movimiento = {
+						tipoMovimiento : "Retiro",
+						origen : "Entrega de Credito",
+						origen_id :creditoid,
+						caja_id : cajaid,
+						cuenta_id :index,
+						monto : monto.saldo,
+						sucursal_id : user.profile.sucursal_id,
+						createdAt : new Date(),
+						createdBy : user._id,
+						updated : false,
+						estatus : 1
+					}
+					caja.cuenta[index].saldo -= Number(parseFloat(monto.saldo).toFixed(2));
+		
+					var movimientoid = MovimientosCajas.insert(movimiento);
+					credito.entrega.movimientosCaja.push(movimientoid);
+					credito.fechaEntrega = fechaNueva;
 
-			var movimientoid = MovimientosCajas.insert(movimiento);
-			credito.entrega.movimientosCaja.push(movimientoid);
-			credito.fechaEntrega = fechaNueva
-
+			}	
 		});
 
 		delete caja._id
@@ -411,7 +416,8 @@ if (aval.buscarPersona_id)
 		caja.updatedBy = user._id;
 		Cajas.update({_id:cajaid},{$set:caja});
 
-		_.each(montos.cuenta,(monto,index)=>{
+		/*
+_.each(montos.cuenta,(monto,index)=>{
 			var movimiento = {
 				tipoMovimiento : "Retiro",
 				origen : "Entrega de Credito",
@@ -431,6 +437,7 @@ if (aval.buscarPersona_id)
 			//console.log(cuenta);
 			Cuentas.update({_id:cuenta._id},{$set:{saldo:cuenta.saldo-monto.saldo}});
 		})
+*/
 
 		//credito.entregado = true;
 		credito.estatus = 4;
