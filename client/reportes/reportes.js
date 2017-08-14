@@ -394,7 +394,7 @@ _.each(creditos,function(credit){
 						rc.planPagos = result;
 						
 						_.each(rc.planPagos, function(plan){
-							
+							console.log(plan);
 							if (plan.tipoCuenta == "Consignia")
 							{							
 								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
@@ -405,11 +405,13 @@ _.each(creditos,function(credit){
 								rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
 								if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
 								rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
+								
+								rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
 							}
 								
 						});
 						
-						rc.totalCobranza = rc.sumaCapital + rc.sumaInteres + rc.sumaIva + rc.sumaSeguro;
+						
 						$scope.$apply();
 				}
 		});

@@ -14,6 +14,7 @@ Meteor.methods({
     caja.createdAt = new Date();
     caja.updated = false;
     caja.estatus = true;
+    caja.folioCaja = 0;
     caja.estadoCaja = "Cerrada";
     var cajaid = Cajas.insert(caja)
     if (usuario.profile.caja_id)
@@ -220,7 +221,15 @@ Meteor.methods({
   abrirCaja: function(caja) {
     caja.estadoCaja = "Abierta";
     var cajaid = caja._id;
-    var user = Meteor.user()
+    var user = Meteor.user();
+    
+    delete caja._id
+    caja.updated = true;
+    caja.updatedAt = new Date();
+    caja.ultimaApertura = new Date();
+    caja.updatedBy = user._id;
+    Cajas.update({ _id: cajaid }, { $set: caja });
+    
     _.each(caja.cuenta, function(cuenta, cuentaid) {
       var movimiento = {
         tipoMovimiento: "Saldo Inicial",
@@ -237,12 +246,7 @@ Meteor.methods({
       }
       MovimientosCajas.insert(movimiento);
     })
-    delete caja._id
-    caja.updated = true;
-    caja.updatedAt = new Date();
-    caja.ultimaApertura = new Date();
-    caja.updatedBy = user._id;
-    Cajas.update({ _id: cajaid }, { $set: caja });
+    
 
     return "200"
   },
@@ -271,13 +275,12 @@ Meteor.methods({
   },
   corteCaja: (montos, cajeroId, cajaId) => {
 	
-		console.log(cajeroId);
+		//console.log(cajeroId);
     var user = Meteor.users.findOne({_id: cajeroId});
-    console.log("User:", user);
+    //console.log("User:", user);
     
 		var caja = Cajas.findOne({_id: cajaId});
-    console.log("Caja:", caja);
-    
+    //console.log("Caja:", caja);    
     caja.updated = true;
     caja.updatedAt = new Date();
     caja.updatedBy = user._id;
@@ -295,9 +298,9 @@ Meteor.methods({
     };
     _.each(caja.cuenta, function(cuenta, cuentaid) {
       objeto.cuenta[cuentaid] = {
-        montoRegistrado: cuenta.saldo,
-        montoCaputado: montos[cuentaid].saldo,
-        diferencia: montos[cuentaid].saldo - cuenta.saldo
+        montoRegistrado : Number(parseFloat(cuenta.saldo).toFixed(2)),
+        montoCaputado		: Number(parseFloat(montos[cuentaid].saldo).toFixed(2)),
+        diferencia			: Number(parseFloat(montos[cuentaid].saldo - cuenta.saldo).toFixed(2))
       }
       cuenta.saldo = 0;
     });
@@ -374,18 +377,20 @@ Meteor.methods({
   getCajaInactivaDetalle: (caja_id, fechaInicio, fechaFin) => {
     var res = {};
     res.pagos = Pagos.find({ caja_id: caja_id, fechaPago: { $gte: fechaInicio, $lte: fechaFin } }).fetch();
-		console.log(caja_id);
     var agrupados = {};
     var total = 0;
     var pagos = Pagos.find({ estatus: { $ne: 0 } }).fetch();
     if (pagos.length) {
       _.each(pagos, function(pago) {
         pago.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id);
-        if (agrupados[pago.tipoIngreso.nombre] == undefined) {
-          agrupados[pago.tipoIngreso.nombre] = 0;
+        if (pago.tipoIngreso != undefined)
+        {        
+	        if (agrupados[pago.tipoIngreso.nombre] == undefined) {
+	          agrupados[pago.tipoIngreso.nombre] = 0;
+	        } 
+	        agrupados[pago.tipoIngreso.nombre] += pago.totalPago;
+	        total += pago.totalPago;
         }
-        agrupados[pago.tipoIngreso.nombre] += pago.totalPago;
-        total += pago.totalPago;
       });
     }
     res.totalResumen = total;
@@ -406,8 +411,9 @@ Meteor.methods({
         mov.intereses = 0;
         mov.iva = 0;
         mov.seguro = 0;
+        
         _.each(mov.pago.planPagos, function(plan) {
-          if (plan.descripcion = "Multa") {
+          if (plan.descripcion == "Cargo Moratorio") {
             mov.multas += plan.totalPago;
           }
           mov.capital += plan.pagoCapital;
@@ -454,6 +460,8 @@ Meteor.methods({
     var totalCreditos = 0;
     var creditosEntregados = 0;
     var movs = MovimientosCajas.find({ caja_id: caja_id, $or:[ {tipoMovimiento: 'Retiro'}, {origen: 'Cancelación de retiro'}], createdAt: filtroFechas }).fetch();
+    //var cuentas = Cuentas.find({estatus: 1}).fetch();
+    
     if (movs.length) {
       _.each(movs, function(mov) {
         mov.tipoIngreso = TiposIngreso.findOne(mov.cuenta_id);
@@ -473,7 +481,8 @@ Meteor.methods({
     if (movs.length) {
       _.each(movs, function(mov) {
         mov.tipoIngreso = TiposIngreso.findOne(mov.cuenta_id);
-        if(mov.tipoIngreso.nombre == 'EFECTIVO'){
+        var c = Cuentas.findOne({tipoIngreso_id: mov.tipoIngreso._id}); 
+        if(c.tipoCuenta == 'Consignia'){
         	totalTransAVentanilla += mov.monto;
         }
       });
@@ -485,7 +494,8 @@ Meteor.methods({
     if (movs.length) {
       _.each(movs, function(mov) {
         mov.tipoIngreso = TiposIngreso.findOne(mov.cuenta_id);
-        if(mov.tipoIngreso.nombre == 'EFECTIVO'){
+        var c = Cuentas.findOne({tipoIngreso_id: mov.tipoIngreso._id});        
+        if(c.tipoCuenta == 'Consignia'){
         	totalTransDeVentanilla += mov.monto;
         }
       });
@@ -495,7 +505,8 @@ Meteor.methods({
     var totalEnCaja = 0;
     _.each(caja.cuenta, function(cuenta, key){
     	cuenta.tipoIngreso = TiposIngreso.findOne(key);
-    	if(cuenta.tipoIngreso.nombre == 'EFECTIVO'){
+    	var c = Cuentas.findOne({_id: cuenta.cuenta_id});
+    	if(c.tipoCuenta == 'Consignia'){
     		totalEnCaja = cuenta.saldo;
     	}
     });

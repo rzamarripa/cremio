@@ -19,8 +19,6 @@ angular.module("creditoMio")
 			estatus : 1
 		}]
 	});
-	
-
 
 	this.helpers({
 
@@ -29,16 +27,9 @@ angular.module("creditoMio")
 		},
 		objeto : () => {
 			var caja = Cajas.findOne($stateParams.caja_id);
-			if(caja.estadoCaja=="Abierta")
-			{
-				 toastr.error("La ventanilla ya se encuentra Abierta");
-				 $state.go('root.cajas');
-			}	
 			return caja;
 		}
 	});
-
-	
 
 	this.guardar = function(objeto,form)
 	{
@@ -53,13 +44,14 @@ angular.module("creditoMio")
 					toastr.error('Error al guardar los datos.');
 					return
 				}
-				toastr.success('Actualizado correctamente.');
-				rc.objeto = {}; 
-				$('.collapse').collapse('hide');
-				rc.nuevo = true;
-				form.$setPristine();
-				form.$setUntouched();
+				if (result)
+				{
+					toastr.success('Actualizado correctamente.');
+					rc.objeto = {}; 
+					$state.go('root.cajas');
+				}
 			});	
+
 	};
 
 	
