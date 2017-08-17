@@ -9,6 +9,6 @@ Meteor.publish("cuentas",function(params){
 	console.log(where)
 	console.log("---fin cuenta----")
 */
-	
-  	return Cuentas.find(where);
+		
+  return Cuentas.find(where);
 });

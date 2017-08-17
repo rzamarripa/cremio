@@ -1,0 +1,73 @@
+<h3>Cajero: <span>{{vci.getCajero(vci.caja)}}</span></h3>
+<div>
+          <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#resumenInactiva" aria-controls="resumenInactiva" role="tab" data-toggle="tab">Resumen</a></li>
+    <li role="presentation"><a href="#operacionesInactiva" aria-controls="operacionesInactiva" role="tab" data-toggle="tab">Operaciones</a></li>
+  </ul>
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="resumenInactiva">
+     	<div class="well">
+		      <div class="row">
+		        <div class="col-sm-6">
+					    Folio: <span>{{vci.caja.folioCaja}}</span>
+				    </div>
+				    <br>
+				    <div class="col-sm-6">
+					    Fecha Inicio: <span>{{vci.fechaInicio | date:"dd-MM-yyyy" }}</span>
+				    </div>
+				    <br>
+				    <div class="col-sm-6">
+					    Fecha Final: <span>{{vci.fechaFinal | date:"dd-MM-yyyy" }}</span>
+				    </div>
+		      </div>
+	    	</div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="operacionesInactiva">
+      <div  class="well">
+      	<div class="row">
+        <div class="col-sm-12">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th width="5%">Folio</th>
+                <th width="15%">Fecha</th>
+                <th width="20%">Tipo Movimiento</th>
+                <th width="20%">Movimiento</th>
+                <th width="20%">Cuenta</th>
+                <th width="5%">Capital</th>
+                <th width="5%">Multas</th>
+                <th width="5%">Intereses</th>
+                <th width="5%">Seguro</th>
+                <th width="5%">Iva</th>
+                <th width="5%">Monto</th>
+                <th width="5%"></th>
+              </tr>
+            </thead>
+            <tbody style="font-size: x-small">
+              <tr ng-repeat="mov in vci.cajaInactiva.movimientosCaja">
+                <td align="center">{{mov.pago.folioPago}}</td>
+                <td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
+                <td>{{mov.tipoMovimiento}}</td>
+                <td>{{mov.origen}}</td>
+                <td>{{mov.cuenta.nombre}}</td>
+                <td align="right">{{mov.capital | currency}}</td>
+                <td align="right">{{mov.multas | currency}}</td>
+                <td align="right">{{mov.intereses | currency}}</td>
+                <td align="right">{{mov.seguro | currency}}</td>
+                <td align="right">{{mov.iva | currency}}</td>
+                <td align="right">{{mov.monto | currency}}</td>
+                <td>
+                  <a ng-if="mov.pago.estatus" class="btn btn-primary btn-mini" ui-sref="anon.imprimirTicket({pago_id:mov.pago._id})" target="_blank"><span class="fa fa-file-text-o"></span>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </div>	
+    </div>
+  </div>
+</div>

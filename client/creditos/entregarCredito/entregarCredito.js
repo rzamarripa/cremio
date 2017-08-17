@@ -33,35 +33,80 @@ angular.module("creditoMio")
 		return [{_id : $stateParams.credito_id}]
 	});
 	this.subscribe('cuentas',()=>{
-		return [{estatus : true}]
+		return [{tipoCuenta: {$ne: "Documento"}, estatus : 1}]
 	});
-/*
-	this.subscribe('personas',()=>{
-		return [{rol : "Cliente"}]
-	});
-*/
+
 	this.validar={};
 
 	this.helpers({
 		tiposIngreso : () => {
 			var tipos = TiposIngreso.find().fetch();
+			var tiposIngresosValidos = [];
+			
 			_.each(tipos,(tipo)=>{
-				rc.objeto.caja =rc.objeto.caja? rc.objeto.caja :{};
-				rc.objeto.caja[tipo._id] = rc.objeto.caja[tipo._id]? rc.objeto.caja[tipo._id] :{};
-				rc.objeto.caja[tipo._id].saldo = rc.objeto.caja[tipo._id].saldo? rc.objeto.caja[tipo._id].saldo :0;
+				var c = Cuentas.findOne({tipoIngreso_id: tipo._id});
+				//Unicamente formas de pagos diferentes a documento
+				if (c != undefined && c.tipoIngreso_id == tipo._id)
+				{
+/*
+						rc.objeto.caja =rc.objeto.caja? rc.objeto.caja :{};
+						rc.objeto.caja[tipo._id] = rc.objeto.caja[tipo._id]? rc.objeto.caja[tipo._id] :{};
+						rc.objeto.caja[tipo._id].saldo = rc.objeto.caja[tipo._id].saldo? rc.objeto.caja[tipo._id].saldo :0;
+*/
+						tiposIngresosValidos.push(tipo);
+				}
+
 			});
-			return tipos;
+			
+			return tiposIngresosValidos;
 		},
 		caja : () => {			
+			var caj = Cajas.findOne(Meteor.user() != undefined ? Meteor.user().profile.caja_id : "");
+			var ti = TiposIngreso.find().fetch();
+			
+			if (caj != undefined && ti != undefined)
+			{
+								
+				_.each(ti,(tipo)=>{
+					
+					var c = Cuentas.findOne({tipoIngreso_id: tipo._id});
+					
+					if (c != undefined && c.tipoIngreso_id == tipo._id)
+					{
+						//console.log(tipo);					
+						
+/*
+						rc.objeto.cuenta = rc.objeto.cuenta? rc.objeto.cuenta :{};
+						rc.objeto.cuenta[c._id] 			 = rc.objeto.cuenta[c._id]? rc.objeto.cuenta[c._id] :{};
+						rc.objeto.cuenta[c._id].saldo  = Number(parseFloat(c.saldo).toFixed(2));
+*/
+						
+						
+						rc.objeto.caja =rc.objeto.caja? rc.objeto.caja :{};
+						rc.objeto.caja[tipo._id] = rc.objeto.caja[tipo._id]? rc.objeto.caja[tipo._id] :{};
+						rc.objeto.caja[tipo._id].saldo = rc.objeto.caja[tipo._id].saldo? rc.objeto.caja[tipo._id].saldo :0;
+						
+/*
+						rc.objeto.caja = rc.objeto.caja? rc.objeto.caja :{};
+						rc.objeto.caja[tipo._id] = rc.objeto.caja[tipo._id]? rc.objeto.caja[tipo._id] :{};
+						rc.objeto.caja[tipo._id].saldo = Number(parseFloat(caj.cuenta[tipo._id].saldo).toFixed(2));
+*/
+					}		
+					
+				});
+			}
+			
 			return Cajas.findOne(Meteor.user() != undefined ? Meteor.user().profile.caja_id : "");
 		},
 		cuentas : () => {
 			var cuentas = Cuentas.find().fetch();
+/*
 			_.each(cuentas,(cuenta)=>{
 				rc.objeto.cuenta = rc.objeto.cuenta? rc.objeto.cuenta :{};
 				rc.objeto.cuenta[cuenta._id] = rc.objeto.cuenta[cuenta._id]? rc.objeto.cuenta[cuenta._id] :{};
 				rc.objeto.cuenta[cuenta._id].saldo = rc.objeto.cuenta[cuenta._id].saldo? rc.objeto.cuenta[cuenta._id].saldo :0;
 			});
+*/
 			return cuentas;
 		},
 		credito : () => {
@@ -116,13 +161,15 @@ angular.module("creditoMio")
 			return 0;
 			
 		rc.suma = 0;
-		_.each(this.objeto.cuenta,function(cuenta){ 
+	/*
+	_.each(this.objeto.cuenta,function(cuenta){ 
 			if(cuenta && cuenta.saldo && cuenta.saldo>0)
-				rc.suma+= cuenta.saldo;
+				rc.suma += cuenta.saldo;
 		})
+*/
 		_.each(this.objeto.caja,function(caja){ 
 			if(caja && caja.saldo && caja.saldo>0)
-				rc.suma+= caja.saldo;
+				rc.suma += caja.saldo;
 		})
 
 	}
@@ -163,23 +210,26 @@ angular.module("creditoMio")
 			var validarSaldoCaja = rc.caja.cuenta[rc.tipoIngreso._id];
 			if (validarSaldoCaja.saldo < rc.suma)
 			{
-					toastr.error('Error no tienes saldo en la ventanilla en ese tipo de ingreso.');
+					toastr.error('Error no tienes saldo en el Fondo asociado a ese tipo de ingreso.');
+					rc.objeto.caja[rc.tipoIngreso._id].saldo = 0;
+					rc.suma = 0;
 					return;
 			}			
 			
 			//Validar que no tenga Cargos Moratorios
 			//console.log(rc.credito.cliente_id);
 			Meteor.call ("validarCreditosSaldoEnMultas",rc.credito.cliente_id,function(error,result){
-					console.log("Resultado:", result);
+					//console.log("Resultado:", result);
 					if (!result)
 					{
 							toastr.error('El cliente tiene Cargos Moratorios Activos no es posible Entregarle el crédito.');
-							esValidoEntregar = result;
 							return;		
 					}
 					else if (result)
 					{
-						
+							//ELIMINAR AQUELLOS QUE NO TIENEN SALDO 0 EN rc.objeto
+							
+												
 							Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id,function(error,result){
 								if(error){
 									console.log(error);
@@ -191,9 +241,8 @@ angular.module("creditoMio")
 								rc.objeto = {}; 
 								$('.collapse').collapse('hide');
 								rc.nuevo = true;
-								form.$setPristine();
-								form.$setUntouched();
 							});	
+
 						
 					}
 					

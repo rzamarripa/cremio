@@ -4,7 +4,7 @@ Meteor.publish("buscarClientes",function(options){
 				let selector = {
 			  	"profile.nombreCompleto": { '$regex' : '.*' + options.where.nombreCompleto || '' + '.*', '$options' : 'i' }, 
 			  	 roles : {$in : ["Cliente", "Distribuidor"]}
-				}
+				}				
 				return Meteor.users.find(selector, { fields: {roles: 1,
 																											"profile.nombreCompleto"	: 1, 
 																											"profile.nombre"					: 1, 

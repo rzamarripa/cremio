@@ -876,6 +876,26 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.verCajaActiva', {
+			url: '/verCajaActiva/:caja_id',
+			templateUrl: 'client/cajas/verCajaActiva.html',
+			controller: 'verCajaActivaCtrl as vca',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.verCajaInactiva', {
+			url: '/verCajaInactiva/:caja_id/:corteCaja_id/:movimientosCaja_id',
+			templateUrl: 'client/cajas/verCajaInactiva.html',
+			controller: 'verCajaInactivaCtrl as vci',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.calculadora', {
 			url: '/calculadora',
 			templateUrl: 'client/administracion/calculadora.html',

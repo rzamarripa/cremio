@@ -1,6 +1,15 @@
 
-<h2>Entregar Crédito</h2>
-<a ui-sref="root.clienteDetalle({objeto_id: ecCtrl.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
+<div class="row">
+	<div class="col-sm-12">
+			<div class="col-sm-6">
+					<h2>Entregar Crédito</h2>
+			</div>
+			<div class="col-sm-6">
+					<a ui-sref="root.clienteDetalle({objeto_id: ecCtrl.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>		
+			</div>		
+	</div>
+</div>	
+
 <div class="row">
   <div class="col-sm-12">
     <div ng-show = "ecCtrl.verDiaPago">
@@ -62,8 +71,8 @@
                 </div>
               </div>
                <div class="row "> 
-                                 <div class="col-sm-4" ng-show="ecCtrl.imprecion"><br/>   
-	                <input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirContrato(ecCtrl.credito,ecCtrl.cliente);ecCtrl.generarPlanPagos(rc.credito)" value="Imprimir" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
+                    <div class="col-sm-4" ng-show="ecCtrl.imprecion"><br/>   
+												<input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirContrato(ecCtrl.credito,ecCtrl.cliente);ecCtrl.generarPlanPagos(rc.credito)" value="Imprimir" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
               </div>
             </div>
               </div>
