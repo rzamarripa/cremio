@@ -49,6 +49,10 @@
 						<br/>
 						<img width="300px" ng-if="cli.pic == cli.fotillo"   ng-src="{{cli.pic}}" ng-class="{'img-thumbnail': !!cli.pic}" />
 					</div>
+					<div class="col-sm-3" valida> 					    
+						<label>Numero Cliente (s) *</label>
+						<input name="numeroCliente" type="number" class="form-control" ng-model="cli.objeto.profile.numeroCliente" required >
+					</div>
 				</div>  
 			</div>
 			<h4>Documentos</h4>

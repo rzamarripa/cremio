@@ -6,8 +6,12 @@ Meteor.methods({
 	  var sucursal;
 	  if (rol == "Cliente")
 		{
+				
 				sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
-				var numero;
+				var numero = usuario.profile.numeroCliente;
+				
+				//se desactivo para que ellos empiecena capturar el numero-----------------
+/*
 				if (sucursal.folioCliente != undefined)				
 				 	  numero = sucursal.folioCliente + 1;
 				else	
@@ -15,6 +19,7 @@ Meteor.methods({
 						sucursal.folioCliente = 0;
 						numero = sucursal.folioCliente + 1;
 				}
+*/
 				
 				if (numero < 10)
 					 usuario.username = sucursal.clave + '-C000' + numero;

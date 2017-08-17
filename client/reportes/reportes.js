@@ -394,7 +394,7 @@ _.each(creditos,function(credit){
 						rc.planPagos = result;
 						
 						_.each(rc.planPagos, function(plan){
-							console.log(plan);
+							//console.log(plan);
 							if (plan.tipoCuenta == "Consignia")
 							{							
 								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
