@@ -420,11 +420,16 @@ if (referenciaPersonal.buscarPersona_id)
 	getPersonas: function (nombre) {	//Se hizo para la validacion de Clientes, Avales y Referencias Personales
 	  var personas = {};
 	  personas.clientes = [];
+	  personas.distribuidores = [];
 	  personas.avales = [];
 	  personas.referenciasPersonales = [];
-	  personas.clientes = Meteor.users.find({ "profile.nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' },roles : ["Cliente"]}, 
-	  																			{ fields: {"profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1 }}, 
+	  personas.clientes = Meteor.users.find({ "profile.nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }, roles : ["Cliente"]}, 
+	  																			{ fields: {"profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, roles: 1 }}, 
 																					{ sort : {"profile.nombreCompleto" : 1 }}, {"profile.nombreCompleto":1, "profile.referenciasPersonales_ids":1}).fetch();
+																					
+		personas.distribuidores = Meteor.users.find({ "profile.nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }, roles : ["Distribuidor"]}, 
+	  																			{ fields: {"profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, roles: 1 }}, 
+																					{ sort : {"profile.nombreCompleto" : 1 }}, {"profile.nombreCompleto":1, "profile.referenciasPersonales_ids":1}).fetch();																			
 									 
 		personas.avales = Avales.find({ "profile.nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }}, 
 																	{ fields: {"profile.nombreCompleto":1, "profile.sexo": 1, "profile.foto": 1, "profile.creditos": 1 }},

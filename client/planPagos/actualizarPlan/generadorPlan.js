@@ -298,8 +298,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			}
 		
 			rc.aval.num = this.avales.length + 1;
-			this.avales.push(rc.aval);
 			rc.aval.estatus = "N";
+			this.avales.push(rc.aval);
+			
 			rc.aval={};
 	};
 	
@@ -311,7 +312,10 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			{
 				av.nombre = a.nombre;
 				av.estadoCivil = a.estadoCivil;
-				av.ocupacion = a.ocupacion;			
+				av.ocupacion = a.ocupacion;
+				av.calle = a.calle;
+			  av.numero = a.numero;
+				av.codigoPostal = a.codigoPostal;			
 				av.direccion = a.direccion;
 				av.empresa = a.empresa;
 				av.puesto = a.puesto;
@@ -319,12 +323,10 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				av.direccionEmpresa = a.direccionEmpresa;
 				av.parentesco = a.parentesco;
 				av.tiempoConocerlo = a.tiempoConocerlo;
-				av.estatus = "A";
 			}
 		})
-		
 		this.aval={};
-		this.num=0;
+		this.num = 0;
 		this.actionAval = true;
 	};
 	
@@ -338,17 +340,11 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	this.quitarAval = function(numero)
 	{
 		pos = functiontofindIndexByKeyValue(this.avales, "num", numero);
-		//Eliminar el Aval del credito y del AVAl
-		
-		console.log("Eliminar:", this.avales[pos]);
-		
-/*
 		this.avales.splice(pos, 1);
 		if (this.avales.length == 0)
 			this.con = 0;
-*/
  
-	  //functiontoOrginiceNum(this.avales, "num");
+	    functiontoOrginiceNum(this.avales, "num");
 	};
 	
 	this.editarAval = function(a)
@@ -356,7 +352,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		rc.aval.nombre = a.nombre;
 		rc.aval.estadoCivil = a.estadoCivil;
 		rc.aval.ocupacion = a.ocupacion;			
-		rc.aval.direccion = a.direccion;
+		rc.aval.calle = a.calle;
+		rc.aval.numero = a.numero;
+		rc.aval.codigoPostal = a.codigoPostal;
 		rc.aval.empresa = a.empresa;
 		rc.aval.puesto = a.puesto;
 		rc.aval.tiempoLaborando = a.tiempoLaborando;
@@ -375,7 +373,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			rc.aval.apellidoMaterno = "";
 			rc.aval.estadoCivil = "";
 			rc.aval.ocupacion = "";
-			rc.aval.direccion = "";
+			rc.aval.calle = "";
+			rc.aval.numero = "";
+			rc.aval.codigoPostal = "";
 			rc.aval.parentesco = "";
 			rc.aval.tiempoLaborando = "";
 			rc.aval.empresa = "";
@@ -396,10 +396,12 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		Meteor.call('getAval', a._id, function(error, result){
 			if(result){					
 					rc.aval.ocupacion = result.ocupacion;
-					rc.aval.direccion = result.calle + " Num:" + result.numero + " CP:" + result.codigoPostal;
+					rc.aval.calle = result.calle;
+					rc.aval.numero = result.numero;
+					rc.aval.codigoPostal = result.codigoPostal;
 					rc.aval.estadoCivil = result.estadoCivil;
 					rc.aval.empresa = result.empresa.nombre;
-					rc.aval.direccionEmpresa = result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;;
+					rc.aval.direccionEmpresa = result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;
 					rc.aval.puesto = result.puesto;
 					rc.aval.tiempoLaborando = result.tiempoLaborando;
 					$scope.$apply();
@@ -410,6 +412,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		rc.aval._id = a._id;
 		
 	};
+
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////	
 	this.insertarGarantia = function(tipo)

@@ -22,6 +22,9 @@ angular.module("creditoMio")
 								_.each(result.clientes, function(cliente){
 										rc.personas.push(cliente);
 								});
+								_.each(result.distribuidores, function(distribuidor){
+										rc.personas.push(distribuidor);
+								});
 								_.each(result.avales, function(aval){
 										rc.personas.push(aval);
 								});

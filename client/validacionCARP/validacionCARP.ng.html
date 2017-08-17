@@ -2,7 +2,7 @@
 	<div class="col-sm-12">
 		<h1 class="alge-title txt-color-blueDark">
 			<i class="fa fa-list fa-fw "></i>
-				Validación de Clientes, Avales y Referencias Personales
+				Validación de Clientes, Distribuidores, Avales y Referencias Personales
 		</h1>
 	</div>
 </div>
@@ -32,12 +32,20 @@
 		              <strong ng-if="persona.profile == undefined">{{persona.nombreCompleto}}</strong>
 		            </p>
 	              <address class="font-sm">
-	                  <strong ng-if="persona.profile.referenciasPersonales_ids != undefined">Cliente</strong>
+	                  <strong ng-if="persona.roles[0] == 'Cliente'">Cliente</strong>
+	                  <strong ng-if="persona.roles[0] == 'Distribuidor'">Distribuidor</strong>
 	                  <strong ng-if="persona.profile.creditos != undefined">Aval</strong>
 	                  <strong ng-if="persona.profile == undefined">Referencia Personal</strong>
 	              </address>
 								<!--Clientes -->
-								<div ng-if="persona.profile.referenciasPersonales_ids != undefined">
+								<div ng-if="persona.roles[0] == 'Cliente'">
+									<ul style="padding: 0">
+										<label>Referencias Personales:</label>
+										<li ng-repeat="referenciaPersonal in persona.profile.referenciasPersonales_ids"><small>{{referenciaPersonal.nombreCompleto}} - {{referenciaPersonal.parentesco}} - {{referenciaPersonal.tiempoConocerlo}}</small></li>
+									</ul>	
+								</div>
+								<!--Distribuidores -->
+								<div ng-if="persona.roles[0] == 'Distribuidor'">
 									<ul style="padding: 0">
 										<label>Referencias Personales:</label>
 										<li ng-repeat="referenciaPersonal in persona.profile.referenciasPersonales_ids"><small>{{referenciaPersonal.nombreCompleto}} - {{referenciaPersonal.parentesco}} - {{referenciaPersonal.tiempoConocerlo}}</small></li>
@@ -46,15 +54,15 @@
 								<!--avales -->
 								<div ng-if="persona.profile.creditos != undefined">
 									<ul style="padding: 0">
-										<label>Cliente:</label>
-										<li ng-repeat="aval in persona.profile.creditos"><small>{{aval.nombreCompleto}} - {{aval.parentesco}} - {{aval.tiempoConocerlo}}</small></li>
+										<label>Cliente o Distribuidor:</label>
+										<li ng-repeat="aval in persona.profile.creditos"><small>{{aval.nombreCompleto}} - {{aval.parentesco}} - {{aval.tiempoConocerlo}} - {{aval.tipo}}</small></li>
 									</ul>	
 								</div>
 								<!--Referencias Personales -->
 								<div ng-if="persona.profile == undefined">
 									<ul style="padding: 0">
-										<label>Clientes:</label>
-										<li ng-repeat="cliente in persona.clientes"><small>{{cliente.nombreCompleto}} - {{cliente.parentesco}} - {{cliente.tiempoConocerlo}}</small></li>
+										<label>Clientes o Avales:</label>
+										<li ng-repeat="cliente in persona.clientes"><small>{{cliente.nombreCompleto}} - {{cliente.parentesco}} - {{cliente.tiempoConocerlo}} - {{cliente.tipo}} </small></li>
 									</ul>	
 								</div>		                  
 	          </a>
