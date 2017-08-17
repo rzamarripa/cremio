@@ -427,9 +427,9 @@
 				</div>
 				<br>
 				<div class="row">		
-					<div class="col-sm-3">
+					<div class="col-sm-12">
 						<input type="button" ng-click="cli.insertarReferencia()" value="Agregar" ng-show="cli.actionReferencia" class="btn btn-primary">
-						<input type="button" ng-click="cli.borrarReferencia()" value="Quitar Referenciado" ng-show="cli.referenciaPersonal._id" class="btn btn-warning"> 	
+						<input type="button" ng-click="cli.borrarReferencia()" value="Quitar Referencia" ng-show="cli.referenciaPersonal._id" class="btn btn-warning"> 	
 						<input type="button" ng-click="cli.actualizarReferencia(cli.referenciaPersonal)" value="Actualizar" ng-show="!cli.actionReferencia" class="btn btn-primary">
 						<input type="button" ng-click="cli.cancelarReferencia()" value="Cancelar" ng-show="!cli.actionReferencia" class="btn btn-danger">	   				
 					</div>
@@ -481,7 +481,6 @@
 					<div class="col-sm-4" valida>
 						<label for="seccion_id">Empresa *</label>
 						<select name="empresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.empresa_id" required>
-						<option ng-repeat="empresa in cli.empresas" value="{{empresa._id}}">OTRO</option>
 							<option ng-repeat="empresa in cli.empresas" value="{{empresa._id}}">{{empresa.nombre}}</option>
 						</select>
 					</div>

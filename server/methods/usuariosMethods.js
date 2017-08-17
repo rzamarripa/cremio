@@ -135,6 +135,7 @@ Meteor.methods({
 													nombreCompleto	: user.profile.nombreCompleto,
 												  parentesco			: referenciaPersonal.parentesco, 
 												  tiempoConocerlo	: referenciaPersonal.tiempoConocerlo, 
+												  tipo						: rol,
 												  estatus					: referenciaPersonal.estatus});
 				
 				var idTemp = RP._id;
@@ -243,14 +244,15 @@ updateUsuario: function (usuario, rol) {
 					    																					 referenciaPersonal_id	: referenciaPersonal._id, 
 					    																					 nombreCompleto					: referenciaPersonal.nombreCompleto,
 					    																					 parentesco							: referenciaPersonal.parentesco, 
-					    																					 tiempoConocerlo				: referenciaPersonal.tiempoConocerlo, 
+					    																					 tiempoConocerlo				: referenciaPersonal.tiempoConocerlo,
 					    																					 estatus								: referenciaPersonal.estatus});
 						
-						var RP = ReferenciasPersonales.findOne(aval.aval_id);
+						var RP = ReferenciasPersonales.findOne(referenciaPersonal._id);
 						RP.clientes.push({cliente_id			: usuario_id,
 															nombreCompleto	: user.profile.nombreCompleto,
 														  parentesco			: referenciaPersonal.parentesco, 
-														  tiempoConocerlo	: referenciaPersonal.tiempoConocerlo, 
+														  tiempoConocerlo	: referenciaPersonal.tiempoConocerlo,
+														  tipo						: rol,
 														  estatus					: referenciaPersonal.estatus});	
 						
 						var idTemp = RP._id;

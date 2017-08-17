@@ -44,7 +44,7 @@ angular.module("creditoMio")
   this.documents = []
   
   this.estadoCivil = "";
-    this.empresaSeleccionada = "";
+  this.empresaSeleccionada = "";
 
   this.estadoCivilSeleccionado = {};
 
@@ -62,8 +62,6 @@ angular.module("creditoMio")
     else if (this.getReactively("buscar.nombre").length  == 0 )
       this.buscando = false;
   });
-
-  
 
   this.subscribe('empresas',()=>{
     return [{estatus: true}]
@@ -195,7 +193,7 @@ angular.module("creditoMio")
       var config = Configuraciones.find().fetch();
       return config[config.length - 1]
     },
-     imagenesDocs : () => {
+    imagenesDocs : () => {
       var imagen = rc.imagenes
       _.each(rc.getReactively("imagenes"),function(imagen){
         imagen.archivo = rc.imagen

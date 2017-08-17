@@ -8,9 +8,9 @@ Meteor.publish("buscarReferenciasPersonales",function(options){
 			}
 });
 
-/*
-Meteor.publish("avales",function(options){
-  return Avales.find(options);
+
+Meteor.publish("referenciasPersonales",function(options){
+  return ReferenciasPersonales.find(options);
 });
-*/
+
 

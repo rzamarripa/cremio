@@ -29,6 +29,12 @@ Meteor.methods({
 							
 							var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
 	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
+	  																
+	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
+	  																{fields: {"profile.nombreCompleto": 1}});											
+	  												
+	  					plan.cajero = cajero.profile.nombreCompleto;
+	  									
 							plan.numeroCliente = user.profile.numeroCliente;	
 							plan.nombreCompleto = user.profile.nombreCompleto;
 							

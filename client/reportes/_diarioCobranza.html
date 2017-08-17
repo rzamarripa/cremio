@@ -61,9 +61,10 @@
 					<th><div class="text-center">Capital</div></th>
 					<th><div class="text-center">Iva</div></th>
 					<th><div class="text-center">Seguro</div></th> 
-					<th><div class="text-center">Forma de pago</div></th>
+<!-- 					<th><div class="text-center">Forma de pago</div></th> -->
 					<th><div class="text-center">Movimiento</div></th>
 					<th><div class="text-center">Importe</div></th>
+					<th><div class="text-center">Cajero</div></th>
 				</tr>
 			</thead>
 			<tbody style="font-size: small">
@@ -78,9 +79,10 @@
 			    <td><div class="pull-right">{{objeto.pagoCapital | currency}}</div></td>
 			    <td><div class="pull-right">{{objeto.pagoIva | currency}}</div></td>
 			    <td><div class="pull-right">{{objeto.pagoSeguro | currency}}</div></td>
-			    <td><div class="pull-right">{{objeto.tipoIngreso}}</div></td>
+<!-- 			    <td><div class="pull-right">{{objeto.tipoIngreso}}</div></td> -->
 			    <td><div class="text-center">{{objeto.descripcion}}</div></td>
 			    <td><div class="pull-right">{{objeto.totalPago | currency}}</div></td> 
+			    <td><div class="pull-right">{{objeto.cajero}}</div></td>
 		    </tr>
 			</tbody>
 		</table>
