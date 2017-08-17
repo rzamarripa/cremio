@@ -600,7 +600,9 @@ Meteor.methods({
 		});
 
 	},
-	pagoParcialCredito:function(pagos, abono, totalPago, tipoIngresoId, pusuario_id){
+	pagoParcialCredito:function(pagos, abono, totalPago, tipoIngresoId, pusuario_id, ocultaMulta, subtotal, cargosMoratorios, total, fechaProximoPago){
+		
+		console.log(ocultaMulta);
 		
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
@@ -640,6 +642,21 @@ Meteor.methods({
 		pago.semanaPago = ffecha.isoWeek();
 		pago.semanaPago = ahora.getMonth();
 		pago.estatus = 1;
+		
+		
+		
+		pago.saldoActual = Number(parseFloat(total).toFixed(2));
+		pago.saldoAnterior = Number(parseFloat(total - totalPago).toFixed(2));
+		if (ocultaMulta)
+			 pago.saldoCargoMoratorio = 0;
+		else
+			 pago.saldoCargoMoratorio = Number(parseFloat(cargosMoratorios).toFixed(2));	 
+		
+		pago.liquidacion = Number(parseFloat(total).toFixed(2));;
+		pago.proximoPago = fechaProximoPago;
+		
+		
+		
 		//pago.credito_id = credito_id;
 		pago.planPagos=[];
 	

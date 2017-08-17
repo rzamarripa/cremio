@@ -28,7 +28,7 @@ angular.module("creditoMio")
 		clientes : () => {
 			return Meteor.users.find({
 		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
-		  	roles : ["Cliente"]
+		  	roles : {$in : ["Cliente", "Distribuidor"]}
 			}, { sort : {"profile.nombreCompleto" : 1 }});
 		},
 	});

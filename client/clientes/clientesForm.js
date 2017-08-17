@@ -628,15 +628,15 @@ angular.module("creditoMio")
         }
 
     });
-    console.log(imagen,"programador estrella");
+    	//console.log(imagen,"programador estrella");
      }  
     }       
   };
 
   this.actDoc = function(doc,imagen)
   {
-    console.log("imagen",imagen)
-      // rc.imagen = imagen
+    //console.log("imagen",imagen)
+    // rc.imagen = imagen
     Meteor.call('getDocs', doc, function(error,result){
       if (result)
         {console.log("result",result)
@@ -661,10 +661,7 @@ angular.module("creditoMio")
 
    this.getEmpresa= function(empresa_id)
   {
-  
-    console.log(empresa_id);
     rc.empresa = Empresas.findOne(empresa_id);
-    //rc.nota.unidad = Unidades.findOne(rc.nota.unidad_id);
   };
 
   this.mostrarModal= function(img)
@@ -719,7 +716,6 @@ angular.module("creditoMio")
   this.createEmpresa = function()
   {
       this.empresa = {};    
-
   }
 
   this.imprimirDoc = function(imagen) {

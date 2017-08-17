@@ -45,6 +45,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.editMode = false;
 	rc.puedeSolicitar = true;
 	
+	rc.estatusCaja = "";
+	
+	this.subscribe('cajas',()=>{
+		return [{}];
+	});
 	
 	this.subscribe('cliente', () => {
 		return [{_id : $stateParams.objeto_id}];
@@ -218,6 +223,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			
 		},
+		
+		/*
 		// empresa: () => {
 		// 	var nota = Notas.find({tipo : "Cuenta"}).fetch()
 		// 	_.each(nota, function(notita){
@@ -229,6 +236,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			
 		// },
+		*/
+		
 		objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
 			
@@ -237,7 +246,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				if (cli._id == rc.notaPerfil.cliente_id) {
 					//console.log("entro aqui compilla")
 					if (rc.notaPerfil.tipo == "Cuenta") {
-						console.log("modal cerrar")
+
 						$("#notaPerfil").modal("hide");
 
 					}else{
@@ -347,17 +356,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 				return cli;
 			}		
-		},
-		
-		//ocupaciones : () => {
-/*
-			if(this.getReactively("creditos")){
-				this.creditos_id = _.pluck(rc.creditos, "_id");
-			}
-*/
-		// 	return Ocupaciones.find();
-		// },
-	
+		},	
 		planPagos : () => {
 			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:-1}}).fetch();
 			
@@ -551,7 +550,25 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			//console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
 		},
-
+		cajero: () => {
+			var c = Meteor.users.findOne({roles: "Cajero"});
+			
+			if (c != undefined)
+			{
+					var caja = Cajas.findOne({usuario_id: c._id});
+					if (caja != undefined)
+					{
+							if (caja.estadoCaja == "Cerrada")
+									rc.estatusCaja = false;
+							else
+									rc.estatusCaja = true;
+					}
+					else
+							rc.estatusCaja = false;
+			}			
+			return c;
+		},
+		
     imagenesDocs : () => {
    	var imagen = rc.imagenes
    	_.each(rc.getReactively("imagenes"),function(imagen){
@@ -564,8 +581,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 				
 	});
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
+
 //////////////////////////////////////////////////////////////////////////////////////////
 
   this.mostrarCheckCuenta = function(nota){

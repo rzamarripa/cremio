@@ -365,17 +365,6 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			 }]
 			}
 		})
-
-		.state('root.distribuidoresLista', {
-			url: '/distribuidores',
-			templateUrl: 'client/distribuidores/distribuidoresLista.ng.html',
-			controller: 'DistribuidoresListaCtrl as dis',
-			resolve: {
-				"currentUser": ["$meteor", function($meteor){
-					return $meteor.requireUser();
-				}]
-			}
-		})
 		.state('root.distribuidoresForm', {
 			url: '/distribuidoresForm',
 			templateUrl: 'client/distribuidores/distribuidoresForm.ng.html',

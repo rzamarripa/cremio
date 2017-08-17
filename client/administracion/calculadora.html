@@ -47,14 +47,18 @@
 					    	<label>Capital Solicitado *</label>
 					    	<input name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="cal.credito.capitalSolicitado" required="">
 				    	</div>
-				    	<div class="col-sm-3">					    
+				    	<div class="col-sm-2">					    
 					    	<label>Con Seguro</label>
 					    	<input name="conSeguro" type="checkbox" class="form-control" ng-model="cal.credito.conSeguro">
 				    	</div>	
-				    	<div class="col-sm-3" ng-if="cal.credito.conSeguro" valida>
+				    	<div class="col-sm-2" ng-if="cal.credito.conSeguro" valida>
 						    <label>Importe seguro *</label>
 					    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="cal.credito.seguro"  required>
 					    </div>    					    			
+					    <div class="col-sm-2" valida>
+              	<label>Primer abono</label>
+								<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="cal.credito.fechaPrimerAbono" name="fechaPrimerAbono"/>
+							</div>
 				    </div>
 				    <br>
 						<div class="row">

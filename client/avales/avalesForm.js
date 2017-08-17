@@ -211,7 +211,8 @@ configuraciones : () => {
           this.referenciasPersonales = [];
           if ($stateParams.objeto_id != undefined)
           {
-              _.each(objeto.referenciasPersonales_ids,function(referenciaPersonal){
+	          	
+              _.each(objeto.profile.referenciasPersonales_ids,function(referenciaPersonal){
                     Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
                           if (result)
                           {
@@ -286,7 +287,7 @@ configuraciones : () => {
       if (this.action)
       {
 	      	objeto.password = Math.random().toString(36).substring(2,7);		
-	      	console.log(objeto.password);			
+	      	//console.log(objeto.password);			
       }	
 			//console.log(objeto);
       
@@ -309,7 +310,7 @@ configuraciones : () => {
       //Guardar las referencias Personales---------------------------------------------------------------------
       objeto.profile.referenciasPersonales_ids = [];
       
-      _.each(usuario.profile.referenciasPersonales, function(referenciaPersonal){
+      _.each(objeto.profile.referenciasPersonales, function(referenciaPersonal){
 					if (referenciaPersonal.estatus == "N") 
 						referenciaPersonal.estatus = "G";
 				   
@@ -396,11 +397,11 @@ configuraciones : () => {
 						    																					 tiempoConocerlo				: referenciaPersonal.tiempoConocerlo,
 						    																					 estatus								: referenciaPersonal.estatus});
 						
-						console.log(referenciaPersonal);
+
 						rc.referenciaPersonal._id = referenciaPersonal._id;
 						var RP = ReferenciasPersonales.findOne(referenciaPersonal._id);
 						console.log(RP);
-						RP.clientes.push({aval_id					: objeto._id,
+						RP.clientes.push({cliente_id			: objeto._id,
 															nombreCompleto	: objeto.profile.nombreCompleto,
 														  parentesco			: referenciaPersonal.parentesco, 
 														  tiempoConocerlo	: referenciaPersonal.tiempoConocerlo, 
@@ -484,7 +485,8 @@ configuraciones : () => {
                 }
       				});
   };
-   this.guardarOcupacion = function(ocupacion, objeto,form)
+  
+  this.guardarOcupacion = function(ocupacion, objeto,form)
   {
       if(form.$invalid){
             toastr.error('Error al guardar los datos.');
@@ -514,24 +516,8 @@ configuraciones : () => {
               });
   };
     
-/*
-  this.AgregarAval = function(a){
-
-    this.objeto = {}; 
-    this.objeto.profile = {};
-    
-    this.objeto.profile.nombre = a.nombre;
-    this.objeto.profile.apellidoPaterno = a.apellidoPaterno;
-    this.objeto.profile.apellidoMaterno = a.apellidoMaterno;
-    this.objeto.profile.direccion = a.direccion;
-    this.objeto.profile.persona_id = a._id;
-
-    this.buscar.nombre = "";
-    
-  };
-*/
   
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
   
   this.AgregarReferencia = function(a){
@@ -794,6 +780,17 @@ configuraciones : () => {
   this.cambiarPassword = function()
   {
       this.cambiarContrasena = !this.cambiarContrasena; 
+  }
+  
+  
+  this.getEmpresa= function(empresa_id)
+  {
+    rc.empresa = Empresas.findOne(empresa_id);
+  };
+  
+  this.createEmpresa = function()
+  {
+      this.empresa = {};    
   }
   
 };

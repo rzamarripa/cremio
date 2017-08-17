@@ -66,9 +66,13 @@
 							</td>
 						</tr>
 					</table>
-					<div class="row">
-						<div class="col-sm-6 pull-left">SALDO ACTUAL: {{tkpctrl.credito.saldoActual}}</div><br>
-						<div class="col-sm-6 pull-left">FORMA PAGO: {{tkpctrl.tipoIngreso.nombre}}</div>
+					<div class="row">						
+						<div style="text-align: left" class="col-sm-10">SALDO ANTERIOR: {{tkpctrl.pago.saldoAnterior | currency}}</div><br>
+						<div style="text-align: left" class="col-sm-10">SALDO ACTUAL  : {{tkpctrl.pago.saldoActual | currency}}</div><br>
+						<div style="text-align: left" class="col-sm-10">C. MORATORIOS : {{tkpctrl.pago.saldoCargoMoratorio | currency}}</div><br>
+						<div style="text-align: left" class="col-sm-10">LIQUIDACIÓN   : {{tkpctrl.pago.liquidacion | currency}}</div><br>
+						<div style="text-align: left" class="col-sm-10">PRÓXIMO PAGO  : {{tkpctrl.pago.proximoPago | date:"dd-MM-yyyy"}} </div><br>
+						<div style="text-align: left" class="col-sm-10">FORMA PAGO    : {{tkpctrl.tipoIngreso.nombre}}</div>
 					</div>
 					<br>
 						Atendio:<br>

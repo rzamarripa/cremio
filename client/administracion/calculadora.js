@@ -58,7 +58,7 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 			adeudoInicial 			  : this.credito.capitalSolicitado,
 			saldoActual 				  : this.credito.capitalSolicitado,
 			periodoPago 				  : this.credito.periodoPago,
-			fechaPrimerAbono 		  : new Date(),
+			fechaPrimerAbono 		  : this.credito.fechaPrimerAbono,
 			multasPendientes 		  : 0.00,
 			saldoMultas 				  : 0.00,
 			saldoRecibo 				  : 0.00,
@@ -69,7 +69,7 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 			turno									: this.credito.turno,
 			tasa									: this.credito.tasa,
 			conSeguro 						: this.credito.conSeguro,
-			seguro								: this.credito.seguro
+			seguro								: this.credito.seguro,
 		};
 
 		Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
