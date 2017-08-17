@@ -5,14 +5,25 @@
 				Reportes de Bancos
 		</h1>
 	</div>
-	<div class="">
-			<ul id="sparks" class="">
-			<!-- 	<li class="sparks-info">
-					<h5>Total a Pagar <span class="txt-color-green" style="text-align: right">{{re.totalPagar | currency}}</span></h5> -->
-				<!-- <li class="sparks-info">
-					<h5>Total Acumulado <span class="txt-color-red" style="text-align: right">{{re.totalSolicitado | currency}}</span></h5> -->
-			</ul>
-		</div>
+	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+		<ul id="sparks" class="">
+			<li class="sparks-info">
+				<h5>Total Capital <span class="txt-color-green" style="text-align: right">{{re.sumaCapital | currency}}</span></h5>
+			</li>	
+			<li class="sparks-info">
+				<h5>Total Intereses <span class="txt-color-red" style="text-align: right">{{re.sumaInteres | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5>total IVA <span class="txt-color-blue" style="text-align: right">{{re.sumaIva | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5>total Seguro <span class="txt-color-yellow" style="text-align: right">{{re.sumaSeguro | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Total Cobranza <span class="txt-color-gray" style="text-align: right">{{re.totalCobranza | currency}}</span></h5>
+			</li>	
+		</ul>
+	</div>
 </div>
 <div class="well">
 	<div class="row">
@@ -51,7 +62,9 @@
 						<th><div class="text-center">Interes</div></th>
 						<th><div class="text-center">Capital</div></th>
 						<th><div class="text-center">IVA</div></th>
+						<th><div class="text-center">Seguro</div></th>
 						<th><div class="text-center">Acumulado por dia</div></th>
+
 						<!-- <th><div class="text-center">Acumulado</div></th>
 						<th><div class="text-center">Checar</div></th> -->
 					</tr>
@@ -68,7 +81,8 @@
 				    <td><div class="pull-right">{{objeto.pagoInteres | currency}}</div></td>
 				    <td><div class="pull-right">{{objeto.pagoCapital | currency}}</div></td> 	
 				    <td><div class="pull-right">{{objeto.pagoIva | currency}}</div></td> 	
-				    <td><div class="pull-right">{{objeto.totalPago | currency}}</div></td> 	
+				     <td><div class="pull-right">{{objeto.pagoSeguro | currency}}</div></td>	
+				    <td><div class="pull-right">{{objeto.totalPago | currency}}</div></td>
 				    <!-- <td><div class="pull-right">{{objeto.acumulado}}</div></td> -->
 				   			
 			    </tr>
