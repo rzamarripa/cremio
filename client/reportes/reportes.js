@@ -418,7 +418,7 @@ _.each(creditos,function(credit){
 		
 	};
 
-		this.bancos = function(){
+		this.diarioBancos = function(){
 
 		var usuario = Meteor.user();
 				
@@ -439,7 +439,7 @@ _.each(creditos,function(credit){
 						
 						_.each(rc.planPagos, function(plan){
 							
-							if (plan.tipoCuenta == "Consignia")
+							if (plan.tipoCuenta == "Banco")
 							{							
 								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
 								rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));

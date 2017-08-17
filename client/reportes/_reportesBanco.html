@@ -30,7 +30,7 @@
 		</div>
 		<div class="col-sm-3">
 			<br>
-			<input type="button" class="btn btn-primary" ng-click="re.bancos()" value="Buscar" />
+			<input type="button" class="btn btn-primary" ng-click="re.diarioBancos()" value="Buscar" />
 				<a href="" class="btn btn-primary pull-right" ng-click="re.imprimirReporteBancos(re.bancos[0])" >Imprimir Tabla</a>
 		</div>	
 	</div>	
@@ -41,7 +41,7 @@
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-					    <th width="5%"><div class="text-center">No.</div></th>
+					    <!-- <th width="5%"><div class="text-center">No.</div></th> -->
 						<th width="15%"> <div class="text-center">Nombre</div></th>
 						<th width="10%"><div class="text-center">Numero del cliente</div></th>
 						<th width="10%"><div class="text-center">Fecha del deposito</div></th>
@@ -57,20 +57,20 @@
 					</tr>
 				</thead>
 				<tbody>
-			    <tr ng-repeat="objeto in re.bancos | filter:buscar">
-			    	<td><div class="text-center">{{$index + 1}}</div></td>
+			    <tr ng-repeat="objeto in re.planPagos | filter:buscar" ng-show="objeto.mostrar">
+			    	<!-- <td><div class="text-center">{{$index + 1}}</div></td> -->
 				    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
 				    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
-				    <td><div class="text-center">{{objeto.fechaPago}}</div></td>
-				    <td><div class="text-center">{{objeto.pago}}</div></td>
-				    <td><div class="text-center">{{objeto.fechaPago}}</div></td>
-				    <td><div class="pull-right">{{objeto.nombreCajero}}</div></td>
-				    <td><div class="pull-right">{{objeto.planPagos[0].pagoInteres}}</div></td>
-				    <td><div class="pull-right">{{objeto.planPagos[0].pagoCapital}}</div></td> 	
-				    <td><div class="pull-right">{{objeto.planPagos[0].pagoIva}}</div></td> 	
-				    <td><div class="pull-right">{{objeto.acumulado}}</div></td>
-				    <!-- <td><div class="pull-right">Acumulado</div></td>
-				    <td><div class="text-center">{{objeto.pago}}</div></td>	 -->			
+				    <td><div class="text-center">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</div></td>
+				    <td><div class="text-center">{{objeto.totalPago | currency}}</div></td>
+				    <td><div class="text-center">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</div></td>
+				    <td><div class="pull-right">{{objeto.cajero}}</div></td>
+				    <td><div class="pull-right">{{objeto.pagoInteres | currency}}</div></td>
+				    <td><div class="pull-right">{{objeto.pagoCapital | currency}}</div></td> 	
+				    <td><div class="pull-right">{{objeto.pagoIva | currency}}</div></td> 	
+				    <td><div class="pull-right">{{objeto.totalPago | currency}}</div></td> 	
+				    <!-- <td><div class="pull-right">{{objeto.acumulado}}</div></td> -->
+				   			
 			    </tr>
 				</tbody>
 			</table>

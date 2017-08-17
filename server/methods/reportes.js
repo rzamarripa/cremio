@@ -44,6 +44,8 @@ Meteor.methods({
 			
 			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}}).fetch();
 			
+
+
 			var cobranza = [];
 			
 			_.each(cobranzaDiaria, function(cd){
@@ -54,6 +56,7 @@ Meteor.methods({
 							var credito = Creditos.findOne(pp.credito_id);
 							var tipoIngreso = TiposIngreso.findOne(cd.tipoIngreso_id);
 							var cuenta = Cuentas.findOne({tipoIngreso_id: cd.tipoIngreso_id});
+
 							
 							plan.folio = credito.folio;
 							plan.numeroPago = pp.numeroPago;
@@ -61,13 +64,21 @@ Meteor.methods({
 							plan.tipoIngreso = tipoIngreso.nombre;
 							plan.tipoCuenta = cuenta.tipoCuenta;
 							
-							if (plan.tipoCuenta == "Consignia")
+							if (plan.tipoCuenta == "Banco")
 								plan.mostrar = true;
 							else
-								plan.mostrar = false;	 
-							
-							var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
+								plan.mostrar = false;	
+								var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
 	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
+	  																
+	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
+	  																{fields: {"profile.nombreCompleto": 1}});											
+	  												
+	  					plan.cajero = cajero.profile.nombreCompleto;
+	  									
+							plan.numeroCliente = user.profile.numeroCliente; 
+							
+							
 							plan.numeroCliente = user.profile.numeroCliente;	
 							plan.nombreCompleto = user.profile.nombreCompleto;
 							

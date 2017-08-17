@@ -286,14 +286,11 @@ Meteor.methods({
 	console.log(referencia,"ficha")
 		
 		var fs = require('fs');
-    var Docxtemplater = require('docxtemplater');
+        var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
-		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		////var produccion = "/home/cremio/archivos/";
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
-	
 		var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 
@@ -1429,7 +1426,7 @@ getListaCobranza: function (objeto) {
 		}
 		
 		opts.getSize=function(img,tagValue, tagName) {
-		    return [180,160];
+		    return [400,250];
 		}
 		
 		var imageModule=new ImageModule(opts);
@@ -1449,9 +1446,16 @@ getListaCobranza: function (objeto) {
 			}
 			return "";
 		}});
+
+								var f = String(imagen);
+					imagen = f.replace('data:image/jpeg;base64,', '');
+
+					var bitmap = new Buffer(imagen, 'base64');
+
+					fs.writeFileSync(produccion+".jpeg", bitmap);
+					imagen = produccion+".jpeg";
 		
 		var fecha = new Date();
-		var f = fecha;
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 		
 		doc.setData({				imagen:    imagen,
