@@ -329,7 +329,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		        else if (pago.descripcion == "Cargo Moratorio")
 		        {
 		        		rc.cargosMoratorios +=  pago.importeRegular;
-		        		console.log("Entro: CM", pago)
+		        		//console.log("Entro: CM", pago)
 		        }
 		        pago.folio = pago.credito.folio;
 		        

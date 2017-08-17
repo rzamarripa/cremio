@@ -256,6 +256,27 @@ Meteor.methods({
 			
 			return arreglo;
 		
-	}	
+	},
+
+		getClienteInformacion: function (cliente) {
+		
+			 var persona = cliente
+			
+				persona.profile.estadoCivil = EstadoCivil.findOne(persona.profile.estadoCivil_id);
+				persona.profile.nacionalidad = Nacionalidades.findOne(persona.profile.nacionalidad_id);
+				persona.profile.colonia = Colonias.findOne(persona.profile.colonia_id);
+				persona.profile.estado = Estados.findOne(persona.profile.estado_id);
+				persona.profile.municipio = Municipios.findOne(persona.profile.municipio_id);
+				persona.profile.ocupacion = Ocupaciones.findOne(persona.profile.ocupacion_id);
+				persona.profile.ciudad = Ciudades.findOne(persona.profile.ciudad_id);
+				persona.profile.pais = Paises.findOne(persona.profile.pais_id);
+				persona.profile.empresa = Empresas.findOne(persona.profile.empresa_id);
+			    
+				//persona.profile.estadoCivil = EstadoCivil.findOne(persona.profile.estadoCivil_id);
+
+
+			return persona;
+			
+	},	
 	
 });	

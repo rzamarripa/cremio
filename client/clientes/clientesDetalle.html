@@ -44,7 +44,7 @@
 			
 		</li>
 		<li class="pull-right">
-			<a href="#informacionCliente" data-toggle="tab" ng-click="cd.masInformacion()">Información Cliente</a>
+			<a href="#informacionCliente" data-toggle="tab" ng-click="cd.masInformacion(cd.objeto)">Información Cliente</a>
 		</li>
 		<li class="pull-right">
 			<a href="#historialCrediticio" ng-click="cd.masInformacionCrdito()"  data-toggle="tab">Historial Crediticio</a>
@@ -165,7 +165,7 @@
 														<a ng-click="cd.mostrarReestructuracion(credito)" ng-if="currentUser.roles[0] == 'Gerente'" class="btn btn-primary">Reestructuración del crédito</a>
 												</small>
 												<br/><br/>
-												<small><a ng-click="cd.imprimirContratos(cd.creditos)" class="btn btn-primary">Imprimir Contrato</a></small>
+												<small><a ng-click="cd.imprimirContratos(credito,cd.objeto._id)" class="btn btn-primary">Imprimir Contrato</a></small>
 										</div>
 											</div>
 										</div>
@@ -1248,7 +1248,8 @@
   </div>
 </div>
 <!--		 //////////////////////////////////////////////////////////// -->
-<a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   
+<a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a> 
+  
 
 
 	

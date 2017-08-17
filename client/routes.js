@@ -291,6 +291,12 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('anon.imprimirDoc', {
+		      url: '/imprimirDoc',
+		      templateUrl: 'client/clientes/imprimirDoc.ng.html',
+		      controller: 'ImprimirDocCtrl as dc',
+		      params: {'documentoImagen':':documentoImagen'},
+   		 })
 		.state('root.editarCliente', {
 			url: '/editarCliente/:objeto_id',
 			templateUrl: 'client/clientes/clientesForm.ng.html',
@@ -359,6 +365,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			 }]
 			}
 		})
+
 		.state('root.distribuidoresLista', {
 			url: '/distribuidores',
 			templateUrl: 'client/distribuidores/distribuidoresLista.ng.html',

@@ -97,7 +97,11 @@
 									<td class="text-center">
 										<a href="" ng-click="cli.mostrarModal(item.imagen)">Ver Archivo</a>
 									</td>
-									<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index)"><i class="fa fa-trash"></i></a></div></td>
+									<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index)" class="btn btn-primary"><i class="fa fa-trash"></i></a>
+									 <a target="_blank"  ng-click="cli.imprimirDoc(item.imagen)" class="btn btn-primary"><i class="fa fa-print" ></i></a></div>
+									</td>
+
+
 								</tr>
 							</tbody>
 						</table>
@@ -708,7 +712,7 @@
 					</div>
 				</form>
 			</div>
-			<div class="modal-footer"s>
+			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 				<input type="submit" ng-click="cli.guardarOcupacion(cli.ocupacion, cli.objeto,form3)" value="Guardar" class="btn btn-primary" valida-form formulario="form3">
 		  </div>
