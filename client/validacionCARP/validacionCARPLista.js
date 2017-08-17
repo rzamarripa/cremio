@@ -20,15 +20,19 @@ angular.module("creditoMio")
 	              //console.log("Personas:", result);
 								rc.personas = [];
 								_.each(result.clientes, function(cliente){
+										cliente.tipoPersona = "cliente"; 
 										rc.personas.push(cliente);
 								});
 								_.each(result.distribuidores, function(distribuidor){
+									  distribuidor.tipoPersona = "distribuidor";
 										rc.personas.push(distribuidor);
 								});
 								_.each(result.avales, function(aval){
+										aval.tipoPersona = "aval";
 										rc.personas.push(aval);
 								});
 								_.each(result.referenciasPersonales, function(referenciaPersonal){
+										referenciaPersonal.tipoPersona = "referenciaPersonal";
 										rc.personas.push(referenciaPersonal);
 								});
 								

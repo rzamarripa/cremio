@@ -434,7 +434,7 @@ if (referenciaPersonal.buscarPersona_id)
 		personas.avales = Avales.find({ "profile.nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }}, 
 																	{ fields: {"profile.nombreCompleto":1, "profile.sexo": 1, "profile.foto": 1, "profile.creditos": 1 }},
 																	{ sort : {"profile.nombreCompleto" : 1 }}).fetch();
-									 
+																	
 		personas.referenciasPersonales = ReferenciasPersonales.find({ nombreCompleto: { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }}, 
 																																{ fields: {nombreCompleto:1, clientes: 1 }}, 
 																																{ sort : {nombreCompleto : 1 }}).fetch();

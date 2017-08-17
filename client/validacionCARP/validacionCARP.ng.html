@@ -32,10 +32,10 @@
 		              <strong ng-if="persona.profile == undefined">{{persona.nombreCompleto}}</strong>
 		            </p>
 	              <address class="font-sm">
-	                  <strong ng-if="persona.roles[0] == 'Cliente'">Cliente</strong>
-	                  <strong ng-if="persona.roles[0] == 'Distribuidor'">Distribuidor</strong>
-	                  <strong ng-if="persona.profile.creditos != undefined">Aval</strong>
-	                  <strong ng-if="persona.profile == undefined">Referencia Personal</strong>
+	                  <strong ng-if="persona.tipoPersona == 'cliente'">Cliente</strong>
+	                  <strong ng-if="persona.tipoPersona == 'distribuidor'">Distribuidor</strong>
+	                  <strong ng-if="persona.tipoPersona == 'aval'">Aval</strong>
+	                  <strong ng-if="persona.tipoPersona == 'referenciaPersonal'">Referencia Personal</strong>
 	              </address>
 								<!--Clientes -->
 								<div ng-if="persona.roles[0] == 'Cliente'">
