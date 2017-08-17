@@ -612,18 +612,35 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 				    }					
 				}
 				
+				var fechaProximoPagoArray = []
+				
 				var seleccionadosId = [];
 		    _.each(rc.planPagosViejo, function(p) {
 		      if (p.pagoSeleccionado){
 						 if (p.descripcion == "Recibo") sePagaraRecibo = true;
 						 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
 			       seleccionadosId.push({ id: p._id, importe: p.importepagado })
-		      }		        
+		      }
+		      else
+		      	 fechaProximoPagoArray.push(p.fechaLimite);
 		    });
+		    
+		    var fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
 				
 		    //console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
+		    
 
-		    Meteor.call("pagoParcialCredito", seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id, $stateParams.objeto_id, function(error, success) {
+		    
+Meteor.call("pagoParcialCredito", seleccionadosId, 
+		    																	pago.pagar, 
+		    																	pago.totalPago, 
+		    																	pago.tipoIngreso_id, 
+		    																	$stateParams.objeto_id, 
+		    																	rc.ocultarMultas, 
+		    																	rc.subtotal,  
+		    																	rc.cargosMoratorios, 
+		    																	rc.total, 
+		    																	fechaProximoPago, function(error, success) {
 		      if (!success) {
 			      
 		        toastr.error('Error al guardar.', success);
@@ -637,6 +654,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
 		      window.open(url, '_blank');
 		    });
+
 
 		  
 	  }
@@ -677,28 +695,44 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 	{
 			rc.subtotal = 0;
 			rc.cargosMoratorios = 0;
+			rc.total = 0;
 
 			_.each(this.planPagosViejo, function(pago) {
+					
           if (pago.descripcion == "Cargo Moratorio")
           {
 	          	pago.verCargo = !pago.verCargo;
           }	
           
-	        if (pago.verCargo)
+          if (pago.pagoSeleccionado == true && pago.verCargo == false)
+          {
+          		pago.pagoSeleccionado = false;
+							console.log("false:", pago.importepagado);  	
+							console.log("false:", rc.pago.totalPago);  	
+          		rc.pago.totalPago = rc.pago.totalPago - Number(parseFloat(pago.importepagado).toFixed(2));
+							pago.importepagado	= 0;
+          }
+	        if (pago.verCargo == true)
 	        {
+		      		
+		        	if(pago.descripcion == "Recibo")
+		        	{
+								rc.subtotal = rc.subtotal + Number(parseFloat(pago.importeRegular).toFixed(2));
+								
+							}	
+							if(pago.descripcion == "Cargo Moratorio")
+								rc.cargosMoratorios += Number(parseFloat(pago.importeRegular).toFixed(2));
 		        	
-		        	if(pago.descripcion=="Recibo")
-								rc.subtotal+=pago.importeRegular;
-							if(pago.descripcion=="Cargo Moratorio")
-								rc.cargosMoratorios+=pago.importeRegular;
-		        	
+	
 	        }		
-	        else 
+	        else if (pago.verCargo == false)
 	        {
 		        	if(pago.descripcion=="Recibo")
-								rc.subtotal+=pago.importeRegular;
-							if(pago.descripcion=="Cargo Moratorio")
+								rc.subtotal += Number(parseFloat(pago.importeRegular).toFixed(2));
+							/*
+if(pago.descripcion=="Cargo Moratorio")
 								rc.cargosMoratorios = 0;
+*/
 	        }
 	        
        });

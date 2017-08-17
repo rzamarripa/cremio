@@ -19,7 +19,7 @@
 							<a ng-click="cd.crearCargoMoratorio(credito)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px">
 								 <i class="fa fa-plus"></i> N. Cargo Moratorio
 							</a>&nbsp;	
-							<a ui-sref="root.pagarPlanPagos({objeto_id : cd.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
+							<a ui-sref="root.pagarPlanPagos({objeto_id : cd.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero' && cd.estatusCaja == true" style="margin: 5px;">
 								<i class="fa fa-plus"></i> N. Pago
 							</a>&nbsp;
 							<div class="col-sm-2">

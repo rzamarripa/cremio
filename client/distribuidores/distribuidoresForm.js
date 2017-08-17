@@ -1,8 +1,8 @@
 angular.module("creditoMio")
 .controller("DistribuidoresFormCtrl", DistribuidoresFormCtrl);
  function DistribuidoresFormCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams){
- 	rc = $reactive(this).attach($scope);
-let rc = $reactive(this).attach($scope);
+  
+  let rc = $reactive(this).attach($scope);
   window.rc = rc;
   
   this.cambiarContrasena = true;
@@ -27,11 +27,13 @@ let rc = $reactive(this).attach($scope);
   this.ciudad_id = "";
   this.empresa_id = "";
   rc.ocupacionSeleccionado = ""
+  rc.coloniaSeleccionado = ""
+  
   
   this.con = 0;
   this.num = 0;
   this.referenciasPersonales = [];
-  this.parentezco = {};
+  this.referenciaPersonal = {};
   
   this.buscar = {};
   this.buscar.nombre = "";
@@ -42,12 +44,12 @@ let rc = $reactive(this).attach($scope);
   this.documents = []
   
   this.estadoCivil = "";
-    this.empresaSeleccionada = "";
+  this.empresaSeleccionada = "";
 
   this.estadoCivilSeleccionado = {};
 
 
-  this.subscribe('buscarPersonas', () => {
+  this.subscribe('buscarReferenciasPersonales', () => {
     if(this.getReactively("buscar.nombre").length > 3){
       this.buscando = true;
       return [{
@@ -60,8 +62,6 @@ let rc = $reactive(this).attach($scope);
     else if (this.getReactively("buscar.nombre").length  == 0 )
       this.buscando = false;
   });
-
-  
 
   this.subscribe('empresas',()=>{
     return [{estatus: true}]
@@ -94,19 +94,16 @@ let rc = $reactive(this).attach($scope);
   });
   
   this.subscribe('estados',()=>{
-
     if (this.getReactively("pais_id") !=  "")
     {
         console.log("Cambio pais:", this.pais_id);    
         return [{pais_id: this.getReactively("pais_id"), estatus: true}];
-        
     }   
 
     else 
         return [{estatus: true}];
 
   });
-
 
   this.subscribe('municipios',()=>{
     if (this.getReactively("estado_id") !=  "")
@@ -120,8 +117,6 @@ let rc = $reactive(this).attach($scope);
         return [{estatus: true}]; 
 
   });
-
-  
 
   this.subscribe('ciudades',()=>{
     if (this.getReactively("municipio_id") !=  "")
@@ -198,7 +193,7 @@ let rc = $reactive(this).attach($scope);
       var config = Configuraciones.find().fetch();
       return config[config.length - 1]
     },
-     imagenesDocs : () => {
+    imagenesDocs : () => {
       var imagen = rc.imagenes
       _.each(rc.getReactively("imagenes"),function(imagen){
         imagen.archivo = rc.imagen
@@ -208,7 +203,8 @@ let rc = $reactive(this).attach($scope);
 
       return imagen
     },
-    objetoEitar : () => {
+    objetoEditar : () => {
+
       var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
       rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
       
@@ -218,25 +214,24 @@ let rc = $reactive(this).attach($scope);
           this.referenciasPersonales = [];
           if ($stateParams.objeto_id != undefined)
           {
-              _.each(objeto.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
-                    Meteor.call('getPersona', referenciaPersonal_id, $stateParams.objeto_id, function(error, result){           
+              _.each(objeto.profile.referenciasPersonales_ids,function(referenciaPersonal){
+                    Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
                           if (result)
                           {
-                              //Recorrer las relaciones 
-                              //console.log(result);
-                              rc.referenciasPersonales.push({buscarPersona_id : referenciaPersonal_id,
+	                          	//console.log(result);
+                              rc.referenciasPersonales.push({_id 							: referenciaPersonal.referenciaPersonal_id,
                                                              nombre           : result.nombre,
                                                              apellidoPaterno  : result.apellidoPaterno,
                                                              apellidoMaterno  : result.apellidoMaterno,
-                                                             parentezco       : result.parentezco,
                                                              direccion        : result.direccion,
                                                              telefono         : result.telefono,
-                                                             tiempo           : result.tiempo,
-                                                             num              : result.num,
-                                                             cliente          : result.cliente,
-                                                             cliente_id       : result.cliente_id,
-                                                             tipoPersona      : result.tipoPersona,
-                                                             estatus          : result.estatus
+                                                             celular         	: result.celular,
+                                                             parentesco       : referenciaPersonal.parentesco,
+                                                             tiempoConocerlo	: referenciaPersonal.tiempoConocerlo,
+                                                             num              : referenciaPersonal.num,
+                                                             nombreCompleto   : result.nombreCompleto,
+                                                             cliente_id       : objeto._id,
+                                                             estatus          : referenciaPersonal.estatus
                               });
                               $scope.$apply();    
                           }
@@ -245,42 +240,33 @@ let rc = $reactive(this).attach($scope);
               
           }
           
-          
-          
           rc.objeto = objeto;
+          rc.objeto.confirmpassword = rc.objeto.password;
           //eturn objeto;
       }  
     },
-    personasTipos : () => {
-      var personas = Personas.find({
-        "nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
+    referenciasPersonalesHelper : () => {
+      var rp = ReferenciasPersonales.find({
+        nombreCompleto: { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
       }, { sort : {"nombreCompleto" : 1 }}).fetch();
-      return personas;
+      return rp;
     },
-
-       ultimoCliente : () => {   
-      
+    ultimoCliente : () => {     
        return Personas.find({}, {sort: {folio: -1}, limit: 1});
     },
-      empresa : () => {
-     
-      
+    empresa : () => {
       return Empresas.findOne(rc.objeto.profile.empresa_id)
-    },
-      
+    },  
   }); 
 
-this.tomarFoto = function(objeto){
-      console.log(objeto)
-        $meteor.getPicture().then(function(data){
+	this.tomarFoto = function(objeto){
+      //console.log(objeto)
+      $meteor.getPicture().then(function(data){
       rc.fotillo = data
       rc.pic = rc.fotillo
       //objeto.profile.fotografia = this.objeto.profile.fotografia;
     });
-    };
-
-
-
+  };
   
   this.Nuevo = function()
   {
@@ -289,8 +275,6 @@ this.tomarFoto = function(objeto){
     this.objeto = {};   
   };
   
-
-
   this.cambiarPaisObjeto = function() {this.pais_id = this.getReactively("objeto.profile.pais_id");};
   this.cambiarEstadoObjeto = function() {this.estado_id = this.getReactively("objeto.profile.estado_id");};
   this.cambiarMunicipioObjeto = function() {this.municipio_id = this.getReactively("objeto.profile.municipio_id");};
@@ -301,7 +285,6 @@ this.tomarFoto = function(objeto){
   this.cambiarMunicipioEmpresa = function() {this.municipio_id = this.getReactively("empresa.municipio_id");};
   this.cambiarCiudadEmpresa = function() {this.ciudad_id = this.getReactively("empresa.ciudad_id");};
   this.cambiarColoniaEmpresa = function() {this.colonia_id = this.getReactively("empresa.colonia_id");};
-
 
   this.guardar = function(objeto,form)
   {
@@ -316,11 +299,8 @@ this.tomarFoto = function(objeto){
 	      	objeto.password = Math.random().toString(36).substring(2,7);		
 	      	console.log(objeto.password);			
       }	
-			//console.log(objeto);
-      
       objeto.profile.estatus = true;
-      //rc.documentos
-      objeto.profile.documentos = rc.documents
+      objeto.profile.documentos = rc.documents;
       objeto.profile.foto = rc.pic;
       objeto.profile.usuarioInserto = Meteor.userId();
       objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
@@ -330,7 +310,8 @@ this.tomarFoto = function(objeto){
       var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-      Meteor.call('createUsuario', objeto, "Cliente", function(e,r){
+
+      Meteor.call('createUsuario', objeto, "Distribuidor", function(e,r){
           if (r)
           {
               toastr.success('Guardado correctamente.');
@@ -375,7 +356,7 @@ this.tomarFoto = function(objeto){
 
   
     delete objeto.profile.repeatPassword;
-    Meteor.call('updateGerenteVenta', objeto, this.referenciasPersonales, "Cliente");
+    Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Distribuidor");
     toastr.success('Actualizado correctamente.');
     //$('.collapse').collapse('hide');
     this.nuevo = true;
@@ -414,7 +395,8 @@ this.tomarFoto = function(objeto){
                 }
       				});
   };
-   this.guardarOcupacion = function(ocupacion, objeto,form)
+  
+  this.guardarOcupacion = function(ocupacion, objeto,form)
   {
       if(form.$invalid){
             toastr.error('Error al guardar los datos.');
@@ -444,101 +426,83 @@ this.tomarFoto = function(objeto){
               });
   };
     
-  this.AgregarCliente = function(a){
-
-    this.objeto = {}; 
-    this.objeto.profile = {};
-    
-    this.objeto.profile.nombre = a.nombre;
-    this.objeto.profile.apellidoPaterno = a.apellidoPaterno;
-    this.objeto.profile.apellidoMaterno = a.apellidoMaterno;
-    this.objeto.profile.direccion = a.direccion;
-    this.objeto.profile.persona_id = a._id;
-
-    this.buscar.nombre = "";
-  };
+ /*
+*/
+  
+  
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
   
   this.AgregarReferencia = function(a){
-    this.parentezco.nombre = a.nombre;
-    this.parentezco.apellidoPaterno = a.apellidoPaterno;
-    this.parentezco.apellidoMaterno = a.apellidoMaterno;
-    this.parentezco.direccion = a.direccion;
-    this.parentezco.parentezco = a.parentezco;
-    this.parentezco.tiempoConocerlo = a.tiempoConocerlo;
-    this.parentezco.persona_id = a._id;
+    this.referenciaPersonal.nombre = a.nombre;
+    this.referenciaPersonal.apellidoPaterno = a.apellidoPaterno;
+    this.referenciaPersonal.apellidoMaterno = a.apellidoMaterno;
+    this.referenciaPersonal.direccion = a.direccion;
+    this.referenciaPersonal.telefono = a.telefono;
+    this.referenciaPersonal.celular = a.celular;
+    this.referenciaPersonal.tiempoConocerlo = a.tiempoConocerlo;
+    this.referenciaPersonal.nombreCompleto = a.nombreCompleto;
+    this.referenciaPersonal._id = a._id;
     this.buscar.nombre = "";
   };
   
   this.insertarReferencia = function()
   {
-      /*
       //Validar que no venga vacio
-      if (this.mes==null) 
+      if (this.referenciaPersonal.nombre == undefined || this.referenciaPersonal.apellidoPaterno == undefined || this.referenciaPersonal.parentesco == undefined || this.referenciaPersonal.tiempoConocerlo == undefined || this.referenciaPersonal.parentesco == "" || this.referenciaPersonal.tiempoConocerlo == "" )
       {
-        toastr.error('Seleccionar Mes.');
-        return;
-      } 
-      //validar que vengan mes y cantidad
-      if (this.mes.nombre == null || this.mes.cantidad == null) 
-      {
-        toastr.error('Seleccionar Mes y Cantidad');
-        return;
-      } 
+	      	toastr.warning('Favor de completar los datos en referencias personales.');
+          return;
+      }		
       
-      */
-      //console.log(this.referenciasPersonales.length);
-      
-      //incremeneto
-      //this.con = this.con + 1;
-      
-      //console.log(this.parentezco);
-      
-      
-      this.parentezco.num = this.referenciasPersonales.length + 1;
-      
-      this.referenciasPersonales.push(this.parentezco); 
-      this.parentezco={};
+      this.referenciaPersonal.num = this.referenciasPersonales.length + 1;
+      this.referenciaPersonal.estatus = "N";
+      this.referenciasPersonales.push(this.referenciaPersonal); 
+      this.referenciaPersonal = {};
   };
   
   this.actualizarReferencia = function(p)
   {
       p.num = this.num;
-      
       _.each(this.referenciasPersonales, function(rp){
               if (rp.num == p.num)
               {
                   rp.nombre = p.nombre;
                   rp.apellidoPaterno = p.apellidoPaterno;
-                  rp.apellidoMaterno = p.apellidoMaterno;     
-                  rp.parentezco = p.parentezco;
+                  rp.apellidoMaterno = p.apellidoMaterno;    
                   rp.direccion = p.direccion;
                   rp.telefono = p.telefono;
-                  rp.tiempo = p.tiempo;
+                  rp.celular = p.celular;
+                  rp.parentesco = p.parentesco;
+                  rp.tiempoConocerlo = p.tiempoConocerlo;
+                  if (rp.estatus == "G")
+                  		rp.estatus = "A"; 
               }
       });
       
-      this.parentezco={};
+      this.referenciaPersonal = {};
       this.num=0;
       rc.actionReferencia = true;
   };
   
   this.cancelarReferencia = function()
   {
-      this.parentezco={};
+      this.referenciaPersonal={};
       this.num = -1;
       rc.actionReferencia = true;
   };
   
   this.borrarReferencia = function()
   {
-      this.parentezco.nombre = "";
-      this.parentezco.apellidoPaterno = "";
-      this.parentezco.apellidoMaterno = "";
-      this.parentezco.direccion = "";
-      this.parentezco.parentezco = "";
-      this.parentezco.tiempoConocerlo = "";
-      delete this.parentezco["persona_id"];
-
+      this.referenciaPersonal.nombre = "";
+      this.referenciaPersonal.apellidoPaterno = "";
+      this.referenciaPersonal.apellidoMaterno = "";
+      this.referenciaPersonal.direccion = "";
+      this.referenciaPersonal.telefono = "";
+      this.referenciaPersonal.celular = "";
+      this.referenciaPersonal.parentesco = "";
+      this.referenciaPersonal.tiempoConocerlo = "";
+      delete this.referenciaPersonal["_id"];
   };
   
   this.quitarReferencia = function(numero)
@@ -549,25 +513,47 @@ this.tomarFoto = function(objeto){
       //reorganiza el consecutivo     
       functiontoOrginiceNum(this.referenciasPersonales, "num");
   };
-
-    this.borrarDoc = function($index)
-  {
-    rc.documents.splice($index, 1);
-    };
   
   this.editarReferencia = function(p)
   {
-      this.parentezco.nombre = p.nombre;
-      this.parentezco.apellidoPaterno = p.apellidoPaterno;
-      this.parentezco.apellidoMaterno = p.apellidoMaterno;      
-      this.parentezco.parentezco = p.parentezco;
-      this.parentezco.direccion = p.direccion;
-      this.parentezco.telefono = p.telefono;
-      this.parentezco.tiempo = p.tiempo;
+      this.referenciaPersonal.nombre 					= p.nombre;
+      this.referenciaPersonal.apellidoPaterno = p.apellidoPaterno;
+      this.referenciaPersonal.apellidoMaterno = p.apellidoMaterno;      
+      this.referenciaPersonal.direccion 			= p.direccion;
+      this.referenciaPersonal.telefono 				= p.telefono;
+      this.referenciaPersonal.celular 				= p.celular;
+      this.referenciaPersonal.parentesco 			= p.parentesco;
+      this.referenciaPersonal.tiempoConocerlo = p.tiempoConocerlo;
+      
       
       this.num = p.num;
       this.actionReferencia = false;
   };
+  
+  this.guardarReferenciaPersonal = function(referenciaPersonal, form4)
+  {
+	  	if(form4.$invalid){
+            toastr.error('Error al guardar los datos.');
+            return;
+      }
+	  		  	
+	  	referenciaPersonal.usuarioInserto = Meteor.userId();
+	  	referenciaPersonal.nombreCompleto = referenciaPersonal.nombre + " " + 
+	  																			referenciaPersonal.apellidoPaterno + 
+	  																			(referenciaPersonal.apellidoMaterno == undefined?"": " " + referenciaPersonal.apellidoMaterno);
+	  																			
+			referenciaPersonal.clientes = [];
+      this.referenciaPersonal._id = ReferenciasPersonales.insert(referenciaPersonal);
+      
+      $("#modalreferenciaPersonal").modal('hide');
+  };
+  
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  this.borrarDoc = function($index)
+  {
+    rc.documents.splice($index, 1);
+    };
   
   //busca un elemento en el arreglo
   function functiontofindIndexByKeyValue(arraytosearch, key, valuetosearch) {
@@ -642,15 +628,15 @@ this.tomarFoto = function(objeto){
         }
 
     });
-    console.log(imagen,"programador estrella");
+    	//console.log(imagen,"programador estrella");
      }  
     }       
   };
 
-    this.actDoc = function(doc,imagen)
+  this.actDoc = function(doc,imagen)
   {
-    console.log("imagen",imagen)
-      // rc.imagen = imagen
+    //console.log("imagen",imagen)
+    // rc.imagen = imagen
     Meteor.call('getDocs', doc, function(error,result){
       if (result)
         {console.log("result",result)
@@ -661,24 +647,21 @@ this.tomarFoto = function(objeto){
         }
 
     });
-    console.log(imagen,"programador estrella");
-     } 
+    //console.log(imagen,"programador estrella");
+  } 
 
 
   this.getDocumentos= function(documento_id)
   {
   
-    console.log(documento_id);
+    //console.log(documento_id);
     rc.documento = Documentos.findOne(documento_id);
     //rc.nota.unidad = Unidades.findOne(rc.nota.unidad_id);
   };
 
    this.getEmpresa= function(empresa_id)
   {
-  
-    console.log(empresa_id);
     rc.empresa = Empresas.findOne(empresa_id);
-    //rc.nota.unidad = Unidades.findOne(rc.nota.unidad_id);
   };
 
   this.mostrarModal= function(img)
@@ -719,11 +702,72 @@ this.tomarFoto = function(objeto){
       this.cambiarContrasena = !this.cambiarContrasena; 
   }
 
-    this.getOcupaciones= function(ocupacion_id)
+  this.getOcupaciones= function(ocupacion_id)
   {
-    console.log(ocupacion_id);
-    rc.ocupacionSeleccionado = Ocupaciones.findOne(ocupacion_id);
-    
+    rc.ocupacionSeleccionado = Ocupaciones.findOne(ocupacion_id); 
   };
+  
+  this.getColonias = function(colonia_id)
+  {
+    rc.coloniaSeleccionado = Colonias.findOne(colonia_id); 
+  };
+  
+  
+  this.createEmpresa = function()
+  {
+      this.empresa = {};    
+  }
+
+  this.imprimirDoc = function(imagen) {
+    console.log(imagen)
+      Meteor.call('imprimirImagenDocumento', imagen, function(error, response) {
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+              function b64toBlob(b64Data, contentType, sliceSize) {
+                  contentType = contentType || '';
+                  sliceSize = sliceSize || 512;
+                
+                  var byteCharacters = atob(b64Data);
+                  var byteArrays = [];
+                
+                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+                
+                    var byteNumbers = new Array(slice.length);
+                    for (var i = 0; i < slice.length; i++) {
+                      byteNumbers[i] = slice.charCodeAt(i);
+                    }
+                
+                    var byteArray = new Uint8Array(byteNumbers);
+                
+                    byteArrays.push(byteArray);
+                  }
+                    
+                  var blob = new Blob(byteArrays, {type: contentType});
+                  return blob;
+              }
+              
+              var blob = b64toBlob(response, "application/docx");
+              var url = window.URL.createObjectURL(blob);
+              
+              //console.log(url);
+              var dlnk = document.getElementById('dwnldLnk');
+
+              dlnk.download = "imagenDocumento.docx"; 
+              dlnk.href = url;
+              dlnk.click();       
+              window.URL.revokeObjectURL(url);
+  
+       }
+    });
+  }
+  
+  
+
   
 };

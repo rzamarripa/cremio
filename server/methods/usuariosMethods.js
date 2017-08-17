@@ -69,7 +69,7 @@ Meteor.methods({
 		Roles.addUsersToRoles(usuario_id, rol, grupo);
 		
 
-		if (rol == "Cliente")
+		if (rol == "Cliente" || rol == "Distribuidor")
 		{
 				Sucursales.update({_id: sucursal._id},{$set:{folioCliente : sucursal.folioCliente}});
 				
@@ -82,39 +82,6 @@ Meteor.methods({
 				);
 */
 		}
-
-		//Insertar en personas el Cliente (Regresar el id)
-/*
-		var usuarioPersona = {};
-		
-		if (!usuario.profile.persona_id)
-		{
-				usuarioPersona.nombre	= usuario.profile.nombre;
-				usuarioPersona.apellidoPaterno	= usuario.profile.apellidoPaterno;
-				usuarioPersona.apellidoMaterno	= usuario.profile.apellidoMaterno;
-				usuarioPersona.nombreCompleto	= usuario.profile.nombreCompleto;
-				usuarioPersona.rol = rol;
-				usuarioPersona.relaciones = [];
-				Personas.insert(usuarioPersona)
-				
-		}
-		else
-		{
-				var p = Personas.findOne({_id:usuario.profile.persona_id});
-				
-				p.relaciones.push({cliente_id			: usuario_id, 
-													 cliente				: usuario.profile.nombreCompleto,
-													 nombre					: usuario.profile.nombre,
-													 apellidoPaterno: usuario.profile.apellidoPaterno,
-													 apellidoMaterno: usuario.profile.apellidoMaterno,
-													 direccion			: usuario.profile.direccion,
-													 telefono				: usuario.profile.telefono,	
-													 tipoPersona		: "Cliente", 
-													 estatus: 0});
-													 
-				Personas.update({_id: usuario.profile.persona_id},{$set:p});
-		}
-*/
 
 		var user = Meteor.users.findOne({_id: usuario_id});
 		user.profile.referenciasPersonales_ids = [];

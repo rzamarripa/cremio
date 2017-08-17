@@ -291,16 +291,6 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
-		.state('root.distribuidorForm', {
-			url: '/distribuidorForm',
-			templateUrl: 'client/clientes/distribuidorForm.ng.html',
-			controller: 'DistribuidorFormCtrl as dis',
-			resolve: {
-				"currentUser": ["$meteor", function($meteor){
-					return $meteor.requireUser();
-				}]
-			}
-		})
 		.state('anon.imprimirDoc', {
 		      url: '/imprimirDoc',
 		      templateUrl: 'client/clientes/imprimirDoc.ng.html',
@@ -373,17 +363,6 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 						}					 	
 				 });
 			 }]
-			}
-		})
-
-		.state('root.distribuidoresLista', {
-			url: '/distribuidores',
-			templateUrl: 'client/distribuidores/distribuidoresLista.ng.html',
-			controller: 'DistribuidoresListaCtrl as dis',
-			resolve: {
-				"currentUser": ["$meteor", function($meteor){
-					return $meteor.requireUser();
-				}]
 			}
 		})
 		.state('root.distribuidoresForm', {
