@@ -312,7 +312,8 @@ angular.module("creditoMio")
 	              $scope.$apply();
 	          }
 	        
-	    }); 	
+	    }); 
+
 	    
     },
 
@@ -449,9 +450,21 @@ angular.module("creditoMio")
   
   this.selCredito=function(objeto, num)
   {
+    console.log(objeto,"kaka" )
 			
 			//objeto.classPago = "text-primary";
 			//console.log(objeto);
+          Meteor.call('getClienteInformacion',objeto.cliente, function(error, result) {           
+          if (result)
+          {
+            rc.cliente = result;
+              console.log("cliente",result);
+              
+
+
+              $scope.$apply();
+          }
+      });
 			
       rc.cliente_id = objeto.cliente._id
 
@@ -578,6 +591,8 @@ angular.module("creditoMio")
                 //console.log(rc.historialCrediticio);
             }
       });
+
+       
       
       
       //-----------------------------------------------------------------------------
@@ -607,8 +622,8 @@ angular.module("creditoMio")
 		
 		if (this.selected_numero === objeto)
 		{
-				console.log("isSelected:", objeto); 	
-				console.log(objeto);
+				// console.log("isSelected:", objeto); 	
+				// console.log(objeto);
 		}
 		
 		
@@ -671,7 +686,8 @@ angular.module("creditoMio")
 											rc.seleccionadoRecibos += c.importeRegular;
 									else if (c.descripcion == "Cargo Moratorio")		
 											rc.seleccionadoMultas += c.importeRegular;
-							}		
+							}	
+
 					});
 			}
 	};

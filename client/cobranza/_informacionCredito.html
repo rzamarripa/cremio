@@ -25,7 +25,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cob.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in cob.planPagosViejo">
+					<tr ng-class="(pago.movimiento == 'Cargo Moratorio') ? 'danger' : 'active in'" ng-repeat="pago in cob.planPagosViejo">
 
 
 						<td ng-class="(pago.descripcion == 'Multa') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago}}</td>	

@@ -40,13 +40,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.recibo = {};
 	rc.recibos = [];
 	rc.empresaSeleccionada = ""
+	rc.datosCliente = ""
 	
 	rc.editMode = false;
 	rc.puedeSolicitar = true;
 	
-	this.subscribe("ocupaciones",()=>{
-		return [{ estatus : true }]
-	});
+	
 	this.subscribe('cliente', () => {
 		return [{_id : $stateParams.objeto_id}];
 	});
@@ -71,40 +70,22 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('pagos',()=>{
 		return [{}];
 	});
-	this.subscribe('documentos',()=>{
-		return [{estatus:true}];
-	});
+	
 	this.subscribe('personas',()=>{
 		return [{rol:"Cliente"}];
 	});
 
-	this.subscribe('ciudades',()=>{
-		return [{estatus:true}];
+	this.subscribe('tiposIngreso',()=>{
+		return [{
+			estatus : true
+		}] 
 	});
-	this.subscribe('municipios',()=>{
-		return [{estatus:true}];
+	this.subscribe('tiposCredito',()=>{
+		return [{
+			estatus : true
+		}]
 	});
-	this.subscribe('colonias',()=>{
-		return [{estatus:true}];
-	});
-	this.subscribe('estadoCivil',()=>{
-		return [{estatus:true}]
-	 });
-	this.subscribe('paises',()=>{
-		return [{estatus:true}];
-	});
-	this.subscribe('sucursales',()=>{
-		return [{estatus:true}];
-	});
-	this.subscribe('empresas',()=>{
-		return [{estatus:true}];
-	});
-	this.subscribe('estados',()=>{
-		return [{estatus:true}];
-	});
-	this.subscribe('nacionalidades',()=>{
-		return [{estatus:true}];
-	});
+
 			
 	this.helpers({
 		ciudades : () => {
@@ -664,7 +645,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
   };
 
 	
-	this.masInformacion = function(){
+	this.masInformacion = function(cliente){
 		this.masInfo = !this.masInfo;
 		this.solicitudesCre = false;
 		this.creditoAc = false;
@@ -672,7 +653,21 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		this.masInfoCredito = false;
 		this.creditoApro = false
 		this.creditosRechazados = false;
-	}
+
+		 Meteor.call('getClienteInformacion',cliente, function(error, result) {           
+          if (result)
+          {
+          	rc.objeto = result;
+              console.log("cliente",result);
+              
+
+
+              $scope.$apply();
+          }
+      }) 
+
+
+	};
 	this.creditosActivos = function(){
 		this.creditoAc = !this.creditoAc;
 		this.solicitudesCre = false;
@@ -893,15 +888,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		$('#imagenDiv').empty().append(imagen);
 		$("#modaldoc").modal('show');
 	};
-	
-/*
-	this.modalDoc= function(img)
-	{
-		var imagen = '<img class="img-responsive" src="'+img+'" style="margin:auto;">';
-		$('#imagenDiv').empty().append(imagen);
-		$("#modaldoc").modal('show');
-	};
-*/
+
 
 	this.cerrarModal= function() {
 		rc.openModal = false
@@ -921,11 +908,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 
 		_.each(objeto, function(cliente){	
-	  			// var empresa = Empresas.findOne(cliente.empresa_id);
-	  			// cliente.empresaCiudad = empresa.ciudad;
-	  			// cliente. = empresa.;
+
 	  			
-	  			//if (cliente.ocupacion_id) {
 	  				cliente.ocupacion = Ocupaciones.findOne(cliente.ocupacion_id)
 
 	  			//}
@@ -1426,11 +1410,23 @@ if(estatus == 0){
 					
 	}
 
+	 this.imprimirContratos = function(contrato,cliente){
+	 	//console.log("contrato",contrato,"y",cliente,"cliente")
+	
+				contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
+	  
+	  		    Meteor.call('getPeople',cliente, function(error, result){           					
+							if (result)
+							{
+									
+								rc.datosCliente = result.profile
+									
 
-	  this.imprimirContratos = function(contrato){
-	  	console.log("contrato",contrato)
-
-	  		Meteor.call('contratos', contrato, function(error, response) {
+								console.log(rc.datosCliente,"el clientaso")
+									
+										console.log("contrato",contrato)
+				Meteor.call('contratos', contrato, contrato._id,rc.datosCliente,contrato.planPagos, function(error, response) {
+				  
 				   if(error)
 				   {
 					    console.log('ERROR :', error);
@@ -1467,43 +1463,118 @@ if(estatus == 0){
 						  var url = window.URL.createObjectURL(blob);
 						  
 						  //console.log(url);
-						   if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
-
+						//  CONTRATO SIMPLE ////////////////////////////////////////////////////
+						  if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
+						  console.log("INTERES","INTERES:",contrato.tipoInteres.tipoInteres)
+						   if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
 						  var dlnk = document.getElementById('dwnldLnk');
-						  console.log("INTERES")
 					    dlnk.download = "CONTRATOINTERES.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
+							}
+						  if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
+						  var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOINTERESSSI.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+							}
+							if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+						  var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOINTERESCOMPUESTO.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+							}
 						}
-						 if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
-						 	console.log("OBLIGADO SOLIDARIO")
+						////////////////////////////////////////////////////////////////////////////////////////////////////
+						///////CONTRATO SOLIDARIO//////////////////////////////////////////
+
+						if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
+							 console.log("OBLIGADO SOLIDARIO","INTERES:",contrato.tipoInteres.tipoInteres);
+							 if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
+						  }
+						   if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIOCOMPUESTO.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+						  }
+						   if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIOSSI.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+						  }
 
 						}
-							if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
-								console.log("HIPOTECARIO")
+							if (contrato.garantias && contrato.tipoGarantia == "general") {
+								console.log("HIPOTECARIO","INTERES:",contrato.tipoInteres.tipoInteres)
+								if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOHIPOTECARIO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
+						}
+							if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOHIPOTECARIOSSI.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+						}
+							if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOHIPOTECARIOCOMPUESTO.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+						}
 
 						}
 							if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
-								console.log("PRENDARIA")
+								console.log("PRENDARIA","INTERES:",contrato.tipoInteres.tipoInteres)
+								if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOGARANTIAPRENDARIA.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
-						}		  
-				   }
-				});
+							}
+								if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOGARANTIAPRENDARIACOMPUESTO.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+							}
+								if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
+							var dlnk = document.getElementById('dwnldLnk');
+					    dlnk.download = "CONTRATOGARANTIAPRENDARIASSI.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+							}
+						}
+										}//else
+					});//meteorcontratos
+			}//if
+			//$scope.$apply();	
+		});
+		  
+				
+
+// $scope.$apply();
+
 		};
 
 		this.recuperarCredito= function(id)

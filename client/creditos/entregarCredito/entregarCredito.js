@@ -480,7 +480,7 @@ angular.module("creditoMio")
 						  var url = window.URL.createObjectURL(blob);
 						  
 						  //console.log(url);
-						  //CONTRATO SIMPLE ////////////////////////////////////////////////////
+						//  CONTRATO SIMPLE ////////////////////////////////////////////////////
 						  if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
 						  console.log("INTERES","INTERES:",contrato.tipoInteres.tipoInteres)
 						   if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
@@ -490,7 +490,7 @@ angular.module("creditoMio")
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 							}
-						  if (contrato.tipoInteres.tipoInteres == "Saldo Insolutos") {
+						  if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
 						  var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOINTERESSSI.docx"; 
 							dlnk.href = url;
@@ -505,8 +505,8 @@ angular.module("creditoMio")
 						  window.URL.revokeObjectURL(url);
 							}
 						}
-						//////////////////////////////////////////////////////////////////////////////////////////////////////
-						/////////CONTRATO SOLIDARIO//////////////////////////////////////////
+						////////////////////////////////////////////////////////////////////////////////////////////////////
+						///////CONTRATO SOLIDARIO//////////////////////////////////////////
 
 						if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
 							 console.log("OBLIGADO SOLIDARIO","INTERES:",contrato.tipoInteres.tipoInteres);
@@ -524,7 +524,7 @@ angular.module("creditoMio")
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 						  }
-						   if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+						   if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIOSSI.docx"; 
 							dlnk.href = url;
@@ -542,7 +542,7 @@ angular.module("creditoMio")
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 						}
-							if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+							if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOHIPOTECARIOSSI.docx"; 
 							dlnk.href = url;
@@ -574,17 +574,15 @@ angular.module("creditoMio")
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 							}
-								if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+								if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOGARANTIAPRENDARIASSI.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 							}
-
 						}
-		  
-				   }
+					}
 				});
 										
 							}
