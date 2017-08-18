@@ -16,7 +16,7 @@
 					   	</div>
 						 	<div class="col-sm-4" valida>
 						  	<label>Cajero *</label>
-					    	<select name="cajero" class="form-control select2" placeholder="Seleccione" ng-model="caj.objeto.usuario_id" required>
+					    	<select name="cajero" class="form-control select2" placeholder="Seleccione" ng-model="caj.objeto.usuario_id" required="">
 									<option ng-repeat="cajero in caj.cajeros" value="{{cajero._id}}">{{cajero.profile.nombreCompleto}}</option>
 								</select>
 					   	</div>

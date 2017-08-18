@@ -556,16 +556,18 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			if (c != undefined)
 			{
 					var caja = Cajas.findOne({usuario_id: c._id});
+					console.log(caja);
 					if (caja != undefined)
 					{
 							if (caja.estadoCaja == "Cerrada")
 									rc.estatusCaja = false;
-							else
+							else if (caja.estadoCaja == "Abierta")
 									rc.estatusCaja = true;
 					}
 					else
 							rc.estatusCaja = false;
 			}			
+			console.log(rc.estatusCaja);
 			return c;
 		},
 		

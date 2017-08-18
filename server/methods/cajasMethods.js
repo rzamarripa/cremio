@@ -18,7 +18,7 @@ Meteor.methods({
     caja.estadoCaja = "Cerrada";
     var cajaid = Cajas.insert(caja)
     if (usuario.profile.caja_id)
-      Cajas.update({ _id: cajavieja._id }, { $set: { usuario_id: "" } });
+       Cajas.update({ _id: cajavieja._id }, { $set: { usuario_id: "" } });
     Meteor.users.update({ _id: caja.usuario_id }, { $set: { 'profile.caja_id': cajaid } })
     return cajaid;
   },
@@ -38,9 +38,9 @@ Meteor.methods({
     var usuarioViejo = oldcaja.usuario_id;
 
     if (usuario.profile.caja_id) {
-      cajavieja = Cajas.findOne(usuario.profile.caja_id);
-      if (cajavieja.estadoCaja == "Abierta")
-        throw new Meteor.Error(500, 'Error 500: Conflicto', 'Caja Abierta');
+      	cajavieja = Cajas.findOne(usuario.profile.caja_id);
+				if (cajavieja.estadoCaja == "Abierta")
+        	throw new Meteor.Error(500, 'Error 500: Conflicto', 'Caja Abierta');
     }
     caja.sucursal_id = user.profile.sucursal_id;
     //caja.createdBy = user._id;
@@ -50,14 +50,17 @@ Meteor.methods({
     caja.updatedBy = user._id;
     //caja.estatus = true;
     //caja.estadoCaja = "Cerrado";
-
+		//console.log(caja);
 
     var cajaid = caja._id;
     delete caja._id
     Cajas.update({ _id: cajaid }, { $set: caja })
 
-    if (usuario.profile.caja_id)
-      Cajas.update({ _id: cajavieja._id }, { $set: { usuario_id: "" } })
+    
+		if (usuario.profile.caja_id != caja.usuario_id)
+       Cajas.update({ _id: cajavieja._id }, { $set: { usuario_id: "" } })
+		
+      
     if (usuarioViejo)
       Meteor.users.update({ _id: usuarioViejo }, { $set: { 'profile.caja_id': "" } })
 
@@ -219,7 +222,12 @@ Meteor.methods({
     return "200";
   },
   abrirCaja: function(caja) {
-    caja.estadoCaja = "Abierta";
+	  
+	  if (caja.usuario_id == "")
+		  	throw new Meteor.Error(500, 'Al abrir ventanilla, No tiene asignado un Cajero', ' ');
+	  
+    
+		caja.estadoCaja = "Abierta";
     var cajaid = caja._id;
     var user = Meteor.user();
     
@@ -246,7 +254,6 @@ Meteor.methods({
       }
       MovimientosCajas.insert(movimiento);
     })
-    
 
     return "200"
   },

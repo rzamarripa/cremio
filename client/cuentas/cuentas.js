@@ -47,26 +47,30 @@ angular.module("creditoMio")
 		}
 		
 		//Validación para que no agrege cuentas si existe una caja abierta
-		var ban = false;
-		_.each(rc.cajas, function(caja){
-				if (caja.estadoCaja == "Abierta")
-				{
-						toastr.warning('La ventanilla ' + caja.nombre + ' esta abierta es necesario cerrarla entes de crear una cuenta');		
-						ban = true;	
-						return;
-				}
-		});
+		/*
+				var ban = false;
+				_.each(rc.cajas, function(caja){
+						if (caja.estadoCaja == "Abierta")
+						{
+								toastr.warning('La ventanilla ' + caja.nombre + ' esta abierta es necesario cerrarla entes de crear una cuenta');		
+								ban = true;	
+								return;
+						}
+				});
+		*/
+/*
 		if (!ban)
 		{
-				Meteor.call ("crearCuenta",objeto,function(error,result){
-					if(error){
-						console.log(error);
-						toastr.error('Error al guardar los datos.');
-						return
-					}
-					toastr.success('Guardado correctamente.');
-				});
-		}
+*/
+		Meteor.call ("crearCuenta",objeto,function(error,result){
+			if(error){
+				console.log(error);
+				toastr.error('Error al guardar los datos.');
+				return
+			}
+			toastr.success('Guardado correctamente.');
+		});
+		//}
 		rc.objeto = {}; 
 		$('.collapse').collapse('hide');
 		rc.nuevo = true;

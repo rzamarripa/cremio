@@ -80,6 +80,15 @@ angular.module("creditoMio")
 						toastr.error('Error al guardar los datos.');
 						return;
 			}
+			
+			var cajaAbierta = Cajas.findOne({usuario_id: objeto.usuario_id});
+			if (cajaAbierta.estadoCaja == "Abierta")
+			{
+					toastr.warning('Ya tinen una caja abierta');
+					return;
+			}
+			
+			
 			objeto.estatus = true;
 
 			_.each(this.tiposIngreso,function(tipo){
@@ -118,8 +127,22 @@ angular.module("creditoMio")
 						return;
 			}
 			
+			if (objeto.usuario_id == "")
+			{
+					toastr.warning('Asigne un Cajero');
+					return;
+			}
+			
+			var cajaAbierta = Cajas.findOne({usuario_id: objeto.usuario_id});
+			if (cajaAbierta.estadoCaja == "Abierta")
+			{
+					toastr.warning('Ya tinen una caja abierta');
+					return;
+			}
 			
 			
+			
+
 			Meteor.call ("actualizarCaja",objeto,function(error,result){
 		
 				if(error){
@@ -134,6 +157,7 @@ angular.module("creditoMio")
 				form.$setPristine();
 				form.$setUntouched();
 			});
+
 	};
 
 	this.cambiarEstatus = function(id, estatus)

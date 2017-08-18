@@ -227,8 +227,8 @@ angular.module("creditoMio")
             flags.abonoKey = key;
           }
           if(pago.descripcion == "Abono de Multa"){
-            console.log(flags);
-            console.log(arreglo[flags.multaKey].saldoActualizado);
+            //console.log(flags);
+            //console.log(arreglo[flags.multaKey].saldoActualizado);
             if(arreglo[flags.multaKey].saldoActualizado){
               arreglo[flags.multaKey].saldoActualizado -= pago.pago;
             }else{
@@ -258,7 +258,7 @@ angular.module("creditoMio")
 
         })
 
-        console.log(filtrado,"filtrado")
+        //console.log(filtrado,"filtrado")
         return filtrado;
       }
       
