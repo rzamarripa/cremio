@@ -651,7 +651,7 @@
 												<tbody>
 													<tr ng-class="pago.color" ng-repeat="pago in pvpp.planPagosViejo | orderBy: pvpp.funcionOrdenar()" ng-if="pago.verCargo">
 							
-														<td ><a ng-model="pago.pagoSeleccionado" ng-click="pvpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1" >{{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
+														<td ><a ng-model="pago.pagoSeleccionado" ng-click="pvpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
 
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>

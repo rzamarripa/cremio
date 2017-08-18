@@ -448,28 +448,38 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
     }
   }
 
-
   this.seleccionarPago = function(pago) {
     pago.pagoSeleccionado = !pago.pagoSeleccionado;
     pago.estatus = 0;
     rc.pago.totalPago = 0;
+    
+		if (pago.pagoSeleccionado == true && pago.movimiento == "Cargo Moratorio")
+    {
+	    	pago.importeRegular = Number(pago.importeRegular).toFixed(2);
+		    pago.importepagado = parseFloat(pago.importeRegular);
+		    pago.pagoSeleccionado = true;
+	    
+    }
+    
     if (!pago.pagoSeleccionado)
       pago.importepagado = 0;
     _.each(rc.planPagosViejo, function(p) {
 				if (p.verCargo)
 	      {	    
-		      if (!pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago > pago.numeroPago && p.estatus != 1) {
+		      if (!pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago > pago.numeroPago && p.estatus != 1 && pago.movimiento == "Recibo") {
 		        p.importepagado = 0;
 		        p.pagoSeleccionado = false;
 		      }
-		      if (pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago <= pago.numeroPago && p.estatus != 1) {
+		      if (pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago <= pago.numeroPago && p.estatus != 1 && pago.movimiento == "Recibo") {
 			      p.importeRegular = Number(p.importeRegular).toFixed(2);
 		        p.importepagado = parseFloat(p.importeRegular);
 		        p.pagoSeleccionado = true;
 		      }
+		      
+		      
 		      if (p.pagoSeleccionado != undefined) {
 		        if (p.pagoSeleccionado == true) {
-		          rc.pago.totalPago += p.importepagado;
+		           rc.pago.totalPago += p.importepagado;
 		        }
 		      }
 				}		
@@ -522,6 +532,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 	};
 
   this.guardarPago = function(pago, credito) {
+		
 		
 	  if (this.pago.tipoIngreso_id == undefined)
 	  {
@@ -598,6 +609,23 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 						//Validar que es lo que se va a pagar recibo, cargo o ambos
 						var sePagaraRecibo = false;
 						var sePagaraCargo = false;
+						
+						
+						var fechaProximoPagoArray = []
+						
+						var seleccionadosId = [];
+				    _.each(rc.planPagosViejo, function(p) {
+				      if (p.pagoSeleccionado){
+								 if (p.descripcion == "Recibo") sePagaraRecibo = true;
+								 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
+					       seleccionadosId.push({ id: p._id, importe: p.importepagado })
+				      }
+				      else
+				      	 fechaProximoPagoArray.push(p.fechaLimite);
+				    });
+				    
+				    var fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
+						
 				    	    
 				    if (nc.aplica == "RECIBO" &&  sePagaraCargo == true)
 				    {
@@ -611,27 +639,30 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 								return;
 				    }					
 				}
-				
-				var fechaProximoPagoArray = []
-				
-				var seleccionadosId = [];
-		    _.each(rc.planPagosViejo, function(p) {
-		      if (p.pagoSeleccionado){
-						 if (p.descripcion == "Recibo") sePagaraRecibo = true;
-						 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
-			       seleccionadosId.push({ id: p._id, importe: p.importepagado })
-		      }
-		      else
-		      	 fechaProximoPagoArray.push(p.fechaLimite);
-		    });
-		    
-		    var fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
-				
-		    //console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
+				else
+				{
+						
+						var fechaProximoPagoArray = []
+						
+						var seleccionadosId = [];
+				    _.each(rc.planPagosViejo, function(p) {
+				      if (p.pagoSeleccionado){
+								 if (p.descripcion == "Recibo") sePagaraRecibo = true;
+								 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
+					       seleccionadosId.push({ id: p._id, importe: p.importepagado })
+				      }
+				      else
+				      	 fechaProximoPagoArray.push(p.fechaLimite);
+				    });
+				    
+				    var fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
+					
+					
+					
+				}
 		    
 
-		    
-Meteor.call("pagoParcialCredito", seleccionadosId, 
+				Meteor.call("pagoParcialCredito", seleccionadosId, 
 		    																	pago.pagar, 
 		    																	pago.totalPago, 
 		    																	pago.tipoIngreso_id, 
@@ -680,7 +711,6 @@ Meteor.call("pagoParcialCredito", seleccionadosId,
 
 	};
 
-
   $(document).ready(function() {
     $('body').addClass("hidden-menu");
 		
@@ -689,7 +719,6 @@ Meteor.call("pagoParcialCredito", seleccionadosId,
   
 
 	});
-
 
 	this.ocultar = function() 
 	{

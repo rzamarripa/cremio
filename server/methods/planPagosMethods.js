@@ -602,8 +602,6 @@ Meteor.methods({
 	},
 	pagoParcialCredito:function(pagos, abono, totalPago, tipoIngresoId, pusuario_id, ocultaMulta, subtotal, cargosMoratorios, total, fechaProximoPago){
 		
-		console.log(ocultaMulta);
-		
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 		var puser = Meteor.users.findOne(pusuario_id);
