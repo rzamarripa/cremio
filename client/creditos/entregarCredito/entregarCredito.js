@@ -532,21 +532,21 @@ angular.module("creditoMio")
 						//  CONTRATO SIMPLE ////////////////////////////////////////////////////
 						  if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
 						  console.log("INTERES","INTERES:",contrato.tipoInteres.tipoInteres)
-						   if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+						   if (contrato.tipoInteres.tipoInteres == "Simple") {
 						  var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOINTERES.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 							}
-						  if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
+						  if (contrato.tipoInteres.tipoInteres == "Saldos Isolutos") {
 						  var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOINTERESSSI.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 							}
-							if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+							if (contrato.tipoInteres.tipoInteres == "Compuesto") {
 						  var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOINTERESCOMPUESTO.docx"; 
 							dlnk.href = url;
@@ -559,21 +559,21 @@ angular.module("creditoMio")
 
 						if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
 							 console.log("OBLIGADO SOLIDARIO","INTERES:",contrato.tipoInteres.tipoInteres);
-							 if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+							 if (contrato.tipoInteres.tipoInteres == "Simple") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 						  }
-						   if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+						   if (contrato.tipoInteres.tipoInteres == "Compuesto") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIOCOMPUESTO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 						  }
-						   if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
+						   if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIOSSI.docx"; 
 							dlnk.href = url;
@@ -584,21 +584,21 @@ angular.module("creditoMio")
 						}
 							if (contrato.garantias && contrato.tipoGarantia == "general") {
 								console.log("HIPOTECARIO","INTERES:",contrato.tipoInteres.tipoInteres)
-								if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+								if (contrato.tipoInteres.tipoInteres == "Simple") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOHIPOTECARIO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 						}
-							if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
+							if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOHIPOTECARIOSSI.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 						}
-							if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+							if (contrato.tipoInteres.tipoInteres == "Compuesto") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOHIPOTECARIOCOMPUESTO.docx"; 
 							dlnk.href = url;
@@ -609,21 +609,21 @@ angular.module("creditoMio")
 						}
 							if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
 								console.log("PRENDARIA","INTERES:",contrato.tipoInteres.tipoInteres)
-								if (contrato.tipoInteres.tipoInteres == "SIMPLE") {
+								if (contrato.tipoInteres.tipoInteres == "Simple") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOGARANTIAPRENDARIA.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 							}
-								if (contrato.tipoInteres.tipoInteres == "COMPUESTO") {
+								if (contrato.tipoInteres.tipoInteres == "Compuesto") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOGARANTIAPRENDARIACOMPUESTO.docx"; 
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 							}
-								if (contrato.tipoInteres.tipoInteres == "SALDOS SOBRE INSOLUTOS") {
+								if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOGARANTIAPRENDARIASSI.docx"; 
 							dlnk.href = url;

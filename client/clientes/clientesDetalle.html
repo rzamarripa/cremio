@@ -693,7 +693,7 @@
 							</thead>
 							<tbody>
 								<tr  ng-repeat="credito in cd.historial" 
-								ng-class="(credito.tipoPar == 'par') ? 'default' : (credito.tipoPar == 'impar') ? 'info': 'success'">
+								ng-class="(credito.tipoPar == 'par') ? 'active in' : (credito.tipoPar == 'impar') ? 'info': 'success'">
 									<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
 									<td class="text-center">{{credito.movimiento}}</td>	
 									<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
@@ -701,7 +701,7 @@
 									<td class="text-right">{{credito.pago | currency}}</td>
 									<td >{{credito.saldo | currency}}</td>
 									<td >0</td>
-									<td >0</td>
+									<td >{{credito.saldoActualizado}}</td>
 								</tr>
 							</tbody>
 						</table>

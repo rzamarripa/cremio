@@ -15,11 +15,15 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 /*
 				console.log(Meteor.userId());
 				console.log(Meteor.user());
+
 */
+        //$state.go('root.home');
+        if (Meteor.user().username == "admin")
+           $state.go('root.home'); 
 	      if (Meteor.user().roles[0] == "Verificador")
         	 $state.go('root.panelVerificador');        
         else 	 
-        	$state.go('root.home');
+         	$state.go('root.home');
       },
       function (error) {
         toastr.error(error.reason);

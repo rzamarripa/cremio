@@ -425,7 +425,7 @@ _.each(creditos,function(credit){
 	  rc.fechaInicial.setHours(0,0,0,0);
 		rc.fechaFinal.setHours(23,0,0,0);
 		
-		rc.sumaCapital = 0;
+	rc.sumaCapital = 0;
     rc.sumaInteres = 0;
     rc.sumaIva = 0;
     rc.sumaSeguro = 0;
@@ -843,17 +843,20 @@ this.guardarNotaCobranza=function(nota){
 		this.diarioCreditos = true
 	}
 	this.imprimirReporteCobranza = function(objeto){
+		console.log(objeto)
 		
 		var suma = 0
 		var sumaInter = 0
 		var sumaIva = 0
 		_.each(objeto,function(item){
 			
-	    	item.numerosPagos= item.credito.folio
-	    	item.numeroCliente = item.cliente.profile.numeroCliente
-	    	suma += item.pago
-	    	sumaInter += item.interes
-	    	sumaIva += item.iva 
+	    	// item.numerosPagos= item.credito.folio
+	    	// item.numeroCliente = item.numeroCliente
+
+
+	    	suma = rc.sumaCapital
+	    	sumaInter += rc.sumaInteres
+	    	sumaIva += rc.sumaCapital 
 	    	});
    
 

@@ -252,13 +252,12 @@ angular.module("creditoMio")
             }
             else
             {
-              
               pago.tipoPar = "impar"
             }
 
         })
 
-        //console.log(filtrado,"filtrado")
+        console.log(filtrado,"filtrado")
         return filtrado;
       }
       

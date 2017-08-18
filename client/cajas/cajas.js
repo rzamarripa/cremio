@@ -82,11 +82,13 @@ angular.module("creditoMio")
 			}
 			
 			var cajaAbierta = Cajas.findOne({usuario_id: objeto.usuario_id});
+			if (cajaAbierta != undefined) {
 			if (cajaAbierta.estadoCaja == "Abierta")
 			{
 					toastr.warning('Ya tinen una caja abierta');
 					return;
 			}
+		}
 			
 			
 			objeto.estatus = true;

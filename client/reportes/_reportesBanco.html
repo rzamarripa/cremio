@@ -42,7 +42,7 @@
 		<div class="col-sm-3">
 			<br>
 			<input type="button" class="btn btn-primary" ng-click="re.diarioBancos()" value="Buscar" />
-				<a href="" class="btn btn-primary pull-right" ng-click="re.imprimirReporteBancos(re.bancos[0])" >Imprimir Tabla</a>
+				<a href="" class="btn btn-primary pull-right" ng-click="re.imprimirReporteBancos(re.planPagos)" >Imprimir Tabla</a>
 		</div>	
 	</div>	
 </div>
@@ -75,8 +75,9 @@
 				    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
 				    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
 				    <td><div class="text-center">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</div></td>
+				     <td><div class="text-center">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</div></td>
 				    <td><div class="text-center">{{objeto.totalPago | currency}}</div></td>
-				    <td><div class="text-center">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</div></td>
+				   
 				    <td><div class="pull-right">{{objeto.cajero}}</div></td>
 				    <td><div class="pull-right">{{objeto.pagoInteres | currency}}</div></td>
 				    <td><div class="pull-right">{{objeto.pagoCapital | currency}}</div></td> 	
