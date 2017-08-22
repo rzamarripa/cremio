@@ -237,12 +237,14 @@ angular.module("creditoMio")
                           }
                     }); 
               });     
-              
+          	   
           }
-          
+
           rc.objeto = objeto;
-          rc.objeto.confirmpassword = rc.objeto.password;
-          //eturn objeto;
+          rc.objeto.confirmpassword = "sinpassword";	
+					rc.objeto.password 				= "sinpassword"; 
+					
+          //return objeto;
       }  
     },
     referenciasPersonalesHelper : () => {
@@ -332,10 +334,13 @@ angular.module("creditoMio")
       toastr.error('Error al actualizar los datos.');
       return;
     }
+        
     var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
     var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
     var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
     objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
+    
+    
     
     if (rc.documents.length){
       objeto.profile.documentos = rc.documents
@@ -356,7 +361,7 @@ angular.module("creditoMio")
 
   
     delete objeto.profile.repeatPassword;
-    Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Cliente");
+    Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Cliente", this.cambiarContrasena);
     toastr.success('Actualizado correctamente.');
     //$('.collapse').collapse('hide');
     this.nuevo = true;
@@ -395,6 +400,40 @@ angular.module("creditoMio")
                 }
       				});
   };
+  
+  this.actualizarEmpresa = function(empresa, objeto,form)
+  {
+      if(form.$invalid){
+            toastr.error('Error al guardar los datos.');
+            return;
+      }
+      empresa.estatus = true;
+      empresa.usuarioActualizo = Meteor.userId();
+      
+      console.log(empresa._id)
+      var tempId = empresa._id;
+      delete empresa._id;
+      
+      Empresas.update({_id: tempId},{$set: empresa}, function(error, result)
+             	{
+                if (error){
+                  console.log("error: ",error);
+                }
+                if (result)
+                {
+                    objeto.profile.empresa_id = tempId;
+                    toastr.success('Actualizado correctamente.');
+                    this.empresa = {}; 
+                    $('.collapse').collapse('hide');
+                    this.nuevo = true;
+                    form.$setPristine();
+                    form.$setUntouched();
+                    $("[data-dismiss=modal]").trigger({ type: "click" });
+                    
+                }
+      				});
+  };
+  
   
   this.guardarOcupacion = function(ocupacion, objeto,form)
   {
@@ -699,6 +738,7 @@ angular.module("creditoMio")
   
   this.cambiarPassword = function()
   {
+	  	
       this.cambiarContrasena = !this.cambiarContrasena; 
   }
 

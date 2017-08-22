@@ -26,12 +26,16 @@
                 <option value="6">Sábado</option>
               </select>
             </div>
-            <div class="col-sm-2" valida>
+            <div class="col-sm-3" valida>
               <label>Primer abono</label>
               <input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ecCtrl.objeto.primerAbono" name="fechaPrimerAbono"/>
-            </div>            
+            </div>
+            <div class="col-sm-3">            
+								<br>
+								<button class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Crédito</button>	            
+            </div>  
           </div>
-          <button class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Crédito</button>         
+         
       </div>
     </div>
     <div ng-show = "!ecCtrl.verDiaPago">

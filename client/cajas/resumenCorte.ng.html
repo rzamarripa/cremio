@@ -1,0 +1,119 @@
+<div class="container">
+	<div class="widget-body no-padding">
+		<div class="padding-10">
+			<div class="row text-center">
+				<div class="col-sm-4 col-sm-offset-4">
+				<span id="logo"> <img src="img/logoCreditoMio.png" alt="SmartAdmin" style="margin-top: -5px;width: 170px;height: 100px;"> </span>
+					<strong> <h2>Credito Mio</h2> </strong>
+					<strong> <h2>Corte</h2> </strong>
+					<strong>-----------APERTURA DE VENTANILLA----------------</strong>
+					<table class="table">
+						<tr ng-repeat="(key, resu) in cjc.aperturaVentanilla">
+							<td>
+								{{key}}
+							</td>
+							<td>
+								{{resu | currency}}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<strong>Total: </strong>
+							</td>
+							<td>
+								<strong>{{cjc.totalAperura | currency}}</strong>
+							</td>
+						</tr>
+					</table>
+					<strong>-----------INGRESOS POR FORMA DE PAGO------------</strong>
+					<table class="table">
+						<tr ng-repeat="(key, resu) in cjc.ingresosAgrupados">
+							<td>
+								{{key}}
+							</td>
+							<td>
+								{{resu | currency}}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<strong>Total: </strong>
+							</td>
+							<td>
+								<strong>{{cjc.totalIngresos | currency}}</strong>
+							</td>
+						</tr>
+					</table>
+					<strong>-----------------ENTREGA DE CREDITOS-----------------</strong>
+					<table class="table">
+						<tr>
+							<td>
+								CREDITOS ENTREGADOS:
+							</td>
+							<td align="right">
+								{{cjc.creditosEntregados}}
+							</td>
+						</tr>
+						<tr ng-repeat="(key, ag) in cjc.creditosAgrupados">
+							<td>
+								{{key}}
+							</td>
+							<td>
+								{{ag | currency}}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<strong>Total: </strong>
+							</td>
+							<td>
+								<strong>{{cjc.totalCreditos | currency}}</strong>
+							</td>
+						</tr>
+					</table>
+					<strong>----------TRANSF. DE FONDOS A VENTANILLA----------</strong>
+					<table class="table">
+						<tr>
+							<td>
+								<strong>MONEDA NACIONAL: </strong>
+							</td>
+							<td>
+								<strong>{{cjc.totalTransAVentanilla | currency}}</strong>
+							</td>
+						</tr>
+					</table>
+					<strong>---------RETIRO DE FONDOS DE VENTANILLA---------</strong>
+					<table class="table">
+						<tr>
+							<td>
+								<strong>MONEDA NACIONAL: </strong>
+							</td>
+							<td>
+								<strong>{{cjc.totalTransDeVentanilla | currency}}</strong>
+							</td>
+						</tr>
+					</table>
+					<div class="row">
+						<div class="col-sm-12">
+							<span class="pull-left">(=)EFECTIVO EN CAJA:</span> 
+							<span class="pull-right">{{cjc.totalEnCaja | currency}}</span>
+						</div>
+					</div>
+					
+					<address>
+						OPERADOR (A): {{cjc.caja.cajero.profile.nombreCompleto}}<br>
+						ADMINISTRADOR (A):<br>
+						VENTANILLA: {{cjc.caja.nombre}}<br>
+
+						Rubidia Martinez Alcaraz<br>
+						Blvd Emiliano Zapata 3125 Local 12BC<br>
+						Colonia Lomas del Boulevard<br>
+						MAAR-661007-BF5<br>
+						(667) 717-21-21<br>
+					</address>
+					<div><a class="btn btn-primary" id="printpagebutton" ng-click="tkpctrl.borrarBotonImprimir()">Imprimir</a></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

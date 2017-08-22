@@ -270,7 +270,7 @@
             </li>
         </ul>
     </li>
-    <li data-ui-sref-active="active">
+    <li data-ui-sref-active="active" ng-if="currentUser.roles[0] != 'admin'">
           <a ui-sref="root.validacionCARP" tilte="Credito Mio">
               <i class="fa fa-lg fa-fw fa-lock"></i>
               <span class="menu-item-parent">Validación Personas</span>

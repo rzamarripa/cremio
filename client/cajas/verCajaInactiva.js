@@ -5,9 +5,10 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 	let rc = $reactive(this).attach($scope);
   window.rc = rc;
   
+  this.caja_id 	= $stateParams.caja_id;
+  rc.corte_id = $stateParams.corteCaja_id;
   
-  
-  this.caja_id = $stateParams.caja_id;
+  console.log(rc.corte_id);
   
   this.caja = { _id: 0 };
   
@@ -36,18 +37,6 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
     return [{_id: $stateParams.corteCaja_id}]
   });
   
-/*
-  this.subscribe('traspasos', () => {
-    return [{
-      $or: [
-        { origen_id: this.getReactively('caja._id') },
-        { destino_id: this.getReactively('caja._id') }
-      ],
-      createdAt: {$gte: this.getReactively('caja.ultimaApertura')},
-      sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
-    }];
-  });
-*/
   this.subscribe('pagos', () => {
     return [{ _id: { $in: this.getReactively('pagos_id') } }]
   });
@@ -72,7 +61,7 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 				      Meteor.apply('getCajaInactivaDetalle', [caj._id, mc.createdAt, corte.createdAt], function(err, result) {
 					      if (result)
 					      {
-						      console.log(result);
+						      //console.log(result);
 					        rc.cajaInactiva = result;
 					        $scope.$apply();
 					      }  
@@ -254,8 +243,11 @@ traspasos: () => {
   this.detalle = function(_id) {
     rc.detalleOrigenDestino = _.findWhere(rc.cajas, {_id: _id}) || _.findWhere(rc.cuentas, {_id: _id});
   };
+  
+  
 
-  this.getHistorialCajas = function(fechaInicio, fechaFin) {
+  /*
+this.getHistorialCajas = function(fechaInicio, fechaFin) {
     fechaInicio = moment(fechaInicio).startOf('day').toDate();
     fechaFin = moment(fechaFin).endOf('day').toDate();
     Meteor.apply('getHistorialCajas', [fechaInicio, fechaFin, Meteor.user().profile.sucursal_id], function(err, result) {
@@ -267,6 +259,7 @@ traspasos: () => {
       }
     });
   };
+*/
 
    
 

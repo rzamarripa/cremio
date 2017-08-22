@@ -19,19 +19,19 @@
 								    <div class="row">
 									    <div class="col-sm-3" valida>					    
 									    	<label>Nombre *</label>
-									    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="suc.objeto.nombre" required>
+									    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="suc.objeto.nombre" required capitalize>
 								    	</div>
 								    	<div class="col-sm-3" valida>
 									    	<label>Apellido Paterno *</label>
-									    	<input name="apPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="suc.objeto.apPaterno" required>
+									    	<input name="apPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="suc.objeto.apPaterno" required capitalize>
 								    	</div>
 								    	<div class="col-sm-3">					    
 									    	<label>Apellido Materno</label>
-									    	<input name="apMaterno"  type="text" class="form-control" placeholder="Apellido Materno" ng-model="suc.objeto.apMaterno" >
+									    	<input name="apMaterno"  type="text" class="form-control" placeholder="Apellido Materno" ng-model="suc.objeto.apMaterno" capitalize>
 								    	</div>
 								    	<div class="col-sm-3" valida>
 										    <label for="sexo">Sexo *</label>
-										    <select name="sexo" ng-model="suc.objeto.sexo" data-placeholder="Seleccione" class="form-control" required>
+										    <select name="sexo" ng-model="suc.objeto.sexo" data-placeholder="Seleccione" class="form-control" required capitalize>
 											    <option value=""></option>
 											    <option value="Masculino">Masculino</option>
 											    <option value="Femenino">Femenino</option>
@@ -67,15 +67,15 @@
 									<div class="row">
 							    	<div class="col-sm-3" valida>					    
 								    	<label>Clave *</label>
-								    	<input name="clave" type="text" class="form-control" placeholder="Clave" ng-model="suc.objeto.clave" required="">
+								    	<input name="clave" type="text" class="form-control" placeholder="Clave" ng-model="suc.objeto.clave" required="" capitalize>
 							    	</div>
 							    	<div class="col-sm-3" valida>
 							    		<label>Nombre *</label>
-								    	<input name="nombreobjeto" type="text" class="form-control" placeholder="Nombre Sección" ng-model="suc.objeto.nombreSucursal" required="">
+								    	<input name="nombreobjeto" type="text" class="form-control" placeholder="Nombre Sección" ng-model="suc.objeto.nombreSucursal" required="" capitalize>
 							    	</div>
 							    	<div class="col-sm-6">
 									    <label>Descripción</label>
-									    <textarea name="descripcion" class="form-control" placeholder="Descripción" ng-model="suc.objeto.descripcion"></textarea>
+									    <textarea name="descripcion" class="form-control" placeholder="Descripción" ng-model="suc.objeto.descripcion" capitalize></textarea>
 							    	</div>
 							    </div>
 				          <div class="row" valida>
@@ -89,7 +89,7 @@
 							    	</div>
 							    	<div class="col-sm-6" valida>
 									    <label>Dirección *</label>
-									    <textarea name="direccion" class="form-control" placeholder="Dirección" ng-model="suc.objeto.direccion" required></textarea>
+									    <textarea name="direccion" class="form-control" placeholder="Dirección" ng-model="suc.objeto.direccion" required capitalize></textarea>
 							    	</div>				    	
 							    </div>					
 							    <!--

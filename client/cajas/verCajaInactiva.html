@@ -10,17 +10,24 @@
     <div role="tabpanel" class="tab-pane active" id="resumenInactiva">
      	<div class="well">
 		      <div class="row">
-		        <div class="col-sm-6">
+		        <div class="col-sm-3">
 					    Folio: <span>{{vci.caja.folioCaja}}</span>
 				    </div>
 				    <br>
-				    <div class="col-sm-6">
+				    <div class="col-sm-3">
 					    Fecha Inicio: <span>{{vci.fechaInicio | date:"dd-MM-yyyy" }}</span>
 				    </div>
 				    <br>
-				    <div class="col-sm-6">
+				    <div class="col-sm-3">
 					    Fecha Final: <span>{{vci.fechaFinal | date:"dd-MM-yyyy" }}</span>
 				    </div>
+				    <br>
+				    <br>
+				    <div class="col-sm-2">
+				      <a class="btn btn-danger btn-mini" ui-sref="anon.imprimirCorte({corte_id: vci.corte_id})" target="_blank">
+							  <span class="fa fa-inbox"> Imprimir Corte</span>
+							</a>				    
+			      </div>
 		      </div>
 	    	</div>
     </div>
@@ -35,7 +42,7 @@
                 <th width="15%">Fecha</th>
                 <th width="20%">Tipo Movimiento</th>
                 <th width="20%">Movimiento</th>
-                <th width="20%">Cuenta</th>
+                <!-- <th width="20%">Cuenta</th> -->
                 <th width="5%">Capital</th>
                 <th width="5%">Multas</th>
                 <th width="5%">Intereses</th>
@@ -51,7 +58,7 @@
                 <td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
                 <td>{{mov.tipoMovimiento}}</td>
                 <td>{{mov.origen}}</td>
-                <td>{{mov.cuenta.nombre}}</td>
+                <!-- <td>{{mov.cuenta.nombre}}</td> -->
                 <td align="right">{{mov.capital | currency}}</td>
                 <td align="right">{{mov.multas | currency}}</td>
                 <td align="right">{{mov.intereses | currency}}</td>
