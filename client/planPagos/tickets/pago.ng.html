@@ -4,18 +4,13 @@
 	<div class="widget-body no-padding">
 		<div class="padding-10">
 			<div class="row text-center">
-			
-
-				
-
-		
 				<div class="col-sm-4 col-sm-offset-4">
 
 				<span id="logo"> <img src="img/logoCreditoMio.png" alt="SmartAdmin" style="margin-top: -5px;width: 170px;height: 100px;"> </span>
 					<strong> <h2>Credito Mio</h2> </strong>
 					<strong>----------------------Recibo de Pago----------------------</strong>
 					<address>
-						RECIBIMOS DE {{tkpctrl.cliente.profile.nombreCompleto}} (CLIENTE No. {{tkpctrl.cliente.profile.folio}}) CON DOMICILIO EN: CALLE {{tkpctrl.cliente.profile.calle}} NO. {{tkpctrl.cliente.profile.numero}} {{tkpctrl.cliente.profile.colonia.nombre}}. {{tkpctrl.cliente.profile.municipio.nombre}}, {{tkpctrl.cliente.profile.estado.nombre}}.
+						RECIBIMOS DE {{tkpctrl.cliente.profile.nombreCompleto}} (CLIENTE No. {{tkpctrl.cliente.profile.numeroCliente}}) CON DOMICILIO EN: CALLE {{tkpctrl.cliente.profile.calle}} NO. {{tkpctrl.cliente.profile.numero}} {{tkpctrl.cliente.profile.colonia.nombre}}. {{tkpctrl.cliente.profile.municipio.nombre}}, {{tkpctrl.cliente.profile.estado.nombre}}.
 					</address>
 					
 					<span class="pull-left">LA CANTIDAD DE: {{tkpctrl.pago.totalPago | currency}}</span>
@@ -66,7 +61,31 @@
 							</td>
 						</tr>
 					</table>
-					<div class="row">						
+					<table>
+						<tr>
+							<td class="col-sm-3" style="text-align: left">SALDO ANTERIOR: </td>
+							<td class="col-sm-3" style="text-align: right">{{tkpctrl.pago.saldoAnterior | currency}}</td>							
+						</tr>
+						<tr>
+							<td class="col-sm-3" style="text-align: left">SALDO ACTUAL: </td>
+							<td class="col-sm-3" style="text-align: right">{{tkpctrl.pago.saldoActual | currency}}</td>							
+						</tr>
+						<tr>
+							<td class="col-sm-3" style="text-align: left">C. MORATORIOS: </td>
+							<td class="col-sm-3" style="text-align: right">{{tkpctrl.pago.saldoCargoMoratorio | currency}}</td>							
+						</tr>
+						<tr>
+							<td class="col-sm-3" style="text-align: left">PRÓXIMO PAGO: </td>
+							<td class="col-sm-3" style="text-align: right">{{tkpctrl.pago.proximoPago | date:"dd-MM-yyyy"}}</td>							
+						</tr>
+						<tr>
+							<td class="col-sm-3" style="text-align: left">FORMA PAGO: </td>
+							<td class="col-sm-3" style="text-align: right">{{tkpctrl.tipoIngreso.nombre}}</td>							
+						</tr>						
+					</table>	
+<!--
+					<div class="row">
+													
 						<div style="text-align: left" class="col-sm-10">SALDO ANTERIOR: {{tkpctrl.pago.saldoAnterior | currency}}</div><br>
 						<div style="text-align: left" class="col-sm-10">SALDO ACTUAL  : {{tkpctrl.pago.saldoActual | currency}}</div><br>
 						<div style="text-align: left" class="col-sm-10">C. MORATORIOS : {{tkpctrl.pago.saldoCargoMoratorio | currency}}</div><br>
@@ -74,6 +93,7 @@
 						<div style="text-align: left" class="col-sm-10">PRÓXIMO PAGO  : {{tkpctrl.pago.proximoPago | date:"dd-MM-yyyy"}} </div><br>
 						<div style="text-align: left" class="col-sm-10">FORMA PAGO    : {{tkpctrl.tipoIngreso.nombre}}</div>
 					</div>
+-->
 					<br>
 						Atendio:<br>
 						{{tkpctrl.cajero.profile.nombreCompleto}}

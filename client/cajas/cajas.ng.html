@@ -95,7 +95,6 @@
 							  <ul class="dropdown-menu dropdown-menu-right text-left">
 							    <li><a  ng-click="caj.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
 							    <li><a  ui-sref="root.abrirCaja({caja_id:objeto._id})" ng-if = "objeto.estadoCaja=='Cerrada'"><i class="fa fa-external-link"></i> Abrir</a></li>
-							    <li><a  ui-sref="root.corteCaja({caja_id:objeto._id, cajero_id: objeto.usuario_id})" ng-if = "objeto.estadoCaja=='Abierta'"><i class="fa fa-external-link"></i> Corte</a><li>
 							  </ul>
 							</div>
 				    </div>				    

@@ -203,9 +203,11 @@ updateUsuario: function (usuario, rol) {
 		Accounts.setPassword(user._id, usuario.password, {logout: false});		
 	},
 */
-	updateUsuario: function (usuario, referenciasPersonales, rol) {
+	updateUsuario: function (usuario, referenciasPersonales, rol, cambiarPassword) {
 		
 	  var user = Meteor.users.findOne({"username" : usuario.username});
+		
+		user.profile = usuario.profile;
 
 		_.each(referenciasPersonales, function(referenciaPersonal){
 				
@@ -348,19 +350,18 @@ if (referenciaPersonal.buscarPersona_id)
 							
 		});
 	  
-	  //console.log(user.profile.referenciasPersonales_ids);  
-	  //delete usuario.profile.referenciasPersonales_ids;
-	  //usuario.profile.referenciasPersonales_ids = user.user.profile.referenciasPersonales_ids;
 	  
 	  
 	  Meteor.users.update({_id: user._id}, {$set:{
 			username: usuario.username,
 			roles: [rol],
-			password: usuario.password,
+			//password: usuario.password,
 			profile: user.profile
 		}});
 		
-		Accounts.setPassword(user._id, usuario.password, {logout: false});		
+		if (cambiarPassword == false)
+				Accounts.setPassword(user._id, usuario.password, {logout: false});		
+				
 	},
 	getUsuario: function (usuario) {	
 	  var user = Meteor.users.findOne({"_id" : usuario}, {fields: {"profile.nombreCompleto":1, "profile.numeroCliente": 1 }});

@@ -366,6 +366,8 @@ Meteor.methods({
 
     delete objeto._id
     CortesCaja.update({ _id: corteid }, { $set: objeto });
+    
+    return corteid;
 
   },
   getHistorialCajas: (fechaInicio, fechaFin, sucursal_id) => {
@@ -518,41 +520,118 @@ Meteor.methods({
     	}
     });
     return 	{
-	    				ingresosAgrupados: ingresosAgrupados,
-	    				totalIngresos: totalIngresos,
-	    				creditosAgrupados: creditosAgrupados,
-							totalCreditos: totalCreditos,
-							creditosEntregados: creditosEntregados,
-							totalTransAVentanilla: totalTransAVentanilla,
-							totalTransDeVentanilla: totalTransDeVentanilla,
+	    				ingresosAgrupados				: ingresosAgrupados,
+	    				totalIngresos						: totalIngresos,
+	    				creditosAgrupados				: creditosAgrupados,
+							totalCreditos						: totalCreditos,
+							creditosEntregados			: creditosEntregados,
+							totalTransAVentanilla		: totalTransAVentanilla,
+							totalTransDeVentanilla	: totalTransDeVentanilla,
 							totalEnCaja
 						};
-    //var agrupados = {};
-    // var pagos = Pagos.find({ caja_id: caja_id, estatus: { $ne: 0 }, fechaPago: filtroFechas }).fetch();
-    // _.each(pagos, function(pago) {
-    //   pago.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id);
-    //   if (agrupados[pago.tipoIngreso.nombre] == undefined) {
-    //     agrupados[pago.tipoIngreso.nombre] = 0;
-    //   }
-    //   agrupados[pago.tipoIngreso.nombre] += pago.totalPago;
-    // });
+  },
+  
+  getCorte: (corte_id) => {
+		
+		var corte = CortesCaja.findOne({_id: corte_id});
+		
+		var aperturaVentanilla = {}
+		var totalAperura = 0;
+		
+		var ingresosAgrupados = {};
+    var totalIngresos = 0;
     
-    // var caja = Cajas.findOne(caja_id);
-    // var entregados = {};
-    // var movimientos = MovimientosCajas.find({ monto: { $ne: 0 }, origen: 'Entrega de Credito', createdAt: filtroFechas }).fetch();
-    // entregados.cantidad = 0;
-    // entregados.total = 0;
-    // entregados.agrupados = {};
-    // _.each(movimientos, function(mov) {
-    //   entregados.total += (mov.monto * -1);
-    //   entregados.cantidad++;
-    //   mov.tipoIngreso = TiposIngreso.findOne(mov.cuenta_id);
-    //   if (entregados.agrupados[mov.tipoIngreso.nombre] == undefined) {
-    //     entregados.agrupados[mov.tipoIngreso.nombre] = 0
-    //   };
-    //   entregados.agrupados[mov.tipoIngreso.nombre] += (mov.monto * -1);
-    // });
-    // caja.cajero = Meteor.users.findOne(caja.usuario_id);
-    // return { resumen: agrupados, caja: caja, entregados: entregados, caja: caja };
-  }
+    var creditosAgrupados = {};
+    var totalCreditos = 0;
+    var creditosEntregados = 0;
+		
+		var transAVentanillaAgrupados = {};
+    var totalTransAVentanilla = 0;
+    
+    var transDeVentanillaAgrupados = {};
+    var totalTransDeVentanilla = 0;
+		
+		var totalEnCaja = 0;
+    
+		_.each(corte.movimientosCaja, function(mcaja, id){
+				
+				var movs = MovimientosCajas.findOne({ _id: mcaja});
+				
+				 //Ingresos por forma de pago			
+				if (movs.tipoMovimiento == 'Saldo Inicial')
+				{
+						movs.tipoIngreso = TiposIngreso.findOne(movs.cuenta_id);
+						var c = Cuentas.findOne({tipoIngreso_id: movs.cuenta_id});
+			    	if(c.tipoCuenta == 'Consignia'){
+			        totalAperura += movs.monto;				    		
+			    	}						
+			    	if (aperturaVentanilla[movs.tipoIngreso.nombre] == undefined) {
+			          aperturaVentanilla[movs.tipoIngreso.nombre] = 0;
+			      }
+			      aperturaVentanilla[movs.tipoIngreso.nombre] += movs.monto;
+				}
+				 //Ingresos por forma de pago			
+				else if (movs.tipoMovimiento == 'Pago' || movs.origen == 'Cancelación de pago')
+				{
+						movs.tipoIngreso = TiposIngreso.findOne(movs.cuenta_id);
+		        if (ingresosAgrupados[movs.tipoIngreso.nombre] == undefined) {
+		          ingresosAgrupados[movs.tipoIngreso.nombre] = 0;
+		        }
+		        ingresosAgrupados[movs.tipoIngreso.nombre] += movs.monto;
+		        totalIngresos += movs.monto;
+				}
+				else if(movs.tipoMovimiento == 'Retiro' || movs.origen == 'Cancelación de retiro')
+				{
+						movs.tipoIngreso = TiposIngreso.findOne(movs.cuenta_id);
+		        if (creditosAgrupados[movs.tipoIngreso.nombre] == undefined) {
+		          creditosAgrupados[movs.tipoIngreso.nombre] = 0;
+		        }
+		        creditosAgrupados[movs.tipoIngreso.nombre] += (movs.monto*-1);
+		        totalCreditos += movs.monto;
+		        creditosEntregados++;
+				}
+				else if(movs.tipoMovimiento == 'Ingreso Por Traspaso')
+				{
+						movs.tipoIngreso = TiposIngreso.findOne(movs.cuenta_id);
+		        var c = Cuentas.findOne({tipoIngreso_id: movs.tipoIngreso._id}); 
+		        if(c.tipoCuenta == 'Consignia'){
+		        	totalTransAVentanilla += movs.monto;
+		        }		
+				}
+				else if(movs.tipoMovimiento == 'Retiro Por Traspaso')
+				{
+						movs.tipoIngreso = TiposIngreso.findOne(movs.cuenta_id);
+		        var c = Cuentas.findOne({tipoIngreso_id: movs.tipoIngreso._id});        
+		        if(c.tipoCuenta == 'Consignia'){
+		        	totalTransDeVentanilla += movs.monto;
+		        }
+				}
+				
+		})
+		
+		totalCreditos = totalCreditos*-1;
+		
+    //Efectivo en Caja
+    _.each(corte.cuenta, function(cuenta, key){
+    		cuenta.tipoIngreso = TiposIngreso.findOne(key);
+				var c = Cuentas.findOne({tipoIngreso_id: cuenta.tipoIngreso._id});
+	    	if(c.tipoCuenta == 'Consignia'){
+	    		totalEnCaja = cuenta.montoCaputado;
+	    	}
+    });
+    
+    return 	{
+	    				ingresosAgrupados				: ingresosAgrupados,
+	    				aperturaVentanilla			: aperturaVentanilla,
+	    				totalIngresos						: totalIngresos,
+	    				creditosAgrupados				: creditosAgrupados,
+							totalCreditos						: totalCreditos,
+							creditosEntregados			: creditosEntregados,
+							totalTransAVentanilla		: totalTransAVentanilla,
+							totalTransDeVentanilla	: totalTransDeVentanilla,
+							totalAperura						:	totalAperura,
+							totalEnCaja
+						};
+  },
+  
 });

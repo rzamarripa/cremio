@@ -190,7 +190,7 @@ Meteor.methods({
 		
 		return "hecho";
 	},
-	entregarCredito : (montos,creditoid)=>{
+	entregarCredito : (montos,creditoid, tipoIngreso_id)=>{
 		var cajaid = Meteor.user().profile.caja_id;
 		var user = Meteor.user();
 		var caja = Cajas.findOne(cajaid);
@@ -213,6 +213,7 @@ Meteor.methods({
 						tipoMovimiento : "Retiro",
 						origen : "Entrega de Credito",
 						origen_id :creditoid,
+						tipoIngreso_id : tipoIngreso_id,
 						caja_id : cajaid,
 						cuenta_id :index,
 						monto : monto.saldo,

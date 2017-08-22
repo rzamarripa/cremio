@@ -25,9 +25,14 @@
 				    </div>
 		      </div>
 		      <div class="row">  
-			      <div class="col-sm-6">
+			      <div class="col-sm-2">
 				      <a class="btn btn-primary btn-mini" ui-sref="anon.imprimirResumen({caja_id: vca.caja._id, fechaApertura: vca.caja.ultimaApertura})" target="_blank">
-							  <span class="fa fa-file-text-o">Resumen</span>
+							  <span class="fa fa-file-text-o"> Resumen</span>
+							</a>				    
+			      </div>
+			      <div class="col-sm-2">
+				      <a class="btn btn-danger btn-mini" ng-click="vca.corte(vca.caja)">
+							  <span class="fa fa-inbox"> Corte Ventanilla</span>
 							</a>				    
 			      </div>
 		      </div>
@@ -45,7 +50,7 @@
 	                <th width="10%">N. Cliente</th>
 	                <th width="15%">Cliente</th>
 	                <th width="5%">Tipo Movimiento</th>
-	                <th width="10%">Cuenta</th>
+<!-- 	                <th width="10%">Cuenta</th> -->
 	                <th width="5%">Capital</th>
 	                <th width="5%">C. Mor.</th>
 	                <th width="5%">Intereses</th>
@@ -53,7 +58,7 @@
 	                <th width="5%">Iva</th>
 	                <th width="5%">Monto</th>
 	                <th width="10%">F. Pago</th>
-	                <th width="5%"></th>
+	                <th width="5%">Acción</th>
 	              </tr>
 	            </thead>
 	            <tbody style="font-size: x-small">
@@ -63,7 +68,7 @@
 	                <td>{{mov.numeroCliente}}</td>
 	                <td>{{mov.nombreCliente}}</td>
 	                <td>{{mov.tipoMovimiento}}</td>
-	                <td>{{mov.cuenta}}</td>
+<!-- 	                <td>{{mov.cuenta}}</td> -->
 	                <td align="right">{{mov.capital | currency}}</td>
 	                <td align="right">{{mov.multas | currency}}</td>
 	                <td align="right">{{mov.intereses | currency}}</td>
@@ -72,7 +77,7 @@
 	                <td align="right">{{mov.monto | currency}}</td>
 	                <td align="center">{{mov.tipoIngreso.nombre}}</td>
 	                <td>
-	                	<div ng-if="mov.pago.estatus" class="btn-group">
+	                	<div ng-if="mov.tipoMovimiento == 'Pago' || mov.tipoMovimiento == 'Retiro'" class="btn-group">
 										  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										    <span class="caret"></span>
 										    <span class="sr-only">Toggle Dropdown</span>
@@ -160,7 +165,7 @@
               <div class="col-sm-6" valida>
                 <label>Tipo</label>
                 <select ng-model="vca.nuevoTraspaso.tipo" name="tipo" class="form-control" required>
-                  <option value="desde_cuenta">Desde Cuenta</option>
+                  <option value="desde_cuenta">Desde Cuenta (Transpaso)</option>
                   <option value="desde_ventanilla">Desde Ventanilla</option>
                   <option value="a_cuenta">A Cuenta (Retiro)</option>
                   <option value="a_ventanilla">A Ventanilla</option>

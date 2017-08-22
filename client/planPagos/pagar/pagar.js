@@ -88,6 +88,12 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
     }]
   });
   
+  this.subscribe('cajas', () => {
+    return [{usuario_id : Meteor.userId
+    }]
+  });
+
+  
   this.subscribe('notasCreditoTop1', () => {
     return [{
 					cliente_id: $stateParams.objeto_id, saldo : {$gt: 0}, estatus : 1
@@ -405,6 +411,9 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
     notas: () => {
       return Notas.find().fetch();
     },
+    caja: () => {
+      return Cajas.findOne();
+    },
   });
   this.getFolio = function(credito_id) {
     var credito = Creditos.findOne(credito_id);
@@ -532,6 +541,12 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 	};
 
   this.guardarPago = function(pago, credito) {
+		
+		if (rc.caja.estadoCaja == "Cerrada")
+		{
+				toastr.error("La caja esta cerrada, favor de reportar con el Gerente");
+				return;	
+		}
 		
 		
 	  if (this.pago.tipoIngreso_id == undefined)
@@ -689,7 +704,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 
 		  
 	  }
-
+		
+		
   };
 
   this.creditosAprobados = function(){
@@ -834,9 +850,10 @@ if(pago.descripcion=="Cargo Moratorio")
 					var nc = NotasCredito.findOne({cliente_id: $stateParams.objeto_id, saldo : {$gt: 0}, estatus : 1});
 					if (nc != undefined)
 					{
-							//console.log(nc.saldo);
 							this.pago.pagar = Number(parseFloat(nc.saldo).toFixed(2));		
 					}					
+					else
+							this.pago.pagar = 0;
 			}
 			else
 			{

@@ -912,6 +912,12 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			templateUrl: 'client/cajas/resumen.ng.html',
 			controller: 'CajaResumenCtrl as cj',
 		})
+		.state('anon.imprimirCorte',{
+			url: '/imprimir/resumenCorte/:corte_id/',
+			params: {'corte_id': ':corte_id'},
+			templateUrl: 'client/cajas/resumenCorte.ng.html',
+			controller: 'CajaResumenCorteCtrl as cjc',
+		})
 		.state('root.diasInhabiles', {
 			url: '/diasInhabiles',
 			templateUrl: 'client/administracion/diasInhabiles.ng.html',

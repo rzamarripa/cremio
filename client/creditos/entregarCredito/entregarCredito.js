@@ -120,6 +120,7 @@ angular.module("creditoMio")
 					if (c.folio)
 						  this.verDiaPago = false;
 					
+/*
 					if (c.periodoPago == "Quincenal")
 					{
 							var fecha;
@@ -149,6 +150,7 @@ angular.module("creditoMio")
 							fecha = new Date(f);	    					    
 					    this.objeto.primerAbono = fecha;
 					}		
+*/
 	
 			}			
 			return c
@@ -230,7 +232,7 @@ angular.module("creditoMio")
 							//ELIMINAR AQUELLOS QUE NO TIENEN SALDO 0 EN rc.objeto
 							
 												
-							Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id,function(error,result){
+							Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id, rc.tipoIngreso._id,function(error,result){
 								if(error){
 									console.log(error);
 									toastr.error('Error al guardar los datos.');

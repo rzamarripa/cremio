@@ -17,6 +17,9 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
   this.fechaFin = moment().subtract(1, 'month').endOf('month').toDate();
   this.totalResumen = 0;
   this.nuevoTraspaso = { tipo: 'desde_cuenta' }
+  
+  
+  
   this.subscribe('cajas', () => {
     return [{ _id: $stateParams.caja_id }]
   });
@@ -111,10 +114,9 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
         var cj = Cajas.findOne(rc.caja._id);
         var pagos_id = [];
         _.each(movimientos, function(mov) {
-	        //console.log(mov);
+
           var d = {};
-          
-          if (mov.origen == "Pago de Cliente") {
+          if (mov.origen == "Pago de Cliente" || mov.origen == "Cancelación de pago") {
             	pagos_id.push(mov.origen_id);
 							var p = Pagos.findOne(mov.origen_id);
 							if (p != undefined)
@@ -154,31 +156,31 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 									  }  
 						      }
 						  });	
-	          
+							
 	        } 
+					
+          d.createdAt 		 	= mov.createdAt;
+          d.tipoMovimiento 	= mov.tipoMovimiento;
+          d.origen 					= mov.origen;
           
-          d.createdAt = mov.createdAt;
-          d.tipoMovimiento = mov.tipoMovimiento;
-          d.origen = mov.origen;
-                    
           c = Cuentas.findOne(cj.cuenta[mov.cuenta_id].cuenta_id);
          
           if (c) {
             d.cuenta = c.nombre;
           }
           d.monto = mov.monto;
+          
           d.pago = Pagos.findOne(mov.origen_id);
-          //d.pago_id = mov.origen_id;
+
           if (d.pago) {
             d.multas = 0;
             d.capital = 0;
             d.intereses = 0;
             d.iva = 0;
             d.seguro = 0;
-
+						
             if (d.pago.tipoIngreso_id != undefined)
-              d.tipoIngreso = TiposIngreso.findOne(d.pago.tipoIngreso_id);
-
+              	d.tipoIngreso = TiposIngreso.findOne(d.pago.tipoIngreso_id);
             _.each(d.pago.planPagos, function(plan) {
               if (plan.descripcion == "Cargo Moratorio") {
                 d.multas += plan.totalPago;
@@ -189,11 +191,15 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
               d.seguro += plan.pagoSeguro;
             });
           }
+          else
+          	if (mov.tipoIngreso_id != undefined)
+							d.tipoIngreso = TiposIngreso.findOne(mov.tipoIngreso_id); 
+							
           ret.push(d)
         });
         rc.pagos_id = pagos_id;
       }
-			
+
       return ret
     },
     traspasos: () => {
@@ -230,7 +236,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
   }
 
   this.cancelarPago = function(pago) {
-    customConfirm('Estás seguro de cancelar el pago ' + pago.folioPago + '?', function() {
+    customConfirm('¿Estás seguro de cancelar el pago ' + pago.folioPago + '?', function() {
       _.each(pago.planPagos, function(plan) {
         PlanPagos.update(plan.planPago_id, { $set: { estatus: 0 }, $inc: { importeRegular: plan.totalPago, pago: -plan.totalPago } });
       });
@@ -254,21 +260,6 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
   this.detalle = function(_id) {
     rc.detalleOrigenDestino = _.findWhere(rc.cajas, {_id: _id}) || _.findWhere(rc.cuentas, {_id: _id});
   };
-
-  /*
-this.getHistorialCajas = function(fechaInicio, fechaFin) {
-    fechaInicio = moment(fechaInicio).startOf('day').toDate();
-    fechaFin = moment(fechaFin).endOf('day').toDate();
-    Meteor.apply('getHistorialCajas', [fechaInicio, fechaFin, Meteor.user().profile.sucursal_id], function(err, result) {
-      if (err) {
-        toastr.warning('Error al consultar los datos');
-      } else {
-        rc.cajasInactivas = result;
-        $scope.$apply();
-      }
-    });
-  };
-*/
 
   this.nuevoTraspasoGuardar = function(datos, form) {
     if(form.$invalid){
@@ -334,5 +325,29 @@ this.getHistorialCajas = function(fechaInicio, fechaFin) {
     }
   };
   
+  this.corte = function(caja) {
+	  
+    customConfirm('¿Estás seguro de cerrar la ventanilla?', function() {
+
+      	Meteor.call ("corteCaja",caja.cuenta, caja.usuario_id, caja._id,function(error,result){
+						if(error){
+							console.log(error);
+							toastr.error('Error al guardar los datos.');
+							return
+						}
+						if (result)
+						{
+							console.log(result);
+							toastr.success('Cierre efectuado correctamente.');
+							$state.go('root.cajasActivas');						
+							
+							var url = $state.href("anon.imprimirCorte", { corte_id: result });
+							window.open(url, '_blank');
+							
+						}	
+				});
+      
+    })
+  }
 
 }
