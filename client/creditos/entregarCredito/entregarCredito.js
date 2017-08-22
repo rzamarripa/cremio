@@ -539,7 +539,7 @@ angular.module("creditoMio")
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
 							}
-						  if (contrato.tipoInteres.tipoInteres == "Saldos Isolutos") {
+						  if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
 						  var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOINTERESSSI.docx"; 
 							dlnk.href = url;
