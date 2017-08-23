@@ -921,11 +921,16 @@ Meteor.methods({
 		 	pp.total = parseFloat(pp.total.toFixed(2))
 		 	pp.capital = parseFloat(pp.capital.toFixed(2))
 		 	if (pp.liquidar) {pp.liquidar = parseFloat(pp.liquidar.toFixed(2))}
-		 	
 		 	pp.fechaLimite = moment(pp.fechaLimite).format("DD-MM-YYYY")
+		 	
 
 
 		 });
+  	 _.each(contrato.garantias,function(item){
+  	 	item.fechaFiniquito = moment(item.fechaFiniquito).format("DD-MM-YYYY")
+  	 	item.fechaComercializacion = moment(item.fechaComercializacion).format("DD-MM-YYYY")
+
+  	 });
   	//var garantias = contrato.garantias[0]
 
   
@@ -944,7 +949,7 @@ Meteor.methods({
 					var content = fs
 					.readFileSync(produccion+"CONTRATOINTERES.docx", "binary");
 				}
-				if (contrato.tipoInteres.tipoInteres == "Saldo Insolutos") {
+				if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
 					var content = fs
 					.readFileSync(produccion+"CONTRATOINTERESSSI.docx", "binary");
 				}
@@ -1040,7 +1045,7 @@ Meteor.methods({
 	  		doc.setData({				items: 		 contrato,
 									    fecha:     fecha,
 									    cliente:    cliente,
-									    nacionalidad: cliente.nacionalidadCliente.nombre
+									    pp: planPagos,
 				});
 								
 		doc.render();
@@ -1110,7 +1115,7 @@ Meteor.methods({
 									cliente: cliente,
 									contrato: contrato,
 									pp: planPagos,
-									garantias: garantias,
+									//garantias: garantias,
 													
 				});
 								
@@ -1120,7 +1125,7 @@ Meteor.methods({
 				var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
              		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-             		 	console.log(",monndddrigoo")
+             		 	console.log(",cjecj")
              		 	fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalidaSSISalida.docx",buf);
              		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalidaSSISalida.docx");
              		 }
@@ -1272,7 +1277,6 @@ getListaCobranza: function (objeto) {
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var ImageModule = require('docxtemplater-image-module');
-		////var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		var opts = {}

@@ -94,6 +94,34 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			estatus : true
 		}]
 	});
+	this.subscribe("estadoCivil", ()=>{
+    return [{estatus : true}]
+  });
+  
+  this.subscribe("nacionalidades", ()=>{
+    return [{}]
+  });
+  this.subscribe("ocupaciones", ()=>{
+    return [{}]
+  });
+  this.subscribe("paises", ()=>{
+    return [{}]
+  });
+  this.subscribe("estados", ()=>{
+    return [{}]
+  });
+  this.subscribe("municipios", ()=>{
+    return [{}]
+  });
+  this.subscribe("ciudades", ()=>{
+    return [{}]
+  });
+  this.subscribe("colonias", ()=>{
+    return [{}]
+  });
+  this.subscribe("empresas", ()=>{
+    return [{}]
+  });   
 
 			
 	this.helpers({
@@ -962,11 +990,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	    objeto.municipio = objeto.profile.nombre
 	    objeto.empresa = objeto.profile.empresa
 	    //console.log('-----------------------', objeto.profile.empresa);
-	    objeto.ciudadEmpresa = rc.ciudades[objeto.profile.empresa.ciudad_id].nombre;
-	    objeto.municipioEmpresa = rc.municipios[objeto.profile.empresa.municipio_id].nombre;
-	    objeto.paisEmpresa = rc.paises[objeto.profile.empresa.pais_id].nombre;
-	    objeto.estadoEmpresa = rc.estados[objeto.profile.empresa.estado_id].nombre;
-	    objeto.coloniaEmpresa = rc.colonias[objeto.profile.empresa.colonia_id].nombre;
+	    // objeto.ciudadEmpresa = rc.ciudades[objeto.profile.empresa.ciudad_id].nombre;
+	    // objeto.municipioEmpresa = rc.municipios[objeto.profile.empresa.municipio_id].nombre;
+	    // objeto.paisEmpresa = rc.paises[objeto.profile.empresa.pais_id].nombre;
+	    // objeto.estadoEmpresa = rc.estados[objeto.profile.empresa.estado_id].nombre;
+	    // objeto.coloniaEmpresa = rc.colonias[objeto.profile.empresa.colonia_id].nombre;
 	     _.each(rc.referencias,function(relacion){
 						 	if (relacion.apellidoMaterno == null) {
 						 		relacion.apellidoMaterno = "";
