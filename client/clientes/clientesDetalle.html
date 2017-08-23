@@ -757,6 +757,9 @@
 														{{pendiente.duracionMeses}}
 														<span class="subscript">/meses</span>
 													</h2>
+													<small>
+														{{pendiente.tipoCredito.nombre}}
+													</small><br>
 													<small>Plan: {{pendiente.periodoPago}}</small><br>
 													<small>Fecha: {{pendiente.fechaSolicito | date:'dd/MM/yyyy'}}</small><br>
 													<small ng-if="pendiente.requiereVerificacion == true">Con Verificación <!-- {{pendiente.fechaVerificacion | date:'dd/MM/yyyy'}} --></small>
@@ -842,10 +845,10 @@
 				</article>
    </div>
 </div>
-<div class="tab-pane fade" id="aprobados" ng-show="cd.creditoApro">
+	<div class="tab-pane fade" id="aprobados" ng-show="cd.creditoApro">
 	<p>
 	<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-
+		
 					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
 						
 						<header role="heading">
@@ -882,6 +885,9 @@
 														{{aprobado.duracionMeses}}
 														<span class="subscript">/meses</span>
 													</h2>
+													<small>
+														{{aprobado.tipoCredito.nombre}}
+													</small><br>
 													<small>Plan: {{aprobado.periodoPago}}</small>
 													<small>Fecha: {{aprobado.fechaSolicito.getUTCDate() +"/"+ (aprobado.fechaSolicito.getUTCMonth()+1) +"/"+ aprobado.fechaSolicito.getUTCFullYear()}}</small>
 												</div>
@@ -904,13 +910,11 @@
 					<!-- end widget -->
 			
 				</article>
-
 	</p>
 </div>
-
-<div class="tab-pane fade" id="rechazados" ng-show="cd.creditosRechazados">
+	<div class="tab-pane fade" id="rechazados" ng-show="cd.creditosRechazados">
 	<p>
-   <div class="tab-pane">
+   	<div class="tab-pane">
    		<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
 					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
 						<header role="heading">

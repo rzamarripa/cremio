@@ -12,5 +12,14 @@ angular.module("creditoMio")
  		rc = _.extend(rc, result);
  	 	$scope.$apply();
  	});
+ 	
+ 	
+ 	this.borrarBotonImprimir= function()
+	{
+		var printButton = document.getElementById("printpagebutton");
+	 	printButton.style.visibility = 'hidden';
+	 	window.print()
+	 	printButton.style.visibility = 'visible';
+	};
 
 };
