@@ -266,7 +266,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
   }
 	
 	this.getHistorialCajas = function(fechaInicio, fechaFin) {
-		console.log("Busca")
+		//console.log("Busca")
     fechaInicio = moment(fechaInicio).startOf('day').toDate();
     fechaFin = moment(fechaFin).endOf('day').toDate();
     Meteor.apply('getHistorialCajas', [fechaInicio, fechaFin, Meteor.user().profile.sucursal_id], function(err, result) {
@@ -274,7 +274,7 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
         toastr.warning('Error al consultar los datos');
       } else {
         rc.cajasInactivas = result;
-        console.log(result);
+        //console.log(result);
         $scope.$apply();
       }
     });

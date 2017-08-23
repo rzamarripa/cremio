@@ -55,6 +55,7 @@
 						<th><div class="text-center">Garantia</div></th>
 						<th><div class="text-center">Solicitado</div></th>
 						<th><div class="text-center">A pagar</div></th>
+						<th><div class="text-center">Cajero</div></th>
 					</tr>
 				</thead>
 				<tbody style="font-size: small">
@@ -67,7 +68,8 @@
 				    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
 				    <td><div class="text-center">{{objeto.estatusGarantia}}</div></td>
 				    <td><div class="pull-right">{{objeto.capitalSolicitado | currency}}</div></td>
-				    <td><div class="pull-right">{{objeto.adeudoInicial | currency }}</div></td> 				
+				    <td><div class="pull-right">{{objeto.adeudoInicial | currency }}</div></td> 	
+				    <td><div class="pull-right">{{objeto.cajero}}</div></td>	
 			    </tr>
 				</tbody>
 			</table>

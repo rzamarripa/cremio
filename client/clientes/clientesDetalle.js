@@ -72,6 +72,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('tiposNotasCredito',()=>{
 		return [{}]
 	});
+	
+	this.subscribe('tiposCreditos',()=>{
+		return [{}]
+	});
 	this.subscribe('pagos',()=>{
 		return [{}];
 	});
@@ -142,8 +146,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					rc.puedeSolicitar = false
 				}
 				
-				credito.tieneAvales = false;
 				
+				
+				credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
+				
+				
+				credito.tieneAvales = false;
 				_.each(credito.avales_ids, function(aval){
 						credito.tieneAvales = true;
 						Meteor.apply('getAval', [aval.aval_id], function(error, result){
@@ -159,27 +167,29 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				
 			});
 
-/*
-			if(creditos != undefined){
-				rc.creditos_id = _.pluck(creditos, "_id");
-				console.log("En C:", rc.creditos_id);
-			}
-*/			
 			return creditos;
 		},
 
 	
 		creditosAprobados : () =>{
-			return Creditos.find({estatus:2});
+			var creditos = Creditos.find({estatus:2}).fetch();			
+			if(creditos != undefined){
+				_.each(creditos, function(credito){	
+					 credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
+				})
+			}
+			return creditos;
 		},
 		creditosCancelados : () =>{
 			return Creditos.find({estatus:3});
 		},
 		creditosPendientes : () =>{
 			var creditos = Creditos.find({estatus:{$in:[0,1]}}).fetch();
+			
 			if(creditos.length > 0){
 				_.each(creditos, function(credito){				
 					 credito.estatusClase = obtenerClaseEstatus(credito.requiereVerificacion);
+					 credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
 				})
 			}
 			
@@ -530,7 +540,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			//console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
 		},
-			historialCreditos : () => {
+		historialCreditos : () => {
 			var creditos = Creditos.find({estatus: {$in: [4,5]}}).fetch();
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "_id");

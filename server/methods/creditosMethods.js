@@ -263,6 +263,7 @@ _.each(montos.cuenta,(monto,index)=>{
 
 		//credito.entregado = true;
 		credito.estatus = 4;
+		credito.usuario_id = user._id;
 
 		delete credito._id ;
 		Creditos.update({_id:creditoid},{$set:credito});

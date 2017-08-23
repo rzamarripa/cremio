@@ -464,8 +464,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
     
 		if (pago.pagoSeleccionado == true && pago.movimiento == "Cargo Moratorio")
     {
-	    	pago.importeRegular = Number(pago.importeRegular).toFixed(2);
-		    pago.importepagado = parseFloat(pago.importeRegular);
+	    	pago.importeRegular = Number(parseFloat(pago.importeRegular).toFixed(2));
+		    pago.importepagado = Number(parseFloat(pago.importeRegular).toFixed(2));
 		    pago.pagoSeleccionado = true;
 	    
     }
@@ -480,12 +480,11 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		        p.pagoSeleccionado = false;
 		      }
 		      if (pago.pagoSeleccionado && pago.credito_id == p.credito_id && p.numeroPago <= pago.numeroPago && p.estatus != 1 && pago.movimiento == "Recibo") {
-			      p.importeRegular = Number(p.importeRegular).toFixed(2);
-		        p.importepagado = parseFloat(p.importeRegular);
+			      p.importeRegular = Number(parseFloat(p.importeRegular).toFixed(2));
+		        p.importepagado = Number(parseFloat(p.importeRegular).toFixed(2));
 		        p.pagoSeleccionado = true;
 		      }
-		      
-		      
+		      		      
 		      if (p.pagoSeleccionado != undefined) {
 		        if (p.pagoSeleccionado == true) {
 		           rc.pago.totalPago += p.importepagado;
@@ -610,6 +609,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 	  }
 	  else
 	  {		
+		  	var fechaProximoPago = "";
 		  	
 		  	if (tipoIngreso.nombre == "Nota de Credito")
 				{
@@ -626,7 +626,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 						var sePagaraCargo = false;
 						
 						
-						var fechaProximoPagoArray = []
+						var fechaProximoPagoArray = [];
 						
 						var seleccionadosId = [];
 				    _.each(rc.planPagosViejo, function(p) {
@@ -635,11 +635,11 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 								 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
 					       seleccionadosId.push({ id: p._id, importe: p.importepagado })
 				      }
-				      else
+				      if (p.importepagado != p.importeRegular)				      				      
 				      	 fechaProximoPagoArray.push(p.fechaLimite);
 				    });
 				    
-				    var fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
+				    fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
 						
 				    	    
 				    if (nc.aplica == "RECIBO" &&  sePagaraCargo == true)
@@ -657,8 +657,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 				else
 				{
 						
-						var fechaProximoPagoArray = []
-						
+						var fechaProximoPagoArray = [];
+												
 						var seleccionadosId = [];
 				    _.each(rc.planPagosViejo, function(p) {
 				      if (p.pagoSeleccionado){
@@ -666,13 +666,14 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 								 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
 					       seleccionadosId.push({ id: p._id, importe: p.importepagado })
 				      }
-				      else
+				      
+				      if (p.importepagado != p.importeRegular)				      				      
 				      	 fechaProximoPagoArray.push(p.fechaLimite);
 				    });
 				    
-				    var fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
-					
-					
+				    fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
+				    if (fechaProximoPago < new Date())
+				    		fechaProximoPago = "";
 					
 				}
 		    
@@ -699,7 +700,10 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		      rc.pago.fechaEntrega = pago.fechaEntrega
 		      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
 		      window.open(url, '_blank');
+
 		    });
+		    
+		   
 
 
 		  

@@ -28,7 +28,6 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 			rc.pago = Pagos.findOne($stateParams.pago_id);
 			rc.tipoIngreso = TiposIngreso.findOne(rc.pago.tipoIngreso_id);
 			rc.pago = rc.pago? rc.pago:{};
-			console.log	(rc.pago.saldoAnterior);
 
 
 			Meteor.call('datosCliente', rc.pago.usuario_id ,function(err, res){

@@ -638,21 +638,24 @@ Meteor.methods({
 		pago.cambio = pago.cambio < 0 ? 0: Number(parseFloat(pago.cambio).toFixed(2));
 		pago.diaPago = ffecha.weekday();
 		pago.semanaPago = ffecha.isoWeek();
-		pago.semanaPago = ahora.getMonth();
+		pago.mesPago = ahora.getMonth();
 		pago.estatus = 1;
 		
 		
 		
-		pago.saldoActual = Number(parseFloat(total).toFixed(2));
-		pago.saldoAnterior = Number(parseFloat(total - totalPago).toFixed(2));
+		pago.saldoAnterior = Number(parseFloat(total).toFixed(2));
+		pago.saldoActual	 = Number(parseFloat(total - totalPago).toFixed(2));
 		if (ocultaMulta)
 			 pago.saldoCargoMoratorio = 0;
 		else
 			 pago.saldoCargoMoratorio = Number(parseFloat(cargosMoratorios).toFixed(2));	 
 		
 		pago.liquidacion = Number(parseFloat(total).toFixed(2));;
-		pago.proximoPago = fechaProximoPago;
 		
+		if (fechaProximoPago < new Date())
+			 pago.proximoPago = "";
+		else
+			 pago.proximoPago = fechaProximoPago;	 
 		
 		
 		//pago.credito_id = credito_id;
@@ -897,30 +900,34 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 				p.fechaPago 					= ahora;
 				semanaPago 						= mfecha.isoWeek();
 				diaPago								= mfecha.weekday();
+				
+				credit = Creditos.findOne(pago.credito_id);
 
 				var npp = { pago_id		 	: pago_id,
-									totalPago	 	: ttpago,
-									estatus		 	: p.estatus,
-									fechaPago  	: pago.fechaPago, 
-									numeroPago 	: p.numeroPago,
-									movimiento	: p.movimiento,
-									cargo				: p.importe,
-									planPago_id	: p._id,
-									pagoCapital : abonos.pagoCapital, 
-									pagoInteres	: abonos.pagoInteres,
-									pagoIva 		: abonos.pagoIva, 
-									pagoSeguro 	: abonos.pagoSeguro, 
-									usuario_id	: pusuario_id};
+										totalPago	 	: ttpago,
+										estatus		 	: p.estatus,
+										fechaPago  	: pago.fechaPago, 
+										numeroPago 	: p.numeroPago,
+										numeroPagos	: credit.numeroPagos,
+										movimiento	: p.movimiento,
+										cargo				: p.importe,
+										planPago_id	: p._id,
+										pagoCapital : abonos.pagoCapital, 
+										pagoInteres	: abonos.pagoInteres,
+										pagoIva 		: abonos.pagoIva, 
+										pagoSeguro 	: abonos.pagoSeguro, 
+										usuario_id	: pusuario_id};
 
 				p.pagos.push(npp);
 				
-				credit = Creditos.findOne(pago.credito_id);
+				
 				var npago= { planPago_id	: p._id,
 										 totalPago		: ttpago,
 										 estatus			: p.estatus, 
 										 descripcion	: p.descripcion,
 										 fechaPago		: pago.fechaPago, 
 										 numeroPago 	: p.numeroPago,
+										 numeroPagos	: credit.numeroPagos,
 										 folioCredito	: credit.folio,
 										 pagoCapital 	: abonos.pagoCapital, 
 										 pagoInteres	: abonos.pagoInteres,
@@ -929,6 +936,7 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 										 usuario_id		: pusuario_id};
 				
 				pago.planPagos.push(npago); 
+
 
 				var pid = p._id;
 				delete p._id;

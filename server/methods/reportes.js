@@ -46,7 +46,7 @@ Meteor.methods({
 			return cobranza;
 			
 	},
-		getBancos:function(fechaInicial, fechaFinal, sucursal_id){
+	getBancos:function(fechaInicial, fechaFinal, sucursal_id){
 			
 			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}}).fetch();
 			
@@ -114,6 +114,16 @@ Meteor.methods({
 					}else{
 						credito.estatusGarantia = "No"
 					}
+					
+
+					var cajero = Meteor.users.findOne({"_id" : credito.usuario_id}, 
+	  																{fields: {"profile.nombreCompleto": 1}});											
+	  			
+	  			if (cajero != undefined)
+	  				 credito.cajero = cajero.profile.nombreCompleto;
+	  			else
+	  				 credito.cajero = "";	 
+
 					
 					
 			});

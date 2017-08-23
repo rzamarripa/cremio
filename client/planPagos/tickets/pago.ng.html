@@ -8,7 +8,7 @@
 
 				<span id="logo"> <img src="img/logoCreditoMio.png" alt="SmartAdmin" style="margin-top: -5px;width: 170px;height: 100px;"> </span>
 					<strong> <h2>Credito Mio</h2> </strong>
-					<strong>----------------------Recibo de Pago----------------------</strong>
+					<strong>----------------------RECIBO DE PAGO----------------------</strong>
 					<address>
 						RECIBIMOS DE {{tkpctrl.cliente.profile.nombreCompleto}} (CLIENTE No. {{tkpctrl.cliente.profile.numeroCliente}}) CON DOMICILIO EN: CALLE {{tkpctrl.cliente.profile.calle}} NO. {{tkpctrl.cliente.profile.numero}} {{tkpctrl.cliente.profile.colonia.nombre}}. {{tkpctrl.cliente.profile.municipio.nombre}}, {{tkpctrl.cliente.profile.estado.nombre}}.
 					</address>
@@ -28,7 +28,7 @@
 							</tr>
 							<tr ng-repeat="pago in tkpctrl.pago.planPagos">
 								<td align="center">{{pago.folioCredito}}</td>
-								<td align="center">{{pago.numeroPago}}</td>
+								<td align="center">{{pago.numeroPago}} / {{pago.numeroPagos}}</td>
 								<td align="center">{{pago.totalPago | currency:""}}</td>
 								<td align="center">{{pago.descripcion}}</td>					
 							</tr>
@@ -96,7 +96,7 @@
 -->
 					<br>
 						Atendio:<br>
-						{{tkpctrl.cajero.profile.nombreCompleto}}
+						{{tkpctrl.cajero.profile.nombre}}
 					<br>
 					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
 					<strong><center>FIRMA DEL CAJERO Y SELLO DE LA CAJA</center></strong>
