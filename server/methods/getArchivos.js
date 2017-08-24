@@ -228,6 +228,11 @@ Meteor.methods({
 			//console.log("esta es la referencia",referencia)
 			return referencia;
 	},
+	getReferenciasP: function (idReferencia) {
+			var referencia = ReferenciasPersonales.findOne(idReferencia);
+			//console.log("esta es la referencia",referencia)
+			return referencia;
+	},
 	 getDocs: function (idReferencia) {
 			var referencia = Documentos.findOne(idReferencia);
 			//console.log("esta es la referencia",referencia)
@@ -235,6 +240,7 @@ Meteor.methods({
 	},
 	getPeople: function (idReferencia) {
 			var persona = Meteor.users.findOne(idReferencia);
+			
 				_.each(persona, function(objeto){
 					objeto.nacionalidadCliente = Nacionalidades.findOne(objeto.nacionalidad_id);
 					objeto.coloniaCliente = Colonias.findOne(objeto.colonia_id);
@@ -242,10 +248,20 @@ Meteor.methods({
 					objeto.municipioCliente = Municipios.findOne(objeto.municipio_id);
 					objeto.ocupacionCliente = Ocupaciones.findOne(objeto.ocupacion_id);
 					objeto.ciudadCliente = Ciudades.findOne(objeto.ciudad_id);
-					//objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id).nombre;
+					objeto.sucursales = Sucursales.findOne(objeto.sucursal_id);
+					objeto.estadoCivilCliente = EstadoCivil.findOne(objeto.estadoCivil_id);
+					_.each(objeto.referenciasPersonales_ids, function(item){
+					objeto.referencias = ReferenciasPersonales.findOne(item.referenciaPersonal_id)
+
+				})
+
+		
 
 
 				});
+
+				console.log(persona,"termina")
+				
 			//console.log("esta es la referencia",referencia)
 			return persona;
 	},
@@ -283,7 +299,8 @@ Meteor.methods({
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   getFicha: function (objeto,referencia) {
-	console.log(referencia,"ficha")
+  	console.log(objeto.referencias,"FICHA")
+	
 		
 		var fs = require('fs');
         var Docxtemplater = require('docxtemplater');
@@ -330,141 +347,74 @@ Meteor.methods({
 			    hora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 
 		fecha.setHours(0,0,0,0);
-		var fechaNaci = objeto.profile.fechaNacimiento;
+		//var fechaNaci = objeto.profile.fechaNacimiento;
 		
     	//var f = fecha;
     	
-    	fechaAltaCliente = new Date(objeto.profile.fechaCreacion)
-    	fechaAltaCliente.setHours(0,0,0,0)
-    	fechaAlta = fechaAltaCliente.getUTCDate()+'-'+(fechaAltaCliente.getUTCMonth()+1)+'-'+fechaAltaCliente.getUTCFullYear();
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    fechaNacimiento = fechaNaci.getUTCDate()+'-'+(fechaNaci.getUTCMonth()+1)+'-'+fechaNaci.getUTCFullYear();
-	    var cliente =objeto.nombreCompleto
-	    var nombreCliente  = cliente.toUpperCase();
-	    var calle = objeto.profile.calle
-	    var calleCLiente = calle.toUpperCase();
-	    var colonia = objeto.colonia.nombre
-	    var coloniaCliente = colonia.toUpperCase();
-	    var ciudad = objeto.ciudad.nombre
-	    var ciudadCliente = ciudad.toUpperCase();
-	    var estado = objeto.estado.nombre
-	    var estadoCliente = estado.toUpperCase();
-	    var pais = objeto.pais.nombre
-	    var paisCliente = pais.toUpperCase();
-		var sexoCliente = objeto.profile.sexo
-	    var sexo  = sexoCliente.toUpperCase();
-	    var nacionalidadCliente = objeto.nacionalidad.nombre
-	    var nacionalidad  = nacionalidadCliente.toUpperCase();
-	    var lugar = objeto.lugarNacimiento
-	    var lugarNacimiento  = lugar.toUpperCase();
-	    var ocupa = objeto.ocupacion.nombre
-	    var ocupacion  = ocupa.toUpperCase();
-	    var est = objeto.estadoCivil.nombre
-	    var estadoCivil  = est.toUpperCase();
-	    var anti = objeto.profile.tiempoResdencia
-	    var antiguedad  = anti.toUpperCase(); 
-	    var anti = objeto.profile.tiempoResdencia
-	    var antiguedad  = anti.toUpperCase();
-	    var sucu = objeto.sucursal.nombre;
-	    var sucursal = sucu.toUpperCase();
-	    var muni = objeto.municipio;
-	    var municipio = muni.toUpperCase();
-	    var empre = objeto.empresa.nombre;
-	    var empresa = empre.toUpperCase();
-	    var call = objeto.empresa.calle;
-	    var calleEmpresa = call.toUpperCase();
-	    var col = objeto.coloniaEmpresa;
-	    var coloniaEmpresa = col.toUpperCase();
-	    
-
-		 // var jefe = jef.toUpperCase();
-		 var cas = objeto.profile.casa;
-		 var casa = cas.toUpperCase();
+    	//fechaAltaCliente = new Date(objeto.profile.fechaCreacion)
+    	// fechaAltaCliente.setHours(0,0,0,0)
+    	// fechaAlta = fechaAltaCliente.getUTCDate()+'-'+(fechaAltaCliente.getUTCMonth()+1)+'-'+fechaAltaCliente.getUTCFullYear();
+	    // fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    //fechaNacimiento = fechaNaci.getUTCDate()+'-'+(fechaNaci.getUTCMonth()+1)+'-'+fechaNaci.getUTCFullYear();
+	    fechaEmision = new Date()
+	    fechaEmision=moment(fechaEmision).format("DD-MM-YYYY")
 
 
-	    var f = String(objeto.profile.foto);
-					objeto.profile.foto = f.replace('data:image/jpeg;base64,', '');
+	    var f = String(objeto.foto);
+					objeto.foto = f.replace('data:image/jpeg;base64,', '');
 
-					var bitmap = new Buffer(objeto.profile.foto, 'base64');
+					var bitmap = new Buffer(objeto.foto, 'base64');
 
 					fs.writeFileSync(produccion+".jpeg", bitmap);
-					objeto.profile.foto = produccion+".jpeg";
-						_.each(referencia,function(relacion){
-						 	if (relacion.apellidoMaterno == undefined) {
-						 		relacion.apellidoMaterno = "";
-						 	}
-						 	relacion.nombreCompleto = relacion.nombre+' '+relacion.apellidoPaterno+' '+relacion.apellidoMaterno
+					objeto.foto = produccion+".jpeg";
+						
+						 	//objeto.referenciasPersonales_ids.referencia .find(objeto.referenciasPersonales_ids.r
 
-						 });
+						objeto.fechaCreacion =moment(objeto.fechaCreacion).format("DD-MM-YYYY")
+						objeto.fechaNacimiento =moment(objeto.fechaNacimiento).format("DD-MM-YYYY")
 
-
-		doc.setData({				nombreCompleto: 		nombreCliente,//bien
-									sexo:                   sexo,//bien
-									fechaEmision:           fecha,//bien
-									nacionalidad:           nacionalidad,
-									fechaNacimiento:        fechaNacimiento,
-									lugarNacimiento:        lugarNacimiento,
-									ocupacion:              ocupacion,
-									estadoCivil:            estadoCivil,
-									 calle: 			    calleCLiente,
-									 no: 				    objeto.profile.numero,
-									 antiguedad:            antiguedad,
-									 colonia: 				coloniaCliente,
-									 cp: 	        		objeto.profile.codigoPostal,
-									 ciudad: 				ciudadCliente,
-									 estado: 				estadoCliente,
-									 pais: 					paisCliente,
-									 fechaCreacion:         fechaAlta,
-									 hora:                  hora,
-									 foto:                  objeto.profile.foto,
-									 sucursal:              sucursal,
-									 municipio:             municipio,
-									 telefonoContacto:      objeto.profile.telefono,
-									 telefonoAlternativo:   objeto.profile.otroTelefono,
-									 telefonoMovilContacto: objeto.profile.celular,
-									 correo:                objeto.profile.correo,
-									 casa:                  casa,
-									 renta:                 objeto.profile.rentaMes,
-
-
-									 //////////////////// REFERENCIAS PERSONALES //////////////////////
-									 ingresosPersonales:    objeto.profile.ingresosPersonales,
-									 ingresosConyuge:       objeto.profile.ingresosConyuge,
-									 gastosFijos:           objeto.profile.gastosFijos,
-									 gastoEventuales:       objeto.profile.gastosEventuales,
-									 otrosIngresos:         objeto.otrosIngresos,
-									 referencias: 			    referencia,
+						
+							objeto.ciudad = objeto.ciudadCliente.nombre
+							objeto.sucursal = objeto.sucursales.nombre
+							objeto.colonia = objeto.coloniaCliente.nombre
+							objeto.municipio = objeto.municipioCliente.nombre
+							objeto.estado = objeto.estadoCliente.nombre
+							objeto.nacionalidad = objeto.nacionalidadCliente.nombre
+							objeto.estadoCivil = objeto.estadoCivilCliente.nombre
+							objeto.ocupacion = objeto.ocupacionCliente.nombre
+							objeto.renta = objeto.rentames
+							objeto.cp = objeto.codigoPostal
+							objeto.renta = objeto.rentames
+							objeto.telefonoMovilContacto = objeto.celular
+							objeto.telefonoContacto = objeto.particular
+							objeto.nombreConyu = objeto.nombreConyuge
+							objeto.empresaC = Empresas.findOne(objeto.empresa_id);
+							objeto.empresaC.municipio = Municipios.findOne(objeto.empresaC.municipio_id);
+							objeto.municipioEmpresa = objeto.empresaC.municipio.nombre
+							objeto.empresaC.municipio = Municipios.findOne(objeto.empresaC.municipio_id);
+							objeto.municipioEmpresa = objeto.empresaC.municipio.nombre
+							objeto.empresaC.estado = Estados.findOne(objeto.empresaC.estado_id);
+							objeto.estadoEmpresa = objeto.empresaC.estado.nombre
+							objeto.empresaC.colonia = Colonias.findOne(objeto.empresaC.colonia_id);
+							objeto.coloniaEmpresa = objeto.empresaC.colonia.nombre
+							objeto.empresaC.pais = Paises.findOne(objeto.empresaC.pais_id);
+							objeto.paisEmpresa = objeto.empresaC.pais.nombre
+							objeto.numeroEmpresa = objeto.empresaC.no
+							objeto.empresa = objeto.empresaC.nombre
+							objeto.calleEmpresa = objeto.empresaC.calle
+							objeto.numeroEmpresa = objeto.empresaC.numero
 
 
-									 /////////////////// CONTACTO //////////////////////
-									 
-									 telefonoOficina:      objeto.profile.telefonoOficina,
+						 	
+
+						
 
 
-									//////////////////// EMPRESA //////////////////////
-									empresa:               empresa, 
-									calleEmpresa:          calleEmpresa,
-									coloniaEmpresa:        coloniaEmpresa,
-									telefonoEmpresa:       objeto.empresa.telefono,
-									//departamento:          departamento,
-									//puesto:                puesto,
-									//antiguedad:            antiguedad,
-									numeroEmpresa:         objeto.empresa.numero,
-									cpEmpresa:             objeto.empresa.codigoPostal,
-									paisEmpresa:           objeto.paisEmpresa,
-									municipioEmpresa:      objeto.municipioEmpresa,
-									estadoEmpresa:         objeto.estadoEmpresa,
-									//jefe:                  jefeEmpresa,
-									//antiguedadEmpresa:      antiguedadEmpresa,      
+		doc.setData({				item: 		objeto,//bien
+									foto: objeto.foto,
+									referencias: objeto.referencias
+					
 
-								
-
-									//////////////////// CONYUGE //////////////////////
-									telefonoConyuge:       objeto.profile.telefonoConyuge,//bien
-									ocupacionConyuge:      objeto.profile.ocupacionConyuge,
-									nombreConyu:           objeto.profile.nombreConyuge,
-									telefonoConyugeTrabajo: objeto.profile.telefonoConyugeTrabajo,
-									direccionConyugeTrabajo: objeto.profile.direccionConyugeTrabajo,
 
 								}) 
 									
@@ -479,8 +429,6 @@ Meteor.methods({
 		//Pasar a base64
 		// read binary data
     var bitmap = fs.readFileSync(produccion+"FICHASOCIOSalida.docx");
-
-   // cmd.run('unoconv -f pdf '+ produccion+'cedulaSalida.docx');
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
