@@ -2,8 +2,6 @@ Meteor.methods({
 		getcartaRecordatorio: function (objeto) {
 	console.log(objeto,"recordatori")
    // var produccion = "/home/cremio/archivos/";
-
-		
 		
 		var fs = require('fs') ;
     var Docxtemplater = require('docxtemplater');
@@ -12,8 +10,7 @@ Meteor.methods({
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		////var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
-				 
-		
+				  
 		
 		var content = fs
     							.readFileSync(produccion+"RECORDATORIOS.docx", "binary");
@@ -254,44 +251,41 @@ Meteor.methods({
 					objeto.referencias = ReferenciasPersonales.findOne(item.referenciaPersonal_id)
 
 				})
-
-		
-
-
-				});
-
-				console.log(persona,"termina")
+			});
+				//console.log(persona,"termina")
 				
 			//console.log("esta es la referencia",referencia)
 			return persona;
 	},
-	// getEmpresas: function (idEmpresa) {
-	// 		//console.log('hi');
-	// 		Meteor.apply('findSomeShit',['Empresas', {_id: idEmpresa}, true], function(err, empresa){
-	// 			Meteor.call('findSomeShit',['Ciudades', {_id: empresa.empresa_id}, true], function(err, ciudad){
-	// 				Meteor.call('findSomeShit',['Municipios', {_id: empresa.municipio_id}, true], function(err, municipio){
-	// 					Meteor.call('findSomeShit',['Estados', {_id: empresa.estado_id}, true], function(err, estado){
-	// 						Meteor.call('findSomeShit',['Paises', {_id: empresa.pais_id}, true], function(err, pais){
-	// 							Meteor.call('findSomeShit',['Colonias', {_id: empresa.colonia_id}, true], function(err, colonia){
-	// 								empresa.ciudad = ciudad;
-	// 								empresa.municipio = municipio;
-	// 								empresa.estado = estado;
-	// 								empresa.pais = pais;
-	// 								empresa.colonia = colonia;
-	// 								res['return'] = empresa;
-	// 							});
-	// 						});
-	// 					});
-	// 				});
-	// 			});
-	// 		});
-	// 		// empresa.municipio = Municipios.findOne(empresa.municipio_id);
-	// 		// empresa.estado = Estados.findOne(empresa.estado_id);
-	// 		// empresa.colonia = Colonias.findOne(empresa.colonia_id);
-	// 		// empresa.pais = Paises.findOne(empresa.pais_id);
-	// 		// console.log("esta es la empresa",empresa)
-	// 		return res.wait();
-	// },
+	 obAvales: function (aval_id) {
+			var aval = Avales.findOne(aval_id);
+			console.log(aval,"nanda")
+			// 	_.each(aval, function(objeto){
+					
+					aval.profile.nacionalidadAval = Nacionalidades.findOne(aval.profile.nacionalidad_id);
+					aval.profile.nacionalidad = aval.profile.nacionalidadAval.nombre
+					aval.profile.coloniaAval = Colonias.findOne(aval.profile.colonia_id);
+					aval.profile.colonia = aval.profile.coloniaAval.nombre
+					aval.profile.estadoAval = Estados.findOne(aval.profile.estado_id);
+					aval.profile.estado = aval.profile.estadoAval.nombre
+					aval.profile.municipioAval = Municipios.findOne(aval.profile.municipio_id);
+					aval.profile.municipio = aval.profile.municipioAval.nombre
+			 		aval.profile.ocupacionAval = Ocupaciones.findOne(aval.profile.ocupacion_id);
+
+			 		aval.profile.ocupacion = aval.profile.ocupacionAval.nombre
+					aval.profile.ciudadAval = Ciudades.findOne(aval.profile.ciudad_id);
+					aval.profile.ciudad = aval.profile.ciudadAval.nombre
+					// aval.profile.sucursalesAval = Sucursales.findOne(aval.profile.sucursal_id);
+					// aval.profile.sucursal = aval.profile.sucursalAval.nombre
+					aval.profile.estadoCivilAval = EstadoCivil.findOne(aval.profile.estadoCivil_id);
+					aval.profile.estadoCivil = aval.profile.estadoCivilAval.nombre
+
+						
+			// });
+			// 	console.log(aval,"nanda")
+			return aval;
+	},
+
 
 	findSomeShit: function (collection, find, findOne){
 		return findOne ? eval(collection).findOne(find) : eval(collection).find(find);
@@ -406,16 +400,10 @@ Meteor.methods({
 
 
 						 	
-
-						
-
-
 		doc.setData({				item: 		objeto,//bien
 									foto: objeto.foto,
 									referencias: objeto.referencias
 					
-
-
 								}) 
 									
 								
@@ -537,10 +525,10 @@ Meteor.methods({
 	 	 		   item.liquidar = parseFloat(item.liquidar.toFixed(2))
 	 	 		    item.capital = parseFloat(item.capital.toFixed(2))
 	 	 		// item.liquidar =              
-	 	 		if (item.estatus = 5) {
-	 	 			item.formaPago = item.tipoIngreso.nombre
+	 	 		// if (item.estatus = 5) {
+	 	 		// 	item.formaPago = item.tipoIngreso.nombre
 
-	 	 		}
+	 	 		// }
 	 	 	});
 
 		
@@ -577,8 +565,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"reporteDiarioCobranza.docx", "binary");
@@ -670,8 +658,8 @@ Meteor.methods({
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
 		//
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteDiarioCreditos.docx", "binary");
@@ -856,12 +844,14 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
-  contratos: function (contrato,credito,cliente,planPagos) {
+  contratos: function (contrato,credito,cliente,planPagos,avales) {
   	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
   	cliente.colonia = cliente.coloniaCliente.nombre
   	cliente.estado = cliente.estadoCliente.nombre
   	cliente.ocupacion = cliente.ocupacionCliente.nombre
   	cliente.ciudad = cliente.ciudadCliente.nombre
+  	cliente.municipio = cliente.municipioCliente.nombre
+  	contrato.fechaEntrega = moment(contrato.fechaEntrega).format("DD-MM-YYYY")
   	 _.each(planPagos,function(pp){
 		 	pp.importeRegular = parseFloat(pp.importeRegular.toFixed(2))
 		 	pp.iva = parseFloat(pp.iva.toFixed(2))
@@ -879,11 +869,11 @@ Meteor.methods({
   	 	item.fechaComercializacion = moment(item.fechaComercializacion).format("DD-MM-YYYY")
 
   	 });
-  	//var garantias = contrato.garantias[0]
 
-  
-  		
-  	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
+  	 
+  	console.log(avales,"avaless")
+
+   	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
 	
 	    //console.log(contrato,"contratos  sin aval ni garantias")
 		var fs = require('fs');
@@ -927,6 +917,8 @@ Meteor.methods({
 									cliente: cliente,
 									contrato: contrato,
 									pp: planPagos,
+									//////AVALES
+									aval: avales,
 													
 				});
 								
@@ -954,13 +946,13 @@ Meteor.methods({
 		
    }
    	if (contrato.avales_ids && _.isEmpty(contrato.garantias)) {
-   	console.log(contrato,"contratos con aval sin garantias ")
+   	//console.log(contrato,"contratos con aval sin garantias ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-	    var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+	    //var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 	    if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
@@ -994,6 +986,9 @@ Meteor.methods({
 									    fecha:     fecha,
 									    cliente:    cliente,
 									    pp: planPagos,
+									    aval: contrato.aval,
+									    aval: avales,
+									    //coloniaAv:contrato.aval.coloniaAval.nombre,
 				});
 								
 		doc.render();
@@ -1019,13 +1014,13 @@ Meteor.methods({
 
 
   if (contrato.garantias && contrato.tipoGarantia == "general") {
-   	console.log(contrato,"hipotecarios ")
+   	//console.log(contrato,"hipotecarios ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		 var produccion = "/home/cremio/archivos/";
-	    //var produccion = meteor_root+"/web.browser/app/plantillas/";
+		 //var produccion = "/home/cremio/archivos/";
+	    var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -1063,6 +1058,8 @@ Meteor.methods({
 									cliente: cliente,
 									contrato: contrato,
 									pp: planPagos,
+									aval: avales,
+									//coloniaAv:contrato.aval.coloniaAval.nombre,
 									//garantias: garantias,
 													
 				});
@@ -1092,14 +1089,14 @@ Meteor.methods({
 
    }
    if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
-   		console.log(contrato,"mobiliaria ")
+   		//console.log(contrato,"mobiliaria ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			console.log("entra SIMPLE")
 			var content = fs				
@@ -1137,6 +1134,8 @@ Meteor.methods({
 									    cliente:   cliente,
 										contrato: contrato,
 										pp: planPagos,
+										aval: avales,
+										//coloniaAv:contrato.aval.coloniaAval.nombre,
 										//garantias: 
 				});
 								
@@ -1325,8 +1324,8 @@ getListaCobranza: function (objeto) {
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"FormatoSol.docx", "binary");
