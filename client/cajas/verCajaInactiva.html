@@ -40,9 +40,7 @@
               <tr>
                 <th width="5%">Folio</th>
                 <th width="15%">Fecha</th>
-                <th width="20%">Tipo Movimiento</th>
                 <th width="20%">Movimiento</th>
-                <!-- <th width="20%">Cuenta</th> -->
                 <th width="5%">Capital</th>
                 <th width="5%">Multas</th>
                 <th width="5%">Intereses</th>
@@ -56,9 +54,7 @@
               <tr ng-repeat="mov in vci.cajaInactiva.movimientosCaja">
                 <td align="center">{{mov.pago.folioPago}}</td>
                 <td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
-                <td>{{mov.tipoMovimiento}}</td>
                 <td>{{mov.origen}}</td>
-                <!-- <td>{{mov.cuenta.nombre}}</td> -->
                 <td align="right">{{mov.capital | currency}}</td>
                 <td align="right">{{mov.multas | currency}}</td>
                 <td align="right">{{mov.intereses | currency}}</td>

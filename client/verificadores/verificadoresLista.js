@@ -21,7 +21,8 @@ angular.module("creditoMio")
 		// }
   // });
   this.subscribe('verificadores', () => {
-		return [{roles:"Verificador"}]; });
+		return [{"profile.sucursal_id": Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+						roles:"Verificador"}]; });
   
   this.helpers({
 	// 	verificadores : () => {

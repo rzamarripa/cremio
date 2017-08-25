@@ -18,18 +18,22 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4" valida>
-                        <label>Usuario *</label>
-                        <input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="sup.objeto.username" required="">
-                    </div>
-                    <div class="col-sm-4" valida>
-                        <label>Contraseña *</label>
-                        <input name="contrasena" type="password" class="form-control" placeholder="Contraseña" ng-model="sup.objeto.password" required="">
-                    </div>
-                    <div class="col-sm-4" valida>
-                        <label>Confirmar Contraseña *</label>
-                        <input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="sup.objeto.confirmpassword" required="">
-                    </div>
+                    <div class="col-sm-3" valida>
+		                    <label>Usuario *</label>
+		                    <input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="sup.objeto.username" required="">
+		                </div>
+		                <div class="col-sm-3" valida>					    
+												<label>Contraseña *</label>
+												<input name="contrasena" type="password" class="form-control" placeholder="Contraseña" ng-model="sup.objeto.password" required="" ng-disabled="sup.cambiarContrasena">
+										</div>		    				    	    
+										<div class="col-sm-3" valida>					    
+											<label>Confirmar Contraseña *</label>
+											<input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="sup.objeto.confirmpassword" required="" ng-disabled="sup.cambiarContrasena">
+										</div>
+										<div class="col-sm-3">			
+											<br>		    
+											<button type="button" class="btn btn-primary" ng-click="sup.cambiarPassword()" ng-show="!sup.action">Cambiar Contraseña</button>
+										</div>
                 </div>
                 <div class="row">
                     <div class="col-sm-1">
@@ -167,12 +171,42 @@
                                 <option ng-repeat="ciudad in sup.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
                             </select>
                         </div>
-                        <div class="col-sm-4" valida>
-                            <label for="seccion_id">Colonia *</label>
-                            <select name="dirColonia" class="form-control select2" placeholder="Seleccione" ng-model="sup.objeto.profile.colonia_id" required>
-                                <option ng-repeat="colonia in sup.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
-                            </select>
-                        </div>
+                        <div class="col-sm-4">
+													<label for="seccion_id">Buscar Colonia</label>
+													<div class="input-group"> 
+														<input name="colonia_id" type="text" class="form-control" ng-model="sup.buscar.coloniaNombre" capitalize>
+														<span class="input-group-btn">
+															<button class="btn btn-default" type="button" style="height: 34px;">
+																<i class="fa fa-search"></i>
+															</button> 
+														</span>
+													</div>
+													<div class="ajax-dropdown" ng-show="sup.buscandoColonia" style="display: block; width: 100% !important;">
+														<div class="ajax-notifications custom-scroll">
+															<div class="alert alert-transparent">
+																<div class="tab-pane fade active in" id="a2">
+																	<div class="user well" title="{{colonia.nombre}}" ng-repeat="colonia in sup.colonias" style="width: 100%">
+																		<div class="row">
+																			<div class="col-sm-4">
+																				<a href="javascript:void(0);"> {{colonia.nombre}}</a> 						
+																				<a href="javascript:void(0);" ng-click="sup.agregarColonia(colonia);sup.buscandoColonia = false"> Seleccionar</a>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<span> 
+															<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="sup.buscando = false; sup.buscar.nombre = ''">
+																<i class="fa fa-times"></i>
+															</button> 
+														</span>							
+													</div>
+												</div>
+												<div class="col-sm-4" valida>					    
+													<label>Colonia *</label>
+													<input name="colonia" type="text" class="form-control" placeholder="Colonia" ng-model="sup.colonia.nombre" disabled="true" required>
+												</div>
                     </div>
                 </div>
                 <div class="well">

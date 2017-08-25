@@ -10,27 +10,27 @@ angular.module("creditoMio")
   this.buscar.nombre = "";
   window.rc = rc;
   
-  // this.subscribe('buscarCajeros', () => {
-		// if(this.getReactively("buscar.nombre").length > 0){
-		// 	console.log(rc.buscar.nombre);
-		// 	return [{
-		//     options : { limit: 51 },
-		//     where : { 
-		// 			nombreCompleto : this.getReactively('buscar.nombre')
-		// 		} 		   
-	 //    }];
-		// }
-  // });
+/*
+   this.subscribe('buscarCajeros', () => {
+		 if(this.getReactively("buscar.nombre").length > 0){
+		 	console.log(rc.buscar.nombre);
+		 	return [{
+		     options : { limit: 10 },
+		     where : { 
+			    "profile.sucursal_id": Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", 
+		 			"profile.nombreCompleto" : this.getReactively('buscar.nombre')
+		 		} 		   
+	     }];
+		 }
+   });
+*/
   this.subscribe('cajero', () => {
-		return [{roles:"Cajero"}]; });
+		return [{"profile.sucursal_id": Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",roles:"Cajero"}]; });
   
   this.helpers({
-		cajeros : () => {
-			// return Meteor.users.find({
-		 //  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
-		 //  	roles : ["Cajero"]
-			// }, { sort : {"profile.nombreCompleto" : 1 }});
-			return Meteor.users.find({roles:"Cajero"});
+		cajeros : () => {	
+			return Meteor.users.find({"profile.sucursal_id": Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+																roles:"Cajero"});
 		},
 	});
 	

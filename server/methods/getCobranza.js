@@ -257,8 +257,7 @@ Meteor.methods({
 			return arreglo;
 		
 	},
-
-		getClienteInformacion: function (cliente) {
+	getClienteInformacion: function (cliente) {
 		
 			 var persona = cliente
 			

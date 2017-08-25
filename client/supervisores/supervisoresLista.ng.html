@@ -15,7 +15,7 @@
 					<i class="fa fa-plus"></i> Nuevo
 				</a>
 			</div>
-			<input class="form-control" type="text" placeholder="Buscar..." ng-model="buscar.profile.nombreCompleto">
+			<input id="filter" class="form-control" type="text" placeholder="Buscar..." ng-model="buscar.profile.nombreCompleto" capitalize>
 		</div>
 	</div>
 </div>
@@ -65,7 +65,7 @@
                   <span class="caret"></span>
                   <span class="sr-only">Toggle Dropdown</span>
                 </button>
-                <ul class="dropdown-menu text-left">
+                <ul class="dropdown-menu dropdown-menu-right text-left">
                   <li><a href="#" ui-sref="root.editarSupervisor({objeto_id : objeto._id})"><i class="fa fa-pencil"></i> Editar</a></li>
                   <li><a href="#" ng-click="sup.cambiarEstatus(objeto._id)">
                     <i class="fa fa-{{objeto.estatus ? 'trash' : 'check' }}"></i> {{objeto.estatus ? "Desactivar" : "Activar" }}</a>

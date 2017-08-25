@@ -9,7 +9,8 @@ angular.module("creditoMio")
   
 	this.subscribe('tiposCredito',()=>{
 		return [{
-			sucursal_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
+			//sucursal_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
+			
 		}]
 	 });
 	 
