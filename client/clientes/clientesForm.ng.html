@@ -265,30 +265,57 @@
 							<option ng-repeat="ciudad in cli.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
 						</select>
 					</div>	
-					<div class="col-sm-4" valida>
-						<label for="seccion_id">Colonia *</label>
-						<select name="dirColonia" 
-										class="js-example-basic-single js-states form-control" 
-										placeholder="Seleccione" 
-										ng-model="cli.objeto.profile.colonia_id" required>
-							<option ng-repeat="colonia in cli.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
-						</select>
+					<div class="col-sm-4">
+						<label for="seccion_id">Buscar Colonia</label>
+						<div class="input-group"> 
+							<input name="colonia_id" type="text" class="form-control" ng-model="cli.buscar.coloniaNombre" capitalize>
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button" style="height: 34px;">
+									<i class="fa fa-search"></i>
+								</button> 
+							</span>
+						</div>
+						<div class="ajax-dropdown" ng-show="cli.buscandoColonia" style="display: block; width: 100% !important;">
+							<div class="ajax-notifications custom-scroll">
+								<div class="alert alert-transparent">
+									<div class="tab-pane fade active in" id="a2">
+										<div class="user well" title="{{colonia.nombre}}" ng-repeat="colonia in cli.colonias" style="width: 100%">
+											<div class="row">
+												<div class="col-sm-4">
+													<a href="javascript:void(0);"> {{colonia.nombre}}</a> 						
+													<a href="javascript:void(0);" ng-click="cli.agregarColonia(colonia);cli.buscandoColonia = false"> Seleccionar</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<span> 
+								<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="cli.buscando = false; cli.buscar.nombre = ''">
+									<i class="fa fa-times"></i>
+								</button> 
+							</span>							
+						</div>
 					</div>
-					<div class="col-sm-4">					    
-						<label>Tiempo Residencia</label>
-						<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="cli.objeto.profile.tiempoResdencia" capitalize>
+					<div class="col-sm-4" valida>					    
+						<label>Colonia *</label>
+						<input name="colonia" type="text" class="form-control" placeholder="Colonia" ng-model="cli.colonia.nombre" disabled="true" required>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-4">
+					<div class="col-sm-3">					    
+						<label>Tiempo Residencia</label>
+						<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="cli.objeto.profile.tiempoResdencia" capitalize>
+					</div>
+					<div class="col-sm-3">
 						  <label for="casa">Casa</label>
 							<input name="casa" type="text" class="form-control" ng-model="cli.objeto.profile.casa" capitalize>
 						</div>
-					<div class="col-sm-4">					    
+					<div class="col-sm-3">					    
 						<label>Renta</label>
 						<input name="renta" type="checkbox" class="form-control" ng-model="cli.objeto.profile.renta">
 					</div>
-					<div class="col-sm-4" ng-if="cli.objeto.profile.renta">					    
+					<div class="col-sm-3" ng-if="cli.objeto.profile.renta">					    
 						<label>Renta Mes </label>
 						<input name="rentaMes" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="cli.objeto.profile.rentaMes">
 					</div>
@@ -484,7 +511,7 @@
 					<div class="col-sm-4">
 						<br />
 						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-empresa-modal-lg" ng-click="cli.createEmpresa()">Crear Empresa</button>
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-empresaVer-modal-lg" ng-click="cli.getEmpresa(cli.objeto.profile.empresa_id)" ng-show="cli.objeto.profile.empresa_id" >Ver Empresa</button>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-empresa-modal-lg" ng-click="cli.getEmpresa(cli.objeto.profile.empresa_id)" ng-show="cli.objeto.profile.empresa_id" >Ver Empresa</button>
 					</div>
 				</div>
 				<br>
@@ -597,17 +624,42 @@
 								<option ng-repeat="ciudad in cli.ciudadesEmpresa" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
 							</select>
 						</div>	
-						<div class="col-sm-4" valida>
-							<label for="seccion_id">Colonia *</label>
-							<br>
-							<select name="dirColoniaEmpresa" 
-											class="js-example-basic-single js-states form-control" 
-											placeholder="Seleccione" 
-											ng-model="cli.empresa.colonia_id" 
-											required style="width: 400px;"
-											ng-change="cli.cambiarColoniaEmpresa()">
-								<option ng-repeat="colonia in cli.coloniasEmpresa" value="{{colonia._id}}">{{colonia.nombre}}</option>
-							</select>
+						<div class="col-sm-4">
+							<label for="seccion_id">Buscar Colonia</label>
+							<div class="input-group"> 
+								<input name="empresaColonia_id" type="text" class="form-control" ng-model="cli.buscar.coloniaNombreEmpresa" capitalize>
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button" style="height: 34px;">
+										<i class="fa fa-search"></i>
+									</button> 
+								</span>
+							</div>
+							<div class="ajax-dropdown" ng-show="cli.buscandoColoniaEmpresa" style="display: block; width: 100% !important;">
+								<div class="ajax-notifications custom-scroll">
+									<div class="alert alert-transparent">
+										<div class="tab-pane fade active in" id="a2">
+											<div class="user well" title="{{colonia.nombre}}" ng-repeat="colonia in cli.coloniasEmpresa" style="width: 100%">
+												<div class="row">
+													<div class="col-sm-4">
+														<a href="javascript:void(0);"> {{colonia.nombre}}</a> 						
+														<a href="javascript:void(0);" ng-click="cli.agregarColoniaEmpresa(colonia);cli.buscandoColoniaEmpresa = false"> Seleccionar</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<span> 
+									<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="cli.buscando = false; cli.buscar.nombre = ''">
+										<i class="fa fa-times"></i>
+									</button> 
+								</span>
+								
+							</div>
+						</div>
+						<div class="col-sm-4" valida>					    
+							<label>Colonia *</label>
+							<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cli.coloniaEmpresa.nombre" disabled="true" required>
 						</div>
 					</div>	 
 				</div>
@@ -616,13 +668,15 @@
 		<br>
 		<div class="modal-footer"s>
 			<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-			<input type="submit" ng-click="cli.guardarEmpresa(cli.empresa, cli.objeto,form2)" value="Guardar" class="btn btn-primary" valida-form formulario="form2">
+			<input type="submit" ng-click="cli.guardarEmpresa(cli.empresa, cli.objeto,form2)" value="Guardar" class="btn btn-primary" valida-form formulario="form2" ng-show="cli.nuevoEmpresa">
+			<input type="submit" ng-click="cli.actualizarEmpresa(cli.empresa, cli.objeto,form2)" value="Actualizar" class="btn btn-primary" valida-form formulario="form2" ng-show="!cli.nuevoEmpresa">
 	  </div>
 	</div>
 </div>
 </div>
 
 <!-- VER EMPRESA Modal -->
+<!--
 <div id="modalEmpVer" class="modal fade bs-empresaVer-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
   <div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
@@ -705,6 +759,7 @@
 		</div>
 	</div>
 </div>
+-->
 
 <!-- Ocupación -->
 <div id="modalOcupacion" class="modal fade bs-ocupacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">

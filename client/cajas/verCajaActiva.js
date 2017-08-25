@@ -237,24 +237,67 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 
   this.cancelarPago = function(pago) {
     customConfirm('¿Estás seguro de cancelar el pago ' + pago.folioPago + '?', function() {
-      _.each(pago.planPagos, function(plan) {
-        PlanPagos.update(plan.planPago_id, { $set: { estatus: 0 }, $inc: { importeRegular: plan.totalPago, pago: -plan.totalPago } });
+      
+      var mc = MovimientosCajas.findOne(pago.movimientoCaja_id);
+
+      if (mc.estatus == 2)
+      {
+	      	toastr.warning("El movimiento ya está Cancelado");
+	      	return;
+      }
+			
+			_.each(pago.planPagos, function(plan) {
+							console.log(plan);				
+					//Poner pago Cancelado para que no sume
+					_.each(plan.pagos, function(pago){
+							if (pago.pago_id == pago._id)
+								 pago.estatus = 2; //Estatus Cancelado;
+
+					});
+					
+					
+					PlanPagos.update(plan.planPago_id, { $set: { estatus				: 0}, 
+																							 $inc: { importeRegular : plan.totalPago, 
+																											 pagoInteres 		: -plan.pagoInteres,
+																											 pagoIva 				: -plan.pagoIva,
+																											 pagoSeguro 		: -plan.pagoSeguro, 
+																											 pagoCapital		: -plan.pagoCapital
+																										 }
+	        });
+					
       });
+      
+      //Para que no se pueda voler a cancelar
+      MovimientosCajas.update(pago.movimientoCaja_id, {$set: {estatus:2}});
+      
       var movimiento_id = MovimientosCajas.insert({
-        tipoMovimiento: "Cancelación",
-        origen: "Cancelación de pago",
-        origen_id: pago._id,
-        monto: pago.totalPago *-1,
-        cuenta_id: pago.tipoIngreso_id,
-        caja_id: pago.caja_id,
-        sucursal_id: pago.sucursalPago_id,
-        createdAt: new Date(),
-        createdBy: Meteor.userId(),
-        updated: false,
-        estatus: 1
+        tipoMovimiento	: "Cancelación",
+        origen					: "Cancelación de pago",
+        origen_id				: pago._id,
+        monto						: pago.totalPago *-1,
+        cuenta_id				: pago.tipoIngreso_id,
+        caja_id					: pago.caja_id,
+        sucursal_id			: pago.sucursalPago_id,
+        createdAt				: new Date(),
+        createdBy				: Meteor.userId(),
+        updated					: false,
+        estatus					: 1
       });
       Pagos.update(pago._id, { $set: { estatus: 0, cancelacion_movimientoCaja_id: movimiento_id } });
-    })
+
+
+			//Restar de la cuenta en la que se hizo el dinero:
+			_.each(rc.caja.cuenta, function(caja, tipoIngreso_id){
+					if (tipoIngreso_id == pago.tipoIngreso_id)
+						rc.caja.cuenta[tipoIngreso_id].saldo = Number(parseFloat(rc.caja.cuenta[tipoIngreso_id].saldo - pago.totalPago).toFixed(2));				
+				});
+				var tempId = rc.caja._id;
+				delete rc.caja._id;
+				Cajas.update(tempId, {$set:rc.caja});
+	    })
+	    
+	    
+	    
   }
 
   this.detalle = function(_id) {

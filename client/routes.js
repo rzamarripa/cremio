@@ -948,6 +948,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.ver', {
+			url: '/ver',
+			templateUrl: 'client/clientes/ver.ng.html',
+			controller: 'verCtrl as v',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 }]);
 
 function irArriba(){

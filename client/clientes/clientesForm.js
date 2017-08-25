@@ -8,7 +8,10 @@ angular.module("creditoMio")
   this.cambiarContrasena = true;
   this.action = true;
   this.actionReferencia = true;
-  this.nuevo = true;   
+  this.nuevo = true;
+  
+  this.nuevoEmpresa = true;
+       
   this.objeto = {}; 
   this.objeto.profile = {};
   this.ocupacion = {};
@@ -20,15 +23,13 @@ angular.module("creditoMio")
   rc.folio = "";
   rc.imagen = "";
   $(".js-example-basic-single").select2();
+    
   
   this.pais_id = "";
   this.estado_id = "";
   this.municipio_id = "";
   this.ciudad_id = "";
   this.empresa_id = "";
-  rc.ocupacionSeleccionado = ""
-  rc.coloniaSeleccionado = ""
-  
   
   this.con = 0;
   this.num = 0;
@@ -37,7 +38,12 @@ angular.module("creditoMio")
   
   this.buscar = {};
   this.buscar.nombre = "";
+  this.buscar.coloniaNombre = "";
+  this.buscar.coloniaNombreEmpresa = "";
   this.buscando = false;
+  this.buscandoColonia = false;
+  this.buscandoColoniaEmpresa = false;
+  
   var fotillo = ""
   //this.pic = {};
   this.imagenes = []
@@ -47,6 +53,9 @@ angular.module("creditoMio")
   this.empresaSeleccionada = "";
 
   this.estadoCivilSeleccionado = {};
+  
+  rc.colonia = {};
+  rc.coloniaEmpresa = {};
 
 
   this.subscribe('buscarReferenciasPersonales', () => {
@@ -62,6 +71,37 @@ angular.module("creditoMio")
     else if (this.getReactively("buscar.nombre").length  == 0 )
       this.buscando = false;
   });
+  
+  this.subscribe('buscarColonias', () => {
+    if(this.getReactively("buscar.coloniaNombre").length > 3){
+      this.buscandoColonia = true;
+      return [{
+        options : { limit: 10 },
+        where : { 
+	        ciudad_id : this.getReactively("objeto.profile.ciudad_id"),
+          nombre 		: this.getReactively('buscar.coloniaNombre')
+        }        
+      }];
+    }
+    else if (this.getReactively("buscar.coloniaNombre").length  == 0 )
+      this.buscandoColonia = false;
+  });
+  
+  this.subscribe('buscarColonias', () => {
+    if(this.getReactively("buscar.coloniaNombreEmpresa").length > 3){
+      this.buscandoColoniaEmpresa = true;
+      return [{
+        options : { limit: 10 },
+        where : { 
+	        ciudad_id : this.getReactively("empresa.ciudad_id"),
+          nombre 		: this.getReactively('buscar.coloniaNombreEmpresa')
+        }        
+      }];
+    }
+    else if (this.getReactively("buscar.coloniaNombreEmpresa").length  == 0 )
+      this.buscandoColoniaEmpresa = false;
+  });
+  
 
   this.subscribe('empresas',()=>{
     return [{estatus: true}]
@@ -90,9 +130,11 @@ angular.module("creditoMio")
     return [{rol:"Cliente"}]
   });
   
+/*
   this.subscribe('configuraciones',()=>{
     return [{}]
   });
+*/
   
   this.subscribe('estados',()=>{
 	  
@@ -123,14 +165,15 @@ angular.module("creditoMio")
 		if (this.getReactively("empresa.municipio_id") !=  undefined)
         return [{municipio_id: this.getReactively("empresa.municipio_id"), estatus: true}];
   });
-
-  this.subscribe('colonias',()=>{
-    if (this.getReactively("objeto.profile.ciudad_id") !=  undefined)
-        return [{ciudad_id: this.getReactively("objeto.profile.ciudad_id"), estatus: true}];
+	
+	this.subscribe('colonias',()=>{
+	  if (this.getReactively("objeto.profile.colonia_id") != undefined)
+	  		return [{_id: this.getReactively("objeto.profile.colonia_id")}]
   });
+  
   this.subscribe('colonias',()=>{
-    if (this.getReactively("empresa.ciudad_id") !=  undefined)
-        return [{ciudad_id: this.getReactively("empresa.ciudad_id"), estatus: true}]; 
+	  if (this.getReactively("empresa.colonia_id") != undefined)
+	  		return [{_id: this.getReactively("empresa.colonia_id")}]
   });
   
   //Condición del Parametro
@@ -177,13 +220,17 @@ angular.module("creditoMio")
       return Ciudades.find({municipio_id: this.getReactively("objeto.profile.municipio_id"), estatus: true});
     },
     ciudadesEmpresa : () => {
+	    
       return Ciudades.find({municipio_id: this.getReactively("empresa.municipio_id"), estatus: true});
     },
-    colonias : () => {
-      return Colonias.find({ciudad_id: this.getReactively("objeto.profile.ciudad_id"), estatus: true});
+
+    colonias : () => {	    
+      return Colonias.find({ciudad_id : this.getReactively("objeto.profile.ciudad_id"),
+      											nombre		: { '$regex' : '.*' + this.getReactively('buscar.coloniaNombre') || '' + '.*', '$options' : 'i' }});
     },
     coloniasEmpresa : () => {
-      return Colonias.find({ciudad_id: this.getReactively("empresa.ciudad_id"), estatus: true});
+      return Colonias.find({ciudad_id : this.getReactively("empresa.ciudad_id"),
+	      										nombre		: { '$regex' : '.*' + this.getReactively('buscar.coloniaNombreEmpresa') || '' + '.*', '$options' : 'i' }});
     },
     empresas : () => {
       return Empresas.find();
@@ -191,28 +238,29 @@ angular.module("creditoMio")
     documentos : () => {
       return Documentos.find();
     },
+/*
     configuraciones : () => {
       var config = Configuraciones.find().fetch();
       return config[config.length - 1]
     },
+*/
     imagenesDocs : () => {
       var imagen = rc.imagenes
       _.each(rc.getReactively("imagenes"),function(imagen){
         imagen.archivo = rc.imagen
 
       });
-
-
       return imagen
     },
     objetoEditar : () => {
 
       var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
       rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
-      
-      
+
       if (objeto != undefined)
       {
+	      	
+	      	
           this.referenciasPersonales = [];
           if ($stateParams.objeto_id != undefined)
           {
@@ -261,6 +309,12 @@ angular.module("creditoMio")
     empresa : () => {
       return Empresas.findOne(rc.objeto.profile.empresa_id)
     },  
+    col : () => {
+	    rc.colonia = Colonias.findOne({_id: this.getReactively("objeto.profile.colonia_id")});			
+    },
+    colE : () => {
+	    rc.coloniaEmpresa = Colonias.findOne({_id: this.getReactively("empresa.colonia_id")});			
+    },
   }); 
 
 	this.tomarFoto = function(objeto){
@@ -279,19 +333,6 @@ angular.module("creditoMio")
     this.objeto = {};   
   };
   
-/*
-  this.cambiarPaisObjeto = function() {this.pais_id = this.getReactively("objeto.profile.pais_id");};
-  this.cambiarEstadoObjeto = function() {this.estado_id = this.getReactively("objeto.profile.estado_id");};
-  this.cambiarMunicipioObjeto = function() {this.municipio_id = this.getReactively("objeto.profile.municipio_id");};
-  this.cambiarCiudadObjeto = function() {this.ciudad_id = this.getReactively("objeto.profile.ciudad_id");};
-  
-  this.cambiarPaisEmpresa = function() {this.pais_id = this.getReactively("empresa.pais_id");};
-  this.cambiarEstadoEmpresa = function() {this.estado_id = this.getReactively("empresa.estado_id");};
-  this.cambiarMunicipioEmpresa = function() {this.municipio_id = this.getReactively("empresa.municipio_id");};
-  this.cambiarCiudadEmpresa = function() {this.ciudad_id = this.getReactively("empresa.ciudad_id");};
-  this.cambiarColoniaEmpresa = function() {this.colonia_id = this.getReactively("empresa.colonia_id");};
-*/
-
   this.guardar = function(objeto,form)
   {
       
@@ -303,7 +344,7 @@ angular.module("creditoMio")
       if (this.action)
       {
 	      	objeto.password = Math.random().toString(36).substring(2,7);		
-	      	//console.log(objeto.password);			
+
       }	
       objeto.profile.estatus = true;
       objeto.profile.documentos = rc.documents;
@@ -704,10 +745,7 @@ angular.module("creditoMio")
     //rc.nota.unidad = Unidades.findOne(rc.nota.unidad_id);
   };
 
-   this.getEmpresa= function(empresa_id)
-  {
-    rc.empresa = Empresas.findOne(empresa_id);
-  };
+  
 
   this.mostrarModal= function(img)
   {
@@ -758,11 +796,31 @@ angular.module("creditoMio")
     rc.coloniaSeleccionado = Colonias.findOne(colonia_id); 
   };
   
+  this.agregarColonia = function(colonia)
+  {
+    	rc.colonia = colonia;
+    	rc.objeto.profile.colonia_id = colonia._id;
+    	rc.buscar.coloniaNombre = "";
+  };
+  
+  this.agregarColoniaEmpresa = function(colonia)
+  {
+    	rc.coloniaEmpresa = colonia;
+    	rc.empresa.colonia_id = colonia._id;
+    	rc.buscar.coloniaNombreEmpresa = "";
+  };
   
   this.createEmpresa = function()
   {
       this.empresa = {};    
+      this.nuevoEmpresa = true;
   }
+  
+  this.getEmpresa= function(empresa_id)
+  {
+    	rc.empresa = Empresas.findOne(empresa_id);
+			this.nuevoEmpresa = false;
+  };
 
   this.imprimirDoc = function(imagen) {
     console.log(imagen)

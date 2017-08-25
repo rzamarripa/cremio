@@ -128,6 +128,7 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 	        //console.log(mov);
           var d = {};
           
+          
           if (mov.origen == "Pago de Cliente") {
             	pagos_id.push(mov.origen_id);
 							var p = Pagos.findOne(mov.origen_id);

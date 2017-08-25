@@ -232,6 +232,7 @@ Meteor.methods({
     var user = Meteor.user();
     
     delete caja._id
+    caja.folioCaja += 1;
     caja.updated = true;
     caja.updatedAt = new Date();
     caja.ultimaApertura = new Date();
@@ -530,7 +531,6 @@ Meteor.methods({
 							totalEnCaja
 						};
   },
-  
   getCorte: (corte_id) => {
 		
 		var corte = CortesCaja.findOne({_id: corte_id});
