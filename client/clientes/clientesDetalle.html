@@ -24,7 +24,9 @@
 							</a>&nbsp;
 							<div class="col-sm-2">
 										<h1>{{cd.objeto.profile.nombre}} <span class="semi-bold">{{cd.objeto.profile.apellidoPaterno}} {{cd.objeto.profile.apellidoMaterno}}</span>
-										<h5>{{cd.objeto.profile.numeroCliente}}</h5>
+										<h5>{{cd.objeto.profile.numeroCliente}}</h5><h1>{{cd.cantidad}}</h1>
+											<h2>{{cd.empresaCliente.pais}}</h2>
+
 									</div>
 								
 										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
@@ -76,7 +78,7 @@
 					<h2>Créditos Activos</h2>
 					<ul class="nav nav-tabs pull-right" id="myTab">
 						<li class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in cd.creditos track by $index">
-							<a data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado}}</span></a>
+							<a ng-click="cd.getAvales(credito);cd.trance(credito)" data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado}}</span></a>
 						</li>
 					</ul>
 				<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
@@ -610,7 +612,7 @@
 									    	<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cd.objeto.profile.jefeInmediato" disabled="">
 								    	</div>
 										</div>
-										<div class="row">
+										<div class="row" >
 											<div class="col-sm-3" >
 													<label >Pais </label>
 													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cd.objeto.profile.empresa.pais" disabled="">
@@ -625,7 +627,7 @@
 											</div>
 											<div class="col-sm-3" >
 													<label for="seccion_id">Ciudad </label>
-													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="cd.objeto.profile.empresa.ciudad" disabled="">
+													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" value="{{cd.empresaCliente.ciudad}}" disabled="">
 											</div>
 										</div>	
 				    </div>

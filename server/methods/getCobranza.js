@@ -273,9 +273,28 @@ Meteor.methods({
 			    
 				//persona.profile.estadoCivil = EstadoCivil.findOne(persona.profile.estadoCivil_id);
 
-
 			return persona;
 			
 	},	
+	getEmpresaInfo: function (empresa) {
+		
+			 var emp = empresa
+			
+				emp.coloniaEmpresa = Colonias.findOne(emp.colonia_id);
+				emp.colonia = emp.coloniaEmpresa.nombre
+				emp.estadoEmpresa = Estados.findOne(emp.estado_id);
+				emp.estado = emp.estadoEmpresa.nombre
+				emp.municipioEmpresa = Municipios.findOne(emp.municipio_id);
+				emp.municipio = emp.municipioEmpresa.nombre
+				emp.ciudadEmpresa = Ciudades.findOne(emp.ciudad_id);
+				emp.ciudad = emp.ciudadEmpresa.nombre
+				emp.paisEmpresa = Paises.findOne(emp.pais_id);
+				emp.pais = emp.paisEmpresa.nombre
+			    
+				//persona.profile.estadoCivil = EstadoCivil.findOne(persona.profile.estadoCivil_id);
+
+			return emp;
+			
+	},
 	
 });	

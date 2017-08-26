@@ -9,6 +9,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.fechaActual = new Date();
 	this.creditos = [];
 	rc.creditos_id = [];
+	rc.empresaCliente = ""
 	//rc.creditos_idH = [];
 	rc.credito_id = ""
 	rc.credito = "";
@@ -689,10 +690,15 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
           {
           	rc.objeto = result;
               console.log("cliente",result);
-              
 
-
-              $scope.$apply();
+              		 Meteor.call('getEmpresaInfo',rc.objeto.profile.empresa, function(error, result) {           
+			          if (result)
+			          {
+			          	rc.empresaCliente = result;
+			              console.log("empresa",result);
+			          }
+			      }) 
+              //$scope.$apply();
           }
       }) 
 
@@ -943,15 +949,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						  	//})
 								rc.datosCliente = result.profile
 
-
-								
-						
-
-	  
-					
-							
-						
-			
 	   
 	    console.log("cliente",rc.datosCliente)
 	   // console.log("refes",rc.referencias)
@@ -1409,23 +1406,47 @@ if(estatus == 0){
 		console.log( contrato)
 					
 	}
+	this.trance= function(credito)
+		{
+			console.log("creditop",credito)
+				
+		    Meteor.call('numeroALetras',credito.capitalSolicitado, function(error, result){           					
+					if (result)
+					{
+						console.log("result",result)
+							rc.cantidad = result
+					}
+					console.log("cantidad",rc.cantidad)
 
-	 this.imprimirContratos = function(contrato,cliente){
-	 	//console.log("contrato",contrato,"y",cliente,"cliente")
+			});
+		};
+		this.getAvales= function(credito)
+		{
+				console.log(credito.avales_ids[0].aval_id)
+				rc.avalpapu = credito.avales_ids[0].aval_id
+		    Meteor.call('obAvales',rc.avalpapu, function(error, result){           					
+					if (result)
+					{
+						//console.log("result",result)
+							rc.avalesCliente = result.profile
+					}
+					//console.log("avales",rc.avalesCliente)
+
+			});
+		};
+
+	 this.imprimirContratos = function(contrato,cliente,avales){
+	 	avales = rc.avalesCliente
 	
 				contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
-	  
-	  		    Meteor.call('getPeople',cliente, function(error, result){           					
-							if (result)
-							{
+	  		    Meteor.call('getPeople',cliente,contrato._id, function(error, result){           					
+					if (result)
+					{
+							rc.datosCliente = result.profile
 									
-								rc.datosCliente = result.profile
-									
-
-								console.log(rc.datosCliente,"el clientaso")
-									
-										console.log("contrato",contrato)
-				Meteor.call('contratos', contrato, contrato._id,rc.datosCliente,contrato.planPagos, function(error, response) {
+				//console.log(rc.datosCliente,"el clientaso")				
+				console.log("contrato",contrato)
+				Meteor.call('contratos', contrato, contrato._id,rc.datosCliente,contrato.planPagos,avales, function(error, response) {
 				  
 				   if(error)
 				   {
@@ -1567,11 +1588,10 @@ if(estatus == 0){
 						}
 										}//else
 					});//meteorcontratos
+
 			}//if
 			//$scope.$apply();	
 		});
-		  
-				
 
 // $scope.$apply();
 
@@ -1602,6 +1622,9 @@ if(estatus == 0){
 		  
 		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
 		};
+
 	
+	
+	  	
 	
 }
