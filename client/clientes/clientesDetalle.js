@@ -9,6 +9,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.fechaActual = new Date();
 	this.creditos = [];
 	rc.creditos_id = [];
+	rc.empresaCliente = ""
 	//rc.creditos_idH = [];
 	rc.credito_id = ""
 	rc.credito = "";
@@ -689,10 +690,15 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
           {
           	rc.objeto = result;
               console.log("cliente",result);
-              
 
-
-              $scope.$apply();
+              		 Meteor.call('getEmpresaInfo',rc.objeto.profile.empresa, function(error, result) {           
+			          if (result)
+			          {
+			          	rc.empresaCliente = result;
+			              console.log("empresa",result);
+			          }
+			      }) 
+              //$scope.$apply();
           }
       }) 
 
@@ -1439,7 +1445,7 @@ if(estatus == 0){
 							rc.datosCliente = result.profile
 									
 				//console.log(rc.datosCliente,"el clientaso")				
-				console.log("aba",avales)
+				console.log("contrato",contrato)
 				Meteor.call('contratos', contrato, contrato._id,rc.datosCliente,contrato.planPagos,avales, function(error, response) {
 				  
 				   if(error)
