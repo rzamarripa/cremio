@@ -316,6 +316,54 @@ angular.module("creditoMio")
 	    rc.coloniaEmpresa = Colonias.findOne({_id: this.getReactively("empresa.colonia_id")});			
     },
   }); 
+  
+  this.cambiarPaisObjeto = function() {
+	  	this.objeto.profile.estado_id = "";
+	  	this.objeto.profile.municipio_id = "";
+			this.objeto.profile.ciudad_id = "";
+			this.objeto.profile.colonia_id = "";
+			rc.colonia = {};	  	
+	  
+  };
+  this.cambiarEstadoObjeto = function() {
+	  	this.objeto.profile.municipio_id = "";
+			this.objeto.profile.ciudad_id = "";
+			this.objeto.profile.colonia_id = "";
+			rc.colonia = {};
+	};
+  this.cambiarMunicipioObjeto = function() {
+			this.objeto.profile.ciudad_id = "";
+			this.objeto.profile.colonia_id = "";
+			rc.colonia = {};
+  };
+  this.cambiarCiudadObjeto = function() {
+	  	this.objeto.profile.colonia_id = "";
+			rc.colonia = {};
+  };
+  
+  this.cambiarPaisEmpresa = function() {
+	  	this.empresa.estado_id = "";
+	  	this.empresa.municipio_id = "";
+			this.empresa.ciudad_id = "";
+			this.empresa.colonia_id = "";
+			rc.colonia = {};	  	
+	  
+  };
+  this.cambiarEstadoEmpresa = function() {
+	  	this.empresa.municipio_id = "";
+			this.empresa.ciudad_id = "";
+			this.empresa.colonia_id = "";
+			rc.colonia = {};
+	};
+  this.cambiarMunicipioEmpresa = function() {
+			this.empresa.ciudad_id = "";
+			this.empresa.colonia_id = "";
+			rc.colonia = {};
+  };
+  this.cambiarCiudadEmpresa = function() {
+	  	this.empresa.colonia_id = "";
+			rc.colonia = {};
+  };
 
 	this.tomarFoto = function(objeto){
       //console.log(objeto)
@@ -744,8 +792,6 @@ angular.module("creditoMio")
     rc.documento = Documentos.findOne(documento_id);
     //rc.nota.unidad = Unidades.findOne(rc.nota.unidad_id);
   };
-
-  
 
   this.mostrarModal= function(img)
   {

@@ -3,7 +3,7 @@ Meteor.methods({
 
 	getCobranzaDiaria:function(fechaInicial, fechaFinal, sucursal_id){
 			
-			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}}).fetch();
+			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}).fetch();
 			
 			var cobranza = [];
 			
@@ -48,7 +48,7 @@ Meteor.methods({
 	},
 	getBancos:function(fechaInicial, fechaFinal, sucursal_id){
 			
-			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}}).fetch();
+			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}).fetch();
 			
 
 

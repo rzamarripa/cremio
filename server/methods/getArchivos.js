@@ -1,9 +1,7 @@
 Meteor.methods({
 		getcartaRecordatorio: function (objeto) {
-	console.log(objeto,"recordatori")
+		//console.log(objeto,"recordatori")
    // var produccion = "/home/cremio/archivos/";
-
-		
 		
 		var fs = require('fs') ;
     var Docxtemplater = require('docxtemplater');
@@ -12,8 +10,6 @@ Meteor.methods({
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		////var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
-				 
-		
 		
 		var content = fs
     							.readFileSync(produccion+"RECORDATORIOS.docx", "binary");
@@ -75,7 +71,7 @@ Meteor.methods({
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   getcartaUrgente: function (objeto) {
-	console.log(objeto,"URGENTE")
+	//console.log(objeto,"URGENTE")
 		
 		
 		var fs = require('fs');
@@ -233,7 +229,7 @@ Meteor.methods({
 			//console.log("esta es la referencia",referencia)
 			return referencia;
 	},
-	 getDocs: function (idReferencia) {
+	getDocs: function (idReferencia) {
 			var referencia = Documentos.findOne(idReferencia);
 			//console.log("esta es la referencia",referencia)
 			return referencia;
@@ -501,7 +497,7 @@ Meteor.methods({
 		
   },
 
-    getCreditoReporte: function (objeto,credito,avales,total) {
+  getCreditoReporte: function (objeto,credito,avales,total) {
     	console.log(total,"total")
 	
 		var fs = require('fs');
@@ -570,7 +566,7 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
-   ReporteCobranza: function (objeto,inicial,final) {
+  ReporteCobranza: function (objeto,inicial,final) {
 	
 		console.log(objeto,"creditos ")
 		var fs = require('fs');
@@ -661,9 +657,9 @@ Meteor.methods({
 		
   },
 
-     ReporteCreditos: function (objeto,inicial,final) {
+  ReporteCreditos: function (objeto,inicial,final) {
 	
-		console.log(objeto,"fwfe ")
+		//console.log(objeto,"fwfe ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -735,8 +731,6 @@ Meteor.methods({
 		
   },
 
-
-
   ReporteMovimientoCuenta: function (objeto,inicial,final) {
 	
 		console.log(objeto,"creditos ")
@@ -796,7 +790,7 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
-   ReportesBanco: function (objeto,inicial,final) {
+  ReportesBanco: function (objeto,inicial,final) {
 	
 		console.log(objeto,"creditos ")
 		var fs = require('fs');
@@ -857,6 +851,10 @@ Meteor.methods({
 		
   },
   contratos: function (contrato,credito,cliente,planPagos) {
+	  
+	  
+	  
+	  
   	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
   	cliente.colonia = cliente.coloniaCliente.nombre
   	cliente.estado = cliente.estadoCliente.nombre
@@ -1165,7 +1163,7 @@ Meteor.methods({
 
    }
 },
-getListaCobranza: function (objeto) {
+	getListaCobranza: function (objeto) {
 	
 		console.log(objeto,"planPagos")
 		var fs = require('fs');
@@ -1361,7 +1359,7 @@ getListaCobranza: function (objeto) {
     return new Buffer(bitmap).toString('base64');
 		
   }, 
-   imprimirImagenDocumento: function (imagen) {
+  imprimirImagenDocumento: function (imagen) {
 	   
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');

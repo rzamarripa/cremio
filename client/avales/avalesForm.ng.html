@@ -230,27 +230,57 @@
 							<option ng-repeat="ciudad in ava.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
 						</select>
 					</div>	
-					<div class="col-sm-4" valida>
-						<label for="seccion_id">Colonia *</label>
-						<select name="dirColonia" class="form-control select2" placeholder="Seleccione" ng-model="ava.objeto.profile.colonia_id" required>
-							<option ng-repeat="colonia in ava.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
-						</select>
+					<div class="col-sm-4">
+						<label for="seccion_id">Buscar Colonia</label>
+						<div class="input-group"> 
+							<input name="colonia_id" type="text" class="form-control" ng-model="ava.buscar.coloniaNombre" capitalize>
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button" style="height: 34px;">
+									<i class="fa fa-search"></i>
+								</button> 
+							</span>
+						</div>
+						<div class="ajax-dropdown" ng-show="ava.buscandoColonia" style="display: block; width: 100% !important;">
+							<div class="ajax-notifications custom-scroll">
+								<div class="alert alert-transparent">
+									<div class="tab-pane fade active in" id="a2">
+										<div class="user well" title="{{colonia.nombre}}" ng-repeat="colonia in ava.colonias" style="width: 100%">
+											<div class="row">
+												<div class="col-sm-4">
+													<a href="javascript:void(0);"> {{colonia.nombre}}</a> 						
+													<a href="javascript:void(0);" ng-click="ava.agregarColonia(colonia);ava.buscandoColonia = false"> Seleccionar</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<span> 
+								<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="ava.buscando = false; ava.buscar.nombre = ''">
+									<i class="fa fa-times"></i>
+								</button> 
+							</span>							
+						</div>
 					</div>
-					<div class="col-sm-4">					    
-						<label>Tiempo Residencia</label>
-						<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="ava.objeto.profile.tiempoResdencia" capitalize>
+					<div class="col-sm-4" valida>					    
+						<label>Colonia *</label>
+						<input name="colonia" type="text" class="form-control" placeholder="Colonia" ng-model="ava.colonia.nombre" disabled="true" required>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-4">
+					<div class="col-sm-3">					    
+						<label>Tiempo Residencia</label>
+						<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="ava.objeto.profile.tiempoResdencia" capitalize>
+					</div>
+					<div class="col-sm-3">
 						  <label for="casa">Casa</label>
 							<input name="casa" type="input" class="form-control" ng-model="ava.objeto.profile.casa">
 						</div>
-					<div class="col-sm-4">					    
+					<div class="col-sm-3">					    
 						<label>Renta</label>
 						<input name="renta" type="checkbox" class="form-control" ng-model="ava.objeto.profile.renta">
 					</div>
-					<div class="col-sm-4" ng-if="ava.objeto.profile.renta">					    
+					<div class="col-sm-3" ng-if="ava.objeto.profile.renta">					    
 						<label>Renta Mes </label>
 						<input name="rentaMes" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="ava.objeto.profile.rentaMes">
 					</div>
@@ -442,7 +472,7 @@
 					<div class="col-sm-4">
 						<br />
 						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-empresa-modal-lg" ng-click="ava.createEmpresa()">Crear Empresa</button>
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-empresaVer-modal-lg" ng-click="ava.getEmpresa(ava.objeto.profile.empresa_id)" ng-show="ava.objeto.profile.empresa_id" >Ver Empresa</button>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-empresa-modal-lg" ng-click="ava.getEmpresa(ava.objeto.profile.empresa_id)" ng-show="ava.objeto.profile.empresa_id" >Ver Empresa</button>
 					</div>
 				</div>
 				<br>
@@ -495,88 +525,121 @@
 
 <!-- Modal -->
 <div id="modalEmp" class="modal fade bs-empresa-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Agregar Empresa</h4>
+<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel">Agregar Empresa</h4>
 
-			</div>
-
-			<div class="widget-body">
-				<form name="form2" novalidate>
-					<div class="well">	    
-						<div class="row">
-							<div class="col-sm-6" valida> 					    
-								<label>Nombre *</label>
-								<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="ava.empresa.nombre" required capitalize>
-							</div>
-							<div class="col-sm-6" valida>					    
-								<label>Razón Social *</label>
-								<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="ava.empresa.razonSocial" required capitalize>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4" valida>					    
-								<label>Calle *</label>
-								<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="ava.empresa.calle" required="" capitalize >
-							</div>	  
-							<div class="col-sm-4" valida>					    
-								<label>Número *</label>
-								<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="ava.empresa.numero" required="" >
-							</div>  
-							<div class="col-sm-4" valida>					    
-								<label>Código Postal *</label>
-								<input name="codigopostal" type="text" class="form-control" placeholder="Código Postal" ng-model="ava.empresa.codigoPostal" required="" capitalize>
-							</div>				    	    
-						</div>
-						<div class="row">
-							<div class="col-sm-4" valida>
-								<label >Pais *</label>
-								<select name="dirPaisEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.pais_id" required ng-change="ava.cambiarPaisEmpresa()">
-									<option  value="{{pais._id}}" ng-repeat="pais in ava.paises">{{pais.nombre}}</option>
-								</select>
-							</div>
-							<div class="col-sm-4" valida>
-								<label for="seccion_id">Estado *</label>
-								<select name="dirEstadoEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.estado_id" required ng-change="ava.cambiarEstadoEmpresa()">
-									<option ng-repeat="estado in ava.estados" value="{{estado._id}}">{{estado.nombre}}</option>
-								</select>
-							</div>	
-							<div class="col-sm-4" valida>
-								<label >Municipio *</label>
-								<select name="dirMunicipioEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.municipio_id" required ng-change="ava.cambiarMunicipioEmpresa()">
-									<option  value="{{municipio._id}}" ng-repeat="municipio in ava.municipios">{{municipio.nombre}}</option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4" valida>
-								<label for="seccion_id">Ciudad *</label>
-								<select name="dirCiudadEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.ciudad_id" required ng-change="ava.cambiarCiudadEmpresa()">
-									<option ng-repeat="ciudad in ava.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
-								</select>
-							</div>	
-							<div class="col-sm-4" valida>
-								<label for="seccion_id">Colonia *</label>
-								<select name="dirColoniaEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.colonia_id" required ng-change="ava.cambiarColoniaEmpresa()">
-									<option ng-repeat="colonia in ava.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
-								</select>
-							</div>
-						</div>	 
-					</div>
-				</form>
-			</div>
-			<br>
-			<div class="modal-footer"s>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<input type="submit" ng-click="ava.guardarEmpresa(ava.empresa, ava.objeto,form2)" value="Guardar" class="btn btn-primary" valida-form formulario="form2">
-		  </div>
 		</div>
+
+		<div class="widget-body">
+			<form name="form2" novalidate>
+				<div class="well">	    
+					<div class="row">
+						<div class="col-sm-6" valida> 					    
+							<label>Nombre *</label>
+							<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="ava.empresa.nombre" required capitalize>
+						</div>
+						<div class="col-sm-6" valida>					    
+							<label>Razón Social *</label>
+							<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="ava.empresa.razonSocial" required capitalize>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4" valida>					    
+							<label>Calle *</label>
+							<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="ava.empresa.calle" required="" capitalize >
+						</div>	  
+						<div class="col-sm-4" valida>					    
+							<label>Número *</label>
+							<input name="numeroEmpresa" type="text" class="form-control" placeholder="Número" ng-model="ava.empresa.numero" required="" >
+						</div>  
+						<div class="col-sm-4" valida>					    
+							<label>Código Postal *</label>
+							<input name="codigopostal" type="number" class="form-control" placeholder="Código Postal" ng-model="ava.empresa.codigoPostal" required="" capitalize>
+						</div>				    	    
+					</div>
+					<div class="row">
+						<div class="col-sm-4" valida>
+							<label >Pais *</label>
+							<select name="dirPaisEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.pais_id" required >
+								<option  value="{{pais._id}}" ng-repeat="pais in ava.paises">{{pais.nombre}}</option>
+							</select>
+						</div>
+						<div class="col-sm-4" valida>
+							<label for="seccion_id">Estado *</label>
+							<select name="dirEstadoEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.estado_id" required >
+								<option ng-repeat="estado in ava.estadosEmpresa" value="{{estado._id}}">{{estado.nombre}}</option>
+							</select>
+						</div>	
+						<div class="col-sm-4" valida>
+							<label >Municipio *</label>
+							<select name="dirMunicipioEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.municipio_id" required >
+								<option  value="{{municipio._id}}" ng-repeat="municipio in ava.municipiosEmpresa">{{municipio.nombre}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4" valida>
+							<label for="seccion_id">Ciudad *</label>
+							<select name="dirCiudadEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.ciudad_id" required >
+								<option ng-repeat="ciudad in ava.ciudadesEmpresa" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
+							</select>
+						</div>	
+						<div class="col-sm-4">
+							<label for="seccion_id">Buscar Colonia</label>
+							<div class="input-group"> 
+								<input name="empresaColonia_id" type="text" class="form-control" ng-model="ava.buscar.coloniaNombreEmpresa" capitalize>
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button" style="height: 34px;">
+										<i class="fa fa-search"></i>
+									</button> 
+								</span>
+							</div>
+							<div class="ajax-dropdown" ng-show="ava.buscandoColoniaEmpresa" style="display: block; width: 100% !important;">
+								<div class="ajax-notifications custom-scroll">
+									<div class="alert alert-transparent">
+										<div class="tab-pane fade active in" id="a2">
+											<div class="user well" title="{{colonia.nombre}}" ng-repeat="colonia in ava.coloniasEmpresa" style="width: 100%">
+												<div class="row">
+													<div class="col-sm-4">
+														<a href="javascript:void(0);"> {{colonia.nombre}}</a> 						
+														<a href="javascript:void(0);" ng-click="ava.agregarColoniaEmpresa(colonia);ava.buscandoColoniaEmpresa = false"> Seleccionar</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<span> 
+									<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="ava.buscando = false; ava.buscar.nombre = ''">
+										<i class="fa fa-times"></i>
+									</button> 
+								</span>
+								
+							</div>
+						</div>
+						<div class="col-sm-4" valida>					    
+							<label>Colonia *</label>
+							<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="ava.coloniaEmpresa.nombre" disabled="true" required>
+						</div>
+					</div>	 
+				</div>
+			</form>
+		</div>
+		<br>
+		<div class="modal-footer"s>
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+			<input type="submit" ng-click="ava.guardarEmpresa(ava.empresa, ava.objeto,form2)" value="Guardar" class="btn btn-primary" valida-form formulario="form2" ng-show="ava.nuevoEmpresa">
+			<input type="submit" ng-click="ava.actualizarEmpresa(ava.empresa, ava.objeto,form2)" value="Actualizar" class="btn btn-primary" valida-form formulario="form2" ng-show="!ava.nuevoEmpresa">
+	  </div>
 	</div>
+</div>
 </div>
 
 <!-- VER EMPRESA Modal -->
+<!--
 <div id="modalEmp" class="modal fade bs-empresaVer-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
   <div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">

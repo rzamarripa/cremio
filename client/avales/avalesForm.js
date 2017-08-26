@@ -34,7 +34,11 @@ angular.module("creditoMio")
   
   this.buscar = {};
   this.buscar.nombre = "";
+  this.buscar.coloniaNombre = "";
+  this.buscar.coloniaNombreEmpresa = "";
   this.buscando = false;
+  this.buscandoColonia = false;
+  this.buscandoColoniaEmpresa = false;
   var fotillo = ""
   //this.pic = {};
   this.imagenes = []
@@ -43,7 +47,9 @@ angular.module("creditoMio")
   this.estadoCivil = "";
 
   this.estadoCivilSeleccionado = {};
-
+	
+	rc.colonia = {};
+  rc.coloniaEmpresa = {};
 
   this.subscribe('buscarReferenciasPersonales', () => {
     if(this.getReactively("buscar.nombre").length > 3){
@@ -57,6 +63,36 @@ angular.module("creditoMio")
     }
     else if (this.getReactively("buscar.nombre").length  == 0 )
       this.buscando = false;
+  });
+  
+  this.subscribe('buscarColonias', () => {
+    if(this.getReactively("buscar.coloniaNombre").length > 3){
+      this.buscandoColonia = true;
+      return [{
+        options : { limit: 10 },
+        where : { 
+	        ciudad_id : this.getReactively("objeto.profile.ciudad_id"),
+          nombre 		: this.getReactively('buscar.coloniaNombre')
+        }        
+      }];
+    }
+    else if (this.getReactively("buscar.coloniaNombre").length  == 0 )
+      this.buscandoColonia = false;
+  });
+  
+  this.subscribe('buscarColonias', () => {
+    if(this.getReactively("buscar.coloniaNombreEmpresa").length > 3){
+      this.buscandoColoniaEmpresa = true;
+      return [{
+        options : { limit: 10 },
+        where : { 
+	        ciudad_id : this.getReactively("empresa.ciudad_id"),
+          nombre 		: this.getReactively('buscar.coloniaNombreEmpresa')
+        }        
+      }];
+    }
+    else if (this.getReactively("buscar.coloniaNombreEmpresa").length  == 0 )
+      this.buscandoColoniaEmpresa = false;
   });
 
   this.subscribe('avales',()=>{
@@ -96,52 +132,43 @@ angular.module("creditoMio")
   });
   
   this.subscribe('estados',()=>{
-
-    if (this.getReactively("pais_id") !=  "")
-    {
-        console.log("Cambio pais:", this.pais_id);    
-        return [{pais_id: this.getReactively("pais_id"), estatus: true}];
-        
-    }   
-
-    else 
-        return [{estatus: true}];
-
+	  
+    if (this.getReactively("objeto.profile.pais_id") != undefined)
+        return [{pais_id: this.getReactively("objeto.profile.pais_id"), estatus: true}];
+  });
+  
+  this.subscribe('estados',()=>{
+    if (this.getReactively("empresa.pais_id") !=  undefined)
+        return [{pais_id: this.getReactively("empresa.pais_id"), estatus: true}];
   });
 
   this.subscribe('municipios',()=>{
-    if (this.getReactively("estado_id") !=  "")
-    { 
-        console.log("Cambio Estado");
-        return [{estado_id: this.getReactively("estado_id"), estatus: true}];
-        
-    }   
-
-    else 
-        return [{estatus: true}]; 
-
+    if (this.getReactively("objeto.profile.estado_id") !=  undefined)
+        return [{estado_id: this.getReactively("objeto.profile.estado_id"), estatus: true}];
   });
   
-  this.subscribe('ciudades',()=>{
-    if (this.getReactively("municipio_id") !=  "")
-    {
-        console.log("Cambio Muni");
-        return [{municipio_id: this.getReactively("municipio_id"), estatus: true}];
-        
-    }   
-
-    else 
-        return [{estatus: true}];
-
+  this.subscribe('municipios',()=>{ 
+ 		if (this.getReactively("empresa.estado_id") !=  undefined)
+        return [{estado_id: this.getReactively("empresa.estado_id"), estatus: true}];
   });
 
+  this.subscribe('ciudades',()=>{
+    if (this.getReactively("objeto.profile.municipio_id") !=  undefined)
+        return [{municipio_id: this.getReactively("objeto.profile.municipio_id"), estatus: true}];
+  });
+  this.subscribe('ciudades',()=>{
+		if (this.getReactively("empresa.municipio_id") !=  undefined)
+        return [{municipio_id: this.getReactively("empresa.municipio_id"), estatus: true}];
+  });
+	
+	this.subscribe('colonias',()=>{
+	  if (this.getReactively("objeto.profile.colonia_id") != undefined)
+	  		return [{_id: this.getReactively("objeto.profile.colonia_id")}]
+  });
+  
   this.subscribe('colonias',()=>{
-    if (this.getReactively("ciudad_id") !=  "")
-        return [{ciudad_id: this.getReactively("ciudad_id"), estatus: true}];
-
-    else 
-        return [{estatus: true}];
-
+	  if (this.getReactively("empresa.colonia_id") != undefined)
+	  		return [{_id: this.getReactively("empresa.colonia_id")}]
   });
   
   //Condición del Parametro
@@ -166,22 +193,35 @@ angular.module("creditoMio")
     ocupaciones : () => {
       return Ocupaciones.find();
     },
-
     paises : () => {
       return Paises.find();
     },
-
     estados : () => {
-          return Estados.find();
+          return Estados.find({pais_id: this.getReactively("objeto.profile.pais_id"), estatus: true});
+    },
+    estadosEmpresa : () => {
+          return Estados.find({pais_id: this.getReactively("empresa.pais_id"), estatus: true});
     },
     municipios : () => {
-      return Municipios.find();
+      return Municipios.find({estado_id: this.getReactively("objeto.profile.estado_id"), estatus: true});
+    },
+    municipiosEmpresa : () => {
+      return Municipios.find({estado_id: this.getReactively("empresa.estado_id"), estatus: true});
     },
     ciudades : () => {
-      return Ciudades.find();
+      return Ciudades.find({municipio_id: this.getReactively("objeto.profile.municipio_id"), estatus: true});
     },
-    colonias : () => {
-      return Colonias.find();
+    ciudadesEmpresa : () => {
+	    
+      return Ciudades.find({municipio_id: this.getReactively("empresa.municipio_id"), estatus: true});
+    },
+    colonias : () => {	    
+      return Colonias.find({ciudad_id : this.getReactively("objeto.profile.ciudad_id"),
+      											nombre		: { '$regex' : '.*' + this.getReactively('buscar.coloniaNombre') || '' + '.*', '$options' : 'i' }});
+    },
+    coloniasEmpresa : () => {
+      return Colonias.find({ciudad_id : this.getReactively("empresa.ciudad_id"),
+	      										nombre		: { '$regex' : '.*' + this.getReactively('buscar.coloniaNombreEmpresa') || '' + '.*', '$options' : 'i' }});
     },
     empresas : () => {
       return Empresas.find();
@@ -189,12 +229,6 @@ angular.module("creditoMio")
     documentos : () => {
       return Documentos.find();
     },
-    /*
-configuraciones : () => {
-      var config = Configuraciones.find().fetch();
-      return config[config.length - 1]
-    },
-*/
     imagenesDocs : () => {
       var imagen = rc.imagenes
       _.each(rc.getReactively("imagenes"),function(imagen){
@@ -246,6 +280,12 @@ configuraciones : () => {
       }, { sort : {"nombreCompleto" : 1 }}).fetch();
       return rp;
     },
+    col : () => {
+	    rc.colonia = Colonias.findOne({_id: this.getReactively("objeto.profile.colonia_id")});			
+    },
+    colE : () => {
+	    rc.coloniaEmpresa = Colonias.findOne({_id: this.getReactively("empresa.colonia_id")});			
+    },
   }); 
 
 
@@ -265,16 +305,54 @@ configuraciones : () => {
     this.objeto = {};   
   };
   
-  this.cambiarPaisObjeto = function() {this.pais_id = this.getReactively("objeto.profile.pais_id");};
-  this.cambiarEstadoObjeto = function() {this.estado_id = this.getReactively("objeto.profile.estado_id");};
-  this.cambiarMunicipioObjeto = function() {this.municipio_id = this.getReactively("objeto.profile.municipio_id");};
-  this.cambiarCiudadObjeto = function() {this.ciudad_id = this.getReactively("objeto.profile.ciudad_id");};
+  this.cambiarPaisObjeto = function() {
+	  	this.objeto.profile.estado_id = "";
+	  	this.objeto.profile.municipio_id = "";
+			this.objeto.profile.ciudad_id = "";
+			this.objeto.profile.colonia_id = "";
+			rc.colonia = {};	  	
+	  
+  };
+  this.cambiarEstadoObjeto = function() {
+	  	this.objeto.profile.municipio_id = "";
+			this.objeto.profile.ciudad_id = "";
+			this.objeto.profile.colonia_id = "";
+			rc.colonia = {};
+	};
+  this.cambiarMunicipioObjeto = function() {
+			this.objeto.profile.ciudad_id = "";
+			this.objeto.profile.colonia_id = "";
+			rc.colonia = {};
+  };
+  this.cambiarCiudadObjeto = function() {
+	  	this.objeto.profile.colonia_id = "";
+			rc.colonia = {};
+  };
   
-  this.cambiarPaisEmpresa = function() {this.pais_id = this.getReactively("empresa.pais_id");};
-  this.cambiarEstadoEmpresa = function() {this.estado_id = this.getReactively("empresa.estado_id");};
-  this.cambiarMunicipioEmpresa = function() {this.municipio_id = this.getReactively("empresa.municipio_id");};
-  this.cambiarCiudadEmpresa = function() {this.ciudad_id = this.getReactively("empresa.ciudad_id");};
-  this.cambiarColoniaEmpresa = function() {this.colonia_id = this.getReactively("empresa.colonia_id");};
+  this.cambiarPaisEmpresa = function() {
+	  	this.empresa.estado_id = "";
+	  	this.empresa.municipio_id = "";
+			this.empresa.ciudad_id = "";
+			this.empresa.colonia_id = "";
+			rc.colonia = {};	  	
+	  
+  };
+  this.cambiarEstadoEmpresa = function() {
+	  	this.empresa.municipio_id = "";
+			this.empresa.ciudad_id = "";
+			this.empresa.colonia_id = "";
+			rc.colonia = {};
+	};
+  this.cambiarMunicipioEmpresa = function() {
+			this.empresa.ciudad_id = "";
+			this.empresa.colonia_id = "";
+			rc.colonia = {};
+  };
+  this.cambiarCiudadEmpresa = function() {
+	  	this.empresa.colonia_id = "";
+			rc.colonia = {};
+  };
+  
 
   this.guardar = function(objeto,form)
   {
@@ -475,6 +553,39 @@ configuraciones : () => {
                 {
                     objeto.profile.empresa_id = result;
                     toastr.success('Guardado correctamente.');
+                    this.empresa = {}; 
+                    $('.collapse').collapse('hide');
+                    this.nuevo = true;
+                    form.$setPristine();
+                    form.$setUntouched();
+                    $("[data-dismiss=modal]").trigger({ type: "click" });
+                    
+                }
+      				});
+  };
+  
+  this.actualizarEmpresa = function(empresa, objeto,form)
+  {
+      if(form.$invalid){
+            toastr.error('Error al guardar los datos.');
+            return;
+      }
+      empresa.estatus = true;
+      empresa.usuarioActualizo = Meteor.userId();
+      
+      //console.log(empresa._id)
+      var tempId = empresa._id;
+      delete empresa._id;
+      
+      Empresas.update({_id: tempId},{$set: empresa}, function(error, result)
+             	{
+                if (error){
+                  console.log("error: ",error);
+                }
+                if (result)
+                {
+                    objeto.profile.empresa_id = tempId;
+                    toastr.success('Actualizado correctamente.');
                     this.empresa = {}; 
                     $('.collapse').collapse('hide');
                     this.nuevo = true;
@@ -782,6 +893,24 @@ configuraciones : () => {
       this.cambiarContrasena = !this.cambiarContrasena; 
   }
   
+  this.getColonias = function(colonia_id)
+  {
+    rc.coloniaSeleccionado = Colonias.findOne(colonia_id); 
+  };
+  
+  this.agregarColonia = function(colonia)
+  {
+    	rc.colonia = colonia;
+    	rc.objeto.profile.colonia_id = colonia._id;
+    	rc.buscar.coloniaNombre = "";
+  };
+  
+  this.agregarColoniaEmpresa = function(colonia)
+  {
+    	rc.coloniaEmpresa = colonia;
+    	rc.empresa.colonia_id = colonia._id;
+    	rc.buscar.coloniaNombreEmpresa = "";
+  };
   
   this.getEmpresa= function(empresa_id)
   {
@@ -792,5 +921,7 @@ configuraciones : () => {
   {
       this.empresa = {};    
   }
+  
+  
   
 };

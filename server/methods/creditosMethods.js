@@ -14,12 +14,11 @@ Meteor.methods({
 		
 		var saldoActual = 0;
 		_.each(planPagos,function(pago){
-			saldoActual += pago.cargo;
+			saldoActual += Number(parseFloat(pago.cargo).toFixed(2));
 		});
-		c.numeroPagos = planPagos.length;
-		c.saldoActual = saldoActual;
-		c.adeudoInicial = saldoActual;
-
+		c.numeroPagos 	= planPagos.length;
+		c.saldoActual 	= Number(parseFloat(saldoActual).toFixed(2));
+		c.adeudoInicial = Number(parseFloat(saldoActual).toFixed(2));
 
 		var sucursal = Sucursales.findOne({_id : c.sucursal_id});
 		
@@ -50,7 +49,7 @@ Meteor.methods({
 			PlanPagos.insert(pago);
 		});
 
-		Meteor.call("generarMultas");
+		Meteor.call("generarMultas");	//Duda
 		return "hecho";
 	},
 	generarCreditoPeticion : function(cliente, credito){
@@ -210,18 +209,18 @@ Meteor.methods({
 			{
 			
 					var movimiento = {
-						tipoMovimiento : "Retiro",
-						origen : "Entrega de Credito",
-						origen_id :creditoid,
-						tipoIngreso_id : tipoIngreso_id,
-						caja_id : cajaid,
-						cuenta_id :index,
-						monto : monto.saldo,
-						sucursal_id : user.profile.sucursal_id,
-						createdAt : new Date(),
-						createdBy : user._id,
-						updated : false,
-						estatus : 1
+						tipoMovimiento  : "Retiro",
+						origen 					: "Entrega de Credito",
+						origen_id 			: creditoid,
+						tipoIngreso_id 	: tipoIngreso_id,
+						caja_id 				: cajaid,
+						cuenta_id 			: index,
+						monto 					: monto.saldo,
+						sucursal_id 		: user.profile.sucursal_id,
+						createdAt 			: new Date(),
+						createdBy 			:	user._id,
+						updated 				: false,
+						estatus 				: 1
 					}
 					caja.cuenta[index].saldo -= Number(parseFloat(monto.saldo).toFixed(2));
 		

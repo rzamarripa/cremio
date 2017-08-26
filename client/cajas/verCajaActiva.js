@@ -134,16 +134,20 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 							}
           }
           
-          if (mov.origen == "Entrega de Credito") {
+          var credito = {};
+          
+          if (mov.origen == "Entrega de Credito" || mov.origen == "Cancelación de Ent. de Crédito") {
          
-	          	Meteor.apply('getCredito', [mov.origen_id], function(err, result) {
+	          	Meteor.call('getCredito', mov.origen_id, function(err, result) {
 						      if (err) {
-						        toastr.warning('Error al consultar los datos');
-						      } else {
-						        var credito = result;
+						        //toastr.warning('Error al consultar los datos');
+						      } 
+						      
+						      if (result) {
+						        credito = result;
 						        if (credito != undefined)
 										{
-							        Meteor.apply('getUsuario', [credito.cliente_id], function(err, result) {
+							        Meteor.call('getUsuario', credito.cliente_id, function(err, result) {
 									      if (err) {
 									        toastr.warning('Error al consultar los datos');
 									      } else {
@@ -153,15 +157,19 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 													$scope.$apply();
 									      }
 									    });
+									    d.credito = credito;
 									  }  
 						      }
 						  });	
-							
+							d.credito_id				= mov.origen_id;
+							d.movimientoCaja_id = mov._id; 
 	        } 
 					
+					d.estatus					= mov.estatus;
           d.createdAt 		 	= mov.createdAt;
           d.tipoMovimiento 	= mov.tipoMovimiento;
           d.origen 					= mov.origen;
+          
           
           c = Cuentas.findOne(cj.cuenta[mov.cuenta_id].cuenta_id);
          
@@ -171,13 +179,14 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
           d.monto = mov.monto;
           
           d.pago = Pagos.findOne(mov.origen_id);
+          
 
           if (d.pago) {
-            d.multas = 0;
-            d.capital = 0;
+            d.multas 		= 0;
+            d.capital 	= 0;
             d.intereses = 0;
-            d.iva = 0;
-            d.seguro = 0;
+            d.iva 			= 0;
+            d.seguro 		= 0;
 						
             if (d.pago.tipoIngreso_id != undefined)
               	d.tipoIngreso = TiposIngreso.findOne(d.pago.tipoIngreso_id);
@@ -192,9 +201,12 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
             });
           }
           else
+          {
           	if (mov.tipoIngreso_id != undefined)
-							d.tipoIngreso = TiposIngreso.findOne(mov.tipoIngreso_id); 
-							
+								d.tipoIngreso = TiposIngreso.findOne(mov.tipoIngreso_id); 
+						if (mov.cuenta_id != undefined)	
+								d.tipoIngreso = TiposIngreso.findOne(mov.cuenta_id);							
+					}		
           ret.push(d)
         });
         rc.pagos_id = pagos_id;
@@ -235,70 +247,123 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
     $('#nuevoTraspaso').modal('show');
   }
 
-  this.cancelarPago = function(pago) {
-    customConfirm('¿Estás seguro de cancelar el pago ' + pago.folioPago + '?', function() {
+  this.cancelarPago = function(pago, op) {
+	  
+	  
+	  if (op == 1)
+	  {
+    	customConfirm('¿Estás seguro de cancelar el pago ' + pago.folioPago + '?', function() {
+	    	    	
       
-      var mc = MovimientosCajas.findOne(pago.movimientoCaja_id);
-
-      if (mc.estatus == 2)
-      {
-	      	toastr.warning("El movimiento ya está Cancelado");
-	      	return;
-      }
-			
-			_.each(pago.planPagos, function(plan) {
-							console.log(plan);				
-					//Poner pago Cancelado para que no sume
-					_.each(plan.pagos, function(pago){
-							if (pago.pago_id == pago._id)
-								 pago.estatus = 2; //Estatus Cancelado;
-
-					});
-					
-					
-					PlanPagos.update(plan.planPago_id, { $set: { estatus				: 0}, 
-																							 $inc: { importeRegular : plan.totalPago, 
-																											 pagoInteres 		: -plan.pagoInteres,
-																											 pagoIva 				: -plan.pagoIva,
-																											 pagoSeguro 		: -plan.pagoSeguro, 
-																											 pagoCapital		: -plan.pagoCapital
-																										 }
-	        });
-					
-      });
-      
-      //Para que no se pueda voler a cancelar
-      MovimientosCajas.update(pago.movimientoCaja_id, {$set: {estatus:2}});
-      
-      var movimiento_id = MovimientosCajas.insert({
-        tipoMovimiento	: "Cancelación",
-        origen					: "Cancelación de pago",
-        origen_id				: pago._id,
-        monto						: pago.totalPago *-1,
-        cuenta_id				: pago.tipoIngreso_id,
-        caja_id					: pago.caja_id,
-        sucursal_id			: pago.sucursalPago_id,
-        createdAt				: new Date(),
-        createdBy				: Meteor.userId(),
-        updated					: false,
-        estatus					: 1
-      });
-      Pagos.update(pago._id, { $set: { estatus: 0, cancelacion_movimientoCaja_id: movimiento_id } });
-
-
-			//Restar de la cuenta en la que se hizo el dinero:
-			_.each(rc.caja.cuenta, function(caja, tipoIngreso_id){
-					if (tipoIngreso_id == pago.tipoIngreso_id)
-						rc.caja.cuenta[tipoIngreso_id].saldo = Number(parseFloat(rc.caja.cuenta[tipoIngreso_id].saldo - pago.totalPago).toFixed(2));				
+	      var mc = MovimientosCajas.findOne(pago.movimientoCaja_id);
+	
+	      if (mc.estatus == 2)
+	      {
+		      	toastr.warning("El movimiento ya está Cancelado");
+		      	return;
+	      }
+				
+				_.each(pago.planPagos, function(plan) {			
+						//Poner pago Cancelado para que no sume
+						_.each(plan.pagos, function(pago){
+								if (pago.pago_id == pago._id)
+									 pago.estatus = 2; //Estatus Cancelado;
+	
+						});
+						
+						PlanPagos.update(plan.planPago_id, { $set: { estatus				: 0}, 
+																								 $inc: { importeRegular : plan.totalPago, 
+																												 pagoInteres 		: -plan.pagoInteres,
+																												 pagoIva 				: -plan.pagoIva,
+																												 pagoSeguro 		: -plan.pagoSeguro, 
+																												 pagoCapital		: -plan.pagoCapital
+																											 }
+		        });
+						
+	      });
+	      
+	      //Para que no se pueda voler a cancelar
+	      MovimientosCajas.update(pago.movimientoCaja_id, {$set: {estatus:2}});
+	      
+	      var movimiento_id = MovimientosCajas.insert({
+	        tipoMovimiento	: "Cancelación",
+	        origen					: "Cancelación de pago",
+	        origen_id				: pago._id,
+	        monto						: pago.totalPago *-1,
+	        cuenta_id				: pago.tipoIngreso_id,
+	        caja_id					: pago.caja_id,
+	        sucursal_id			: pago.sucursalPago_id,
+	        createdAt				: new Date(),
+	        createdBy				: Meteor.userId(),
+	        updated					: false,
+	        estatus					: 1
+	      });
+	      Pagos.update(pago._id, { $set: { estatus: 0, cancelacion_movimientoCaja_id: movimiento_id } });
+	
+	
+				//Restar de la cuenta en la que se hizo el dinero:
+				_.each(rc.caja.cuenta, function(caja, tipoIngreso_id){
+						if (tipoIngreso_id == pago.tipoIngreso_id)
+							rc.caja.cuenta[tipoIngreso_id].saldo = Number(parseFloat(rc.caja.cuenta[tipoIngreso_id].saldo - pago.totalPago).toFixed(2));				
 				});
 				var tempId = rc.caja._id;
 				delete rc.caja._id;
 				Cajas.update(tempId, {$set:rc.caja});
-	    })
 	    
+	    });
+	  }
+	  else
+	  {
+		  customConfirm('¿Estás seguro de cancelar la entrega de crédito ?', function() {
+      					
+      					
+      	if (pago.estatus == 2)
+	      {
+		      	toastr.warning("El movimiento ya está Cancelado");
+		      	return;
+	      }
+      	
+      	//Valida que se pueda cancelar la entrega de crédito
+      	if (pago.credito.adeudoInicial != pago.credito.saldoActual)
+      	{	
+	      		toastr.warning("El crédito ya tiene pagos hechos no es posible cancelarlo");
+		      	return;	
+      	}
+      	
+      	
+      	//Para que no se pueda voler a cancelar
+				MovimientosCajas.update(pago.movimientoCaja_id, {$set: {estatus:2}});
+	    	Creditos.update(pago.credito._id,{$set:{estatus:2}});
+	    	
+				
+				var movimiento_id = MovimientosCajas.insert({
+	        tipoMovimiento	: "Cancelación",
+	        origen					: "Cancelación de Ent. de Crédito",
+	        origen_id				: pago.credito._id,
+	        monto						: pago.monto *-1,
+	        cuenta_id				: pago.tipoIngreso._id,
+	        caja_id					: rc.caja._id,
+	        sucursal_id			: pago.credito.sucursalPago_id,
+	        createdAt				: new Date(),
+	        createdBy				: Meteor.userId(),
+	        updated					: false,
+	        estatus					: 1
+	      });
+				
+				//Sumar de la cuenta en la que se hizo el dinero:				
+				_.each(rc.caja.cuenta, function(caja, tipoIngreso_id){
+						if (tipoIngreso_id == pago.tipoIngreso._id)
+							rc.caja.cuenta[tipoIngreso_id].saldo = Number(parseFloat(rc.caja.cuenta[tipoIngreso_id].saldo + pago.monto).toFixed(2));				
+				});
+				var tempId = rc.caja._id;
+				delete rc.caja._id;
+				Cajas.update(tempId, {$set:rc.caja});
+
+		      		  
+			})
 	    
-	    
-  }
+	  }
+	}
 
   this.detalle = function(_id) {
     rc.detalleOrigenDestino = _.findWhere(rc.cajas, {_id: _id}) || _.findWhere(rc.cuentas, {_id: _id});

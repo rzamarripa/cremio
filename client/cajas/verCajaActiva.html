@@ -62,7 +62,7 @@
 	            </thead>
 	            <tbody style="font-size: x-small">
 	              <tr ng-repeat="mov in vca.movimientosCaja">
-	                <td align="center">{{mov.pago.folioPago}}</td>
+	                <td align="center">{{mov.pago != undefined ? mov.pago.folioPago : mov.credito.folio }}</td>
 	                <td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
 	                <td>{{mov.numeroCliente}}</td>
 	                <td>{{mov.nombreCliente}}</td>
@@ -82,7 +82,7 @@
 										  </button>
 	                    <ul class="dropdown-menu dropdown-menu-right text-left">
 										    <li><a ui-sref="anon.imprimirTicket({pago_id:mov.pago._id})" target="_blank"><i class="fa fa-file-text-o"></i> Ticket</a></li>
-										    <li><a ng-click="vca.cancelarPago(mov.pago)"><i class="fa fa-trash"></i> Cancelar</a></li>
+										    <li><a ng-click="mov.origen=='Pago de Cliente'?vca.cancelarPago(mov.pago,1):vca.cancelarPago(mov,2)"><i class="fa fa-trash"></i> Cancelar</a></li>
 										  </ul>
 										</div>
 	                </td>
