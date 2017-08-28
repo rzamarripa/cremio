@@ -685,6 +685,22 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.reportesDocumentos', {
+			url: '/reportes/reportesDocumentos',
+			templateUrl: 'client/reportes/_reporteDocumentos.html',
+			controller: 'ReportesCtrl as re',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 
+					});
+				}]
+			}
+		})
 		.state('root.verificadoresLista', {
 			url: '/verificadores',
 			templateUrl: 'client/verificadores/verificadoresLista.ng.html',

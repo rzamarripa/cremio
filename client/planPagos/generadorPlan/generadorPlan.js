@@ -7,6 +7,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	window.rc = rc;
 
 	this.tablaAmort = false;
+
 	this.nuevoBotonPago = true;
 	this.action = false;
 	this.actionAval = true;
@@ -345,6 +346,32 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 		this.num = a.num;
 	  this.actionAval = false;
 	};
+	this.verAval = function(a)
+	{
+		console.log(a,"aval p")
+		$("#modalAval").modal('show');
+		rc.aval.nombre = a.nombre;
+		if (a.apellidoPaterno == undefined) {
+			a.apellidoPaterno = ""
+		}
+		if (a.apellidoMaterno == undefined) {
+			a.apellidoMaterno = ""
+		}
+		rc.aval.nombreCompleto= a.nombre + " " + a.apellidoPaterno + " " + a.apellidoMaterno
+		rc.aval.estadoCivil = a.estadoCivil;
+		rc.aval.ocupacion = a.ocupacion;			
+		rc.aval.calle = a.calle;
+		rc.aval.numero = a.numero;
+		rc.aval.codigoPostal = a.codigoPostal;
+		rc.aval.empresa = a.empresa;
+		rc.aval.puesto = a.puesto;
+		rc.aval.tiempoLaborando = a.tiempoLaborando;
+		rc.aval.direccionEmpresa = a.direccionEmpresa;
+		rc.aval.parentesco = a.parentesco;
+		rc.aval.tiempoConocerlo = a.tiempoConocerlo;
+		rc.aval.foto =a.foto
+	
+	};
 	
 	this.borrarReferencia = function()
 	{
@@ -384,6 +411,7 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 					rc.aval.direccionEmpresa = result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;
 					rc.aval.puesto = result.puesto;
 					rc.aval.tiempoLaborando = result.tiempoLaborando;
+					rc.aval.foto = result.foto;
 					$scope.$apply();
 			}
 		});

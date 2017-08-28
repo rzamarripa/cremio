@@ -237,6 +237,12 @@
 						<span class="menu-item-child">Reportes de banco</span>
 					</a>
 				</li>
+				<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
+					<a ui-sref="root.reportesDocumentos" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-group"></i>
+						<span class="menu-item-child">Reportes de documentos</span>
+					</a>
+				</li>
 				<!-- <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
 					<a ui-sref="root.carteraVencida" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-group"></i>
