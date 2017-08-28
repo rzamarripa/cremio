@@ -1012,8 +1012,6 @@ Meteor.methods({
 			
 		var letra = NumeroALetras(contrato.capitalSolicitado);
 		//console.log("Letra:",letra);
-
-
 	  
   	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
   	cliente.colonia = cliente.coloniaCliente.nombre

@@ -1,41 +1,12 @@
+<h1>Bienvenido a creditoMio</h1>
+
 <div class="alert alert-info" ng-if="currentUser.roles[0] == 'Cajero' && ho.estaCerrada == true">
-		<p><i class="fa-fw fa fa-info"></i> La caja asignada esta cerrada {{ho.estaCerrada}}</p>
+		<p><i class="fa-fw fa fa-info"></i> La ventanilla asignada esta cerrada </p>
 </div>
 
-<h1>Bienvenido a creditoMio</h1>
-<!-- <section id="widget-grid" data-widget-grid="data-widget-grid">
-  <div class="row">
-    <div class="col-sm-12">
-      <div data-widget-color="blue" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-jarvis-widget="data-jarvis-widget">
-        <header>
-          <h2>Título Gráfica 1</h2>
-        </header>
-        <div>
-          <div class="widget-body">
-            <div id="grafica1" style="height: 350px;">
-            </div>
-	            
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="row" ng-show="currentUser.roles[0] == 'Gerente'">
+	<div class="col-sm-12 col-md-12 col-lg-12">
+		<div id="container"></div>
+	</div>		
+</div>
 
-  <div class="row">
-    <div class="col-sm-12">
-
-      <div data-widget-color="blue" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-jarvis-widget="data-jarvis-widget">
-        <header>
-          <h2>Título Gráfica 2</h2>
-        </header>
-        <div>
-          <div class="widget-body">
-            <div id="grafica2" style="height: 350px;">
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section> -->

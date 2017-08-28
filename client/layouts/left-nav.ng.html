@@ -1,8 +1,15 @@
 <nav>
 
 	<ul data-smart-menu ng-if = "ro.verMenu()">
-		<!--Gerente-->
 		
+		<li data-ui-sref-active="active">
+			<a ui-sref="root.home" tilte="Credito Mio">
+				<i class="fa fa-lg fa-fw fa-home"></i>
+				<span class="menu-item-parent">Inicio</span>
+			</a>
+		</li>
+		
+		<!--Gerente-->
 		<li data-menu-collapse>
 			<a href="#" ng-show="currentUser.roles[0] == 'Gerente'">
 				<i class="fa fa-lg fa-fw fa-tags"></i>
