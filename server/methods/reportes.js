@@ -49,8 +49,6 @@ Meteor.methods({
 	getBancos:function(fechaInicial, fechaFinal, sucursal_id){
 			
 			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}).fetch();
-			
-
 
 			var cobranza = [];
 			
@@ -71,6 +69,55 @@ Meteor.methods({
 							plan.tipoCuenta = cuenta.tipoCuenta;
 							
 							if (plan.tipoCuenta == "Banco")
+								plan.mostrar = true;
+							else
+								plan.mostrar = false;	
+								var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
+	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
+	  																
+	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
+	  																{fields: {"profile.nombreCompleto": 1}});											
+	  												
+	  					plan.cajero = cajero.profile.nombreCompleto;
+	  									
+							plan.numeroCliente = user.profile.numeroCliente; 
+							
+							
+							plan.numeroCliente = user.profile.numeroCliente;	
+							plan.nombreCompleto = user.profile.nombreCompleto;
+							
+							cobranza.push(plan);
+					})
+					
+			});
+						
+			return cobranza;
+			
+	},
+
+	getRDocumentos:function(fechaInicial, fechaFinal, sucursal_id){
+			
+			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}).fetch();
+
+			var cobranza = [];
+			
+			_.each(cobranzaDiaria, function(cd){
+					_.each(cd.planPagos, function(plan){
+						
+							plan.fechaPago = cd.fechaPago;
+							var pp = PlanPagos.findOne(plan.planPago_id);
+							var credito = Creditos.findOne(pp.credito_id);
+							var tipoIngreso = TiposIngreso.findOne(cd.tipoIngreso_id);
+							var cuenta = Cuentas.findOne({tipoIngreso_id: cd.tipoIngreso_id});
+
+							
+							plan.folio = credito.folio;
+							plan.numeroPago = pp.numeroPago;
+							plan.numeroPagos = credito.numeroPagos;
+							plan.tipoIngreso = tipoIngreso.nombre;
+							plan.tipoCuenta = cuenta.tipoCuenta;
+							
+							if (plan.tipoCuenta == "Documento")
 								plan.mostrar = true;
 							else
 								plan.mostrar = false;	

@@ -418,45 +418,88 @@ _.each(creditos,function(credit){
 		
 	};
 
-		this.diarioBancos = function(){
+	this.diarioBancos = function(){
 
 		var usuario = Meteor.user();
-				
-	  rc.fechaInicial.setHours(0,0,0,0);
+					
+	    rc.fechaInicial.setHours(0,0,0,0);
 		rc.fechaFinal.setHours(23,0,0,0);
-		
-	rc.sumaCapital = 0;
-    rc.sumaInteres = 0;
-    rc.sumaIva = 0;
-    rc.sumaSeguro = 0;
-    
-    rc.totalCobranza = 0;
-				
-		Meteor.call("getBancos", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
-				if  (result)
-				{
-						rc.planPagos = result;
-						
-						_.each(rc.planPagos, function(plan){
+			
+		rc.sumaCapital = 0;
+	    rc.sumaInteres = 0;
+	    rc.sumaIva = 0;
+	    rc.sumaSeguro = 0;
+	    
+	    rc.totalCobranza = 0;
+					
+			Meteor.call("getBancos", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
+					if  (result)
+					{
+							rc.planPagos = result;
 							
-							if (plan.tipoCuenta == "Banco")
-							{							
-								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
-								rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
-								if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
-								rc.sumaSeguro += Number(parseFloat(plan.pagoSeguro).toFixed(2));
-								if (plan.pagoIva == undefined) plan.pagoIva = 0;
-								rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
-								if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
-								rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
-							}
+							_.each(rc.planPagos, function(plan){
 								
-						});
-						
-						rc.totalCobranza = rc.sumaCapital + rc.sumaInteres + rc.sumaIva + rc.sumaSeguro;
-						$scope.$apply();
-				}
-		});
+								if (plan.tipoCuenta == "Banco")
+								{							
+									if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
+									rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
+									if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
+									rc.sumaSeguro += Number(parseFloat(plan.pagoSeguro).toFixed(2));
+									if (plan.pagoIva == undefined) plan.pagoIva = 0;
+									rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
+									if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
+									rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
+								}
+									
+							});
+							
+							rc.totalCobranza = rc.sumaCapital + rc.sumaInteres + rc.sumaIva + rc.sumaSeguro;
+							$scope.$apply();
+					}
+			});
+		
+	};
+
+	this.diarioDocumentos = function(){
+		console.log("buscando")
+
+		var usuario = Meteor.user();
+					
+	    rc.fechaInicial.setHours(0,0,0,0);
+		rc.fechaFinal.setHours(23,0,0,0);
+			
+		rc.sumaCapital = 0;
+	    rc.sumaInteres = 0;
+	    rc.sumaIva = 0;
+	    rc.sumaSeguro = 0;
+	    
+	    rc.totalCobranza = 0;
+					
+			Meteor.call("getRDocumentos", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
+					if  (result)
+					{
+							rc.planPagos = result;
+							
+							_.each(rc.planPagos, function(plan){
+								
+								if (plan.tipoCuenta == "Documento")
+								{							
+									if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
+									rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
+									if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
+									rc.sumaSeguro += Number(parseFloat(plan.pagoSeguro).toFixed(2));
+									if (plan.pagoIva == undefined) plan.pagoIva = 0;
+									rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
+									if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
+									rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
+								}
+									
+							});
+							
+							rc.totalCobranza = rc.sumaCapital + rc.sumaInteres + rc.sumaIva + rc.sumaSeguro;
+							$scope.$apply();
+					}
+			});
 		
 	};
 	

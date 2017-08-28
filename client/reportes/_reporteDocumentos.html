@@ -1,0 +1,90 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Reporte Documentos
+		</h1>
+	</div>
+	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+		<ul id="sparks" class="">
+			<li class="sparks-info">
+				<h5>Total Capital <span class="txt-color-green" style="text-align: right">{{re.sumaCapital | currency}}</span></h5>
+			</li>	
+			<li class="sparks-info">
+				<h5>Total Intereses <span class="txt-color-red" style="text-align: right">{{re.sumaInteres | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5>total IVA <span class="txt-color-blue" style="text-align: right">{{re.sumaIva | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5>total Seguro <span class="txt-color-yellow" style="text-align: right">{{re.sumaSeguro | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Total Cobranza <span class="txt-color-gray" style="text-align: right">{{re.totalCobranza | currency}}</span></h5>
+			</li>	
+		</ul>
+	</div>
+</div>
+<div class="well">
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="fecha">Fecha Inicial:</label>
+				<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaInicial"/>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="fecha">Fecha Final:</label>
+				<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaFinal"/>
+			</div>
+		</div>
+		<div class="col-sm-3" style="padding: 0px 85px 0px 0px">
+			<br>
+			<input type="button" class="btn btn-primary" ng-click="re.diarioDocumentos()" value="Buscar" />
+			<!-- <input type="button" class="btn btn-primary" ng-click="re.imprimirReporteCobranza(re.planPagos)" value="Imprimir" /> -->
+		</div>	
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12" >
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+				  <th width="5%"><div class="text-center">No.</div></th>
+					<th><div class="text-center">Fecha</div></th>
+					<th><div class="text-center">Pagaré</div></th>
+					<th><div class="text-center">Recibo</div></th>
+					<th><div class="text-center">Cliente</div></th>
+					<th><div class="text-center">Nombre</div></th>
+					<th><div class="text-center">Intereses</div></th>
+					<th><div class="text-center">Capital</div></th>
+					<th><div class="text-center">Iva</div></th>
+					<th><div class="text-center">Seguro</div></th> 
+<!-- 					<th><div class="text-center">Forma de pago</div></th> -->
+					<th><div class="text-center">Movimiento</div></th>
+					<th><div class="text-center">Importe</div></th>
+					<th><div class="text-center">Cajero</div></th>
+				</tr>
+			</thead>
+			<tbody style="font-size: small">
+		    <tr ng-repeat="objeto in re.planPagos" ng-show="objeto.mostrar">
+		    	<td>{{$index + 1}}</td>
+			    <td><div class="text-center">{{objeto.fechaPago  | date:"dd-MM-yyyy"}}</div></td>
+			    <td><div class="text-center">{{objeto.folio}}</div></td>
+			    <td><div class="text-center">{{objeto.numeroPago}} - {{objeto.numeroPagos}}</div></td>
+			    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
+			    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
+			    <td><div class="pull-right">{{objeto.pagoInteres | currency}}</div></td>
+			    <td><div class="pull-right">{{objeto.pagoCapital | currency}}</div></td>
+			    <td><div class="pull-right">{{objeto.pagoIva | currency}}</div></td>
+			    <td><div class="pull-right">{{objeto.pagoSeguro | currency}}</div></td>
+<!-- 			    <td><div class="pull-right">{{objeto.tipoIngreso}}</div></td> -->
+			    <td><div class="text-center">{{objeto.descripcion}}</div></td>
+			    <td><div class="pull-right">{{objeto.totalPago | currency}}</div></td> 
+			    <td><div class="pull-right">{{objeto.cajero}}</div></td>
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>
