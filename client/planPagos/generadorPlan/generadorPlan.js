@@ -145,15 +145,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	}
 	  
 	this.generarPlanPagos = function(credito, form){
-		
-		/*
-var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
-		if(!tipoCredito || credito.capitalSolicitado>tipoCredito.montoMaximon){
-			toastr.error("El monto solicitado es mayor al permitido.");
-			return;
-		}
-*/
-		
+				
 		
 		if(form.$invalid){
 			toastr.error('Error al calcular el nuevo plan de pagos, llene todos los campos.');
@@ -213,12 +205,14 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 		return rc.planPagos;
 	}
 	
-	this.generarCredito = function(){
+	this.generarCredito = function(c, form){
 						
-		if(formNuevoCredito.$invalid){
-			toastr.error('Error al guardar la solicitud de crédito, llene todos los campos.');
+		if(form.$invalid){
+			toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
 			return;
 		}		
+		
+		return;
 		
 		var credito = {
 			cliente_id : this.cliente._id,
@@ -348,7 +342,7 @@ var tipoCredito = TiposCredito.findOne(this.credito.tipoCredito_id);
 	};
 	this.verAval = function(a)
 	{
-		console.log(a,"aval p")
+		//console.log(a,"aval p")
 		$("#modalAval").modal('show');
 		rc.aval.nombre = a.nombre;
 		if (a.apellidoPaterno == undefined) {

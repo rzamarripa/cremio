@@ -19,6 +19,7 @@ angular.module("creditoMio")
   rc.otrafoto = ""
   rc.folio = "";
   rc.imagen = "";
+  $(".js-example-basic-single").select2();
   
   this.pais_id = "";
   this.estado_id = "";
@@ -920,6 +921,7 @@ angular.module("creditoMio")
   this.createEmpresa = function()
   {
       this.empresa = {};    
+      this.nuevoEmpresa = true;
   }
   
   

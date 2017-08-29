@@ -111,8 +111,8 @@
 						<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="ava.objeto.profile.telefonoAlternativo" capitalize>
 					</div>	  
 					<div class="col-sm-4">					    
-						<label>Dueño</label>
-						<input name="otroTelefono" type="text" class="form-control" placeholder="Dueño" ng-model="ava.objeto.profile.duenoAlternativo" capitalize>
+						<label>Nombre</label>
+						<input name="otroTelefono" type="text" class="form-control" placeholder="Nombre" ng-model="ava.objeto.profile.duenoAlternativo" capitalize>
 					</div>
 					<div class="col-sm-4">					    
 						<label>Parentesco</label>
@@ -177,9 +177,10 @@
 					</div>
 						<div class="col-sm-4">
 							<label for="id_label_single" >Ocupaciones *</label>
-                			 <select  ng-options="ocupacion._id as ocupacion.nombre for ocupacion in ava.ocupaciones" 
-             				ng-model="ava.objeto.profile.ocupacion_id" class="js-example-basic-single js-states form-control" placeholder="Seleccione" ng-change="ava.getOcupaciones(ava.ocupacionSeleccionado._id)" style="width: 300px;" ></select>
-
+              <select ng-options="ocupacion._id as ocupacion.nombre for ocupacion in ava.ocupaciones" 
+             					ng-model="ava.objeto.profile.ocupacion_id" class="js-example-basic-single js-states form-control" 
+	             				placeholder="Seleccione" style="width: 300px;" >
+	            </select>
 						</div>
 					<div class="col-sm-4">
 						<br/>
@@ -479,7 +480,7 @@
 				<div class="row">
 					<div class="col-sm-4" valida>
 						<label for="seccion_id">Empresa *</label>
-						<select name="empresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.objeto.profile.empresa_id" required>
+						<select name="empresa" class="js-example-basic-single js-states form-control" placeholder="Seleccione" ng-model="ava.objeto.profile.empresa_id" required>
 							<option ng-repeat="empresa in ava.empresas" value="{{empresa._id}}">{{empresa.nombre}}</option>
 						</select>
 					</div>

@@ -132,6 +132,8 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 						      }
 						    });
 							}
+							if (mov.origen == "Cancelación de pago")
+							   d.clase = "bg-color-pinkDark";
           }
           
           var credito = {};
@@ -161,6 +163,8 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 									  }  
 						      }
 						  });	
+						  if (mov.origen == "Cancelación de Ent. de Crédito")
+							   d.clase = "bg-color-pinkDark";
 							d.credito_id				= mov.origen_id;
 							d.movimientoCaja_id = mov._id; 
 	        } 

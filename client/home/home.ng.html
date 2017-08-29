@@ -9,4 +9,21 @@
 		<div id="container"></div>
 	</div>		
 </div>
-
+<div class="row" ng-show="currentUser.roles[0] == 'Cajero'">
+	<div class="col-sm-6 col-md-6 col-lg-6">
+			<table class="table table-striped">
+			  <thead>
+			    <tr>
+			      <th>Tipo Ingreso</th>
+			      <th>Saldo</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <tr ng-repeat="c in ho.cuentas">
+			      <td>{{c.tipoIngreso}}</td>
+			      <td style="text-align: right ">{{c.saldo | currency }}</td>
+			    </tr>
+			  </tbody>
+			</table>
+	</div>		
+</div>
