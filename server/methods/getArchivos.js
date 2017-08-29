@@ -533,10 +533,10 @@ Meteor.methods({
 	 	 		   item.liquidar = parseFloat(item.liquidar.toFixed(2))
 	 	 		    item.capital = parseFloat(item.capital.toFixed(2))
 	 	 		// item.liquidar =              
-	 	 		if (item.estatus = 5) {
-	 	 			item.formaPago = item.tipoIngreso.nombre
+	 	 		// if (item.estatus = 5) {
+	 	 		// 	item.formaPago = item.tipoIngreso.nombre
 
-	 	 		}
+	 	 		// }
 	 	 	});
 
 		
@@ -1046,8 +1046,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				
 				if (contrato.tipoInteres.tipoInteres == "Simple") {
 					var content = fs
@@ -1116,8 +1116,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-	    //var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+	    var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 	    if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
@@ -1182,8 +1182,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		// var produccion = "/home/cremio/archivos/";
-	    var produccion = meteor_root+"/web.browser/app/plantillas/";
+		 var produccion = "/home/cremio/archivos/";
+	    //var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -1256,8 +1256,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			console.log("entra SIMPLE")
 			var content = fs				
