@@ -246,13 +246,13 @@
 					</div>
 					<div class="col-sm-4" valida>
 						<label for="seccion_id">Estado *</label>
-						<select name="dirEstado" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.estado_id" required >
+						<select name="dirEstado" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.estado_id" required ng-change="cli.cambiarEstadoObjeto()">
 							<option ng-repeat="estado in cli.estados" value="{{estado._id}}">{{estado.nombre}}</option>
 						</select>
 					</div>	
 					<div class="col-sm-4" valida>
 						<label >Municipio *</label>
-						<select name="dirMunicipio" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.municipio_id" required>
+						<select name="dirMunicipio" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.municipio_id" required ng-change="cli.cambiarMunicipioObjeto()">
 							<option  value="{{municipio._id}}" ng-repeat="municipio in cli.municipios">{{municipio.nombre}}</option>
 						</select>
 					</div>
@@ -260,7 +260,7 @@
 				<div class="row">
 					<div class="col-sm-4" valida>
 						<label for="seccion_id">Ciudad *</label>
-						<select name="dirCiudad" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.ciudad_id" required>
+						<select name="dirCiudad" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.ciudad_id" required ng-change="cli.cambiarCiudadObjeto()">
 							<option ng-repeat="ciudad in cli.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
 						</select>
 					</div>	
@@ -298,7 +298,7 @@
 					</div>
 					<div class="col-sm-4" valida>					    
 						<label>Colonia *</label>
-						<input name="colonia" type="text" class="form-control" placeholder="Colonia" ng-model="cli.colonia.nombre" disabled="true" required>
+						<input name="colonia" type="text" class="form-control" placeholder="Colonia" ng-model="cli.colonia.nombre" disabled="true" required >
 					</div>
 				</div>
 				<div class="row">
@@ -561,7 +561,7 @@
 </div>
 <!-- Modal -->
 <div id="modalEmp" class="modal fade bs-empresa-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-dialog modal-lg" role="document">
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -599,19 +599,19 @@
 					<div class="row">
 						<div class="col-sm-4" valida>
 							<label >Pais *</label>
-							<select name="dirPaisEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.pais_id" required >
+							<select name="dirPaisEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.pais_id" required ng-change="cli.cambiarPaisEmpresa()">
 								<option  value="{{pais._id}}" ng-repeat="pais in cli.paises">{{pais.nombre}}</option>
 							</select>
 						</div>
 						<div class="col-sm-4" valida>
 							<label for="seccion_id">Estado *</label>
-							<select name="dirEstadoEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.estado_id" required >
+							<select name="dirEstadoEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.estado_id" required ng-change="cli.cambiarEstadoEmpresa()" >
 								<option ng-repeat="estado in cli.estadosEmpresa" value="{{estado._id}}">{{estado.nombre}}</option>
 							</select>
 						</div>	
 						<div class="col-sm-4" valida>
 							<label >Municipio *</label>
-							<select name="dirMunicipioEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.municipio_id" required >
+							<select name="dirMunicipioEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.municipio_id" required ng-change="cli.cambiarMunicipioEmpresa()">
 								<option  value="{{municipio._id}}" ng-repeat="municipio in cli.municipiosEmpresa">{{municipio.nombre}}</option>
 							</select>
 						</div>
@@ -619,7 +619,7 @@
 					<div class="row">
 						<div class="col-sm-4" valida>
 							<label for="seccion_id">Ciudad *</label>
-							<select name="dirCiudadEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.ciudad_id" required >
+							<select name="dirCiudadEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.ciudad_id" required ng-change="cli.cambiarCiudadEmpresa()">
 								<option ng-repeat="ciudad in cli.ciudadesEmpresa" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
 							</select>
 						</div>	
@@ -673,92 +673,6 @@
 	</div>
 </div>
 </div>
-
-<!-- VER EMPRESA Modal -->
-<!--
-<div id="modalEmpVer" class="modal fade bs-empresaVer-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
-  <div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Ver o actualizar empresa</h4>
-			</div>
-			<div class="widget-body">
-				<form name="form3" novalidate>
-					<div class="well">	    
-						<div class="row">
-							<div class="col-sm-6" valida> 					    
-								<label>Nombre *</label>
-								<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="cli.empresa.nombre" required capitalize>
-							</div>
-							<div class="col-sm-6" valida>					    
-								<label>Razón Social *</label>
-								<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="cli.empresa.razonSocial" required capitalize>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4" valida>					    
-								<label>Calle *</label>
-								<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="cli.empresa.calle" required="" capitalize>
-							</div>	  
-							<div class="col-sm-4" valida>					    
-								<label>Número *</label>
-								<input name="numeroEmpresa" type="text" class="form-control" placeholder="Número" ng-model="cli.empresa.numero" required="" >
-							</div>  
-							<div class="col-sm-4" valida>					    
-								<label>Código Postal *</label>
-								<input name="codigopostal" type="number" class="form-control" placeholder="Código Postal" ng-model="cli.empresa.codigoPostal" required="">
-							</div>				    	    
-						</div>
-						<div class="row">
-							<div class="col-sm-4" valida>
-								<label >Pais *</label>
-								<select name="dirPaisEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.pais_id" required >
-									<option  value="{{pais._id}}" ng-repeat="pais in cli.paises">{{pais.nombre}}</option>
-								</select>
-							</div>
-							<div class="col-sm-4" valida>
-								<label for="seccion_id">Estado *</label>
-								<select name="dirEstadoEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.estado_id" required >
-									<option ng-repeat="estado in cli.estadosEmpresa" value="{{estado._id}}">{{estado.nombre}}</option>
-								</select>
-							</div>	
-							<div class="col-sm-4" valida>
-								<label >Municipio *</label>
-								<select name="dirMunicipioEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.municipio_id" required >
-									<option  value="{{municipio._id}}" ng-repeat="municipio in cli.municipiosEmpresa">{{municipio.nombre}}</option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4" valida>
-								<label for="seccion_id">Ciudad *</label>
-								<select name="dirCiudadEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="cli.empresa.ciudad_id" required >
-									<option ng-repeat="ciudad in cli.ciudadesEmpresa" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
-								</select>
-							</div>	
-							<div class="col-sm-4" valida>
-								<label for="seccion_id">Colonia *</label>
-								<select name="dirColoniaEmpresa" 
-												class="form-control select2" 
-												placeholder="Seleccione" 
-												ng-model="cli.empresa.colonia_id" required ng-change="cli.cambiarColoniaEmpresa()">
-									<option ng-repeat="colonia in cli.coloniasEmpresa" value="{{colonia._id}}">{{colonia.nombre}}</option>
-								</select>
-							</div>
-						</div>	 
-					</div>
-				</form>
-			</div>
-			<br>
-			<div class="modal-footer"s>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<input type="submit" ng-click="cli.actualizarEmpresa(cli.empresa, cli.objeto,form2)" value="Actualizar" class="btn btn-primary" valida-form formulario="form3">
-		  </div>
-		</div>
-	</div>
-</div>
--->
 
 <!-- Ocupación -->
 <div id="modalOcupacion" class="modal fade bs-ocupacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
