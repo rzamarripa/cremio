@@ -205,14 +205,12 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		return rc.planPagos;
 	}
 	
-	this.generarCredito = function(c, form){
+	this.generarCredito = function(form){
 						
 		if(form.$invalid){
 			toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
 			return;
 		}		
-		
-		return;
 		
 		var credito = {
 			cliente_id : this.cliente._id,
@@ -528,11 +526,6 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			var diaActual = date.day();		
 			var fecha = new Date();
 			var dif = diaActual - diaSeleccionado;
-			
-			console.log("Actual:", diaActual);
-			console.log("Seleccionado:",diaSeleccionado);
-			console.log("dif:",dif);
-			
 			
 			if (periodoPago == "Semanal")
 			{

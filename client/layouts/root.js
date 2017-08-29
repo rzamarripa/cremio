@@ -18,7 +18,7 @@ angular.module("creditoMio")
 	
 
 	this.subscribe('buscarRootClientesDistribuidores', () => {
-		console.log(rc.getReactively("buscar.nombre"));
+
 		
 		if(rc.getReactively("buscar.nombre").length > 4){
 			
