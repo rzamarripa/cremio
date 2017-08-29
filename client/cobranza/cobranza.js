@@ -754,7 +754,8 @@ angular.module("creditoMio")
 
   }
   this.guardarNotaCliente=function(nota){
-      //console.log(nota);      
+      //console.log(nota);
+      nota.perfil = "perfil"      
       nota.estatus = true;
       nota.fecha = new Date()
       nota.hora = moment(nota.fecha).format("hh:mm:ss a")

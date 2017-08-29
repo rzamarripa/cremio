@@ -853,7 +853,7 @@ Meteor.methods({
   
   
   
-  contratos: function (contrato,credito,cliente,planPagos) {
+  contratos: function (contrato,credito,cliente,planPagos,avales) {
 	  	
 
     function Unidades(num){
@@ -1012,6 +1012,13 @@ Meteor.methods({
 			
 		var letra = NumeroALetras(contrato.capitalSolicitado);
 		console.log("Letra:",letra);
+	if (avales == undefined) {
+		avales = cliente
+
+	}
+	if (contrato.seguro == undefined) {
+		contrato.seguro = 0
+	}
 	  
   	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
   	cliente.colonia = cliente.coloniaCliente.nombre
@@ -1046,8 +1053,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				
 				if (contrato.tipoInteres.tipoInteres == "Simple") {
 					var content = fs
@@ -1083,7 +1090,8 @@ Meteor.methods({
 									cliente: cliente,
 									contrato: contrato,
 									pp: planPagos,
-									letra : letra
+									letra : letra,
+									aval: avales,
 													
 				});
 								
@@ -1116,8 +1124,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-	    var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+	    //var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 	    if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
@@ -1151,7 +1159,9 @@ Meteor.methods({
 									    fecha:     fecha,
 									    cliente:    cliente,
 									    pp: planPagos,
+									    contrato: contrato,
 									    letra : letra,
+									    aval: avales,
 				});
 								
 		doc.render();
@@ -1182,8 +1192,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		 var produccion = "/home/cremio/archivos/";
-	    //var produccion = meteor_root+"/web.browser/app/plantillas/";
+		// var produccion = "/home/cremio/archivos/";
+	    var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -1222,6 +1232,7 @@ Meteor.methods({
 									contrato: contrato,
 									pp: planPagos,
 									letra : letra,
+									aval: avales,
 													
 				});
 								
@@ -1256,8 +1267,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			console.log("entra SIMPLE")
 			var content = fs				
@@ -1296,6 +1307,7 @@ Meteor.methods({
 										contrato: contrato,
 										pp: planPagos,
 										letra : letra,
+										aval : avales,
 										//garantias: 
 				});
 								
