@@ -140,8 +140,8 @@
 						<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cli.objeto.profile.telefonoAlternativo" capitalize>
 					</div>	  
 					<div class="col-sm-4">					    
-						<label>Dueño</label>
-						<input name="otroTelefono" type="text" class="form-control" placeholder="Dueño" ng-model="cli.objeto.profile.duenoAlternativo" capitalize>
+						<label>Nombre</label>
+						<input name="otroTelefono" type="text" class="form-control" placeholder="Nombre" ng-model="cli.objeto.profile.duenoAlternativo" capitalize>
 					</div>
 					<div class="col-sm-4">					    
 						<label>Parentesco</label>
@@ -204,18 +204,17 @@
 						<label>Lugar de Nacimiento *</label>
 						<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="cli.objeto.profile.lugarNacimiento" capitalize required="" >
 					</div>
-						<div class="col-sm-4">
-							<label for="id_label_single" >Ocupaciones *</label>
-                		<select ng-options="ocupacion._id as ocupacion.nombre for ocupacion in cli.ocupaciones" 
-             								ng-model="cli.objeto.profile.ocupacion_id" 
-	             							class="js-example-basic-single js-states form-control" 
-		             						placeholder="Seleccione" 
-			             					ng-change="cli.getOcupaciones(cli.ocupacionSeleccionado._id)" 
-				             				style="width: 300px;" >
-					             	
-				            </select>
-
-						</div>
+					<div class="col-sm-4">
+						<label for="id_label_single" >Ocupaciones *</label>
+        		<select ng-options="ocupacion._id as ocupacion.nombre for ocupacion in cli.ocupaciones" 
+     								ng-model="cli.objeto.profile.ocupacion_id" 
+       							class="js-example-basic-single js-states form-control" 
+         						placeholder="Seleccione" 
+           					ng-change="cli.getOcupaciones(cli.ocupacionSeleccionado._id)" 
+             				style="width: 300px;" >
+	             	
+            </select>
+					</div>
 					<div class="col-sm-4">
 						<br/>
 						<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-ocupacion-modal-lg">Crear Ocupación</button>

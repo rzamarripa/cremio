@@ -61,7 +61,7 @@
 	              </tr>
 	            </thead>
 	            <tbody style="font-size: x-small">
-	              <tr ng-repeat="mov in vca.movimientosCaja">
+	              <tr ng-repeat="mov in vca.movimientosCaja" class={{mov.clase}}>
 	                <td align="center">{{mov.pago != undefined ? mov.pago.folioPago : mov.credito.folio }}</td>
 	                <td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
 	                <td>{{mov.numeroCliente}}</td>
