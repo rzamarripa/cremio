@@ -652,10 +652,7 @@ Meteor.methods({
 		
 		pago.liquidacion = Number(parseFloat(total).toFixed(2));;
 		
-		if (fechaProximoPago < new Date())
-			 pago.proximoPago = "";
-		else
-			 pago.proximoPago = fechaProximoPago;	 
+		pago.proximoPago = fechaProximoPago;	 
 		
 		
 		//pago.credito_id = credito_id;
@@ -670,7 +667,7 @@ Meteor.methods({
 		
 		_.each(pagos,function (p) {
 				idpagos.push(p.id);
-				pagosId[p.id]=p.importe;
+				pagosId[p.id] = p.importe;
 		})
 		
 		var pagos = PlanPagos.find({_id:{$in:idpagos}},{sort:{descripcion:1}}).fetch();

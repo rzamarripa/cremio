@@ -182,6 +182,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			if(creditos != undefined){
 				_.each(creditos, function(credito){	
 					 credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
+					 if (credito.avales_ids.length > 0)
+					 		credito.tieneAval = "SI";
+					 else
+					 		credito.tieneAval = "NO";		
+					 				
 				})
 			}
 			return creditos;
@@ -196,6 +201,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				_.each(creditos, function(credito){				
 					 credito.estatusClase = obtenerClaseEstatus(credito.requiereVerificacion);
 					 credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
+					 if (credito.avales_ids.length > 0)
+					 		credito.tieneAval = "SI";
+					 else
+					 		credito.tieneAval = "NO";		
 				})
 			}
 			
@@ -359,6 +368,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			if(rc.getReactively("creditos") && rc.creditos.length > 0 && planPagos.length > 0){	
 				_.each(rc.getReactively("creditos"), function(credito){
 					credito.planPagos = [];
+					
+					credito.numeroPagosCargoMoratorios = 0;
 					credito.pagados = 0;
 					credito.pagadosCargoM = 0;
 					credito.sumaPagosRecibos = 0;
@@ -380,6 +391,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 							
 							
 							pago.numeroPagos = credito.numeroPagos;
+							pago.numeroPagosCargoMoratorios = 0;
 							
 							credito.planPagos.push(pago);
 							if (pago.descripcion == "Recibo")
@@ -394,13 +406,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 							if (pago.descripcion == "Cargo Moratorio")
 							{
 								credito.tieneCargoMoratorio = true;	
+								
 								if (pago.importeRegular == 0)
 								{
 									  credito.pagadosCargoM++;
 									  credito.sumaPendientesCargoM += pago.cargo;
 								}
-								 
-								 credito.sumaCargoMoratorios += pago.cargo;
+								credito.numeroPagosCargoMoratorios += 1;
+								credito.sumaCargoMoratorios += pago.cargo;
 							}
 								
 						}

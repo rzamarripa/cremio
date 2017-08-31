@@ -526,7 +526,7 @@
 
 <!-- Modal -->
 <div id="modalEmp" class="modal fade bs-empresa-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-dialog modal-lg" role="document">
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -554,11 +554,11 @@
 						</div>	  
 						<div class="col-sm-4" valida>					    
 							<label>Número *</label>
-							<input name="numeroEmpresa" type="text" class="form-control" placeholder="Número" ng-model="ava.empresa.numero" required="" >
+							<input name="numeroEmpresa" type="text" class="form-control" placeholder="Número" ng-model="ava.empresa.numero" required="" capitalize>
 						</div>  
 						<div class="col-sm-4" valida>					    
 							<label>Código Postal *</label>
-							<input name="codigopostal" type="number" class="form-control" placeholder="Código Postal" ng-model="ava.empresa.codigoPostal" required="" capitalize>
+							<input name="codigopostal" type="number" class="form-control" placeholder="Código Postal" ng-model="ava.empresa.codigoPostal" required="">
 						</div>				    	    
 					</div>
 					<div class="row">
@@ -639,7 +639,7 @@
 </div>
 </div>
 
-<!-- VER EMPRESA Modal -->
+
 <!--
 <div id="modalEmp" class="modal fade bs-empresaVer-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
   <div class="modal-dialog modal-lg" role="document">
