@@ -130,7 +130,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	};
 
 	
-	this.tieneFoto = function(sexo, foto){
+	/*
+this.tieneFoto = function(sexo, foto){
 		if(foto === undefined){
 			if(sexo === "Masculino")
 				return "img/badmenprofile.jpeg";
@@ -143,6 +144,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			return foto;
 		}
 	}
+*/
 	  
 	this.generarPlanPagos = function(credito, form){
 				
@@ -207,10 +209,20 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	
 	this.generarCredito = function(form){
 						
+		
+
 		if(form.$invalid){
-			toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
-			return;
-		}		
+				toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
+				return;
+		}	
+		
+		if (rc.cliente.profile.renta == true && this.avales.length == 0)		
+		{
+				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
+				return;
+		}	
+		
+		
 		
 		var credito = {
 			cliente_id : this.cliente._id,

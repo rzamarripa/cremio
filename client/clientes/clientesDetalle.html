@@ -147,10 +147,10 @@
 											</div>
 											<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12" ng-if="credito.tieneCargoMoratorio"> 
 												<span class="text"> Número de Pagos Cargos Moratorios 
-													<span class="pull-right">{{credito.pagadosCargoM}}/{{credito.numeroPagos}}</span> 
+													<span class="pull-right">{{credito.pagadosCargoM}}/{{credito.numeroPagosCargoMoratorios}}</span> 
 												</span>
 												<div class="progress">
-													<div class="progress-bar bg-color-blueDark" style="width: {{(credito.pagadosCargoM / credito.numeroPagos) * 100}}%;"></div>
+													<div class="progress-bar bg-color-blueDark" style="width: {{(credito.pagadosCargoM / credito.numeroPagosCargoMoratorios) * 100}}%;"></div>
 												</div> 
 											</div>
 											<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12" ng-if="credito.tieneCargoMoratorio"> 
@@ -169,10 +169,8 @@
 												<br/><br/>
 												<small><a ng-click="cd.imprimirContratos(credito,cd.objeto._id)" class="btn btn-primary">Imprimir Contrato</a></small>
 										</div>
-											</div>
-										</div>
 										<div class="row" ng-if = "credito.tieneAvales == true">
-											<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12 container">
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 container">
 											  <h2>Aval</h2>
 											  <ul class="list-group" ng-repeat = "aval in credito.avales_ids">
 											    <li class="list-group-item">{{aval.nombreCompleto}}</li>
@@ -182,6 +180,9 @@
 											  </ul>
 											</div>
 										</div>
+											</div>
+									</div>
+								
 									</div>
 								</div>
 							</div>
@@ -760,6 +761,7 @@
 													<small>
 														{{pendiente.tipoCredito.nombre}}
 													</small><br>
+													<small>Tiene Aval: {{pendiente.tieneAval}}</small><br>
 													<small>Plan: {{pendiente.periodoPago}}</small><br>
 													<small>Fecha: {{pendiente.fechaSolicito | date:'dd/MM/yyyy'}}</small><br>
 													<small ng-if="pendiente.requiereVerificacion == true">Con Verificación <!-- {{pendiente.fechaVerificacion | date:'dd/MM/yyyy'}} --></small>
@@ -887,13 +889,15 @@
 													<small>
 														{{aprobado.tipoCredito.nombre}}
 													</small><br>
+													<small>Tiene Aval: {{aprobado.tieneAval}}</small><br>
 													<small>Plan: {{aprobado.periodoPago}}</small>
 													<small>Fecha: {{aprobado.fechaSolicito.getUTCDate() +"/"+ (aprobado.fechaSolicito.getUTCMonth()+1) +"/"+ aprobado.fechaSolicito.getUTCFullYear()}}</small>
+													
 												</div>
 											</div>
 											<div class="panel-footer no-padding">						
 <a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
-												<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Petición" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="cd.cancelarSeleccion(aprobado)" />
+												<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Crédito" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="cd.cancelarSeleccion(aprobado)" />
 												<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
 											</div>
 										</div>
@@ -1027,8 +1031,6 @@
 						</div>
 						<div class="modal-body">
 						<p>Fecha: <strong>{{cd.notaPerfil.fecha | date:'dd-MM-yyyy'}}, {{cd.notaPerfil.hora}}</strong></p><br/>
-							
-							<!-- 	<p>Por: <strong>{{cd.usuario.profile.nombreCompleto}}</strong></p> -->
 						</div>
 						<div class="modal-body">
 							<h6>Información de la nota</h6><br/>
@@ -1203,7 +1205,7 @@
 </div>
 <!--//////////////////////////////////// //////////////////////////////////////////////////////////// -->
 <!-- Modal para cargos Moratorios -->
-<div id="modalCargosMoratorios" class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div id="modalCargosMoratorios" class="modal fade bs-cargos-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 	    	<div class="modal-header">

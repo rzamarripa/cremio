@@ -672,9 +672,10 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 				    });
 				    
 				    fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
-				    if (fechaProximoPago < new Date())
-				    		fechaProximoPago = "";
-					
+						
+						if (fechaProximoPago == "Invalid Date")
+								fechaProximoPago = "";								
+						
 				}
 		    
 

@@ -31,7 +31,7 @@ angular.module("creditoMio")
   this.num = 0;
   this.referenciasPersonales = [];
   this.referenciaPersonal = {};
-  this.referenciaPersonal._id = "";
+
   
   this.buscar = {};
   this.buscar.nombre = "";
@@ -740,8 +740,8 @@ angular.module("creditoMio")
 	  	referenciaPersonal.nombreCompleto = referenciaPersonal.nombre + " " + 
 	  																			referenciaPersonal.apellidoPaterno + 
 	  																			(referenciaPersonal.apellidoMaterno == undefined?"": " " + referenciaPersonal.apellidoMaterno);
-	  																			
-			referenciaPersonal.clientes = [];
+			
+  		referenciaPersonal.clientes = [];
       this.referenciaPersonal._id = ReferenciasPersonales.insert(referenciaPersonal);
       
       $("#modalreferenciaPersonal").modal('hide');

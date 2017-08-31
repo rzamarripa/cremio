@@ -1,3 +1,4 @@
+/*
 Bitacora 						= new Mongo.Collection("bitacora");
 Bitacora.allow({
   insert: function () { return true; },
@@ -345,3 +346,4 @@ function popCallbackFromArgs(args) {
     return args.pop();
   }
 }
+*/
