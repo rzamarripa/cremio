@@ -10,7 +10,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.creditos = [];
 	rc.creditos_id = [];
 	rc.empresaCliente = ""
-	//rc.creditos_idH = [];
 	rc.credito_id = ""
 	rc.credito = "";
 	rc.notaCuenta = []
@@ -35,13 +34,13 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.objeto = {};
 	rc.objeto.profile = {};
 	rc.objeto.profile.empresa = {};
-	
 	rc.creditoSeleccionado = {};
 	this.estadoCivilSeleccionado = "";
 	rc.recibo = {};
 	rc.recibos = [];
 	rc.empresaSeleccionada = ""
 	rc.datosCliente = ""
+	rc.btnCerrarRespuesta = true;
 	
 	rc.editMode = false;
 	rc.puedeSolicitar = true;
@@ -1430,7 +1429,7 @@ if(estatus == 0){
 						//console.log("result",result)
 							rc.avalesCliente = result.profile
 					}
-					//console.log("avales",rc.avalesCliente)
+					console.log("avales",rc.avalesCliente)
 
 			});
 		};
@@ -1446,6 +1445,7 @@ if(estatus == 0){
 									
 				//console.log(rc.datosCliente,"el clientaso")				
 				console.log("contrato",contrato)
+				console.log("avalesssss",avales)
 				Meteor.call('contratos', contrato, contrato._id,rc.datosCliente,contrato.planPagos,avales, function(error, response) {
 				  
 				   if(error)
@@ -1619,6 +1619,13 @@ if(estatus == 0){
 		{
 
 	    	$state.go("root.generadorPlan",{objeto_id : id});
+		  
+		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
+		};
+		this.btnCerrar= function()
+		{
+
+	    	rc.btnCerrarRespuesta = false
 		  
 		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
 		};

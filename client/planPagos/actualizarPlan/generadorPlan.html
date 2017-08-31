@@ -166,7 +166,7 @@
 											<tr>
 												<th width="5%">Número</th>
 												<th width="15%">Nombre</th>
-												<th width="5%">Estado Civil</th>
+												<!-- <th width="5%">Estado Civil</th>
 												<th width="5%">Ocupación</th>
 												<th width="15%">Dirección</th>
 												<th width="10%">Empresa</th>
@@ -174,15 +174,15 @@
 												<th width="5%">Tiempo Laborando</th>
 												<th width="15%">Dirección Empresa</th>
 												<th width="10%">Parentesco</th>
-												<th width="10%">Tiempo Conocerlo</th>
-												<th width="5%">Quitar</th>
+												<th width="10%">Tiempo Conocerlo</th> -->
+												<th width="10%">Acciones</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr ng-repeat="aval in ae.avales">
 												<td>{{aval.num}}</td>
 												<td>{{aval.nombre}}</td>
-												<td>{{aval.estadoCivil}}</td>
+												<!-- <td>{{aval.estadoCivil}}</td>
 												<td>{{aval.ocupacion}}</td>
 												<td>{{aval.direccion}}</td>
 												<td>{{aval.empresa}}</td>
@@ -190,10 +190,11 @@
 												<td>{{aval.tiempoLaborando}}</td>
 												<td>{{aval.direccionEmpresa}}</td>
 												<td>{{aval.parentesco}}</td>
-												<td>{{aval.tiempoConocerlo}}</td>
+												<td>{{aval.tiempoConocerlo}}</td> -->
 												<td>
-														<a href="#" ng-click="ae.quitarAval(aval.num)"><i class="fa fa-trash"></i></a>
-														<a href="#" ng-click="ae.editarAval(aval)"><i class="fa fa-pencil"></i></a>
+														<a href="#" class="btn btn-primary" ng-click="ae.verAval(aval)"><i class="fa fa-eye"></i></a>
+														<a href="#" class="btn btn-warning" ng-click="ae.editarAval(aval)"><i class="fa fa-pencil"></i></a>
+														<a href="#" class="btn btn-danger" ng-click="ae.quitarAval(aval.num)"><i class="fa fa-trash"></i></a>
 												</td>
 											</tr>
 										</tbody>
@@ -415,6 +416,71 @@ FECHA DE INICIO DE COMERCIALIZACIÓN	FECHA LÍMITE DE FINIQUITO -->
 			</tbody>
 		</table>	
 	</div>
+</div>
+
+<div id="modalAval" class="modal fade bs-modalAvales-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		       
+		    </div>
+				<div class="widget-body">
+							<form name="form2" novalidate>
+									<div class="well">	    
+								     <div class="row">
+							 <div class="col-sm-3">
+						    	<img style="max-width:170px;" src="{{ae.aval.foto}}" >
+						    </div>
+					    	<div class="col-sm-6"> 					    
+						    	<label>Nombre</label>
+						    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ae.aval.nombreCompleto" disabled="true">
+					    	</div>
+					    	
+					       </div>
+					    <div class="row">	
+						    <div class="col-sm-4">					    
+						    	<label>Calle</label>
+						    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ae.aval.calle" disabled="true">
+					    	</div>
+					    	<div class="col-sm-2">					    
+						    	<label>Número</label>
+						    	<input name="numero" type="text" class="form-control" placeholder="Calle" ng-model="ae.aval.calle" disabled="true">
+					    	</div>
+					    	<div class="col-sm-2">					    
+						    	<label>Código Postal</label>
+						    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ae.aval.codigoPostal" disabled="true">
+					    	</div>
+						    <div class="col-sm-4"> 					    
+						    	<label>Estado Civil</label>
+						    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="ae.aval.estadoCivil" disabled="true">
+					    	</div>
+					    </div>
+					    <div class="row">		
+						    <div class="col-sm-3"> 					    
+						    	<label>Ocupación</label>
+						    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="ae.aval.ocupacion" disabled="true">
+					    	</div>
+					    	<div class="col-sm-3">					    
+						    	<label>Empresa</label>
+						    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="ae.aval.empresa" disabled="true">
+					    	</div>
+					    	<div class="col-sm-3">					    
+						    	<label>Puesto</label>
+						    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ae.aval.puesto" disabled="true">
+					    	</div>					    	
+					    	<div class="col-sm-3">					    
+						    	<label>Tiempo Laborando</label>
+						    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="ae.aval.tiempoLaborando" disabled="true">
+					    	</div>
+									</div>
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" ng-click="ae.cancelarAval()" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+     
+  </div>
 </div>
 
 

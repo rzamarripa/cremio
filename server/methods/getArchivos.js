@@ -261,6 +261,33 @@ Meteor.methods({
 			//console.log("esta es la referencia",referencia)
 			return persona;
 	},
+
+		obAvales: function (idReferencia) {
+			var aval = Avales.findOne(idReferencia);
+			console.log(aval,"avales server")
+			
+			
+				
+					aval.profile.nacionalidadAval = Nacionalidades.findOne(aval.profile.nacionalidad_id);
+					aval.profile.nacionalidad = aval.profile.nacionalidadAval.nombre
+					aval.profile.coloniaAval = Colonias.findOne(aval.profile.colonia_id);
+					aval.profile.colonia = aval.profile.coloniaAval.nombre
+					aval.profile.estadoAval = Estados.findOne(aval.profile.estado_id);
+					aval.profile.estado = aval.profile.estadoAval.nombre
+					aval.profile.municipioAval = Municipios.findOne(aval.profile.municipio_id);
+					aval.profile.municipio = aval.profile.municipioAval.municipio
+					aval.profile.ocupacionAval = Ocupaciones.findOne(aval.profile.ocupacion_id);
+					aval.profile.ocupacion = aval.profile.ocupacionAval.nombre
+					aval.profile.ciudadAval = Ciudades.findOne(aval.profile.ciudad_id);
+					aval.profile.ciudad = aval.profile.ciudadAval.nombre
+					aval.profile.sucursalesAval = Sucursales.findOne(aval.profile.sucursal_id);
+					aval.profile.sucursal = aval.profile.sucursalesAval.nombre
+					
+
+				
+				
+			return aval;
+	},
 	// getEmpresas: function (idEmpresa) {
 	// 		//console.log('hi');
 	// 		Meteor.apply('findSomeShit',['Empresas', {_id: idEmpresa}, true], function(err, empresa){
@@ -304,8 +331,8 @@ Meteor.methods({
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 
 		var opts = {}
@@ -352,8 +379,8 @@ Meteor.methods({
     	// fechaAlta = fechaAltaCliente.getUTCDate()+'-'+(fechaAltaCliente.getUTCMonth()+1)+'-'+fechaAltaCliente.getUTCFullYear();
 	    // fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	    //fechaNacimiento = fechaNaci.getUTCDate()+'-'+(fechaNaci.getUTCMonth()+1)+'-'+fechaNaci.getUTCFullYear();
-	    fechaEmision = new Date()
-	    fechaEmision=moment(fechaEmision).format("DD-MM-YYYY")
+	    var fechaEmision = new Date()
+	    
 
 
 	    var f = String(objeto.foto);
@@ -368,19 +395,19 @@ Meteor.methods({
 
 						objeto.fechaCreacion =moment(objeto.fechaCreacion).format("DD-MM-YYYY")
 						objeto.fechaNacimiento =moment(objeto.fechaNacimiento).format("DD-MM-YYYY")
+						objeto.fechaEmision = fechaEmision
+						objeto.fechaEmision= moment(objeto.fechaEmision).format("DD-MM-YYYY")
 
 						
 							objeto.ciudad = objeto.ciudadCliente.nombre
-							objeto.sucursal = objeto.sucursales.nombre
+							objeto.sucursal = objeto.sucursales.nombreSucursal
 							objeto.colonia = objeto.coloniaCliente.nombre
 							objeto.municipio = objeto.municipioCliente.nombre
 							objeto.estado = objeto.estadoCliente.nombre
 							objeto.nacionalidad = objeto.nacionalidadCliente.nombre
 							objeto.estadoCivil = objeto.estadoCivilCliente.nombre
 							objeto.ocupacion = objeto.ocupacionCliente.nombre
-							objeto.renta = objeto.rentames
 							objeto.cp = objeto.codigoPostal
-							objeto.renta = objeto.rentames
 							objeto.telefonoMovilContacto = objeto.celular
 							objeto.telefonoContacto = objeto.particular
 							objeto.nombreConyu = objeto.nombreConyuge
@@ -408,7 +435,8 @@ Meteor.methods({
 
 		doc.setData({				item: 		objeto,//bien
 									foto: objeto.foto,
-									referencias: objeto.referencias
+									referencias: objeto.referencias,
+									fechaEmision : objeto.fechaEmision,
 					
 
 
@@ -854,7 +882,6 @@ Meteor.methods({
   
   
   contratos: function (contrato,credito,cliente,planPagos,avales) {
-	  	
 
     function Unidades(num){
 
@@ -986,10 +1013,11 @@ Meteor.methods({
             enteros: Math.floor(num),
             centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
             letrasCentavos: '',
-            letrasMonedaPlural: currency.plural || 'PESOS',//'PESOS', 'Dólares', 'Bolívares', 'etcs'
-            letrasMonedaSingular: currency.singular || 'PESO', //'PESO', 'Dólar', 'Bolivar', 'etc'
-            letrasMonedaCentavoPlural: currency.centPlural || 'PESOS',
-            letrasMonedaCentavoSingular: currency.centSingular || 'PESO'
+            letrasMonedaPlural: currency.plural || '',//'PESOS', 'Dólares', 'Bolívares', 'etcs'
+            letrasMonedaSingular: currency.singular || '', //'PESO', 'Dólar', 'Bolivar', 'etc'
+            letrasMonedaCentavoPlural: currency.centPlural || '',
+            letrasMonedaCentavoSingular: currency.centSingular || ''
+
         };
 
         if (data.centavos > 0) {
@@ -1011,7 +1039,10 @@ Meteor.methods({
 		
 			
 		var letra = NumeroALetras(contrato.capitalSolicitado);
-		console.log("Letra:",letra);
+		var tasaPor = NumeroALetras(contrato.tasa);
+		// console.log("Letra:",letra);
+		// console.log("tasa:",tasaPor);
+		console.log(avales,"avales")
 	if (avales == undefined) {
 		avales = cliente
 
@@ -1053,8 +1084,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				
 				if (contrato.tipoInteres.tipoInteres == "Simple") {
 					var content = fs
@@ -1092,6 +1123,7 @@ Meteor.methods({
 									pp: planPagos,
 									letra : letra,
 									aval: avales,
+									tasaPor : tasaPor,
 													
 				});
 								
@@ -1124,8 +1156,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-	    var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+	    //var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 	    if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
@@ -1162,6 +1194,7 @@ Meteor.methods({
 									    contrato: contrato,
 									    letra : letra,
 									    aval: avales,
+									    tasaPor : tasaPor,
 				});
 								
 		doc.render();
@@ -1192,8 +1225,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		 var produccion = "/home/cremio/archivos/";
-	    //var produccion = meteor_root+"/web.browser/app/plantillas/";
+		 //var produccion = "/home/cremio/archivos/";
+	    var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -1233,6 +1266,7 @@ Meteor.methods({
 									pp: planPagos,
 									letra : letra,
 									aval: avales,
+									tasaPor : tasaPor,
 													
 				});
 								
@@ -1267,8 +1301,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			console.log("entra SIMPLE")
 			var content = fs				
@@ -1308,6 +1342,7 @@ Meteor.methods({
 										pp: planPagos,
 										letra : letra,
 										aval : avales,
+										tasaPor : tasaPor,
 										//garantias: 
 				});
 								
@@ -1316,7 +1351,7 @@ Meteor.methods({
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
              		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-             		 	console.log(",monndddrigoo")
+             		 	//console.log(",monndddrigoo")
              		 	fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIASSISalida.docx",buf);
              		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASSISalida.docx");
              		 }
