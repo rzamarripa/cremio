@@ -1005,8 +1005,11 @@
 									<a	class="btn btn-success" ng-click="cd.contestarNota(cd.notaCuenta1._id)"
 									ng-show="cd.notaCuenta1.respuesta">Contestar</a>
 									<button type="button" ng-click="cd.quitarNota(cd.notaCuenta1._id)" class="btn btn-default" data-dismiss="modal" ng-show="!cd.notaCuenta1.respuesta">Quitar</button>
+									<button type="button" id="cerrarRespuesta" class="btn btn-default" data-dismiss="modal"
+									  ng-show="cd.btnCerrarRespuesta">Cerrar</button>
 									 <button type="button" class="btn btn-default" data-dismiss="modal"
 									  ng-show="!cd.notaCuenta1.respuesta">Cerrar</button>
+									  
 								</div>
 					</div>								 
 					</div>

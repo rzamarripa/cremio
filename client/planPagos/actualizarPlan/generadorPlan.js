@@ -101,7 +101,12 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 																		  tiempoConocerlo		: aval.tiempoConocerlo,
 																		  num								: aval.num,
 																		  //cliente_id				: result.cliente_id,
-																		  estatus						: aval.estatus
+																		  estatus						: aval.estatus,
+																		  calle:result.calle,
+																		  numero:result.numero,
+																		  foto:result.foto,
+																		  codigoPostal:result.codigoPostal
+
 											});
 											$scope.$apply();
 									}
@@ -364,6 +369,33 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		
 		this.num = a.num;
 	  this.actionAval = false;
+	};
+
+		this.verAval = function(a)
+	{
+		console.log(a,"aval p")
+		$("#modalAval").modal('show');
+		rc.aval.nombre = a.nombre;
+		if (a.apellidoPaterno == undefined) {
+			a.apellidoPaterno = ""
+		}
+		if (a.apellidoMaterno == undefined) {
+			a.apellidoMaterno = ""
+		}
+		rc.aval.nombreCompleto= a.nombre + " " + a.apellidoPaterno + " " + a.apellidoMaterno
+		rc.aval.estadoCivil = a.estadoCivil;
+		rc.aval.ocupacion = a.ocupacion;			
+		rc.aval.calle = a.calle;
+		rc.aval.numero = a.numero;
+		rc.aval.codigoPostal = a.codigoPostal;
+		rc.aval.empresa = a.empresa;
+		rc.aval.puesto = a.puesto;
+		rc.aval.tiempoLaborando = a.tiempoLaborando;
+		rc.aval.direccionEmpresa = a.direccionEmpresa;
+		rc.aval.parentesco = a.parentesco;
+		rc.aval.tiempoConocerlo = a.tiempoConocerlo;
+		rc.aval.foto =a.foto
+	
 	};
 	
 	this.borrarReferencia = function()

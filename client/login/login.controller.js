@@ -14,8 +14,10 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 	      toastr.success("Bienvenido al Sistema");
 
         //if (Meteor.user().username == "admin" || Meteor.user().roles[0] == "Cajero" || Meteor.user().roles[0] == "Gerente" || Meteor.user().roles[0] == "Supervisor")
-           
-	      if (Meteor.user().roles[0] == "Verificador")
+        if (Meteor.user().roles == "admin") {
+            $state.go('root.home');    
+        }
+	      if (Meteor.user().roles == "Verificador")
         	 $state.go('root.panelVerificador');      
         else
         	 $state.go('root.home'); 	   
