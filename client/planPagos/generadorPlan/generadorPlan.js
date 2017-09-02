@@ -41,6 +41,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.personasTipos = [];
 	this.personas_ids = [];
 	
+	//rc.avalesH = [];
+	
 	rc.ocupacion = "";
 	
 	
@@ -55,7 +57,10 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	    }];
 		}
 		else if (this.getReactively("buscar.nombre").length  == 0 )
+		{
 			this.buscando = false;
+			rc.avalesH = [];
+		}	
   });
 	
 
@@ -72,6 +77,10 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		return [{ _id : $stateParams.objeto_id }];
 	});
 	
+	this.subscribe('creditos', () => {
+		return [{ cliente_id : $stateParams.objeto_id }];
+	});
+	
 	this.subscribe('pagos', () => {
 		return [{ estatus:true}];
 	});
@@ -82,6 +91,14 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			var aval = Avales.find({
 		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
 			}, { sort : {"nombreCompleto" : 1 }}).fetch();
+			
+/*
+			_.each(aval, function(a){
+					
+					rc.avalesH.push(a);
+			})
+*/
+			
 			return aval;
 		},
 		cliente : () => {
@@ -93,6 +110,43 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		pagos : () => {
 			return Pagos.find();
 		},
+/*
+		creditos: () => {
+			var cred = Creditos.find({}).fetch();
+			
+			if (cred != undefined)
+			{
+
+					_.each(cred, function(c){
+						if (c.avales_ids != undefined && c.avales_ids.length > 0)
+						{
+
+								_.each(c.avales_ids, function(aval){
+										console.log(aval.aval_id)
+										Meteor.call("getAval",aval.aval_id,function(error,result){
+											
+											if(error){
+												console.log(error);
+
+											}
+											if (result)
+											{
+												console.log(result);
+												rc.avalesH.push(result);
+												$scope.$apply();
+											}
+												
+										})
+								});		
+						}	
+					});
+					console.log("AVALE:", rc.avalesH);
+						
+				
+			}	
+
+		}	
+*/		
 		
 	});
 	

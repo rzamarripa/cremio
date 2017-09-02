@@ -994,5 +994,8 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 		return pago_id;
 
 	},
+	getPago:function(pago_id){
+			return Pagos.findOne(pago_id);		
+	}
 	
 });
