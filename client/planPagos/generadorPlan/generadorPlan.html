@@ -312,7 +312,7 @@ FECHA DE INICIO DE COMERCIALIZACIÓN	FECHA LÍMITE DE FINIQUITO -->
 													<td>{{garantia.fechaComercializacion | date:"dd-MM-yyyy"}}</td>
 													<td>{{garantia.fechaFiniquito | date:"dd-MM-yyyy"}}</td> -->
 													<td>
-													<a href="#" class="btn btn-primary" ng-click="ge.editarGarantia(ge.credito.tipoGarantia, garantia)"><i class="fa fa-eye"></i></a>
+													<a href="#" class="btn btn-primary" ng-click="ge.verGarantia(ge.credito.tipoGarantia, garantia)"><i class="fa fa-eye"></i></a>
 													<a href="#" class="btn btn-warning" ng-click="ge.editarGarantia(ge.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
 															<a href="#" class="btn btn-danger" ng-click="ge.quitarGarantia(ge.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
 															
@@ -406,7 +406,7 @@ COMISIÓN Y GASTOS	POR ESCRITURACIÓN E INSCRIPCIÓN DE REGISTRO PÚBLICO -->
 													<td>{{garantia.comisionGastos}}</td>
 													<td>{{garantia.escrituracion}}</td> -->
 													<td>
-														<a href="#" class="btn btn-primary" ng-click="ge.editarGarantia(ge.credito.tipoGarantia, garantia.num)"><i class="fa fa-eye"></i></a>
+														<a href="#" class="btn btn-primary" ng-click="ge.verGarantia(ge.credito.tipoGarantia, garantia)"><i class="fa fa-eye"></i></a>
 														<a href="#" class="btn btn-warning" ng-click="ge.editarGarantia(ge.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
 															<a href="#" class="btn btn-danger" ng-click="ge.quitarGarantia(ge.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
 															
@@ -539,6 +539,108 @@ COMISIÓN Y GASTOS	POR ESCRITURACIÓN E INSCRIPCIÓN DE REGISTRO PÚBLICO -->
 	      </div>	
 	      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" ng-click="ge.cancelarAval()" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+     
+  </div>
+</div>
+
+<div id="modalGarantia" class="modal fade bs-modalGarantia-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		       
+		    </div>
+				<div class="widget-body">
+								<div class="row" ng-show="ge.general">
+								<div class="col-sm-12"> 
+							    	<div class="col-sm-4"> 					    
+								    	<label>Sup. de terreno y construcción</label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ge.garantia.terrenoYconstruccion">
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>Medidas, colindancias, clave astral</label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Medidas, colindancias, clave astral"  ng-model="ge.garantia.medidasColindancias">
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>Avalúo </label>
+								    	<input name="valorEstimado" type="number" class="form-control" placeholder="Avalúo" ng-model="ge.garantia.avaluo">
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>Préstamo </label>
+								    	<input name="valorEstimado" type="number" class="form-control" placeholder="Préstamo" ng-model="ge.garantia.prestamo">
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>Préstamo sobre avalúo</label>
+								    	<input name="valorEstimado" type="number" class="form-control" placeholder="Préstamo sobre avalúo" ng-model="ge.garantia.prestamoSobreAvaluo">
+							    	</div>
+							    		<div class="col-sm-4"> 					    
+								    	<label>Monto de avalúo</label>
+								    	<input name="valorEstimado" type="number" class="form-control" placeholder="Monto de avalúo" ng-model="ge.garantia.montoAvaluo">
+							    	</div>
+							    		<div class="col-sm-4"> 					    
+								    	<label>% Porcentaje del préstamo sobre el avaluo</label>
+								    	<input name="valorEstimado" type="number" class="form-control" placeholder="% Porcentaje del préstamo  sobre avalúo" ng-model="ge.garantia.porcentajePrestamo">
+								    
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>Comisión y gastos</label>
+								    	<input name="valorEstimado" type="number" class="form-control" placeholder="Comisión y gastos" ng-model="ge.garantia.comisionGastos">
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>	Por escrituración e inscripción de registro público</label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Por escrituroación e inscripción de registro público" ng-model="ge.garantia.escrituracion">
+							    	</div>
+
+								</div>
+								</div>
+								<div class="row" ng-show="ge.mob">
+								<div class="col-sm-12">
+									<div class="row">
+						    	<div class="col-sm-4"> 					    
+							    	<label>Descripción Generica</label>
+							    	<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN" ng-model="ge.garantia.descripcion">
+						    	</div>
+						    	<div class="col-sm-4"> 					    
+							    	<label>Características	</label>
+							    	<input name="caracteristicas" type="text" class="form-control" placeholder="Caracteristicas" ng-model="ge.garantia.caracteristicas">
+						    	</div>
+						    	<div class="col-sm-4"> 					    
+							    	<label>Avalúo</label>
+							    	<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO" ng-model="ge.garantia.avaluo">
+						    	</div>
+						    </div>
+						    <div class="row">	
+						    <div class="col-sm-4">					    
+							    	<label>Préstamo </label>
+							    	<input name="serie" type="number" class="form-control" placeholder="PRÉSTAMO" ng-model="ge.garantia.prestamo">
+						    	</div>
+							    <div class="col-sm-4">					    
+							    	<label>Préstamo sobre avalúo</label>
+							    	<input name="serie" type="number" class="form-control" placeholder="PRÉSTAMO SOBRE AVALÚO" ng-model="ge.garantia.prestamoPorcentaje">
+						    	</div>
+						    	 <div class="col-sm-4">					    
+							    	<label>Monto de avalúo</label>
+							    	<input name="serie" type="number" class="form-control" placeholder="MOTO DE AVALÚO" ng-model="ge.garantia.monto">
+						    	</div>
+						    	 <div class="col-sm-4">					    
+							    	<label>Porcentaje del prestamo sobre el avalúo</label>
+							    	<input name="serie" type="number" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ge.garantia.porcentaje">
+						    	</div>
+						    	<div class="col-sm-4">					    
+							    	<label>Fecha de inico de comercialización</label>
+							    	<input name="serie" class="form-control" placeholder="FECHA DE INICIO DE COMERCIALIZACIÓN" ng-model="ge.garantia.fechaComercializacion" date-time format="dd-MM-yyyy" view="date" max-view="year" min-view="date">
+						    	</div>
+						    	
+						    	<div class="col-sm-4">					    
+							    	<label>Fecha limite de finquito</label>
+							    	<input name="serie"  class="form-control" placeholder="FECHA LIMITE DE FINIQUITO" ng-model="ge.garantia.fechaFiniquito" date-time format="dd-MM-yyyy" view="date" max-view="year" min-view="date">
+						    	</div>
+								</div>
+								</div>
+	      </div>	
+	      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" ng-click="ge.cancelarGarantia(ge.credito.tipoGarantia)" data-dismiss="modal">Cerrar</button>
 		     </div>
      </div>
      
