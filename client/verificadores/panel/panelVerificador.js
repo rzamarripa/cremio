@@ -199,7 +199,6 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 			return ver;
 		},
 	});	 
->>>>>>> fcec0b38cdda52a05956b58beeecb3aebf830095
 					  
   this.mostrarEvaluacion = function(credito_id)
 	{	
