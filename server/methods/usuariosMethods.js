@@ -2,6 +2,10 @@
 
 Meteor.methods({
   createUsuario: function (usuario, rol, grupo) {
+  	//console.log(usuario)
+  	// _.each(usuario.profile, function(item){
+			// delete item.$$hashKey;
+			// });	
 	  
 	  var sucursal;
 	  if (rol == "Cliente")

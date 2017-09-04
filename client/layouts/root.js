@@ -1,6 +1,6 @@
 angular.module("creditoMio")
 .controller("RootCtrl", RootCtrl);
- function RootCtrl($scope, $meteor, $reactive,  $state) {
+ function RootCtrl($scope, $meteor, $reactive,  $state, toastr) {
 
 	
 	let rc = $reactive(this).attach($scope);
@@ -54,6 +54,56 @@ angular.module("creditoMio")
 						
 			return clientes;
 			
+		},
+		inicio:()=>{
+			if (Meteor.user().username != "admin") {
+		    var fecha = new Date();
+            hora = fecha.getHours()+':'+fecha.getMinutes()//+':'+fecha.getSeconds()
+   
+            	usuario = Meteor.user().profile.sucursal_id
+            	   //console.log(hora,"hora")
+           // console.log(usuario,"id")
+
+             Meteor.call('getSucursal',usuario, function(error, result){           					
+					if (result)
+					{
+						//console.log("result",result)
+					    rc.sucursalVer = result
+					}
+					//console.log("avales",rc.avalesCliente)
+					var entrada = rc.sucursalVer.horaEntrada
+					var salida = rc.sucursalVer.horaSalida
+             // console.log(entrada,"entrada") 
+             var horaEntrada = entrada.getHours()+':'+entrada.getMinutes()
+             var horaSalida = salida.getHours()+':'+salida.getMinutes()
+             //console.log(horaEntrada,"entrada","y",horaSalida,"salida")
+            
+			    // if (horaEntrada < 10) {
+			    //     horaEntrada = "0" + horaEntrada;
+			    // }
+			     //console.log(horaEntrada,"entrada") 
+		        
+		             if (hora == horaSalida) {
+		             	// $state.go('anon.logout');
+		             	rc.sucursalVer.laborando = false
+
+		             	
+		             }
+		             if (horaEntrada == hora) {
+		             	rc.sucursalVer.laborando = true
+		             	
+		             }
+		             if (rc.sucursalVer.laborando == false) {
+		             	$state.go('anon.logout');
+		             	toastr.error("No puedes ingresar en este horario");
+
+		             }
+		             //console.log("estatusSucursal", rc.sucursalVer)
+
+
+				});
+          	}
+   
 		},
 	});
 

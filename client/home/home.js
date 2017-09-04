@@ -44,6 +44,7 @@ angular.module("creditoMio")
 				  }
 					
 				},	
+		
 				catidadCobranzaDiaria :() =>{								
 					var arreglo = [];
 		

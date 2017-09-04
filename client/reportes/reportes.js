@@ -59,46 +59,7 @@ angular.module("creditoMio")
   this.subscribe("tiposCredito", ()=>{
 		return [{}]
 	});
-/*
-	this.subscribe("estadoCivil", ()=>{
-		return [{}]
-	});
-	this.subscribe("nacionalidades", ()=>{
-		return [{}]
-	});
-	this.subscribe("ocupaciones", ()=>{
-		return [{}]
-	});
 
-	this.subscribe("paises", ()=>{
-		return [{}]
-	});
-	this.subscribe("estados", ()=>{
-		return [{}]
-	});
-	this.subscribe("municipios", ()=>{
-		return [{}]
-	});
-	this.subscribe("ciudades", ()=>{
-		return [{}]
-	});
-	this.subscribe("colonias", ()=>{
-		return [{}]
-	});
-	this.subscribe("empresas", ()=>{
-		return [{}]
-	});
-
-  this.subscribe('notas',()=>{
-		return [{cliente_id:this.getReactively("cliente_id")}]
-	});
-	*/
-
-/*
-	this.subscribe("planPagos", ()=>{
-	    return [{fechaPago : { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}]
-	});
-*/
 
   this.subscribe('movimientosCaja', () => {
      return [{ createdAt:  { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}]
