@@ -15,7 +15,6 @@
     "jszip": "^2.6.1",
     "meteor-node-stubs": "~0.2.0",
     "moment": "^2.17.1",
-    "node-cmd": "^2.0.0",
-    "ui-select": "^0.19.6"
+    "node-cmd": "^2.0.0"
   }
 }

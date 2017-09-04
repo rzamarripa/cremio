@@ -20,12 +20,19 @@ function VerificacionVecinoCtrl($scope, $meteor, $reactive,  $state, $stateParam
 	this.subscribe('verificaciones',()=>{
 			return [{_id : $stateParams.verificacion_id }]
 	});
-		
+	
+	this.subscribe('creditos',()=>{
+			return [{_id : $stateParams.id }]
+	});	
+	
   this.helpers({
 	  verificaciones : () => {
 		  		rc.objeto = Verificaciones.findOne();
 			return rc.objeto;	  
 	  }, 
+	  credito : () => {
+			return Creditos.findOne();
+		},
   });
   
   this.guardar = function(obj, form)
@@ -41,6 +48,8 @@ function VerificacionVecinoCtrl($scope, $meteor, $reactive,  $state, $stateParam
 			obj.credito_id = $stateParams.id;
 			obj.tipoVerificacion = "vecino";
 			obj.fechaVerificacion = new Date();
+			obj.sucursal_id = Meteor.user().profile.sucursal_id;
+			obj.cliente_id = rc.credito.cliente_id;
 														
 			Verificaciones.insert(obj);
 						
@@ -61,6 +70,7 @@ function VerificacionVecinoCtrl($scope, $meteor, $reactive,  $state, $stateParam
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
+		  
 		  
 			var idTemp = obj._id;
 			delete obj._id;		
