@@ -61,9 +61,9 @@ Meteor.methods({
 		}
 
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
+
 		credito.avales_ids = [];
-		
-		
+			
 		_.each(credito.avales, function(aval){		
 			if (aval.estatus == "N") aval.estatus = "G";
 				 credito.avales_ids.push({num							: aval.num, 

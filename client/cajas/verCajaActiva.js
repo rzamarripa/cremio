@@ -24,7 +24,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
     return [{ _id: $stateParams.caja_id }]
   });
   this.subscribe('tiposIngreso', () => {
-    return [{estatus: true}]
+    return [{}]
   });
   this.subscribe('allCajeros', () => {
     return [{}]
@@ -163,6 +163,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 									  }  
 						      }
 						  });	
+
 						  if (mov.origen == "Cancelación de Ent. de Crédito")
 							   d.clase = "bg-color-pinkDark";
 							d.credito_id				= mov.origen_id;

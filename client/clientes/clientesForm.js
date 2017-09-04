@@ -936,7 +936,9 @@ angular.module("creditoMio")
 
 
   
-  
+  this.refreshColonias = function(colonia) {
+    	
+  }
 
   
 };

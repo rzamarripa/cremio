@@ -48,8 +48,8 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 				  	 this.garantias = angular.copy(rc.objeto.garantias); 
 		  }
 	  }, 
-	  creditos : () => {
-			return Creditos.find().fetch();
+	  credito : () => {
+			return Creditos.findOne();
 		},
   });
 
@@ -68,6 +68,8 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			obj.usuarioVerifico = Meteor.userId();
 			obj.tipoVerificacion = "solicitante o aval";
 			obj.fechaVerificacion = new Date();
+			obj.sucursal_id = Meteor.user().profile.sucursal_id;
+			obj.cliente_id = rc.credito.cliente_id;
 			
 			if (this.objeto.tipoGarantia == "mobiliaria")
 					obj.garantias = angular.copy(this.garantias);

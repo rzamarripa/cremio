@@ -65,6 +65,10 @@ Meteor.methods({
 	  		usuario.password = '123';
 	  		sucursal.folioCliente = numero;
 	  		usuario.profile.numeroCliente = usuario.username;
+	  		
+	  		
+	  		
+	  		
 		  
 	  }
 		
@@ -212,7 +216,6 @@ updateUsuario: function (usuario, rol) {
 	  var user = Meteor.users.findOne({"username" : usuario.username});
 		
 		user.profile = usuario.profile;
-
 		_.each(referenciasPersonales, function(referenciaPersonal){
 				
 				if (referenciaPersonal.estatus == "N"){					
