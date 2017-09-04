@@ -437,7 +437,9 @@ angular.module("creditoMio")
       var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
+      rc.avales.estatus = "G"
       objeto.profile.avales_ids = rc.avales
+
 
       // Meteor.apply('generarAval', rc.avales, function(error, result){
       // if(result){

@@ -705,12 +705,12 @@
 					</div>
 				</div>
 				<br>
-				<div class="row">
+			<!-- 	<div class="row">
 					<div class="col-sm-12">
 						<input type="submit" ng-click="dis.guardar(dis.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="dis.action" valida-form formulario="form">
 						<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form">
 					</div>
-				</div>
+				</div> -->
 			</div>
 		<!-- 	//kaka -->
 		<div class="well">
@@ -718,6 +718,7 @@
 		<div class="col-sm-4">					    
 						<label>Limite de Credito</label>
 						<input name="lCredito" type="number" class="form-control" placeholder="Limite credito" ng-model="dis.objeto.profile.limiteCredito" >
+						<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form">
 					</div>
 			
 		</div>

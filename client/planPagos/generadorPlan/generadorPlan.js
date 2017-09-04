@@ -591,25 +591,36 @@ this.tieneFoto = function(sexo, foto){
 	};
 	
 	this.editarGarantia = function(tipo, a)
-	{
+	{ console.log(tipo,"tipo")
+	console.log("a",a)
+
 			if (tipo == "mobiliaria")
 			{
-					this.garantia.tipo = a.tipo;
-					this.garantia.marca = a.marca;
-					this.garantia.modelo = a.modelo;			
-					this.garantia.serie = a.serie;
-					this.garantia.color = a.color;
-					this.garantia.estadoActual = a.estadoActual;
-					
-					this.numG = a.num;
+					this.garantia.descripcion = a.descripcion;
+					this.garantia.caracteristicas = a.caracteristicas;
+					this.garantia.avaluo = a.avaluo;			
+					this.garantia.prestamoPorcentaje = a.prestamoPorcentaje;
+					this.garantia.prestamo = a.prestamo;
+					this.garantia.monto = a.monto;
+					this.garantia.porcentaje = a.porcentaje;
+					this.garantia.fechaComercializacion = a.fechaComercializacion;
+					this.garantia.fechaFiniquito = a.fechaFiniquito;					
+				
 					this.actionGarantia = false;
 			}
 			else
 			{
-					this.garantia.descripcion = a.descripcion;
-					this.garantia.valorEstimado = a.valorEstimado;
+				    this.garantia.medidasColindancias = a.medidasColindancias
+				    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion
+				    this.garantia.prestamoSobreAvaluo = a.prestamoSobreAvaluo
+				    this.garantia.prestamo = a.prestamo
+				    this.garantia.num = a.num
+				    this.garantia.montoAvaluo = a.montoAvaluo
+					this.garantia.avaluo = a.avaluo;
+					this.garantia.comisionGastos = a.comisionGastos;
+					this.garantia.escrituracion = a.escrituracion;
+					this.garantia.porcentajePrestamo = a.porcentajePrestamo;
 					
-					this.numGen = a.num;
 					this.actionGarantia = false;
 			}		
 	};

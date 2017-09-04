@@ -955,8 +955,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	  		    Meteor.call('getPeople',objeto._id,objeto.profile.referenciasPersonales_ids.referenciaPersonal_id, function(error, result){           					
 							if (result)
 							{
+								
 
-								// _.each(result.profile.referenciasPersonales_ids, function(refe){
 						  // 		refe.referencias = ReferenciasPersonales.findOne(refe.referenciaPersonal_id)
 						  	//})
 								rc.datosCliente = result.profile
@@ -1449,6 +1449,7 @@ if(estatus == 0){
 
 	 this.imprimirContratos = function(contrato,cliente,avales){
 	 	avales = rc.avalesCliente
+
 	
 				contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
 	  		    Meteor.call('getPeople',cliente,contrato._id, function(error, result){           					
@@ -1456,9 +1457,9 @@ if(estatus == 0){
 					{
 							rc.datosCliente = result.profile
 									
-				//console.log(rc.datosCliente,"el clientaso")				
-				console.log("contrato",contrato)
-				console.log("avalesssss",avales)
+				console.log(rc.datosCliente,"el clientaso")				
+				//console.log("contrato",contrato)
+				console.log("avalesssss",rc.avalesCliente)
 				Meteor.call('contratos', contrato, contrato._id,rc.datosCliente,contrato.planPagos,avales, function(error, response) {
 				  
 				   if(error)
