@@ -422,8 +422,9 @@ angular.module("creditoMio")
       _.each(objeto, function(item){
          delete item.$$hashKey;
       })
-       _.each(rc.avales, function(item){
-         delete item.$$hashKey;
+       _.each(rc.avales, function(aval){
+         aval.estatus = "G"
+         delete aval.$$hashKey;
       })
 
       objeto.profile.estatus = true;
@@ -437,27 +438,23 @@ angular.module("creditoMio")
       var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-      rc.avales.estatus = "G"
       objeto.profile.avales_ids = rc.avales
 
 
       // Meteor.apply('generarAval', rc.avales, function(error, result){
       // if(result){
+        console.log("apunto de entrar",objeto)
     
-      Meteor.call('createUsuario', objeto, "Distribuidor", function(e,r){
+       Meteor.call('createUsuario', objeto, "Distribuidor", function(e,r){
           if (r)
           {
-            _.each(r, function(item){
-      delete item.$$hashKey;
-      }); 
-            console.log(r,"aval")
               toastr.success('Guardado correctamente.');
               this.usuario = {};
               $('.collapse').collapse('hide');
               this.nuevo = true;
               form.$setPristine();
               form.$setUntouched();
-              $state.go('root.clienteDetalle', { 'objeto_id':r});
+              $state.go('root.distribuidoresDetalle', { 'objeto_id':r});
           }
       });
     //      }
@@ -978,7 +975,7 @@ angular.module("creditoMio")
   };
 
   this.AgregarAval = function(a){
-    console.log(a,"avalespapu")
+    //console.log(a,"avalespapu")
     
     rc.aval.nombre = a.profile.nombre;
     rc.aval.apellidoPaterno = a.profile.apellidoPaterno;

@@ -1,8 +1,8 @@
 angular
 	.module('creditoMio')
-	.controller('ClientesDetalleCtrl', ClientesDetalleCtrl);
+	.controller('DistribuidoresDetalleCtrl', DistribuidoresDetalleCtrl);
  
-function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams) {
+function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams) {
 	
 	rc = $reactive(this).attach($scope);
 	
@@ -1639,10 +1639,6 @@ if(estatus == 0){
 	    	rc.btnCerrarRespuesta = false
 		  
 		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
-		};
-
-	
-	
-	  	
+		};	  	
 	
 }

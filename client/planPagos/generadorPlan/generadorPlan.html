@@ -25,17 +25,23 @@
 									</div>
 					  	</div>
 					    <div class="row">
-						    <div class="col-sm-4" valida>
+						    <div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Tipo de crédito *</label>
 						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="ge.credito.tipoCredito_id" required="">
 							    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in ge.tiposCredito">{{tipoCredito.nombre}}</option>
+						    	</select>
+					    	</div>
+					    	 <div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Distribuidor'">
+						    	<label>Tipo de crédito *</label>
+						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="ge.credito.tipoCredito_id" required="">
+							    	<option value="{{ge.tiposCredito[0]._id}}">{{ge.tiposCredito[0].nombre}}</option>
 						    	</select>
 					    	</div>
 					    	<div class="col-sm-4" valida>
 							    <label>Tasa %*</label>
 						    	<input name="tasa" min="0" type="number" class="form-control" ng-model="ge.credito.tasa" required>
 						    </div>
-					    	<div class="col-sm-4" valida>
+					    	<div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Periodo de pago *</label>
 						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ge.credito.periodoPago" required="">
 							    	<option value="Semanal">Semanal</option>
@@ -43,15 +49,48 @@
 							    	<option value="Mensual">Mensual</option>
 						    	</select>
 					    	</div>
+					    	<div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Distribuidor'">
+						    	<label>Periodo de pago *</label>
+						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ge.credito.periodoPago" required="">
+							    	<option value="Quincenal">Quincenal</option>
+						    	</select>
+					    	</div>
 					    </div>
 					    <div class="row">
-						    <div class="col-sm-3" valida>					    
+						    <div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">					    
 						    	<label>Duración (Meses) *</label>
 						    	<input name="duracionMesesCreditoNuevo" min="1" max="12" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ge.credito.duracionMeses" required="">
 					    	</div>
-					    	<div class="col-sm-3" valida>
+					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
+						    	<label>Duración (Meses) *</label>
+						    	<select name="duracionMesesCreditoNuevo" class="form-control" ng-model="ge.credito.duracionMeses" required="">
+							    	<option value="3">3</option>
+							    	<option value="4">4</option>
+							    	<option value="5">5</option>
+							    	<option value="6">6</option>
+							    	<option value="7">7</option>
+							    	<option value="8">8</option>
+						    	</select>
+					    	</div>
+					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Capital Solicitado *</label>
 						    	<input name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ge.credito.capitalSolicitado" required="">
+					    	</div>
+					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
+						    	<label>Capital Solicitado *</label>
+						    	<select name="capitalSolicitadoCreditoNuevo" class="form-control" ng-model="ge.credito.capitalSolicitado" placeholder="Capital Solicitado" required="">
+							    	<option value="1500">1500</option>
+							    	<option value="2000">2000</option>
+							    	<option value="2500">2500</option>
+							    	<option value="3000">3000</option>
+							    	<option value="3500">3500</option>
+							    	<option value="4000">4000</option>
+							    	<option value="4500">4500</option>
+							    	<option value="5000">5000</option>
+							    	<option value="5500">5500</option>
+							    	<option value="6000">6000</option>
+
+						    	</select>
 					    	</div>
 					    	<div class="col-sm-3">					    
 						    	<label>Con Seguro</label>
@@ -80,8 +119,8 @@
 					    	</div>
 						</div>
 						</div>
-						<h4>Avales</h4>			
-						<div class="well">	    
+						<h4 ng-if="ge.cliente.roles == 'Cliente'">Avales</h4>			
+						<div class="well" ng-if="ge.cliente.roles == 'Cliente'">	    
 							<div class="row">
 								<div class="col-sm-6"> 
 										<div ng-include=" 'client/planPagos/generadorPlan/_buscarAval.html' "></div>
@@ -205,8 +244,8 @@
 								</div>
 							</div>
 						</div>
-						<h4>Garantias</h4>
-						<div class="well">	    
+						<h4 ng-if="ge.cliente.roles == 'Cliente'">Garantias</h4>
+						<div class="well" ng-if="ge.cliente.roles == 'Cliente'">	    
 							<div class="row">
 								<div class="col-sm-4" valida>
 							    	<label>Tipo de garantía</label>

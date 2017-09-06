@@ -43,14 +43,15 @@ Meteor.methods({
 	  else if (rol == "Distribuidor")
 	  {
 		  	sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
-				var numero;
-				if (sucursal.folioDistribuidor != undefined)				
-				 	  numero = sucursal.folioDistribuidor + 1;
-				else	
-				{
-						sucursal.folioDistribuidor = 0;
-						numero = sucursal.folioDistribuidor + 1;
-				}
+				 //var numero;
+				 var numero = usuario.profile.numeroDistribuidor;
+				// if (sucursal.folioDistribuidor != undefined)				
+				//  	  numero = sucursal.folioDistribuidor + 1;
+				// else	
+				// {
+				// 		sucursal.folioDistribuidor = 0;
+				// 		numero = sucursal.folioDistribuidor + 1;
+				// }
 				
 				if (numero < 10)
 					 usuario.username = sucursal.clave + '-D000' + numero;
@@ -63,8 +64,8 @@ Meteor.methods({
 	  			 	  			 	 
 	  		//usuario.contrasena = Math.random().toString(36).substring(2,7);
 	  		usuario.password = '123';
-	  		sucursal.folioCliente = numero;
-	  		usuario.profile.numeroCliente = usuario.username;
+	  		sucursal.folioDistribuidor = numero;
+	  		usuario.profile.numeroDistribuidor = usuario.username;
 	  		
 	  		
 	  		

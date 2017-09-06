@@ -84,6 +84,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.subscribe('pagos', () => {
 		return [{ estatus:true}];
 	});
+	console.log($stateParams,"cliente")
 
 	
 	this.helpers({
@@ -102,7 +103,19 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			return aval;
 		},
 		cliente : () => {
-			return Meteor.users.findOne({roles : ["Cliente"]});
+			var cliente = Meteor.users.findOne($stateParams.objeto_id);
+
+
+			// _.each(cliente, function(item){
+			// 	 item.tipoCliente = Meteor.users.findOne(item._id);
+
+			// });
+			//console.log(cliente,"item")
+			//var distribuidor = 
+			
+
+
+			return  cliente
 		},
 		tiposCredito : () => {
 			return TiposCredito.find();
@@ -315,13 +328,22 @@ this.tieneFoto = function(sexo, foto){
 				credito.garantias = angular.copy(this.garantiasGeneral);
 				
 				
+				if (Meteor.user().roles = "Distribuidor") {
+					credito.vale = "vale"
+				}
 		//Cambie el metodo		
 		Meteor.apply('generarCreditoPeticion', [this.cliente, credito], function(error, result){
 			if(result == "hecho"){
 				toastr.success('Se ha guardado la solicitud de crédito correctamente');
 				rc.planPagos = [];
 				this.avales = [];
-				$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+				if (rc.cliente.roles == "Distribuidor") {
+					$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
+				}
+				if (rc.cliente.roles == "Cliente") {
+					$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+				}
+				
 			}
 			$scope.$apply();
 		});
