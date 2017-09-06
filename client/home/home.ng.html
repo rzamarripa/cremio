@@ -1,7 +1,8 @@
 <h1>Bienvenido a creditoMio</h1>
 
 <div class="alert alert-info" ng-if="currentUser.roles[0] == 'Cajero' && ho.estaCerrada == true">
-		<p><i class="fa-fw fa fa-info"></i> La ventanilla asignada esta cerrada </p>
+		<p><i class="fa-fw fa fa-info"></i> La ventanilla asignada esta cerrada </p>		
+		<a  ui-sref="root.abrirCaja({caja_id:ho.caja_id})" ><i class="btn btn-success btn-mini">Abrir Caja</i> </a>
 </div>
 
 <div class="row" ng-show="currentUser.roles[0] == 'Gerente'">
