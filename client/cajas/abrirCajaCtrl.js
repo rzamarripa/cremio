@@ -46,9 +46,15 @@ angular.module("creditoMio")
 				}
 				if (result)
 				{
+					
+					var user = Meteor.users.findOne(Meteor.userId());
+					console.log(user.roles[0]);
 					toastr.success('Actualizado correctamente.');
 					rc.objeto = {}; 
-					$state.go('root.cajas');
+					if (user.roles[0] == 'Cajero')
+							$state.go('root.home');
+					else
+							$state.go('root.cajas');
 				}
 			});	
 

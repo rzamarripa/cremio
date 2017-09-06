@@ -5,8 +5,9 @@ angular.module("creditoMio")
  	let rc = $reactive(this).attach($scope);
  	
  	rc.estaCerrada = false;
- 	
  	rc.cuentas = [];
+ 	
+ 	this.caja_id = "";
  	this.cajero_id = "";
   this.cajeros_id = [];
   this.fechaInicial = new Date();
@@ -148,7 +149,7 @@ angular.module("creditoMio")
 						
 						if (c != undefined)
 						{
-						
+								this.caja_id = c._id;
 								if (c.estadoCaja == "Cerrada")
 										rc.estaCerrada = true;								
 								else

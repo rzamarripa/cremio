@@ -552,10 +552,13 @@ Meteor.methods({
     var totalTransDeVentanilla = 0;
 		
 		var totalEnCaja = 0;
+   
     
 		_.each(corte.movimientosCaja, function(mcaja, id){
 				
 				var movs = MovimientosCajas.findOne({ _id: mcaja});
+				
+				 //console.log(movs);
 				
 				 //Ingresos por forma de pago			
 				if (movs.tipoMovimiento == 'Saldo Inicial')
@@ -580,15 +583,22 @@ Meteor.methods({
 		        ingresosAgrupados[movs.tipoIngreso.nombre] += movs.monto;
 		        totalIngresos += movs.monto;
 				}
-				else if(movs.tipoMovimiento == 'Retiro' || movs.origen == 'Cancelación de retiro')
+				else if(movs.tipoMovimiento == 'Retiro' || movs.origen == 'Cancelación de Ent. de Crédito')
 				{
+					  
+					  console.log(movs);
 						movs.tipoIngreso = TiposIngreso.findOne(movs.cuenta_id);
 		        if (creditosAgrupados[movs.tipoIngreso.nombre] == undefined) {
 		          creditosAgrupados[movs.tipoIngreso.nombre] = 0;
 		        }
 		        creditosAgrupados[movs.tipoIngreso.nombre] += (movs.monto*-1);
 		        totalCreditos += movs.monto;
-		        creditosEntregados++;
+		        if (movs.origen == 'Cancelación de Ent. de Crédito')
+		        	 creditosEntregados--;
+		        else	
+		        	 creditosEntregados++;	 
+		        
+		        
 				}
 				else if(movs.tipoMovimiento == 'Ingreso Por Traspaso')
 				{

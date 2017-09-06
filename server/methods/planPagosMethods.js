@@ -951,22 +951,37 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 		_.each(idCreditos,function(c){
 				var pp = PlanPagos.find({credito_id: c}).fetch();
 				//console.log("pp:", pp);
+				
 				var ban = true;
+				var banR = true;
+				var banCM = true;
 				_.each(pp,function(p){
 						if (p.importeRegular > 0)
-								ban = false;
+								ban = false;							
+					
+						if (p.importeRegular > 0 && p.descripcion == "Recibo")
+								banR = false;							
+						
+						if (p.importeRegular > 0 && p.descripcion == "Cargo Moratorio")
+								banCM = false;										
 				});			
+				
 				
 				if (ban)
 				{
-						//console.log("Acualizar Credito");
 						var fecha = new Date();
-						Creditos.update({_id : c},{$set : {estatus : 5 , fechaLiquidacion : fecha}})
+						Creditos.update({_id : c},{$set : {estatus : 5 , fechaLiquidacion : fecha, saldoActual: 0, saldoMultas: 0}})
 				}
-				/*
-				else
-						console.log("Todavia no Acualizar Credito");
-				*/
+				if (banR)
+				{
+						var fecha = new Date();
+						Creditos.update({_id : c},{$set : {saldoActual: 0}})
+				}
+				if (banCM)
+				{
+						var fecha = new Date();
+						Creditos.update({_id : c},{$set : {saldoMultas: 0}})
+				}
 				
 		});
 				
