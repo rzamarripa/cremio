@@ -134,8 +134,11 @@
             <br/>
             <br/>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-12" ng-show="!ecCtrl.credito.vale">
                   <input type="submit" ng-click="ecCtrl.guardar(ecCtrl.objeto,form)" value="Entregar Credito" class="btn btn-primary" valida-form formulario="form">
+                </div>
+                <div class="col-sm-12" ng-show="ecCtrl.credito.vale" >
+                  <input type="submit" ng-click="ecCtrl.guardar(ecCtrl.objeto,form)" value="Entregar Vale" class="btn btn-primary" valida-form formulario="form">
                 </div>
             </div>
           </div>  

@@ -23,7 +23,18 @@
 <div class="row">
 	<div class="col-lg-3" ng-repeat="cliente in lcli.clientes">
       <div class="contact-box center-version">
-          <a href="/clientes/{{cliente._id}}" style="text-decoration: none;">
+          <a ng-if="cliente.roles == 'Cliente'" href="/clientes/{{cliente._id}}" style="text-decoration: none;">
+              <img alt="image" class="img-circle" ng-src="{{lcli.tieneFoto(cliente.profile.sexo, cliente.profile.foto)}}">
+              <p class="lead font-xs text-center"><strong>{{cliente.profile.nombre}} <br/> {{cliente.profile.apellidoPaterno}} {{cliente.profile.apellidoMaterno}}</strong></p>
+              <div class="font-bold">{{cliente.username}}</div>
+              <address class="font-xs">
+                  <strong ng-if="cliente.roles[0] == 'Cliente'">Cliente <br></strong>
+	                <strong ng-if="cliente.roles[0] == 'Distribuidor'">Distribuidor <br></strong>
+                  <abbr title="Teléfono">Teléfono:</abbr> {{cliente.profile.particular}}<br/>
+                  <abbr title="Celular">Celular:</abbr> {{cliente.profile.celular}}
+              </address>
+          </a>
+          <a ng-if="cliente.roles == 'Distribuidor'" href="/distribuidores/{{cliente._id}}" style="text-decoration: none;">
               <img alt="image" class="img-circle" ng-src="{{lcli.tieneFoto(cliente.profile.sexo, cliente.profile.foto)}}">
               <p class="lead font-xs text-center"><strong>{{cliente.profile.nombre}} <br/> {{cliente.profile.apellidoPaterno}} {{cliente.profile.apellidoMaterno}}</strong></p>
               <div class="font-bold">{{cliente.username}}</div>
@@ -36,7 +47,8 @@
           </a>
           <div class="contact-box-footer">
               <div class="m-t-xs btn-group">
-                  <a href="/clientes/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
+                  <a ng-if="cliente.roles == 'Cliente'" href="/clientes/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
+                  <a ng-if="cliente.roles == 'Distribuidor'" href="/distribuidores/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
                   <a href="/editarCliente/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Editar</a>
               </div>
           </div>

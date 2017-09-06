@@ -5,7 +5,7 @@
 					<a  ui-sref="root.clienteDetalle({objeto_id: dis.objeto_id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
 					<br>
 			</div>
-			<h4>Información del Cliente</h4>
+			<h4>Información del Distribuidor</h4>
 			<div class="well">	    
 				<div class="row">	
 					<div class="col-sm-4" valida> 					    
@@ -51,7 +51,7 @@
 					</div>
 					<div class="col-sm-3" valida> 					    
 						<label>Numero Cliente (s) *</label>
-						<input name="numeroCliente" type="text" class="form-control" ng-model="dis.objeto.profile.numeroCliente" required >
+						<input name="numeroCliente" type="text" class="form-control" ng-model="dis.objeto.profile.numeroDistribuidor" required >
 					</div>
 				</div>  
 			</div>
@@ -414,9 +414,28 @@
 					</div>
 				</div>
 			</div>
-			<h4>Referencias Personales</h4>
+			<h4>Referencias Personales y avales</h4>
 			<div class="well">
-				<div class="row">
+				<div role="content">
+					<div class="widget-body">
+						<hr class="simple">
+						
+						<ul id="myTab1" class="nav nav-tabs bordered">
+							<li class="active">
+								<a href="#s1" data-toggle="tab">Referencias Personales</a>
+							</li>
+							<li>
+								<a href="#s2" data-toggle="tab"> Avales</a>
+							</li>
+							<li class="pull-right">
+								<a href="javascript:void(0);">
+								<div class="sparkline txt-color-pinkDark text-align-right" data-sparkline-height="18px" data-sparkline-width="90px" data-sparkline-barwidth="7"><canvas width="52" height="18" style="display: inline-block; width: 52px; height: 18px; vertical-align: top;"></canvas></div> </a>
+							</li>
+						</ul>
+
+						<div id="myTabContent1" class="tab-content padding-10">
+							<div class="tab-pane fade in active" id="s1">
+								<div class="row">
 					<div class="col-sm-6"> 
 						<div ng-include=" 'client/clientes/_buscarPersonaReferencia.html'"></div>
 					</div>
@@ -473,6 +492,7 @@
 				</div>
 				<br>
 				<div class="row">
+					<div class="col-sm-12">
 					<table class="table table-bordered">
 						<thead>
 							<tr>
@@ -502,6 +522,142 @@
 							</tr>
 						</tbody>
 					</table>
+				</div>
+				</div>
+							</div>
+							<div class="tab-pane fade" id="s2">
+							<div class="row">
+							<!-- AVALES -->
+								<div class="col-sm-6"> 
+										<div ng-include=" 'client/distribuidores/_buscarAvalDis.html' "></div>
+								</div>
+							</div>
+					    <div class="row">
+					    	<div class="col-sm-4"> 					    
+						    	<label>Nombre</label>
+						    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="dis.aval.nombre" disabled="true">
+					    	</div>
+					    	<div class="col-sm-4"> 					    
+						    	<label>Apellido Paterno</label>
+						    	<input name="apellidoPaternoAval" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="dis.aval.apellidoPaterno" disabled="true">
+					    	</div>
+					    	<div class="col-sm-4"> 					    
+						    	<label>Apellido Materno</label>
+						    	<input name="apellidoMaternoAval" type="text" class="form-control" placeholder="Apellido Materno" ng-model="dis.aval.apellidoMaterno" disabled="true">
+					    	</div>
+					    </div>
+					    <div class="row">	
+						    <div class="col-sm-4">					    
+						    	<label>Calle</label>
+						    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.calle" disabled="true">
+					    	</div>
+					    	<div class="col-sm-2">					    
+						    	<label>Número</label>
+						    	<input name="numero" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.calle" disabled="true">
+					    	</div>
+					    	<div class="col-sm-2">					    
+						    	<label>Código Postal</label>
+						    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="dis.aval.codigoPostal" disabled="true">
+					    	</div>
+						    <div class="col-sm-4"> 					    
+						    	<label>Estado Civil</label>
+						    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="dis.aval.estadoCivil" disabled="true">
+					    	</div>
+					    </div>
+					    <div class="row">		
+						    <div class="col-sm-3"> 					    
+						    	<label>Ocupación</label>
+						    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="dis.aval.ocupacion" disabled="true">
+					    	</div>
+					    	<div class="col-sm-3">					    
+						    	<label>Empresa</label>
+						    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="dis.aval.empresa" disabled="true">
+					    	</div>
+					    	<div class="col-sm-3">					    
+						    	<label>Puesto</label>
+						    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="dis.aval.puesto" disabled="true">
+					    	</div>					    	
+					    	<div class="col-sm-3">					    
+						    	<label>Tiempo Laborando</label>
+						    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="dis.aval.tiempoLaborando" disabled="true">
+					    	</div>
+					    </div>
+					    <div class="row">	
+						    <div class="col-sm-6">					    
+						    	<label>Dirección Empresa</label>
+						    	<input name="direccionEmpresa" type="text" class="form-control" placeholder="Dirección Empresa" ng-model="dis.aval.direccionEmpresa" disabled="true">
+					    	</div>
+					    	<div class="col-sm-3">					    
+						    	<label>Parentesco</label>
+						    	<input name="parentesco" type="text" class="form-control" placeholder="Parentezco" ng-model="dis.aval.parentesco" CAPITALIZE>
+					    	</div>
+					    	<div class="col-sm-3">					    
+						    	<label>Tiempo de Conocerlo</label>
+						    	<input name="tiempoConocerlo" type="text" class="form-control" placeholder="Tiempo en Conocerlo" ng-model="dis.aval.tiempoConocerlo" CAPITALIZE>
+					    	</div>
+					    	<!--<input type="hidden" name="aval_id" ng-model="dis.aval._id" value="">-->
+					    </div>
+					    <div class="row">		
+					    	<div class="col-sm-3">
+							   	<input type="button" ng-click="dis.insertarAval()" value="Agregar" ng-show="dis.actionAval" class="btn btn-primary"> 	
+							   	<input type="button" ng-click="dis.borrarReferencia()" value="Quitar Aval" ng-show="dis.aval._id" class="btn btn-warning">
+							<!--    	<input type="button" ng-click="dis.actualizarAval(dis.aval)" value="Actualizar" ng-show="!dis.actionAval" class="btn btn-primary">
+							   	<input type="button" ng-click="dis.cancelarAval()" value="Cancelar" ng-show="!dis.actionAval" class="btn btn-danger"> -->	   				
+								</div>
+					    </div>
+					    <br/>
+					    <div class="row">
+								<div class="col-sm-12">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th width="5%">Número</th>
+												<th width="15%">Nombre</th>
+										<!-- 		<th width="5%">Estado Civil</th>
+												<th width="5%">Ocupación</th>
+												<th width="15%">Dirección</th>
+												<th width="10%">Empresa</th>
+												<th width="5%">Puesto</th>
+												<th width="5%">Tiempo Laborando</th>
+												<th width="15%">Dirección Empresa</th>
+												<th width="10%">Parentesco</th>
+												<th width="10%">Tiempo Conocerlo</th> -->
+												<th width="10%">Acciones</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="aval in dis.avales">
+												<td>{{aval.num}}</td>
+												<td>{{aval.nombre}}</td>
+												<!-- <td>{{aval.estadoCivil}}</td>
+												<td>{{aval.ocupacion}}</td>
+												<td>{{aval.direccion}}</td>
+												<td>{{aval.empresa}}</td>
+												<td>{{aval.puesto}}</td>
+												<td>{{aval.tiempoLaborando}}</td>
+												<td>{{aval.direccionEmpresa}}</td>
+												<td>{{aval.parentesco}}</td>
+												<td>{{aval.tiempoConocerlo}}</td> -->
+												<td>
+														<a href="#" class="btn btn-primary"  data-target=".bs-modalAvales-modal-lg" ng-click="dis.verAval(aval)" ><i class="fa fa-eye"></i></a>
+														<a href="#" class="btn btn-warning" ng-click="dis.editarAval(aval)"><i class="fa fa-pencil"></i></a>
+														<a href="#" class="btn btn-danger" ng-click="dis.quitarAval(aval.num)"><i class="fa fa-trash"></i></a>
+														
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+					
+							</div>
+							
+						
+						</div>
+
+					</div>
+					<!-- end widget content -->
+
 				</div>
 			</div>
 			<h4>Empresa</h4>
@@ -549,13 +705,31 @@
 					</div>
 				</div>
 				<br>
-				<div class="row">
+			<!-- 	<div class="row">
+					<div class="col-sm-12">
+						<input type="submit" ng-click="dis.guardar(dis.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="dis.action" valida-form formulario="form">
+						<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form">
+					</div>
+				</div> -->
+			</div>
+		<!-- 	//kaka -->
+		<div class="well">
+		<div class="row">
+		<div class="col-sm-4">					    
+						<label>Limite de Credito</label>
+						<input name="lCredito" type="number" class="form-control" placeholder="Limite credito" ng-model="dis.objeto.profile.limiteCredito" >
+						<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form">
+					</div>
+			
+		</div>
+		<div class="row">
 					<div class="col-sm-12">
 						<input type="submit" ng-click="dis.guardar(dis.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="dis.action" valida-form formulario="form">
 						<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form">
 					</div>
 				</div>
-			</div>
+			
+		</div>
 		</form>
 	</div>
 </div>
@@ -748,13 +922,14 @@
 					</div>
 				</form>
 			</div>
-			<div class="modal-footer"s>
+			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 				<input type="submit" ng-click="dis.guardarReferenciaPersonal(dis.referenciaPersonal, form4)" value="Guardar" class="btn btn-primary" valida-form formulario="form4">
 		  </div>
 		</div>
 	</div>
 </div>
+
 
 
 <script>

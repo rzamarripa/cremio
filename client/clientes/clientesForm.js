@@ -56,6 +56,7 @@ angular.module("creditoMio")
   
   rc.colonia = {};
   rc.coloniaEmpresa = {};
+  rc.aval = {};
 
 
   this.subscribe('buscarReferenciasPersonales', () => {
@@ -916,6 +917,24 @@ angular.module("creditoMio")
        }
     });
   }
+
+  this.insertarAval = function()
+  {
+      if (rc.aval.nombre == undefined || rc.aval.parentesco == undefined || rc.aval.tiempoConocerlo == undefined || rc.aval.parentesco == "" || rc.aval.tiempoConocerlo == "")
+      {
+          toastr.warning("Favor de agregar al datos del Aval, Parentesco y Tiempo de Conocerlo...");
+          return;         
+      }
+    
+      rc.aval.num = this.avales.length + 1;
+      rc.aval.estatus = "N";
+      this.avales.push(rc.aval);
+      
+      rc.aval={};
+  };
+
+
+
   
   this.refreshColonias = function(colonia) {
     	

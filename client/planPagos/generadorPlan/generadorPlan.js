@@ -84,6 +84,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.subscribe('pagos', () => {
 		return [{ estatus:true}];
 	});
+	console.log($stateParams,"cliente")
 
 	
 	this.helpers({
@@ -102,7 +103,19 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			return aval;
 		},
 		cliente : () => {
-			return Meteor.users.findOne({roles : ["Cliente"]});
+			var cliente = Meteor.users.findOne($stateParams.objeto_id);
+
+
+			// _.each(cliente, function(item){
+			// 	 item.tipoCliente = Meteor.users.findOne(item._id);
+
+			// });
+			//console.log(cliente,"item")
+			//var distribuidor = 
+			
+
+
+			return  cliente
 		},
 		tiposCredito : () => {
 			return TiposCredito.find();
@@ -315,13 +328,22 @@ this.tieneFoto = function(sexo, foto){
 				credito.garantias = angular.copy(this.garantiasGeneral);
 				
 				
+				if (Meteor.user().roles = "Distribuidor") {
+					credito.vale = "vale"
+				}
 		//Cambie el metodo		
 		Meteor.apply('generarCreditoPeticion', [this.cliente, credito], function(error, result){
 			if(result == "hecho"){
 				toastr.success('Se ha guardado la solicitud de crédito correctamente');
 				rc.planPagos = [];
 				this.avales = [];
-				$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+				if (rc.cliente.roles == "Distribuidor") {
+					$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
+				}
+				if (rc.cliente.roles == "Cliente") {
+					$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+				}
+				
 			}
 			$scope.$apply();
 		});
@@ -645,27 +667,75 @@ this.tieneFoto = function(sexo, foto){
 	};
 	
 	this.editarGarantia = function(tipo, a)
-	{
+	{ console.log(tipo,"tipo")
+	console.log("a",a)
+
 			if (tipo == "mobiliaria")
 			{
-					this.garantia.tipo = a.tipo;
-					this.garantia.marca = a.marca;
-					this.garantia.modelo = a.modelo;			
-					this.garantia.serie = a.serie;
-					this.garantia.color = a.color;
-					this.garantia.estadoActual = a.estadoActual;
-					
-					this.numG = a.num;
+					this.garantia.descripcion = a.descripcion;
+					this.garantia.caracteristicas = a.caracteristicas;
+					this.garantia.avaluo = a.avaluo;			
+					this.garantia.prestamoPorcentaje = a.prestamoPorcentaje;
+					this.garantia.prestamo = a.prestamo;
+					this.garantia.monto = a.monto;
+					this.garantia.porcentaje = a.porcentaje;
+					this.garantia.fechaComercializacion = a.fechaComercializacion;
+					this.garantia.fechaFiniquito = a.fechaFiniquito;					
+				
 					this.actionGarantia = false;
 			}
 			else
 			{
-					this.garantia.descripcion = a.descripcion;
-					this.garantia.valorEstimado = a.valorEstimado;
+				    this.garantia.medidasColindancias = a.medidasColindancias
+				    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion
+				    this.garantia.prestamoSobreAvaluo = a.prestamoSobreAvaluo
+				    this.garantia.prestamo = a.prestamo
+				    this.garantia.num = a.num
+				    this.garantia.montoAvaluo = a.montoAvaluo
+					this.garantia.avaluo = a.avaluo;
+					this.garantia.comisionGastos = a.comisionGastos;
+					this.garantia.escrituracion = a.escrituracion;
+					this.garantia.porcentajePrestamo = a.porcentajePrestamo;
 					
-					this.numGen = a.num;
 					this.actionGarantia = false;
 			}		
+	};
+
+	this.verGarantia = function(tipo,a)
+	{
+		//console.log(a,"aval p")
+		$("#modalGarantia").modal('show');
+				if (tipo == "mobiliaria")
+			{
+				this.mob = true
+					this.garantia.descripcion = a.descripcion;
+					this.garantia.caracteristicas = a.caracteristicas;
+					this.garantia.avaluo = a.avaluo;			
+					this.garantia.prestamoPorcentaje = a.prestamoPorcentaje;
+					this.garantia.prestamo = a.prestamo;
+					this.garantia.monto = a.monto;
+					this.garantia.porcentaje = a.porcentaje;
+					this.garantia.fechaComercializacion = a.fechaComercializacion;
+					this.garantia.fechaFiniquito = a.fechaFiniquito;					
+				
+					this.actionGarantia = false;
+			}
+			else
+			{		this.general = true
+				    this.garantia.medidasColindancias = a.medidasColindancias
+				    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion
+				    this.garantia.prestamoSobreAvaluo = a.prestamoSobreAvaluo
+				    this.garantia.prestamo = a.prestamo
+				    this.garantia.num = a.num
+				    this.garantia.montoAvaluo = a.montoAvaluo
+					this.garantia.avaluo = a.avaluo;
+					this.garantia.comisionGastos = a.comisionGastos;
+					this.garantia.escrituracion = a.escrituracion;
+					this.garantia.porcentajePrestamo = a.porcentajePrestamo;
+					
+					this.actionGarantia = false;
+			}	
+	
 	};
 	
 	//busca un elemento en el arreglo
@@ -704,6 +774,23 @@ this.tieneFoto = function(sexo, foto){
 		  popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</body></html>');
 		  popupWin.document.close();
 		 // setTimeout(function(){popupWin.print();},1000);
+
+    };
+    this.cerrarGArantia = function(tipo){
+    	if (tipo == "mobiliaria")
+			{
+					this.garantia={};
+					this.numG = -1;
+					this.actionGarantia = true;
+			}
+			else
+			{
+					this.garantia={};
+					this.numGen = -1;
+					this.actionGarantia = true;
+			}	
+
+		  
 
     };
 	

@@ -34,6 +34,7 @@ angular.module("creditoMio")
   this.con = 0;
   this.num = 0;
   this.referenciasPersonales = [];
+  this.avales = [];
   this.referenciaPersonal = {};
   
   this.buscar = {};
@@ -43,6 +44,7 @@ angular.module("creditoMio")
   this.buscando = false;
   this.buscandoColonia = false;
   this.buscandoColoniaEmpresa = false;
+  this.actionAval = true;
   
   var fotillo = ""
   //this.pic = {};
@@ -56,6 +58,23 @@ angular.module("creditoMio")
   
   rc.colonia = {};
   rc.coloniaEmpresa = {};
+    rc.aval = {};
+  // this.buscar = {};
+  // this.buscar.nombre = "";
+
+    this.subscribe('buscarAvales', () => {
+    if(this.getReactively("buscar.nombre").length > 3){
+      this.buscando = true;
+      return [{
+        options : { limit: 20 },
+        where : { 
+          nombreCompleto : this.getReactively('buscar.nombre')
+        }        
+      }];
+    }
+    else if (this.getReactively("buscar.nombre").length  == 0 )
+      this.buscando = false;
+  });
 
 
   this.subscribe('buscarReferenciasPersonales', () => {
@@ -238,6 +257,12 @@ angular.module("creditoMio")
     documentos : () => {
       return Documentos.find();
     },
+    avalesHelper : () => {
+      var aval = Avales.find({
+        "profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
+      }, { sort : {"nombreCompleto" : 1 }}).fetch();
+      return aval;
+    },
 /*
     configuraciones : () => {
       var config = Configuraciones.find().fetch();
@@ -383,7 +408,6 @@ angular.module("creditoMio")
   
   this.guardar = function(objeto,form)
   {
-      
       if(form.$invalid){
             toastr.error('Error al guardar los datos.');
             return;
@@ -394,6 +418,15 @@ angular.module("creditoMio")
 	      	objeto.password = Math.random().toString(36).substring(2,7);		
 
       }	
+
+      _.each(objeto, function(item){
+         delete item.$$hashKey;
+      })
+       _.each(rc.avales, function(aval){
+         aval.estatus = "G"
+         delete aval.$$hashKey;
+      })
+
       objeto.profile.estatus = true;
       objeto.profile.documentos = rc.documents;
       objeto.profile.foto = rc.pic;
@@ -405,8 +438,14 @@ angular.module("creditoMio")
       var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
+      objeto.profile.avales_ids = rc.avales
 
-      Meteor.call('createUsuario', objeto, "Distribuidor", function(e,r){
+
+      // Meteor.apply('generarAval', rc.avales, function(error, result){
+      // if(result){
+        console.log("apunto de entrar",objeto)
+    
+       Meteor.call('createUsuario', objeto, "Distribuidor", function(e,r){
           if (r)
           {
               toastr.success('Guardado correctamente.');
@@ -415,9 +454,12 @@ angular.module("creditoMio")
               this.nuevo = true;
               form.$setPristine();
               form.$setUntouched();
-              $state.go('root.clienteDetalle', { 'objeto_id':r});
+              $state.go('root.distribuidoresDetalle', { 'objeto_id':r});
           }
       });
+    //      }
+      
+    // });
       
     
   };
@@ -916,6 +958,49 @@ angular.module("creditoMio")
        }
     });
   }
+
+  this.insertarAval = function()
+  {
+      if (rc.aval.nombre == undefined || rc.aval.parentesco == undefined || rc.aval.tiempoConocerlo == undefined || rc.aval.parentesco == "" || rc.aval.tiempoConocerlo == "")
+      {
+          toastr.warning("Favor de agregar al datos del Aval, Parentesco y Tiempo de Conocerlo...");
+          return;         
+      }
+    
+      rc.aval.num = this.avales.length + 1;
+      rc.aval.estatus = "N";
+      this.avales.push(rc.aval);
+      
+      rc.aval={};
+  };
+
+  this.AgregarAval = function(a){
+    //console.log(a,"avalespapu")
+    
+    rc.aval.nombre = a.profile.nombre;
+    rc.aval.apellidoPaterno = a.profile.apellidoPaterno;
+    rc.aval.apellidoMaterno = a.profile.apellidoMaterno;
+    
+    Meteor.call('getAval', a._id, function(error, result){
+      if(result){         
+          rc.aval.ocupacion = result.ocupacion;
+          rc.aval.calle = result.calle;
+          rc.aval.numero = result.numero;
+          rc.aval.codigoPostal = result.codigoPostal;
+          rc.aval.estadoCivil = result.estadoCivil;
+          rc.aval.empresa = result.empresa.nombre;
+          rc.aval.direccionEmpresa = result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;
+          rc.aval.puesto = result.puesto;
+          rc.aval.tiempoLaborando = result.tiempoLaborando;
+          rc.aval.foto = result.foto;
+          $scope.$apply();
+      }
+    });
+    
+    this.buscar.nombre = ""
+    rc.aval._id = a._id;
+    
+  };
   
   
 

@@ -22,6 +22,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	rc.conVecino = 0;
 	rc.conSolicitanteAval = 0;
 	rc.creditos = [];
+
 	
 	this.subscribe('creditos',()=>{
 			return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", 
@@ -46,9 +47,11 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 							   }
 							   if(result)
 							   {	
+							   //	console.log(result)
 									 		cliente = result;
 											credito.nombreCliente = cliente.nombreCompleto;
 											$scope.$apply();
+
 								 }
 							});
 							
@@ -71,6 +74,50 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 							
 					})
 		  }
+<<<<<<< HEAD
+		},
+	});
+
+
+	 this.helpers({
+	 		inicio:()=>{
+		    var fecha = new Date();
+            hora = fecha.getHours()+':'+fecha.getMinutes()
+            usuario = Meteor.user().profile.sucursal_id
+
+            console.log(hora,"hora")
+            console.log(usuario,"id")
+
+             Meteor.call('getSucursal',usuario, function(error, result){           					
+					if (result)
+					{
+						console.log("result",result)
+					    rc.sucursalVer = result
+					}
+					//console.log("avales",rc.avalesCliente)
+					var entrada = rc.sucursalVer.horaEntrada
+					var salida = rc.sucursalVer.horaSalida
+             // console.log(entrada,"entrada") 
+             var horaEntrada = entrada.getHours()+':'+entrada.getMinutes()
+             var horaSalida = salida.getHours()+':'+salida.getMinutes()
+             console.log(horaEntrada,"entrada","y",horaSalida,"salida")
+             
+             if (hora >= horaSalida) {
+             	$state.go('anon.logout');
+             	toastr.error("No puedes ingresar en este horario");
+             }
+             if (horaEntrada < hora) {
+             	$state.go('anon.logout');
+             	toastr.error("No puedes ingresar en este horario");
+             }
+         
+
+			});
+
+		},
+	  
+  });
+=======
 */
 		}	
 	});

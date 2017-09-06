@@ -239,7 +239,14 @@ angular.module("creditoMio")
 									return
 								}
 								toastr.success('Operacion Realizada.');
-								$state.go("root.clienteDetalle",{objeto_id : rc.credito.cliente_id});
+								if (rc.credito.vale) {
+								$state.go("root.distribuidoresDetalle",{objeto_id : rc.credito.cliente_id});
+
+								}else{
+    							$state.go("root.clienteDetalle",{objeto_id : rc.credito.cliente_id});
+
+
+								}
 								rc.objeto = {}; 
 								$('.collapse').collapse('hide');
 								rc.nuevo = true;
