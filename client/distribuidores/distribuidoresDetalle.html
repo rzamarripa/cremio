@@ -29,7 +29,7 @@
 										</h1>				
 							</div>
 								
-										<a	ui-sref="root.editarCliente({objeto_id : dis.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
+										<a	ui-sref="root.editarDistribuidores({objeto_id : dis.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
 		 									<i class="fa fa-pencil" ></i> Modificar
 	 								  </a>&nbsp;
 	 								  <small><a ng-click="dis.generarFicha(dis.objeto,dis.objeto._id)" class="btn btn-primary">Descargar ficha</a></small>
