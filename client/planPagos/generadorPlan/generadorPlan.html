@@ -9,7 +9,7 @@
 				</h2>
 			</div>
 			<a style="margin: 5px;" ng-if="ge.cliente.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
-			<a style="margin: 5px;" ng-if="ge.cliente.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;		
+			<a style="margin: 5px;" ng-show="ge.cliente.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;		
 			<div class="row">				
 				<div class="col-sm-12">
 					<form name="form" class="form-horizontal" role="form" novalidate>
@@ -38,10 +38,10 @@
 							    	<option value="{{ge.tiposCredito[0]._id}}">{{ge.tiposCredito[0].nombre}}</option>
 						    	</select>
 					    	</div> -->
-					    	<!-- <div class="col-sm-4" valida>
+					    	<div class="col-sm-4" valida  ng-if="ge.cliente.roles == 'Cliente'">
 							    <label>Tasa %*</label>
 						    	<input name="tasa" min="0" type="number" class="form-control" ng-model="ge.credito.tasa" required>
-						    </div> -->
+						    </div>
 					    	<div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Periodo de pago *</label>
 						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ge.credito.periodoPago" required="">
