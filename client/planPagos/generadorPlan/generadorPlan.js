@@ -17,6 +17,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.nuevoBotonCredito = true;
 	
 	this.cliente_id = "";
+	rc.sucursalCliente = "";
 	this.planPagos = [];
 	this.credito = {};
 	this.pago = {};
@@ -104,16 +105,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		},
 		cliente : () => {
 			var cliente = Meteor.users.findOne($stateParams.objeto_id);
-
-
-			// _.each(cliente, function(item){
-			// 	 item.tipoCliente = Meteor.users.findOne(item._id);
-
-			// });
-			//console.log(cliente,"item")
-			//var distribuidor = 
-			
-
+			//console.log(cliente,"el cliente paps")
 
 			return  cliente
 		},
@@ -275,68 +267,78 @@ this.tieneFoto = function(sexo, foto){
 	}
 	
 	this.generarCredito = function(form){
-						
-		
-
 		if(form.$invalid){
 				toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
 				return;
 		}	
-		
 		if (rc.cliente.profile.renta == true && this.avales.length == 0)		
 		{
 				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
 				return;
 		}	
+
+
+		this.credito.periodoPago = "Quincenal"
+	    Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
+		if (result)
+		{
+			console.log(result,"sucursal bebe");
+			//rc.sucursalCliente.push(result);
+			//console.log(rc.sucursalCliente,"sucursal del cliente");
 		
+		//this.credito.sucursal = Sucu
+		//this.credito.tasa = this.
 		
 		
 		var credito = {
-			cliente_id : this.cliente._id,
-			tipoCredito_id : this.credito.tipoCredito_id,
+			cliente_id : rc.cliente._id,
+			tipoCredito_id : rc.tiposCredito[0]._id,
 			fechaSolicito : new Date(),
-			duracionMeses : this.credito.duracionMeses,
-			capitalSolicitado : this.credito.capitalSolicitado,
-			adeudoInicial : this.credito.capitalSolicitado,
-			saldoActual : this.credito.capitalSolicitado,
-			periodoPago : this.credito.periodoPago,
-			fechaPrimerAbono : this.credito.primerAbono,
+			duracionMeses : rc.credito.duracionMeses,
+			capitalSolicitado : rc.credito.capitalSolicitado,
+			adeudoInicial : rc.credito.capitalSolicitado,
+			saldoActual : rc.credito.capitalSolicitado,
+			periodoPago : rc.credito.periodoPago,
+			fechaPrimerAbono : rc.credito.primerAbono,
 			multasPendientes : 0,
 			saldoMultas : 0.00,
 			saldoRecibo : 0.00,
 			estatus : 1,
-			requiereVerificacion: this.credito.requiereVerificacion,
+			requiereVerificacion: rc.credito.requiereVerificacion,
 			sucursal_id : Meteor.user().profile.sucursal_id,
-			fechaVerificacion: this.credito.fechaVerificacion,
-			turno : this.credito.turno,
-			tipoGarantia : this.credito.tipoGarantia,
-			tasa: this.credito.tasa,
-			conSeguro : this.credito.conSeguro,
-			seguro: this.credito.seguro
+			fechaVerificacion: rc.credito.fechaVerificacion,
+			turno : rc.credito.turno,
+			tipoGarantia : rc.credito.tipoGarantia,
+			tasa: result.tasaVales,
+			conSeguro : rc.credito.conSeguro,
+			seguro: rc.credito.seguro
 		};
 			
 			
 		//console.log(credito);
 				
-		credito.avales = angular.copy(this.avales);
+		credito.avales = angular.copy(rc.avales);
 		
 		//Duda se guardan los dos???
 		
-		if (this.credito.tipoGarantia == "mobiliaria")
-				credito.garantias = angular.copy(this.garantias);
+		if (rc.credito.tipoGarantia == "mobiliaria")
+				credito.garantias = angular.copy(rc.garantias);
 		else
-				credito.garantias = angular.copy(this.garantiasGeneral);
+				credito.garantias = angular.copy(rc.garantiasGeneral);
 				
 				
 				if (Meteor.user().roles = "Distribuidor") {
-					credito.vale = "vale"
+					credito.tipo = "vale"
+				}else if (Meteor.user().roles = "Cliente") {
+					credito.tipo == "creditoP"
 				}
-		//Cambie el metodo		
-		Meteor.apply('generarCreditoPeticion', [this.cliente, credito], function(error, result){
+		//Cambie el metodo	
+
+		Meteor.apply('generarCreditoPeticion', [rc.cliente, credito], function(error, result){
 			if(result == "hecho"){
 				toastr.success('Se ha guardado la solicitud de crédito correctamente');
 				rc.planPagos = [];
-				this.avales = [];
+				rc.avales = [];
 				if (rc.cliente.roles == "Distribuidor") {
 					$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
 				}
@@ -346,7 +348,11 @@ this.tieneFoto = function(sexo, foto){
 				
 			}
 			$scope.$apply();
+			/////////////////AQUI
 		});
+			}
+						
+				})
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
