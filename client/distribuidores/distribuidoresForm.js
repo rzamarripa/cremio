@@ -439,6 +439,7 @@ angular.module("creditoMio")
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
       objeto.profile.avales_ids = rc.avales
+     
 
 
       // Meteor.apply('generarAval', rc.avales, function(error, result){
@@ -469,6 +470,7 @@ angular.module("creditoMio")
       toastr.error('Error al actualizar los datos.');
       return;
     }
+   // console.log("objeto",objeto)
         
     var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
     var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
@@ -494,15 +496,24 @@ angular.module("creditoMio")
         objeto.profile.foto = rc.objeto.profile.foto
       }
 
+
   
     delete objeto.profile.repeatPassword;
-    Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Cliente", this.cambiarContrasena);
+    Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Distribuidor", this.cambiarContrasena);
     toastr.success('Actualizado correctamente.');
     //$('.collapse').collapse('hide');
     this.nuevo = true;
     form.$setPristine();
     form.$setUntouched();
-    $state.go('root.clienteDetalle', { 'objeto_id':objeto._id});
+    if (rc.objeto.roles == "Distribuidor") {
+      $state.go('root.distribuidoresDetalle', { 'objeto_id':objeto._id});
+       
+
+    }else{
+      $state.go('root.clienteDetalle', { 'objeto_id':objeto._id});
+
+    }
+   
 
   };
   

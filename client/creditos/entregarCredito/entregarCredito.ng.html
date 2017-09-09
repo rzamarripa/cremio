@@ -5,7 +5,8 @@
 					<h2>Entregar Crédito</h2>
 			</div>
 			<div class="col-sm-6">
-					<a ui-sref="root.clienteDetalle({objeto_id: ecCtrl.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>		
+					<a style="margin: 5px;" ng-if="ecCtrl.credito.tipo == 'vale'" ui-sref="root.distribuidoresDetalle({objeto_id : ecCtrl.credito.cliente_id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
+          <a style="margin: 5px;" ng-if="!ecCtrl.credito.tipo == 'creditoP'" ui-sref="root.clienteDetalle({objeto_id : ecCtrl.credito.cliente_id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;		
 			</div>		
 	</div>
 </div>	

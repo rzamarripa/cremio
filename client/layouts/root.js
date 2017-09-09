@@ -76,7 +76,7 @@ angular.module("creditoMio")
              // console.log(entrada,"entrada") 
              var horaEntrada = entrada.getHours()+':'+entrada.getMinutes()
              var horaSalida = salida.getHours()+':'+salida.getMinutes()
-             //console.log(horaEntrada,"entrada","y",horaSalida,"salida")
+             console.log(horaEntrada,"entrada","y",horaSalida,"salida")
             
 			    // if (horaEntrada < 10) {
 			    //     horaEntrada = "0" + horaEntrada;

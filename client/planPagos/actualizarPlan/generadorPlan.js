@@ -127,7 +127,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			return aval;
 		},
 		cliente : () => {
-			return Meteor.users.findOne({roles : ["Cliente"]});
+			var cliente = Meteor.users.findOne($stateParams.objeto_id);
+			//return Meteor.users.findOne({roles : ["Cliente"]});
+			return cliente
 		},
 		tiposCredito : () => {
 			return TiposCredito.find();

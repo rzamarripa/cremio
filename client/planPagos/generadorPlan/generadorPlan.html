@@ -8,7 +8,8 @@
 						Solicitud de Crédito
 				</h2>
 			</div>
-			<a ui-sref="root.clienteDetalle({objeto_id: ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>		
+			<a style="margin: 5px;" ng-if="ge.cliente.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
+			<a style="margin: 5px;" ng-show="ge.cliente.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;		
 			<div class="row">				
 				<div class="col-sm-12">
 					<form name="form" class="form-horizontal" role="form" novalidate>
@@ -31,13 +32,13 @@
 							    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in ge.tiposCredito">{{tipoCredito.nombre}}</option>
 						    	</select>
 					    	</div>
-					    	 <div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Distribuidor'">
+					    	<!--  <div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Distribuidor'">
 						    	<label>Tipo de crédito *</label>
 						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="ge.credito.tipoCredito_id" required="">
 							    	<option value="{{ge.tiposCredito[0]._id}}">{{ge.tiposCredito[0].nombre}}</option>
 						    	</select>
-					    	</div>
-					    	<div class="col-sm-4" valida>
+					    	</div> -->
+					    	<div class="col-sm-4" valida  ng-if="ge.cliente.roles == 'Cliente'">
 							    <label>Tasa %*</label>
 						    	<input name="tasa" min="0" type="number" class="form-control" ng-model="ge.credito.tasa" required>
 						    </div>
@@ -49,12 +50,12 @@
 							    	<option value="Mensual">Mensual</option>
 						    	</select>
 					    	</div>
-					    	<div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Distribuidor'">
+					    	<!-- <div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Distribuidor'">
 						    	<label>Periodo de pago *</label>
 						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ge.credito.periodoPago" required="">
 							    	<option value="Quincenal">Quincenal</option>
 						    	</select>
-					    	</div>
+					    	</div> -->
 					    </div>
 					    <div class="row">
 						    <div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">					    
@@ -101,7 +102,7 @@
 						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ge.credito.seguro"  required>
 						    </div>		
 					    </div>
-					    <div class="row">
+					    <div class="row" ng-if="ge.cliente.roles == 'Cliente'">
 								<div class="col-sm-2">					    
 						    	<label>Requiere Verificación</label>
 						    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ge.credito.requiereVerificacion">
