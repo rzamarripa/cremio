@@ -49,7 +49,7 @@
 			<a href="#informacionCliente" data-toggle="tab" ng-click="cd.masInformacion(cd.objeto)">Información Cliente</a>
 		</li>
 		<li class="pull-right">
-			<a href="#historialCrediticio" ng-click="cd.masInformacionCrdito()"  data-toggle="tab">Historial Crediticio</a>
+			<a href="#historialCrediticio" ng-click="cd.masInformacionCrdito(cd.obtenerGente(cd.objeto))"  data-toggle="tab">Historial Crediticio</a>
 		</li>
 		<li class="pull-right">
 			<a href="#solicitudes" ng-click="cd.solicitudesCreditos()" data-toggle="tab"><span class="badge bg-color-yellow txt-color-white pull-right">{{cd.creditosPendientes.length}}</span>Solicitudes </a>
@@ -711,7 +711,8 @@
 				 </div>
 				</div>
 				<div class="modal-footer">
-				    <button ng-click="cd.cerrarModal()" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				<button ng-click="cd.cerrarModal()" type="button" class="btn btn-default left-panel" data-dismiss="modal">Cerrar</button>
+				    <button ng-click="cd.imprimirHistorial(cd.historial,cd.objeto,cd.credito)" type="button" class="btn btn-success pull-left" >Imprimir Tabla</button>
 				 </div>
 			</div>
 	  </div>

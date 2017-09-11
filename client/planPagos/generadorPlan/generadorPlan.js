@@ -286,13 +286,19 @@ this.tieneFoto = function(sexo, foto){
 			//rc.sucursalCliente.push(result);
 			//console.log(rc.sucursalCliente,"sucursal del cliente");
 		
-		//this.credito.sucursal = Sucu
-		//this.credito.tasa = this.
+		if (rc.cliente.roles == "Distribuidor") {
+			rc.credito.tasa = result.tasaVales
+			rc.credito.tiposCredito_id = rc.tiposCredito[0]._id
+		}else if (rc.cliente.roles == "Cliente") {
+			rc.credito.tasa = rc.credito.tasa
+			rc.credito.tiposCredito_id = rc.credito.tiposCredito_id 
+
+		}
 		
 		
 		var credito = {
 			cliente_id : rc.cliente._id,
-			tipoCredito_id : rc.tiposCredito[0]._id,
+			tipoCredito_id : rc.credito.tipoCredito_id,
 			fechaSolicito : new Date(),
 			duracionMeses : rc.credito.duracionMeses,
 			capitalSolicitado : rc.credito.capitalSolicitado,
@@ -309,9 +315,9 @@ this.tieneFoto = function(sexo, foto){
 			fechaVerificacion: rc.credito.fechaVerificacion,
 			turno : rc.credito.turno,
 			tipoGarantia : rc.credito.tipoGarantia,
-			tasa: result.tasaVales,
+			tasa: rc.credito.tasa,
 			conSeguro : rc.credito.conSeguro,
-			seguro: rc.credito.seguro
+			seguro: rc.credito.seguro,
 		};
 			
 			

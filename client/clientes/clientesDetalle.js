@@ -465,8 +465,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			_.each(rc.getReactively("planPagosHistorial"), function(planPago, index){
 				
-				console.log("entro al segundo")
-				console.log("credito",credito)
+				//console.log("entro al segundo")
+				///console.log("credito",credito)
 
 				
 				if(planPago.descripcion=="Cargo Moratorio")
@@ -552,7 +552,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
         })
 
-        console.log(filtrado,"filtrado")
+        //console.log(filtrado,"filtrado")
         return filtrado;
       }
 
@@ -952,11 +952,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
   	
 		console.log("entro:", objeto);
 		//console.log("refes", objeto.referenciasPersonales_ids)	 
-	  		    Meteor.call('getPeople',objeto._id,objeto.profile.referenciasPersonales_ids.referenciaPersonal_id, function(error, result){           					
-							if (result)
-							{
+	    Meteor.call('getPeople',objeto._id,objeto.profile.referenciasPersonales_ids.referenciaPersonal_id, function(error, result){           					
+				if (result)
+				{
 
-								rc.datosCliente = result.profile
+					rc.datosCliente = result.profile
 
 	   
 	    console.log("cliente",rc.datosCliente)
@@ -1640,6 +1640,104 @@ if(estatus == 0){
 		  
 		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
 		};
+
+		this.imprimirHistorial= function(objeto,cliente,credito) 
+  {
+  	console.log(objeto,"pp")
+
+    cliente = rc.datosCliente
+    console.log("toshtta japon",cliente)
+
+    var sumaCargos = 0
+    var sumaAbonos = 0
+    var popo = 0
+    objeto.objetoFinal = objeto[objeto.length - 1];
+     _.each(objeto,function(item){
+
+        if (item.movimiento == "Cargo Moratorio") {
+          sumaCargos += item.importe
+          sumaAbonos += item.pago
+
+        }
+        if (item.movimiento == "Abono") {
+          sumaAbonos += item.pago
+
+        }
+      
+        //suma += item.capitalSolicitado
+        //sumaSol += item.adeudoInicial
+        popo = objeto.objetoFinal.saldo
+        item.ultimoSaldo =  popo
+     
+      });
+
+       _.each(objeto,function(item){
+       item.sumaCargos = sumaCargos
+       item.sumaAbonos = sumaAbonos
+        
+    });
+    
+      console.log(cliente,"objeto")
+      console.log(credito,"credito")
+  
+  
+ 
+    // var toPrint = [];
+    
+
+    Meteor.call('imprimirHistorial', objeto, cliente,credito, function(error, response) {     
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+      function b64toBlob(b64Data, contentType, sliceSize) {
+          contentType = contentType || '';
+          sliceSize = sliceSize || 512;
+          var byteCharacters = atob(b64Data);
+          var byteArrays = [];
+          for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+            }
+            var byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+          }
+          var blob = new Blob(byteArrays, {type: contentType});
+          return blob;
+          }
+          var blob = b64toBlob(response, "application/docx");
+          var url = window.URL.createObjectURL(blob);
+          var dlnk = document.getElementById('dwnldLnk');
+
+           dlnk.download = "HISTORIALCREDITICIO.docx"; 
+          dlnk.href = url;
+          dlnk.click();       
+          window.URL.revokeObjectURL(url);
+      }
+    });
+  };  
+
+  this.obtenerGente= function(objeto)
+	{		
+		//console.log(objeto,"Cliente")
+		    Meteor.call('getPeople',objeto._id, function(error, result){           					
+				if (result)
+				{
+
+					rc.datosCliente = result.profile
+
+					   console.log("cliente",rc.datosCliente)
+
+	 
+			   }
+		});
+	    
+	};
 
 	
 	
