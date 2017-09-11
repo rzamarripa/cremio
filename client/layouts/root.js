@@ -58,9 +58,9 @@ angular.module("creditoMio")
 		inicio:()=>{
 			if (Meteor.user().username != "admin") {
 		    var fecha = new Date();
-            hora = fecha.getHours()+':'+fecha.getMinutes()//+':'+fecha.getSeconds()
+            hora = fecha.getHours()+':'+fecha.getMinutes();
    
-            	usuario = Meteor.user().profile.sucursal_id
+          usuario = Meteor.user().profile.sucursal_id
             	   //console.log(hora,"hora")
            // console.log(usuario,"id")
 
@@ -158,6 +158,7 @@ this.verMenu =()=>{
 	this.autorun(function() {
     if(!Meteor.user()){	    
     	$state.go('anon.login');
+    	
     }    
   });	
 
