@@ -1431,31 +1431,29 @@ if(estatus == 0){
 		};
 		this.getAvales= function(credito)
 		{
-				console.log(credito.avales_ids[0].aval_id)
-				rc.avalpapu = credito.avales_ids[0].aval_id
-		    Meteor.call('obAvales',rc.avalpapu, function(error, result){           					
-					if (result)
-					{
-						//console.log("result",result)
-							rc.avalesCliente = result.profile
-					}
-					console.log("avales",rc.avalesCliente)
-
-			});
+				
 		};
 
 	 this.imprimirContratos = function(contrato,cliente,avales){
-	 	avales = rc.avalesCliente
 
-	
+	 	//console.log(contrato.avales_ids[0].aval_id)
+	 		if (contrato.avales_ids.length > 0) {
+				rc.avalpapu = contrato.avales_ids[0].aval_id
+		        Meteor.call('obAvales',rc.avalpapu, function(error, result){           					
+					if (result)
+					{
+						//console.log("result de avales",result)
+							rc.avalesCliente = result.profile
+							avales = rc.avalesCliente
+				    }
+				});
+		    }	
 				contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
 	  		    Meteor.call('getPeople',cliente,contrato._id, function(error, result){           					
 					if (result)
 					{
 							rc.datosCliente = result.profile
-									
-				console.log(rc.datosCliente,"el clientaso")				
-				//console.log("contrato",contrato)
+
 				console.log("avalesssss",rc.avalesCliente)
 				Meteor.call('contratos', contrato, contrato._id,rc.datosCliente,contrato.planPagos,avales, function(error, response) {
 				  
@@ -1599,6 +1597,7 @@ if(estatus == 0){
 						}
 										}//else
 					});//meteorcontratos
+				
 
 			}//if
 			//$scope.$apply();	
