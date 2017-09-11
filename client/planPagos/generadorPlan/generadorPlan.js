@@ -245,40 +245,37 @@ this.tieneFoto = function(sexo, foto){
 						
 			
 					}
-			}
-		
-		});
+			
 			if (rc.cliente.roles == "Distribuidor") {
 				rc.credito.tipoCredito_id = rc.tiposCredito[0]._id
 
 			}
 
-		var _credito = {
-			cliente_id : this.cliente._id,
-			tipoCredito_id : this.credito.tipoCredito_id,
-			fechaSolicito : new Date(),
-			duracionMeses : this.credito.duracionMeses,
-			capitalSolicitado : this.credito.capitalSolicitado,
-			adeudoInicial : this.credito.capitalSolicitado,
-			saldoActual : this.credito.capitalSolicitado,
-			periodoPago : this.credito.periodoPago,
-			fechaPrimerAbono : this.credito.primerAbono,
-			multasPendientes : 0,
-			saldoMultas : 0.00,
-			saldoRecibo : 0.00,
-			estatus : 1,
-			requiereVerificacion: this.credito.requiereVerificacion,
-			turno : this.credito.turno,
-			sucursal_id : Meteor.user().profile.sucursal_id,
-			fechaVerificacion: this.credito.fechaVerificacion,
-			turno: this.credito.turno,
-			tasa: this.credito.tasa,
-			conSeguro : this.credito.conSeguro,
-			seguro: this.credito.seguro
-		};
-		console.log(_credito,"creditoJaime")
-
-		Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
+			var _credito = {
+				cliente_id : rc.cliente._id,
+				tipoCredito_id : rc.credito.tipoCredito_id,
+				fechaSolicito : new Date(),
+				duracionMeses : rc.credito.duracionMeses,
+				capitalSolicitado : rc.credito.capitalSolicitado,
+				adeudoInicial : rc.credito.capitalSolicitado,
+				saldoActual : rc.credito.capitalSolicitado,
+				periodoPago : rc.credito.periodoPago,
+				fechaPrimerAbono : rc.credito.primerAbono,
+				multasPendientes : 0,
+				saldoMultas : 0.00,
+				saldoRecibo : 0.00,
+				estatus : 1,
+				requiereVerificacion: rc.credito.requiereVerificacion,
+				turno : rc.credito.turno,
+				sucursal_id : Meteor.user().profile.sucursal_id,
+				fechaVerificacion: rc.credito.fechaVerificacion,
+				turno: rc.credito.turno,
+				tasa: rc.credito.tasa,
+				conSeguro : rc.credito.conSeguro,
+				seguro: rc.credito.seguro
+			};  
+			 console.log(_credito,"creditoJaime")
+			 Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
 		
 			if(error){
 				console.log(error);
@@ -292,6 +289,14 @@ this.tieneFoto = function(sexo, foto){
 			}
 				
 		})
+
+		}
+
+		
+		});
+		
+
+		
 		
 		return rc.planPagos;
 	}

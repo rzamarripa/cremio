@@ -3,12 +3,17 @@
 	<div class="col-sm-12">
 		<div class="well well-sm">
 			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-				<h2 class="alge-title txt-color-blueDark">
+				<h2 class="alge-title txt-color-blueDark" ng-if="ae.cliente.roles == 'Cliente'">
 					<i class="fa fa-list fa-fw "></i>
 						Actualización del Crédito
 				</h2>
+				<h2 class="alge-title txt-color-blueDark" ng-if="ae.cliente.roles == 'Distribuidor'">
+					<i class="fa fa-list fa-fw "></i>
+						Actualización del Vale
+				</h2>
 			</div>
-			<a  ui-sref="root.clienteDetalle({objeto_id: ae.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
+			<a ng-if="ae.cliente.roles == 'Cliente'"  ui-sref="root.clienteDetalle({objeto_id: ae.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
+			<a style="margin: 5px;" ng-if="ae.cliente.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : ae.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
 			<div class="row">
 				<div class="col-sm-12">
 					<form name="formNuevoCredito" class="form-horizontal" role="form" novalidate>
@@ -22,17 +27,17 @@
 					  		</div>
 					  	</div>
 					    <div class="row">
-						    <div class="col-sm-4" valida>
+						    <div class="col-sm-4" valida ng-if="ae.cliente.roles == 'Cliente'">
 						    	<label>Tipo de crédito *</label>
 						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="ae.credito.tipoCredito_id" required="">
 							    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in ae.tiposCredito">{{tipoCredito.nombre}}</option>
 						    	</select>
 					    	</div>
-					    	<div class="col-sm-4" valida>
+					    	<div class="col-sm-4" valida ng-if="ae.cliente.roles == 'Cliente'">
 							    <label>Tasa %*</label>
 						    	<input name="tasa" type="number" min="0" class="form-control" ng-model="ae.credito.tasa" required>
 						    </div>
-					    	<div class="col-sm-4" valida>
+					    	<div class="col-sm-4" valida ng-if="ae.cliente.roles == 'Cliente'">
 						    	<label>Periodo de pago *</label>
 						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ae.credito.periodoPago" required="">
 							    	<option value="Semanal">Semanal</option>
@@ -59,7 +64,7 @@
 						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ae.credito.seguro"  required>
 						    </div>		
 					    </div>
-					    <div class="row">
+					    <div class="row" ng-if="ae.cliente.roles == 'Cliente'">
 								<div class="col-sm-2">					    
 						    	<label>Requiere Verificación</label>
 						    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ae.credito.requiereVerificacion">
@@ -78,8 +83,8 @@
 						</div>
 						</div>
 						
-						<h4 ng-if="ge.cliente.roles == 'Cliente'">Avales</h4>			
-						<div class="well">	    
+						<h4 ng-if="ae.cliente.roles == 'Cliente'">Avales</h4>			
+						<div class="well" ng-if="ae.cliente.roles == 'Cliente'">	    
 							<div class="row">
 								<div class="col-sm-6"> 
 										<div ng-include=" 'client/planPagos/actualizarPlan/_buscarAval.html' "></div>
@@ -204,8 +209,8 @@
 						</div>
 						
 												
-						<h4>Garantias</h4>
-						<div class="well">	    
+						<h4 ng-if="ae.cliente.roles == 'Cliente'">Garantias</h4>
+						<div class="well" ng-if="ae.cliente.roles == 'Cliente'">	    
 							<div class="row">
 								<div class="col-sm-4" valida>
 							    	<label>Tipo de garantía</label>
