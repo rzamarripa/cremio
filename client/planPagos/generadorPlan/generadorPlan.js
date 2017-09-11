@@ -258,7 +258,6 @@ this.tieneFoto = function(sexo, foto){
 					rc.planPagos.push(pago)
 					$scope.$apply();
 				});
-				console.log("Prueba",rc.planPagos)
 			}
 				
 		})
@@ -267,6 +266,7 @@ this.tieneFoto = function(sexo, foto){
 	}
 	
 	this.generarCredito = function(form){
+		
 		if(form.$invalid){
 				toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
 				return;
@@ -276,7 +276,13 @@ this.tieneFoto = function(sexo, foto){
 				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
 				return;
 		}	
+<<<<<<< HEAD
 
+=======
+		
+
+		
+>>>>>>> 3bfbc9ee898f1421997e494151fb2d5434efb5cf
 		if (rc.cliente.roles == "Distribuidor") {
 			this.credito.periodoPago = "Quincenal"
 
@@ -284,7 +290,7 @@ this.tieneFoto = function(sexo, foto){
 	    Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
 		if (result)
 		{
-			console.log(result,"sucursal bebe");
+			//console.log(result,"sucursal bebe");
 			//rc.sucursalCliente.push(result);
 			//console.log(rc.sucursalCliente,"sucursal del cliente");
 		
@@ -296,7 +302,16 @@ this.tieneFoto = function(sexo, foto){
 			rc.credito.tiposCredito_id = rc.credito.tiposCredito_id 
 
 		}
-		
+
+		}
+	/*
+	
+		this.credito.periodoPago = "Quincenal";
+	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
+		if (result)
+		{
+*/
+
 		
 		var credito = {
 			cliente_id : rc.cliente._id,
@@ -320,7 +335,7 @@ this.tieneFoto = function(sexo, foto){
 			tasa: rc.credito.tasa,
 			conSeguro : rc.credito.conSeguro,
 			seguro: rc.credito.seguro,
-		};
+		//};
 			
 			
 		//console.log(credito);

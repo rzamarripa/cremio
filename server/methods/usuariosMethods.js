@@ -370,6 +370,9 @@ if (referenciaPersonal.buscarPersona_id)
 		if (cambiarPassword == false)
 				Accounts.setPassword(user._id, usuario.password, {logout: false});		
 				
+		
+		return true;		
+				
 	},
 	getUsuario: function (usuario) {	
 	  var user = Meteor.users.findOne({"_id" : usuario}, {fields: {"profile.nombreCompleto":1, "profile.numeroCliente": 1 }});
@@ -382,8 +385,7 @@ if (referenciaPersonal.buscarPersona_id)
 	  var ocupacion = Ocupaciones.findOne(a.profile.ocupacion_id);
 	  a.profile.ocupacion = "";
 	  a.profile.ocupacion = ocupacion.nombre;
-	  
-	  
+	  	  
 	  var estadoCivil = EstadoCivil.findOne(a.profile.estadoCivil_id);
 	  a.profile.estadoCivil = "";
 	  a.profile.estadoCivil = estadoCivil.nombre;
