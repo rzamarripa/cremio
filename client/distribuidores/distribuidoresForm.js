@@ -340,6 +340,9 @@ angular.module("creditoMio")
     colE : () => {
 	    rc.coloniaEmpresa = Colonias.findOne({_id: this.getReactively("empresa.colonia_id")});			
     },
+    edoCivil: () =>{
+				rc.estadoCivilSeleccionado = EstadoCivil.findOne(rc.objeto.profile.estadoCivil_id); 	    
+    }
   }); 
   
   this.cambiarPaisObjeto = function() {
@@ -444,7 +447,7 @@ angular.module("creditoMio")
 
       // Meteor.apply('generarAval', rc.avales, function(error, result){
       // if(result){
-        console.log("apunto de entrar",objeto)
+      //console.log("apunto de entrar",objeto)
     
        Meteor.call('createUsuario', objeto, "Distribuidor", function(e,r){
           if (r)
