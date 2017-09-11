@@ -281,33 +281,27 @@ this.tieneFoto = function(sexo, foto){
 		
 		if (rc.cliente.roles == "Distribuidor") {
 			this.credito.periodoPago = "Quincenal"
-
 		}
-	    Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
-		if (result)
-		{
-			//console.log(result,"sucursal bebe");
-			//rc.sucursalCliente.push(result);
-			//console.log(rc.sucursalCliente,"sucursal del cliente");
-		
-		if (rc.cliente.roles == "Distribuidor") {
-			rc.credito.tasa = result.tasaVales
-			rc.credito.tiposCredito_id = rc.tiposCredito[0]._id
-		}else if (rc.cliente.roles == "Cliente") {
-			rc.credito.tasa = rc.credito.tasa
-			rc.credito.tiposCredito_id = rc.credito.tiposCredito_id 
-
-		}
-
-		}
-	/*
-	
-		this.credito.periodoPago = "Quincenal";
+	  
 	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
-		if (result)
-		{
-*/
-
+			if (result)
+			{
+					//console.log(result,"sucursal bebe");
+					//rc.sucursalCliente.push(result);
+					//console.log(rc.sucursalCliente,"sucursal del cliente");
+					
+					if (rc.cliente.roles == "Distribuidor") {
+						rc.credito.tasa = result.tasaVales
+						rc.credito.tiposCredito_id = rc.tiposCredito[0]._id
+					}else if (rc.cliente.roles == "Cliente") {
+						rc.credito.tasa = rc.credito.tasa
+						rc.credito.tiposCredito_id = rc.credito.tiposCredito_id 
+			
+					}
+	
+			}
+		
+		});
 		
 		var credito = {
 			cliente_id : rc.cliente._id,
@@ -331,10 +325,7 @@ this.tieneFoto = function(sexo, foto){
 			tasa: rc.credito.tasa,
 			conSeguro : rc.credito.conSeguro,
 			seguro: rc.credito.seguro,
-		//};
-			
-			
-		//console.log(credito);
+		};
 				
 		credito.avales = angular.copy(rc.avales);
 		
@@ -346,11 +337,12 @@ this.tieneFoto = function(sexo, foto){
 				credito.garantias = angular.copy(rc.garantiasGeneral);
 				
 				
-				if (Meteor.user().roles = "Distribuidor") {
-					credito.tipo = "vale"
-				}else if (Meteor.user().roles = "Cliente") {
-					credito.tipo == "creditoP"
-				}
+		if (Meteor.user().roles = "Distribuidor") {
+			credito.tipo = "vale"
+		}
+		else if (Meteor.user().roles = "Cliente") {
+			credito.tipo == "creditoP"
+		}
 		//Cambie el metodo	
 
 		Meteor.apply('generarCreditoPeticion', [rc.cliente, credito], function(error, result){
@@ -369,9 +361,7 @@ this.tieneFoto = function(sexo, foto){
 			$scope.$apply();
 			/////////////////AQUI
 		});
-			}
-						
-				})
+		
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -507,16 +497,17 @@ this.tieneFoto = function(sexo, foto){
 		
 		Meteor.call('getAval', a._id, function(error, result){
 			if(result){					
-					rc.aval.ocupacion = result.ocupacion;
-					rc.aval.calle = result.calle;
-					rc.aval.numero = result.numero;
-					rc.aval.codigoPostal = result.codigoPostal;
-					rc.aval.estadoCivil = result.estadoCivil;
-					rc.aval.empresa = result.empresa.nombre;
-					rc.aval.direccionEmpresa = result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;
-					rc.aval.puesto = result.puesto;
-					rc.aval.tiempoLaborando = result.tiempoLaborando;
-					rc.aval.foto = result.foto;
+					rc.aval.ocupacion 		 		= result.ocupacion;
+					rc.aval.nombreCompleto 		= 
+					rc.aval.calle 						= result.calle;
+					rc.aval.numero 						= result.numero;
+					rc.aval.codigoPostal 			= result.codigoPostal;
+					rc.aval.estadoCivil 			= result.estadoCivil;
+					rc.aval.empresa 					= result.empresa.nombre;
+					rc.aval.direccionEmpresa 	= result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;
+					rc.aval.puesto 						= result.puesto;
+					rc.aval.tiempoLaborando 	= result.tiempoLaborando;
+					rc.aval.foto 							= result.foto;
 					$scope.$apply();
 			}
 		});
@@ -692,8 +683,9 @@ this.tieneFoto = function(sexo, foto){
 	};
 	
 	this.editarGarantia = function(tipo, a)
-	{ console.log(tipo,"tipo")
-	console.log("a",a)
+	{ 
+		//console.log(tipo,"tipo")
+		//console.log("a",a)
 
 			if (tipo == "mobiliaria")
 			{
@@ -801,7 +793,8 @@ this.tieneFoto = function(sexo, foto){
 		 // setTimeout(function(){popupWin.print();},1000);
 
     };
-    this.cerrarGArantia = function(tipo){
+    
+  this.cerrarGArantia = function(tipo){
     	if (tipo == "mobiliaria")
 			{
 					this.garantia={};
