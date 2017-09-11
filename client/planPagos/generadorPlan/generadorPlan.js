@@ -278,7 +278,11 @@ this.tieneFoto = function(sexo, foto){
 		}	
 
 
-		this.credito.periodoPago = "Quincenal"
+		
+		if (rc.cliente.roles == "Distribuidor") {
+			this.credito.periodoPago = "Quincenal"
+
+		}
 	    Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
 		if (result)
 		{
