@@ -242,10 +242,12 @@ Meteor.methods({
 					objeto.coloniaCliente = Colonias.findOne(objeto.colonia_id);
 					objeto.estadoCliente = Estados.findOne(objeto.estado_id);
 					objeto.municipioCliente = Municipios.findOne(objeto.municipio_id);
+					objeto.paisCliente = Paises.findOne(objeto.pais_id);
 					objeto.ocupacionCliente = Ocupaciones.findOne(objeto.ocupacion_id);
 					objeto.ciudadCliente = Ciudades.findOne(objeto.ciudad_id);
 					objeto.sucursales = Sucursales.findOne(objeto.sucursal_id);
 					objeto.estadoCivilCliente = EstadoCivil.findOne(objeto.estadoCivil_id);
+					objeto.empresa = Empresas.findOne(objeto.empresa_id);
 					_.each(objeto.referenciasPersonales_ids, function(item){
 					objeto.referencias = ReferenciasPersonales.findOne(item.referenciaPersonal_id)
 
@@ -1084,8 +1086,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				
 				if (contrato.tipoInteres.tipoInteres == "Simple") {
 					var content = fs
@@ -1156,8 +1158,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-	    var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+	   // var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 	    if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
@@ -1225,8 +1227,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-	    //var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+	    var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -1301,8 +1303,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			console.log("entra SIMPLE")
 			var content = fs				
@@ -1425,14 +1427,14 @@ Meteor.methods({
 
   imprimirHistorial: function (objeto,cliente,credito) {
 	
-		console.log(credito,"cre")
+		console.log(cliente,"cliente")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var ImageModule = require('docxtemplater-image-module');
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		var opts = {}
 			opts.centered = false;
 			opts.getImage=function(tagValue, tagName) {
@@ -1471,13 +1473,13 @@ Meteor.methods({
 		var f = fecha;
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	    
-      objeto.fechaLimite =moment(objeto.fechaLimite).format("DD-MM-YYYY")
-      cliente.fechaCreacion =moment(cliente.fechaCreacion).format("DD-MM-YYYY")
-      cliente.fechaNa =moment(cliente.fechaNa).format("DD-MM-YYYY")
-      credito.fechaEntrega =moment(credito.fechaEntrega).format("DD-MM-YYYY")
-      credito.adeudoInicial = parseFloat(credito.adeudoInicial.toFixed(2))
-      credito.saldoActual = parseFloat(credito.saldoActual.toFixed(2))
-      credito.saldoMultas = parseFloat(credito.saldoMultas.toFixed(2))
+       objeto.fechaLimite =moment(objeto.fechaLimite).format("DD-MM-YYYY")
+       cliente.fechaCreacion =moment(cliente.fechaCreacion).format("DD-MM-YYYY")
+       cliente.fechaNacimiento =moment(cliente.fechaNacimiento).format("DD-MM-YYYY")
+       credito.fechaEntrega =moment(credito.fechaEntrega).format("DD-MM-YYYY")
+       credito.adeudoInicial = parseFloat(credito.adeudoInicial.toFixed(2))
+       credito.saldoActual = parseFloat(credito.saldoActual.toFixed(2))
+       credito.saldoMultas = parseFloat(credito.saldoMultas.toFixed(2))
 
       var totalCargos = 0
       var totalAbonos = 0 
@@ -1489,25 +1491,36 @@ Meteor.methods({
       totalCargos = parseFloat(item.sumaCargos.toFixed(2))
       totalSaldo =  parseFloat(item.ultimoSaldo.toFixed(2))
 	 });
+	 		cliente.ciudad = cliente.ciudadCliente.nombre
+			cliente.sucursal = cliente.sucursales.nombreSucursal
+			cliente.colonia = cliente.coloniaCliente.nombre
+			cliente.municipio = cliente.municipioCliente.nombre
+			cliente.estado = cliente.estadoCliente.nombre
+			cliente.nacionalidad = cliente.nacionalidadCliente.nombre
+			cliente.estadoCivil = cliente.estadoCivilCliente.nombre
+			cliente.ocupacion = cliente.ocupacionCliente.nombre
 		
 		doc.setData({				
 						items:   objeto,
-						fecha:   fecha,
-						cliente: cliente,
-						foto:    cliente.foto,
-						sucursal: cliente.sucursal,
-						fechaCreacion : cliente.fechaCreacion,
-						nombreCompleto :  cliente.profile.nombreCompleto,
-						sexo : cliente.profile.sexo,
-						nacionalidad : cliente.clienteNacionalidad.nombre,
-						ocupacion : cliente.ocupacion,
-						fechaNacimiento : cliente.fechaNa,
-						lugarNacimiento : cliente.lugarNacimiento,
-						capitalSolicitado : credito.capitalSolicitado,
-						numeroPagos : credito.numeroPagos,
-						adeudoInicial : credito.adeudoInicial,
-						saldoActual : credito.saldoActual,
-						fechaEntrega : credito.fechaEntrega,
+						// fecha:   fecha,
+						 cliente: cliente,
+						 foto:    cliente.foto,
+						 credito: credito,
+
+						// sucursal: cliente.sucursal,
+						// fechaCreacion : cliente.fechaCreacion,
+						// nombreCompleto :  cliente.profile.nombreCompleto,
+						// sexo : cliente.profile.sexo,
+						// nacionalidad : cliente.clienteNacionalidad.nombre,
+						// ocupacion : cliente.ocupacion,
+						// fechaNacimiento : cliente.fechaNa,
+						// lugarNacimiento : cliente.lugarNacimiento,
+						// capitalSolicitado : credito.capitalSolicitado,
+						// numeroPagos : credito.numeroPagos,
+						 adeudoInicial : credito.adeudoInicial,
+						// saldoActual : credito.saldoActual,
+						// fechaEntrega : credito.fechaEntrega,
+						fechaEmision:     fecha,
 						saldoMultas : credito.saldoMultas,
 						totalCargos : totalCargos,
 						totalAbonos : totalAbonos,

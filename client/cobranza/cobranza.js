@@ -449,21 +449,17 @@ angular.module("creditoMio")
   
   this.selCredito=function(objeto, num)
   {
-    console.log(objeto,"kaka" )
+   
 			
 			//objeto.classPago = "text-primary";
 			//console.log(objeto);
-          Meteor.call('getClienteInformacion',objeto.cliente, function(error, result) {           
+          Meteor.call('getPeople',objeto.cliente._id, function(error, result){                     
           if (result)
           {
-            rc.cliente = result;
-              console.log("cliente",result);
-              
 
-
-              $scope.$apply();
-          }
-      });
+            objeto.cliente = result
+ //console.log(rc.cliente,"kaka" )
+         
 			
       rc.cliente_id = objeto.cliente._id
 
@@ -471,7 +467,7 @@ angular.module("creditoMio")
 
       objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
 
-      this.ban = !this.ban;
+      rc.ban = !rc.ban;
 
       rc.credito_id = objeto.credito._id;
       //console.log("Objeto: ",objeto)
@@ -479,7 +475,7 @@ angular.module("creditoMio")
 
       //Información del Cliente
       rc.cliente = objeto.cliente;
-      //console.log(rc.cliente);
+      console.log(rc.cliente,"popo");
       var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
       if (ec != undefined) rc.cliente.profile.estadoCivil = ec.nombre; 
       var nac = Nacionalidades.findOne(rc.cliente.profile.nacionalidad_id);
@@ -528,6 +524,7 @@ angular.module("creditoMio")
          objeto.celular = rc.cliente.profile.celular
          objeto.folioCredito = objeto.credito.folio
          objeto.saldoActual = objeto.credito.saldoActual
+        // console.log(objeto,"objetisimo")
 
          //objeto.municipio = rc.cliente.profile.municipio
 
@@ -592,12 +589,12 @@ angular.module("creditoMio")
       });
 
        
-      
-      
       //-----------------------------------------------------------------------------
       
-      
-      this.selected_numero = num;
+      console.log("no llega")
+      rc.selected_numero = num;
+       }
+        });
   };
 
    this.selCredito2=function(objeto)
@@ -616,14 +613,13 @@ angular.module("creditoMio")
     }
   
   this.isSelected=function(objeto){
+   
 		
-		
-		
-		if (this.selected_numero === objeto)
-		{
+		// if (this.selected_numero === objeto)
+		//{
 				// console.log("isSelected:", objeto); 	
-				// console.log(objeto);
-		}
+				 //console.log(objeto,"ATMOSFEARZ")
+		//}
 		
 		
     this.sumarSeleccionados();

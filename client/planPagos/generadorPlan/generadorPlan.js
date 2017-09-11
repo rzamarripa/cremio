@@ -276,18 +276,42 @@ this.tieneFoto = function(sexo, foto){
 				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
 				return;
 		}	
+		
 
 		
+		if (rc.cliente.roles == "Distribuidor") {
+			this.credito.periodoPago = "Quincenal"
+
+		}
+	    Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
+		if (result)
+		{
+			//console.log(result,"sucursal bebe");
+			//rc.sucursalCliente.push(result);
+			//console.log(rc.sucursalCliente,"sucursal del cliente");
 		
+		if (rc.cliente.roles == "Distribuidor") {
+			rc.credito.tasa = result.tasaVales
+			rc.credito.tiposCredito_id = rc.tiposCredito[0]._id
+		}else if (rc.cliente.roles == "Cliente") {
+			rc.credito.tasa = rc.credito.tasa
+			rc.credito.tiposCredito_id = rc.credito.tiposCredito_id 
+
+		}
+
+		}
+	/*
+	
 		this.credito.periodoPago = "Quincenal";
 	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
 		if (result)
 		{
+*/
 
 		
 		var credito = {
 			cliente_id : rc.cliente._id,
-			tipoCredito_id : rc.tiposCredito[0]._id,
+			tipoCredito_id : rc.credito.tipoCredito_id,
 			fechaSolicito : new Date(),
 			duracionMeses : rc.credito.duracionMeses,
 			capitalSolicitado : rc.credito.capitalSolicitado,
@@ -304,10 +328,10 @@ this.tieneFoto = function(sexo, foto){
 			fechaVerificacion: rc.credito.fechaVerificacion,
 			turno : rc.credito.turno,
 			tipoGarantia : rc.credito.tipoGarantia,
-			tasa: result.tasaVales,
+			tasa: rc.credito.tasa,
 			conSeguro : rc.credito.conSeguro,
-			seguro: rc.credito.seguro
-		};
+			seguro: rc.credito.seguro,
+		//};
 			
 			
 		//console.log(credito);
