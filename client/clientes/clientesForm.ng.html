@@ -373,44 +373,38 @@
 					<div class="row">
 						<div class="col-sm-4" valida> 					    
 							<label>Nombre *</label>
-							<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cli.objeto.profile.nombreConyuge" required="" capitalize>
+							<input name="nombreConyuge" type="text" class="form-control" placeholder="Nombre" ng-model="cli.objeto.profile.nombreConyuge" required="" capitalize>
 						</div>
 						<div class="col-sm-4" valida>					    
-							<label>Dirección *</label>
-							<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyuge" required="" capitalize>
+							<label>Celular *</label>
+							<input name="celularConyuge" type="text" class="form-control" placeholder="Celular" ng-model="cli.objeto.profile.celularConyuge" required="" capitalize>
 						</div>
 						<div class="col-sm-4" valida>					    
-							<label>Dirección del trabajo *</label>
-							<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cli.objeto.profile.direccionConyugeTrabajo" required="" capitalize>
+							<label>Empresa *</label>
+							<input name="empresaConyuge" type="text" class="form-control" placeholder="Empresa Conyuge" ng-model="cli.objeto.profile.empresaConyuge" required="" capitalize>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-sm-3" valida>					    
+						<div class="col-sm-4" valida>					    
+							<label>Dirección Empresa*</label>
+							<input name="direccionEmpresa" type="text" class="form-control" placeholder="Dirección Empresa" ng-model="cli.objeto.profile.direccionEmpresa" required="" capitalize>
+						</div>
+						<div class="col-sm-4" valida>					    
+							<label>Teléfono del trabajo *</label>
+							<input name="telefonoConyugeTrabajo" type="text" class="form-control" placeholder="Teléfono trabajo" ng-model="cli.objeto.profile.telefonoConyugeTrabajo" required="" capitalize >
+						</div>
+						<div class="col-sm-4" valida>					    
 							<label>Puesto *</label>
-							<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cli.objeto.profile.puestoConyuge" required="" capitalize>
+							<input name="puestoConyuge" type="text" class="form-control" placeholder="Puesto" ng-model="cli.objeto.profile.puestoConyuge" required="" capitalize>
 						</div>
-						<div class="col-sm-3" valida>					    
-							<label>Teléfono Particular *</label>
-							<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyuge" required="">
-						</div>
-						<div class="col-sm-3">					    
-							<label>Teléfono del trabajo</label>
-							<input name="telefonoConyugeTrabajo" type="number" class="form-control" placeholder="Teléfono" ng-model="cli.objeto.profile.telefonoConyugeTrabajo" >
-						</div>
-						<div class="col-sm-3">					    
-							<label>Celular</label>
-							<input name="celularConyuge" type="number" class="form-control" placeholder="Celular" ng-model="cli.objeto.profile.celularConyuge" >
-						</div>
+						
 					</div>
 					<div class="row">
-						<div class="col-sm-4">					    
-							<label>Ocupación</label>
-							<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cli.objeto.profile.ocupacionConyuge" capitalize>
-						</div>	
-						<div class="col-sm-4">					    
-							<label>Dirección Trabajo</label>
-							<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion" ng-model="cli.objeto.profile.direccionTrabajoConyuge" capitalize>
-						</div>		   				    	    
+						
+						<div class="col-sm-12" valida>					    
+							<label>Nombre, puesto y teléfono jefe inmediato *</label>
+							<input name="datosjefeInmediato" type="text" class="form-control" placeholder="Datos Jefe Inmediato" ng-model="cli.objeto.profile.datosjefeInmediato" required="" capitalize>
+						</div>
 					</div>
 				</div>
 			</div>

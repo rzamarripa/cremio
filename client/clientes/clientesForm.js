@@ -261,7 +261,6 @@ angular.module("creditoMio")
       if (objeto != undefined)
       {
 	      	
-	      	
           this.referenciasPersonales = [];
           if ($stateParams.objeto_id != undefined)
           {
@@ -290,10 +289,16 @@ angular.module("creditoMio")
               });     
           	   
           }
-
+					
+										
+					
+					
           rc.objeto = objeto;
           rc.objeto.confirmpassword = "sinpassword";	
 					rc.objeto.password 				= "sinpassword"; 
+					
+				
+
 					
           //return objeto;
       }  
@@ -316,6 +321,9 @@ angular.module("creditoMio")
     colE : () => {
 	    rc.coloniaEmpresa = Colonias.findOne({_id: this.getReactively("empresa.colonia_id")});			
     },
+    edoCivil: () =>{
+				rc.estadoCivilSeleccionado = EstadoCivil.findOne(rc.objeto.profile.estadoCivil_id); 	    
+    }
   }); 
   
   this.cambiarPaisObjeto = function() {
@@ -455,13 +463,26 @@ angular.module("creditoMio")
 
   
     delete objeto.profile.repeatPassword;
-    Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Cliente", this.cambiarContrasena);
-    toastr.success('Actualizado correctamente.');
-    //$('.collapse').collapse('hide');
-    this.nuevo = true;
-    form.$setPristine();
-    form.$setUntouched();
-    $state.go('root.clienteDetalle', { 'objeto_id':objeto._id});
+    
+    
+    _.each(objeto.profile.documentos, function(d){	    
+	    delete d.$$hashKey;
+    })
+    
+    
+    Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Cliente", this.cambiarContrasena, function(error,result){
+	    	console.log(result);
+	    	if (result)
+	    	{
+		    		toastr.success('Actualizado correctamente.');
+				    //$('.collapse').collapse('hide');
+				    this.nuevo = true;
+				    form.$setPristine();
+				    form.$setUntouched();
+				    $state.go('root.clienteDetalle', { 'objeto_id':objeto._id});
+		    	
+	    	}	    
+    });
 
   };
   
@@ -561,8 +582,6 @@ angular.module("creditoMio")
     
  /*
 */
-  
-  
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
   

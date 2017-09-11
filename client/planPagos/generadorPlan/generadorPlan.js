@@ -258,7 +258,6 @@ this.tieneFoto = function(sexo, foto){
 					rc.planPagos.push(pago)
 					$scope.$apply();
 				});
-				console.log("Prueba",rc.planPagos)
 			}
 				
 		})
@@ -267,6 +266,7 @@ this.tieneFoto = function(sexo, foto){
 	}
 	
 	this.generarCredito = function(form){
+		
 		if(form.$invalid){
 				toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
 				return;
@@ -277,18 +277,13 @@ this.tieneFoto = function(sexo, foto){
 				return;
 		}	
 
-
-		this.credito.periodoPago = "Quincenal"
-	    Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
+		
+		
+		this.credito.periodoPago = "Quincenal";
+	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
 		if (result)
 		{
-			console.log(result,"sucursal bebe");
-			//rc.sucursalCliente.push(result);
-			//console.log(rc.sucursalCliente,"sucursal del cliente");
-		
-		//this.credito.sucursal = Sucu
-		//this.credito.tasa = this.
-		
+
 		
 		var credito = {
 			cliente_id : rc.cliente._id,

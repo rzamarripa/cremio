@@ -13,13 +13,14 @@
             <thead>
                 <tr>
                     <th style='width: 5%' class="text-center">No.</th>
-                    <th style='width: 10%' class="text-center">Cliente</th>
-                    <th style='width: 10%' class="text-center">Capital Solicitado</th>
-                    <th style='width: 10%' class="text-center">Fecha Solicitud</th>
+                    <th style='width: 15%' class="text-center">Cliente</th>
+                    <th style='width: 5%' class="text-center">Capital Solicitado</th>
+                    <th style='width: 8%' class="text-center">Fecha Solicitud</th>
+                    <th style='width: 15%' class="text-center">Aval</th>
                     <th style='width: 10%' class="text-center">Verificación</th>
-                    <th style='width: 15%' class="text-center">Verificación Estatus</th>
-                    <th style='width: 15%' class="text-center">Valoración</th>
-                    <th style='width: 10%' class="text-center">Acciones</th>
+                    <th style='width: 8%' class="text-center">Verificación Estatus</th>
+                    <th style='width: 8%' class="text-center">Valoración</th>
+                    <th style='width: 5%' class="text-center">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +29,8 @@
                     <td><a href="javascript:void(0);" ui-sref="root.clienteDetalle({objeto_id : credito.cliente_id})">{{credito.cliente.profile.nombreCompleto}}</a></td>
                     <td class="text-center">{{credito.capitalSolicitado | currency}}</td>
                     <td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
-                    <td class="text-center"><ul ng-if="credito.requiereVerificacion">
+                    <td>{{credito.avales_ids[0].nombreCompleto}}</td>
+                    <td class="text-left" style="padding: 0px"><ul ng-if="credito.requiereVerificacion" style="padding-left: 15px">
 	                    												<li ng-repeat="v in credito.verificaciones">
 			                    											<a ng-if = "v.tipoVerificacion == 'vecino'" 
 			                    												 href="javascript:void(0);" 

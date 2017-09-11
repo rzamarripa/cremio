@@ -23,7 +23,7 @@ angular.module("creditoMio")
     
   this.helpers({
 		creditosPorAutorizar : () => {
-			var creditos = Creditos.find({estatus : 1}).fetch();
+			var creditos = Creditos.find({estatus : 1},{ sort : {fechaSolicito : 1 }}).fetch();
 			if(creditos){
 				rc.clientes_ids = _.pluck(creditos, "cliente_id");
 				
@@ -46,6 +46,26 @@ angular.module("creditoMio")
 								 		$scope.$apply();
 							 }
 						});
+						
+						if (credito.avales_ids.length > 0 )
+						{		
+							console.log(credito);	
+/*
+							Meteor.call('getAvalEncabezado', credito.avales_ids[0], function(error, result) {
+							   if(error)
+							   {
+								    console.log('ERROR :', error);
+								    return;
+							   }
+							   if(result)
+							   {	
+								   	console.log(result);
+									 	credito.aval = result;	
+									 	$scope.$apply();
+								 }
+							});
+*/
+						}
 						
 						
 				})

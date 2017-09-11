@@ -9,6 +9,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	
 	rc.fechaInicial = new Date();
   rc.fechaInicial.setHours(0,0,0,0);
+
 /*
   rc.fechaFinal = new Date(rc.getReactively("fechaInicial"));
   rc.fechaFinal.setHours(23,0,0,0);	
@@ -135,7 +136,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	
 	this.helpers({
 		creditos : () => {
-			rc.creditos = Creditos.find().fetch();
+			rc.creditos = Creditos.find({},{ sort : {fechaSolicito : 1 }}).fetch();
 		  if (rc.creditos != undefined)
 		  {
 			  _.each(rc.creditos, function(credito){
