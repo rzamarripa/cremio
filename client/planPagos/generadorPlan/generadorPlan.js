@@ -271,14 +271,12 @@ this.tieneFoto = function(sexo, foto){
 				toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
 				return;
 		}	
-		if (rc.cliente.profile.renta == true && this.avales.length == 0)		
+		if (rc.cliente.profile.renta == true && this.avales.length == 0 && rc.cliente.roles != "Distribuidor")		
 		{
 				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
 				return;
 		}	
 
-
-		
 		if (rc.cliente.roles == "Distribuidor") {
 			this.credito.periodoPago = "Quincenal"
 
