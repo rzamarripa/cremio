@@ -276,13 +276,7 @@ this.tieneFoto = function(sexo, foto){
 				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
 				return;
 		}	
-<<<<<<< HEAD
 
-=======
-		
-
-		
->>>>>>> 3bfbc9ee898f1421997e494151fb2d5434efb5cf
 		if (rc.cliente.roles == "Distribuidor") {
 			this.credito.periodoPago = "Quincenal"
 
