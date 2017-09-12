@@ -325,6 +325,9 @@ Meteor.methods({
 
   getFicha: function (objeto,referencia) {
   	console.log(objeto.referencias,"FICHA")
+  	if (objeto.numeroDistribuidor) {
+  		objeto.numeroCliente = objeto.numeroDistribuidor
+  	}
 	
 		
 		var fs = require('fs');
@@ -333,8 +336,8 @@ Meteor.methods({
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 
 		var opts = {}
@@ -400,7 +403,7 @@ Meteor.methods({
 						objeto.fechaEmision = fechaEmision
 						objeto.fechaEmision= moment(objeto.fechaEmision).format("DD-MM-YYYY")
 
-						
+						    objeto.pais = objeto.paisCliente.nombre
 							objeto.ciudad = objeto.ciudadCliente.nombre
 							objeto.sucursal = objeto.sucursales.nombreSucursal
 							objeto.colonia = objeto.coloniaCliente.nombre

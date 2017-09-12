@@ -517,6 +517,7 @@ this.tieneFoto = function(sexo, foto){
 			{
 					toastr.warning("Favor de agregar al datos del Aval, Parentesco y Tiempo de Conocerlo...");
 					return;					
+
 			}
 		
 			rc.aval.num = this.avales.length + 1;
@@ -690,16 +691,21 @@ this.tieneFoto = function(sexo, foto){
 			if (tipo == "mobiliaria")
 			{
 					a.num = this.numG;
+
+
 			
 					_.each(this.garantias, function(av){
 						if (av.num == a.num)
 						{
-							av.tipo = a.tipo;
-							av.marca = a.marca;
-							av.modelo = a.modelo;			
-							av.serie = a.serie;
-							av.color = a.color;
-							av.estadoActual = a.estadoActual;
+							av.descripcion = a.descripcion;
+							av.caracteristicas = a.caracteristicas;
+							av.avaluo = a.avaluo;			
+							av.prestamoPorcentaje = a.prestamoPorcentaje;
+							av.prestamo = a.prestamo;
+							av.monto = a.monto;
+							av.porcentaje = a.porcentaje;
+							av.fechaComercializacion = a.fechaComercializacion;
+							av.fechaFiniquito = a.fechaFiniquito;
 						}
 					})
 				
@@ -714,8 +720,18 @@ this.tieneFoto = function(sexo, foto){
 					_.each(this.garantiasGeneral, function(av){
 						if (av.num == a.num)
 						{
-							av.descripcion = a.descripcion;
-							av.valorEstimado = a.valorEstimado;
+							
+
+							av.medidasColindancias = a.medidasColindancias
+						    av.terrenoYconstruccion = a.terrenoYconstruccion
+						    av.prestamoSobreAvaluo = a.prestamoSobreAvaluo
+						    av.prestamo = a.prestamo
+						    av.num = a.num
+						    av.montoAvaluo = a.montoAvaluo
+							av.avaluo = a.avaluo;
+							av.comisionGastos = a.comisionGastos;
+							av.escrituracion = a.escrituracion;
+							av.porcentajePrestamo = a.porcentajePrestamo;
 						}
 					})
 				
