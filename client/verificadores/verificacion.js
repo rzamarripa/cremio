@@ -13,9 +13,11 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.numG = 0;
 	this.conGen = 0;
 	this.numGen = 0;
-	
-  this.garantia = {};
-  rc.objeto = {};
+
+
+
+    this.garantia = {};
+    rc.objeto = {};
 	
 	this.garantiasGeneral = [];
 	this.garantias = [];
@@ -205,28 +207,155 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 					
 	};
 
+
+
 	this.editarGarantia = function(tipo, a)
-	{
+	{ console.log(tipo,"tipo")
+	console.log("a",a)
+
 			if (tipo == "mobiliaria")
 			{
-					this.garantia.tipo = a.tipo;
-					this.garantia.marca = a.marca;
-					this.garantia.modelo = a.modelo;			
-					this.garantia.serie = a.serie;
-					this.garantia.color = a.color;
-					this.garantia.estadoActual = a.estadoActual;
-					
-					this.numG = a.num;
+					this.garantia.descripcion = a.descripcion;
+					this.garantia.caracteristicas = a.caracteristicas;
+					this.garantia.avaluo = a.avaluo;			
+					this.garantia.prestamoPorcentaje = a.prestamoPorcentaje;
+					this.garantia.prestamo = a.prestamo;
+					this.garantia.monto = a.monto;
+					this.garantia.porcentaje = a.porcentaje;
+					this.garantia.fechaComercializacion = a.fechaComercializacion;
+					this.garantia.fechaFiniquito = a.fechaFiniquito;					
+				
 					this.actionGarantia = false;
 			}
 			else
 			{
-					this.garantia.descripcion = a.descripcion;
-					this.garantia.valorEstimado = a.valorEstimado;
+				    this.garantia.medidasColindancias = a.medidasColindancias
+				    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion
+				    this.garantia.prestamoSobreAvaluo = a.prestamoSobreAvaluo
+				    this.garantia.prestamo = a.prestamo
+				    this.garantia.num = a.num
+				    this.garantia.montoAvaluo = a.montoAvaluo
+					this.garantia.avaluo = a.avaluo;
+					this.garantia.comisionGastos = a.comisionGastos;
+					this.garantia.escrituracion = a.escrituracion;
+					this.garantia.porcentajePrestamo = a.porcentajePrestamo;
 					
-					this.numGen = a.num;
 					this.actionGarantia = false;
 			}		
+	};
+
+	this.verGarantia = function(tipo,a)
+	{
+		//console.log(a,"aval p")
+		$("#modalGarantia").modal('show');
+				if (tipo == "mobiliaria")
+			{
+				this.mob = true
+					this.garantia.descripcion = a.descripcion;
+					this.garantia.caracteristicas = a.caracteristicas;
+					this.garantia.avaluo = a.avaluo;			
+					this.garantia.prestamoPorcentaje = a.prestamoPorcentaje;
+					this.garantia.prestamo = a.prestamo;
+					this.garantia.monto = a.monto;
+					this.garantia.porcentaje = a.porcentaje;
+					this.garantia.fechaComercializacion = a.fechaComercializacion;
+					this.garantia.fechaFiniquito = a.fechaFiniquito;					
+				
+					this.actionGarantia = false;
+			}
+			else
+			{		this.general = true
+				    this.garantia.medidasColindancias = a.medidasColindancias
+				    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion
+				    this.garantia.prestamoSobreAvaluo = a.prestamoSobreAvaluo
+				    this.garantia.prestamo = a.prestamo
+				    this.garantia.num = a.num
+				    this.garantia.montoAvaluo = a.montoAvaluo
+					this.garantia.avaluo = a.avaluo;
+					this.garantia.comisionGastos = a.comisionGastos;
+					this.garantia.escrituracion = a.escrituracion;
+					this.garantia.porcentajePrestamo = a.porcentajePrestamo;
+					
+					this.actionGarantia = false;
+			}	
+	
+	};
+
+	this.insertarGarantia = function(tipo)
+	{
+			if (tipo == "mobiliaria")
+			{				
+					this.conG = this.conG + 1;
+					this.garantia.num = this.conG;
+					
+					this.garantias.push(this.garantia);	
+					this.garantia={};
+			}
+			else
+			{
+					this.conGen = this.conGen + 1;
+					this.garantia.num = this.conGen;
+					
+					this.garantiasGeneral.push(this.garantia);	
+					this.garantia={};
+			}
+				
+	};
+
+	this.actualizarGarantia = function(tipo, a)
+	{
+			if (tipo == "mobiliaria")
+			{
+					a.num = this.numG;
+
+
+			
+					_.each(this.garantias, function(av){
+						if (av.num == a.num)
+						{
+							av.descripcion = a.descripcion;
+							av.caracteristicas = a.caracteristicas;
+							av.avaluo = a.avaluo;			
+							av.prestamoPorcentaje = a.prestamoPorcentaje;
+							av.prestamo = a.prestamo;
+							av.monto = a.monto;
+							av.porcentaje = a.porcentaje;
+							av.fechaComercializacion = a.fechaComercializacion;
+							av.fechaFiniquito = a.fechaFiniquito;
+						}
+					})
+				
+					this.garantia = {};
+					this.numG = 0;
+					this.actionGarantia = true;
+			}
+			else
+			{
+					a.num = this.numGen;
+			
+					_.each(this.garantiasGeneral, function(av){
+						if (av.num == a.num)
+						{
+							
+
+							av.medidasColindancias = a.medidasColindancias
+						    av.terrenoYconstruccion = a.terrenoYconstruccion
+						    av.prestamoSobreAvaluo = a.prestamoSobreAvaluo
+						    av.prestamo = a.prestamo
+						    av.num = a.num
+						    av.montoAvaluo = a.montoAvaluo
+							av.avaluo = a.avaluo;
+							av.comisionGastos = a.comisionGastos;
+							av.escrituracion = a.escrituracion;
+							av.porcentajePrestamo = a.porcentajePrestamo;
+						}
+					})
+				
+					this.garantia = {};
+					this.numGen = 0;
+					this.actionGarantia = true;		
+			}
+					
 	};
 
   

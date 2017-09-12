@@ -106,6 +106,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		cliente : () => {
 			var cliente = Meteor.users.findOne($stateParams.objeto_id);
 			//console.log(cliente,"el cliente paps")
+			if (true) {}
 
 			return  cliente
 		},
@@ -115,6 +116,9 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		pagos : () => {
 			return Pagos.find();
 		},
+		// distrib : () => {
+			
+		// },
 /*
 		creditos: () => {
 			var cred = Creditos.find({}).fetch();
@@ -214,7 +218,9 @@ this.tieneFoto = function(sexo, foto){
 		}
 		rc.planPagos = [];
 		this.tablaAmort = true;
-			
+		if (rc.cliente.roles == "Distribuidor") {
+			this.credito.periodoPago = "Quincenal"
+		}
 		if(rc.credito.requiereVerificacion == true)
 			rc.credito.estatus = 0;
 		else
@@ -222,32 +228,54 @@ this.tieneFoto = function(sexo, foto){
 			
 		if (!this.credito.requiereVerificacion)
 				this.credito.turno = "";
+			  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
+			if (result)
+			{
+					//console.log(result,"sucursal bebe");
+					//rc.sucursalCliente.push(result);
+					//console.log(rc.sucursalCliente,"sucursal del cliente");
+						if (rc.cliente.roles == "Distribuidor") {
+						console.log("distri")
+						rc.credito.tasa = result.tasaVales
+						
+						console.log(rc.credito.tipoCredito_id)
+					}else if (rc.cliente.roles == "Cliente") {
+						console.log("clientaso")
+						rc.credito.tasa = rc.credito.tasa
+						
+			
+					}
+			
+			if (rc.cliente.roles == "Distribuidor") {
+				rc.credito.tipoCredito_id = rc.tiposCredito[0]._id
 
-		var _credito = {
-			cliente_id : this.cliente._id,
-			tipoCredito_id : this.credito.tipoCredito_id,
-			fechaSolicito : new Date(),
-			duracionMeses : this.credito.duracionMeses,
-			capitalSolicitado : this.credito.capitalSolicitado,
-			adeudoInicial : this.credito.capitalSolicitado,
-			saldoActual : this.credito.capitalSolicitado,
-			periodoPago : this.credito.periodoPago,
-			fechaPrimerAbono : this.credito.primerAbono,
-			multasPendientes : 0,
-			saldoMultas : 0.00,
-			saldoRecibo : 0.00,
-			estatus : 1,
-			requiereVerificacion: this.credito.requiereVerificacion,
-			turno : this.credito.turno,
-			sucursal_id : Meteor.user().profile.sucursal_id,
-			fechaVerificacion: this.credito.fechaVerificacion,
-			turno: this.credito.turno,
-			tasa: this.credito.tasa,
-			conSeguro : this.credito.conSeguro,
-			seguro: this.credito.seguro
-		};
+			}
 
-		Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
+			var _credito = {
+				cliente_id : rc.cliente._id,
+				tipoCredito_id : rc.credito.tipoCredito_id,
+				fechaSolicito : new Date(),
+				duracionMeses : rc.credito.duracionMeses,
+				capitalSolicitado : rc.credito.capitalSolicitado,
+				adeudoInicial : rc.credito.capitalSolicitado,
+				saldoActual : rc.credito.capitalSolicitado,
+				periodoPago : rc.credito.periodoPago,
+				fechaPrimerAbono : rc.credito.primerAbono,
+				multasPendientes : 0,
+				saldoMultas : 0.00,
+				saldoRecibo : 0.00,
+				estatus : 1,
+				requiereVerificacion: rc.credito.requiereVerificacion,
+				turno : rc.credito.turno,
+				sucursal_id : Meteor.user().profile.sucursal_id,
+				fechaVerificacion: rc.credito.fechaVerificacion,
+				turno: rc.credito.turno,
+				tasa: rc.credito.tasa,
+				conSeguro : rc.credito.conSeguro,
+				seguro: rc.credito.seguro
+			};  
+			 console.log(_credito,"creditoJaime")
+			 Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
 		
 			if(error){
 				console.log(error);
@@ -261,10 +289,124 @@ this.tieneFoto = function(sexo, foto){
 			}
 				
 		})
+
+		}
+
+		
+		});
+		
+
+		
 		
 		return rc.planPagos;
 	}
 	
+// 	this.generarCredito = function(form){
+		
+// 		if(form.$invalid){
+// 				toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
+// 				return;
+// 		}	
+// 		if (rc.cliente.profile.renta == true && this.avales.length == 0 && rc.cliente.roles != "Distribuidor")		
+// 		{
+// 				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
+// 				return;
+// 		}	
+
+// 		if (rc.cliente.roles == "Distribuidor") {
+// 			this.credito.periodoPago = "Quincenal"
+
+// 		}
+// 	    Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
+// 		if (result)
+// 		{
+// 			//console.log(result,"sucursal bebe");
+// 			//rc.sucursalCliente.push(result);
+// 			//console.log(rc.sucursalCliente,"sucursal del cliente");
+		
+// 		if (rc.cliente.roles == "Distribuidor") {
+// 			rc.credito.tasa = result.tasaVales
+// 			rc.credito.tiposCredito_id = rc.tiposCredito[0]._id
+// 		}else if (rc.cliente.roles == "Cliente") {
+// 			rc.credito.tasa = rc.credito.tasa
+// 			rc.credito.tiposCredito_id = rc.credito.tiposCredito_id 
+
+// 		}
+
+// 		}
+// 	/*
+	
+// 		this.credito.periodoPago = "Quincenal";
+// 	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
+// 		if (result)
+// 		{
+// */
+
+		
+// 		var credito = {
+// 			cliente_id : rc.cliente._id,
+// 			tipoCredito_id : rc.credito.tipoCredito_id,
+// 			fechaSolicito : new Date(),
+// 			duracionMeses : rc.credito.duracionMeses,
+// 			capitalSolicitado : rc.credito.capitalSolicitado,
+// 			adeudoInicial : rc.credito.capitalSolicitado,
+// 			saldoActual : rc.credito.capitalSolicitado,
+// 			periodoPago : rc.credito.periodoPago,
+// 			fechaPrimerAbono : rc.credito.primerAbono,
+// 			multasPendientes : 0,
+// 			saldoMultas : 0.00,
+// 			saldoRecibo : 0.00,
+// 			estatus : 1,
+// 			requiereVerificacion: rc.credito.requiereVerificacion,
+// 			sucursal_id : Meteor.user().profile.sucursal_id,
+// 			fechaVerificacion: rc.credito.fechaVerificacion,
+// 			turno : rc.credito.turno,
+// 			tipoGarantia : rc.credito.tipoGarantia,
+// 			tasa: rc.credito.tasa,
+// 			conSeguro : rc.credito.conSeguro,
+// 			seguro: rc.credito.seguro,
+// 		//};
+			
+			
+// 		//console.log(credito);
+				
+// 		credito.avales = angular.copy(rc.avales);
+		
+// 		//Duda se guardan los dos???
+		
+// 		if (rc.credito.tipoGarantia == "mobiliaria")
+// 				credito.garantias = angular.copy(rc.garantias);
+// 		else
+// 				credito.garantias = angular.copy(rc.garantiasGeneral);
+				
+				
+// 				if (Meteor.user().roles = "Distribuidor") {
+// 					credito.tipo = "vale"
+// 				}else if (Meteor.user().roles = "Cliente") {
+// 					credito.tipo == "creditoP"
+// 				}
+// 		//Cambie el metodo	
+
+// 		Meteor.apply('generarCreditoPeticion', [rc.cliente, credito], function(error, result){
+// 			if(result == "hecho"){
+// 				toastr.success('Se ha guardado la solicitud de crédito correctamente');
+// 				rc.planPagos = [];
+// 				rc.avales = [];
+// 				if (rc.cliente.roles == "Distribuidor") {
+// 					$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
+// 				}
+// 				if (rc.cliente.roles == "Cliente") {
+// 					$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+// 				}
+				
+// 			}
+// 			$scope.$apply();
+// 			/////////////////AQUI
+// 		});
+// 			}
+						
+// 				})
+// 	}
 	this.generarCredito = function(form){
 		
 		if(form.$invalid){
@@ -276,32 +418,40 @@ this.tieneFoto = function(sexo, foto){
 				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
 				return;
 		}	
-		
-
-		
 		if (rc.cliente.roles == "Distribuidor") {
 			this.credito.periodoPago = "Quincenal"
 		}
-	  
 	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
 			if (result)
 			{
 					//console.log(result,"sucursal bebe");
 					//rc.sucursalCliente.push(result);
 					//console.log(rc.sucursalCliente,"sucursal del cliente");
-					
-					if (rc.cliente.roles == "Distribuidor") {
+						if (rc.cliente.roles == "Distribuidor") {
+						console.log("distri")
 						rc.credito.tasa = result.tasaVales
-						rc.credito.tiposCredito_id = rc.tiposCredito[0]._id
+						
+						console.log(rc.credito.tipoCredito_id)
 					}else if (rc.cliente.roles == "Cliente") {
+						console.log("clientaso")
 						rc.credito.tasa = rc.credito.tasa
-						rc.credito.tiposCredito_id = rc.credito.tiposCredito_id 
+						
 			
 					}
-	
 			}
 		
 		});
+
+
+	    if (rc.cliente.roles == "Distribuidor") {
+			console.log("es vale")
+			rc.credito.tipo = "vale"
+			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id
+		}
+		else if (rc.cliente.roles == 'Cliente') {
+			console.log("es credito")
+			rc.credito.tipo = "creditoP"
+		}
 		
 		var credito = {
 			cliente_id : rc.cliente._id,
@@ -325,6 +475,7 @@ this.tieneFoto = function(sexo, foto){
 			tasa: rc.credito.tasa,
 			conSeguro : rc.credito.conSeguro,
 			seguro: rc.credito.seguro,
+			tipo : rc.credito.tipo,
 		};
 				
 		credito.avales = angular.copy(rc.avales);
@@ -337,12 +488,8 @@ this.tieneFoto = function(sexo, foto){
 				credito.garantias = angular.copy(rc.garantiasGeneral);
 				
 				
-		if (Meteor.user().roles = "Distribuidor") {
-			credito.tipo = "vale"
-		}
-		else if (Meteor.user().roles = "Cliente") {
-			credito.tipo == "creditoP"
-		}
+		
+
 		//Cambie el metodo	
 
 		Meteor.apply('generarCreditoPeticion', [rc.cliente, credito], function(error, result){
@@ -363,7 +510,6 @@ this.tieneFoto = function(sexo, foto){
 		});
 		
 	}
-	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	this.insertarAval = function()
 	{
@@ -371,6 +517,7 @@ this.tieneFoto = function(sexo, foto){
 			{
 					toastr.warning("Favor de agregar al datos del Aval, Parentesco y Tiempo de Conocerlo...");
 					return;					
+
 			}
 		
 			rc.aval.num = this.avales.length + 1;
@@ -506,6 +653,7 @@ this.tieneFoto = function(sexo, foto){
 		
 		Meteor.call('getAval', a._id, function(error, result){
 			if(result){					
+
 					rc.aval.ocupacion 		 		= result.ocupacion;
 					rc.aval.nombreCompleto 		= result.nombreCompleto;
 					rc.aval.calle 						= result.calle;
@@ -554,16 +702,21 @@ this.tieneFoto = function(sexo, foto){
 			if (tipo == "mobiliaria")
 			{
 					a.num = this.numG;
+
+
 			
 					_.each(this.garantias, function(av){
 						if (av.num == a.num)
 						{
-							av.tipo = a.tipo;
-							av.marca = a.marca;
-							av.modelo = a.modelo;			
-							av.serie = a.serie;
-							av.color = a.color;
-							av.estadoActual = a.estadoActual;
+							av.descripcion = a.descripcion;
+							av.caracteristicas = a.caracteristicas;
+							av.avaluo = a.avaluo;			
+							av.prestamoPorcentaje = a.prestamoPorcentaje;
+							av.prestamo = a.prestamo;
+							av.monto = a.monto;
+							av.porcentaje = a.porcentaje;
+							av.fechaComercializacion = a.fechaComercializacion;
+							av.fechaFiniquito = a.fechaFiniquito;
 						}
 					})
 				
@@ -578,8 +731,18 @@ this.tieneFoto = function(sexo, foto){
 					_.each(this.garantiasGeneral, function(av){
 						if (av.num == a.num)
 						{
-							av.descripcion = a.descripcion;
-							av.valorEstimado = a.valorEstimado;
+							
+
+							av.medidasColindancias = a.medidasColindancias
+						    av.terrenoYconstruccion = a.terrenoYconstruccion
+						    av.prestamoSobreAvaluo = a.prestamoSobreAvaluo
+						    av.prestamo = a.prestamo
+						    av.num = a.num
+						    av.montoAvaluo = a.montoAvaluo
+							av.avaluo = a.avaluo;
+							av.comisionGastos = a.comisionGastos;
+							av.escrituracion = a.escrituracion;
+							av.porcentajePrestamo = a.porcentajePrestamo;
 						}
 					})
 				
@@ -692,9 +855,8 @@ this.tieneFoto = function(sexo, foto){
 	};
 	
 	this.editarGarantia = function(tipo, a)
-	{ 
-		//console.log(tipo,"tipo")
-		//console.log("a",a)
+	{ console.log(tipo,"tipo")
+	console.log("a",a)
 
 			if (tipo == "mobiliaria")
 			{
@@ -802,8 +964,7 @@ this.tieneFoto = function(sexo, foto){
 		 // setTimeout(function(){popupWin.print();},1000);
 
     };
-    
-  this.cerrarGArantia = function(tipo){
+    this.cerrarGArantia = function(tipo){
     	if (tipo == "mobiliaria")
 			{
 					this.garantia={};

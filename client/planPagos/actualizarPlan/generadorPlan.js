@@ -310,7 +310,13 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				toastr.success('Se actualizó correctamente la solicitud de crédito');
 				rc.planPagos = [];
 				this.avales = [];
-				$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+				
+				if (rc.cliente.roles == "Distribuidor") {
+					$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
+				}
+				else if (rc.cliente.roles == "Cliente") {
+					$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+				}
 			}
 			$scope.$apply();
 		});
