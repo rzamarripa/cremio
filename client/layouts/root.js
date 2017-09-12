@@ -55,6 +55,7 @@ angular.module("creditoMio")
 			return clientes;
 			
 		},
+/*
 		inicio:()=>{
 			if (Meteor.user().username != "admin") {
 		    var fecha = new Date();
@@ -105,6 +106,7 @@ angular.module("creditoMio")
           	}
    
 		},
+*/
 	});
 
 

@@ -85,7 +85,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.subscribe('pagos', () => {
 		return [{ estatus:true}];
 	});
-	console.log($stateParams,"cliente")
+
 
 	
 	this.helpers({
@@ -383,10 +383,11 @@ this.tieneFoto = function(sexo, foto){
 	this.actualizarAval = function(a)
 	{
 		a.num = this.num;
+		
 		_.each(this.avales, function(av){
 			if (av.num == a.num)
 			{
-				av.nombre = a.nombre;
+				av.nombreCompleto = a.nombreCompleto;
 				av.estadoCivil = a.estadoCivil;
 				av.ocupacion = a.ocupacion;
 				av.calle = a.calle;
@@ -425,7 +426,10 @@ this.tieneFoto = function(sexo, foto){
 	
 	this.editarAval = function(a)
 	{
+		
 		rc.aval.nombre = a.nombre;
+		rc.aval.apellidoPaterno = a.apellidoPaterno;
+		rc.aval.apellidoMaterno = a.apellidoMaterno;
 		rc.aval.estadoCivil = a.estadoCivil;
 		rc.aval.ocupacion = a.ocupacion;			
 		rc.aval.calle = a.calle;
@@ -495,10 +499,15 @@ this.tieneFoto = function(sexo, foto){
 		rc.aval.apellidoPaterno = a.profile.apellidoPaterno;
 		rc.aval.apellidoMaterno = a.profile.apellidoMaterno;
 		
+		var nombre = a.profile.nombre != undefined ? a.profile.nombre + " " : "";
+    var apPaterno = a.profile.apellidoPaterno != undefined ? a.profile.apellidoPaterno + " " : "";
+    var apMaterno = a.profile.apellidoMaterno != undefined ? a.profile.apellidoMaterno : "";
+    rc.aval.nombreCompleto = nombre + apPaterno + apMaterno;
+		
 		Meteor.call('getAval', a._id, function(error, result){
 			if(result){					
 					rc.aval.ocupacion 		 		= result.ocupacion;
-					rc.aval.nombreCompleto 		= 
+					rc.aval.nombreCompleto 		= result.nombreCompleto;
 					rc.aval.calle 						= result.calle;
 					rc.aval.numero 						= result.numero;
 					rc.aval.codigoPostal 			= result.codigoPostal;

@@ -24,8 +24,7 @@
 							</a>&nbsp;
 							<div class="col-sm-2">
 										<h1>{{cd.objeto.profile.nombre}} <span class="semi-bold">{{cd.objeto.profile.apellidoPaterno}} {{cd.objeto.profile.apellidoMaterno}}</span>
-										<h5>{{cd.objeto.profile.numeroCliente}}</h5><h1>{{cd.cantidad}}</h1>
-										<h2>{{cd.empresaCliente.pais}}</h2>
+										<h5>{{cd.objeto.profile.numeroCliente}}</h5>
 										</h1>				
 							</div>
 								
@@ -67,905 +66,938 @@
 	</ul>
 
 
-<div class="tab-pane fade in active" id="creditosActivos" ng-show="cd.creditoAc" >
-	<p>
-		<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-					<!-- new widget -->
-			<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-				
-				<header role="heading">
-					<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-					<h2>Créditos Activos</h2>
-					<ul class="nav nav-tabs pull-right" id="myTab">
-						<li class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in cd.creditos track by $index">
-							<a ng-click="cd.getAvales(credito);cd.trance(credito)" data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado}}</span></a>
-						</li>
-					</ul>
-				<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-
-				
-				<div class="no-padding" role="content">
-				
-					<div class="jarviswidget-editbox">
-
-
-					</div>
-
-					<div class="widget-body">
-						<!-- content -->
-						<div id="myTabContent" class="tab-content">
-							<div class="tab-pane fade padding-10 no-padding-bottom {{($index == 0 ? 'active in' : '')}}" id="s{{$index +1}}" ng-repeat="credito in cd.creditos track by $index">
-								<div class="row">
-									<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-										<table class="table table-striped table-bordered table-condensed font-xs">
-												<thead class="thead">
-													<tr>
-														<th class="text-center" width="5%">No.</th>
-														<th class="text-center" width="20%">Movimiento</th>
-														<th class="text-center" width="20%">Fecha de Pago</th>
-														<th class="text-center" width="10%">N. Pago</th>
-														<th class="text-center" width="10%">Capital</th>
-														<th class="text-center" width="10%">Interes</th>
-														<th class="text-center" width="5%">IVA</th>
-														<th class="text-center" width="10%">Seguro</th>
-														<th class="text-center" width="15%">Pago</th>
-														<th class="text-center" width="10%">Saldo</th>
-													</tr>
-												</thead>
-												<tbody>
-<!-- 													(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cd.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info' -->
-													<tr ng-repeat="pago in credito.planPagos">								
-														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
-														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
-														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
-														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.capital - pago.pagoCapital | currency}}</td>
-														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.interes - pago.pagoInteres | currency}}</td>
-														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.iva - pago.pagoIva | currency}}</td>
-														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.seguro - pago.pagoSeguro | currency}}</td>
-														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.cargo | currency}}</td>
-														<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular | currency}}</td>
-													</tr>
-												</tbody>
-											</table>	
-									</div>
-									<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 show-stats">
-										<div class="row">
-											<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-												<span class="text"> Folio de Crédito - <strong>{{credito.folio}}</strong></span>
-											</div>	
-											<br><br>
-											<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> Número de Pagos Recibos <span class="pull-right">{{credito.pagados}}/{{credito.numeroPagos}}</span> </span>
-												<div class="progress">
-													<div class="progress-bar bg-color-blueDark" style="width: {{(credito.pagados / credito.numeroPagos) * 100}}%;"></div>
-												</div> 
-											</div>
-											<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> Abonos Recibos <span class="pull-right">{{credito.sumaPagosRecibos	| currency}} de {{credito.adeudoInicial	| currency}}</span> </span>
-												<div class="progress">
-													<div class="progress-bar bg-color-blue" style="width: {{(credito.sumaPagosRecibos/credito.adeudoInicial) * 100}}%"></div>
-												</div> 
-											</div>
-											<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12" ng-if="credito.tieneCargoMoratorio"> 
-												<span class="text"> Número de Pagos Cargos Moratorios 
-													<span class="pull-right">{{credito.pagadosCargoM}}/{{credito.numeroPagosCargoMoratorios}}</span> 
-												</span>
-												<div class="progress">
-													<div class="progress-bar bg-color-blueDark" style="width: {{(credito.pagadosCargoM / credito.numeroPagosCargoMoratorios) * 100}}%;"></div>
-												</div> 
-											</div>
-											<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12" ng-if="credito.tieneCargoMoratorio"> 
-												<span class="text"> Abonos Cargos Moratorios 
-													<span class="pull-right">{{credito.sumaPendientesCargoM	| currency}} de {{credito.sumaCargoMoratorios	| currency}}</span> 
-												</span>
-												<div class="progress">
-													<div class="progress-bar bg-color-blue" style="width: {{(credito.sumaPendientesCargoM/credito.sumaCargoMoratorios) * 100}}%"></div>
-												</div> 
+			<div class="tab-pane fade in active" id="creditosActivos" ng-show="cd.creditoAc" >
+				<p>
+					<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+								<!-- new widget -->
+						<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+							
+							<header role="heading">
+								<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+								<h2>Créditos Activos</h2>
+								<ul class="nav nav-tabs pull-right" id="myTab">
+									<li class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in cd.creditos track by $index">
+										<a ng-click="cd.getAvales(credito);cd.trance(credito)" data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado}}</span></a>
+									</li>
+								</ul>
+							<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+			
+							
+							<div class="no-padding" role="content">
+							
+								<div class="jarviswidget-editbox">
+			
+			
+								</div>
+			
+								<div class="widget-body">
+									<!-- content -->
+									<div id="myTabContent" class="tab-content">
+										<div class="tab-pane fade padding-10 no-padding-bottom {{($index == 0 ? 'active in' : '')}}" id="s{{$index +1}}" ng-repeat="credito in cd.creditos track by $index">
+											<div class="row">
+												<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+													<table class="table table-striped table-bordered table-condensed font-xs">
+															<thead class="thead">
+																<tr>
+																	<th class="text-center" width="5%">No.</th>
+																	<th class="text-center" width="20%">Movimiento</th>
+																	<th class="text-center" width="20%">Fecha de Pago</th>
+																	<th class="text-center" width="10%">N. Pago</th>
+																	<th class="text-center" width="10%">Capital</th>
+																	<th class="text-center" width="10%">Interes</th>
+																	<th class="text-center" width="5%">IVA</th>
+																	<th class="text-center" width="10%">Seguro</th>
+																	<th class="text-center" width="15%">Pago</th>
+																	<th class="text-center" width="10%">Saldo</th>
+																</tr>
+															</thead>
+															<tbody>
+			<!-- 													(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cd.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info' -->
+																<tr ng-repeat="pago in credito.planPagos">								
+																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
+																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
+																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
+																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.capital - pago.pagoCapital | currency}}</td>
+																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.interes - pago.pagoInteres | currency}}</td>
+																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.iva - pago.pagoIva | currency}}</td>
+																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.seguro - pago.pagoSeguro | currency}}</td>
+																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.cargo | currency}}</td>
+																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular | currency}}</td>
+																</tr>
+															</tbody>
+														</table>	
+												</div>
+												<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 show-stats">
+													<div class="row">
+														<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
+															<span class="text"> Folio de Crédito - <strong>{{credito.folio}}</strong></span>
+														</div>	
+														<br><br>
+														<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> Número de Pagos Recibos <span class="pull-right">{{credito.pagados}}/{{credito.numeroPagos}}</span> </span>
+															<div class="progress">
+																<div class="progress-bar bg-color-blueDark" style="width: {{(credito.pagados / credito.numeroPagos) * 100}}%;"></div>
+															</div> 
+														</div>
+														<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> Abonos Recibos <span class="pull-right">{{credito.sumaPagosRecibos	| currency}} de {{credito.adeudoInicial	| currency}}</span> </span>
+															<div class="progress">
+																<div class="progress-bar bg-color-blue" style="width: {{(credito.sumaPagosRecibos/credito.adeudoInicial) * 100}}%"></div>
+															</div> 
+														</div>
+														<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12" ng-if="credito.tieneCargoMoratorio"> 
+															<span class="text"> Número de Pagos Cargos Moratorios 
+																<span class="pull-right">{{credito.pagadosCargoM}}/{{credito.numeroPagosCargoMoratorios}}</span> 
+															</span>
+															<div class="progress">
+																<div class="progress-bar bg-color-blueDark" style="width: {{(credito.pagadosCargoM / credito.numeroPagosCargoMoratorios) * 100}}%;"></div>
+															</div> 
+														</div>
+														<div class="col-xs-6 col-sm-6 col-md-12 col-lg-12" ng-if="credito.tieneCargoMoratorio"> 
+															<span class="text"> Abonos Cargos Moratorios 
+																<span class="pull-right">{{credito.sumaPendientesCargoM	| currency}} de {{credito.sumaCargoMoratorios	| currency}}</span> 
+															</span>
+															<div class="progress">
+																<div class="progress-bar bg-color-blue" style="width: {{(credito.sumaPendientesCargoM/credito.sumaCargoMoratorios) * 100}}%"></div>
+															</div> 
+														</div>
+													</div>
+													<div>
+															<small>
+																	<a ng-click="cd.mostrarReestructuracion(credito)" ng-if="currentUser.roles[0] == 'Gerente'" class="btn btn-primary">Reestructuración del crédito</a>
+															</small>
+															<br/><br/>
+															<small><a ng-click="cd.imprimirContratos(credito,cd.objeto._id)" class="btn btn-primary">Imprimir Contrato</a></small>
+													</div>
+													<div class="row" ng-if = "credito.tieneAvales == true">
+														<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 container">
+														  <h2>Aval</h2>
+														  <ul class="list-group" ng-repeat = "aval in credito.avales_ids">
+														    <li class="list-group-item">{{aval.nombreCompleto}}</li>
+														    <li class="list-group-item">Cel: {{aval.celular}}</li>
+														    <li class="list-group-item">{{aval.parentesco}}</li>
+														    <li class="list-group-item">{{aval.tiempoConocerlo}}</li>
+														  </ul>
+														</div>
+													</div>
+														</div>
+												</div>
+											
+												</div>
 											</div>
 										</div>
-										<div>
-												<small>
-														<a ng-click="cd.mostrarReestructuracion(credito)" ng-if="currentUser.roles[0] == 'Gerente'" class="btn btn-primary">Reestructuración del crédito</a>
-												</small>
-												<br/><br/>
-												<small><a ng-click="cd.imprimirContratos(credito,cd.objeto._id)" class="btn btn-primary">Imprimir Contrato</a></small>
-										</div>
-										<div class="row" ng-if = "credito.tieneAvales == true">
-											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 container">
-											  <h2>Aval</h2>
-											  <ul class="list-group" ng-repeat = "aval in credito.avales_ids">
-											    <li class="list-group-item">{{aval.nombreCompleto}}</li>
-											    <li class="list-group-item">Cel: {{aval.celular}}</li>
-											    <li class="list-group-item">{{aval.parentesco}}</li>
-											    <li class="list-group-item">{{aval.tiempoConocerlo}}</li>
-											  </ul>
-											</div>
-										</div>
-											</div>
 									</div>
-								
-									</div>
+									<!-- end content -->
 								</div>
 							</div>
+							<!-- end widget div -->
 						</div>
-						<!-- end content -->
-					</div>
-				</div>
-				<!-- end widget div -->
+								<!-- end widget -->
+				</article>
+				</p>
 			</div>
-					<!-- end widget -->
-	</article>
-	</p>
-</div>
-<div class="tab-pane fade" id="informacionCliente" ng-show="cd.masInfo">
-	<p>
-		<div class="col-sm-12">
-			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-			  <div class="panel panel-default">
-			    <div class="panel-heading" role="heading" id="headingOne">
-			      <h4 class="panel-title">
-			        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#href1" aria-expanded="false" aria-controls="href1">
-			          Información del Cliente
-			        </a>
-			      </h4>
-			    </div>
-			      <div class="panel-body">    
-						    <div class="row">
-						    	<div class="col-sm-3">
-						    		<img style="max-width:200px;" src="{{cd.objeto.profile.foto}}" >
-						    	</div>
-
-						    	<div class="col-sm-3" > 					    
-							    	<label>Nombre (s)</label>
-							    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cd.objeto.profile.nombre" disabled="">
-						    	</div>
-						    	<div class="col-sm-3" >					    
-							    	<label>Apellido Paterno</label>
-							    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cd.objeto.profile.apellidoPaterno" disabled="">
-						    	</div>
-						    	<div class="col-sm-3">					    
-							    	<label>Apellido Materno</label>
-							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cd.objeto.profile.apellidoMaterno" disabled="">
-						    	</div>	 
-						    	<div class="col-sm-3">
-										<br/>
-										<div class="well padding-10">
-											<h5 class="margin-top-0"><i class="fa fa-file"></i> Documentos:</h5>
-											<div class="row">
-
-												<div class="col-lg-12">
-
-													<ul class="list-group no-margin">
-														<li class="list-group-item"  ng-repeat="item in cd.objeto.profile.documentos">
-															<a  ng-click="cd.modalDoc(item.imagen)"> {{item.nombre}}</a>
-														</li>
-														
-													</ul>
-
-												</div>
-
-												<div class="col-lg-12">
-													<div class="margin-top-10">
-														<!-- <img src="img/demo/video.png" alt="smartgirl" class="img-responsive"> -->
+			<div class="tab-pane fade" id="informacionCliente" ng-show="cd.masInfo">
+				<p>
+					<div class="col-sm-12">
+						<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+						  <div class="panel panel-default">
+						    <div class="panel-heading" role="heading" id="headingOne">
+						      <h4 class="panel-title">
+						        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#href1" aria-expanded="false" aria-controls="href1">
+						          Información del Cliente
+						        </a>
+						      </h4>
+						    </div>
+						      <div class="panel-body">    
+									    <div class="row">
+									    	<div class="col-sm-3">
+									    		<img style="max-width:200px;" src="{{cd.objeto.profile.foto}}" >
+									    	</div>
+			
+									    	<div class="col-sm-3" > 					    
+										    	<label>Nombre (s)</label>
+										    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cd.objeto.profile.nombre" disabled="">
+									    	</div>
+									    	<div class="col-sm-3" >					    
+										    	<label>Apellido Paterno</label>
+										    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cd.objeto.profile.apellidoPaterno" disabled="">
+									    	</div>
+									    	<div class="col-sm-3">					    
+										    	<label>Apellido Materno</label>
+										    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cd.objeto.profile.apellidoMaterno" disabled="">
+									    	</div>	 
+									    	<div class="col-sm-3">
+													<br/>
+													<div class="well padding-10">
+														<h5 class="margin-top-0"><i class="fa fa-file"></i> Documentos:</h5>
+														<div class="row">
+			
+															<div class="col-lg-12">
+			
+																<ul class="list-group no-margin">
+																	<li class="list-group-item"  ng-repeat="item in cd.objeto.profile.documentos">
+																		<a  ng-click="cd.modalDoc(item.imagen)"> {{item.nombre}}</a>
+																	</li>
+																	
+																</ul>
+			
+															</div>
+			
+															<div class="col-lg-12">
+																<div class="margin-top-10">
+																	<!-- <img src="img/demo/video.png" alt="smartgirl" class="img-responsive"> -->
+																</div>
+															</div>
+														</div>
+			
 													</div>
 												</div>
-											</div>
-
-										</div>
-									</div>
-						    	<div class="col-sm-3">					    
-							    	<label>Número cliente</label>
-							    	<input name="numeroCliente" type="text" class="form-control" placeholder="Número de Cliente" ng-model="cd.objeto.profile.numeroCliente" disabled="">
-						    	</div>  				    	    
+									    	<div class="col-sm-3">					    
+										    	<label>Número cliente</label>
+										    	<input name="numeroCliente" type="text" class="form-control" placeholder="Número de Cliente" ng-model="cd.objeto.profile.numeroCliente" disabled="">
+									    	</div>  				    	    
+									    </div>
+						      </div>
+						  </div>
+						  <div class="panel panel-default">
+						    <div class="panel-heading" role="tab" id="headingTwo">
+						      <h4 class="panel-title">
+						        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href2" aria-expanded="false" aria-controls="href2">
+						          Información de contacto
+						        </a>
+						      </h4>
 						    </div>
-			      </div>
-			  </div>
-			  <div class="panel panel-default">
-			    <div class="panel-heading" role="tab" id="headingTwo">
-			      <h4 class="panel-title">
-			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href2" aria-expanded="false" aria-controls="href2">
-			          Información de contacto
-			        </a>
-			      </h4>
-			    </div>
-			    
-			      <div class="panel-body">
-			        	<div class="row">
-							    	<div class="col-sm-4" valida> 					    
-								    	<label>Particular</label>
-								    	<input name="telefonoParticular" type="text" class="form-control" placeholder="Teléfono Particular" ng-model="cd.objeto.profile.particular" disabled="">
-							    	</div>
-							    	<div class="col-sm-4" valida> 					    
-								    	<label>Teléfono Oficina</label>
-								    	<input name="telefonoOficina" type="text" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoOficina" disabled="">
-							    	</div>
-							    	<div class="col-sm-4" valida>					    
-								    	<label>Celular</label>
-								    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="cd.objeto.profile.celular" disabled="">
-							    	</div>
-							    </div>
-							    <div class="row">
-								    <div class="col-sm-3">					    
-								    	<label>Teléfono Alternativo</label>
-								    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cd.objeto.profile.telefonoAlternativo" disabled="">
-							    	</div>	  
-							    	<div class="col-sm-3">					    
-								    	<label>Dueño</label>
-								    	<input name="otroTelefono" type="text" class="form-control" placeholder="Dueño" ng-model="cd.objeto.profile.duenoAlternativo" disabled="">
-							    	</div>
-							    	<div class="col-sm-3">					    
-								    	<label>Parentezco</label>
-								    	<input name="otroTelefono" type="text" class="form-control" placeholder="Parentezco" ng-model="cd.objeto.profile.parentescoAlternativo" disabled="">
-							    	</div>
-							    	<div class="col-sm-3">					    
-								    	<label>Correo</label>
-								    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="cd.objeto.profile.correo" disabled="">
-							    	</div>  
-							  </div>
-			      </div>
-			  
-			  </div>
-			  <div class="panel panel-default">
-			    <div class="panel-heading" role="tab" id="headingThree">
-			      <h4 class="panel-title">
-			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href3" aria-expanded="false" aria-controls="href3">
-			          Particulares
-			        </a>
-			      </h4>
-			    </div>
-			    
-			      <div class="panel-body">
-			        	<div class="row">
-									<div class="col-sm-3" >
-								    <label for="sexo">Sexo </label>
-								    <select name="sexo" ng-model="cd.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" disabled>
-										    <option value=""></option>
-										    <option value="Masculino">Masculino</option>
-										    <option value="Femenino">Femenino</option>
-										</select>
-						    	</div>
-						    	<div class="col-sm-3">
-										<label for="estadocivil">Estado Civil </label>
-										<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="cd.objeto.profile.estadoCivil.nombre" disabled="">
-									</div>
-										
-						    	<div class="col-sm-3">					    
-							    	<label>Fecha Nacimiento </label>
-							    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="cd.objeto.profile.fechaNacimiento" disabled="">
-						    	</div>	
-									
-									<div class="col-sm-3">
-										<label for="nacionalidad">Nacionalidad</label>
-										<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="cd.objeto.profile.nacionalidad.nombre" disabled="">
-									</div>			
+						    
+						      <div class="panel-body">
+						        	<div class="row">
+										    	<div class="col-sm-4" valida> 					    
+											    	<label>Particular</label>
+											    	<input name="telefonoParticular" type="text" class="form-control" placeholder="Teléfono Particular" ng-model="cd.objeto.profile.particular" disabled="">
+										    	</div>
+										    	<div class="col-sm-4" valida> 					    
+											    	<label>Teléfono Oficina</label>
+											    	<input name="telefonoOficina" type="text" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoOficina" disabled="">
+										    	</div>
+										    	<div class="col-sm-4" valida>					    
+											    	<label>Celular</label>
+											    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="cd.objeto.profile.celular" disabled="">
+										    	</div>
+										    </div>
+										    <div class="row">
+											    <div class="col-sm-3">					    
+											    	<label>Teléfono Alternativo</label>
+											    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cd.objeto.profile.telefonoAlternativo" disabled="">
+										    	</div>	  
+										    	<div class="col-sm-3">					    
+											    	<label>Dueño</label>
+											    	<input name="otroTelefono" type="text" class="form-control" placeholder="Dueño" ng-model="cd.objeto.profile.duenoAlternativo" disabled="">
+										    	</div>
+										    	<div class="col-sm-3">					    
+											    	<label>Parentezco</label>
+											    	<input name="otroTelefono" type="text" class="form-control" placeholder="Parentezco" ng-model="cd.objeto.profile.parentescoAlternativo" disabled="">
+										    	</div>
+										    	<div class="col-sm-3">					    
+											    	<label>Correo</label>
+											    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="cd.objeto.profile.correo" disabled="">
+										    	</div>  
+										  </div>
+						      </div>
+						  
+						  </div>
+						  <div class="panel panel-default">
+						    <div class="panel-heading" role="tab" id="headingThree">
+						      <h4 class="panel-title">
+						        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href3" aria-expanded="false" aria-controls="href3">
+						          Particulares
+						        </a>
+						      </h4>
 						    </div>
-						    <div class="row">
-							    <div class="col-sm-3">
-										<label for="ocupacion">Ocupación </label>
-										<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="cd.objeto.profile.ocupacion.nombre" disabled="">
-									</div>		
-						    	<div class="col-sm-3">					    
-							    	<label>CURP</label>
-							    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="cd.objeto.profile.curp" disabled>
-						    	</div>
-						      <div class="col-sm-3">					    
-							    	<label>Lugar de Nacimiento</label>
-							    	<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="cd.objeto.profile.lugarNacimiento" disabled>
-						    	</div>	
-						    </div>		
-			      </div>
-			   
-			  </div>
-			  <div class="panel panel-default">
-				    <div class="panel-heading" role="tab" id="headingFour">
-				      <h4 class="panel-title">
-				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href4" aria-expanded="false" aria-controls="href4">
-				          Dirección
-				        </a>
-				      </h4>
-				    </div>
-				   
-				      <div class="panel-body">
-				        	<div class="row">
-									    <div class="col-sm-6" >					    
-									    	<label>Calle </label>
-									    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="cd.objeto.profile.calle" disabled="">
-								    	</div>
-								    	<div class="col-sm-3" >					    
-									    	<label>Numero </label>
-									    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="cd.objeto.profile.numero" disabled="">
-								    	</div>
-								    	<div class="col-sm-3" >					    
-									    	<label>CP </label>
-									    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="cd.objeto.profile.codigoPostal" disabled="">
-								    	</div>
-								    </div>
-								    <div class="row">
-									    <div class="col-sm-3" >
-													<label >Pais </label>
-													<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="cd.objeto.profile.pais.nombre" disabled>
-											</div>
-										  <div class="col-sm-3" >
-													<label for="seccion_id">Estado </label>
-													<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="cd.objeto.profile.estado.nombre" disabled>
-											</div>	
-											<div class="col-sm-3" >
-													<label >Municipio </label>
-													<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="cd.objeto.profile.municipio.nombre" disabled>
-											</div>
-											<div class="col-sm-3" >
-													<label for="seccion_id">Ciudad </label>
-													<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="cd.objeto.profile.ciudad.nombre" disabled>
-											</div>	
-								    </div>
-								    <div class="row">
-									    <div class="col-sm-3" >
-													<label for="seccion_id">Colonia </label>
-													<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="cd.objeto.profile.colonia.nombre" disabled>
-											</div>
-											<div class="col-sm-3">					    
-									    	<label>Tiempo Residencia</label>
-									    	<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="cd.objeto.profile.tiempoResdencia" disabled>
-								    	</div>
-								    	<div class="col-sm-2">					    
-									    	<label>Renta</label>
-									    	<input name="rentaMes" type="checkbox" class="form-control" ng-model="cd.objeto.profile.renta" disabled>
-								    	</div>
-								    	<div class="col-sm-3" ng-if="cd.objeto.profile.renta">					    
-									    	<label>Renta Mes </label>
-									    	<input name="tiempo" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="cd.objeto.profile.rentaMes" disabled>
-								    	</div>
-											<div class="col-sm-12">					    
-									    	<label>Señas Particulares</label>
-									    	<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="cd.objeto.profile.senasParticulares" disabled>
-								    	</div>
-								    </div>	
-				      </div>
-				    
-				</div>
-				<div class="panel panel-default">
-				    <div class="panel-heading" role="tab" id="headingFive">
-				      <h4 class="panel-title">
-				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href5" aria-expanded="false" aria-controls="href5">
-				          Ingresos Mensuales
-				        </a>
-				      </h4>
-				    </div>
-				  
-				      <div class="panel-body">
-				        	<div class="row">
-							    	<div class="col-sm-3" > 					    
-								    	<label>Ingresos Personales</label>
-								    	<input name="ingresosPersonales" type="text" class="form-control" placeholder="Ingresos Personales" ng-model="cd.objeto.profile.ingresosPersonales" disabled>
-							    	</div>
-							    	<div class="col-sm-3" >					    
-								    	<label>Ingresos Conyuge</label>
-								    	<input name="ingresosConyuge" type="text" class="form-control" placeholder="Ingresos Conyuge" ng-model="cd.objeto.profile.ingresosConyuge" disabled>
-							    	</div>
-							    	<div class="col-sm-3">					    
-								    	<label>Otros Ingresos</label>
-								    	<input name="otrosIngresos" type="text" class="form-control" placeholder="Otros Ingresos" ng-model="cd.objeto.profile.otrosIngresos" disabled>
-							    	</div>	  
-							    	<div class="col-sm-3">					    
-								    	<label>Total Ingresos</label>
-								    	<input name="totalIngresos" type="text" class="form-control" placeholder="Total Ingresos" ng-model="cd.objeto.profile.totalIngresos" disabled>
-							    	</div>  				    	    
-							    </div>
-							    <div class="row">
-							    	<div class="col-sm-3" > 					    
-								    	<label>Gastos Fijos</label>
-								    	<input name="gastosFijos" type="text" class="form-control" placeholder="Gastos Fijos" ng-model="cd.objeto.profile.gastosFijos" disabled>
-							    	</div>
-							    	<div class="col-sm-3" >					    
-								    	<label>Gastos Eventuales</label>
-								    	<input name="gastosEventuales" type="text" class="form-control" placeholder="Gastos Eventuales" ng-model="cd.objeto.profile.gastosEventuales" disabled>
-							    	</div>
-							    	<div class="col-sm-3">					    
-								    	<label>Total Gastos</label>
-								    	<input name="totalGastos" type="text" class="form-control" placeholder="Total Gastos" ng-model="cd.objeto.profile.totalGastos" disabled>
-							    	</div>	  
-							    	<div class="col-sm-3">					    
-								    	<label>Resultado Neto</label>
-								    	<input name="resultadoNeto" type="text" class="form-control" placeholder="Resultado Neto" ng-model="cd.objeto.profile.resultadoNeto" disabled>
-							    	</div>  				    	    
-							    </div>
-				      </div>
-				
-				</div>				
-				<div class="panel panel-default" ng-if="cd.estadoCivilSeleccionado == 'CASADO (A)'">
-				    <div class="panel-heading" role="tab" id="headingSix">
-				      <h4 class="panel-title">
-				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href6" aria-expanded="false" aria-controls="href6">
-				          Información del Cónyuge
-				        </a>
-				      </h4>
-				    </div>
-				  
-				      <div class="panel-body">
-				        	<div class="col-sm-3" valida> 					    
-							    	<label>Nombre *</label>
-							    	<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cd.objeto.profile.nombreConyuge" required="" capitalize>
-						    	</div>
-						    	<div class="col-sm-3" valida>					    
-							    	<label>Dirección *</label>
-							    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cd.objeto.profile.direccionConyuge" required="" capitalize>
-						    	</div>
-						    	<div class="col-sm-3" valida>					    
-							    	<label>Dirección del trabajo *</label>
-							    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cd.objeto.profile.direccionConyugeTrabajo" required="" capitalize>
-						    	</div>
-						    	<div class="col-sm-3" valida>					    
-							    	<label>Puesto *</label>
-							    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cd.objeto.profile.puestoConyuge" required="" capitalize>
-						    	</div>
-						    	<div class="col-sm-3" valida>					    
-							    	<label>Teléfono Particular *</label>
-							    	<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoConyuge" required="">
-						    	</div>
-						    	<div class="col-sm-3">					    
-							    	<label>Teléfono del trabajo</label>
-							    	<input name="telefonoConyugeTrabajo" type="number" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoConyugeTrabajo" >
-						    	</div>
-						    	<div class="col-sm-3">					    
-							    	<label>Ocupación</label>
-							    	<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cd.objeto.profile.ocupacionConyuge" capitalize>
-						    	</div>	
-						    	<div class="col-sm-3">					    
-							    	<label>Dirección Trabajo</label>
-							    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion" ng-model="cd.objeto.profile.direccionTrabajoConyuge" capitalize>
-						    	</div>		   				    	    
-						    </div>
-				      
-				    </div>
-				<div class="panel panel-default">
-				    <div class="panel-heading" role="tab" id="headingSeven">
-				      <h4 class="panel-title">
-				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href7" aria-expanded="false" aria-controls="href7">
-				          Referencias Personales
-				        </a>
-				      </h4>
-				    </div>
-				   
-				      <div class="panel-body">
-				        	<div class="row">
-										<table class="table table-bordered">
-											<thead>
-												<tr>
-													<th width="5%">Número</th>
-													<th width="20%">Nombre</th>
-													<th width="5%">Parentesco</th>
-													<th width="30%">Dirección</th>
-													<th width="10%">Telefono</th>
-													<th width="10%">Tiempo</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="p in cd.referenciasPersonales">
-													<td>{{p.num}}</td>
-													<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}} </td>
-													<td>{{p.parentezco}}</td>
-													<td>{{p.direccion}}</td>
-													<td>{{p.telefono}}</td>
-													<td>{{p.tiempo}}</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-				      </div>
-				   
-				</div>
-				<div class="panel panel-default">
-				    <div class="panel-heading" role="tab" id="headingEight">
-				      <h4 class="panel-title">
-				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href8" aria-expanded="false" aria-controls="href8">
-				          Empresa
-				        </a>
-				      </h4>
-				    </div>
-				 
-				      <div class="panel-body">
-				        	<div class="row">
-								    	<div class="col-sm-6" > 					    
-									    	<label>Nombre</label>
-									    	<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="cd.objeto.profile.empresa.nombre" disabled>
-								    	</div>
-								    	<div class="col-sm-6" >					    
-									    	<label>Razón Social</label>
-									    	<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="cd.objeto.profile.empresa.razonSocial" disabled>
-								    	</div>
-								    	<div class="col-sm-4" >					    
-									    	<label>Calle</label>
-									    	<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="cd.objeto.profile.empresa.calle" disabled="" >
-								    	</div>	  
-								    	<div class="col-sm-2" >					    
-									    	<label>Número </label>
-									    	<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="cd.objeto.profile.empresa.numero" disabled="" >
-								    	</div>  				    	    
-								    	<div class="col-sm-6" >					    
-									    	<label>Colonia </label>
-									    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cd.objeto.profile.empresa.colonia" disabled="">
-								    	</div>
-								    </div>
-								    <div class="row">
-									    <div class="col-sm-3" >					    
-									    	<label>Teléfono </label>
-									    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoEmpresa" disabled="">
-								    	</div>
-								    	<div class="col-sm-3" >					    
-									    	<label>Código Postal </label>
-									    	<input name="codigopostal" type="text" class="form-control" placeholder="Código Postal" ng-model="cd.objeto.profile.empresa.codigoPostal" disabled="">
-								    	</div>
-								    	<div class="col-sm-3" >					    
-									    	<label>Tiempo Laborando </label>
-									    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="cd.objeto.profile.tiempoLaborando" disabled="">
-								    	</div>
-								    	<div class="col-sm-3" >					    
-									    	<label>Puesto </label>
-									    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cd.objeto.profile.puesto" disabled="">
-								    	</div>
-								    </div>  
-								    <div class="row">
-								    	<div class="col-sm-3" >					    
-									    	<label>Departamento </label>
-									    	<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="cd.objeto.profile.departamento" disabled="">
-								    	</div>
-								    	<div class="col-sm-3" >					    
-									    	<label>Jefe Inmediato </label>
-									    	<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cd.objeto.profile.jefeInmediato" disabled="">
-								    	</div>
-										</div>
-										<div class="row" >
-											<div class="col-sm-3" >
-													<label >Pais </label>
-													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cd.empresaCliente.pais" disabled="">
-											</div>
-										  <div class="col-sm-3" >
-													<label for="seccion_id">Estado </label>
-													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cd.empresaCliente.estado" disabled="">
-											</div>	
-											<div class="col-sm-3" >
-													<label >Municipio </label>
-													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cd.empresaCliente.municipio" disabled="">
-											</div>
-											<div class="col-sm-3" >
-													<label for="seccion_id">Ciudad </label>
-													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" value="{{cd.empresaCliente.ciudad}}" disabled="">
-											</div>
-										</div>	
-				    </div>
-				</div>
-			</div>
-	</div>
-	</p>
-</div>
-<div class="tab-pane fade" id="historialCrediticio" ng-show="cd.masInfoCredito">
-	<p>
-<div class="tab-pane">
-	<div class="col-sm-12">
-		<br/>
-		<table class="table table-striped table-bordered table-condensed font-xs">
-			<thead class="thead">
-				<tr>
-					<th class="text-center" width="7%">Crédito No.</th>
-					<th class="text-center" width="15%">Fecha Solicitud</th>
-					<th class="text-center" width="15%">Fecha Entrega</th>
-					<th class="text-center" width="15%">Capital Solicitado</th>
-					<th class="text-center" width="15%">Adeudo Inicial</th>
-					<th class="text-center" width="20%">Saldo Actual</th>
-					<th class="text-center" width="10%">Acciones</th>
-					<th ng-show="cd.openModal"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="credito in cd.historialCreditos">
-						
-					<td class="text-center">{{credito.folio}}</td>	
-					<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
-					<td class="text-center">{{credito.fechaEntrega |  date:"dd-MM-yyyy" }}</td>
-					<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
-					<td >{{credito.adeudoInicial | currency}}</td>
-					<td >{{credito.saldoActual | currency}}</td>
-					<td>
-						<div class="text-center">
-								<button type="button" class="btn btn-link" ng-click="cd.verPagos(credito)">Ver Pagos</button>
-						</div>						
-					</td>
-
-<!-- modal -->
-<!-- (////////////////////////////////////////////////////////////////////////) -->
-
-				<td ng-show="cd.openModal" >
-	  		<div class="modal fade" id="modalpagos"	class="modal fade bs-example-modal-lg" tabindex="-1" 	role="dialog" aria-labelledby="myLargeModalLabel">
-	    <div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Pagos</h4>
-				</div>
-				<div class="modal-body">
-				 <div>
-					  <table class="table table-striped table-bordered table-condensed font-xs">
-							<thead class="thead">
-								<tr>
-									<th class="text-center" width="7%">Recibo No.</th>
-									<th class="text-center" width="10%">Movimiento</th>
-									<th class="text-center" width="10%">Fecha</th>
-									<th class="text-center" width="10%">Cargo</th>
-									<th class="text-center" width="10%">Abono</th>
-									<th class="text-center" width="20%">Saldo</th>
-									<th class="text-center" width="20%">Nota de credito</th>
-									<th class="text-center" width="20%">Saldo actualizado</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr  ng-repeat="credito in cd.historial" 
-								ng-class="(credito.tipoPar == 'par') ? 'active in' : (credito.tipoPar == 'impar') ? 'info': 'success'">
-									<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
-									<td class="text-center">{{credito.movimiento}}</td>	
-									<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
-									<td class="text-center">{{credito.cargo | currency}}</td>
-									<td class="text-right">{{credito.pago | currency}}</td>
-									<td >{{credito.saldo | currency}}</td>
-									<td >0</td>
-									<td >{{credito.saldoActualizado}}</td>
-								</tr>
-							</tbody>
-						</table>
-				 </div>
-				</div>
-				<div class="modal-footer">
-				<button ng-click="cd.cerrarModal()" type="button" class="btn btn-default left-panel" data-dismiss="modal">Cerrar</button>
-				    <button ng-click="cd.imprimirHistorial(cd.historial,cd.objeto,cd.credito)" type="button" class="btn btn-success pull-left" >Imprimir Tabla</button>
-				 </div>
-			</div>
-	  </div>
-				</td>
-				</tr>
-			</tbody>
-		</table>	
-
-	</div>
-   </div>
-
-
-	</p>
-</div>
-<div class="tab-pane fade" id="solicitudes" ng-show="cd.solicitudesCre">
-	<p>
-   	<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-						
-						<header role="heading">
-							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-							<h2>Solicitudes de Crédito</h2>
-			
-						<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-						<!-- widget div-->
-						<div class="no-padding" role="content">
-							<!-- widget edit box -->
-							<div class="widget-body">
-								<!-- content -->
-								<div class="row ">
-									<br/>
-									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="pendiente in cd.creditosPendientes">
-										<div class="panel panel-{{pendiente.estatusClase}}">
-											<div class="panel-heading">
-												<h3 class="panel-title">
-													Crédito</h3>
-											</div>
-											<div class="panel-body no-padding text-align-center">
-												<div class="the-price">
-													<h1>
-														{{pendiente.capitalSolicitado|currency}}
-													</h1>
-													<h2>
-														{{pendiente.duracionMeses}}
-														<span class="subscript">/meses</span>
-													</h2>
-													<small>
-														{{pendiente.tipoCredito.nombre}}
-													</small><br>
-													<small>Tiene Aval: {{pendiente.tieneAval}}</small><br>
-													<small>Plan: {{pendiente.periodoPago}}</small><br>
-													<small>Fecha: {{pendiente.fechaSolicito | date:'dd/MM/yyyy'}}</small><br>
-													<small ng-if="pendiente.requiereVerificacion == true">Con Verificación <!-- {{pendiente.fechaVerificacion | date:'dd/MM/yyyy'}} --></small>
-													<small ng-if="pendiente.requiereVerificacion == undefined">Sin Verificación</small>
+						    
+						      <div class="panel-body">
+						        	<div class="row">
+												<div class="col-sm-3" >
+											    <label for="sexo">Sexo </label>
+											    <select name="sexo" ng-model="cd.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" disabled>
+													    <option value=""></option>
+													    <option value="Masculino">Masculino</option>
+													    <option value="Femenino">Femenino</option>
+													</select>
+									    	</div>
+									    	<div class="col-sm-3">
+													<label for="estadocivil">Estado Civil </label>
+													<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="cd.objeto.profile.estadoCivil.nombre" disabled="">
 												</div>
-											</div>
-											
-											<div class="panel-footer no-padding">						
-												<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
-											</div>
-											
-										</div>
-									</div>
-									
-								</div>
-								<!-- end content -->
-							</div>
-			
-						</div>
-						<!-- end widget div -->
-					</div>
-					<!-- end widget -->
-			
-				</article>
-	</p>
-</div>
-<div class="tab-pane fade" id="notasCredito" ng-show="cd.notasCre">
-	<p>
-   <div class="tab-pane">
-   		<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-						
-						<header role="heading">
-							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-							<h2>Notas de Crédito</h2>
-							<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
-						</header>
-			
-						<!-- widget div-->
-						<div class="no-padding" role="content">
-							<div class="widget-body">
-								<!-- content -->
-										<div class="row	padding-10 ">
-											<div class="col-xs-12 col-sm-12 col-md-8 col-lg-12">
-												<table class="table table-striped table-bordered table-condensed font-xs">
-														<thead class="thead">
-															<tr>
-															<!-- 	<th class="text-center" width="5%"></th> -->
-																<th class="text-center" width="5%">No.</th>
-																<th class="text-center" width="15%">Tipo de Nota de Crédito</th>
-																<th class="text-center" width="20%">Causa</th>
-																<th class="text-center" width="10%">Fecha Creación</th>
-																<th class="text-center" width="10%">Fecha Vigencia</th>
-																<th class="text-center" width="5%">Importe</th>
-																<th class="text-center" width="5%">Saldo</th>
-																<th class="text-center" width="5%">Estatus</th>
-																
-																
-																<!-- 	<th class="text-center" width="20%">Acciones</th> -->
-															</tr>
-														</thead>
-														<tbody>
-															<tr ng-repeat="(index,nota) in cd.notasCredito">
-																<td>{{index+1}}</td>
-																<td>{{nota.aplica}}</td>
-																<td>{{nota.causa}}</td>
-																<td style="text-align: center">{{nota.createdAt | date:'dd/MM/yyyy'}}</td>
-																<td style="text-align: center">{{nota.vigencia | date:'dd/MM/yyyy'}}</td>
-																<td style="text-align: right">{{nota.importe | currency}}</td>
-																<td style="text-align: right">{{nota.saldo | currency}}</td>
-																<td>{{nota.estatus==1? 'Vigente': nota.estatus==2? 'Caducadas':nota.estatus==1?'Vigente':'Aplicada'}}</td>
-															</tr>
-														</tbody>
-												</table>
-											</div>
-										</div>					
-								<!-- end content -->
-							</div>
-						</div>
-					<!-- end widget -->
-					</div>	
-			</article>
-   </div>
-	</p>
-</div>
-<div class="tab-pane fade" id="aprobados" ng-show="cd.creditoApro">
-	<p>
-			<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-		
-					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-						
-						<header role="heading">
-							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-							<h2>Créditos Aprobados</h2>
-							<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
-						</header>
-			
-						<!-- widget div-->
-						<div class="no-padding" role="content">
-							<!-- widget edit box -->
-						
-							<!-- end widget edit box -->
-			
-							<div class="widget-body">
-								<!-- content -->
-								
-
-								<div class="row ">
-									<br/>
-									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="aprobado in cd.creditosAprobados">
-										<div class="panel panel-blueDark">
-											<div class="panel-heading">
-												<h3 class="panel-title">
-													Crédito</h3>
-											</div>
-											<div class="panel-body no-padding text-align-center">
-												<div class="the-price">
-													<h1>
-														{{aprobado.capitalSolicitado|currency}}
-													</h1>
-													<h2>
-														{{aprobado.duracionMeses}}
-														<span class="subscript">/meses</span>
-													</h2>
-													<small>
-														{{aprobado.tipoCredito.nombre}}
-													</small><br>
-													<small>Tiene Aval: {{aprobado.tieneAval}}</small><br>
-													<small>Plan: {{aprobado.periodoPago}}</small>
-													<small>Fecha: {{aprobado.fechaSolicito.getUTCDate() +"/"+ (aprobado.fechaSolicito.getUTCMonth()+1) +"/"+ aprobado.fechaSolicito.getUTCFullYear()}}</small>
 													
-												</div>
-											</div>
-											<div class="panel-footer no-padding">						
-<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
-												<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Crédito" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="cd.cancelarSeleccion(aprobado)" />
-												<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
-											</div>
-										</div>
-									</div>
-									
-								</div>
-								<!-- end content -->
+									    	<div class="col-sm-3">					    
+										    	<label>Fecha Nacimiento </label>
+										    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="cd.objeto.profile.fechaNacimiento" disabled="">
+									    	</div>	
+												
+												<div class="col-sm-3">
+													<label for="nacionalidad">Nacionalidad</label>
+													<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="cd.objeto.profile.nacionalidad.nombre" disabled="">
+												</div>			
+									    </div>
+									    <div class="row">
+										    <div class="col-sm-3">
+													<label for="ocupacion">Ocupación </label>
+													<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="cd.objeto.profile.ocupacion.nombre" disabled="">
+												</div>		
+									    	<div class="col-sm-3">					    
+										    	<label>CURP</label>
+										    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="cd.objeto.profile.curp" disabled>
+									    	</div>
+									      <div class="col-sm-3">					    
+										    	<label>Lugar de Nacimiento</label>
+										    	<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="cd.objeto.profile.lugarNacimiento" disabled>
+									    	</div>	
+									    </div>		
+						      </div>
+						   
+						  </div>
+						  <div class="panel panel-default">
+							    <div class="panel-heading" role="tab" id="headingFour">
+							      <h4 class="panel-title">
+							        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href4" aria-expanded="false" aria-controls="href4">
+							          Dirección
+							        </a>
+							      </h4>
+							    </div>
+							   
+							      <div class="panel-body">
+							        	<div class="row">
+												    <div class="col-sm-6" >					    
+												    	<label>Calle </label>
+												    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="cd.objeto.profile.calle" disabled="">
+											    	</div>
+											    	<div class="col-sm-3" >					    
+												    	<label>Numero </label>
+												    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="cd.objeto.profile.numero" disabled="">
+											    	</div>
+											    	<div class="col-sm-3" >					    
+												    	<label>CP </label>
+												    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="cd.objeto.profile.codigoPostal" disabled="">
+											    	</div>
+											    </div>
+											    <div class="row">
+												    <div class="col-sm-3" >
+																<label >Pais </label>
+																<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="cd.objeto.profile.pais.nombre" disabled>
+														</div>
+													  <div class="col-sm-3" >
+																<label for="seccion_id">Estado </label>
+																<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="cd.objeto.profile.estado.nombre" disabled>
+														</div>	
+														<div class="col-sm-3" >
+																<label >Municipio </label>
+																<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="cd.objeto.profile.municipio.nombre" disabled>
+														</div>
+														<div class="col-sm-3" >
+																<label for="seccion_id">Ciudad </label>
+																<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="cd.objeto.profile.ciudad.nombre" disabled>
+														</div>	
+											    </div>
+											    <div class="row">
+												    <div class="col-sm-3" >
+																<label for="seccion_id">Colonia </label>
+																<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="cd.objeto.profile.colonia.nombre" disabled>
+														</div>
+														<div class="col-sm-3">					    
+												    	<label>Tiempo Residencia</label>
+												    	<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="cd.objeto.profile.tiempoResdencia" disabled>
+											    	</div>
+											    	<div class="col-sm-2">					    
+												    	<label>Renta</label>
+												    	<input name="rentaMes" type="checkbox" class="form-control" ng-model="cd.objeto.profile.renta" disabled>
+											    	</div>
+											    	<div class="col-sm-3" ng-if="cd.objeto.profile.renta">					    
+												    	<label>Renta Mes </label>
+												    	<input name="tiempo" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="cd.objeto.profile.rentaMes" disabled>
+											    	</div>
+														<div class="col-sm-12">					    
+												    	<label>Señas Particulares</label>
+												    	<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="cd.objeto.profile.senasParticulares" disabled>
+											    	</div>
+											    </div>	
+							      </div>
+							    
 							</div>
-			
-						</div>
-						<!-- end widget div -->
-					</div>
-					<!-- end widget -->
-			
-			</article>
-	</p>
-</div>
-<div class="tab-pane fade" id="rechazados" ng-show="cd.creditosRechazados">
-	<p>
-   	<div class="tab-pane">
-   		<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-					<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-						<header role="heading">
-							<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-							<h2>Créditos Rechazados</h2>
-							<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
-						</header>
-						<div class="no-padding" role="content">
-							<div class="widget-body">
-								<!-- content -->
-										<div class="row	padding-10 ">
-											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-												<table class="table table-striped table-bordered table-condensed font-xs">
-														<thead class="thead">
+							<div class="panel panel-default">
+							    <div class="panel-heading" role="tab" id="headingFive">
+							      <h4 class="panel-title">
+							        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href5" aria-expanded="false" aria-controls="href5">
+							          Ingresos Mensuales
+							        </a>
+							      </h4>
+							    </div>
+							  
+							      <div class="panel-body">
+							        	<div class="row">
+										    	<div class="col-sm-3" > 					    
+											    	<label>Ingresos Personales</label>
+											    	<input name="ingresosPersonales" type="text" class="form-control" placeholder="Ingresos Personales" ng-model="cd.objeto.profile.ingresosPersonales" disabled>
+										    	</div>
+										    	<div class="col-sm-3" >					    
+											    	<label>Ingresos Conyuge</label>
+											    	<input name="ingresosConyuge" type="text" class="form-control" placeholder="Ingresos Conyuge" ng-model="cd.objeto.profile.ingresosConyuge" disabled>
+										    	</div>
+										    	<div class="col-sm-3">					    
+											    	<label>Otros Ingresos</label>
+											    	<input name="otrosIngresos" type="text" class="form-control" placeholder="Otros Ingresos" ng-model="cd.objeto.profile.otrosIngresos" disabled>
+										    	</div>	  
+										    	<div class="col-sm-3">					    
+											    	<label>Total Ingresos</label>
+											    	<input name="totalIngresos" type="text" class="form-control" placeholder="Total Ingresos" ng-model="cd.objeto.profile.totalIngresos" disabled>
+										    	</div>  				    	    
+										    </div>
+										    <div class="row">
+										    	<div class="col-sm-3" > 					    
+											    	<label>Gastos Fijos</label>
+											    	<input name="gastosFijos" type="text" class="form-control" placeholder="Gastos Fijos" ng-model="cd.objeto.profile.gastosFijos" disabled>
+										    	</div>
+										    	<div class="col-sm-3" >					    
+											    	<label>Gastos Eventuales</label>
+											    	<input name="gastosEventuales" type="text" class="form-control" placeholder="Gastos Eventuales" ng-model="cd.objeto.profile.gastosEventuales" disabled>
+										    	</div>
+										    	<div class="col-sm-3">					    
+											    	<label>Total Gastos</label>
+											    	<input name="totalGastos" type="text" class="form-control" placeholder="Total Gastos" ng-model="cd.objeto.profile.totalGastos" disabled>
+										    	</div>	  
+										    	<div class="col-sm-3">					    
+											    	<label>Resultado Neto</label>
+											    	<input name="resultadoNeto" type="text" class="form-control" placeholder="Resultado Neto" ng-model="cd.objeto.profile.resultadoNeto" disabled>
+										    	</div>  				    	    
+										    </div>
+							      </div>
+							
+							</div>				
+							<div class="panel panel-default" ng-if="cd.estadoCivilSeleccionado == 'CASADO (A)'">
+							    <div class="panel-heading" role="tab" id="headingSix">
+							      <h4 class="panel-title">
+							        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href6" aria-expanded="false" aria-controls="href6">
+							          Información del Cónyuge
+							        </a>
+							      </h4>
+							    </div>
+							  
+							      <div class="panel-body">
+							        	<div class="col-sm-3" valida> 					    
+										    	<label>Nombre *</label>
+										    	<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cd.objeto.profile.nombreConyuge" required="" capitalize>
+									    	</div>
+									    	<div class="col-sm-3" valida>					    
+										    	<label>Dirección *</label>
+										    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cd.objeto.profile.direccionConyuge" required="" capitalize>
+									    	</div>
+									    	<div class="col-sm-3" valida>					    
+										    	<label>Dirección del trabajo *</label>
+										    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cd.objeto.profile.direccionConyugeTrabajo" required="" capitalize>
+									    	</div>
+									    	<div class="col-sm-3" valida>					    
+										    	<label>Puesto *</label>
+										    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cd.objeto.profile.puestoConyuge" required="" capitalize>
+									    	</div>
+									    	<div class="col-sm-3" valida>					    
+										    	<label>Teléfono Particular *</label>
+										    	<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoConyuge" required="">
+									    	</div>
+									    	<div class="col-sm-3">					    
+										    	<label>Teléfono del trabajo</label>
+										    	<input name="telefonoConyugeTrabajo" type="number" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoConyugeTrabajo" >
+									    	</div>
+									    	<div class="col-sm-3">					    
+										    	<label>Ocupación</label>
+										    	<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cd.objeto.profile.ocupacionConyuge" capitalize>
+									    	</div>	
+									    	<div class="col-sm-3">					    
+										    	<label>Dirección Trabajo</label>
+										    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion" ng-model="cd.objeto.profile.direccionTrabajoConyuge" capitalize>
+									    	</div>		   				    	    
+									    </div>
+							      
+							    </div>
+							<div class="panel panel-default">
+							    <div class="panel-heading" role="tab" id="headingSeven">
+							      <h4 class="panel-title">
+							        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href7" aria-expanded="false" aria-controls="href7">
+							          Referencias Personales
+							        </a>
+							      </h4>
+							    </div>
+							   
+							      <div class="panel-body">
+							        	<div class="row">
+													<table class="table table-bordered">
+														<thead>
 															<tr>
-																<th class="text-center" width="5%">No.</th>
-																<th class="text-center" width="20%">Capital Solicitado</th>
-																<th class="text-center" width="20%">Fecha Solicito</th>
-																<th class="text-center" width="40%">Motivo</th>
-																<th class="text-center" width="15%">Acciones</th>
+																<th width="5%">Número</th>
+																<th width="20%">Nombre</th>
+																<th width="5%">Parentesco</th>
+																<th width="30%">Dirección</th>
+																<th width="10%">Telefono</th>
+																<th width="10%">Tiempo</th>
 															</tr>
 														</thead>
 														<tbody>
-															<tr ng-repeat="credito in cd.creditosCancelados track by $index">
-																<td class="text-center">{{index+1}}</td>
-																<td class="text-center">{{credito.capitalSolicitado | currency}}</td>
-																<td class="text-center">{{credito.fechaSolicito | date:'dd-MM-yyyy'}}</td>
-																<td class="text-center">{{credito.motivo}}</td>
-																<td class="text-center"><a href="" ng-click="cd.recuperarCredito(credito._id)" class="btn btn-success btn-sm" >Recuperar Credito</a></td>
+															<tr ng-repeat="p in cd.referenciasPersonales">
+																<td>{{p.num}}</td>
+																<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}} </td>
+																<td>{{p.parentezco}}</td>
+																<td>{{p.direccion}}</td>
+																<td>{{p.telefono}}</td>
+																<td>{{p.tiempo}}</td>
 															</tr>
 														</tbody>
-												</table>
+													</table>
+												</div>
+							      </div>
+							   
+							</div>
+							<div class="panel panel-default">
+							    <div class="panel-heading" role="tab" id="headingEight">
+							      <h4 class="panel-title">
+							        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href8" aria-expanded="false" aria-controls="href8">
+							          Empresa
+							        </a>
+							      </h4>
+							    </div>
+							 
+							      <div class="panel-body">
+							        	<div class="row">
+											    	<div class="col-sm-6" > 					    
+												    	<label>Nombre</label>
+												    	<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="cd.objeto.profile.empresa.nombre" disabled>
+											    	</div>
+											    	<div class="col-sm-6" >					    
+												    	<label>Razón Social</label>
+												    	<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="cd.objeto.profile.empresa.razonSocial" disabled>
+											    	</div>
+											    	<div class="col-sm-4" >					    
+												    	<label>Calle</label>
+												    	<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="cd.objeto.profile.empresa.calle" disabled="" >
+											    	</div>	  
+											    	<div class="col-sm-2" >					    
+												    	<label>Número </label>
+												    	<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="cd.objeto.profile.empresa.numero" disabled="" >
+											    	</div>  				    	    
+											    	<div class="col-sm-6" >					    
+												    	<label>Colonia </label>
+												    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cd.objeto.profile.empresa.colonia" disabled="">
+											    	</div>
+											    </div>
+											    <div class="row">
+												    <div class="col-sm-3" >					    
+												    	<label>Teléfono </label>
+												    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoEmpresa" disabled="">
+											    	</div>
+											    	<div class="col-sm-3" >					    
+												    	<label>Código Postal </label>
+												    	<input name="codigopostal" type="text" class="form-control" placeholder="Código Postal" ng-model="cd.objeto.profile.empresa.codigoPostal" disabled="">
+											    	</div>
+											    	<div class="col-sm-3" >					    
+												    	<label>Tiempo Laborando </label>
+												    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="cd.objeto.profile.tiempoLaborando" disabled="">
+											    	</div>
+											    	<div class="col-sm-3" >					    
+												    	<label>Puesto </label>
+												    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cd.objeto.profile.puesto" disabled="">
+											    	</div>
+											    </div>  
+											    <div class="row">
+											    	<div class="col-sm-3" >					    
+												    	<label>Departamento </label>
+												    	<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="cd.objeto.profile.departamento" disabled="">
+											    	</div>
+											    	<div class="col-sm-3" >					    
+												    	<label>Jefe Inmediato </label>
+												    	<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cd.objeto.profile.jefeInmediato" disabled="">
+											    	</div>
+													</div>
+													<div class="row" >
+														<div class="col-sm-3" >
+																<label >Pais </label>
+																<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cd.empresaCliente.pais" disabled="">
+														</div>
+													  <div class="col-sm-3" >
+																<label for="seccion_id">Estado </label>
+																<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cd.empresaCliente.estado" disabled="">
+														</div>	
+														<div class="col-sm-3" >
+																<label >Municipio </label>
+																<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cd.empresaCliente.municipio" disabled="">
+														</div>
+														<div class="col-sm-3" >
+																<label for="seccion_id">Ciudad </label>
+																<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" value="{{cd.empresaCliente.ciudad}}" disabled="">
+														</div>
+													</div>	
+							    </div>
+							</div>
+						</div>
+				</div>
+				</p>
+			</div>
+			<div class="tab-pane fade" id="historialCrediticio" ng-show="cd.masInfoCredito">
+				<p>
+			<div class="tab-pane">
+				<div class="col-sm-12">
+					<br/>
+					<table class="table table-striped table-bordered table-condensed font-xs">
+						<thead class="thead">
+							<tr>
+								<th class="text-center" width="7%">Crédito No.</th>
+								<th class="text-center" width="15%">Fecha Solicitud</th>
+								<th class="text-center" width="15%">Fecha Entrega</th>
+								<th class="text-center" width="15%">Capital Solicitado</th>
+								<th class="text-center" width="15%">Adeudo Inicial</th>
+								<th class="text-center" width="20%">Saldo Actual</th>
+								<th class="text-center" width="10%">Acciones</th>
+								<th ng-show="cd.openModal"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="credito in cd.historialCreditos">
+									
+								<td class="text-center">{{credito.folio}}</td>	
+								<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
+								<td class="text-center">{{credito.fechaEntrega |  date:"dd-MM-yyyy" }}</td>
+								<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
+								<td >{{credito.adeudoInicial | currency}}</td>
+								<td >{{credito.saldoActual | currency}}</td>
+								<td>
+									<div class="text-center">
+											<button type="button" class="btn btn-link" ng-click="cd.verPagos(credito)">Ver Pagos</button>
+									</div>						
+								</td>
+			
+			<!-- modal -->
+			<!-- (////////////////////////////////////////////////////////////////////////) -->
+			
+							<td ng-show="cd.openModal" >
+				  		<div class="modal fade" id="modalpagos"	class="modal fade bs-example-modal-lg" tabindex="-1" 	role="dialog" aria-labelledby="myLargeModalLabel">
+				    <div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title">Pagos</h4>
+							</div>
+							<div class="modal-body">
+							 <div>
+								  <table class="table table-striped table-bordered table-condensed font-xs">
+										<thead class="thead">
+											<tr>
+												<th class="text-center" width="7%">Recibo No.</th>
+												<th class="text-center" width="10%">Movimiento</th>
+												<th class="text-center" width="10%">Fecha</th>
+												<th class="text-center" width="10%">Cargo</th>
+												<th class="text-center" width="10%">Abono</th>
+												<th class="text-center" width="20%">Saldo</th>
+												<th class="text-center" width="20%">Nota de credito</th>
+												<th class="text-center" width="20%">Saldo actualizado</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr  ng-repeat="credito in cd.historial" 
+											ng-class="(credito.tipoPar == 'par') ? 'active in' : (credito.tipoPar == 'impar') ? 'info': 'success'">
+												<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
+												<td class="text-center">{{credito.movimiento}}</td>	
+												<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
+												<td class="text-center">{{credito.cargo | currency}}</td>
+												<td class="text-right">{{credito.pago | currency}}</td>
+												<td >{{credito.saldo | currency}}</td>
+												<td >0</td>
+												<td >{{credito.saldoActualizado}}</td>
+											</tr>
+										</tbody>
+									</table>
+							 </div>
+							</div>
+							<div class="modal-footer">
+							<button ng-click="cd.cerrarModal()" type="button" class="btn btn-default left-panel" data-dismiss="modal">Cerrar</button>
+							    <button ng-click="cd.imprimirHistorial(cd.historial,cd.objeto,cd.credito)" type="button" class="btn btn-success pull-left" >Imprimir Tabla</button>
+							 </div>
+						</div>
+				  </div>
+							</td>
+							</tr>
+						</tbody>
+					</table>	
+			
+				</div>
+			   </div>
+			
+			
+				</p>
+			</div>
+			<div class="tab-pane fade" id="solicitudes" ng-show="cd.solicitudesCre">
+				<p>
+			   	<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+								<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+									
+									<header role="heading">
+										<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+										<h2>Solicitudes de Crédito</h2>
+						
+									<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+									<!-- widget div-->
+									<div class="no-padding" role="content">
+										<!-- widget edit box -->
+										<div class="widget-body">
+											<!-- content -->
+											<div class="row ">
+												<br/>
+												<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="pendiente in cd.creditosPendientes">
+													<div class="panel panel-{{pendiente.estatusClase}}">
+														<div class="panel-heading">
+															<h3 class="panel-title">
+																Crédito</h3>
+														</div>
+														<div class="panel-body no-padding text-align-center">
+															<div class="the-price">
+																<h1>
+																	{{pendiente.capitalSolicitado|currency}}
+																</h1>
+																<h2>
+																	{{pendiente.duracionMeses}}
+																	<span class="subscript">/meses</span>
+																</h2>
+																<small>
+																	{{pendiente.tipoCredito.nombre}}
+																</small><br>													
+																<small>Tiene Aval: {{pendiente.tieneAval}}</small>
+																<div class="po-markup" ng-if="pendiente.tieneAval == 'SI'">
+																    <a href="" class="po-link">AVAL</a>
+																    <div class="po-content hidden">
+																        <div class="po-title">
+																          Nombre
+																        </div> <!-- ./po-title -->
+																          
+																        <div class="po-body">
+																            <p>
+																	            {{pendiente.avales_ids[0].nombreCompleto}}
+																            </p>              
+																        </div><!-- ./po-body -->
+																    </div>  <!-- ./po-content -->
+																</div><!-- ./po-markup -->
+ 																<br ng-if="pendiente.tieneAval == 'NO'">
+																<small>Plan: {{pendiente.periodoPago}}</small><br>
+																<small>Fecha: {{pendiente.fechaSolicito | date:'dd/MM/yyyy'}}</small><br>
+																<small ng-if="pendiente.requiereVerificacion == true">Con Verificación <!-- {{pendiente.fechaVerificacion | date:'dd/MM/yyyy'}} --></small>
+																<small ng-if="pendiente.requiereVerificacion == undefined">Sin Verificación</small>
+																<br ng-if="pendiente.tieneAval == 'NO'">
+																<br ng-if="pendiente.tieneAval == 'NO'">
+															</div>
+														</div>
+														
+														<div class="panel-footer no-padding">						
+															<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
+														</div>
+														
+													</div>
+												</div>
+												
 											</div>
+											<!-- end content -->
 										</div>
-								<!-- end content -->
-							</div>
-						</div>
-					<!-- end widget -->
-					</div>
-		</article>
-   </div>
-	</p>
-</div>
+						
+									</div>
+									<!-- end widget div -->
+								</div>
+								<!-- end widget -->
+						
+							</article>
+				</p>
+			</div>
+			<div class="tab-pane fade" id="notasCredito" ng-show="cd.notasCre">
+				<p>
+			   <div class="tab-pane">
+			   		<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+								<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+									
+									<header role="heading">
+										<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+										<h2>Notas de Crédito</h2>
+										<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+									</header>
+						
+									<!-- widget div-->
+									<div class="no-padding" role="content">
+										<div class="widget-body">
+											<!-- content -->
+													<div class="row	padding-10 ">
+														<div class="col-xs-12 col-sm-12 col-md-8 col-lg-12">
+															<table class="table table-striped table-bordered table-condensed font-xs">
+																	<thead class="thead">
+																		<tr>
+																		<!-- 	<th class="text-center" width="5%"></th> -->
+																			<th class="text-center" width="5%">No.</th>
+																			<th class="text-center" width="15%">Tipo de Nota de Crédito</th>
+																			<th class="text-center" width="20%">Causa</th>
+																			<th class="text-center" width="10%">Fecha Creación</th>
+																			<th class="text-center" width="10%">Fecha Vigencia</th>
+																			<th class="text-center" width="5%">Importe</th>
+																			<th class="text-center" width="5%">Saldo</th>
+																			<th class="text-center" width="5%">Estatus</th>
+																			
+																			
+																			<!-- 	<th class="text-center" width="20%">Acciones</th> -->
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr ng-repeat="(index,nota) in cd.notasCredito">
+																			<td>{{index+1}}</td>
+																			<td>{{nota.aplica}}</td>
+																			<td>{{nota.causa}}</td>
+																			<td style="text-align: center">{{nota.createdAt | date:'dd/MM/yyyy'}}</td>
+																			<td style="text-align: center">{{nota.vigencia | date:'dd/MM/yyyy'}}</td>
+																			<td style="text-align: right">{{nota.importe | currency}}</td>
+																			<td style="text-align: right">{{nota.saldo | currency}}</td>
+																			<td>{{nota.estatus==1? 'Vigente': nota.estatus==2? 'Caducadas':nota.estatus==1?'Vigente':'Aplicada'}}</td>
+																		</tr>
+																	</tbody>
+															</table>
+														</div>
+													</div>					
+											<!-- end content -->
+										</div>
+									</div>
+								<!-- end widget -->
+								</div>	
+						</article>
+			   </div>
+				</p>
+			</div>
+			<div class="tab-pane fade" id="aprobados" ng-show="cd.creditoApro">
+				<p>
+						<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+					
+								<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+									
+									<header role="heading">
+										<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+										<h2>Créditos Aprobados</h2>
+										<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+									</header>
+						
+									<!-- widget div-->
+									<div class="no-padding" role="content">
+										<!-- widget edit box -->
+									
+										<!-- end widget edit box -->
+						
+										<div class="widget-body">
+											<!-- content -->
+											
+			
+											<div class="row ">
+												<br/>
+												<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="aprobado in cd.creditosAprobados">
+													<div class="panel panel-blueDark">
+														<div class="panel-heading">
+															<h3 class="panel-title">
+																Crédito</h3>
+														</div>
+														<div class="panel-body no-padding text-align-center">
+															<div class="the-price">
+																<h1>
+																	{{aprobado.capitalSolicitado|currency}}
+																</h1>
+																<h2>
+																	{{aprobado.duracionMeses}}
+																	<span class="subscript">/meses</span>
+																</h2>
+																<small>
+																	{{aprobado.tipoCredito.nombre}}
+																</small><br>
+																<small>Tiene Aval: {{aprobado.tieneAval}}</small><br>
+																<div class="po-markup" ng-if="aprobado.tieneAval == 'SI'">
+																    <a href="" class="po-link">AVAL</a>
+																    <div class="po-content hidden">
+																        <div class="po-title">
+																          Nombre
+																        </div> <!-- ./po-title -->
+																          
+																        <div class="po-body">
+																            <p>
+																	            {{aprobado.avales_ids[0].nombreCompleto}}
+																            </p>              
+																        </div><!-- ./po-body -->
+																    </div>  <!-- ./po-content -->
+																</div><!-- ./po-markup -->
+ 																<br ng-if="pendiente.tieneAval == 'NO'">
+																<small>Plan: {{aprobado.periodoPago}}</small>
+																<small>Fecha: {{aprobado.fechaSolicito.getUTCDate() +"/"+ (aprobado.fechaSolicito.getUTCMonth()+1) +"/"+ aprobado.fechaSolicito.getUTCFullYear()}}</small>			
+																<br ng-if="aprobado.tieneAval == 'NO'">
+																<br ng-if="aprobado.tieneAval == 'NO'">										
+															</div>
+														</div>
+														<div class="panel-footer no-padding">						
+			<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
+															<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Crédito" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="cd.cancelarSeleccion(aprobado)" />
+															<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
+														</div>
+													</div>
+												</div>
+												
+											</div>
+											<!-- end content -->
+										</div>
+						
+									</div>
+									<!-- end widget div -->
+								</div>
+								<!-- end widget -->
+						
+						</article>
+				</p>
+			</div>
+			<div class="tab-pane fade" id="rechazados" ng-show="cd.creditosRechazados">
+				<p>
+			   	<div class="tab-pane">
+			   		<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+								<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+									<header role="heading">
+										<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+										<h2>Créditos Rechazados</h2>
+										<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+									</header>
+									<div class="no-padding" role="content">
+										<div class="widget-body">
+											<!-- content -->
+													<div class="row	padding-10 ">
+														<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+															<table class="table table-striped table-bordered table-condensed font-xs">
+																	<thead class="thead">
+																		<tr>
+																			<th class="text-center" width="5%">No.</th>
+																			<th class="text-center" width="20%">Capital Solicitado</th>
+																			<th class="text-center" width="20%">Fecha Solicito</th>
+																			<th class="text-center" width="40%">Motivo</th>
+																			<th class="text-center" width="15%">Acciones</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr ng-repeat="credito in cd.creditosCancelados track by $index">
+																			<td class="text-center">{{index+1}}</td>
+																			<td class="text-center">{{credito.capitalSolicitado | currency}}</td>
+																			<td class="text-center">{{credito.fechaSolicito | date:'dd-MM-yyyy'}}</td>
+																			<td class="text-center">{{credito.motivo}}</td>
+																			<td class="text-center"><a href="" ng-click="cd.recuperarCredito(credito._id)" class="btn btn-success btn-sm" >Recuperar Credito</a></td>
+																		</tr>
+																	</tbody>
+															</table>
+														</div>
+													</div>
+											<!-- end content -->
+										</div>
+									</div>
+								<!-- end widget -->
+								</div>
+					</article>
+			   </div>
+				</p>
+			</div>
 							</div>
 
 						</div>
-
+						
 					</div>
 
 							</div>													
@@ -1051,7 +1083,7 @@
 </div>			
 <!--//////////////////////////////////// //////////////////////////////////////////////////////////// -->
 <!-- Modal para cancelar credito -->
-<div class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div id="cancelaCredito" class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 	    	<div class="modal-header">
@@ -1251,7 +1283,11 @@
 </div>
 <!--		 //////////////////////////////////////////////////////////// -->
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a> 
-  
+
+
+
+
+
 
 
 	

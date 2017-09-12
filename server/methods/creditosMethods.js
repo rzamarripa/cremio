@@ -124,7 +124,6 @@ Meteor.methods({
 		c.avales_ids = [];
 		c.garantias = credito.garantias;
 		
-	
 		//credito.avales_ids = c.avales_ids; Con lo anterior de personas				
 		_.each(credito.avales, function(aval){
 				if (aval.estatus == "N"){					
@@ -152,7 +151,7 @@ Meteor.methods({
 				else if (aval.estatus == "A"){
 						//Buscar el avales_ids y actualizarlo						
 						_.each(credito.avales_ids, function(aval_ids){
-								//console.log(aval_ids);
+
 								if (aval_ids.num == aval.num)
 								{		
 										aval_ids.parentesco = aval.parentesco;
@@ -180,9 +179,17 @@ Meteor.methods({
 								}
 						});				
 				}
-				
+				else if (aval.estatus == "G"){
+					c.avales_ids.push({num							: aval.num, 
+														 aval_id					: aval.aval_id, 
+														 nombreCompleto		: aval.nombreCompleto,
+														 parentesco				: aval.parentesco, 
+														 tiempoConocerlo	: aval.tiempoConocerlo, 
+														 estatus					: aval.estatus});
+				}
 		});		
-
+		
+		
 		delete credito['avales'];
 		delete credito._id;	
 		Creditos.update({_id:idCredito},{$set:c});
@@ -284,10 +291,8 @@ _.each(montos.cuenta,(monto,index)=>{
 	},
 	generarAval : function(avales){
 
-	
 		credito.avales_ids = [];
-		
-		
+				
 		_.each(credito.avales, function(aval){		
 			if (aval.estatus == "N") aval.estatus = "G";
 				 credito.avales_ids.push({num							: aval.num, 
@@ -314,4 +319,19 @@ _.each(montos.cuenta,(monto,index)=>{
 
 		return "hecho";
 	},
+	eliminarAval : function(aval_id, credito_id){
+		
+		var aval 					= Avales.findOne(aval_id);
+		var arregloAvales = _.without(aval.profile.creditos, _.findWhere(aval.profile.creditos, {credito_id: credito_id}));
+		
+		Avales.update({_id: aval_id}, {$set: {"profile.creditos": arregloAvales}});
+								
+		var credito 			 = Creditos.findOne(credito_id);
+		var arregloCredito = _.without(credito.avales_ids, _.findWhere(credito.avales_ids, {aval_id: aval_id}));
+		
+		Creditos.update({_id: credito_id}, {$set: {creditos: arregloCredito}});
+		
+		return true;
+	},	
+	
 });

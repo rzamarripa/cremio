@@ -1,11 +1,11 @@
-<!-- Cabecera del perfil de  alumno seleccionado -->
+
 <div class="row" ng-show="ae.cliente.profile != undefined">
 	<div class="col-sm-12">
 		<div class="well well-sm">
-			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+			<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 				<h2 class="alge-title txt-color-blueDark">
 					<i class="fa fa-list fa-fw "></i>
-						Actualización del Crédito
+						Actualización del Crédito - <span>{{ae.cliente.profile.nombreCompleto}}</span>
 				</h2>
 			</div>
 			<a  ui-sref="root.clienteDetalle({objeto_id: ae.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
@@ -13,14 +13,6 @@
 				<div class="col-sm-12">
 					<form name="formNuevoCredito" class="form-horizontal" role="form" novalidate>
 				  	<div class="well">	    
-					  	<div class="row">
-					  		<div class="col-sm-12">
-					  			<div class="alert alert-info">
-					  			 <p><i class="fa-fw fa fa-info"></i> Para <strong>crear un nuevo crédito</strong> es importante que pongamos la información correcta.</p>
-					  			 <p><strong>Revisar bien los datos.</strong></p>
-					  			</div>
-					  		</div>
-					  	</div>
 					    <div class="row">
 						    <div class="col-sm-4" valida>
 						    	<label>Tipo de crédito *</label>
@@ -102,25 +94,33 @@
 					    <div class="row">	
 						    <div class="col-sm-4">					    
 						    	<label>Calle</label>
-						    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ae.aval.calle" disabled="true">
+						    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ae.aval.calle" capitalize>
 					    	</div>
 					    	<div class="col-sm-2">					    
 						    	<label>Número</label>
-						    	<input name="numero" type="text" class="form-control" placeholder="Calle" ng-model="ae.aval.calle" disabled="true">
+						    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ae.aval.numero" capitalize>
 					    	</div>
 					    	<div class="col-sm-2">					    
 						    	<label>Código Postal</label>
-						    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ae.aval.codigoPostal" disabled="true">
+						    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ae.aval.codigoPostal" >
 					    	</div>
+						    
 						    <div class="col-sm-4"> 					    
-						    	<label>Estado Civil</label>
-						    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="ae.aval.estadoCivil" disabled="true">
+							    <label for="estadocivil">Estado Civil *</label>					
+									<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="ae.aval.estadoCivil_id" >
+										<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in ae.estadosCiviles">
+											{{estadoCivil.nombre}}
+										</option>
+									</select>
 					    	</div>
 					    </div>
 					    <div class="row">		
-						    <div class="col-sm-3"> 					    
-						    	<label>Ocupación</label>
-						    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="ae.aval.ocupacion" disabled="true">
+						    <div class="col-sm-3"> 				
+							    <label>Ocupación</label>
+		              <select ng-options="ocupacion._id as ocupacion.nombre for ocupacion in ae.ocupaciones" 
+		             					ng-model="ae.aval.ocupacion_id" class="js-example-basic-single js-states form-control" 
+			             				placeholder="Seleccione" style="width: 200px;" >
+			            </select>	    
 					    	</div>
 					    	<div class="col-sm-3">					    
 						    	<label>Empresa</label>
@@ -128,25 +128,33 @@
 					    	</div>
 					    	<div class="col-sm-3">					    
 						    	<label>Puesto</label>
-						    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ae.aval.puesto" disabled="true">
+						    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ae.aval.puesto" capitalize>
 					    	</div>					    	
 					    	<div class="col-sm-3">					    
 						    	<label>Tiempo Laborando</label>
-						    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="ae.aval.tiempoLaborando" disabled="true">
+						    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="ae.aval.tiempoLaborando" capitalize>
 					    	</div>
 					    </div>
 					    <div class="row">	
-						    <div class="col-sm-6">					    
-						    	<label>Dirección Empresa</label>
-						    	<input name="direccionEmpresa" type="text" class="form-control" placeholder="Dirección Empresa" ng-model="ae.aval.direccionEmpresa" disabled="true">
+						    <div class="col-sm-4">					    
+						    	<label>Calle</label>
+						    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ae.aval.calleEmpresa" capitalize>
 					    	</div>
-					    	<div class="col-sm-3">					    
-						    	<label>Parentezco</label>
-						    	<input name="parentesco" type="text" class="form-control" placeholder="Parentezco" ng-model="ae.aval.parentesco" CAPITALIZE>
+					    	<div class="col-sm-2">					    
+						    	<label>Número</label>
+						    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ae.aval.numeroEmpresa" capitalize>
 					    	</div>
-					    	<div class="col-sm-3">					    
+					    	<div class="col-sm-2">					    
+						    	<label>Código Postal</label>
+						    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ae.aval.codigoPostalEmpresa" >
+					    	</div>
+					    	<div class="col-sm-2">					    
+						    	<label>Parentesco</label>
+						    	<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="ae.aval.parentesco" capitalize>
+					    	</div>
+					    	<div class="col-sm-2">					    
 						    	<label>Tiempo de Conocerlo</label>
-						    	<input name="tiempoConocerlo" type="text" class="form-control" placeholder="Tiempo en Conocerlo" ng-model="ae.aval.tiempoConocerlo" CAPITALIZE>
+						    	<input name="tiempoConocerlo" type="text" class="form-control" placeholder="Tiempo en Conocerlo" ng-model="ae.aval.tiempoConocerlo" capitalize>
 					    	</div>
 					    	<!--<input type="hidden" name="aval_id" ng-model="ae.aval._id" value="">-->
 					    </div>
@@ -166,35 +174,21 @@
 											<tr>
 												<th width="5%">Número</th>
 												<th width="15%">Nombre</th>
-												<!-- <th width="5%">Estado Civil</th>
-												<th width="5%">Ocupación</th>
-												<th width="15%">Dirección</th>
-												<th width="10%">Empresa</th>
-												<th width="5%">Puesto</th>
-												<th width="5%">Tiempo Laborando</th>
-												<th width="15%">Dirección Empresa</th>
 												<th width="10%">Parentesco</th>
-												<th width="10%">Tiempo Conocerlo</th> -->
+												<th width="10%">Tiempo Conocerlo</th>
 												<th width="10%">Acciones</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr ng-repeat="aval in ae.avales">
 												<td>{{aval.num}}</td>
-												<td>{{aval.nombre}}</td>
-												<!-- <td>{{aval.estadoCivil}}</td>
-												<td>{{aval.ocupacion}}</td>
-												<td>{{aval.direccion}}</td>
-												<td>{{aval.empresa}}</td>
-												<td>{{aval.puesto}}</td>
-												<td>{{aval.tiempoLaborando}}</td>
-												<td>{{aval.direccionEmpresa}}</td>
+												<td>{{aval.nombreCompleto}}</td>
 												<td>{{aval.parentesco}}</td>
-												<td>{{aval.tiempoConocerlo}}</td> -->
+												<td>{{aval.tiempoConocerlo}}</td>
 												<td>
 														<a href="#" class="btn btn-primary" ng-click="ae.verAval(aval)"><i class="fa fa-eye"></i></a>
 														<a href="#" class="btn btn-warning" ng-click="ae.editarAval(aval)"><i class="fa fa-pencil"></i></a>
-														<a href="#" class="btn btn-danger" ng-click="ae.quitarAval(aval.num)"><i class="fa fa-trash"></i></a>
+														<a href="#" class="btn btn-danger" ng-click="ae.quitarAval(aval.num, aval)"><i class="fa fa-trash"></i></a>
 												</td>
 											</tr>
 										</tbody>
@@ -428,7 +422,7 @@ FECHA DE INICIO DE COMERCIALIZACIÓN	FECHA LÍMITE DE FINIQUITO -->
 							<form name="form2" novalidate>
 									<div class="well">	    
 								     <div class="row">
-							 <div class="col-sm-3">
+								<div class="col-sm-3">
 						    	<img style="max-width:170px;" src="{{ae.aval.foto}}" >
 						    </div>
 					    	<div class="col-sm-6"> 					    

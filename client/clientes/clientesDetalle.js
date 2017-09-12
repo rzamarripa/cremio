@@ -94,13 +94,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			estatus : true
 		}]
 	});
-	// this.subscribe('referenciasPersonales',()=>{
-	// 	return [{
-			
-	// 	}]
-	// });
-
-
 			
 	this.helpers({
 		ciudades : () => {
@@ -140,7 +133,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 
 		creditos : () => {
-			var creditos = Creditos.find({estatus:4}).fetch();
+			var creditos = Creditos.find({estatus:4}, {sort:{fechaSolicito:1}}).fetch();
 			
 			_.each(creditos, function(credito){
 				if (credito.saldoMultas == 0) {
@@ -153,20 +146,21 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				}
 				
 				
-				
 				credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
-				
-				
+								
 				credito.tieneAvales = false;
 				_.each(credito.avales_ids, function(aval){
 						credito.tieneAvales = true;
 						Meteor.apply('getAval', [aval.aval_id], function(error, result){
 							if(result){
-								//console.log(result.nombreCompleto);
+
 								aval.nombreCompleto = result.nombreCompleto;
 								aval.celular = result.celular;
 							}
-							$scope.$apply();
+							if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+					    		$scope.$apply();
+							}
+							
 						});
 					
 				})
@@ -176,9 +170,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return creditos;
 		},
 
-	
 		creditosAprobados : () =>{
-			var creditos = Creditos.find({estatus:2}).fetch();			
+			var creditos = Creditos.find({estatus:2}, {sort:{fechaSolicito:1}}).fetch();			
 			if(creditos != undefined){
 				_.each(creditos, function(credito){	
 					 credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
@@ -195,7 +188,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return Creditos.find({estatus:3});
 		},
 		creditosPendientes : () =>{
-			var creditos = Creditos.find({estatus:{$in:[0,1]}}).fetch();
+			var creditos = Creditos.find({estatus:{$in:[0,1]} }, {sort:{fechaSolicito:1}}).fetch();
 			
 			if(creditos.length > 0){
 				_.each(creditos, function(credito){				
@@ -308,7 +301,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		                                                     tipoPersona      : result.tipoPersona,
 		                                                     estatus          : result.estatus
 		                      });
-		                      $scope.$apply();
+													if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+											    		$scope.$apply();
+													}
 		                  }
 		            }); 
 		      });
@@ -343,7 +338,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 							//console.log("entra aqui");
 							//console.log("result",result);
 							rc.referencias.push(result);
-							$scope.$apply();			
+							if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+					    		$scope.$apply();
+							}
 						}
 					});	
 				});
@@ -796,10 +793,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		
 	}
 
-
-
-
-
 	this.contestarNota = function(id){
 
 		this.nota = Notas.findOne({_id:id});
@@ -876,17 +869,16 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 	
 	this.cancelarCredito = function(motivo){
-			
-			var cre = Creditos.findOne({folio : rc.cancelacion.folio});
+			var cre = Creditos.findOne({_id : rc.cancelacion._id});
 			Creditos.update({_id : cre._id}, { $set : {estatus : 6, motivo: motivo}});
 			toastr.success("El crédito se ha cancelado.")
-			$("[data-dismiss=modal]").trigger({ type: "click" });			
-		
+			$("#cancelaCredito").modal('hide');
 	};
 	
 	
 	this.cancelarSeleccion = function(aprobado){
-			 rc.cancelacion.folio = aprobado.folio;
+			 rc.cancelacion = aprobado;
+			 rc.motivo = "";
 	};
 	
 
@@ -1739,6 +1731,26 @@ if(estatus == 0){
 	    
 	};
 
+	$(document).ready(function() {
+
+	  $('.po-markup > .po-link').popover({
+	    trigger: 'hover',
+	    html: true,  // must have if HTML is contained in popover
+	
+	    // get the title and conent
+	    title: function() {
+	      return $(this).parent().find('.po-title').html();
+	    },
+	    content: function() {
+	      return $(this).parent().find('.po-body').html();
+	    },
+	
+	    container: 'body',
+	    placement: 'right'
+	
+	  });
+	
+	});
 	
 	
 	  	
