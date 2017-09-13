@@ -300,6 +300,15 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			beneficiado 					: this.credito.beneficiado
 		};
 				
+		if (rc.cliente.roles == "Distribuidor") {		
+			rc.credito.tipo = "vale"
+			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+			credito.estatus = 2;
+		}
+		else if (rc.cliente.roles == 'Cliente') {	
+			rc.credito.tipo = "creditoP"
+		}
+		
 		credito.avales = angular.copy(rc.avales);
 		
 		if (this.credito.tipoGarantia == "mobiliaria")

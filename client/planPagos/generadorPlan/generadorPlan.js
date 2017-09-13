@@ -446,15 +446,7 @@ this.tieneFoto = function(sexo, foto){
 		});
 
 
-	    if (rc.cliente.roles == "Distribuidor") {
-			console.log("es vale")
-			rc.credito.tipo = "vale"
-			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id
-		}
-		else if (rc.cliente.roles == 'Cliente') {
-			console.log("es credito")
-			rc.credito.tipo = "creditoP"
-		}
+	 
 		
 		var credito = {
 			cliente_id : rc.cliente._id,
@@ -481,6 +473,18 @@ this.tieneFoto = function(sexo, foto){
 			tipo : rc.credito.tipo,
 			beneficiado : rc.credito.beneficiado
 		};
+		
+		if (rc.cliente.roles == "Distribuidor") {
+			//console.log("es vale")
+			rc.credito.tipo = "vale"
+			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+			credito.estatus = 2;
+		}
+		else if (rc.cliente.roles == 'Cliente') {
+			//console.log("es credito")
+			rc.credito.tipo = "creditoP"
+		}
+		
 				
 		credito.avales = angular.copy(rc.avales);
 		
@@ -491,8 +495,6 @@ this.tieneFoto = function(sexo, foto){
 		else
 				credito.garantias = angular.copy(rc.garantiasGeneral);
 				
-				
-		
 
 		//Cambie el metodo	
 
