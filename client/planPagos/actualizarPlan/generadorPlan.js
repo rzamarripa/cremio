@@ -295,7 +295,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			tipoGarantia 					: this.credito.tipoGarantia,
 			tasa									: this.credito.tasa,
 			conSeguro 						: this.credito.conSeguro,
-			seguro								: this.credito.seguro
+			seguro								: this.credito.seguro,
+			tipo 									: this.credito.tipo,
+			beneficiado 					: this.credito.beneficiado
 		};
 				
 		credito.avales = angular.copy(rc.avales);

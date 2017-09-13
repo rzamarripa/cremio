@@ -122,6 +122,8 @@ Meteor.methods({
 				tasa									: credito.tasa,
 				conSeguro 						: credito.conSeguro,
 				seguro								: credito.seguro,
+				tipo 									: credito.tipo,
+				beneficiado 					: credito.beneficiado
 		};
 		
 		c.avales_ids = [];

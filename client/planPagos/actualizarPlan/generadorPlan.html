@@ -38,14 +38,48 @@
 						    	</select>
 					    	</div>									    	
 					    </div>
+					    <div class="row" ng-if="ae.cliente.roles[0] == 'Distribuidor'">
+						    	<div class="col-sm-6" valida>
+								    <label>Nombre del Beneficiado</label>
+							    	<input name="beneficiado" type="text" class="form-control" ng-model="ae.credito.beneficiado" required capitalize>
+							    </div>	
+						    
+					    </div>
 					    <div class="row">
-						    <div class="col-sm-3" valida>					    
+						    <div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Cliente'">					    
 						    	<label>Duración (Meses) *</label>
 						    	<input name="duracionMesesCreditoNuevo" type="number" min="0" max="12" class="form-control" placeholder="Duración en Meses" ng-model="ae.credito.duracionMeses" required="">
 					    	</div>
-					    	<div class="col-sm-3" valida>
+					    	<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Distribuidor'">
+						    	<label>Duración (Meses) *</label>
+						    	<select name="duracionMesesCreditoNuevo" class="form-control" ng-model="ae.credito.duracionMeses" required="">
+							    	<option value="3">3</option>
+							    	<option value="4">4</option>
+							    	<option value="5">5</option>
+							    	<option value="6">6</option>
+							    	<option value="7">7</option>
+							    	<option value="8">8</option>
+						    	</select>
+					    	</div>
+					    	<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Cliente'">
 						    	<label>Capital Solicitado *</label>
 						    	<input name="capitalSolicitadoCreditoNuevo" type="number" min="0" class="form-control" placeholder="Capital Solicitado" ng-model="ae.credito.capitalSolicitado" required="">
+					    	</div>
+					    	<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Distribuidor'">
+						    	<label>Capital Solicitado *</label>
+						    	<select name="capitalSolicitadoCreditoNuevo" class="form-control" ng-model="ae.credito.capitalSolicitado" placeholder="Capital Solicitado" required="">
+							    	<option value="1500">1500</option>
+							    	<option value="2000">2000</option>
+							    	<option value="2500">2500</option>
+							    	<option value="3000">3000</option>
+							    	<option value="3500">3500</option>
+							    	<option value="4000">4000</option>
+							    	<option value="4500">4500</option>
+							    	<option value="5000">5000</option>
+							    	<option value="5500">5500</option>
+							    	<option value="6000">6000</option>
+
+						    	</select>
 					    	</div>
 					    	<div class="col-sm-3">					    
 						    	<label>Con Seguro</label>
@@ -56,7 +90,7 @@
 						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ae.credito.seguro"  required>
 						    </div>		
 					    </div>
-					    <div class="row" ng-if="ae.cliente.roles == 'Cliente'">
+					    <div class="row" ng-if="ae.cliente.roles[0] == 'Cliente'">
 								<div class="col-sm-2">					    
 						    	<label>Requiere Verificación</label>
 						    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ae.credito.requiereVerificacion">
@@ -75,7 +109,7 @@
 						</div>
 						</div>
 						
-						<div role="content" ng-if="ae.cliente.roles == 'Cliente'">
+						<div role="content" ng-if="ae.cliente.roles[0] == 'Cliente'">
 									<!-- widget edit box -->
 									<div class="jarviswidget-editbox">
 									</div>

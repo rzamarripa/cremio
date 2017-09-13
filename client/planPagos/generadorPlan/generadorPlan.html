@@ -47,6 +47,15 @@
 						    	</select>
 					    	</div>
 					    </div>
+					    
+					    <div class="row" ng-if="ge.cliente.roles[0] == 'Distribuidor'">
+						    	<div class="col-sm-6" valida>
+								    <label>Nombre del Beneficiado</label>
+							    	<input name="beneficiado" type="text" class="form-control" ng-model="ge.credito.beneficiado" required capitalize>
+							    </div>	
+						    
+					    </div>
+					    
 					    <div class="row">
 						    <div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">					    
 						    	<label>Duración (Meses) *</label>

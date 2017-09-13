@@ -100,14 +100,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			var aval = Avales.find({
 		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
 			}, { sort : {"nombreCompleto" : 1 }}).fetch();
-			
-/*
-			_.each(aval, function(a){
-					
-					rc.avalesH.push(a);
-			})
-*/
-			
+						
 			return aval;
 		},
 		cliente : () => {
@@ -129,9 +122,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		ocupaciones : () => {
       return Ocupaciones.find();
     },
-		// distrib : () => {
-			
-		// },
+
 /*
 		creditos: () => {
 			var cred = Creditos.find({}).fetch();
@@ -488,6 +479,7 @@ this.tieneFoto = function(sexo, foto){
 			conSeguro : rc.credito.conSeguro,
 			seguro: rc.credito.seguro,
 			tipo : rc.credito.tipo,
+			beneficiado : rc.credito.beneficiado
 		};
 				
 		credito.avales = angular.copy(rc.avales);
