@@ -431,6 +431,7 @@ angular.module("creditoMio")
       })
 
       objeto.profile.estatus = true;
+      objeto.profile.saldoCredito = objeto.profile.limiteCredito;
       objeto.profile.documentos = rc.documents;
       objeto.profile.foto = rc.pic;
       objeto.profile.usuarioInserto = Meteor.userId();

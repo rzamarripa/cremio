@@ -475,13 +475,13 @@ this.tieneFoto = function(sexo, foto){
 		};
 		
 		if (rc.cliente.roles == "Distribuidor") {
-			//console.log("es vale")
+
 			rc.credito.tipo = "vale"
 			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
 			credito.estatus = 2;
 		}
 		else if (rc.cliente.roles == 'Cliente') {
-			//console.log("es credito")
+
 			rc.credito.tipo = "creditoP"
 		}
 		

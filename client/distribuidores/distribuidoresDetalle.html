@@ -22,17 +22,17 @@
 							<a ui-sref="root.pagarPlanPagos({objeto_id : dis.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero' && dis.estatusCaja == true" style="margin: 5px;">
 								<i class="fa fa-plus"></i> Nuevo Pago
 							</a>&nbsp;
-							<div class="col-sm-2">
-										<h1>{{dis.objeto.profile.nombre}} <span class="semi-bold">{{dis.objeto.profile.apellidoPaterno}} {{dis.objeto.profile.apellidoMaterno}}</span>
-										<h5>{{dis.objeto.profile.numeroDistribuidor}}</h5><h1>{{dis.cantidad}}</h1>
-										<!-- <h2>{{dis.empresaCliente.pais}}</h2> -->
-										</h1>				
-							</div>
-								
+							<div class="col-sm-3">
+									<h1>{{dis.objeto.profile.nombre}} <span class="semi-bold">{{dis.objeto.profile.apellidoPaterno}} {{dis.objeto.profile.apellidoMaterno}}</span>
+									<h5>{{dis.objeto.profile.numeroDistribuidor}} </h5>
+									<h6>Limite Crédito: {{dis.objeto.profile.limiteCredito | currency}}</h6>
+									<h6>Saldo  Crédito: {{dis.objeto.profile.saldoCredito | currency}}</h6>
+									</h1>											
+							</div>							
 										<a	ui-sref="root.editarDistribuidores({objeto_id : dis.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
 		 									<i class="fa fa-pencil" ></i> Modificar
 	 								  </a>&nbsp;
-	 								  <small><a ng-click="dis.generarFicha(dis.objeto,dis.objeto._id)" class="btn btn-primary">Descargar ficha</a></small>
+	 								  <small><a ng-click="dis.generarFicha(dis.objeto,dis.objeto._id)" class="btn btn-primary"><i class="fa fa-download" ></i> Ficha</a></small>
 							
 							</div>
 							<div class="col-sm-12">				
@@ -46,7 +46,7 @@
 			
 		</li>
 		<li class="pull-right">
-			<a href="#informacionCliente" data-toggle="tab" ng-click="dis.masInformacion(dis.objeto)">Información Cliente</a>
+			<a href="#informacionCliente" data-toggle="tab" ng-click="dis.masInformacion(dis.objeto)">Información Distribuidor</a>
 		</li>
 		<li class="pull-right">
 			<a href="#historialCrediticio" ng-click="dis.masInformacionCrdito()"  data-toggle="tab">Historial de Vales</a>
@@ -204,7 +204,7 @@
 			    <div class="panel-heading" role="heading" id="headingOne">
 			      <h4 class="panel-title">
 			        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#href1" aria-expanded="false" aria-controls="href1">
-			          Información del Cliente
+			          Información del Distribuidor
 			        </a>
 			      </h4>
 			    </div>
@@ -499,7 +499,7 @@
 						    	</div>
 						    	<div class="col-sm-3" valida>					    
 							    	<label>Teléfono Particular *</label>
-							    	<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="dis.objeto.profile.telefonoConyuge" required="">
+							    	<input name="telefonoConyuge" type="text" class="form-control" placeholder="Teléfono" ng-model="dis.objeto.profile.telefonoConyuge" required="">
 						    	</div>
 						    	<div class="col-sm-3">					    
 							    	<label>Teléfono del trabajo</label>
