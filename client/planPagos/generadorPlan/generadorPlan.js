@@ -85,6 +85,13 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.subscribe('pagos', () => {
 		return [{ estatus:true}];
 	});
+	
+	this.subscribe('estadoCivil', () => {
+		return [{estatus: true}];
+	});
+	this.subscribe('ocupaciones', () => {
+		return [{estatus: true}];
+	});
 
 
 	
@@ -116,6 +123,12 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		pagos : () => {
 			return Pagos.find();
 		},
+		estadosCiviles : () => {
+      return EstadoCivil.find();
+    },
+		ocupaciones : () => {
+      return Ocupaciones.find();
+    },
 		// distrib : () => {
 			
 		// },
@@ -210,8 +223,7 @@ this.tieneFoto = function(sexo, foto){
 */
 	  
 	this.generarPlanPagos = function(credito, form){
-				
-		
+
 		if(form.$invalid){
 			toastr.error('Error al calcular el nuevo plan de pagos, llene todos los campos.');
 			return;
@@ -530,23 +542,24 @@ this.tieneFoto = function(sexo, foto){
 	this.actualizarAval = function(a)
 	{
 		a.num = this.num;
-		
 		_.each(this.avales, function(av){
 			if (av.num == a.num)
 			{
-				av.nombreCompleto = a.nombreCompleto;
-				av.estadoCivil = a.estadoCivil;
-				av.ocupacion = a.ocupacion;
-				av.calle = a.calle;
-			  av.numero = a.numero;
-				av.codigoPostal = a.codigoPostal;			
-				av.direccion = a.direccion;
-				av.empresa = a.empresa;
-				av.puesto = a.puesto;
-				av.tiempoLaborando = a.tiempoLaborando;
-				av.direccionEmpresa = a.direccionEmpresa;
-				av.parentesco = a.parentesco;
-				av.tiempoConocerlo = a.tiempoConocerlo;
+				av.nombre 							= a.nombre;
+				av.estadoCivil 					= a.estadoCivil;
+				av.ocupacion 						= a.ocupacion;
+				av.calle 								= a.calle;
+			  av.numero 							= a.numero;
+				av.codigoPostal 				= a.codigoPostal;			
+				av.direccion 						= a.direccion;
+				av.empresa 							= a.empresa;
+				av.puesto 							= a.puesto;
+				av.tiempoLaborando 			= a.tiempoLaborando;
+				av.calleEmpresa 				= a.calleEmpresa;
+			  av.numeroEmpresa 				= a.numeroEmpresa;
+				av.codigoPostalEmpresa 	= a.codigoPostalEmpresa;
+				av.parentesco 					= a.parentesco;
+				av.tiempoConocerlo 			= a.tiempoConocerlo;
 			}
 		})
 		this.aval={};
@@ -578,11 +591,18 @@ this.tieneFoto = function(sexo, foto){
 		rc.aval.apellidoPaterno = a.apellidoPaterno;
 		rc.aval.apellidoMaterno = a.apellidoMaterno;
 		rc.aval.estadoCivil = a.estadoCivil;
+		rc.aval.estadoCivil_id = a.estadoCivil_id;
+		
 		rc.aval.ocupacion = a.ocupacion;			
+		rc.aval.ocupacion_id = a.ocupacion_id;			
+		
 		rc.aval.calle = a.calle;
 		rc.aval.numero = a.numero;
 		rc.aval.codigoPostal = a.codigoPostal;
 		rc.aval.empresa = a.empresa;
+		rc.aval.calleEmpresa = a.calleEmpresa;
+		rc.aval.numeroEmpresa = a.numeroEmpresa;
+		rc.aval.codigoPostalEmpresa = a.codigoPostalEmpresa;
 		rc.aval.puesto = a.puesto;
 		rc.aval.tiempoLaborando = a.tiempoLaborando;
 		rc.aval.direccionEmpresa = a.direccionEmpresa;
@@ -592,6 +612,7 @@ this.tieneFoto = function(sexo, foto){
 		this.num = a.num;
 	  this.actionAval = false;
 	};
+	
 	this.verAval = function(a)
 	{
 		//console.log(a,"aval p")
@@ -642,6 +663,7 @@ this.tieneFoto = function(sexo, foto){
 	
 	this.AgregarAval = function(a){
 		
+		
 		rc.aval.nombre = a.profile.nombre;
 		rc.aval.apellidoPaterno = a.profile.apellidoPaterno;
 		rc.aval.apellidoMaterno = a.profile.apellidoMaterno;
@@ -649,22 +671,26 @@ this.tieneFoto = function(sexo, foto){
 		var nombre = a.profile.nombre != undefined ? a.profile.nombre + " " : "";
     var apPaterno = a.profile.apellidoPaterno != undefined ? a.profile.apellidoPaterno + " " : "";
     var apMaterno = a.profile.apellidoMaterno != undefined ? a.profile.apellidoMaterno : "";
-    rc.aval.nombreCompleto = nombre + apPaterno + apMaterno;
+    
 		
 		Meteor.call('getAval', a._id, function(error, result){
-			if(result){					
-
-					rc.aval.ocupacion 		 		= result.ocupacion;
-					rc.aval.nombreCompleto 		= result.nombreCompleto;
-					rc.aval.calle 						= result.calle;
-					rc.aval.numero 						= result.numero;
-					rc.aval.codigoPostal 			= result.codigoPostal;
-					rc.aval.estadoCivil 			= result.estadoCivil;
-					rc.aval.empresa 					= result.empresa.nombre;
-					rc.aval.direccionEmpresa 	= result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;
-					rc.aval.puesto 						= result.puesto;
-					rc.aval.tiempoLaborando 	= result.tiempoLaborando;
-					rc.aval.foto 							= result.foto;
+			if(result){		
+					
+					rc.aval.nombreCompleto 			= nombre + apPaterno + apMaterno;						
+					rc.aval.ocupacion 					= result.ocupacion;
+					rc.aval.ocupacion_id 				= result.ocupacion_id;
+					rc.aval.calle 							= result.calle;
+					rc.aval.numero 							= result.numero;
+					rc.aval.codigoPostal 				= result.codigoPostal;
+					rc.aval.estadoCivil 				= result.estadoCivil;
+					rc.aval.estadoCivil_id 			= result.estadoCivil_id;
+					rc.aval.empresa 						= result.empresa.nombre;
+					rc.aval.calleEmpresa 				= result.empresa.calle;
+					rc.aval.numeroEmpresa 			= result.empresa.numero;
+					rc.aval.codigoPostalEmpresa = result.empresa.codigoPostal;
+					rc.aval.direccionEmpresa 		= result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;
+					rc.aval.puesto 							= result.puesto;
+					rc.aval.tiempoLaborando 		= result.tiempoLaborando;
 					$scope.$apply();
 			}
 		});
@@ -702,8 +728,6 @@ this.tieneFoto = function(sexo, foto){
 			if (tipo == "mobiliaria")
 			{
 					a.num = this.numG;
-
-
 			
 					_.each(this.garantias, function(av){
 						if (av.num == a.num)
@@ -855,8 +879,7 @@ this.tieneFoto = function(sexo, foto){
 	};
 	
 	this.editarGarantia = function(tipo, a)
-	{ console.log(tipo,"tipo")
-	console.log("a",a)
+	{ 
 
 			if (tipo == "mobiliaria")
 			{
@@ -964,7 +987,8 @@ this.tieneFoto = function(sexo, foto){
 		 // setTimeout(function(){popupWin.print();},1000);
 
     };
-    this.cerrarGArantia = function(tipo){
+  
+  this.cerrarGArantia = function(tipo){
     	if (tipo == "mobiliaria")
 			{
 					this.garantia={};

@@ -78,9 +78,12 @@ Meteor.methods({
 		var credito_id = Creditos.insert(credito);
 		_.each(credito.avales_ids, function(aval){
 				var a = Avales.findOne(aval.aval_id);
+				var cliente = Meteor.users.findOne(credito.cliente_id);
+				
 				a.profile.creditos = [];
 				a.profile.creditos.push({credito_id				: credito_id,
 																 folio						: credito.folio,
+																 nombreCompleto		: cliente.profile.nombreCompleto,
 																 parentesco				: aval.parentesco,
 																 tiempoConocerlo	: aval.tiempoConocerlo});	
 				var idTemp = a._id;
@@ -137,10 +140,12 @@ Meteor.methods({
 						
 
 						var a = Avales.findOne(aval._id);
+						var cliente = Meteor.users.findOne(credito.cliente_id);
 
 						a.profile.creditos = [];
 						a.profile.creditos.push({credito_id				: idCredito, 
 																		 folio						: c.folio,
+																		 nombreCompleto		: cliente.profile.nombreCompleto,
 																		 parentesco				: aval.parentesco, 
 																		 tiempoConocerlo	: aval.tiempoConocerlo});	
 						var idTemp = a._id;
@@ -159,10 +164,13 @@ Meteor.methods({
 										aval_ids.estatus = "G";
 										
 										var a = Avales.findOne(aval.aval_id);
+										var cliente = Meteor.users.findOne(credito.cliente_id);
+										
 										_.each(a.profile.creditos, function(credito){
 												if (credito.credito_id == idCredito)
 												{
-														credito.parentesco = 	aval.parentesco;
+														credito.nombreCompleto	= cliente.profile.nombreCompleto,
+														credito.parentesco 			= aval.parentesco;
 														credito.tiempoConocerlo = aval.tiempoConocerlo						
 												}
 										});
@@ -329,7 +337,8 @@ _.each(montos.cuenta,(monto,index)=>{
 		var credito 			 = Creditos.findOne(credito_id);
 		var arregloCredito = _.without(credito.avales_ids, _.findWhere(credito.avales_ids, {aval_id: aval_id}));
 		
-		Creditos.update({_id: credito_id}, {$set: {creditos: arregloCredito}});
+		console.log(arregloCredito);
+		Creditos.update({_id: credito_id}, {$set: {avales_ids: arregloCredito}});
 		
 		return true;
 	},	
