@@ -484,6 +484,7 @@ this.tieneFoto = function(sexo, foto){
 
 			rc.credito.tipo = "creditoP"
 		}
+
 		
 				
 		credito.avales = angular.copy(rc.avales);
