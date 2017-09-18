@@ -189,7 +189,8 @@ Meteor.methods({
 	    throw new Meteor.Error(403, "Usted no tiene permiso para entrar a " + vista);
 	  }
 	},
-	createGerenteSucursal: function (usuario, rol) {
+	/*
+createGerenteSucursal: function (usuario, rol) {
 
 		var usuario_id = Accounts.createUser({
 			username: usuario.username,
@@ -200,11 +201,13 @@ Meteor.methods({
 		Roles.addUsersToRoles(usuario_id, rol);
 		
 	},
+*/
 	updateUsuario: function (usuario, referenciasPersonales, rol, cambiarPassword) {
 		
-	  var user = Meteor.users.findOne({"username" : usuario.username});
+	  var user = Meteor.users.findOne({_id : usuario._id});
 		
 		user.profile = usuario.profile;
+		
 		_.each(referenciasPersonales, function(referenciaPersonal){
 				
 				if (referenciaPersonal.estatus == "N"){					
@@ -347,11 +350,9 @@ if (referenciaPersonal.buscarPersona_id)
 		});
 	  
 	  
-	  
 	  Meteor.users.update({_id: user._id}, {$set:{
 			username: usuario.username,
 			roles: [rol],
-			//password: usuario.password,
 			profile: user.profile
 		}});
 		
