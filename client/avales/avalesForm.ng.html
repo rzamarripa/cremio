@@ -138,8 +138,7 @@
 						</select>
 					</div>
 					<div class="col-sm-4">
-						<label for="estadocivil">Estado Civil *</label>
-						<!-- 	<select  name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="ava.objeto.profile.estadoCivil_id" required> -->
+						<label for="estadocivil">Estado Civil *</label>					
 						<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-change="ava.seleccionarEstadoCivil(ava.objeto.profile.estadoCivil_id)" ng-model="ava.objeto.profile.estadoCivil_id" required>
 							<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in ava.estadosCiviles">
 								{{estadoCivil.nombre}}

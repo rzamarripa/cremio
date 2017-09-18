@@ -35,8 +35,13 @@
 								<br>
 								<button class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Crédito</button>	            
             </div>  
-          </div>
-         
+          </div>         
+          <div class="row" ng-if="ecCtrl.credito.avales_ids.length > 0">
+							<div class="col-sm-6">          	
+								<label>AVAL:</label>
+	          		<h4>{{ecCtrl.credito.avales_ids[0].nombreCompleto}}</h4>
+							</div>
+          </div> 
       </div>
     </div>
     <div ng-show = "!ecCtrl.verDiaPago">
@@ -95,6 +100,10 @@
                 {{ecCtrl.credito.capitalSolicitado | currency}}
                 </h1>
               </div>
+              <div class="col-sm-4" ng-if="ecCtrl.credito.avales_ids.length > 0">          	
+								<label>AVAL:</label>
+	          		<h4>{{ecCtrl.credito.avales_ids[0].nombreCompleto}}</h4>
+							</div>
             </div>
             <div class="row" ng-if="ecCtrl.credito.esRefinanciado">
               <div class="col-sm-4">

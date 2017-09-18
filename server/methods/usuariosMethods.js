@@ -381,7 +381,7 @@ if (referenciaPersonal.buscarPersona_id)
 	},
 	getAval: function (aval_id) {	
 	  var a = Avales.findOne({"_id" : aval_id});
-	  
+	  	  
 	  var ocupacion = Ocupaciones.findOne(a.profile.ocupacion_id);
 	  a.profile.ocupacion = "";
 	  a.profile.ocupacion = ocupacion.nombre;
