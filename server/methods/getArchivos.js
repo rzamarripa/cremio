@@ -336,8 +336,8 @@ Meteor.methods({
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 
 		var opts = {}
@@ -474,11 +474,10 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		////var produccion = "/home/cremio/archivos/";
 		var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
-				var content = fs
+		    var content = fs
     	   .readFileSync(produccion+"RECIBOS.docx", "binary");
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
@@ -539,7 +538,7 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		//var produccion = "/home/cremio/archivos/";
-		var produccion = "/home/cremio/archivos/";
+		//var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
@@ -557,21 +556,34 @@ Meteor.methods({
 		}});
 		
 		var fecha = new Date();
+
 		var f = fecha;
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	 	 	//objeto.cargo.toLocaleString()
+	 	const formatCurrency = require('format-currency')
 	 	 	_.each(objeto,function(item){
+	 	 		
 	 	 		//console.log(item,"Credito")
+	 	 		
 	 	 		item.fechaLimite = item.fechaLimite.getUTCDate()+'-'+(item.fechaLimite.getUTCMonth()+1)+'-'+item.fechaLimite.getUTCFullYear();
 	 	 		 if (item.fechaLimite.length < 2) item.fechaLimite = '0' + item.fechaLimite;
-	 	 		   item.cargo = parseFloat(item.cargo.toFixed(2))
+	 	 		   item.cargo = parseFloat(item.cargo.toFixed(2).toLocaleString())
+	 	 		   item.cargo = formatCurrency(item.liquidar)
+	 	 		   //(formatCurrency(item.cargo)
 	 	 		   item.liquidar = parseFloat(item.liquidar.toFixed(2))
+	 	 		   item.liquidar = formatCurrency(item.liquidar)
 	 	 		    item.capital = parseFloat(item.capital.toFixed(2))
+	 	 		    item.capital = formatCurrency(item.liquidar)
+	 	 		   
+
 	 	 		// item.liquidar =              
 	 	 		// if (item.estatus = 5) {
 	 	 		// 	item.formaPago = item.tipoIngreso.nombre
 
 	 	 		// }
 	 	 	});
+	 	 	credito.capitalSolicitado.toLocaleString()
+	 	 
 
 		
 		doc.setData({				planPagos: 	  objeto,
@@ -580,8 +592,9 @@ Meteor.methods({
 									cliente:      credito.nombre,
 									periodo:      credito.periodoPago,
 									duracion:     credito.duracionMeses,
-									capital:      credito.capitalSolicitado,
-									total:        total.sumatoria,
+									capital:      credito.capitalSolicitado.toLocaleString(),
+									total:        total.sumatoria.toLocaleString(),
+									tasa:         credito.tasa,
 									//tipoCredito:
 
 				  });
