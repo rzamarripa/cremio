@@ -104,9 +104,9 @@ Meteor.methods({
 		}
 		
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
-		var c = Creditos.findOne(idCredito);
+		//var cre = Creditos.findOne(idCredito);
 		
-		c = {
+		var c = {
 				tipoCredito_id 				: credito.tipoCredito_id,
 				duracionMeses 				: credito.duracionMeses,
 				capitalSolicitado 		: credito.capitalSolicitado,
@@ -126,9 +126,11 @@ Meteor.methods({
 				beneficiado 					: credito.beneficiado
 		};
 		
-		c.avales_ids = [];
-		c.garantias = credito.garantias;
+		c.avales_ids 	= [];
+		c.garantias 	= credito.garantias;
+		//c.avales_ids 	= credito.avales_ids;
 		
+		//console.log("CA:",credito.avales);
 		//credito.avales_ids = c.avales_ids; Con lo anterior de personas				
 		_.each(credito.avales, function(aval){
 				if (aval.estatus == "N"){					
@@ -144,9 +146,8 @@ Meteor.methods({
 						var a = Avales.findOne(aval._id);
 						var cliente = Meteor.users.findOne(credito.cliente_id);
 
-						a.profile.creditos = [];
 						a.profile.creditos.push({credito_id				: idCredito, 
-																		 folio						: c.folio,
+																		 folio						: credito.folio,
 																		 nombreCompleto		: cliente.profile.nombreCompleto,
 																		 parentesco				: aval.parentesco, 
 																		 tiempoConocerlo	: aval.tiempoConocerlo});	
@@ -167,7 +168,7 @@ Meteor.methods({
 										
 										var a = Avales.findOne(aval.aval_id);
 										var cliente = Meteor.users.findOne(credito.cliente_id);
-										
+
 										_.each(a.profile.creditos, function(credito){
 												if (credito.credito_id == idCredito)
 												{

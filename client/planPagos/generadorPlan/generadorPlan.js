@@ -473,12 +473,18 @@ this.tieneFoto = function(sexo, foto){
 		console.log(credito,"mi credito")
 		
 		if (rc.cliente.roles == "Distribuidor") {
+<<<<<<< HEAD
 			//console.log("es vale")
 			 ///No me gusta
+=======
+
+			rc.credito.tipo = "vale"
+			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+>>>>>>> 3a2647ad43df58a25e40e0442d9807b45a7b6e4f
 			credito.estatus = 2;
 		}
 		else if (rc.cliente.roles == 'Cliente') {
-			//console.log("es credito")
+
 			rc.credito.tipo = "creditoP"
 		}
 		

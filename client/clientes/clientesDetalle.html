@@ -13,25 +13,25 @@
 							<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px;">
 								<i class="fa fa-plus"></i> N. Nota de Credito
 							</a>&nbsp;
-							<a ng-click="cd.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
+							<a ng-click="cd.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' " style="margin: 5px;">
 								<i class="fa fa-plus"></i> N. Nota de Cliente
 							</a>&nbsp;
-							<a ng-click="cd.crearCargoMoratorio(credito)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px">
+							<a ng-click="cd.crearCargoMoratorio(credito)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px">
 								 <i class="fa fa-plus"></i> N. Cargo Moratorio
 							</a>&nbsp;	
 							<a ui-sref="root.pagarPlanPagos({objeto_id : cd.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero' && cd.estatusCaja == true" style="margin: 5px;">
 								<i class="fa fa-plus"></i> N. Pago
 							</a>&nbsp;
-							<div class="col-sm-2">
+							<div class="col-sm-3">
 										<h1>{{cd.objeto.profile.nombre}} <span class="semi-bold">{{cd.objeto.profile.apellidoPaterno}} {{cd.objeto.profile.apellidoMaterno}}</span>
 										<h5>{{cd.objeto.profile.numeroCliente}}</h5>
 										</h1>				
 							</div>
 								
-										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" style="margin: 5px;">
+										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px;">
 		 									<i class="fa fa-pencil" ></i> Modificar
 	 								  </a>&nbsp;
-	 								  <small><a ng-click="cd.generarFicha(cd.objeto,cd.objeto._id)" class="btn btn-primary">Descargar ficha</a></small>
+	 								  <small><a ng-click="cd.generarFicha(cd.objeto,cd.objeto._id)" class="btn btn-primary"><i class="fa fa-download" ></i> Ficha</a></small>
 							
 							</div>
 							<div class="col-sm-12">				
@@ -787,7 +787,7 @@
 														</div>
 														
 														<div class="panel-footer no-padding">						
-															<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
+															<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'">Editar Crédito</a>
 														</div>
 														
 													</div>
@@ -930,8 +930,8 @@
 														</div>
 														<div class="panel-footer no-padding">						
 			<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
-															<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Crédito" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="cd.cancelarSeleccion(aprobado)" />
-															<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Crédito</a>
+															<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Crédito" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" ng-click="cd.cancelarSeleccion(aprobado)" />
+															<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'">Editar Crédito</a>
 														</div>
 													</div>
 												</div>
