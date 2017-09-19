@@ -37,7 +37,7 @@ angular.module("creditoMio")
 	});
 
 	this.validar={};
-
+	console.log($stateParams,"state")
 	this.helpers({
 		tiposIngreso : () => {
 			var tipos = TiposIngreso.find().fetch();
@@ -60,6 +60,13 @@ angular.module("creditoMio")
 			
 			return tiposIngresosValidos;
 		},
+		// cliente : () => {
+		// 	var cliente = Meteor.users.findOne($stateParams.cliente_id);
+		// 	//console.log(cliente,"el cliente paps")
+		// 	if (true) {}
+
+		// 	return  cliente
+		// },
 		caja : () => {			
 			var caj = Cajas.findOne(Meteor.user() != undefined ? Meteor.user().profile.caja_id : "");
 			var ti = TiposIngreso.find().fetch();
@@ -112,14 +119,14 @@ angular.module("creditoMio")
 		credito : () => {
 			var c = Creditos.findOne({_id:$stateParams.credito_id}); 
 			//console.log(c,"credito")
-			
+
 			if (c != undefined)
 			{		
 
 					rc.cliente._id = c.cliente_id;
 					if (c.folio)
 						  this.verDiaPago = false;
-					
+
 /*
 					if (c.periodoPago == "Quincenal")
 					{
@@ -152,7 +159,8 @@ angular.module("creditoMio")
 					}		
 */
 	
-			}			
+			}	
+		
 			return c
 		}
 	});

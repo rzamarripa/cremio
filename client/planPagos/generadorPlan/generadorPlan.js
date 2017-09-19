@@ -416,7 +416,7 @@ this.tieneFoto = function(sexo, foto){
 				toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
 				return;
 		}	
-		if (rc.cliente.profile.renta == true && this.avales.length == 0)		
+		if (rc.cliente.profile.renta == true && this.avales.length == 0 && rc.cliente.roles != "Distribuidor")		
 		{
 				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
 				return;
@@ -427,25 +427,22 @@ this.tieneFoto = function(sexo, foto){
 	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
 			if (result)
 			{
-					//console.log(result,"sucursal bebe");
-					//rc.sucursalCliente.push(result);
-					//console.log(rc.sucursalCliente,"sucursal del cliente");
-						if (rc.cliente.roles == "Distribuidor") {
-						console.log("distri")
-						rc.credito.tasa = result.tasaVales
-						
-						console.log(rc.credito.tipoCredito_id)
-					}else if (rc.cliente.roles == "Cliente") {
-						console.log("clientaso")
-						rc.credito.tasa = rc.credito.tasa
-						
-			
-					}
-			}
-		
-		});
+					console.log(result,"sucursal bebe");
+					rc.sucursalCredito = result
+					//////////////////////// EL METODO DEBE IR ASI PAPU
 
+	  	if (rc.cliente.roles == "Distribuidor") {
+			console.log("distri")
+			rc.credito.tasa = rc.sucursalCredito.tasaVales
+			rc.credito.tipo = "vale"
+			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id
+			console.log(rc.credito.tipoCredito_id)
+		}else if (rc.cliente.roles == "Cliente") {
+			console.log("clientaso")
+			rc.credito.tipo = "creditoP"
+			rc.credito.tasa = rc.credito.tasa
 
+		}
 	 
 		
 		var credito = {
@@ -473,11 +470,11 @@ this.tieneFoto = function(sexo, foto){
 			tipo : rc.credito.tipo,
 			beneficiado : rc.credito.beneficiado
 		};
+		console.log(credito,"mi credito")
 		
 		if (rc.cliente.roles == "Distribuidor") {
 			//console.log("es vale")
-			rc.credito.tipo = "vale"
-			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+			 ///No me gusta
 			credito.estatus = 2;
 		}
 		else if (rc.cliente.roles == 'Cliente') {
@@ -498,21 +495,24 @@ this.tieneFoto = function(sexo, foto){
 
 		//Cambie el metodo	
 
-		Meteor.apply('generarCreditoPeticion', [rc.cliente, credito], function(error, result){
-			if(result == "hecho"){
-				toastr.success('Se ha guardado la solicitud de crédito correctamente');
-				rc.planPagos = [];
-				rc.avales = [];
-				if (rc.cliente.roles == "Distribuidor") {
-					$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
+			Meteor.apply('generarCreditoPeticion', [rc.cliente, credito], function(error, result){
+				if(result == "hecho"){
+					toastr.success('Se ha guardado la solicitud de crédito correctamente');
+					rc.planPagos = [];
+					rc.avales = [];
+					if (rc.cliente.roles == "Distribuidor") {
+						$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
+					}
+					if (rc.cliente.roles == "Cliente") {
+						$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+					}
+					
 				}
-				if (rc.cliente.roles == "Cliente") {
-					$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
-				}
-				
-			}
-			$scope.$apply();
-			/////////////////AQUI
+				$scope.$apply();
+				/////////////////AQUI
+			});
+		}
+		
 		});
 		
 	}

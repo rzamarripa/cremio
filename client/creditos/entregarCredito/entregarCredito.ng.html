@@ -2,7 +2,8 @@
 <div class="row">
 	<div class="col-sm-12">
 			<div class="col-sm-6">
-					<h2>Entregar Crédito</h2>
+					<h2  ng-if="!ecCtrl.credito.tipo == 'creditoP'">Entregar Crédito</h2>
+          <h2 ng-if="ecCtrl.credito.tipo == 'vale'">Entregar Vale</h2>
 			</div>
 			<div class="col-sm-6">
 					<a style="margin: 5px;" ng-if="ecCtrl.credito.tipo == 'vale'" ui-sref="root.distribuidoresDetalle({objeto_id : ecCtrl.credito.cliente_id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
@@ -33,7 +34,8 @@
             </div>
             <div class="col-sm-3">            
 								<br>
-								<button class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Crédito</button>	            
+								<button ng-if="ecCtrl.credito.tipo == 'creditoP'" class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Crédito</button>
+                <button ng-if="ecCtrl.credito.tipo == 'vale'" class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Vale</button>          
             </div>  
           </div>         
           <div class="row" ng-if="ecCtrl.credito.avales_ids.length > 0">
@@ -91,8 +93,11 @@
           <div class="well">      
             <div class="row">
               <div class="col-sm-4">
-                <h1>
+                <h1 ng-if="ecCtrl.credito.tipo == 'creditoP'">
                 Crédito Solicitado:
+                </h1>
+                <h1 ng-if="ecCtrl.credito.tipo == 'vale'">
+                Vale Solicitado:
                 </h1>
               </div>
               <div class="col-sm-4">
@@ -144,10 +149,10 @@
             <br/>
             <br/>
             <div class="row">
-                <div class="col-sm-12" ng-show="!ecCtrl.credito.vale">
-                  <input type="submit" ng-click="ecCtrl.guardar(ecCtrl.objeto,form)" value="Entregar Credito" class="btn btn-primary" valida-form formulario="form">
+                <div class="col-sm-12" ng-if="ecCtrl.credito.cliente_id == 'creditoP'">
+                  <input type="submit" ng-click="ecCtrl.guardar(ecCtrl.objeto,form)" value="Entregar Crédito" class="btn btn-primary" valida-form formulario="form">
                 </div>
-                <div class="col-sm-12" ng-show="ecCtrl.credito.vale" >
+                <div class="col-sm-12" ng-if="ecCtrl.credito.tipo == 'vale'" >
                   <input type="submit" ng-click="ecCtrl.guardar(ecCtrl.objeto,form)" value="Entregar Vale" class="btn btn-primary" valida-form formulario="form">
                 </div>
             </div>

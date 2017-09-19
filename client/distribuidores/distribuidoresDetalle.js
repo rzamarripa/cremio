@@ -876,17 +876,17 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 	
 	this.cancelarCredito = function(motivo){
-			
-			var cre = Creditos.findOne({folio : rc.cancelacion.folio});
+			var cre = Creditos.findOne({_id : rc.cancelacion._id});
+			console.log(cre,"nanda")
 			Creditos.update({_id : cre._id}, { $set : {estatus : 6, motivo: motivo}});
 			toastr.success("El crédito se ha cancelado.")
-			$("[data-dismiss=modal]").trigger({ type: "click" });			
-		
+			$("#cancelaCredito").modal('hide');
 	};
 	
 	
 	this.cancelarSeleccion = function(aprobado){
-			 rc.cancelacion.folio = aprobado.folio;
+			 rc.cancelacion = aprobado;
+			 rc.motivo = "";
 	};
 	
 
