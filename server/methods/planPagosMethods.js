@@ -34,14 +34,14 @@ Meteor.methods({
 		{
 			totalPagos = credito.duracionMeses * 4;
 			numeroPagosCompuesto = 4;	
-			tasaInteres = (credito.tasa / 4) / 100;
+			tasaInteres = Number(parseFloat((credito.tasa / 4) / 100).toFixed(3));
 								
 		}	
 		else if (credito.periodoPago == "Quincenal")
 		{
 			totalPagos = credito.duracionMeses * 2;
 			numeroPagosCompuesto = 2;
-			tasaInteres = (credito.tasa / 2) / 100;
+			tasaInteres = Number(parseFloat((credito.tasa / 2) / 100).toFixed(3));
 			
 			var fechaMes = new Date(moment(credito.fechaPrimerAbono));
 			var diaMes = fechaMes.getDate();
@@ -62,7 +62,7 @@ Meteor.methods({
 		{
 			totalPagos = credito.duracionMeses;
 			numeroPagosCompuesto = 1;
-			tasaInteres = credito.tasa / 100;
+			tasaInteres = Number(parseFloat(credito.tasa / 100).toFixed(3));
 		  
 		  //var diaMes = moment(credito.fechaPrimerAbono).daysInMonth();
 		  //mfecha = mfecha.date(diaMes);
@@ -130,23 +130,26 @@ Meteor.methods({
 				else if(tipoCredito.tipoInteres == "Compuesto")
 				{
 						
-						var FV = 0;
-						var pagoFijo = 0;
-						var suma = 0;						
+						var FV 				= 0;
+						var pagoFijo 	= 0;
+						var suma 			= 0;
+								
 						FV = 	Number(parseFloat(credito.capitalSolicitado * Math.pow(1 + tasaInteres, totalPagos)).toFixed(2));
+
+						
 						pagoFijo = Number(parseFloat(FV / totalPagos).toFixed(2));
-						var interes = Number(parseFloat(pagoFijo * tasaInteres).toFixed(2));
-						var capital = Number(parseFloat((pagoFijo - interes) / 1.16).toFixed(2));
-						var iva 		= Number(parseFloat(capital * 0.16).toFixed(2));
+
+						
+						var capital = Number(parseFloat(credito.capitalSolicitado / totalPagos).toFixed(2));
+						var interes = Number(parseFloat(pagoFijo - capital).toFixed(2));
+						var iva 		= Number(parseFloat(interes * 0.16).toFixed(2));
+						
 						
 												
 						if (credito.conSeguro)
-								importeParcial = Number(parseFloat(capital) + parseFloat(interes) + parseFloat(iva) + parseFloat(seguro));
+								importeParcial = Number(parseFloat(capital + interes+ iva + seguro).toFixed(2));
 						else
-								importeParcial = Number(parseFloat(capital) + parseFloat(interes) + parseFloat(iva));
-						
-						importeParcial = Math.round(importeParcial * 100) / 100;
-						
+								importeParcial = Number(parseFloat(capital + interes + iva).toFixed(2));						 
 						
 				}
 			

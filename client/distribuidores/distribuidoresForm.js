@@ -374,23 +374,23 @@ angular.module("creditoMio")
 	  	this.empresa.municipio_id = "";
 			this.empresa.ciudad_id = "";
 			this.empresa.colonia_id = "";
-			rc.colonia = {};	  	
+			rc.coloniaEmpresa = {};	  	
 	  
   };
   this.cambiarEstadoEmpresa = function() {
 	  	this.empresa.municipio_id = "";
 			this.empresa.ciudad_id = "";
 			this.empresa.colonia_id = "";
-			rc.colonia = {};
+			rc.coloniaEmpresa = {};
 	};
   this.cambiarMunicipioEmpresa = function() {
 			this.empresa.ciudad_id = "";
 			this.empresa.colonia_id = "";
-			rc.colonia = {};
+			rc.coloniaEmpresa = {};
   };
   this.cambiarCiudadEmpresa = function() {
 	  	this.empresa.colonia_id = "";
-			rc.colonia = {};
+			rc.coloniaEmpresa = {};
   };
 
 	this.tomarFoto = function(objeto){

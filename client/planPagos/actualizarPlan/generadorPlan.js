@@ -274,6 +274,13 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		if (!this.credito.requiereVerificacion)
 				this.credito.turno = "";	
 		
+		var usuario = Meteor.users.findOne(Meteor.userId());
+		if (usuario.roles[0] == "Cajero" && (credito.tasa < usuario.profile.tasaMinima || credito.tasa > usuario.profile.tasaMaxima) && rc.cliente.roles != "Distribuidor")
+		{
+				toastr.warning('La tasa no es válida. debe ser entre ' + usuario.profile.tasaMinima + " y " +  usuario.profile.tasaMaxima);
+				return;	
+		}
+		
 		
 		var credito = {
 			cliente_id 						: this.cliente._id,
@@ -727,6 +734,14 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			toastr.error('Error al calcular el nuevo plan de pagos, llene todos los campos.');
 			return;
 		}
+		
+		var usuario = Meteor.users.findOne(Meteor.userId());
+		if (usuario.roles[0] == "Cajero" && (credito.tasa < usuario.profile.tasaMinima || credito.tasa > usuario.profile.tasaMaxima) && rc.cliente.roles != "Distribuidor")
+		{
+				toastr.warning('La tasa no es válida. debe ser entre ' + usuario.profile.tasaMinima + " y " +  usuario.profile.tasaMaxima);
+				return;	
+		}
+		
 		rc.planPagos = [];
 		this.tablaAmort = true;
 			

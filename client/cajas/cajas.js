@@ -83,12 +83,12 @@ angular.module("creditoMio")
 			
 			var cajaAbierta = Cajas.findOne({usuario_id: objeto.usuario_id});
 			if (cajaAbierta != undefined) {
-			if (cajaAbierta.estadoCaja == "Abierta")
-			{
-					toastr.warning('Ya tinen una caja abierta');
-					return;
+				if (cajaAbierta.estadoCaja == "Abierta")
+				{
+						toastr.warning('Ya tinen una caja abierta');
+						return;
+				}
 			}
-		}
 			
 			
 			objeto.estatus = true;
@@ -136,15 +136,13 @@ angular.module("creditoMio")
 			}
 			
 			var cajaAbierta = Cajas.findOne({usuario_id: objeto.usuario_id});
-			if (cajaAbierta.estadoCaja == "Abierta")
+			if (cajaAbierta != undefined  && cajaAbierta.estadoCaja == "Abierta")
 			{
 					toastr.warning('Ya tinen una caja abierta');
 					return;
 			}
-			
-			
-			
 
+			
 			Meteor.call ("actualizarCaja",objeto,function(error,result){
 		
 				if(error){
@@ -166,7 +164,7 @@ angular.module("creditoMio")
 	{
 			if (estatus == "Abierta")
 			{
-					toastr.error('Error no se puede desactivar si la ventanilla esta abierta.');
+					toastr.error('Error no se puede desactivar si la ventanilla está abierta.');
 					return;	
 			}
 			var objeto = Cajas.findOne({_id:id});

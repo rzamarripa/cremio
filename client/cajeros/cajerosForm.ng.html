@@ -35,6 +35,16 @@
 												<button type="button" class="btn btn-primary" ng-click="ven.cambiarPassword()" ng-show="!ven.action">Cambiar Contraseña</button>
 											</div>
 	                </div>
+	                <div class="row">
+		                	<div class="col-sm-3" valida>
+	                        <label>Tasa Mínima *</label>
+	                        <input name="tasaMinima" type="number" class="form-control" placeholder="Tasa Mínima" ng-model="ven.objeto.profile.tasaMinima" required="">
+	                    </div>
+	                    <div class="col-sm-3" valida>
+	                        <label>Tasa Máxima *</label>
+	                        <input name="tasaMaxima" type="number" class="form-control" placeholder="Tasa Máxima" ng-model="ven.objeto.profile.tasaMaxima" required="">
+	                    </div>               
+	                </div>
 	            </div>
 	    </div>
 	    <div class="col-sm-12">

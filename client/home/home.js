@@ -15,7 +15,7 @@ angular.module("creditoMio")
   this.fechaFinal = new Date();
   this.fechaFinal.setHours(23,0,0,0);
  	
- 	if (Meteor.user().roles[0] == "Gerente")
+ 	if (Meteor.user().roles == "Gerente")
  	{	
 		 	let cajasS = this.subscribe('cajas',()=>{
 				return [{ estatus : true }]
@@ -131,7 +131,7 @@ angular.module("creditoMio")
 			  }
 			});
  	}
- 	else if (Meteor.user().roles[0] == "Cajero")
+ 	else if (Meteor.user().roles == "Cajero")
  	{
 	 		let cajasS = this.subscribe('cajas',()=>{
 				return [{ usuario_id: Meteor.userId()}]

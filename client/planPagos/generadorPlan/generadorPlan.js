@@ -221,6 +221,14 @@ this.tieneFoto = function(sexo, foto){
 		}
 		rc.planPagos = [];
 		this.tablaAmort = true;
+		
+		var usuario = Meteor.users.findOne(Meteor.userId());
+		if (usuario.roles[0] == "Cajero" && (credito.tasa < usuario.profile.tasaMinima || credito.tasa > usuario.profile.tasaMaxima) && rc.cliente.roles != "Distribuidor")
+		{
+				toastr.warning('La tasa no es válida. debe ser entre ' + usuario.profile.tasaMinima + " y " +  usuario.profile.tasaMaxima);
+				return;	
+		}
+		
 		if (rc.cliente.roles == "Distribuidor") {
 			this.credito.periodoPago = "Quincenal"
 		}
@@ -421,13 +429,21 @@ this.tieneFoto = function(sexo, foto){
 				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
 				return;
 		}	
+		
+		var usuario = Meteor.users.findOne(Meteor.userId());
+		if (usuario.roles[0] == "Cajero" && (credito.tasa < usuario.profile.tasaMinima || credito.tasa > usuario.profile.tasaMaxima) && rc.cliente.roles != "Distribuidor")
+		{
+				toastr.warning('La tasa no es válida. debe ser entre ' + usuario.profile.tasaMinima + " y " +  usuario.profile.tasaMaxima);
+				return;	
+		}
+		
 		if (rc.cliente.roles == "Distribuidor") {
 			this.credito.periodoPago = "Quincenal"
 		}
 	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
 			if (result)
 			{
-					console.log(result,"sucursal bebe");
+					//console.log(result,"sucursal bebe");
 					rc.sucursalCredito = result
 					//////////////////////// EL METODO DEBE IR ASI PAPU
 

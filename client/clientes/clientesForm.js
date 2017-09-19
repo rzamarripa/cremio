@@ -17,6 +17,8 @@ angular.module("creditoMio")
   this.ocupacion = {};
   this.objeto.profile.empresa_id = "";
   this.empresa = {}; 
+  this.empresa.colonia_id = "";
+  
   this.objeto_id = ""
   rc.pic = "";
   rc.otrafoto = ""
@@ -355,23 +357,23 @@ angular.module("creditoMio")
 	  	this.empresa.municipio_id = "";
 			this.empresa.ciudad_id = "";
 			this.empresa.colonia_id = "";
-			rc.colonia = {};	  	
+			rc.coloniaEmpresa = {};	  	
 	  
   };
   this.cambiarEstadoEmpresa = function() {
 	  	this.empresa.municipio_id = "";
 			this.empresa.ciudad_id = "";
 			this.empresa.colonia_id = "";
-			rc.colonia = {};
+			rc.coloniaEmpresa = {};
 	};
   this.cambiarMunicipioEmpresa = function() {
 			this.empresa.ciudad_id = "";
 			this.empresa.colonia_id = "";
-			rc.colonia = {};
+			rc.coloniaEmpresa = {};
   };
   this.cambiarCiudadEmpresa = function() {
 	  	this.empresa.colonia_id = "";
-			rc.colonia = {};
+			rc.coloniaEmpresa = {};
   };
 
 	this.tomarFoto = function(objeto){
@@ -869,9 +871,9 @@ angular.module("creditoMio")
     	rc.buscar.coloniaNombre = "";
   };
   
-  this.agregarColoniaEmpresa = function(colonia)
+  this.agregarColoniaEmpresa = function(colonia)  
   {
-    	rc.coloniaEmpresa = colonia;
+    	rc.coloniaEmpresa = colonia;    	
     	rc.empresa.colonia_id = colonia._id;
     	rc.buscar.coloniaNombreEmpresa = "";
   };
@@ -952,9 +954,7 @@ angular.module("creditoMio")
       rc.aval={};
   };
 
-
-
-  
+   
   this.refreshColonias = function(colonia) {
     	
   }
