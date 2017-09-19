@@ -823,6 +823,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.entregarVale', {
+			url: '/entregarVale/:credito_id',
+			templateUrl: 'client/creditos/entregarCredito/entregarVale.ng.html',
+			controller: 'EntregarValeCtrl as ecCtrl',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.cajas', {
 			url: '/cajas',
 			templateUrl: 'client/cajas/cajas.ng.html',
