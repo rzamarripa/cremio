@@ -133,6 +133,8 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 */
 
   this.imprimirCredito = function(objeto,credito,avales,garantias){
+  	// var number = 3500
+  	// console.log(number.toLocaleString(),"ejemplo");
 
 
 			var pag = objeto
@@ -140,6 +142,7 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 			var all = pa[pa.length - 1]
 			//console.log(all,"all")
 			rc.total = all
+			//objeto.liquidar.toLocaleString()
 
 		  Meteor.call('getCreditoReporte', objeto,credito,avales,all, function(error, response) {
 

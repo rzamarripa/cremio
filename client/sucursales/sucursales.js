@@ -47,6 +47,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 		objeto.usuarioInserto = Meteor.userId();
 		objeto.fechaRegistro = new Date();
 		objeto.folioCliente = 0;
+		objeto.folioDistribuidor= 0;
 		objeto.folioPago = 0;
 		objeto.folioCredito = 0; //Folio de Credito
 		
@@ -108,6 +109,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 	      toastr.error('Error al actualizar los datos.');
 	      return;
 		  }
+		 console.log(objeto,"Sucursales")
 		  
 			var idTemp = objeto._id;
 			delete objeto._id;		
@@ -121,10 +123,18 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 																											}
 																											if (result)
 																											{
+																												
 																												  var nombre = objeto.nombre != undefined ? objeto.nombre + " " : "";
 																													var apPaterno = objeto.apPaterno != undefined ? objeto.apPaterno + " " : "";
 																													var apMaterno = objeto.apMaterno != undefined ? objeto.apMaterno : ""
 																													objeto.nombreCompleto = nombre + apPaterno + apMaterno;
+																													// if (objeto.folioDistribuidor == undefined) {
+																													// 	objeto.folioDistribuidor = 0
+																													// }else
+																													// {
+																													// 	objeto.folioDistribuidor + 1
+																													// }
+
 																													var usuario = {
 																														username : objeto.username,
 																														password : objeto.password,
@@ -135,12 +145,11 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 																															nombreCompleto : nombre + apPaterno + apMaterno,
 																															sucursal_id : idTemp,
 																															estatus : true,
-																															sexo : objeto.sexo
+																															sexo : objeto.sexo,
+																															//folioDistribuidor : objeto.folioDistribuidor
 																														}
 																													}
-																													
-																													
-																													
+																																																										
 																													Meteor.call('updateGerenteSucursal', usuario, 'Gerente');
 																													toastr.success('Actualizado correctamente.');
 																													$('.collapse').collapse('hide');

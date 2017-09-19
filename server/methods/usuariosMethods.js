@@ -43,13 +43,15 @@ Meteor.methods({
 	  else if (rol == "Distribuidor")
 	  {
 		  	sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
-				 var numero = usuario.profile.numeroDistribuidor;
-				if (sucursal.folioCliente != undefined)				
-				 	  numero = sucursal.folioCliente + 1;
+		  	console.log(sucursal)
+		  	console.log(sucursal.folioDistribuidor);
+				var numero;// = usuario.profile.numeroDistribuidor;
+				if (sucursal.folioDistribuidor != undefined)				
+				 	  numero = sucursal.folioDistribuidor + 1;
 				else	
 				{
-						sucursal.folioCliente = 0;
-						numero = sucursal.folioCliente + 1;
+						sucursal.folioDistribuidor = 0;
+						numero = sucursal.folioDistribuidor + 1;
 				}
 				
 				if (numero < 10)
@@ -63,14 +65,12 @@ Meteor.methods({
 	  			 	  			 	 
 	  		//usuario.contrasena = Math.random().toString(36).substring(2,7);
 	  		usuario.password = '123';
-	  		sucursal.folioCliente = numero;
+	  		sucursal.folioDistribuidor = numero;
 	  		usuario.profile.numeroDistribuidor = usuario.username;
 	  		
+	  		sucursal.folioDistribuidor = numero;
 	  		
-	  		
-	  		
-		  
-	  }
+	  	 }
 		
 		//Crea al Usuario
 		var usuario_id = Accounts.createUser({
@@ -84,7 +84,8 @@ Meteor.methods({
 
 		if (rol == "Cliente" || rol == "Distribuidor")
 		{
-				Sucursales.update({_id: sucursal._id},{$set:{folioCliente : sucursal.folioCliente}});
+				Sucursales.update({_id: sucursal._id},{$set:{folioCliente : sucursal.folioCliente, 
+															 folioDistribuidor : sucursal.folioDistribuidor}});
 				
 /*
 				Meteor.call('sendEmail',
