@@ -274,6 +274,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		if (!this.credito.requiereVerificacion)
 				this.credito.turno = "";	
 		
+		
 		var credito = {
 			cliente_id 						: this.cliente._id,
 			tipoCredito_id 				: this.credito.tipoCredito_id,
@@ -294,9 +295,20 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			tipoGarantia 					: this.credito.tipoGarantia,
 			tasa									: this.credito.tasa,
 			conSeguro 						: this.credito.conSeguro,
-			seguro								: this.credito.seguro
+			seguro								: this.credito.seguro,
+			tipo 									: this.credito.tipo,
+			beneficiado 					: this.credito.beneficiado
 		};
 				
+		if (rc.cliente.roles == "Distribuidor") {		
+			rc.credito.tipo = "vale"
+			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+			credito.estatus = 2;
+		}
+		else if (rc.cliente.roles == 'Cliente') {	
+			rc.credito.tipo = "creditoP"
+		}
+		
 		credito.avales = angular.copy(rc.avales);
 		
 		if (this.credito.tipoGarantia == "mobiliaria")
@@ -375,23 +387,15 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	this.quitarAval = function(numero, aval)
 	{
 
-		//Eliminar el avale en AVales y en el credito
-		
+		//Eliminar el avale en AVales y en el credito	
 		if (aval.estatus != "N")
 		{
-				Meteor.call('eliminarAval', aval.aval_id, $stateParams.credito_id, function(error, result){						
-						if (result)
-						{
-								
-								pos = functiontofindIndexByKeyValue(this.avales, "num", numero);
-								this.avales.splice(pos, 1);
-								if (this.avales.length == 0)
-									this.con = 0;
-						 
-							  functiontoOrginiceNum(this.avales, "num");	
-		
-						}	
-				});				  
+				Meteor.call('eliminarAval', aval.aval_id, $stateParams.credito_id, function(error, result){});		
+				pos = functiontofindIndexByKeyValue(this.avales, "num", numero);
+				this.avales.splice(pos, 1);
+				if (this.avales.length == 0)
+					this.con = 0;
+				functiontoOrginiceNum(this.avales, "num");		  
 		}
 		else
 		{
@@ -399,7 +403,6 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				this.avales.splice(pos, 1);
 				if (this.avales.length == 0)
 					this.con = 0;
-		 
 			  functiontoOrginiceNum(this.avales, "num");				
 		}
 				
@@ -436,7 +439,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 
 	this.verAval = function(a)
 	{
-		console.log(a,"aval p")
+		
 		$("#modalAval").modal('show');
 		rc.aval.nombre = a.nombre;
 		if (a.apellidoPaterno == undefined) {
@@ -475,9 +478,11 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			rc.aval.parentesco = "";
 			rc.aval.tiempoLaborando = "";
 			rc.aval.empresa = "";
+			rc.aval.calleEmpresa = "";
+			rc.aval.numeroEmpresa = "";
+			rc.aval.codigoPostalEmpresa = "";
 			rc.aval.puesto = "";
 			rc.aval.antiguedad = "";
-			rc.aval.direccionEmpresa = "";
 			rc.aval.tiempoConocerlo = "";
 			delete rc.aval["_id"];
 
@@ -497,21 +502,21 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		Meteor.call('getAval', a._id, function(error, result){
 			if(result){		
 					
-					rc.aval.nombreCompleto = nombre + apPaterno + apMaterno;						
-					rc.aval.ocupacion = result.ocupacion;
-					rc.aval.ocupacion_id = result.ocupacion_id;
-					rc.aval.calle = result.calle;
-					rc.aval.numero = result.numero;
-					rc.aval.codigoPostal = result.codigoPostal;
-					rc.aval.estadoCivil = result.estadoCivil;
-					rc.aval.estadoCivil_id = result.estadoCivil_id;
-					rc.aval.empresa = result.empresa.nombre;
-					rc.aval.calleEmpresa = result.empresa.calle;
-					rc.aval.numeroEmpresa = result.empresa.numero;
+					rc.aval.nombreCompleto 			= nombre + apPaterno + apMaterno;						
+					rc.aval.ocupacion 					= result.ocupacion;
+					rc.aval.ocupacion_id 				= result.ocupacion_id;
+					rc.aval.calle 							= result.calle;
+					rc.aval.numero 							= result.numero;
+					rc.aval.codigoPostal 				= result.codigoPostal;
+					rc.aval.estadoCivil 				= result.estadoCivil;
+					rc.aval.estadoCivil_id 			= result.estadoCivil_id;
+					rc.aval.empresa 						= result.empresa.nombre;
+					rc.aval.calleEmpresa 				= result.empresa.calle;
+					rc.aval.numeroEmpresa 			= result.empresa.numero;
 					rc.aval.codigoPostalEmpresa = result.empresa.codigoPostal;
-					rc.aval.direccionEmpresa = result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;
-					rc.aval.puesto = result.puesto;
-					rc.aval.tiempoLaborando = result.tiempoLaborando;
+					rc.aval.direccionEmpresa 		= result.empresa.calle + " Num:" + result.empresa.numero + " CP:" + result.empresa.codigoPostal;
+					rc.aval.puesto 							= result.puesto;
+					rc.aval.tiempoLaborando 		= result.tiempoLaborando;
 					$scope.$apply();
 			}
 		});
@@ -707,7 +712,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	    return null;
   };
     
-    //Obtener el mayor
+  //Obtener el mayor
 	function functiontoOrginiceNum(arraytosearch, key) {
 		var mayor = 0;
 	    for (var i = 0; i < arraytosearch.length; i++) {

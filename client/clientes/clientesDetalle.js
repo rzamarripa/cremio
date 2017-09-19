@@ -190,7 +190,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		creditosPendientes : () =>{
 			var creditos = Creditos.find({estatus:{$in:[0,1]} }, {sort:{fechaSolicito:1}}).fetch();
 			
-			if(creditos.length > 0){
+			if(creditos != undefined){
 				_.each(creditos, function(credito){				
 					 credito.estatusClase = obtenerClaseEstatus(credito.requiereVerificacion);
 					 credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
@@ -248,7 +248,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						$("#notaPerfil").modal("hide");
 
 					}else{
-						console.log("modal abrir")
+						//console.log("modal abrir")
 						$("#notaPerfil").modal();
 					}
 				}
@@ -359,6 +359,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				return cli;
 			}		
 		},	
+		
 		planPagos : () => {
 			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:-1}}).fetch();
 			
@@ -578,7 +579,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			if (c != undefined)
 			{
 					var caja = Cajas.findOne({usuario_id: c._id});
-					console.log(caja);
+					//console.log(caja);
 					if (caja != undefined)
 					{
 							if (caja.estadoCaja == "Cerrada")
@@ -589,7 +590,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					else
 							rc.estatusCaja = false;
 			}			
-			console.log(rc.estatusCaja);
+			//console.log(rc.estatusCaja);
 			return c;
 		},
 		
@@ -627,7 +628,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		var clienteTemp = Meteor.users.findOne({_id : cliente._id});
 		this.cliente.password = clienteTemp.password;
 		this.cliente.repeatPassword = clienteTemp.password;
-		console.log(this.cliente.password)
+		//console.log(this.cliente.password)
 		//document.getElementById("contra").value = this.cliente.password;
 
 		if(form.$invalid){
@@ -698,13 +699,13 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
           if (result)
           {
           	rc.objeto = result;
-              console.log("cliente",result);
+              //console.log("cliente",result);
 
               		 Meteor.call('getEmpresaInfo',rc.objeto.profile.empresa, function(error, result) {           
 			          if (result)
 			          {
 			          	rc.empresaCliente = result;
-			              console.log("empresa",result);
+			              //console.log("empresa",result);
 			          }
 			      }) 
               //$scope.$apply();
@@ -890,7 +891,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	};
 
 	this.guardarNota = function(objeto){
-		console.log(objeto,"nota")
+		//console.log(objeto,"nota")
 		objeto.perfil = "perfil"
 		objeto.cliente_id = rc.objeto._id
 		objeto.nombreCliente = rc.objeto.profile.nombreCompleto
@@ -942,7 +943,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
   {
 
   	
-		console.log("entro:", objeto);
+		//console.log("entro:", objeto);
 		//console.log("refes", objeto.referenciasPersonales_ids)	 
 	    Meteor.call('getPeople',objeto._id,objeto.profile.referenciasPersonales_ids.referenciaPersonal_id, function(error, result){           					
 				if (result)
@@ -951,7 +952,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					rc.datosCliente = result.profile
 
 	   
-	    console.log("cliente",rc.datosCliente)
+	   //console.log("cliente",rc.datosCliente)
 	   // console.log("refes",rc.referencias)
 	 
 		Meteor.call('getFicha', rc.datosCliente, rc.referencias, function(error, response) {
@@ -1019,12 +1020,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		$("#modalDocumento").modal();
 	};
 
-	 this.almacenaImagen = function(imagen)
+	this.almacenaImagen = function(imagen)
 	{
 		if (this.objeto)
 			this.objeto.profile.foto = imagen;
 		    this.imagenes.push({archivo:imagen})
-		    console.log(this.imagenes)
+		    //console.log(this.imagenes)
 
 						
 	}
@@ -1052,7 +1053,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 	function obtenerClaseEstatus(valor){
 		
-		console.log(valor);
+		//console.log(valor);
 		if (valor )
 			 return "warning";
 		else
@@ -1404,20 +1405,20 @@ if(estatus == 0){
 					
 	}
 	this.seleccionContrato=function(contrato){
-		console.log( contrato)
+		//console.log( contrato)
 					
 	}
 	this.trance= function(credito)
 		{
-			console.log("creditop",credito)
+			//console.log("creditop",credito)
 				
 		    Meteor.call('numeroALetras',credito.capitalSolicitado, function(error, result){           					
 					if (result)
 					{
-						console.log("result",result)
+						//console.log("result",result)
 							rc.cantidad = result
 					}
-					console.log("cantidad",rc.cantidad)
+					//console.log("cantidad",rc.cantidad)
 
 			});
 		};
@@ -1446,7 +1447,7 @@ if(estatus == 0){
 					{
 							rc.datosCliente = result.profile
 
-				console.log("avalesssss",rc.avalesCliente)
+				//console.log("avalesssss",rc.avalesCliente)
 				Meteor.call('contratos', contrato, contrato._id,rc.datosCliente,contrato.planPagos,avales, function(error, response) {
 				  
 				   if(error)
@@ -1487,7 +1488,7 @@ if(estatus == 0){
 						  //console.log(url);
 						//  CONTRATO SIMPLE ////////////////////////////////////////////////////
 						  if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
-						  console.log("INTERES","INTERES:",contrato.tipoInteres.tipoInteres)
+						  //console.log("INTERES","INTERES:",contrato.tipoInteres.tipoInteres)
 						   if (contrato.tipoInteres.tipoInteres == "Simple") {
 						  var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOINTERES.docx"; 
@@ -1514,7 +1515,7 @@ if(estatus == 0){
 						///////CONTRATO SOLIDARIO//////////////////////////////////////////
 
 						if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
-							 console.log("OBLIGADO SOLIDARIO","INTERES:",contrato.tipoInteres.tipoInteres);
+							 //console.log("OBLIGADO SOLIDARIO","INTERES:",contrato.tipoInteres.tipoInteres);
 							 if (contrato.tipoInteres.tipoInteres == "Simple") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO.docx"; 
@@ -1539,7 +1540,7 @@ if(estatus == 0){
 
 						}
 							if (contrato.garantias && contrato.tipoGarantia == "general") {
-								console.log("HIPOTECARIO","INTERES:",contrato.tipoInteres.tipoInteres)
+								//console.log("HIPOTECARIO","INTERES:",contrato.tipoInteres.tipoInteres)
 								if (contrato.tipoInteres.tipoInteres == "Simple") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOHIPOTECARIO.docx"; 
@@ -1564,7 +1565,7 @@ if(estatus == 0){
 
 						}
 							if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
-								console.log("PRENDARIA","INTERES:",contrato.tipoInteres.tipoInteres)
+								//console.log("PRENDARIA","INTERES:",contrato.tipoInteres.tipoInteres)
 								if (contrato.tipoInteres.tipoInteres == "Simple") {
 							var dlnk = document.getElementById('dwnldLnk');
 					    dlnk.download = "CONTRATOGARANTIAPRENDARIA.docx"; 
@@ -1634,10 +1635,10 @@ if(estatus == 0){
 
 		this.imprimirHistorial= function(objeto,cliente,credito) 
   {
-  	console.log(objeto,"pp")
+  	//console.log(objeto,"pp")
 
     cliente = rc.datosCliente
-    console.log("toshtta japon",cliente)
+    //console.log("toshtta japon",cliente)
 
     var sumaCargos = 0
     var sumaAbonos = 0
@@ -1668,8 +1669,8 @@ if(estatus == 0){
         
     });
     
-      console.log(cliente,"objeto")
-      console.log(credito,"credito")
+      //console.log(cliente,"objeto")
+      //console.log(credito,"credito")
   
   
  
@@ -1722,8 +1723,7 @@ if(estatus == 0){
 
 					rc.datosCliente = result.profile
 
-					   console.log("cliente",rc.datosCliente)
-
+					   //console.log("cliente",rc.datosCliente)
 	 
 			   }
 		});
@@ -1732,11 +1732,10 @@ if(estatus == 0){
 
 	$(document).ready(function() {
 
-	  $('.po-markup > .po-link').popover({
+	  $('.po-markup').popover({
 	    trigger: 'hover',
-	    html: true,  // must have if HTML is contained in popover
-	
-	    // get the title and conent
+	    html: true,  
+	    
 	    title: function() {
 	      return $(this).parent().find('.po-title').html();
 	    },
@@ -1746,7 +1745,6 @@ if(estatus == 0){
 	
 	    container: 'body',
 	    placement: 'right'
-	
 	  });
 	
 	});

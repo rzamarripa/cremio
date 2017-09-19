@@ -200,18 +200,6 @@ Meteor.methods({
 		Roles.addUsersToRoles(usuario_id, rol);
 		
 	},
-	/*
-updateUsuario: function (usuario, rol) {		
-	  var user = Meteor.users.findOne({"username" : usuario.username});
-	  Meteor.users.update({_id: user._id}, {$set:{
-			username: usuario.username,
-			roles: [rol],
-			profile: usuario.profile
-		}});
-		
-		Accounts.setPassword(user._id, usuario.password, {logout: false});		
-	},
-*/
 	updateUsuario: function (usuario, referenciasPersonales, rol, cambiarPassword) {
 		
 	  var user = Meteor.users.findOne({"username" : usuario.username});
