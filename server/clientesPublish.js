@@ -53,19 +53,19 @@ Meteor.publish("buscarRootClientesDistribuidoresNumero",function(options){
 				  	"profile.numeroDistribuidor": { '$regex' : '.*' + options.where.numeroDistribuidor || '' + '.*', '$options' : 'i' },
 				  	roles : {$in : [ "Distribuidor"]}
 					}
+					console.log(options.where,"el options")
 				
-				if (selector != undefined)
+				if (options.where.numeroCliente.indexOf("C")!= -1)
 				 {
-				 	console.log("selector1",selector)
+				 	console.log("selector1",options)
 					return Meteor.users.find(selector, { fields: {roles												: 1,
 																											"profile.nombreCompleto"		: 1, 
 																											"profile.sexo"							: 1, 
 																											"profile.foto"							: 1,
 																											"profile.numeroDistribuidor": 1,
 																											"profile.numeroCliente"			: 1 }}, options.options);
-				}
-				if (selector2) {
-					console.log("selector2")
+				}else{
+										console.log("selector2")
 					return Meteor.users.find(selector2, { fields: {roles												: 1,
 																											"profile.nombreCompleto"		: 1, 
 																											"profile.sexo"							: 1, 
@@ -73,6 +73,8 @@ Meteor.publish("buscarRootClientesDistribuidoresNumero",function(options){
 																											"profile.numeroDistribuidor"			: 1 }}, options.options);
 
 				}
+			
+
 
 				
 			}
