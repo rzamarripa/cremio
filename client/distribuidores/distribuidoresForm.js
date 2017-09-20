@@ -415,15 +415,14 @@ angular.module("creditoMio")
             toastr.error('Error al guardar los datos.');
             return;
       }
-<<<<<<< HEAD
+
       if (_.isEmpty(rc.avales))    
       {
           toastr.error("Error, se debe agregar AVAL.");
           return;
       }
-=======
+
             
->>>>>>> e1c52d0b25b35e79d9d67d487f99df53e2431fc1
       if (this.action)
       {
 	      	objeto.password = Math.random().toString(36).substring(2,7);		
