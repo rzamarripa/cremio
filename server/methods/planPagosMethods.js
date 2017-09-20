@@ -165,6 +165,7 @@ Meteor.methods({
 						fechaLimite					: new Date(new Date(fechaLimite.toDate().getTime()).setHours(23,59,59)),
 						diaSemana						: fechaLimite.weekday(),
 						tipoPlan						: credito.periodoPago,
+						tipoCredito					: credito.tipo,
 						numeroPago					: i + 1,
 						importeRegular			: importeParcial,
 						iva									: iva,
@@ -291,6 +292,7 @@ Meteor.methods({
 						fechaLimite					: new Date(new Date(mfecha.toDate().getTime()).setHours(23,59,59)),
 						diaSemana						: mfecha.weekday(),
 						tipoPlan						: credito.periodoPago,
+						tipoCredito					: credito.tipo,
 						numeroPago					: i + 1,
 						importeRegular			: importeParcial,
 						iva									: iva,
@@ -482,10 +484,11 @@ Meteor.methods({
 													]
 											},
 											{
-												multada		: 0,
-												descripcion : "Recibo",
-												importeRegular : {$gte : 0 },
-												fechaLimite : { $lt : ahora }												
+												multada					: 0,
+												descripcion 		: "Recibo",
+												tipoCredito			: "creditoP",
+												importeRegular 	: {$gte : 0 },
+												fechaLimite 		: { $lt : ahora }												
 											}
 										]}).fetch();
 		
@@ -555,6 +558,7 @@ Meteor.methods({
 							fechaLimite					: pago.fechaLimite,
 							diaSemana						: mfecha.weekday(),
 							tipoPlan						: pago.tipoPlan,
+							tipoCredito					: pago.tipo,
 							numeroPago					: pago.numeroPago,
 							importeRegular			: multas,
 							cliente_id					: pago.cliente_id,

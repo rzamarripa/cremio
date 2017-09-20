@@ -709,11 +709,22 @@
 		<!-- 	//kaka -->
 		<div class="well">
 		<div class="row">
-		<div class="col-sm-4">					    
+					<div class="col-sm-4">					    
 						<label>Limite de Credito</label>
 						<input name="lCredito" type="number" class="form-control" placeholder="Limite credito" ng-model="dis.objeto.profile.limiteCredito" >
 						<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form">
 					</div>
+					<div class="col-sm-2" valida>
+			    	<label>Fecha Verificación *</label>
+			    	<input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="dis.objeto.profile.fechaVerificacion" />
+		    	</div>
+					<div class="col-sm-2" valida>
+			    	<label>Horario *</label>
+			    	<select name="horario" class="form-control" ng-model="dis.objeto.profile.turno" >
+				    	<option value="mañana">Mañana</option>
+				    	<option value="tarde">Tarde</option>
+			    	</select>
+		    	</div>
 			
 		</div>
 		<div class="row">

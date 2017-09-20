@@ -430,6 +430,7 @@ angular.module("creditoMio")
          delete aval.$$hashKey;
       })
 
+			objeto.profile.estaVerificado = false;
       objeto.profile.estatus = true;
       objeto.profile.saldoCredito = objeto.profile.limiteCredito;
       objeto.profile.documentos = rc.documents;
@@ -448,7 +449,7 @@ angular.module("creditoMio")
 
       // Meteor.apply('generarAval', rc.avales, function(error, result){
       // if(result){
-      console.log("apunto de entrar",objeto)
+      //console.log("apunto de entrar",objeto)
     
        Meteor.call('createUsuario', objeto, "Distribuidor", function(e,r){
           if (r)

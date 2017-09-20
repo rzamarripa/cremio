@@ -14,10 +14,11 @@
 	<thead>
 		<tr>
 			<th class="text-center" width="10%">No.</th>
-			<th ><div class="text-center">Cliente</div></th>
+			<th ><div class="text-center">Nombre</div></th>
 			<th ><div class="text-center">Verificado</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
 			<th><div class="text-center">Tipo Verificación</div></th>
+			<th><div class="text-center">Tipo </div></th>
 			<th class="text-center" width="10%"><div class="text-center">Acción</div></th>
 		</tr>
 	</thead>
@@ -28,6 +29,7 @@
 	     <td>{{verificacion.nombreParentescoInformacion}}</td>
 	    <td class="text-center">{{verificacion.fechaVerificacion | date:"dd-MM-yyyy" }} </td>
 	    <td class="text-center">{{verificacion.tipoVerificacion}}</td>
+	    <td class="text-center">{{verificacion.tipo}}</td>
 	    <td>
 		    	<div class="text-center">
 				    <div class="btn-group">

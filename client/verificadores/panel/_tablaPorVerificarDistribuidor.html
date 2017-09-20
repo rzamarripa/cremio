@@ -3,8 +3,8 @@
 	<thead>
 		<tr>
 			<th class="text-center" width="10%">No.</th>
-			<th ><div class="text-center">Nombre del Cliente</div></th>
-			<th ><div class="text-center">Capital Solicitado</div></th>
+			<th ><div class="text-center">Nombre del Distribidor</div></th>
+			<th ><div class="text-center">Límite Solicitado</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Solicitud</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Turno</div></th>
@@ -13,13 +13,13 @@
 		</tr>
 	</thead>
 	<tbody>
-    <tr ng-repeat="credito in pver.creditos">
+    <tr ng-repeat="distribuidor in pver.distribuidores">
 	    <td class="text-center">{{$index + 1}}</td>
-	    <td>{{credito.nombreCliente}}</td>
-	    <td class="text-right">{{credito.capitalSolicitado | currency}}</td>
-	    <td class="text-center">{{credito.fechaSolicito.getUTCDate() +"/"+ (credito.fechaSolicito.getUTCMonth()+1) +"/"+ credito.fechaSolicito.getUTCFullYear()}} </td>
-	    <td class="text-center">{{credito.fechaVerificacion.getUTCDate() +"/"+ (credito.fechaVerificacion.getUTCMonth()+1) +"/"+ credito.fechaVerificacion.getUTCFullYear()}} </td>
-	    <td class="text-center">{{credito.turno}}</td>
+	    <td>{{distribuidor.profile.nombreCompleto}}</td>
+	    <td class="text-right">{{distribuidor.profile.limiteCredito | currency}}</td>
+	    <td class="text-center">{{distribuidor.createdAt.getUTCDate() +"/"+ (distribuidor.createdAt.getUTCMonth()+1) +"/"+ distribuidor.createdAt.getUTCFullYear()}} </td>
+	    <td class="text-center">{{distribuidor.profile.fechaVerificacion.getUTCDate() +"/"+ (distribuidor.profile.fechaVerificacion.getUTCMonth()+1) +"/"+ distribuidor.profile.fechaVerificacion.getUTCFullYear()}} </td>
+	    <td class="text-center">{{distribuidor.profile.turno}}</td>
 	    <td>
 			    <div class="text-center">
 				    <div class="btn-group">
@@ -28,14 +28,14 @@
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
 						  <ul class="dropdown-menu text-left">
-						    <li><a ui-sref="root.verificacion({id : credito._id, verificacion_id: '-1', tipo: 'CP'})">Solicitante o Aval</a></li>
-						    <li><a ui-sref="root.verificacionVecino({id : credito._id, verificacion_id: '-1', tipo: 'CP'})">Vecino</a></li>
+						    <li><a ui-sref="root.verificacion({id : distribuidor._id, verificacion_id: '-1', tipo: 'V'})">Solicitante o Aval</a></li>
+						    <li><a ui-sref="root.verificacionVecino({id : distribuidor._id, verificacion_id: '-1', tipo: 'V'})">Vecino</a></li>
 						  </ul>
 						</div>
 			    </div>				    
 			</td>
 	    <td class="text-center">
-		    	<button type="button" class="btn btn-primary" ng-click="pver.mostrarEvaluacion(credito._id)">Evaluar</button>
+		    	<button type="button" class="btn btn-primary" ng-click="pver.mostrarEvaluacionD(distribuidor._id)">Evaluar</button>
 	    </td>
     </tr>
 	</tbody>
@@ -44,7 +44,7 @@
 
 <!-- Modal para cargos Moratorios -->
 
-<div id="modalEvaluarVerificacion" class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div id="modalEvaluarVerificacionD" class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 	    	<div class="modal-header">
