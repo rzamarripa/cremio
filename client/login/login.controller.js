@@ -13,7 +13,7 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
   this.login = function () {
     $meteor.loginWithPassword(this.credentials.username, this.credentials.password).then(
       function () {
-        if (Meteor.user().username != "admin" || Meteor.user().roles == "Gerente" ) {
+        if (Meteor.user().username != "admin" && Meteor.user().roles != "Gerente" ) {
           Meteor.call("getHorario", Meteor.user().profile.sucursal_id,  function(error,result){
             if(error){
               toastr.error('Error en el servidor');
@@ -38,8 +38,7 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
           $state.go('root.home');
         }
   
-        if (Meteor.user().roles == "Gerente")
-           $state.go('root.home');       
+              
       	   
       },
       function (error) {
