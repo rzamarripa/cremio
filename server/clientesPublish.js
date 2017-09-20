@@ -38,6 +38,48 @@ Meteor.publish("buscarRootClientesDistribuidores",function(options){
 																											"profile.numeroCliente"			: 1 }}, options.options);
 			}
 });
+Meteor.publish("buscarRootClientesDistribuidoresNumero",function(options){
+	if (options != undefined){
+			if(options.where.numeroCliente.length > 0 || options.where.numeroDistribuidor.length > 0){
+				//console.log("entro",options)
+				
+					let selector = {
+				  	"profile.numeroCliente": { '$regex' : '.*' + options.where.numeroCliente || '' + '.*', '$options' : 'i' },
+				  	roles : {$in : ["Cliente","Distribuidor"]}
+					}
+	
+					let selector2 = {
+					
+				  	"profile.numeroDistribuidor": { '$regex' : '.*' + options.where.numeroDistribuidor || '' + '.*', '$options' : 'i' },
+				  	roles : {$in : [ "Distribuidor"]}
+					}
+				
+				if (selector != undefined)
+				 {
+				 	console.log("selector1",selector)
+					return Meteor.users.find(selector, { fields: {roles												: 1,
+																											"profile.nombreCompleto"		: 1, 
+																											"profile.sexo"							: 1, 
+																											"profile.foto"							: 1,
+																											"profile.numeroDistribuidor": 1,
+																											"profile.numeroCliente"			: 1 }}, options.options);
+				}
+				if (selector2) {
+					console.log("selector2")
+					return Meteor.users.find(selector2, { fields: {roles												: 1,
+																											"profile.nombreCompleto"		: 1, 
+																											"profile.sexo"							: 1, 
+																											"profile.foto"							: 1,
+																											"profile.numeroDistribuidor"			: 1 }}, options.options);
+
+				}
+
+				
+			}
+
+	}
+
+});
 
 
 /*

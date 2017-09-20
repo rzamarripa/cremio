@@ -8,7 +8,9 @@ angular.module("creditoMio")
 	
 	this.buscar = {};
 	this.buscar.nombre = "";
+	this.buscar.numeroCliente = "";
 	this.buscando = false;
+	rc.porNumero = false;
 	//this.clientesRoot = [];
 	this.clientes_ids = [];
 
@@ -31,8 +33,30 @@ angular.module("creditoMio")
 	    }];
 		}
 		else if (rc.getReactively("buscar.nombre").length  == 0 )
-			this.buscando = false;		
+		{
+			this.buscando = false;	
+		}
+
   });  
+
+		this.subscribe('buscarRootClientesDistribuidoresNumero', () => {
+	
+			if(rc.getReactively("buscar.numeroCliente").length > 4 )
+			{
+				 rc.buscando = true;	
+				return [{
+			    options : { limit: 20 },
+			    where : { 
+						numeroCliente : rc.getReactively('buscar.numeroCliente'),
+						numeroDistribuidor : rc.getReactively('buscar.numeroCliente')
+					} 		   
+		    }];
+			}
+		else if (rc.getReactively("buscar.numeroCliente").length  == 0 ){
+			this.buscando = false;		
+		}
+
+  }); 
 
 
   
@@ -205,6 +229,15 @@ this.verMenu =()=>{
 		   
 		      }
     });
+
+  };
+  this.cambiarNumero = function() 
+  {
+  	rc.porNumero = true
+  };
+  this.cambiarNombre = function() 
+  {
+  	rc.porNumero = false
 
   };
 
