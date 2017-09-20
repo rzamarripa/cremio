@@ -98,10 +98,22 @@ Meteor.publish("buscarRootAvales",function(options){
 */
 
 
+Meteor.publish("distribuidores",function(options){
+  return Meteor.users.find(options,{ fields: {roles	: 1,
+	  																					createdAt:1,
+																							"profile.nombreCompleto"			: 1, 
+																							"profile.numeroDistribuidor"	: 1,
+																							"profile.limiteCredito"				: 1,
+																							"profile.verificacionEstatus"	: 1,
+																							"profile.indicacion"					: 1,
+																							"profile.avales_ids"					: 1, }});
+});
+
 
 Meteor.publish("cliente",function(options){
   return Meteor.users.find(options);
 });
+
 
 Meteor.publish("clientes",function(options){
   return Meteor.users.find(options);

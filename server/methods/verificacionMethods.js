@@ -10,4 +10,15 @@ Meteor.methods({
 		return verificaciones;
 	},
 	
+	finalizarVerificacionDistribuidor: function (id, objeto) {	
+	 	Meteor.users.update({_id: id}, {$set: {"profile.estaVerificado"	: true, 
+																					 "profile.verificacionEstatus" 	: objeto.evaluacion, 
+																					 "profile.indicacion"						: objeto.indicacion}});	
+	},
+	
+	autorizaoRechazaDistribuidor: function (id, valor, motivo) {	
+	 	Meteor.users.update({_id: id}, {$set: {"profile.estatusCredito"	: valor,
+		 																			 "profile.motivo"					: motivo}});	
+	},
+	
 });

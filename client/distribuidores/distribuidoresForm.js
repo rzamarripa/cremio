@@ -415,26 +415,32 @@ angular.module("creditoMio")
             toastr.error('Error al guardar los datos.');
             return;
       }
+<<<<<<< HEAD
       if (_.isEmpty(rc.avales))    
       {
           toastr.error("Error, se debe agregar AVAL.");
           return;
       }
+=======
+            
+>>>>>>> e1c52d0b25b35e79d9d67d487f99df53e2431fc1
       if (this.action)
       {
 	      	objeto.password = Math.random().toString(36).substring(2,7);		
 
-      }	
-
+      }
+      
       _.each(objeto, function(item){
          delete item.$$hashKey;
       })
+      
        _.each(rc.avales, function(aval){
          aval.estatus = "G"
          delete aval.$$hashKey;
       })
 
 			objeto.profile.estaVerificado = false;
+			objeto.profile.estatusVerificacion = 0;
       objeto.profile.estatus = true;
       objeto.profile.saldoCredito = objeto.profile.limiteCredito;
       objeto.profile.documentos = rc.documents;
@@ -447,13 +453,7 @@ angular.module("creditoMio")
       var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-      objeto.profile.avales_ids = rc.avales
-     
-
-
-      // Meteor.apply('generarAval', rc.avales, function(error, result){
-      // if(result){
-      //console.log("apunto de entrar",objeto)
+      objeto.profile.avales_ids = rc.avales;
     
        Meteor.call('createUsuario', objeto, "Distribuidor", function(e,r){
           if (r)

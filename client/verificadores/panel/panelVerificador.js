@@ -333,9 +333,13 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 										}
 										else if (rc.conVecino >= numeroVerificaciones && rc.conSolicitanteAval >= numeroVerificaciones)
 										{
-												Meteor.users.update({_id:rc.distribuidorSeleccionado}, {$set: {"profile.estaVerificado"				: true, 
-																																											 "profile.verificacionEstatus" 	: objeto.evaluacion, 
-																																											 "profile.indicacion"						: objeto.indicacion}});
+												Meteor.call('finalizarVerificacionDistribuidor', rc.distribuidorSeleccionado, objeto, function(error, result) {
+													   if(error)
+													   {
+														    console.log('ERROR :', error);
+														    return;
+													   }
+												});		   
 										}
 										else
 										{
