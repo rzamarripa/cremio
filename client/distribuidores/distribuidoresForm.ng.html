@@ -620,7 +620,26 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr ng-repeat="aval in dis.avales">
+											<tr ng-repeat="aval in dis.avales" ng-show="!dis.objeto._id">
+												<td>{{aval.num}}</td>
+												<td>{{aval.nombre}}</td>
+												<!-- <td>{{aval.estadoCivil}}</td>
+												<td>{{aval.ocupacion}}</td>
+												<td>{{aval.direccion}}</td>
+												<td>{{aval.empresa}}</td>
+												<td>{{aval.puesto}}</td>
+												<td>{{aval.tiempoLaborando}}</td>
+												<td>{{aval.direccionEmpresa}}</td>
+												<td>{{aval.parentesco}}</td>
+												<td>{{aval.tiempoConocerlo}}</td> -->
+												<td>
+														<a href="#" class="btn btn-primary"  data-target=".bs-modalAvales-modal-lg" ng-click="dis.verAval(aval)" ><i class="fa fa-eye"></i></a>
+														<a href="#" class="btn btn-warning" ng-click="dis.editarAval(aval)"><i class="fa fa-pencil"></i></a>
+														<a href="#" class="btn btn-danger" ng-click="dis.quitarAval(aval.num)"><i class="fa fa-trash"></i></a>
+														
+												</td>
+											</tr>
+											<tr ng-repeat="aval in dis.objeto.profile.avales_ids" ng-show="dis.objeto._id">
 												<td>{{aval.num}}</td>
 												<td>{{aval.nombre}}</td>
 												<!-- <td>{{aval.estadoCivil}}</td>

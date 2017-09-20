@@ -415,7 +415,11 @@ angular.module("creditoMio")
             toastr.error('Error al guardar los datos.');
             return;
       }
-      
+      if (_.isEmpty(rc.avales))    
+      {
+          toastr.error("Error, se debe agregar AVAL.");
+          return;
+      }
       if (this.action)
       {
 	      	objeto.password = Math.random().toString(36).substring(2,7);		
@@ -476,14 +480,12 @@ angular.module("creditoMio")
       return;
     }
    // console.log("objeto",objeto)
-        
     var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
     var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
     var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
     objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-    
-    
-    
+    objeto.profile.avales_ids =  angular.copy(rc.objeto.profile.avales_ids);
+        
     if (rc.documents.length){
       objeto.profile.documentos = rc.documents
       objeto.profile.foto = rc.objeto.profile.foto
@@ -491,18 +493,13 @@ angular.module("creditoMio")
       else{
         objeto.profile.documentos = objeto.profile.documentos
         objeto.profile.foto = rc.objeto.profile.foto
-        
       }
-  
       if (rc.pic != ""){
         objeto.profile.foto = rc.pic
       }
       else{
         objeto.profile.foto = rc.objeto.profile.foto
-      }
-
-
-  
+      } 
     delete objeto.profile.repeatPassword;
     Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Distribuidor", this.cambiarContrasena);
     toastr.success('Actualizado correctamente.');
@@ -518,6 +515,7 @@ angular.module("creditoMio")
       $state.go('root.clienteDetalle', { 'objeto_id':objeto._id});
 
     }
+    console.log(objeto)
    
 
   };
@@ -985,7 +983,14 @@ angular.module("creditoMio")
     
       rc.aval.num = this.avales.length + 1;
       rc.aval.estatus = "N";
-      this.avales.push(rc.aval);
+      if (rc.objeto._id) 
+      {
+        rc.objeto.profile.avales_ids.push(rc.aval);
+        
+      }else{
+        this.avales.push(rc.aval);
+      }
+      
       
       rc.aval={};
   };
@@ -1047,11 +1052,23 @@ angular.module("creditoMio")
   this.quitarAval = function(numero)
   {
     pos = functiontofindIndexByKeyValue(this.avales, "num", numero);
-    this.avales.splice(pos, 1);
-    if (this.avales.length == 0)
-      this.con = 0;
+    if (rc.objeto._id) {
+      rc.objeto.profile.avales_ids.splice(pos, 1);
+    }else{
+      this.avales.splice(pos, 1);
+    }
+    if (this.avales.length == 0){
+     this.con = 0; 
+      functiontoOrginiceNum(rc.avales, "num");
+    }
+     if (rc.objeto.profile.avales_ids == 0){
+      functiontoOrginiceNum(rc.rc.objeto.profile.avales_ids, "num");
+      this.con = 0; 
+
+    }
+      
  
-      functiontoOrginiceNum(this.avales, "num");
+     
   };
   
   this.editarAval = function(a)
