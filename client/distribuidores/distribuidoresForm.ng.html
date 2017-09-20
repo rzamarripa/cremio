@@ -935,6 +935,71 @@
 	</div>
 </div>
 
+<div id="modalAval" class="modal fade bs-modalAvales-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		       
+		    </div>
+				<div class="widget-body">
+							<form name="form2" novalidate>
+									<div class="well">	    
+								     <div class="row">
+							 <div class="col-sm-3">
+						    	<img style="max-width:170px;" src="{{dis.aval.foto}}" >
+						    </div>
+					    	<div class="col-sm-6"> 					    
+						    	<label>Nombre</label>
+						    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="dis.aval.nombreCompleto" disabled="true">
+					    	</div>
+					    	
+					       </div>
+					    <div class="row">	
+						    <div class="col-sm-4">					    
+						    	<label>Calle</label>
+						    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.calle" disabled="true">
+					    	</div>
+					    	<div class="col-sm-2">					    
+						    	<label>Número</label>
+						    	<input name="numero" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.numero" disabled="true">
+					    	</div>
+					    	<div class="col-sm-2">					    
+						    	<label>Código Postal</label>
+						    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="dis.aval.codigoPostal" disabled="true">
+					    	</div>
+						    <div class="col-sm-4"> 					    
+						    	<label>Estado Civil</label>
+						    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="dis.aval.estadoCivil" disabled="true">
+					    	</div>
+					    </div>
+					    <div class="row">		
+						    <div class="col-sm-3"> 					    
+						    	<label>Ocupación</label>
+						    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="dis.aval.ocupacion" disabled="true">
+					    	</div>
+					    	<div class="col-sm-3">					    
+						    	<label>Empresa</label>
+						    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="dis.aval.empresa" disabled="true">
+					    	</div>
+					    	<div class="col-sm-3">					    
+						    	<label>Puesto</label>
+						    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="dis.aval.puesto" disabled="true">
+					    	</div>					    	
+					    	<div class="col-sm-3">					    
+						    	<label>Tiempo Laborando</label>
+						    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="dis.aval.tiempoLaborando" disabled="true">
+					    	</div>
+									</div>
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" ng-click="dis.cancelarAval()" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+     
+  </div>
+</div>
+
 
 
 <script>

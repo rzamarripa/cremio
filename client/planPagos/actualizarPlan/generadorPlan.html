@@ -290,25 +290,25 @@
 														    	</div>
 														    	<div class="col-sm-4"> 					    
 															    	<label>Avalúo</label>
-															    	<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO" ng-model="ae.garantia.avaluo">
+															    	<input name="avaluo" type="text" class="form-control" placeholder="AVALÚO" ng-model="ae.garantia.avaluo">
 														    	</div>
 														    </div>
 														    <div class="row">	
 														    <div class="col-sm-4">					    
 															    	<label>Préstamo </label>
-															    	<input name="serie" type="number" class="form-control" placeholder="PRÉSTAMO" ng-model="ae.garantia.prestamo">
+															    	<input name="serie" type="text" class="form-control" placeholder="PRÉSTAMO" ng-model="ae.garantia.prestamo">
 														    	</div>
 															    <div class="col-sm-4">					    
 															    	<label>Préstamo sobre avalúo</label>
-															    	<input name="serie" type="number" class="form-control" placeholder="PRÉSTAMO SOBRE AVALÚO" ng-model="ae.garantia.prestamoPorcentaje">
+															    	<input name="serie" type="text" class="form-control" placeholder="PRÉSTAMO SOBRE AVALÚO" ng-model="ae.garantia.prestamoPorcentaje">
 														    	</div>
 														    	 <div class="col-sm-4">					    
 															    	<label>Monto de avalúo</label>
-															    	<input name="serie" type="number" class="form-control" placeholder="MOTO DE AVALÚO" ng-model="ae.garantia.monto">
+															    	<input name="serie" type="text" class="form-control" placeholder="MOTO DE AVALÚO" ng-model="ae.garantia.monto">
 														    	</div>
 														    	 <div class="col-sm-4">					    
 															    	<label>Porcentaje del prestamo sobre el avalúo</label>
-															    	<input name="serie" type="number" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ae.garantia.porcentaje">
+															    	<input name="serie" type="text" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ae.garantia.porcentaje">
 														    	</div>
 														    	<div class="col-sm-4">					    
 															    	<label>Fecha de inico de comercialización</label>
@@ -340,14 +340,14 @@
 																				<tr>
 																					<th width="5%">Número</th>
 																					<th width="15%">Descripción genérica</th>
-																					<th width="15%">Características</th>
+																					<!-- <th width="15%">Características</th>
 																					<th width="15%">Avalúo</th>
 																					<th width="15%">Préstamo</th>
 																					<th width="15%">Préstamo sobre avalúo</th>
 																					<th width="15%">Monto del avalúo</th>
 																					<th width="15%">Porcentaje del préstamo sobre el avalúo</th>
 																					<th width="15%">Fecha de inicio de comercialización</th>
-																					<th width="15%">Fecha limite de finiquito</th>
+																					<th width="15%">Fecha limite de finiquito</th> -->
 																					<th width="5%">Acción</th>
 																				</tr>
 																			</thead>
@@ -355,17 +355,19 @@
 																				<tr ng-repeat="garantia in ae.garantias">
 																					<td>{{garantia.num}}</td>
 																					<td>{{garantia.descripcion}}</td>
-																					<td>{{garantia.caracteristicas}}</td>
+																		<!-- 			<td>{{garantia.caracteristicas}}</td>
 																					<td>{{garantia.avaluo}}</td>
 																					<td>{{garantia.prestamo}}</td>
 																					<td>{{garantia.prestamoPorcentaje}}</td>
 																					<td>{{garantia.monto}}</td>
 																					<td>{{garantia.porcentaje}}</td>
 																					<td>{{garantia.fechaComercializacion | date:"dd-MM-yyyy"}}</td>
-																					<td>{{garantia.fechaFiniquito | date:"dd-MM-yyyy"}}</td>
-																					<td>
-																							<a href="#" ng-click="ae.quitarGarantia(ae.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
-																							<a href="#" ng-click="ae.editarGarantia(ae.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
+																					<td>{{garantia.fechaFiniquito | date:"dd-MM-yyyy"}}</td> -->
+
+																							<td>
+																					<a href="#" class="btn btn-primary" ng-click="ae.verGarantia(ae.credito.verGarantia, garantia)"><i class="fa fa-eye"></i></a>
+																							<a href="#" class="btn btn-warning" ng-click="ae.editarGarantia(ae.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
+																							<a href="#" class="btn btn-danger" ng-click="ae.quitarGarantia(ae.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
 																					</td>
 																				</tr>
 																			</tbody>
@@ -376,40 +378,86 @@
 															
 															<div  ng-if="ae.credito.tipoGarantia == 'general'">
 																<div class="row">
-															    	<div class="col-sm-6"> 					    
-																			  <label>Descripción:</label>
-																			  <textarea class="form-control" rows="5"  cols="10" ng-model="ae.garantia.descripcion" name="descripcion"></textarea>
-															    	</div>
-															    	<div class="col-sm-4"> 					    
-																    	<label>Valor estimado:</label>
-																    	<input name="valorEstimado" type="text" class="form-control" placeholder="Valor Estimado" ng-model="ae.garantia.valorEstimado">
-															    	</div>
-																</div>
-																<div class="row">
-																	<div class="col-sm-12">
-																		<table class="table table-bordered">
-																			<thead>
-																				<tr>
-																					<th width="5%">Número</th>
-																					<th width="15%">Descripción</th>
-																					<th width="15%">Valor estimado</th>
-																					<th width="5%">Acción</th>
-																				</tr>
-																			</thead>
-																			<tbody>
-																				<tr ng-repeat="garantia in ae.garantiasGeneral">
-																					<td>{{garantia.num}}</td>
-																					<td>{{garantia.descripcion}}</td>
-																					<td>{{garantia.valorEstimado}}</td>
-																					<td>
-																							<a href="#" ng-click="ae.quitarGarantia(ae.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
-																							<a href="#" ng-click="ae.editarGarantia(ae.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
+														    	<div class="col-sm-4"> 					    
+															    	<label>Sup. de terreno y construcción</label>
+															    	<input name="valorEstimado" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ae.garantia.terrenoYconstruccion">
+														    	</div>
+														    	<div class="col-sm-4"> 					    
+															    	<label>Medidas, colindancias, clave astral</label>
+															    	<input name="valorEstimado" type="text" class="form-control" placeholder="Medidas, colindancias, clave astral"  ng-model="ae.garantia.medidasColindancias">
+														    	</div>
+														    	<div class="col-sm-4"> 					    
+															    	<label>Avalúo </label>
+															    	<input name="valorEstimado" type="text" class="form-control" placeholder="Avalúo" ng-model="ae.garantia.avaluo">
+														    	</div>
+														    	<div class="col-sm-4"> 					    
+															    	<label>Préstamo </label>
+															    	<input name="valorEstimado" type="text" class="form-control" placeholder="Préstamo" ng-model="ae.garantia.prestamo">
+														    	</div>
+														    	<div class="col-sm-4"> 					    
+															    	<label>Préstamo sobre avalúo</label>
+															    	<input name="valorEstimado" type="text" class="form-control" placeholder="Préstamo sobre avalúo" ng-model="ae.garantia.prestamoSobreAvaluo">
+														    	</div>
+														    		<div class="col-sm-4"> 					    
+															    	<label>Monto de avalúo</label>
+															    	<input name="valorEstimado" type="text" class="form-control" placeholder="Monto de avalúo" ng-model="ae.garantia.montoAvaluo">
+														    	</div>
+														    		<div class="col-sm-4"> 					    
+															    	<label>% Porcentaje del préstamo sobre el avaluo</label>
+															    	<input name="valorEstimado" type="text" class="form-control" placeholder="% Porcentaje del préstamo  sobre avalúo" ng-model="ae.garantia.porcentajePrestamo">
+															    
+														    	</div>
+														    	<div class="col-sm-4"> 					    
+															    	<label>Comisión y gastos</label>
+															    	<input name="valorEstimado" type="text" class="form-control" placeholder="Comisión y gastos" ng-model="ae.garantia.comisionGastos">
+														    	</div>
+														    	<div class="col-sm-4"> 					    
+															    	<label>	Por escrituración e inscripción de registro público</label>
+															    	<input name="valorEstimado" type="text" class="form-control" placeholder="Por escrituroación e inscripción de registro público" ng-model="ae.garantia.escrituracion">
+														    	</div>
+							
+															</div>
+															<div class="row"><br/>
+																<div class="col-sm-12">
+																	<table class="table table-bordered">
+																		<thead>
+																			<tr>
+																				<th width="5%">Número</th>
+																				<th width="15%">Sup. de terreno y construcción</th>
+																				<!-- <th width="15%">Medidas, colindancias, clave astral</th>
+																				<th width="15%">Avalúo</th>
+																				<th width="15%">Préstamo</th>
+																				<th width="15%">Préstamo sobre avalúo</th>
+																				<th width="15%">Monto de avalúo</th>
+																				<th width="15%">% Porcentaje del préstamo sobre el avaluo</th>
+																	
+																				<th width="15%">Comisión y gastos</th>
+																				<th width="15%">Por escrituración e inscripción de registro público</th> -->
+																				<th width="5%">Acción</th>
+																			</tr>
+																		</thead>
+																		<tbody>
+																			<tr ng-repeat="garantia in ae.garantiasGeneral">
+																				<td>{{garantia.num}}</td>
+																				<td>{{garantia.terrenoYconstruccion}}</td>
+																			<!-- 	<td>{{garantia.medidasColindancias}}</td>
+																				<td>{{garantia.avaluo}}</td>
+																				<td>{{garantia.prestamo}}</td>
+																				<td>{{garantia.prestamoSobreAvaluo}}</td>
+																				<td>{{garantia.montoAvaluo}}</td>
+																				<td>{{garantia.porcentajePrestamo}}</td>
+																				<td>{{garantia.comisionGastos}}</td>
+																				<td>{{garantia.escrituracion}}</td> -->
+																				<td>
+																					<a href="#" class="btn btn-primary" ng-click="ae.verGarantia(ae.credito.verGarantia, garantia)"><i class="fa fa-eye"></i></a>
+																							<a href="#" class="btn btn-warning" ng-click="ae.editarGarantia(ae.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
+																							<a href="#" class="btn btn-danger" ng-click="ae.quitarGarantia(ae.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
 																					</td>
-																				</tr>
-																			</tbody>
-																		</table>
-																	</div>
+																			</tr>
+																		</tbody>
+																	</table>
 																</div>
+															</div>
 																<div class="row">		
 														    	<div class="col-sm-3">
 																   	<input type="button" ng-click="ae.insertarGarantia(ae.credito.tipoGarantia)" value="Agregar" ng-show="ae.actionGarantia" class="btn btn-primary"> 	
@@ -545,5 +593,108 @@
      
   </div>
 </div>
+
+<div id="modalGarantia" class="modal fade bs-modalGarantia-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		       
+		    </div>
+				<div class="widget-body">
+								<div class="row" ng-show="ae.general">
+								<div class="col-sm-12"> 
+							    	<div class="col-sm-4"> 					    
+								    	<label>Sup. de terreno y construcción</label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ae.garantia.terrenoYconstruccion">
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>Medidas, colindancias, clave astral</label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Medidas, colindancias, clave astral"  ng-model="ae.garantia.medidasColindancias">
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>Avalúo </label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Avalúo" ng-model="ae.garantia.avaluo">
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>Préstamo </label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Préstamo" ng-model="ae.garantia.prestamo">
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>Préstamo sobre avalúo</label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Préstamo sobre avalúo" ng-model="ae.garantia.prestamoSobreAvaluo">
+							    	</div>
+							    		<div class="col-sm-4"> 					    
+								    	<label>Monto de avalúo</label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Monto de avalúo" ng-model="ae.garantia.montoAvaluo">
+							    	</div>
+							    		<div class="col-sm-4"> 					    
+								    	<label>% Porcentaje del préstamo sobre el avaluo</label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="% Porcentaje del préstamo  sobre avalúo" ng-model="ae.garantia.porcentajePrestamo">
+								    
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>Comisión y gastos</label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Comisión y gastos" ng-model="ae.garantia.comisionGastos">
+							    	</div>
+							    	<div class="col-sm-4"> 					    
+								    	<label>	Por escrituración e inscripción de registro público</label>
+								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Por escrituroación e inscripción de registro público" ng-model="ae.garantia.escrituracion">
+							    	</div>
+
+								</div>
+								</div>
+								<div class="row" ng-show="ae.mob">
+								<div class="col-sm-12">
+									<div class="row">
+						    	<div class="col-sm-4"> 					    
+							    	<label>Descripción Genérica</label>
+							    	<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN" ng-model="ae.garantia.descripcion">
+						    	</div>
+						    	<div class="col-sm-4"> 					    
+							    	<label>Características	</label>
+							    	<input name="caracteristicas" type="text" class="form-control" placeholder="Caracteristicas" ng-model="ae.garantia.caracteristicas">
+						    	</div>
+						    	<div class="col-sm-4"> 					    
+							    	<label>Avalúo</label>
+							    	<input name="avaluo" type="text" class="form-control" placeholder="AVALÚO" ng-model="ae.garantia.avaluo">
+						    	</div>
+						    </div>
+						    <div class="row">	
+						    <div class="col-sm-4">					    
+							    	<label>Préstamo </label>
+							    	<input name="serie" type="text" class="form-control" placeholder="PRÉSTAMO" ng-model="ae.garantia.prestamo">
+						    	</div>
+							    <div class="col-sm-4">					    
+							    	<label>Préstamo sobre avalúo</label>
+							    	<input name="serie" type="text" class="form-control" placeholder="PRÉSTAMO SOBRE AVALÚO" ng-model="ae.garantia.prestamoPorcentaje">
+						    	</div>
+						    	 <div class="col-sm-4">					    
+							    	<label>Monto de avalúo</label>
+							    	<input name="serie" type="text" class="form-control" placeholder="MOTO DE AVALÚO" ng-model="ae.garantia.monto">
+						    	</div>
+						    	 <div class="col-sm-4">					    
+							    	<label>Porcentaje del prestamo sobre el avalúo</label>
+							    	<input name="serie" type="text" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ae.garantia.porcentaje">
+						    	</div>
+						    	<div class="col-sm-4">					    
+							    	<label>Fecha de inico de comercialización</label>
+							    	<input name="serie" class="form-control" placeholder="FECHA DE INICIO DE COMERCIALIZACIÓN" ng-model="ae.garantia.fechaComercializacion" date-time format="dd-MM-yyyy" view="date" max-view="year" min-view="date">
+						    	</div>
+						    	
+						    	<div class="col-sm-4">					    
+							    	<label>Fecha limite de finquito</label>
+							    	<input name="serie"  class="form-control" placeholder="FECHA LIMITE DE FINIQUITO" ng-model="ae.garantia.fechaFiniquito" date-time format="dd-MM-yyyy" view="date" max-view="year" min-view="date">
+						    	</div>
+								</div>
+								</div>
+	      </div>	
+	      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" ng-click="ae.cancelarGarantia(ae.credito.tipoGarantia)" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+     
+  </div>
+</div>
+
 
 
