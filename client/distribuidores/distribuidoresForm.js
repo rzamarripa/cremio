@@ -1016,6 +1016,71 @@ angular.module("creditoMio")
     rc.aval._id = a._id;
     
   };
+  this.verAval = function(a)
+  {
+    //console.log(a,"aval p")
+    $("#modalAval").modal('show');
+    rc.aval.nombre = a.nombre;
+    if (a.apellidoPaterno == undefined) {
+      a.apellidoPaterno = ""
+    }
+    if (a.apellidoMaterno == undefined) {
+      a.apellidoMaterno = ""
+    }
+    rc.aval.nombreCompleto= a.nombre + " " + a.apellidoPaterno + " " + a.apellidoMaterno
+    rc.aval.estadoCivil = a.estadoCivil;
+    rc.aval.ocupacion = a.ocupacion;      
+    rc.aval.calle = a.calle;
+    rc.aval.numero = a.numero;
+    rc.aval.codigoPostal = a.codigoPostal;
+    rc.aval.empresa = a.empresa;
+    rc.aval.puesto = a.puesto;
+    rc.aval.tiempoLaborando = a.tiempoLaborando;
+    rc.aval.direccionEmpresa = a.direccionEmpresa;
+    rc.aval.parentesco = a.parentesco;
+    rc.aval.tiempoConocerlo = a.tiempoConocerlo;
+    rc.aval.foto =a.foto
+  
+  };
+
+  this.quitarAval = function(numero)
+  {
+    pos = functiontofindIndexByKeyValue(this.avales, "num", numero);
+    this.avales.splice(pos, 1);
+    if (this.avales.length == 0)
+      this.con = 0;
+ 
+      functiontoOrginiceNum(this.avales, "num");
+  };
+  
+  this.editarAval = function(a)
+  {
+    
+    rc.aval.nombre = a.nombre;
+    rc.aval.apellidoPaterno = a.apellidoPaterno;
+    rc.aval.apellidoMaterno = a.apellidoMaterno;
+    rc.aval.estadoCivil = a.estadoCivil;
+    rc.aval.estadoCivil_id = a.estadoCivil_id;
+    
+    rc.aval.ocupacion = a.ocupacion;      
+    rc.aval.ocupacion_id = a.ocupacion_id;      
+    
+    rc.aval.calle = a.calle;
+    rc.aval.numero = a.numero;
+    rc.aval.codigoPostal = a.codigoPostal;
+    rc.aval.empresa = a.empresa;
+    rc.aval.calleEmpresa = a.calleEmpresa;
+    rc.aval.numeroEmpresa = a.numeroEmpresa;
+    rc.aval.codigoPostalEmpresa = a.codigoPostalEmpresa;
+    rc.aval.puesto = a.puesto;
+    rc.aval.tiempoLaborando = a.tiempoLaborando;
+    rc.aval.direccionEmpresa = a.direccionEmpresa;
+    rc.aval.parentesco = a.parentesco;
+    rc.aval.tiempoConocerlo = a.tiempoConocerlo;
+    
+    this.num = a.num;
+    this.actionAval = false;
+  };
   
   
 
