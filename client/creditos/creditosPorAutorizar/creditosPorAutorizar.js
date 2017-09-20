@@ -10,11 +10,18 @@ angular.module("creditoMio")
 	this.verificaciones_ids = [];
 	this.creditoRechazar = "";
 	this.motivo = "";
+	this.tipo = "";
+	
+	this.creditosPorAutorizar = [];
 	
   window.rc = rc;
   
   this.subscribe('clientes', () => {
 		return [{_id : { $in : this.getReactively("clientes_ids")}}];
+	})
+	
+	this.subscribe('distribuidores', () => {
+		return [{"profile.estaVerificado" : true, "profile.estatusCredito": 0}];
 	})
   
   this.subscribe('creditos', () => {
@@ -23,14 +30,32 @@ angular.module("creditoMio")
     
   this.helpers({
 		creditosPorAutorizar : () => {
+			
+			var cpu = [] ;
+			
 			var creditos = Creditos.find({estatus : 1},{ sort : {fechaSolicito : 1 }}).fetch();
 			if(creditos){
+				
 				rc.clientes_ids = _.pluck(creditos, "cliente_id");
 				
-				
 				_.each(creditos, function(credito){
+					
+						var autorizar = {};
+						autorizar.verificaciones = [];
+						
 						credito.cliente = Meteor.users.findOne({_id : credito.cliente_id});
 						credito.verificaciones = [];
+						
+					 	autorizar._id 								= credito.cliente_id;
+					 	autorizar.credito_id					= credito._id;
+					 	autorizar.cliente							= credito.cliente;
+					 	autorizar.capitalSolicitado 	= credito.capitalSolicitado;
+					 	autorizar.fechaSolicito 			= credito.fechaSolicito;
+					 	autorizar.verificacionEstatus = credito.verificacionEstatus;
+					 	autorizar.avales_ids 					= credito.avales_ids;
+					 	autorizar.indicacion 					= credito.indicacion;
+					 	autorizar.tipo								= "Crédito Personal"
+					 	
 						
 						Meteor.call('getVerificacionesCredito', credito._id, function(error, result) {
 						   if(error)
@@ -40,81 +65,115 @@ angular.module("creditoMio")
 						   }
 						   if(result)
 						   {	
-								 		_.each(result, function(v){
-									 			credito.verificaciones.push(v);
-								 		});
-								 		$scope.$apply();
+							 		_.each(result, function(v){
+								 			//credito.verificaciones.push(v);
+								 			autorizar.verificaciones.push(v);
+								 			$scope.$apply();
+							 		});
 							 }
 						});
 						
-						if (credito.avales_ids.length > 0 )
-						{		
-							console.log(credito);	
-/*
-							Meteor.call('getAvalEncabezado', credito.avales_ids[0], function(error, result) {
-							   if(error)
-							   {
-								    console.log('ERROR :', error);
-								    return;
-							   }
-							   if(result)
-							   {	
-								   	console.log(result);
-									 	credito.aval = result;	
-									 	$scope.$apply();
-								 }
-							});
-*/
-						}
-						
+						cpu.push(autorizar);
+													 		
 						
 				})
 			}
+			
+			
+			
+			var distribuidores = Meteor.users.find({roles: ["Distribuidor"]}).fetch();
+			if (distribuidores)
+			{
+				_.each(distribuidores, function(distribuidor){
+						var autorizar = {};
+						autorizar.verificaciones = [];
 						
-			return creditos;
+						autorizar._id 								= distribuidor._id;
+					 	autorizar.cliente							= distribuidor;
+					 	autorizar.capitalSolicitado 	= distribuidor.profile.limiteCredito;
+					 	autorizar.fechaSolicito 			= distribuidor.createdAt;
+					 	autorizar.verificacionEstatus = distribuidor.profile.verificacionEstatus;
+					 	autorizar.avales_ids 					= distribuidor.profile.avales_ids;
+					 	autorizar.indicacion 					= distribuidor.profile.indicacion;
+					 	autorizar.tipo								= "Distribuidor"
+						
+						Meteor.call('getVerificacionesDistribuidor', distribuidor._id, function(error, result) {
+						   if(error)
+						   {
+							    console.log('ERROR :', error);
+							    return;
+						   }
+						   if(result)
+						   {	
+							 		_.each(result, function(v){
+								 			autorizar.verificaciones.push(v);
+								 			$scope.$apply();
+							 		});
+							 }
+						});
+						
+						cpu.push(autorizar);
+						
+				
+				});
+					
+			}
+						
+			return cpu;
 			
 		},
 		
 		
 	});
 	
-/*
-	this.tieneFoto = function(sexo, foto){
-	  if(foto === undefined){
-		  if(sexo === "Masculino")
-			  return "img/badmenprofile.png";
-			else if(sexo === "Femenino"){
-				return "img/badgirlprofile.png";
-			}else{
-				return "img/badprofile.png";
-			}
-			  
-	  }else{
-		  return foto;
-	  }
-  };
-*/
   
-  this.autorizar = function(credito_id){
-	  Creditos.update({_id : credito_id}, { $set : {estatus : 2}});
-	  toastr.success("Ha autorizado el crédito.")
+  this.autorizar = function(id, tipo){
+	  if (tipo == "Crédito Personal")	
+	  		Creditos.update({_id : id}, { $set : {estatus : 2}});
+	  		
+	  else
+		{
+				Meteor.call('autorizaoRechazaDistribuidor', distribuidor._id, 1, "", function(error, result) {
+						   if(error)
+						   {
+							    console.log('ERROR :', error);
+							    return;
+						   }
+				});
+		}		
+	  toastr.success("Se autorizó correctamente.")
   }
   
   this.rechazar = function(motivo){
 	  
-	  Creditos.update({_id : this.creditoRechazar}, { $set : {motivo: motivo, estatus : 3}});
-	  toastr.error("Se ha rechazado el crédito.")
+	  if (this.tipo == "Crédito Personal")
+	  		Creditos.update({_id : this.creditoRechazar}, { $set : {motivo: motivo, estatus : 3}});
+	  else
+	  {
+		  	Meteor.call('autorizaoRechazaDistribuidor', this.creditoRechazar, 2, motivo , function(error, result) {
+						   if(error)
+						   {
+							    console.log('ERROR :', error);
+							    return;
+						   }
+				});
+		  	
+	  }
+	  		
+	  toastr.error("Se ha rechazado la solicitud.")
 	  
 	  this.motivo = "";
 	  this.creditoRechazar = "";
+	  this.tipo = "";
 	  $('#modalRechazo').modal('hide');
 	  
   }
   
   
-  this.mostrarRechazoCredito = function(credito_id){
+  this.mostrarRechazoCredito = function(id, tipo){
 	  
-	  this.creditoRechazar = credito_id;
+	  this.creditoRechazar = id;
+	  this.tipo = tipo;
 		$("#modalRechazo").modal();
 		
 		
