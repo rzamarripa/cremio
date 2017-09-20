@@ -5,4 +5,9 @@ Meteor.methods({
 		return verificaciones;
 	},
 	
+	getVerificacionesDistribuidor: function (id) {	
+	  var verificaciones = Verificaciones.find({cliente_id : id}).fetch();
+		return verificaciones;
+	},
+	
 });

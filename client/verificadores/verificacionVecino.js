@@ -21,10 +21,20 @@ function VerificacionVecinoCtrl($scope, $meteor, $reactive,  $state, $stateParam
 			return [{_id : $stateParams.verificacion_id }]
 	});
 	
-	this.subscribe('creditos',()=>{
-			return [{_id : $stateParams.id }]
-	});	
-	
+	//console.log($stateParams.tipo);
+	if ($stateParams.tipo == "CP")
+	{	
+		this.subscribe('creditos',()=>{
+				return [{_id : $stateParams.id }]
+		});	
+	}
+	else if($stateParams.tipo == "V")
+	{
+		this.subscribe('cliente',()=>{
+				return [{_id : $stateParams.id }]
+		});
+	}
+			
   this.helpers({
 	  verificaciones : () => {
 		  		rc.objeto = Verificaciones.findOne();
@@ -45,12 +55,22 @@ function VerificacionVecinoCtrl($scope, $meteor, $reactive,  $state, $stateParam
 		  
 			obj.estatus = true;
 			obj.usuarioVerifico = Meteor.userId();
-			obj.credito_id = $stateParams.id;
 			obj.tipoVerificacion = "vecino";
 			obj.fechaVerificacion = new Date();
 			obj.sucursal_id = Meteor.user().profile.sucursal_id;
-			obj.cliente_id = rc.credito.cliente_id;
-														
+			
+			if ($stateParams.tipo == "CP")
+			{
+				obj.cliente_id = rc.credito.cliente_id;
+				obj.credito_id = $stateParams.id;
+				obj.tipo 			= "Crédito Personal";
+			}
+			else if ($stateParams.tipo == "V")	
+			{
+				obj.cliente_id = $stateParams.id;
+				obj.tipo 			= "Distribuidor";
+			}
+																	
 			Verificaciones.insert(obj);
 						
 			toastr.success('Guardado correctamente.');

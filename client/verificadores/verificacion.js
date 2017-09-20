@@ -33,9 +33,18 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	});
 	
 	
-	this.subscribe('creditos',()=>{
-			return [{_id : $stateParams.id }]
-	});
+	if ($stateParams.tipo == "CP")
+	{	
+		this.subscribe('creditos',()=>{
+				return [{_id : $stateParams.id }]
+		});	
+	}
+	else if($stateParams.tipo == "V")
+	{
+		this.subscribe('cliente',()=>{
+				return [{_id : $stateParams.id }]
+		});
+	}
 	
   this.helpers({
 	  verificaciones : () => {		  
@@ -66,24 +75,37 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		  }
 		  
 			obj.estatus = true;
-			obj.credito_id = $stateParams.id;
 			obj.usuarioVerifico = Meteor.userId();
 			obj.tipoVerificacion = "solicitante o aval";
 			obj.fechaVerificacion = new Date();
 			obj.sucursal_id = Meteor.user().profile.sucursal_id;
-			obj.cliente_id = rc.credito.cliente_id;
-			
-			if (this.objeto.tipoGarantia == "mobiliaria")
+
+			if ($stateParams.tipo == "CP")
+			{
+				obj.cliente_id = rc.credito.cliente_id;
+				obj.credito_id = $stateParams.id;
+				obj.tipo 			= "Crédito Personal";
+				
+				if (this.objeto.tipoGarantia == "mobiliaria")
 					obj.garantias = angular.copy(this.garantias);
-			else
-					obj.garantias = angular.copy(this.garantiasGeneral);	
-									
-			var credito = Creditos.findOne($stateParams.id);
+				else
+						obj.garantias = angular.copy(this.garantiasGeneral);	
+										
+				var credito = Creditos.findOne($stateParams.id);
+				
+				if (credito.tipoGarantia == undefined )
+						credito.tipoGarantia = [];
+				
+				credito.tipoGarantia = this.objeto.tipoGarantia;
+				
+			}
+			else if ($stateParams.tipo == "V")	
+			{
+				obj.cliente_id = $stateParams.id;
+				obj.tipo 			= "Distribuidor";
+			}
 			
-			if (credito.tipoGarantia == undefined )
-					credito.tipoGarantia = [];
-			
-			credito.tipoGarantia = this.objeto.tipoGarantia;
+					
 			
 			Verificaciones.insert(obj);
 			

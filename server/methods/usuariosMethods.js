@@ -15,7 +15,7 @@ Meteor.methods({
 				var numero = usuario.profile.numeroCliente;
 				
 				//se desactivo para que ellos empiecena capturar el numero-----------------
-/*
+				/*
 				if (sucursal.folioCliente != undefined)				
 				 	  numero = sucursal.folioCliente + 1;
 				else	
@@ -23,7 +23,7 @@ Meteor.methods({
 						sucursal.folioCliente = 0;
 						numero = sucursal.folioCliente + 1;
 				}
-*/
+				*/
 				
 				if (numero < 10)
 					 usuario.username = sucursal.clave + '-C000' + numero;
@@ -43,17 +43,12 @@ Meteor.methods({
 	  else if (rol == "Distribuidor")
 	  {
 		  	sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
-		  	console.log(sucursal)
+		  	//console.log(sucursal)
 		  	console.log(sucursal.folioDistribuidor);
 				var numero;// = usuario.profile.numeroDistribuidor;
-				if (sucursal.folioDistribuidor != undefined)				
-				 	  numero = sucursal.folioDistribuidor + 1;
-				else	
-				{
-						sucursal.folioDistribuidor = 0;
-						numero = sucursal.folioDistribuidor + 1;
-				}
 				
+		 	  numero = sucursal.folioDistribuidor + 1;
+								
 				if (numero < 10)
 					 usuario.username = sucursal.clave + '-D000' + numero;
 				else if (numero < 100)
@@ -65,12 +60,12 @@ Meteor.methods({
 	  			 	  			 	 
 	  		//usuario.contrasena = Math.random().toString(36).substring(2,7);
 	  		usuario.password = '123';
+	  		console.log(usuario.username);
 	  		sucursal.folioDistribuidor = numero;
 	  		usuario.profile.numeroDistribuidor = usuario.username;
 	  		
-	  		sucursal.folioDistribuidor = numero;
 	  		
-	  	 }
+	  }
 		
 		//Crea al Usuario
 		var usuario_id = Accounts.createUser({
@@ -78,16 +73,18 @@ Meteor.methods({
 			password: usuario.password,			
 			profile: usuario.profile
 		});
+
 		
 		Roles.addUsersToRoles(usuario_id, rol, grupo);
 		
 
 		if (rol == "Cliente" || rol == "Distribuidor")
 		{
-				Sucursales.update({_id: sucursal._id},{$set:{folioCliente : sucursal.folioCliente, 
-															 folioDistribuidor : sucursal.folioDistribuidor}});
+				Sucursales.update({_id: sucursal._id},
+													{$set:{	folioCliente 			: sucursal.folioCliente, 
+															 		folioDistribuidor : sucursal.folioDistribuidor}});
 				
-/*
+				/*
 				Meteor.call('sendEmail',
 					usuario.profile.correo,
 					'sistema@corazonvioleta.mx',
@@ -123,57 +120,6 @@ Meteor.methods({
 				delete RP._id;
 				ReferenciasPersonales.update({_id: idTemp}, {$set:RP})	
 				
-/*
-					//Preguntar si es nuevo la Referencia personal
-					if (!referenciaPersonal.persona_id)
-					{
-							var relacion = {nombre					: referenciaPersonal.nombre,
-														  apellidoPaterno : referenciaPersonal.apellidoPaterno,
-														  apellidoMaterno : referenciaPersonal.apellidoMaterno,
-														  nombreCompleto  : referenciaPersonal.nombre + " " + referenciaPersonal.apellidoPaterno + " " + referenciaPersonal.apellidoMaterno
-														  };		
-							
-							//Insertar en Personas las referencia y poniedole el usuario_id (regresar el _id de cada persona para ponerlo en una pila
-							relacion.relaciones = [];
-							relacion.relaciones.push({cliente_id			: usuario_id, 
-																				cliente					: usuario.profile.nombreCompleto, 
-																				nombre					: referenciaPersonal.nombre,
-																				apellidoPaterno : referenciaPersonal.apellidoPaterno,
-																				apellidoMaterno : referenciaPersonal.apellidoMaterno,
-																				parentezco			: referenciaPersonal.parentezco,
-																				direccion				:	referenciaPersonal.direccion,
-																				telefono				: referenciaPersonal.telefono,
-																				tiempo					: referenciaPersonal.tiempo,
-																				num							: referenciaPersonal.num,
-																				tipoPersona			: "Referencia", 
-																				estatus					: 0});
-																									
-							//referenciaPersonal.nombreCompleto = referenciaPersonal.nombre + " " + referenciaPersonal.apellidoPaterno + " " + referenciaPersonal.apellidoMaterno;
-							
-							var result = Personas.insert(relacion);
-							user.profile.referenciasPersonales_ids.push(result);					
-					}
-					else
-					{
-							var p = Personas.findOne({_id:referenciaPersonal.persona_id});
-							p.relaciones.push({cliente_id			 : usuario_id, 
-																 cliente				 : usuario.profile.nombreCompleto,
-																 nombre					 : referenciaPersonal.nombre,
-																 apellidoPaterno : referenciaPersonal.apellidoPaterno,
-																 apellidoMaterno : referenciaPersonal.apellidoMaterno,
-																 parentezco			 : referenciaPersonal.parentezco,
-																 direccion			 : referenciaPersonal.direccion,
-																 telefono				 : referenciaPersonal.telefono,
-																 tiempo					 : referenciaPersonal.tiempo,
-																 num						 : referenciaPersonal.num,
-																 tipoPersona		 : "Referencia", 
-																 estatus				 : 0});
-																 
-							Personas.update({_id: referenciaPersonal.persona_id},{$set:p});
-							user.profile.referenciasPersonales_ids.push(referenciaPersonal.persona_id);
-					}
-*/
-
 		});
 		
 		

@@ -196,23 +196,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		$('#collapseReestructuracion').collapse('hide');
 	};
 
-	
-	/*
-this.tieneFoto = function(sexo, foto){
-		if(foto === undefined){
-			if(sexo === "Masculino")
-				return "img/badmenprofile.jpeg";
-			else if(sexo === "Femenino"){
-				return "img/badgirlprofile.jpeg";
-			}else{
-				return "img/badprofile.jpeg";
-			}
-		}else{
-			return foto;
-		}
-	}
-*/
-	  
+			  
 	this.generarPlanPagos = function(credito, form){
 
 		if(form.$invalid){
@@ -312,112 +296,6 @@ this.tieneFoto = function(sexo, foto){
 		return rc.planPagos;
 	}
 	
-// 	this.generarCredito = function(form){
-		
-// 		if(form.$invalid){
-// 				toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
-// 				return;
-// 		}	
-// 		if (rc.cliente.profile.renta == true && this.avales.length == 0 && rc.cliente.roles != "Distribuidor")		
-// 		{
-// 				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
-// 				return;
-// 		}	
-
-// 		if (rc.cliente.roles == "Distribuidor") {
-// 			this.credito.periodoPago = "Quincenal"
-
-// 		}
-// 	    Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
-// 		if (result)
-// 		{
-// 			//console.log(result,"sucursal bebe");
-// 			//rc.sucursalCliente.push(result);
-// 			//console.log(rc.sucursalCliente,"sucursal del cliente");
-		
-// 		if (rc.cliente.roles == "Distribuidor") {
-// 			rc.credito.tasa = result.tasaVales
-// 			rc.credito.tiposCredito_id = rc.tiposCredito[0]._id
-// 		}else if (rc.cliente.roles == "Cliente") {
-// 			rc.credito.tasa = rc.credito.tasa
-// 			rc.credito.tiposCredito_id = rc.credito.tiposCredito_id 
-
-// 		}
-
-// 		}
-// 	/*
-	
-// 		this.credito.periodoPago = "Quincenal";
-// 	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
-// 		if (result)
-// 		{
-// */
-
-		
-// 		var credito = {
-// 			cliente_id : rc.cliente._id,
-// 			tipoCredito_id : rc.credito.tipoCredito_id,
-// 			fechaSolicito : new Date(),
-// 			duracionMeses : rc.credito.duracionMeses,
-// 			capitalSolicitado : rc.credito.capitalSolicitado,
-// 			adeudoInicial : rc.credito.capitalSolicitado,
-// 			saldoActual : rc.credito.capitalSolicitado,
-// 			periodoPago : rc.credito.periodoPago,
-// 			fechaPrimerAbono : rc.credito.primerAbono,
-// 			multasPendientes : 0,
-// 			saldoMultas : 0.00,
-// 			saldoRecibo : 0.00,
-// 			estatus : 1,
-// 			requiereVerificacion: rc.credito.requiereVerificacion,
-// 			sucursal_id : Meteor.user().profile.sucursal_id,
-// 			fechaVerificacion: rc.credito.fechaVerificacion,
-// 			turno : rc.credito.turno,
-// 			tipoGarantia : rc.credito.tipoGarantia,
-// 			tasa: rc.credito.tasa,
-// 			conSeguro : rc.credito.conSeguro,
-// 			seguro: rc.credito.seguro,
-// 		//};
-			
-			
-// 		//console.log(credito);
-				
-// 		credito.avales = angular.copy(rc.avales);
-		
-// 		//Duda se guardan los dos???
-		
-// 		if (rc.credito.tipoGarantia == "mobiliaria")
-// 				credito.garantias = angular.copy(rc.garantias);
-// 		else
-// 				credito.garantias = angular.copy(rc.garantiasGeneral);
-				
-				
-// 				if (Meteor.user().roles = "Distribuidor") {
-// 					credito.tipo = "vale"
-// 				}else if (Meteor.user().roles = "Cliente") {
-// 					credito.tipo == "creditoP"
-// 				}
-// 		//Cambie el metodo	
-
-// 		Meteor.apply('generarCreditoPeticion', [rc.cliente, credito], function(error, result){
-// 			if(result == "hecho"){
-// 				toastr.success('Se ha guardado la solicitud de crédito correctamente');
-// 				rc.planPagos = [];
-// 				rc.avales = [];
-// 				if (rc.cliente.roles == "Distribuidor") {
-// 					$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
-// 				}
-// 				if (rc.cliente.roles == "Cliente") {
-// 					$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
-// 				}
-				
-// 			}
-// 			$scope.$apply();
-// 			/////////////////AQUI
-// 		});
-// 			}
-						
-// 				})
-// 	}
 	this.generarCredito = function(form){
 		
 		if(form.$invalid){
@@ -739,6 +617,7 @@ this.tieneFoto = function(sexo, foto){
 	
 	this.actualizarGarantia = function(tipo, a)
 	{
+			console.log(tipo, a)
 			if (tipo == "mobiliaria")
 			{
 					a.num = this.numG;
@@ -769,14 +648,13 @@ this.tieneFoto = function(sexo, foto){
 					_.each(this.garantiasGeneral, function(av){
 						if (av.num == a.num)
 						{
-							
 
 							av.medidasColindancias = a.medidasColindancias
-						    av.terrenoYconstruccion = a.terrenoYconstruccion
-						    av.prestamoSobreAvaluo = a.prestamoSobreAvaluo
-						    av.prestamo = a.prestamo
-						    av.num = a.num
-						    av.montoAvaluo = a.montoAvaluo
+						  av.terrenoYconstruccion = a.terrenoYconstruccion
+						  av.prestamoSobreAvaluo = a.prestamoSobreAvaluo
+						  av.prestamo = a.prestamo
+						  av.num = a.num
+						  av.montoAvaluo = a.montoAvaluo
 							av.avaluo = a.avaluo;
 							av.comisionGastos = a.comisionGastos;
 							av.escrituracion = a.escrituracion;

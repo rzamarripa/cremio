@@ -6,12 +6,15 @@
 		<ul id="widget-tab-1" class="nav nav-tabs pull-left">
 
 			<li class="active">
-				<a data-toggle="tab" href="#hr1" aria-expanded="false"> <i class="fa fa-lg fa-circle-o"></i> <span class="hidden-mobile hidden-tablet"> Verificaciones pendientes <span class="badge bg-color-blue txt-color-white">{{pver.creditos.length}}</span></span></a>
+				<a data-toggle="tab" href="#hr1" aria-expanded="false"> <i class="fa fa-lg fa-circle-o"></i> <span class="hidden-mobile hidden-tablet"> Verificaciones Créditos <span class="badge bg-color-blue txt-color-white">{{pver.creditos.length}}</span></span></a>
 			</li>
 			
+			<li class="">
+				<a data-toggle="tab" href="#hr2" aria-expanded="false"> <i class="fa fa-lg fa-circle-o"></i> <span class="hidden-mobile hidden-tablet"> Verificaciones Distribuidor <span class="badge bg-color-blue txt-color-white">{{pver.distribuidores.length}}</span></span></a>
+			</li>
 
 			<li class="">
-				<a data-toggle="tab" href="#hr2" aria-expanded="false"> <i class="fa fa-lg fa-circle"></i> <span class="hidden-mobile hidden-tablet"> Verificaciones hechas<span class="badge bg-color-blue txt-color-white">{{pver.verificacionesHechas.length}}</span></span></a>
+				<a data-toggle="tab" href="#hr3" aria-expanded="false"> <i class="fa fa-lg fa-circle"></i> <span class="hidden-mobile hidden-tablet"> Verificaciones hechas<span class="badge bg-color-blue txt-color-white">{{pver.verificacionesHechas.length}}</span></span></a>
 			</li>
 
 
@@ -42,6 +45,10 @@
 				</div>
 				
 				<div class="tab-pane fade" id="hr2">
+					<div ng-include="'client/verificadores/panel/_tablaPorVerificarDistribuidor.html'"></div>
+				</div>
+				
+				<div class="tab-pane fade" id="hr3">
 					<div ng-include="'client/verificadores/panel/_tablaVerificados.html'"></div>
 				</div>
 			</div>
