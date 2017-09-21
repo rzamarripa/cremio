@@ -135,10 +135,16 @@ angular.module("creditoMio")
 					return;
 			}
 			
+			if (objeto.estadoCaja == "Abierta")
+			{
+					toastr.warning('La ventanilla abierta, no es posible editarla');
+					return;
+			}
+			
 			var cajaAbierta = Cajas.findOne({usuario_id: objeto.usuario_id});
 			if (cajaAbierta != undefined  && cajaAbierta.estadoCaja == "Abierta")
 			{
-					toastr.warning('Ya tinen una caja abierta');
+					toastr.warning('El cajero seleccionado ya tine una ventanilla abierta');
 					return;
 			}
 
