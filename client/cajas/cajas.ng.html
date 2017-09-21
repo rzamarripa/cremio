@@ -93,8 +93,8 @@
 							    <span class="sr-only">Toggle Dropdown</span>
 							  </button>
 							  <ul class="dropdown-menu dropdown-menu-right text-left">
-							    <li><a  ng-click="caj.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
-							    <li><a  ui-sref="root.abrirCaja({caja_id:objeto._id})" ng-if = "objeto.estadoCaja=='Cerrada'"><i class="fa fa-external-link"></i> Abrir</a></li>
+							    <li><a  ng-click="caj.editar(objeto._id)" ng-if = "objeto.estadoCaja=='Cerrada'"><i class="fa fa-pencil"></i> Editar</a></li>
+							    <li><a  ui-sref="root.abrirCaja({caja_id:objeto._id})" ng-if = "objeto.estadoCaja=='Cerrada' && objeto.usuario_id != '' "><i class="fa fa-external-link"></i> Abrir</a></li>
 							  </ul>
 							</div>
 				    </div>				    
