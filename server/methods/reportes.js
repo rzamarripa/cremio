@@ -22,10 +22,7 @@ Meteor.methods({
 							plan.tipoIngreso = tipoIngreso.nombre;
 							plan.tipoCuenta = cuenta.tipoCuenta;
 							
-							if (plan.tipoCuenta == "Consignia")
-								plan.mostrar = true;
-							else
-								plan.mostrar = false;	 
+								 
 							
 							var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
 	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
@@ -37,8 +34,15 @@ Meteor.methods({
 	  									
 							plan.numeroCliente = user.profile.numeroCliente;	
 							plan.nombreCompleto = user.profile.nombreCompleto;
+							if (plan.tipoCuenta == "Consignia"){
+								plan.mostrar = true;
+								cobranza.push(plan);
+							}
 							
-							cobranza.push(plan);
+							else{
+								plan.mostrar = false;
+							}
+							
 					})
 					
 			});
@@ -68,11 +72,9 @@ Meteor.methods({
 							plan.tipoIngreso = tipoIngreso.nombre;
 							plan.tipoCuenta = cuenta.tipoCuenta;
 							
-							if (plan.tipoCuenta == "Banco")
-								plan.mostrar = true;
-							else
-								plan.mostrar = false;	
-								var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
+							
+						
+						var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
 	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
 	  																
 	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
@@ -85,8 +87,15 @@ Meteor.methods({
 							
 							plan.numeroCliente = user.profile.numeroCliente;	
 							plan.nombreCompleto = user.profile.nombreCompleto;
+							if (plan.tipoCuenta == "Banco"){
+								cobranza.push(plan);
+								plan.mostrar = true;
+							}
+							else{
+								plan.mostrar = false;	
+							}
 							
-							cobranza.push(plan);
+							
 					})
 					
 			});
@@ -117,10 +126,7 @@ Meteor.methods({
 							plan.tipoIngreso = tipoIngreso.nombre;
 							plan.tipoCuenta = cuenta.tipoCuenta;
 							
-							if (plan.tipoCuenta == "Documento")
-								plan.mostrar = true;
-							else
-								plan.mostrar = false;	
+								
 								var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
 	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
 	  																
@@ -134,8 +140,15 @@ Meteor.methods({
 							
 							plan.numeroCliente = user.profile.numeroCliente;	
 							plan.nombreCompleto = user.profile.nombreCompleto;
+							if (plan.tipoCuenta == "Documento"){
+								plan.mostrar = true;
+								cobranza.push(plan);
+							}
+							else{
+								plan.mostrar = false;
+							}
 							
-							cobranza.push(plan);
+							
 					})
 					
 			});
