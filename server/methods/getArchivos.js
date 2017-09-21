@@ -648,8 +648,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"reporteDiarioCobranza.docx", "binary");
@@ -789,8 +789,8 @@ Meteor.methods({
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
 		
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteDiarioCreditos.docx", "binary");
@@ -908,8 +908,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteMovimientoCuentas.docx", "binary");
@@ -967,8 +967,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 		var content = fs
     	   .readFileSync(produccion+"ReporteBancos.docx", "binary");
@@ -1715,16 +1715,16 @@ Meteor.methods({
  		    fecha = dia+ "-" + mes + "-" + anio
 		
 		doc.setData({				
-						items:   objeto,
-						cliente: cliente,
-						foto:    cliente.foto,
-						credito: credito,
+						items:          objeto,
+						cliente:        cliente,
+						foto:           cliente.foto,
+						credito:        credito,
 						adeudoInicial : credito.adeudoInicial,
-						fechaEmision:     fecha,
-						saldoMultas : credito.saldoMultas,
-						totalCargos : totalCargos,
-						totalAbonos : totalAbonos,
-						totalSaldo : totalSaldo,
+						fechaEmision:   fecha,
+						saldoMultas :   credito.saldoMultas,
+						totalCargos :   totalCargos,
+						totalAbonos :   totalAbonos,
+						totalSaldo :    totalSaldo,
 				  });
 								
 		doc.render();
