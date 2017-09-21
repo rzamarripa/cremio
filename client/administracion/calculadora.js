@@ -13,7 +13,7 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 	this.pago = {};
 
 	rc.total = ""
-  		
+  		 
 	this.subscribe("tiposCredito", ()=>{
 		return [{ estatus : true, sucursal_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "" }]
 	});

@@ -565,36 +565,64 @@ Meteor.methods({
 	 	 		
 	 	 		//console.log(item,"Credito")
 	 	 		
-	 	 		item.fechaLimite = item.fechaLimite.getUTCDate()+'-'+(item.fechaLimite.getUTCMonth()+1)+'-'+item.fechaLimite.getUTCFullYear();
-	 	 		 if (item.fechaLimite.length < 2) item.fechaLimite = '0' + item.fechaLimite;
+	 	 		//item.fechaLimite = item.fechaLimite.getUTCDate()+'-'+(item.fechaLimite.getUTCMonth()+1)+'-'+item.fechaLimite.getUTCFullYear();
+	 	 		 //if (item.fechaLimite.length < 2) item.fechaLimite = '0' + item.fechaLimite;
 	 	 		   item.cargo = parseFloat(item.cargo.toFixed(2).toLocaleString())
-	 	 		   item.cargo = formatCurrency(item.liquidar)
+	 	 		   item.cargo = formatCurrency(item.cargo)
 	 	 		   //(formatCurrency(item.cargo)
 	 	 		   item.liquidar = parseFloat(item.liquidar.toFixed(2))
 	 	 		   item.liquidar = formatCurrency(item.liquidar)
 	 	 		    item.capital = parseFloat(item.capital.toFixed(2))
-	 	 		    item.capital = formatCurrency(item.liquidar)
-	 	 		   
+	 	 		    item.capital = formatCurrency(item.capital)
+	 	 		    item.interes = parseFloat(item.interes.toFixed(2))
+	 	 		    item.interes = formatCurrency(item.interes)
+	 	 		    item.seguro = parseFloat(item.seguro.toFixed(2))
+	 	 		    item.seguro = formatCurrency(item.seguro)
+	 	 		    item.iva = parseFloat(item.iva.toFixed(2))
+	 	 		    item.iva = formatCurrency(item.iva)
 
-	 	 		// item.liquidar =              
-	 	 		// if (item.estatus = 5) {
-	 	 		// 	item.formaPago = item.tipoIngreso.nombre
+	 	 		    if (item.numeroPago < 10) {
+	 	 		    	item.numeroPago = "0"+item.numeroPago
+	 	 		    }
 
-	 	 		// }
+	 	 		    
+	 	 		    var dia = item.fechaLimite.getUTCDate()
+	 	 		    var mes = item.fechaLimite.getUTCMonth()+1
+	 	 		    var anio = item.fechaLimite.getUTCFullYear()
+	 	 		    if (Number(dia) < 10) {
+	 	 		    	dia = "0" + dia;
+	 	 		    }
+	 	 		    if (Number(mes) < 10) {
+	 	 		    	mes = "0" + mes;
+	 	 		    }
+	 	 		    item.fechaLimite = dia+ "-" + mes + "-" + anio
+
+	 	 		    //console.log(dia,"el dia",mes,"el mes",item.fechaLimite,"la fecha")
+
 	 	 	});
 	 	 	credito.capitalSolicitado.toLocaleString()
+	 	 	var length = objeto.length
+	 	 	if (length < 10) {
+	 	 	    length = "0"+length
+	 	     }
+	 	    credito.capitalSolicitado = parseFloat(credito.capitalSolicitado.toFixed(2));
+	 	    total.sumatoria = parseFloat(total.sumatoria.toFixed(2));
+	 	    credito.capitalSolicitado = formatCurrency(credito.capitalSolicitado)
+	 	    total.sumatoria = formatCurrency(total.sumatoria)
+	 	    var Ti = TiposCredito.findOne(credito.tipoCredito_id)
 	 	 
 
 		
 		doc.setData({				planPagos: 	  objeto,
-									length:       objeto.length,
+									length:       length,
 									fecha:        fecha,
 									cliente:      credito.nombre,
 									periodo:      credito.periodoPago,
 									duracion:     credito.duracionMeses,
-									capital:      credito.capitalSolicitado.toLocaleString(),
+									capitalSolicitado:      credito.capitalSolicitado.toLocaleString(),
 									total:        total.sumatoria.toLocaleString(),
 									tasa:         credito.tasa,
+									Ti:           Ti.nombre,
 									//tipoCredito:
 
 				  });
@@ -620,8 +648,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"reporteDiarioCobranza.docx", "binary");
@@ -636,14 +664,13 @@ Meteor.methods({
 			}
 			return "";
 		}});
-		
+		const formatCurrency = require('format-currency')
 			var fecha = new Date();
 			var f = fecha;
 			var fechaInicial = inicial
 			var fechaFinal = final
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
-	    fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
+	    // fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
+	    // fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
 	    var suma = 0
 		var sumaInter = 0
 		var sumaIva = 0
@@ -666,22 +693,71 @@ Meteor.methods({
 	       totalcobranza = suma + sumaIva + sumaInter
 
 	        item.cargo = parseFloat(item.totalPago.toFixed(2))
+	        item.cargo = formatCurrency(item.cargo)
 	        item.interes = parseFloat(item.pagoInteres.toFixed(2))
+	        item.interes = formatCurrency(item.interes)
 	        item.iva = parseFloat(item.pagoIva.toFixed(2))
+	        item.iva = formatCurrency(item.iva)
 	        item.seguro = parseFloat(item.pagoSeguro.toFixed(2))
+	        item.seguro = formatCurrency(item.seguro)
 	        item.pago = parseFloat(item.pagoCapital.toFixed(2))
-	        
+	        item.pago = formatCurrency(item.pago)
+	        if (item.folio < 10) {
+	 	 		item.folio = "0"+item.folio
+	 	 	}
+	 	 	if (item.numeroPago < 10) {
+	 	 		item.numeroPago = "0"+item.numeroPago
+	 	 	}
+	 	 	if (item.numeroPagos < 10) {
+	 	 		item.numeroPagos = "0"+item.numeroPagos
+	 	 	}
+
 
 	    });
 	    
+
+
+	 	 		    
+ 		    var dia = fecha.getUTCDate()
+ 		    var mes = fecha.getUTCMonth()+1
+ 		    var anio = fecha.getUTCFullYear()
+ 		    if (Number(dia) < 10) {
+ 		    	dia = "0" + dia;
+ 		    }
+ 		    if (Number(mes) < 10) {
+ 		    	mes = "0" + mes;
+ 		    }
+ 		    fecha = dia+ "-" + mes + "-" + anio
+
+ 		    var dia2 = fechaInicial.getUTCDate()
+ 		    var mes2 = fechaInicial.getUTCMonth()+1
+ 		    var anio2 = fechaInicial.getUTCFullYear()
+ 		    if (Number(dia2) < 10) {
+ 		    	dia2 = "0" + dia;
+ 		    }
+ 		    if (Number(mes2) < 10) {
+ 		    	mes2 = "0" + mes2;
+ 		    }
+ 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
+
+ 		    var dia3 = fechaFinal.getUTCDate()
+ 		    var mes3 = fechaFinal.getUTCMonth()+1
+ 		    var anio3 = fechaFinal.getUTCFullYear()
+ 		    if (Number(dia3) < 10) {
+ 		    	dia2 = "0" + dia;
+ 		    }
+ 		    if (Number(mes3) < 10) {
+ 		    	mes3 = "0" + mes3;
+ 		    }
+ 		    fechaFinal = dia3 + "-" + mes3 + "-" + anio3
 	
-	    console.log(objeto.planPagos);
+	    //console.log(objeto.planPagos);
 		
 		      doc.setData({				
       	            items: 		      objeto,
 										fecha:          fecha,
-										inicial:        fInicial,
-										final:          fFinal,
+										inicial:        fechaInicial,
+										final:          fechaFinal,
 										sumaCapital:    parseFloat(suma.toFixed(2)),
 										sumaIntereses:  parseFloat(sumaInter.toFixed(2)),
 										sumaIva:        parseFloat(sumaIva.toFixed(2)),
@@ -712,9 +788,9 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
-		//
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteDiarioCreditos.docx", "binary");
@@ -729,14 +805,14 @@ Meteor.methods({
 			}
 			return "";
 		}});
-		
+		const formatCurrency = require('format-currency')
 			var fecha = new Date();
 			var f = fecha;
 			var fechaInicial = inicial
 			var fechaFinal = final
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
-	    fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
+	    //fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	     // fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
+	     // fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
 	   
           var suma = 0
           var sumaSol = 0
@@ -746,17 +822,64 @@ Meteor.methods({
 	    	sumaSol = item.sumaAPagar
 	    	item.numeroCliente = item.numeroCliente + "";
 	    	item.adeudoInicial = parseFloat(item.adeudoInicial.toFixed(2))
+	    	item.adeudoInicial = formatCurrency(item.adeudoInicial)
 	    	item.saldoActual = parseFloat(item.saldoActual.toFixed(2))
+	    	item.saldoActual = formatCurrency(item.saldoActual)
+	    	item.capitalSolicitado = parseFloat(item.capitalSolicitado.toFixed(2))
+	    	item.capitalSolicitado = formatCurrency(item.capitalSolicitado)
+	    	 if (item.folio < 10) {
+	 	 		item.folio = "0"+item.folio
+	 	 	}
+	 	 	if (item.numeroPagos < 10) {
+	 	 		item.numeroPagos = "0"+item.numeroPagos
+	 	 	}
 
-	    });
+	    });	       
+	 		    
+ 		    var dia = fecha.getUTCDate()
+ 		    var mes = fecha.getUTCMonth()+1
+ 		    var anio = fecha.getUTCFullYear()
+ 		    if (Number(dia) < 10) {
+ 		    	dia = "0" + dia;
+ 		    }
+ 		    if (Number(mes) < 10) {
+ 		    	mes = "0" + mes;
+ 		    }
+ 		    fecha = dia+ "-" + mes + "-" + anio
+
+ 		    var dia2 = fechaInicial.getUTCDate()
+ 		    var mes2 = fechaInicial.getUTCMonth()+1
+ 		    var anio2 = fechaInicial.getUTCFullYear()
+ 		    if (Number(dia2) < 10) {
+ 		    	dia2 = "0" + dia2;
+ 		    }
+ 		    if (Number(mes2) < 10) {
+ 		    	mes2 = "0" + mes2;
+ 		    }
+ 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
+
+ 		    var dia3 = fechaFinal.getUTCDate()
+ 		    var mes3 = fechaFinal.getUTCMonth()+1
+ 		    var anio3 = fechaFinal.getUTCFullYear()
+ 		    if (Number(dia3) < 10) {
+ 		    	dia3 = "0" + dia3;
+ 		    }
+ 		    if (Number(mes3) < 10) {
+ 		    	mes3 = "0" + mes3;
+ 		    }
+ 		    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
 
 	    // console.log(objeto.planPagos);
+	    	// suma = parseFloat(suma.toFixed(2))
+	    	// suma = formatCurrency(suma)
+	    	// sumaSol = parseFloat(sumaSol.toFixed(2))
+	    	// sumaSol = formatCurrency(sumaSol)
 		
 		doc.setData({				
 						items: 		 objeto,
 						fecha:     fecha,
-						inicial:    fInicial,
-						final:      fFinal,
+						inicial:    fechaInicial,
+						final:      fechaFinal,
 						sumaCapital : suma,
 						sumaAPagar: sumaSol,
 													
@@ -785,8 +908,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteMovimientoCuentas.docx", "binary");
@@ -844,8 +967,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 		var content = fs
     	   .readFileSync(produccion+"ReporteBancos.docx", "binary");
@@ -860,26 +983,72 @@ Meteor.methods({
 			}
 			return "";
 		}});
-		
+		const formatCurrency = require('format-currency')
 			var fecha = new Date();
 			var f = fecha;
 			var fechaInicial = inicial
 			var fechaFinal = final
-	    fecha = fecha.getUTCDate()+'/'+(fecha.getUTCMonth()+1)+'/'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
-	    fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
+	    //fecha = fecha.getUTCDate()+'/'+(fecha.getUTCMonth()+1)+'/'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    //fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
+	   // fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
 	    _.each(objeto,function(item){
 	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
-	    	
+	    	item.totalPago = parseFloat(item.totalPago.toFixed(2))
+	    	item.totalPago = formatCurrency(item.totalPago)
+	    	item.pagoInteres = parseFloat(item.pagoInteres.toFixed(2))
+	    	item.pagoInteres = formatCurrency(item.pagoInteres)
+	    	item.pagoCapital = parseFloat(item.pagoCapital.toFixed(2))
+	    	item.pagoCapital = formatCurrency(item.pagoCapital)
+	    	item.pagoIva = parseFloat(item.pagoIva.toFixed(2))
+	    	item.pagoIva = formatCurrency(item.pagoIva)
 	    });
 	    
-	    console.log(objeto.planPagos);
+	    // 	 if (item.folio < 10) {
+	 	 	// 	item.folio = "0"+item.folio
+	 	 	// }
+	 	 	// if (item.numeroPagos < 10) {
+	 	 	// 	item.numeroPagos = "0"+item.numeroPagos
+	 	 	// }
+
+	 		    
+ 		   var dia = fecha.getUTCDate()
+ 		    var mes = fecha.getUTCMonth()+1
+ 		    var anio = fecha.getUTCFullYear()
+ 		    if (Number(dia) < 10) {
+ 		    	dia = "0" + dia;
+ 		    }
+ 		    if (Number(mes) < 10) {
+ 		    	mes = "0" + mes;
+ 		    }
+ 		    fecha = dia+ "-" + mes + "-" + anio
+
+ 		    var dia2 = fechaInicial.getUTCDate()
+ 		    var mes2 = fechaInicial.getUTCMonth()+1
+ 		    var anio2 = fechaInicial.getUTCFullYear()
+ 		    if (Number(dia2) < 10) {
+ 		    	dia2 = "0" + dia2;
+ 		    }
+ 		    if (Number(mes2) < 10) {
+ 		    	mes2 = "0" + mes2;
+ 		    }
+ 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
+
+ 		    var dia3 = fechaFinal.getUTCDate()
+ 		    var mes3 = fechaFinal.getUTCMonth()+1
+ 		    var anio3 = fechaFinal.getUTCFullYear()
+ 		    if (Number(dia3) < 10) {
+ 		    	dia3 = "0" + dia3;
+ 		    }
+ 		    if (Number(mes3) < 10) {
+ 		    	mes3 = "0" + mes3;
+ 		    }
+ 		    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
 		
 		doc.setData({				
 			            item: 		 objeto,
 						fecha:       fecha,
-						inicial:     fInicial,
-						final:       fFinal,
+						inicial:     fechaInicial,
+						final:       fechaFinal,
 													
 				});
 								
@@ -1450,8 +1619,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var ImageModule = require('docxtemplater-image-module');
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		var opts = {}
 			opts.centered = false;
 			opts.getImage=function(tagValue, tagName) {
@@ -1480,6 +1649,7 @@ Meteor.methods({
 			return "";
 		}});
 
+		const formatCurrency = require('format-currency')
 		var pic = String(cliente.foto);
 		cliente.foto = pic.replace('data:image/jpeg;base64,', '');
 		var bitmap = new Buffer(cliente.foto, 'base64');
@@ -1488,25 +1658,36 @@ Meteor.methods({
 		
 		var fecha = new Date();
 		var f = fecha;
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	    
        objeto.fechaLimite =moment(objeto.fechaLimite).format("DD-MM-YYYY")
        cliente.fechaCreacion =moment(cliente.fechaCreacion).format("DD-MM-YYYY")
        cliente.fechaNacimiento =moment(cliente.fechaNacimiento).format("DD-MM-YYYY")
        credito.fechaEntrega =moment(credito.fechaEntrega).format("DD-MM-YYYY")
        credito.adeudoInicial = parseFloat(credito.adeudoInicial.toFixed(2))
+       credito.adeudoInicial = formatCurrency(credito.adeudoInicial)
        credito.saldoActual = parseFloat(credito.saldoActual.toFixed(2))
+       credito.saldoActual = formatCurrency(credito.saldoActual)
        credito.saldoMultas = parseFloat(credito.saldoMultas.toFixed(2))
+       credito.saldoMultas = formatCurrency(credito.saldoMultas)
+       if (credito.numeroPagos < 10) {
+	 	 		credito.numeroPagos = "0"+credito.numeroPagos
+	 	 	}
 
       var totalCargos = 0
       var totalAbonos = 0 
       _.each(objeto,function(item){
       item.fechaSolicito =moment(item.fechaSolicito).format("DD-MM-YYYY")
       item.saldo = parseFloat(item.saldo.toFixed(2))
+      item.saldo = formatCurrency(item.saldo)
       item.cargo = parseFloat(item.cargo.toFixed(2))
+      item.cargo = formatCurrency(item.cargo)
       totalAbonos = parseFloat(item.sumaAbonos.toFixed(2))
+      totalAbonos = formatCurrency(totalAbonos)
       totalCargos = parseFloat(item.sumaCargos.toFixed(2))
+      totalCargos = formatCurrency(totalCargos)
       totalSaldo =  parseFloat(item.ultimoSaldo.toFixed(2))
+      totalSaldo = formatCurrency(totalSaldo)
+
 	 });
 	 		cliente.ciudad = cliente.ciudadCliente.nombre
 			cliente.sucursal = cliente.sucursales.nombreSucursal
@@ -1516,27 +1697,29 @@ Meteor.methods({
 			cliente.nacionalidad = cliente.nacionalidadCliente.nombre
 			cliente.estadoCivil = cliente.estadoCivilCliente.nombre
 			cliente.ocupacion = cliente.ocupacionCliente.nombre
+	    
+	    // 	 if (item.folio < 10) {
+	 	 	// 	item.folio = "0"+item.folio
+	 	 	// }
+	 	 	
+	 		    
+ 		   var dia = fecha.getUTCDate()
+ 		    var mes = fecha.getUTCMonth()+1
+ 		    var anio = fecha.getUTCFullYear()
+ 		    if (Number(dia) < 10) {
+ 		    	dia = "0" + dia;
+ 		    }
+ 		    if (Number(mes) < 10) {
+ 		    	mes = "0" + mes;
+ 		    }
+ 		    fecha = dia+ "-" + mes + "-" + anio
 		
 		doc.setData({				
 						items:   objeto,
-						// fecha:   fecha,
-						 cliente: cliente,
-						 foto:    cliente.foto,
-						 credito: credito,
-
-						// sucursal: cliente.sucursal,
-						// fechaCreacion : cliente.fechaCreacion,
-						// nombreCompleto :  cliente.profile.nombreCompleto,
-						// sexo : cliente.profile.sexo,
-						// nacionalidad : cliente.clienteNacionalidad.nombre,
-						// ocupacion : cliente.ocupacion,
-						// fechaNacimiento : cliente.fechaNa,
-						// lugarNacimiento : cliente.lugarNacimiento,
-						// capitalSolicitado : credito.capitalSolicitado,
-						// numeroPagos : credito.numeroPagos,
-						 adeudoInicial : credito.adeudoInicial,
-						// saldoActual : credito.saldoActual,
-						// fechaEntrega : credito.fechaEntrega,
+						cliente: cliente,
+						foto:    cliente.foto,
+						credito: credito,
+						adeudoInicial : credito.adeudoInicial,
 						fechaEmision:     fecha,
 						saldoMultas : credito.saldoMultas,
 						totalCargos : totalCargos,
