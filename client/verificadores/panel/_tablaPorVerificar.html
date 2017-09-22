@@ -4,6 +4,7 @@
 		<tr>
 			<th class="text-center" width="10%">No.</th>
 			<th ><div class="text-center">Nombre del Cliente</div></th>
+			<th ><div class="text-center">Aval</div></th>
 			<th ><div class="text-center">Capital Solicitado</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Solicitud</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
@@ -16,6 +17,7 @@
     <tr ng-repeat="credito in pver.creditos">
 	    <td class="text-center">{{$index + 1}}</td>
 	    <td>{{credito.nombreCliente}}</td>
+	    <td>{{credito.avales_ids[0].nombreCompleto}}</td>
 	    <td class="text-right">{{credito.capitalSolicitado | currency}}</td>
 	    <td class="text-center">{{credito.fechaSolicito.getUTCDate() +"/"+ (credito.fechaSolicito.getUTCMonth()+1) +"/"+ credito.fechaSolicito.getUTCFullYear()}} </td>
 	    <td class="text-center">{{credito.fechaVerificacion.getUTCDate() +"/"+ (credito.fechaVerificacion.getUTCMonth()+1) +"/"+ credito.fechaVerificacion.getUTCFullYear()}} </td>
