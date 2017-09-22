@@ -2,11 +2,17 @@
 	<div class="col-sm-12">
 		<form name="form" class="form-horizontal" role="form" novalidate>		
 			<h4>Verificación</h4>
-			<div class="well">	    
+			<div class="well">
+				<div class="row">
+					<div class="col-sm-6" valida> 					    
+						<label>Nombre de quien se está verificando *</label>
+			    	<input name="verificado" type="text" class="form-control" placeholder="Antiguedad domicilio" ng-model="ver.objeto.verificado" required capitalize>
+					</div>
+				</div> 
 		    <div class="row">
 		    	<div class="col-sm-4" valida> 					    
 			    	<label>¿Cuál es la antiguedad en su domicilio? *</label>
-			    	<input name="nombre" type="text" class="form-control" placeholder="Antiguedad domicilio" ng-model="ver.objeto.antiguedad" required>
+			    	<input name="nombre" type="text" class="form-control" placeholder="Antiguedad domicilio" ng-model="ver.objeto.antiguedad" required capitalize>
 		    	</div>
 		    	<div class="col-sm-4" valida>					    
 			    	<label>¿Su vivienda es? *</label>
@@ -18,31 +24,31 @@
 		    	</div>
 		    	<div class="col-sm-4">					    
 			    	<label>Nombre de la empresa donde trabaja</label>
-			    	<input name="empresaTreabaja" type="text" class="form-control" placeholder="Empresa" ng-model="ver.objeto.empresaTrabaja" >
+			    	<input name="empresaTreabaja" type="text" class="form-control" placeholder="Empresa" ng-model="ver.objeto.empresaTrabaja" capitalize>
 		    	</div>	    				    	    
 		    </div>
 		    <div class="row">
 			    	<div class="col-sm-4" valida> 					    
 				    	<label>¿Qué antiguedad tiene en dicha empresa? *</label>
-				    	<input name="antiguedadEmpresa" type="text" class="form-control" placeholder="Antiguedad empresa" ng-model="ver.objeto.antiguedadEmpresa" required="">
+				    	<input name="antiguedadEmpresa" type="text" class="form-control" placeholder="Antiguedad empresa" ng-model="ver.objeto.antiguedadEmpresa" required="" capitalize>
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>¿Cómo se llama su esposo(a) *</label>
-				    	<input name="nombreEsposo" type="text" class="form-control" placeholder="Nombre" ng-model="ver.objeto.nombreEsposo" required="">
+				    	<input name="nombreEsposo" type="text" class="form-control" placeholder="Nombre" ng-model="ver.objeto.nombreEsposo" required="" capitalize>
 			    	</div>		    				    	    
 			    	<div class="col-sm-4" valida>					    
 				    	<label>¿Dónde trabaja su esposo(a) *</label>
-				    	<input name="lugarTrajaboEsposo" type="text" class="form-control" placeholder="lugar Trabajo" ng-model="ver.objeto.lugarTrabajoEsposo" required="">
+				    	<input name="lugarTrajaboEsposo" type="text" class="form-control" placeholder="lugar Trabajo" ng-model="ver.objeto.lugarTrabajoEsposo" required="" capitalize>
 					  </div>
 		    </div>
 		    <div class="row">
 			    <div class="col-sm-3" valida> 					    
 				    	<label>Teléfono Esposo(a) *</label>
-				    	<input name="telefonoEsposo" type="text" class="form-control" placeholder="Teléfono Esposo(a)" ng-model="ver.objeto.telefonoEsposo" required="">
+				    	<input name="telefonoEsposo" type="text" class="form-control" placeholder="Teléfono Esposo(a)" ng-model="ver.objeto.telefonoEsposo" required="" capitalize>
 			    	</div>
 			    	<div class="col-sm-3" valida>					    
 				    	<label>Cantidad a solicitar</label>
-				    	<input name="cantidadSolictar" type="text" class="form-control" placeholder="Cantidad a solicitar" ng-model="ver.objeto.cantidadSolictar" required="">
+				    	<input name="cantidadSolictar" type="text" class="form-control" placeholder="Cantidad a solicitar" ng-model="ver.objeto.cantidadSolictar" required="" capitalize>
 			    	</div>		    				    	    
 			    	<div class="col-sm-6" valida>					    
 				    	<label>¿Ha tenido o tiene créditos vigentes en algun banco , financiera o prestamista? *</label>
@@ -56,19 +62,19 @@
 		    <div class="row">
 						<div class="col-sm-3" valida>					    
 				    	<label>Deuda Actual</label>
-				    	<input name="deudaActual" type="text" class="form-control" placeholder="Deuda Actual" ng-model="ver.objeto.deudaActual" required="">
+				    	<input name="deudaActual" type="text" class="form-control" placeholder="Deuda Actual" ng-model="ver.objeto.deudaActual" required="" capitalize>
 			    	</div>
 			    	<div class="col-sm-3" valida>					    
 				    	<label>Pago Semanal</label>
-				    	<input name="pagoSemanal" type="text" class="form-control" placeholder="Pago Semanal" ng-model="ver.objeto.pagoSemanal" required="">
+				    	<input name="pagoSemanal" type="text" class="form-control" placeholder="Pago Semanal" ng-model="ver.objeto.pagoSemanal" required="" capitalize>
 			    	</div>
 			    	<div class="col-sm-3" valida>					    
 				    	<label>Pago Quincenal</label>
-				    	<input name="pagoQuincenal" type="text" class="form-control" placeholder="Pago Quincenal" ng-model="ver.objeto.pagoQuincenal" required="">
+				    	<input name="pagoQuincenal" type="text" class="form-control" placeholder="Pago Quincenal" ng-model="ver.objeto.pagoQuincenal" required="" capitalize>
 			    	</div>
 			    	<div class="col-sm-3" valida>					    
 				    	<label>Pago Mensual</label>
-				    	<input name="pagoMensual" type="text" class="form-control" placeholder="Pago Mensual" ng-model="ver.objeto.pagoMensual" required="">
+				    	<input name="pagoMensual" type="text" class="form-control" placeholder="Pago Mensual" ng-model="ver.objeto.pagoMensual" required="" capitalize>
 			    	</div>					  
 		    </div>  
 		    <div class="row">
@@ -82,13 +88,13 @@
 					  </div>
 					  <div class="col-sm-8" valida> 					    
 				    	<label>Si la respuesta es SI, ¿Cuánto tiene de saldo y Cuánto son sus abonos?</label>
-				    	<input name="saldosAbonosCreditos" type="text" class="form-control" placeholder="Salgos y Abonos" ng-model="ver.objeto.saldosAbonosCreditos" required="">
+				    	<input name="saldosAbonosCreditos" type="text" class="form-control" placeholder="Salgos y Abonos" ng-model="ver.objeto.saldosAbonosCreditos" required="" capitalize>
 			    	</div>
 		    </div>
 		    <div class="row">
 			    	<div class="col-sm-4" valida>					    
 				    	<label>¿Es visitado frecuentemente por cobradores? *</label>
-				    	<select name="visitadoCobradores" ng-model="ver.objeto.visitadoCobradores" data-placeholder="Seleccione" class="form-control" required>
+				    	<select name="visitadoCobradores" ng-model="ver.objeto.visitadoCobradores" data-placeholder="Seleccione" class="form-control" required capitalize>
 								<option value=""></option>
 								<option value="SI">Si</option>
 								<option value="NO">No</option>
@@ -106,27 +112,27 @@
 		    <div class="row">
 			    	<div class="col-sm-4" valida> 					    
 				    	<label>Aspectos de la vivienda</label>
-				    	<input name="aspectoVivienda" type="text" class="form-control" placeholder="Aspecto de la vivienda" ng-model="ver.objeto.aspectoVivienda" required="">
+				    	<input name="aspectoVivienda" type="text" class="form-control" placeholder="Aspecto de la vivienda" ng-model="ver.objeto.aspectoVivienda" required="" capitalize>
 			    	</div>
 						<div class="col-sm-4" valida> 					    
 				    	<label>Nombre y parentesco de la persona que da información</label>
-				    	<input name="nombreParentescoInformacion" type="text" class="form-control" placeholder="Nombre y Parentesco" ng-model="ver.objeto.nombreParentescoInformacion" required="">
+				    	<input name="nombreParentescoInformacion" type="text" class="form-control" placeholder="Nombre y Parentesco" ng-model="ver.objeto.nombreParentescoInformacion" required="" capitalize>
 			    	</div>
 			    	<div class="col-sm-4" valida> 					    
 				    	<label>Observaciones</label>
-				    	<input name="observaciones" type="text" class="form-control" placeholder="Observaciones" ng-model="ver.objeto.Observaciones" required="">
+				    	<input name="observaciones" type="text" class="form-control" placeholder="Observaciones" ng-model="ver.objeto.Observaciones" required="" capitalize>
 			    	</div>
 		    </div>  	
 		    <div class="row">
 			    	<div class="col-sm-4" valida> 					    
 				    	<label>Número de INE</label>
-				    	<input name="ine" type="text" class="form-control" placeholder="INE" ng-model="ver.objeto.INE" required="">
+				    	<input name="ine" type="text" class="form-control" placeholder="INE" ng-model="ver.objeto.INE" required="" capitalize>
 			    	</div>
 		    </div> 	    
 			</div>
 			
-				<h4>Garantias</h4>
-				<div class="well">	    
+				<h4 ng-if = "ver.objeto.tipo == 'Crédito Personal'">Garantias</h4>
+				<div class="well" ng-if = "ver.objeto.tipo == 'Crédito Personal'">	    
 							<div class="row">
 								<div class="col-sm-4" valida>
 							    	<label>Tipo de garantía</label>

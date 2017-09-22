@@ -45,4 +45,55 @@ angular.module("creditoMio")
 	  }
   };
   
+  this.convertir = function(tipo, objeto) {
+	  
+	  if (tipo == "Cliente")
+	  {
+	    	customConfirm('¿Estás seguro de convertir a Cliente ?', function() {		    	
+		    		Meteor.call('getAvalCompleto', objeto, function(e,r){
+		          if (r)
+		          {
+			          		delete r.profile.creditos;
+			          		delete r.password;
+			          		r.createdAt = new Date();
+										Meteor.call('createUsuario', r, "Cliente", function(e,result){
+							          if (result)
+							          {
+								          	Avales.update({_id: objeto._id}, {$set: {"profile.esCliente": true}});
+							              toastr.success('Guardado correctamente.');
+							              $state.go('root.avalesLista', { 'objeto_id':r});
+							          }
+							      });			          	
+		          }
+		      });
+		    
+		    });
+		}    	
+		else
+		{
+				customConfirm('¿Estás seguro de convertir a Distribuidor ?', function() {
+					
+					Meteor.call('getAvalCompleto', objeto, function(e,r){
+		          if (r)
+		          {
+			          		console.log(objeto);
+			          		console.log(r);
+			          		delete r.profile.creditos;
+			          		delete r.password;
+			          		r.createdAt = new Date();
+										Meteor.call('createUsuario', r, "Distribuidor", function(e,result){
+							          if (result)
+							          {
+								          	Avales.update({_id: objeto._id}, {$set: {"profile.esDistribuidor": true}});
+							              toastr.success('Guardado correctamente.');
+							              $state.go('root.avalesLista', { 'objeto_id':r});
+							          }
+							      });			          	
+		          }
+		      });
+		    });
+		}    
+		
+	 }   	
+  
 };

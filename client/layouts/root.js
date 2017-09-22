@@ -231,6 +231,7 @@ this.verMenu =()=>{
     });
 
   };
+  
   this.cambiarNumero = function() 
   {
   	rc.porNumero = true

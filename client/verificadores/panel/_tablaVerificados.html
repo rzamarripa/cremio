@@ -26,7 +26,7 @@
     <tr ng-repeat="verificacion in pver.verificacionesHechas">
 	    <td class="text-center">{{$index + 1}}</td>
 	    <td>{{verificacion.nombreCliente}}</td>
-	     <td>{{verificacion.nombreParentescoInformacion}}</td>
+	     <td>{{verificacion.verificado}}</td>
 	    <td class="text-center">{{verificacion.fechaVerificacion | date:"dd-MM-yyyy" }} </td>
 	    <td class="text-center">{{verificacion.tipoVerificacion}}</td>
 	    <td class="text-center">{{verificacion.tipo}}</td>
@@ -51,5 +51,5 @@
 	    </td>
     </tr>
 	</tbody>
-</table>º
+</table>
 		

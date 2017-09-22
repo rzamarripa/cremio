@@ -9,16 +9,17 @@ Meteor.publish("buscarClientes",function(options){
 
 				
 				return Meteor.users.find(selector, { fields: {roles: 1,
-																											"profile.nombreCompleto"	: 1, 
-																											"profile.nombre"					: 1, 
-																											"profile.apellidoPaterno"	: 1, 
-																											"profile.apellidoMaterno"	: 1,
-																											"profile.particular"			: 1,
-																											"profile.celular"					: 1, 
-																											"profile.sexo"						: 1, 
-																											"profile.foto"						: 1,
-																											"profile.numeroCliente"		: 1,
-																											roles											: 1 }}, options.options);	
+																											"profile.nombreCompleto"			: 1, 
+																											"profile.nombre"							: 1, 
+																											"profile.apellidoPaterno"			: 1, 
+																											"profile.apellidoMaterno"			: 1,
+																											"profile.particular"					: 1,
+																											"profile.celular"							: 1, 
+																											"profile.sexo"								: 1, 
+																											"profile.foto"								: 1,
+																											"profile.numeroCliente"				: 1,
+																											"profile.numeroDistribuidor"	: 1,
+																											roles													: 1 }}, options.options);	
 			}
 });
 
@@ -31,11 +32,12 @@ Meteor.publish("buscarRootClientesDistribuidores",function(options){
 			  	roles : {$in : ["Cliente", "Distribuidor"]}
 				}
 
-				return Meteor.users.find(selector, { fields: {roles												: 1,
-																											"profile.nombreCompleto"		: 1, 
-																											"profile.sexo"							: 1, 
-																											"profile.foto"							: 1,
-																											"profile.numeroCliente"			: 1 }}, options.options);
+				return Meteor.users.find(selector, { fields: {roles													: 1,
+																											"profile.nombreCompleto"			: 1, 
+																											"profile.sexo"								: 1, 
+																											"profile.foto"								: 1,
+																											"profile.numeroCliente"				: 1,
+																											"profile.numeroDistribuidor"	: 1 }}, options.options);
 			}
 });
 Meteor.publish("buscarRootClientesDistribuidoresNumero",function(options){
@@ -59,18 +61,18 @@ Meteor.publish("buscarRootClientesDistribuidoresNumero",function(options){
 				 {
 				 	console.log("selector1",options)
 					return Meteor.users.find(selector, { fields: {roles												: 1,
-																											"profile.nombreCompleto"		: 1, 
-																											"profile.sexo"							: 1, 
-																											"profile.foto"							: 1,
-																											"profile.numeroDistribuidor": 1,
-																											"profile.numeroCliente"			: 1 }}, options.options);
+																											"profile.nombreCompleto"			: 1, 
+																											"profile.sexo"								: 1, 
+																											"profile.foto"								: 1,
+																											"profile.numeroDistribuidor"	: 1,
+																											"profile.numeroCliente"				: 1 }}, options.options);
 				}else{
 										console.log("selector2")
-					return Meteor.users.find(selector2, { fields: {roles												: 1,
-																											"profile.nombreCompleto"		: 1, 
-																											"profile.sexo"							: 1, 
-																											"profile.foto"							: 1,
-																											"profile.numeroDistribuidor"			: 1 }}, options.options);
+					return Meteor.users.find(selector2, { fields: {roles											: 1,
+																											"profile.nombreCompleto"			: 1, 
+																											"profile.sexo"								: 1, 
+																											"profile.foto"								: 1,
+																											"profile.numeroDistribuidor"	: 1 }}, options.options);
 
 				}
 			
