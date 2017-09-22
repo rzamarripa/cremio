@@ -30,17 +30,16 @@
               <div class="font-bold">{{cliente.username}}</div>
               <address class="font-xs">
                   <strong>Aval</strong><br>
-                  {{cliente.profile.call}}<br>
-                  {{cliente.profile.colonia}}<br>
-                  <abbr title="Teléfono">T1:</abbr> {{cliente.profile.telefono}}<br/>
+                  <abbr title="Teléfono">T1:</abbr> {{cliente.profile.particular}}<br/>
                   <abbr title="Celular">C2:</abbr> {{cliente.profile.celular}}
               </address>
 
           </a>
           <div class="contact-box-footer">
               <div class="m-t-xs btn-group">
-<!--                   <a href="/avales/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a> -->
                   <a href="/editarAval/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Editar</a>
+                  <a href="javascript:void(0);" ng-if="cliente.profile.esCliente == false" ng-click="lava.convertir('Cliente', cliente)" class="btn btn-xs btn-white"><i class="fa fa-user"></i> Cliente </a>
+                  <a href="javascript:void(0);" ng-if="cliente.profile.esDistribuidor == false" ng-click="lava.convertir('Distribuidor', cliente)" class="btn btn-xs btn-white"><i class="fa fa-user"></i> Distribuidor </a>
               </div>
           </div>
 

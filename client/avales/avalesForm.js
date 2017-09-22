@@ -335,23 +335,23 @@ angular.module("creditoMio")
 	  	this.empresa.municipio_id = "";
 			this.empresa.ciudad_id = "";
 			this.empresa.colonia_id = "";
-			rc.colonia = {};	  	
+			rc.coloniaEmpresa = {};	  	
 	  
   };
   this.cambiarEstadoEmpresa = function() {
 	  	this.empresa.municipio_id = "";
 			this.empresa.ciudad_id = "";
 			this.empresa.colonia_id = "";
-			rc.colonia = {};
+			rc.coloniaEmpresa = {};
 	};
   this.cambiarMunicipioEmpresa = function() {
 			this.empresa.ciudad_id = "";
 			this.empresa.colonia_id = "";
-			rc.colonia = {};
+			rc.coloniaEmpresa = {};
   };
   this.cambiarCiudadEmpresa = function() {
 	  	this.empresa.colonia_id = "";
-			rc.colonia = {};
+			rc.coloniaEmpresa = {};
   };
   
 
@@ -377,6 +377,8 @@ angular.module("creditoMio")
       objeto.profile.usuarioInserto = Meteor.userId();
       objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
       objeto.profile.fechaCreacion = new Date();
+      objeto.profile.esCliente 			= false;
+      objeto.profile.esDistribuidor	= false;
       objeto.profile.referenciasPersonales = angular.copy(this.referenciasPersonales);
       var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
       var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";

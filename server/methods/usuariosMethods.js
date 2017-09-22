@@ -314,6 +314,10 @@ if (referenciaPersonal.buscarPersona_id)
 	  
 		return user.profile;
 	},
+	getAvalCompleto: function (usuario) {	
+	  var aval = Avales.findOne({"_id" : usuario._id});
+		return aval;
+	},
 	getAval: function (aval_id) {	
 	  var a = Avales.findOne({"_id" : aval_id});
 	  	  

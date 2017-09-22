@@ -12,7 +12,9 @@ Meteor.publish("buscarAvales",function(options){
 																											"profile.particular"			: 1,
 																											"profile.celular"					: 1, 
 																											"profile.sexo"						: 1, 
-																											"profile.foto"						: 1 }}, options.options);	
+																											"profile.foto"						: 1,
+																											"profile.esCliente"				: 1,
+																											"profile.esDistribuidor"	: 1 }}, options.options);	
 			}
 });
 

@@ -487,8 +487,8 @@
 						</div>	
 						
 						<div class="row">
-							<div class="col-sm-3">
-								<button class="btn btn-success" ng-if="ge.cliente.roles == 'Cliente'" ng-click="ge.generarCredito(form)" valida-form formulario="form">Guardar Solicitud de Crédito
+							<div class="col-sm-3" ng-if="ge.cliente.roles == 'Cliente'">
+								<button class="btn btn-success"  ng-click="ge.generarCredito(form)" valida-form formulario="form">Guardar Solicitud de Crédito
 								</button>
 							</div>
 							<div class="col-sm-3" ng-if="ge.cliente.roles == 'Distribuidor'">
