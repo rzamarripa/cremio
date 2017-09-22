@@ -172,6 +172,7 @@ angular.module("creditoMio")
 					if  (result)
 					{
 							rc.planPagos = result;
+							console.log(result,"poncho duarte")
 							
 							_.each(rc.planPagos, function(plan){
 								
@@ -186,6 +187,7 @@ angular.module("creditoMio")
 									if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
 									rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
 								}
+
 									
 							});
 							
