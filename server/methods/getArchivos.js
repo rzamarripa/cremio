@@ -537,7 +537,6 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
 	    var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
@@ -749,6 +748,16 @@ Meteor.methods({
  		    	mes3 = "0" + mes3;
  		    }
  		    fechaFinal = dia3 + "-" + mes3 + "-" + anio3
+ 		    parseFloat(suma.toFixed(2))
+ 		    suma = formatCurrency(suma)
+ 		    parseFloat(sumaInter.toFixed(2))
+ 		    sumaInter = formatCurrency(sumaInter)
+ 		    parseFloat(sumaIva.toFixed(2))
+ 		    sumaIva = formatCurrency(sumaIva)
+ 		    parseFloat(sumaSeguro.toFixed(2))
+ 		    sumaSeguro = formatCurrency(sumaSeguro)
+ 		    parseFloat(totalcobranza.toFixed(2))
+ 		    totalcobranza = formatCurrency(totalcobranza)
 	
 	    //console.log(objeto.planPagos);
 		
@@ -757,11 +766,11 @@ Meteor.methods({
 										fecha:          fecha,
 										inicial:        fechaInicial,
 										final:          fechaFinal,
-										sumaCapital:    parseFloat(suma.toFixed(2)),
-										sumaIntereses:  parseFloat(sumaInter.toFixed(2)),
-										sumaIva:        parseFloat(sumaIva.toFixed(2)),
-										totalSeguro:    parseFloat(sumaSeguro.toFixed(2)),
-										totalCobranza:  parseFloat(totalcobranza.toFixed(2)),
+										sumaCapital:    suma,
+										sumaIntereses:  sumaInter,
+										sumaIva:        sumaIva,
+										totalSeguro:    sumaSeguro,
+										totalCobranza:  totalcobranza,
 		
 				  });
 								
@@ -789,8 +798,8 @@ Meteor.methods({
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
 		
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"ReporteDiarioCreditos.docx", "binary");
@@ -868,12 +877,11 @@ Meteor.methods({
  		    	mes3 = "0" + mes3;
  		    }
  		    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
+ 		    parseFloat(sumaSol.toFixed(2))
+ 		    sumaSol = formatCurrency(sumaSol)
+ 		    parseFloat(suma.toFixed(2))
+ 		    suma = formatCurrency(suma)
 
-	    // console.log(objeto.planPagos);
-	    	// suma = parseFloat(suma.toFixed(2))
-	    	// suma = formatCurrency(suma)
-	    	// sumaSol = parseFloat(sumaSol.toFixed(2))
-	    	// sumaSol = formatCurrency(sumaSol)
 		
 		doc.setData({				
 						items: 		 objeto,
@@ -988,10 +996,18 @@ Meteor.methods({
 			var f = fecha;
 			var fechaInicial = inicial
 			var fechaFinal = final
-	    //fecha = fecha.getUTCDate()+'/'+(fecha.getUTCMonth()+1)+'/'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    //fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
-	   // fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
+
+	       var suma = 0
+		   var sumaInter = 0
+		   var sumaIva = 0
+		   var sumaSeguro = 0
+		   totalcobranza = 0
+		   
 	    _.each(objeto,function(item){
+	    	suma += item.pagoCapital
+	        sumaInter += item.pagoInteres
+	        sumaIva += item.pagoIva
+	        sumaSeguro += item.pagoSeguro
 	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
 	    	item.totalPago = parseFloat(item.totalPago.toFixed(2))
 	    	item.totalPago = formatCurrency(item.totalPago)
@@ -1003,12 +1019,6 @@ Meteor.methods({
 	    	item.pagoIva = formatCurrency(item.pagoIva)
 	    });
 	    
-	    // 	 if (item.folio < 10) {
-	 	 	// 	item.folio = "0"+item.folio
-	 	 	// }
-	 	 	// if (item.numeroPagos < 10) {
-	 	 	// 	item.numeroPagos = "0"+item.numeroPagos
-	 	 	// }
 
 	 		    
  		   var dia = fecha.getUTCDate()
@@ -1043,12 +1053,28 @@ Meteor.methods({
  		    	mes3 = "0" + mes3;
  		    }
  		    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
+ 		    totalcobranza = suma + sumaIva + sumaInter
+            parseFloat(suma.toFixed(2))
+ 		    suma = formatCurrency(suma)
+ 		    parseFloat(sumaInter.toFixed(2))
+ 		    sumaInter = formatCurrency(sumaInter)
+ 		    parseFloat(sumaIva.toFixed(2))
+ 		    sumaIva = formatCurrency(sumaIva)
+ 		    parseFloat(sumaSeguro.toFixed(2))
+ 		    sumaSeguro = formatCurrency(sumaSeguro)
+ 		    parseFloat(totalcobranza.toFixed(2))
+ 		    totalcobranza = formatCurrency(totalcobranza)
 		
 		doc.setData({				
 			            item: 		 objeto,
 						fecha:       fecha,
 						inicial:     fechaInicial,
 						final:       fechaFinal,
+						sumaCapital:    suma,
+						sumaIntereses:  sumaInter,
+						sumaIva:        sumaIva,
+						totalSeguro:    sumaSeguro,
+						totalCobranza:  totalcobranza,
 													
 				});
 								
