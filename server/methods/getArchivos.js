@@ -641,15 +641,15 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
-  ReporteCobranza: function (objeto,inicial,final) {
+  ReporteCobranza: function (objeto,inicial,final,) {
 	
 		console.log(objeto,"creditos ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"reporteDiarioCobranza.docx", "binary");
@@ -674,6 +674,7 @@ Meteor.methods({
 	    var suma = 0
 		var sumaInter = 0
 		var sumaIva = 0
+		var sumaSeguro = 0
 		totalcobranza = 0
 	    _.each(objeto,function(item){
 	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
@@ -686,9 +687,10 @@ Meteor.methods({
 	      }
 	    
 	  
-	       suma = item.sumaCapital
-	       sumaInter = item.sumaInteres
-	       sumaIva = item.sumaIva
+	       suma += item.pagoCapital
+	       sumaInter += item.pagoInteres
+	       sumaIva += item.pagoIva
+	       sumaSeguro += item.pagoSeguro
 
 	       totalcobranza = suma + sumaIva + sumaInter
 
@@ -711,13 +713,10 @@ Meteor.methods({
 	 	 	if (item.numeroPagos < 10) {
 	 	 		item.numeroPagos = "0"+item.numeroPagos
 	 	 	}
-
-
 	    });
 	    
 
 
-	 	 		    
  		    var dia = fecha.getUTCDate()
  		    var mes = fecha.getUTCMonth()+1
  		    var anio = fecha.getUTCFullYear()
@@ -761,6 +760,7 @@ Meteor.methods({
 										sumaCapital:    parseFloat(suma.toFixed(2)),
 										sumaIntereses:  parseFloat(sumaInter.toFixed(2)),
 										sumaIva:        parseFloat(sumaIva.toFixed(2)),
+										totalSeguro:    parseFloat(sumaSeguro.toFixed(2)),
 										totalCobranza:  parseFloat(totalcobranza.toFixed(2)),
 		
 				  });
@@ -967,8 +967,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 		var content = fs
     	   .readFileSync(produccion+"ReporteBancos.docx", "binary");
@@ -1272,8 +1272,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				
 				if (contrato.tipoInteres.tipoInteres == "Simple") {
 					var content = fs
@@ -1344,8 +1344,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-	    var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+	    //var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 	    if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
@@ -1413,8 +1413,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-	    //var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+	    var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -1489,8 +1489,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			console.log("entra SIMPLE")
 			var content = fs				
