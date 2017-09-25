@@ -37,6 +37,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 	rc.cargosMoratorios = 0;
 	rc.total = 0;
 	
+	rc.selectedRow = null;  // initialize our variable to null
   //console.log(rc.credito)
 
   this.subscribe('planPagos', () => {
@@ -800,6 +801,8 @@ if(pago.descripcion=="Cargo Moratorio")
 
 	this.guardarRefinanciamiento = function() 
 	{
+			
+			
 			rc.creditoRefinanciar.refinanciar = rc.pagoR.totalPago;
 			
 			var seleccionadosId = [];
@@ -836,9 +839,15 @@ if(pago.descripcion=="Cargo Moratorio")
 			$("#modalRefinanciamiento").modal('hide');
 	}
 	
-	this.marcarRefinanciamiento = function(credito) 
+	this.marcarRefinanciamiento = function(credito, index) 
 	{
+			//console.log(credito);
+			rc.selectedRow = index;
 			rc.creditoRefinanciar = credito;
+			
+			console.log(index);
+			console.log(rc.selectedRow);
+			
 	}
 	
 	this.cerrarRefinanciamiento = function() 
@@ -875,5 +884,10 @@ if(pago.descripcion=="Cargo Moratorio")
 			
 	}
 	
+	
+  this.setClickedRow = function(index){  //function that sets the value of selectedRow to current index
+	   console.log(index);
+     rc.selectedRow = index;
+  }
 
 };
