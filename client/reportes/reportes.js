@@ -124,7 +124,7 @@ angular.module("creditoMio")
     
     rc.totalCobranza = 0;
 				
-		Meteor.call("getCobranzaDiaria", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
+		Meteor.call("getCobranzaDiaria", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id, function(error, result){
 				if  (result)
 				{
 						rc.planPagos = result;
