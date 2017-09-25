@@ -316,6 +316,7 @@ if (referenciaPersonal.buscarPersona_id)
 	},
 	getAvalCompleto: function (usuario) {	
 	  var aval = Avales.findOne({"_id" : usuario._id});
+
 		return aval;
 	},
 	getAval: function (aval_id) {	

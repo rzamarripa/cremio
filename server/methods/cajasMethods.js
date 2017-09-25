@@ -459,9 +459,9 @@ Meteor.methods({
     var creditosAgrupados = {};
     var totalCreditos = 0;
     var creditosEntregados = 0;
-    var movs = MovimientosCajas.find({ caja_id: caja_id, $or:[ {tipoMovimiento: 'Retiro'}, {origen: 'Cancelación de retiro'}], createdAt: filtroFechas }).fetch();
+    var movs = MovimientosCajas.find({ caja_id: caja_id, $or:[ {tipoMovimiento: 'Retiro'}, {origen: 'Cancelación de Ent. de Crédito'}], createdAt: filtroFechas }).fetch();
     //var cuentas = Cuentas.find({estatus: 1}).fetch();
-    
+
     if (movs.length) {
       _.each(movs, function(mov) {
         mov.tipoIngreso = TiposIngreso.findOne(mov.cuenta_id);
@@ -470,7 +470,13 @@ Meteor.methods({
         }
         creditosAgrupados[mov.tipoIngreso.nombre] += (mov.monto*-1);
         totalCreditos += mov.monto;
-        creditosEntregados++;
+        
+        if (mov.origen == 'Cancelación de Ent. de Crédito')
+		        	 creditosEntregados--;
+		        else	
+		        	 creditosEntregados++;
+        
+        //creditosEntregados++;
       });
     };
     totalCreditos = totalCreditos*-1;

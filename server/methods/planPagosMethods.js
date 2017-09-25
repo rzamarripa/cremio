@@ -1018,6 +1018,6 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 	},
 	getPago:function(pago_id){
 			return Pagos.findOne(pago_id);		
-	}
+	},
 	
 });

@@ -339,6 +339,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		        }
 		        pago.folio = pago.credito.folio;
 		        
+		        //console.log(pago.folio);
+		        
 		        if (pago.pagoSeguro !=  undefined)
 							 pago.seguro = pago.seguro -  pago.pagoSeguro;
 						
@@ -702,6 +704,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		      rc.pago.totalPago = 0;
 		      rc.pago.totalito = 0
 		      rc.pago.fechaEntrega = pago.fechaEntrega
+		      rc.ocultarMultas = false;
 		      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
 		      window.open(url, '_blank');
 
