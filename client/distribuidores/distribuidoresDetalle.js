@@ -696,26 +696,26 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		this.masInfoCredito = false;
 		this.creditoApro = false
 		this.creditosRechazados = false;
+			 Meteor.call('getEmpresaInfo',rc.objeto.profile.empresa_id, function(error, result) {           
+	          if (result)
+	          {
+	          	rc.empresaCliente = result;
+	              console.log("empresa",result);
+				    
+			 Meteor.call('getClienteInformacion',cliente, function(error, result) {           
+	          if (result)
+	          {
+	          	//rc.objeto = result;
+	              console.log("cliente",result);
 
-		 Meteor.call('getClienteInformacion',cliente, function(error, result) {           
-          if (result)
-          {
-          	rc.objeto = result;
-              console.log("cliente",result);
-
-              		 Meteor.call('getEmpresaInfo',rc.objeto.profile.empresa, function(error, result) {           
-			          if (result)
-			          {
-			          	rc.empresaCliente = result;
-			              console.log("empresa",result);
-			          }
-			      }) 
-              //$scope.$apply();
-          }
-      }) 
+	          }
+	          $scope.$apply();
+	          }) 
+			}
+	    })
 
 
-	};
+    };
 	this.creditosActivos = function(){
 		this.creditoAc = !this.creditoAc;
 		this.solicitudesCre = false;

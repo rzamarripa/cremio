@@ -278,7 +278,7 @@ Meteor.methods({
 	},	
 	getEmpresaInfo: function (empresa) {
 		
-			 var emp = empresa
+			 var emp = Empresas.findOne(empresa);
 			
 				emp.coloniaEmpresa = Colonias.findOne(emp.colonia_id);
 				emp.colonia = emp.coloniaEmpresa.nombre
