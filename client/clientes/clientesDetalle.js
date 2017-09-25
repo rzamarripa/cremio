@@ -703,7 +703,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		 Meteor.call('getClienteInformacion',cliente, function(error, result) {           
           if (result)
           {
-          	//rc.objeto = result;
+          	rc.objeto = result;
+          	console.log(result)
           }
         })
 		 $scope.$apply();

@@ -422,7 +422,19 @@ angular.module("creditoMio")
 				});	
 	  };	
 
-	this.imprimirContrato = function(contrato,cliente){
+	this.imprimirContrato = function(contrato,cliente,avales){
+
+		if (contrato.avales_ids.length > 0) {
+				rc.avalpapu = contrato.avales_ids[0].aval_id
+		        Meteor.call('obAvales',rc.avalpapu, function(error, result){           					
+					if (result)
+					{
+						//console.log("result de avales",result)
+							rc.avalesCliente = result.profile
+							avales = rc.avalesCliente
+				    }
+				});
+		    }
 		
 				contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
 								
@@ -508,7 +520,7 @@ angular.module("creditoMio")
 								console.log(rc.datosCliente,"el clientaso")
 									
 										console.log("contrato",contrato)
-				Meteor.call('contratos', contrato, $stateParams.credito_id,rc.datosCliente,rc.planPagos, function(error, response) {
+				Meteor.call('contratos', contrato, $stateParams.credito_id,rc.datosCliente,rc.planPagos,avales, function(error, response) {
 				  
 				   if(error)
 				   {
