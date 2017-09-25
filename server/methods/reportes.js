@@ -195,8 +195,10 @@ Meteor.methods({
 	},
 	getCreditosLiquidados:function(fechaInicial, fechaFinal, sucursal_id){
 					
-			
+			//console.log(fechaInicial);
+			//console.log(fechaFinal);
 			var CreditosLiquidados = Creditos.find({sucursal_id: sucursal_id, fechaLiquidacion : { $gte : fechaInicial, $lte : fechaFinal}, saldoActual: 0}).fetch();
+			
 			
 			_.each(CreditosLiquidados, function(credito){
 					

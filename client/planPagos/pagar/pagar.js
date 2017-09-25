@@ -37,6 +37,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 	rc.cargosMoratorios = 0;
 	rc.total = 0;
 	
+	rc.selectedRow = null;  // initialize our variable to null
   //console.log(rc.credito)
 
   this.subscribe('planPagos', () => {
@@ -338,6 +339,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		        		//console.log("Entro: CM", pago)
 		        }
 		        pago.folio = pago.credito.folio;
+		        
+		        //console.log(pago.folio);
 		        
 		        if (pago.pagoSeguro !=  undefined)
 							 pago.seguro = pago.seguro -  pago.pagoSeguro;
@@ -702,6 +705,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		      rc.pago.totalPago = 0;
 		      rc.pago.totalito = 0
 		      rc.pago.fechaEntrega = pago.fechaEntrega
+		      rc.ocultarMultas = false;
 		      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
 		      window.open(url, '_blank');
 
@@ -797,6 +801,8 @@ if(pago.descripcion=="Cargo Moratorio")
 
 	this.guardarRefinanciamiento = function() 
 	{
+			
+			
 			rc.creditoRefinanciar.refinanciar = rc.pagoR.totalPago;
 			
 			var seleccionadosId = [];
@@ -833,9 +839,15 @@ if(pago.descripcion=="Cargo Moratorio")
 			$("#modalRefinanciamiento").modal('hide');
 	}
 	
-	this.marcarRefinanciamiento = function(credito) 
+	this.marcarRefinanciamiento = function(credito, index) 
 	{
+			//console.log(credito);
+			rc.selectedRow = index;
 			rc.creditoRefinanciar = credito;
+			
+			console.log(index);
+			console.log(rc.selectedRow);
+			
 	}
 	
 	this.cerrarRefinanciamiento = function() 
@@ -872,5 +884,10 @@ if(pago.descripcion=="Cargo Moratorio")
 			
 	}
 	
+	
+  this.setClickedRow = function(index){  //function that sets the value of selectedRow to current index
+	   console.log(index);
+     rc.selectedRow = index;
+  }
 
 };
