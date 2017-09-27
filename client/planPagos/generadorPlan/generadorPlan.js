@@ -617,23 +617,29 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	
 	this.actualizarGarantia = function(tipo, a)
 	{
-			console.log(tipo, a)
+
 			if (tipo == "mobiliaria")
 			{
-					a.num = this.numG;
+					//a.num = this.numG;
 			
 					_.each(this.garantias, function(av){
 						if (av.num == a.num)
 						{
+							av.almacenaje = a.almacenaje;
+							av.comercializacion = a.comercializacion;
+							av.desempenioExtemporaneo = a.desempenioExtemporaneo;
+							av.reposicionContrato = a.reposicionContrato;
 							av.descripcion = a.descripcion;
 							av.caracteristicas = a.caracteristicas;
-							av.avaluo = a.avaluo;			
-							av.prestamoPorcentaje = a.prestamoPorcentaje;
+							av.avaluoMobiliaria = a.avaluoMobiliaria;			
+							av.porcentajePrestamoMobiliria = a.porcentajePrestamoMobiliria;
+							/*
 							av.prestamo = a.prestamo;
 							av.monto = a.monto;
 							av.porcentaje = a.porcentaje;
 							av.fechaComercializacion = a.fechaComercializacion;
 							av.fechaFiniquito = a.fechaFiniquito;
+							*/
 						}
 					})
 				
@@ -643,22 +649,18 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			}
 			else
 			{
-					a.num = this.numGen;
+					//a.num = this.numGen;
 			
 					_.each(this.garantiasGeneral, function(av){
 						if (av.num == a.num)
 						{
-
-							av.medidasColindancias = a.medidasColindancias
-						  av.terrenoYconstruccion = a.terrenoYconstruccion
-						  av.prestamoSobreAvaluo = a.prestamoSobreAvaluo
-						  av.prestamo = a.prestamo
-						  av.num = a.num
-						  av.montoAvaluo = a.montoAvaluo
-							av.avaluo = a.avaluo;
+							//av.num = a.num;
+							av.terrenoYconstruccion = a.terrenoYconstruccion;
+							av.avaluoGeneral = a.avaluoGeneral;
+							av.porcentajePrestamoGeneral = a.porcentajePrestamoGeneral;
+							av.medidasColindancias = a.medidasColindancias;						  
 							av.comisionGastos = a.comisionGastos;
-							av.escrituracion = a.escrituracion;
-							av.porcentajePrestamo = a.porcentajePrestamo;
+							
 						}
 					})
 				
@@ -775,30 +777,47 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 
 			if (tipo == "mobiliaria")
 			{
-					this.garantia.descripcion = a.descripcion;
-					this.garantia.caracteristicas = a.caracteristicas;
-					this.garantia.avaluo = a.avaluo;			
-					this.garantia.prestamoPorcentaje = a.prestamoPorcentaje;
+					
+					this.garantia.num 												= a.num;
+					this.garantia.almacenaje 									= a.almacenaje;
+					this.garantia.comercializacion 						= a.comercializacion;
+					this.garantia.desempenioExtemporaneo 			= a.desempenioExtemporaneo;
+					this.garantia.reposicionContrato 					= a.reposicionContrato;
+																										
+					this.garantia.descripcion 								= a.descripcion;
+					this.garantia.caracteristicas 						= a.caracteristicas;
+					this.garantia.avaluoMobiliaria 						= a.avaluoMobiliaria;			
+					this.garantia.porcentajePrestamoMobiliria = a.porcentajePrestamoMobiliria;
+					/*
+
 					this.garantia.prestamo = a.prestamo;
 					this.garantia.monto = a.monto;
 					this.garantia.porcentaje = a.porcentaje;
 					this.garantia.fechaComercializacion = a.fechaComercializacion;
 					this.garantia.fechaFiniquito = a.fechaFiniquito;					
 				
+					*/
 					this.actionGarantia = false;
 			}
 			else
 			{
-				    this.garantia.medidasColindancias = a.medidasColindancias
-				    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion
-				    this.garantia.prestamoSobreAvaluo = a.prestamoSobreAvaluo
-				    this.garantia.prestamo = a.prestamo
-				    this.garantia.num = a.num
-				    this.garantia.montoAvaluo = a.montoAvaluo
-					this.garantia.avaluo = a.avaluo;
-					this.garantia.comisionGastos = a.comisionGastos;
-					this.garantia.escrituracion = a.escrituracion;
-					this.garantia.porcentajePrestamo = a.porcentajePrestamo;
+					this.garantia.num = a.num;
+			    this.garantia.medidasColindancias = a.medidasColindancias;
+			    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion;
+			    this.garantia.avaluoGeneral = a.avaluoGeneral;
+			    this.garantia.porcentajePrestamoGeneral = a.porcentajePrestamoGeneral;
+			    this.garantia.comisionGastos = a.comisionGastos;
+			    
+					/*
+				 	this.garantia.prestamoSobreAvaluo = a.prestamoSobreAvaluo
+			    this.garantia.prestamo = a.prestamo
+			    
+			    this.garantia.montoAvaluo = a.montoAvaluo
+					
+					*/
+					
+					//this.garantia.escrituracion = a.escrituracion;
+					
 					
 					this.actionGarantia = false;
 			}		
@@ -806,35 +825,39 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 
 	this.verGarantia = function(tipo,a)
 	{
-		//console.log(a,"aval p")
+		console.log(tipo)
 		$("#modalGarantia").modal('show');
-				if (tipo == "mobiliaria")
+			
+			if (tipo == "mobiliaria")
 			{
-				this.mob = true
-					this.garantia.descripcion = a.descripcion;
-					this.garantia.caracteristicas = a.caracteristicas;
-					this.garantia.avaluo = a.avaluo;			
-					this.garantia.prestamoPorcentaje = a.prestamoPorcentaje;
-					this.garantia.prestamo = a.prestamo;
-					this.garantia.monto = a.monto;
-					this.garantia.porcentaje = a.porcentaje;
-					this.garantia.fechaComercializacion = a.fechaComercializacion;
-					this.garantia.fechaFiniquito = a.fechaFiniquito;					
-				
+					this.mob = true;
+					this.general = false;
+					
+					this.garantia.num 												= a.num;
+					this.garantia.almacenaje 									= a.almacenaje;
+					this.garantia.comercializacion 						= a.comercializacion;
+					this.garantia.desempenioExtemporaneo 			= a.desempenioExtemporaneo;
+					this.garantia.reposicionContrato 					= a.reposicionContrato;
+					
+					
+					this.garantia.descripcion 								= a.descripcion;
+					this.garantia.caracteristicas 						= a.caracteristicas;
+					this.garantia.avaluoMobiliaria 						= a.avaluoMobiliaria;			
+					this.garantia.porcentajePrestamoMobiliria = a.porcentajePrestamoMobiliria;
+
 					this.actionGarantia = false;
 			}
 			else
-			{		this.general = true
-				    this.garantia.medidasColindancias = a.medidasColindancias
-				    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion
-				    this.garantia.prestamoSobreAvaluo = a.prestamoSobreAvaluo
-				    this.garantia.prestamo = a.prestamo
-				    this.garantia.num = a.num
-				    this.garantia.montoAvaluo = a.montoAvaluo
-					this.garantia.avaluo = a.avaluo;
-					this.garantia.comisionGastos = a.comisionGastos;
-					this.garantia.escrituracion = a.escrituracion;
-					this.garantia.porcentajePrestamo = a.porcentajePrestamo;
+			{		
+					this.general = true;
+					this.mob = false;
+			    this.garantia.num = a.num
+			    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion;
+			    this.garantia.medidasColindancias = a.medidasColindancias;
+			    this.garantia.avaluoGeneral = a.avaluoGeneral;
+			    this.garantia.porcentajePrestamoGeneral = a.porcentajePrestamoGeneral;
+			    
+			    this.garantia.comisionGastos = a.comisionGastos;
 					
 					this.actionGarantia = false;
 			}	
@@ -896,8 +919,25 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 
 		  
 
-    };
+  };
 	
+	this.calcularPorcentajeGeneral = function(){
+
+    	if (rc.garantia.avaluoGeneral != undefined)
+					rc.garantia.porcentajePrestamoGeneral = rc.garantia.avaluoGeneral / rc.credito.capitalSolicitado * 100;
+			else 
+					rc.garantia.porcentajePrestamoGeneral = 0;
+
+  };
+  
+  this.calcularPorcentajeMobiliaria = function(){
+
+    	if (rc.garantia.avaluoMobiliaria != undefined)
+					rc.garantia.porcentajePrestamoMobiliria = rc.garantia.avaluoMobiliaria / rc.credito.capitalSolicitado * 100;
+			else 
+					rc.garantia.porcentajePrestamoMobiliria = 0;
+  };
+
 	
 	
 
