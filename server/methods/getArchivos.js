@@ -1254,13 +1254,27 @@ Meteor.methods({
 			
 		var letra = NumeroALetras(contrato.capitalSolicitado);
 		var tasaPor = NumeroALetras(contrato.tasa);
+		var ivaLetra = NumeroALetras(16);
+		console.log(ivaLetra,"16")
+		//var 
 	
 		
 	if (avales == undefined) {
 		avales = cliente
-		
-
 	}
+
+	if (contrato.periodoPago == "Semanal") {
+		contrato.periodoPago = "SEMANAL"
+	}
+	if (contrato.periodoPago == "Quincenal") {
+		contrato.periodoPago = "QUINCENAL"
+	}
+	if (contrato.periodoPago == "Mensual") {
+		contrato.periodoPago = "MENSUAL"
+	}
+
+
+
 	if (contrato.seguro == undefined) {
 		contrato.seguro = 0
 	}
@@ -1278,29 +1292,46 @@ Meteor.methods({
  		    fecha = dia+ "-" + mes + "-" + anio
  		    const formatCurrency = require('format-currency')
  		    //console.log(avales,"papu los avales papa")
+ 		     
 	  
-  	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
-  	cliente.colonia = cliente.coloniaCliente.nombre
-  	cliente.estado = cliente.estadoCliente.nombre
-  	cliente.ocupacion = cliente.ocupacionCliente.nombre
-  	cliente.ciudad = cliente.ciudadCliente.nombre
-  	cliente.municipio = cliente.municipioCliente.nombre
-  	 _.each(planPagos,function(pp){
-		 	pp.importeRegular = parseFloat(pp.importeRegular.toFixed(2))
-		 	pp.importeRegular = formatCurrency(pp.importeRegular)
-		 	pp.iva = parseFloat(pp.iva.toFixed(2))
-		 	pp.iva = formatCurrency(pp.iva)
-		 	if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
-		 		pp.sumatoria = formatCurrency(pp.sumatoria)
-		 	if (pp.total) {pp.total = parseFloat(pp.total.toFixed(2))}
-		 		pp.total = formatCurrency(pp.total)
-		 	if (pp.capital) {pp.capital = parseFloat(pp.capital.toFixed(2))}
-		 		pp.capital = formatCurrency(pp.capital)
-		 	if (pp.liquidar) {pp.liquidar = parseFloat(pp.liquidar.toFixed(2))}
-		 		pp.liquidar = formatCurrency(pp.liquidar)
-		 	pp.fechaLimite = moment(pp.fechaLimite).format("DD-MM-YYYY")
+		  	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
+		  	cliente.colonia = cliente.coloniaCliente.nombre
+		  	cliente.estado = cliente.estadoCliente.nombre
+		  	cliente.ocupacion = cliente.ocupacionCliente.nombre
+		  	cliente.ciudad = cliente.ciudadCliente.nombre
+		  	cliente.municipio = cliente.municipioCliente.nombre
+		  	
+		  	var all = planPagos[planPagos.length - 1]
+		  	var total = all.sumatoria
+  	 		_.each(planPagos,function(pp){
+			 	pp.importeRegular = parseFloat(pp.importeRegular.toFixed(2))
+			 	pp.importeRegular = formatCurrency(pp.importeRegular)
+			 	pp.iva = parseFloat(pp.iva.toFixed(2))
+			 	pp.iva = formatCurrency(pp.iva)
+			 	if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
+			 		pp.sumatoria = formatCurrency(pp.sumatoria)
+			 	if (pp.total) {pp.total = parseFloat(pp.total.toFixed(2))}
+			 		pp.total = formatCurrency(pp.total)
+			 	if (pp.capital) {pp.capital = parseFloat(pp.capital.toFixed(2))}
+			 		pp.capital = formatCurrency(pp.capital)
+			 	    pp.fechaLimite = moment(pp.fechaLimite).format("DD-MM-YYYY")					
+					pp.liquidar = total
+			 		total -= (parseFloat(pp.importeRegular).toFixed(2));
+			 		//console.log(pp.liquidar,"keylor")
+			 		pp.liquidar = parseFloat(pp.liquidar.toFixed(2))
+			 	    pp.liquidar = formatCurrency(pp.liquidar)
 
-		 });
+		 	});
+	
+				// _.each(rc.planPagos,function (pago) {
+					
+				// 	pago.liquidar = total;  						
+				// 	total -= Number(parseFloat(pago.importeRegular).toFixed(2));
+								
+				// 	$scope.$apply();
+				// });
+
+
   	 _.each(contrato.garantias,function(item){
   	 	item.fechaFiniquito = moment(item.fechaFiniquito).format("DD-MM-YYYY")
   	 	item.fechaComercializacion = moment(item.fechaComercializacion).format("DD-MM-YYYY")
@@ -1319,8 +1350,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				
 				if (contrato.tipoInteres.tipoInteres == "Simple") {
 					var content = fs
@@ -1391,8 +1422,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-	    var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+	    //var produccion = "/home/cremio/archivos/";
+		 var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 	    if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
@@ -1459,8 +1490,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-	    //var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+	    var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -1531,8 +1562,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			console.log("entra SIMPLE")
 			var content = fs				

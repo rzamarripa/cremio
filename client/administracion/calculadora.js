@@ -84,18 +84,22 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 					
 					var pag = pago
 					var pa = _.toArray(pag);
+					//console.log("nand",pago)
 					var all = pa[pa.length - 1]
 					rc.total = all
+					//console.log(all,"liquidar")
 
 					rc.planPagos.push(pago)
 					$scope.$apply();
 				});
 				
 				var total = rc.total;
+				//console.log(total,"total")
 				_.each(rc.planPagos,function (pago) {
 					
 					pago.liquidar = total;  						
 					total -= Number(parseFloat(pago.importeRegular).toFixed(2));
+					console.log(total,"liquidar")
 								
 					$scope.$apply();
 				});
