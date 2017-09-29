@@ -33,7 +33,7 @@
             </div>
             <div class="col-sm-3">            
 								<br>
-								<button ng-if="ecCtrl.credito.tipo == 'creditoP'" class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Crédito</button>
+								<button class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Crédito</button>
                           
             </div>  
           </div>         
@@ -81,23 +81,24 @@
 	                </label>
                 </div>
               </div>
+              <br>
                <div class="row "> 
-                    <div class="col-sm-4" ng-show="ecCtrl.imprecion"><br/>   
+                    <div class="col-sm-3" ng-show="ecCtrl.imprecion">
 												<input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirContrato(ecCtrl.credito,ecCtrl.cliente);ecCtrl.generarPlanPagos(rc.credito)" value="Imprimir" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
-              </div>
-            </div>
+              			</div>
+            		</div>
+            		
               </div>
               </div>
           </div>
           <div class="well">      
             <div class="row">
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <h1 ng-if="ecCtrl.credito.tipo == 'creditoP'">
                 Crédito Solicitado:
                 </h1>
-               
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <h1>
                 {{ecCtrl.credito.capitalSolicitado | currency}}
                 </h1>
@@ -108,43 +109,140 @@
 							</div>
             </div>
             <div class="row" ng-if="ecCtrl.credito.esRefinanciado">
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <h1>
                 Monto Refinanciado:
                 </h1>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <h1>
                 {{ecCtrl.credito.refinanciar | currency}}
                 </h1>
               </div>
             </div>
             <div class="row" ng-if="ecCtrl.credito.esRefinanciado">
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <h1>
                 Monto a Entregar:
                 </h1>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <h1>
                 {{ecCtrl.credito.capitalSolicitado - ecCtrl.credito.refinanciar | currency}}
                 </h1>
               </div>
             </div>
             <div class="row">
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <h1>
                 Monto Entregado:
                 </h1>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <h1>
                 {{ecCtrl.suma | currency}}
                 </h1>
               </div>
-            </div
+            </div>
             <br/>
-            <br/>
+            <h5>AUTORIZÓ A EL PROVEEDOR PARA UTILIZAR SUS DATOS PERSONALES PARA FINES MERCADOTÉCNICOS Y PUBLICITARIOS</h5>						
+						<div class="row">
+              <div class="form-inline required">
+	              <div class="col-sm-2">
+                  <div class="form-group has-feedback">
+                      <label class="input-group">
+                          <span class="input-group-addon">
+                              <input type="radio" name="datosPersonales" value="0" ng-model="ecCtrl.credito.datosPersonales" />
+                          </span>
+                          <div class="form-control form-control-static">
+                              SI
+                          </div>
+                          <span class="glyphicon form-control-feedback "></span>
+                      </label>
+                  </div>
+	              </div>
+	              <div class="col-sm-2">  
+                  <div class="form-group has-feedback ">
+                      <label class="input-group">
+                          <span class="input-group-addon">
+                              <input type="radio" name="datosPersonales" value="1" ng-model="ecCtrl.credito.datosPersonales" />
+                          </span>
+                          <div class="form-control form-control-static">
+                              NO
+                          </div>
+                          <span class="glyphicon form-control-feedback "></span>
+                      </label>
+                  </div>
+	              </div>  
+              </div>
+		        </div>   
+						
+						<h5>ACEPTA QUE EL PROVEEDOR LE ENVIE PUBLICIDAD SOBRE BIENES Y SERVICIOS</h5>						
+						<div class="row">
+              <div class="form-inline required" valida>
+	              <div class="col-sm-2">
+                  <div class="form-group has-feedback">
+                      <label class="input-group">
+                          <span class="input-group-addon">
+                              <input type="radio" name="publicidad" value="0" ng-model="ecCtrl.credito.publicidad" />
+                          </span>
+                          <div class="form-control form-control-static">
+                              SI
+                          </div>
+                          <span class="glyphicon form-control-feedback "></span>
+                      </label>
+                  </div>
+	              </div>
+	              <div class="col-sm-2">  
+                  <div class="form-group has-feedback ">
+                      <label class="input-group">
+                          <span class="input-group-addon">
+                              <input type="radio" name="publicidad" value="1" ng-model="ecCtrl.credito.publicidad" />
+                          </span>
+                          <div class="form-control form-control-static">
+                              NO
+                          </div>
+                          <span class="glyphicon form-control-feedback "></span>
+                      </label>
+                  </div>
+	              </div>  
+              </div>
+		        </div>   
+		        
+		        <h5>ACEPTO LOS TÉRMINOS Y CONDICIONES EL PRESENTE AVISO DE PRIVACIDAD</h5>						
+						<div class="row">
+              <div class="form-inline required">
+	              <div class="col-sm-2">
+                  <div class="form-group has-feedback">
+                      <label class="input-group">
+                          <span class="input-group-addon">
+                              <input type="radio" name="avisoPrivacidad" value="0" ng-model="ecCtrl.credito.avisoPrivacidad" />
+                          </span>
+                          <div class="form-control form-control-static">
+                              SI
+                          </div>
+                          <span class="glyphicon form-control-feedback "></span>
+                      </label>
+                  </div>
+	              </div>
+	              <div class="col-sm-2">  
+                  <div class="form-group has-feedback ">
+                      <label class="input-group">
+                          <span class="input-group-addon">
+                              <input type="radio" name="avisoPrivacidad" value="1" ng-model="ecCtrl.credito.avisoPrivacidad" />
+                          </span>
+                          <div class="form-control form-control-static">
+                              NO
+                          </div>
+                          <span class="glyphicon form-control-feedback "></span>
+                      </label>
+                  </div>
+	              </div>  
+              </div>
+		        </div>   
+						
+						</div>	
+
             <div class="row">
                 <div class="col-sm-12" ng-if="ecCtrl.credito.tipo == 'creditoP'">
                   <input type="submit" ng-click="ecCtrl.guardar(ecCtrl.objeto,form)" value="Entregar Crédito" class="btn btn-primary" valida-form formulario="form">

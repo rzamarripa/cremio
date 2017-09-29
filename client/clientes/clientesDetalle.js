@@ -259,6 +259,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			{
 					
 					var empresa = Empresas.findOne(cli.profile.empresa_id);
+
 					if (empresa != undefined)
 					{
 						var pais = Paises.findOne(empresa.pais_id);
@@ -278,28 +279,31 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					
 					
 					rc.referenciasPersonales = [];
-      
-		      _.each(cli.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
-		            Meteor.call('getPersona', referenciaPersonal_id, cli._id, function(error, result){           
+					
+					//console.log(cli.profile.referenciasPersonales_ids);
+		      _.each(cli.profile.referenciasPersonales_ids,function(referenciaPersonal){
+			      		//console.log("RP ARRay:",referenciaPersonal);
+		            Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
 		                  if (result)
 		                  {
+			                  //console.log("RP:",result);
 		                  	if (result.apellidoMaterno == null) {
 		                  		result.apellidoMaterno = ""
 		                  	}
 		                      //Recorrer las relaciones 
-		                      rc.referenciasPersonales.push({buscarPersona_id : referenciaPersonal_id,
+		                      rc.referenciasPersonales.push({//buscarPersona_id : referenciaPersonal.referenciaPersonal_id,
 		                                                     nombre           : result.nombre,
 		                                                     apellidoPaterno  : result.apellidoPaterno,
 		                                                     apellidoMaterno  : result.apellidoMaterno,
-		                                                     parentezco       : result.parentezco,
+		                                                     parentesco       : referenciaPersonal.parentesco,
 		                                                     direccion        : result.direccion,
-		                                                     telefono         : result.telefono,
-		                                                     tiempo           : result.tiempo,
-		                                                     num              : result.num,
-		                                                     cliente          : result.cliente,
-		                                                     cliente_id       : result.cliente_id,
-		                                                     tipoPersona      : result.tipoPersona,
-		                                                     estatus          : result.estatus
+		                                                     //telefono         : result.telefono,
+		                                                     tiempo           : referenciaPersonal.tiempoConocerlo,
+		                                                     num              : referenciaPersonal.num
+		                                                     //cliente          : result.cliente,
+		                                                     //cliente_id       : result.cliente_id,
+		                                                     //tipoPersona      : result.tipoPersona,
+		                                                     //estatus          : result.estatus
 		                      });
 													if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
 											    		$scope.$apply();
@@ -329,6 +333,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id);
 				objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id);
 				
+				/*
 				_.each(objeto.referenciasPersonales_ids, function(referencia){
 						Meteor.call('getReferencias', referencia, function(error, result){	
 					//console.log("entra aqui",referencia)					
@@ -344,6 +349,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						}
 					});	
 				});
+				*/
 
                      
 				
@@ -565,14 +571,6 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return creditos;
 		},
 
-		  //   historialCredito : () => {
-    //   var creditos = [];
-    //   rc.clientes_id = _.pluck(rc.objeto,"_id")
- 
-    //     return creditos
-    // },
-
-
 		cajero: () => {
 			var c = Meteor.users.findOne({roles: "Cajero"});
 			
@@ -700,16 +698,16 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
           {
           	rc.empresaCliente = result;
 			       
-		 Meteor.call('getClienteInformacion',cliente, function(error, result) {           
-          if (result)
-          {
-          	rc.objeto = result;
-          	console.log(result)
-          }
-        })
-		 $scope.$apply();
-       }
-	})  
+						 Meteor.call('getClienteInformacion',cliente, function(error, result) {           
+				          if (result)
+				          {
+				          	rc.objeto = result;
+				          	//console.log(result)
+									}
+						})
+						$scope.$apply();
+					}
+			});
 
 
 	};
