@@ -298,8 +298,8 @@ angular.module("creditoMio")
           rc.objeto = objeto;
           rc.objeto.confirmpassword = "sinpassword";	
 					rc.objeto.password 				= "sinpassword"; 
-					
-				
+						
+					rc.documents = rc.objeto.profile.documentos;
 
 					
           //return objeto;
@@ -706,8 +706,11 @@ angular.module("creditoMio")
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   this.borrarDoc = function($index)
   {
+	  console.log($index);	
+	  console.log(rc.documents);	
     rc.documents.splice($index, 1);
-    };
+    console.log(rc.documents);	
+  };
   
   //busca un elemento en el arreglo
   function functiontofindIndexByKeyValue(arraytosearch, key, valuetosearch) {

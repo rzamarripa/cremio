@@ -52,11 +52,14 @@
 			    	</div>		    				    	    
 			    	<div class="col-sm-6" valida>					    
 				    	<label>¿Ha tenido o tiene créditos vigentes en algun banco , financiera o prestamista? *</label>
+				    	<input name="creditoOtro" type="text" class="form-control" placeholder="tiene otros créditos" ng-model="ver.objeto.creditoOtro" required="" capitalize>
+<!--
 				    	<select name="creditoOtro" ng-model="ver.objeto.creditoOtro" data-placeholder="Seleccione" class="form-control" required>
 								<option value=""></option>
 								<option value="SI">Si</option>
 								<option value="NO">No</option>
 							</select>
+-->
 					  </div>
 		    </div>  
 		    <div class="row">
@@ -78,7 +81,7 @@
 			    	</div>					  
 		    </div>  
 		    <div class="row">
-			    	<div class="col-sm-4" valida>					    
+			    	<div class="col-sm-6" valida>					    
 				    	<label>¿Tiene créditos vigentes de otro tipo (coppel, Liverpool, etc)?</label>
 				    	<select name="creditoOtroTipo" ng-model="ver.objeto.creditoOtroTipo" data-placeholder="Seleccione" class="form-control" required>
 								<option value=""></option>
@@ -86,13 +89,13 @@
 								<option value="NO">No</option>
 							</select>
 					  </div>
-					  <div class="col-sm-8" valida> 					    
+					  <div class="col-sm-6" valida> 					    
 				    	<label>Si la respuesta es SI, ¿Cuánto tiene de saldo y Cuánto son sus abonos?</label>
 				    	<input name="saldosAbonosCreditos" type="text" class="form-control" placeholder="Salgos y Abonos" ng-model="ver.objeto.saldosAbonosCreditos" required="" capitalize>
 			    	</div>
 		    </div>
 		    <div class="row">
-			    	<div class="col-sm-4" valida>					    
+			    	<div class="col-sm-3" valida>					    
 				    	<label>¿Es visitado frecuentemente por cobradores? *</label>
 				    	<select name="visitadoCobradores" ng-model="ver.objeto.visitadoCobradores" data-placeholder="Seleccione" class="form-control" required capitalize>
 								<option value=""></option>
@@ -100,7 +103,7 @@
 								<option value="NO">No</option>
 							</select>
 					  </div>
-						<div class="col-sm-8" valida>					    
+						<div class="col-sm-9" valida>					    
 				    	<label>En caso de ser AVAL, ¿Está usted conciente y de acuerdo en hacerse cargo de la cuenta en el momento en el que nosotros le requiramos?</label>
 				    	<select name="cargoCuenta" ng-model="ver.objeto.cargoCuenta" data-placeholder="Seleccione" class="form-control" required>
 								<option value=""></option>

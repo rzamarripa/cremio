@@ -128,12 +128,13 @@ angular.module("creditoMio")
 	
   
   this.autorizar = function(id, tipo){
+
 	  if (tipo == "Crédito Personal")	
 	  		Creditos.update({_id : id}, { $set : {estatus : 2}});
 	  		
 	  else
 		{
-				Meteor.call('autorizaoRechazaDistribuidor', distribuidor._id, 1, "", function(error, result) {
+				Meteor.call('autorizaoRechazaDistribuidor', id, 1, "", function(error, result) {
 						   if(error)
 						   {
 							    console.log('ERROR :', error);

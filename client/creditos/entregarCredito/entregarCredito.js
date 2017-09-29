@@ -14,8 +14,8 @@ angular.module("creditoMio")
 	
 	rc.cliente = {};
 	rc.cliente._id = "" ;
-	rc.datosCliente = ""
-	
+	rc.datosCliente = "";
+		
 	this.subscribe('tiposIngreso',()=>{
 		return [{
 			estatus : true
@@ -37,7 +37,7 @@ angular.module("creditoMio")
 	});
 
 	this.validar={};
-	console.log($stateParams,"state")
+	//console.log($stateParams,"state")
 	this.helpers({
 		tiposIngreso : () => {
 			var tipos = TiposIngreso.find().fetch();
@@ -122,7 +122,11 @@ angular.module("creditoMio")
 
 			if (c != undefined)
 			{		
-
+					//El 0 es SI----
+					c.avisoPrivacidad = 0;
+					c.publicidad 			= 0;
+					c.datosPersonales = 0;
+										
 					rc.cliente._id = c.cliente_id;
 					if (c.folio)
 						  this.verDiaPago = false;
@@ -158,10 +162,10 @@ angular.module("creditoMio")
 					    this.objeto.primerAbono = fecha;
 					}		
 */
-	
+				
 			}	
 		
-			return c
+			return c;
 		}
 	});
 
@@ -185,7 +189,8 @@ angular.module("creditoMio")
 	}
 
 	this.guardar = function (){
-						
+			
+			
 			if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagare!=true || this.validar.tabla!=true)
 			{
 					toastr.error('Es obligatorio verificar los documentos.');
@@ -239,7 +244,10 @@ angular.module("creditoMio")
 					{
 							//ELIMINAR AQUELLOS QUE NO TIENEN SALDO 0 EN rc.objeto
 							
-												
+							Creditos.update({_id: $stateParams.credito_id}, {$set: {avisoPrivacidad	: rc.credito.avisoPrivacidad,
+																																			publicidad			: rc.credito.publicidad,
+																																			datosPersonales	: rc.credito.datosPersonales, } })
+							
 							Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id, rc.tipoIngreso._id,function(error,result){
 								if(error){
 									console.log(error);
@@ -678,3 +686,10 @@ angular.module("creditoMio")
 	
 	/////FINAL///
 };
+
+
+
+
+
+
+
