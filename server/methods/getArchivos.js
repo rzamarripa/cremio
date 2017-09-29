@@ -1249,20 +1249,15 @@ Meteor.methods({
             return Millones(data.enteros) + ' ' + data.letrasMonedaSingular + ' ' + data.letrasCentavos;
         else
             return Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
-    };
-		
+    };	
 			
 		var letra = NumeroALetras(contrato.capitalSolicitado);
 		var tasaPor = NumeroALetras(contrato.tasa);
-		var ivaLetra = NumeroALetras(16);
-		console.log(ivaLetra,"16")
-		//var 
-	
-		
+		const formatCurrency = require('format-currency')
+			
 	if (avales == undefined) {
 		avales = cliente
 	}
-
 	if (contrato.periodoPago == "Semanal") {
 		contrato.periodoPago = "SEMANAL"
 	}
@@ -1272,7 +1267,6 @@ Meteor.methods({
 	if (contrato.periodoPago == "Mensual") {
 		contrato.periodoPago = "MENSUAL"
 	}
-
 
 
 	if (contrato.seguro == undefined) {
@@ -1290,9 +1284,8 @@ Meteor.methods({
  		    	mes = "0" + mes;
  		    }
  		    fecha = dia+ "-" + mes + "-" + anio
- 		    const formatCurrency = require('format-currency')
+ 		    
  		    //console.log(avales,"papu los avales papa")
- 		     
 	  
 		  	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
 		  	cliente.colonia = cliente.coloniaCliente.nombre
@@ -1314,44 +1307,125 @@ Meteor.methods({
 			 		pp.total = formatCurrency(pp.total)
 			 	if (pp.capital) {pp.capital = parseFloat(pp.capital.toFixed(2))}
 			 		pp.capital = formatCurrency(pp.capital)
-			 	    pp.fechaLimite = moment(pp.fechaLimite).format("DD-MM-YYYY")					
 					pp.liquidar = total
 			 		total -= (parseFloat(pp.importeRegular).toFixed(2));
-			 		//console.log(pp.liquidar,"keylor")
 			 		pp.liquidar = parseFloat(pp.liquidar.toFixed(2))
 			 	    pp.liquidar = formatCurrency(pp.liquidar)
-
+			 	    pp.fechaLimitePago = pp.fechaLimite
+			 	    pp.fechaLimitePago =  moment(pp.fechaLimitePago).format("DD-MM-YYYY")	
 		 	});
-	
-				// _.each(rc.planPagos,function (pago) {
-					
-				// 	pago.liquidar = total;  						
-				// 	total -= Number(parseFloat(pago.importeRegular).toFixed(2));
-								
-				// 	$scope.$apply();
-				// });
 
 
   	 _.each(contrato.garantias,function(item){
   	 	item.fechaFiniquito = moment(item.fechaFiniquito).format("DD-MM-YYYY")
   	 	item.fechaComercializacion = moment(item.fechaComercializacion).format("DD-MM-YYYY")
-
+  	 	if (item.comisionGastos) {
+  	 	item.comisionGastos = parseFloat(item.comisionGastos.toFixed(2))
+  	 	item.comisionGastos = formatCurrency(item.comisionGastos)
+  	    }
+  	    if (item.porcentajePrestamoGeneral) {
+  	 	item.porcentajePrestamoGeneral = parseFloat(item.porcentajePrestamoGeneral.toFixed(2))
+  	 	item.porcentajePrestamoGeneralLetra = NumeroALetras(item.porcentajePrestamoGeneral);
+  	    }
+  	     if (item.porcentajePrestamoMobiliaria) {
+  	 	item.porcentajePrestamoMobiliaria = parseFloat(item.porcentajePrestamoMobiliaria.toFixed(2))
+  	 	 item.porcentajePrestamoMobiliariaLetra = NumeroALetras(porcentajePrestamoMobiliaria);
+  	    }
+  	    if (item.avaluoGeneral) {
+  	 	item.avaluoGeneral = parseFloat(item.avaluoGeneral.toFixed(2))
+  	 	item.avaluoGeneral = formatCurrency(item.avaluoGeneral)
+  	    }
+  	    if (item.almacenaje) {
+  	 	item.almacenaje = parseFloat(item.almacenaje.toFixed(2))
+  	 	item.almacenaje = formatCurrency(item.almacenaje)}
+  	 	if (item.comercializacion) {
+  	 	item.comercializacion = parseFloat(item.comercializacion.toFixed(2))
+  	 	item.comercializacion = formatCurrency(item.comercializacion)}
+  	 	if (item.desempenioExtemporaneo) {
+  	 	item.desempenioExtemporaneo = parseFloat(item.desempenioExtemporaneo.toFixed(2))
+  	 	item.desempenioExtemporaneo = formatCurrency(item.desempenioExtemporaneo)}
+  	 	if (item.reposicionContrato) {
+  	 	item.reposicionContrato = parseFloat(item.reposicionContrato.toFixed(2))
+  	 	item.reposicionContrato = formatCurrency(item.reposicionContrato)}
   	 });
   	  contrato.fechaEntrega =moment(contrato.fechaEntrega).format("DD-MM-YYYY")
   	  var vigencia = planPagos[planPagos.length - 1];
-  	//var garantias = contrato.garantias[0]
+  	  var vigenciaFecha = vigencia.fechaLimite
+  	  //vigenciaFecha =moment(vigenciaFecha).format("MM-DD-YYYY")
 
-  
+  	    function formatDate(date) {
+  	    	date = new Date(date);
+		  var monthNames = [
+		    "ENERO", "FEBRERO", "MARZO",
+		    "ABRIL", "MAYO", "JUNIO", "JULIO",
+		    "AGOSTO", "SEPTIEMBRE", "OCTUBRE",
+		    "NOVIEMBRE", "DICIEMBRE"
+		  ];
+		  console.log(date,"date")
+		  var day = date.getDate();
+		  console.log(day,"DIA")
+		  var monthIndex = date.getMonth();
+		  var year = date.getFullYear();
+	
+		  return day + ' ' + 'DE' + ' '  + monthNames[monthIndex] + ' ' + ' DEL'  + ' ' + year;
+		}
+		//console.log(vigenciaFecha)
+        var fechaVigencia = formatDate(vigenciaFecha);
+ 
+        //console.log(fechaVigencia,"la fechilla") 
+        contrato.capitalSolicitado = formatCurrency(contrato.capitalSolicitado) 
+
+        var autorizacionProveedorSi = true;
+        var autorizacionProveedorNo = "";
+        if (autorizacionProveedorSi == true) {
+        	autorizacionProveedorSi = "X"
+        }else{
+        	autorizacionProveedorNo = "X"
+        }
+        var autorizacionPublicidadSi = true;
+        var autorizacionPublicidadNo = "";
+        if (autorizacionPublicidadSi == true) {
+        	autorizacionPublicidadSi = "X"
+        }else{
+        	autorizacionPublicidadNo = "X"
+        }
+
+        //fechaVigencia = moment(fechaVigencia).format("DD-MM-YYYY")
+
+	 		var diaV = vigencia.fechaLimite.getUTCDate()
+	 		var diaV2 = vigencia.fechaLimite.getUTCDate()+1
+ 		    var mesV = vigencia.fechaLimite.getUTCMonth()+1
+ 		    var anioV = vigencia.fechaLimite.getUTCFullYear()
+ 		    if (Number(diaV) < 10) {
+ 		    	diaV = "0" + diaV;
+ 		    }
+ 		    if (Number(diaV2) < 10) {
+ 		    	diaV2 = "0" + diaV2;
+ 		    }
+ 		    if (Number(mesV) < 10) {
+ 		    	mesV = "0" + mesV;
+ 		    }
+ 		    vigencia.fechaLimite = diaV+ "-" + mesV + "-" + anioV
+ 		    var vigenciaMasUnDia = diaV2+ "-" + mesV + "-" + anioV
+
+ 		    
+ 		   
+ 		     
+            
+ 		    
+
+ 		    
+ 		    
+
+
   		
   	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
-	
-	    //console.log(contrato,"contratos  sin aval ni garantias")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				
 				if (contrato.tipoInteres.tipoInteres == "Simple") {
 					var content = fs
@@ -1376,11 +1450,7 @@ Meteor.methods({
 			}
 			return "";
 		}});
-		
-		
-            
- 		    //console.log("la vigencia",vigencia)
-	    
+
 	  		doc.setData({			items: 	   contrato,
 									fecha:     fecha,
 									cliente: cliente,
@@ -1389,10 +1459,14 @@ Meteor.methods({
 									letra : letra,
 									aval: avales,
 									tasaPor : tasaPor,
-									vigencia : vigencia.fechaLimite,
+									vigencia : vigencia.fechaLimite + ' - ' + fechaVigencia,
+									vigenciaMasUnDia : vigenciaMasUnDia,
+									autorizacionProveedorSi : autorizacionProveedorSi,
+									autorizacionProveedorNo : autorizacionProveedorNo,
+									autorizacionPublicidadSi : autorizacionPublicidadSi,
+									autorizacionPublicidadNo : autorizacionPublicidadNo,
 													
 				});
-								
 		doc.render();
  
 		var buf = doc.getZip()
@@ -1422,8 +1496,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-	    //var produccion = "/home/cremio/archivos/";
-		 var produccion = meteor_root+"/web.browser/app/plantillas/";
+	    var produccion = "/home/cremio/archivos/";
+		// var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 	    if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
@@ -1458,7 +1532,12 @@ Meteor.methods({
 									    letra : letra,
 									    aval: avales,
 									    tasaPor : tasaPor,
-									    vigencia : vigencia.fechaLimite,
+									    vigencia : vigencia.fechaLimite + ' ' + fechaVigencia,
+									    vigenciaMasUnDia : vigenciaMasUnDia,
+									    autorizacionProveedorSi : autorizacionProveedorSi,
+									    autorizacionProveedorNo : autorizacionProveedorNo,
+									    autorizacionPublicidadSi : autorizacionPublicidadSi,
+									    autorizacionPublicidadNo : autorizacionPublicidadNo,
 
 				});
 								
@@ -1490,8 +1569,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = "/home/cremio/archivos/";
-	    var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+	    //var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -1527,7 +1606,12 @@ Meteor.methods({
 									letra : letra,
 									aval: avales,
 									tasaPor : tasaPor,
-									vigencia : vigencia.fechaLimite,
+									vigencia : vigencia.fechaLimite + ' ' + fechaVigencia,
+									vigenciaMasUnDia : vigenciaMasUnDia,
+									autorizacionProveedorSi : autorizacionProveedorSi,
+									autorizacionProveedorNo : autorizacionProveedorNo,
+									autorizacionPublicidadSi : autorizacionPublicidadSi,
+									autorizacionPublicidadNo : autorizacionPublicidadNo,
 													
 				});
 								
@@ -1537,7 +1621,7 @@ Meteor.methods({
 				var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
              		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-             		 	console.log(",cjecj")
+             		 	//console.log(",cjecj")
              		 	fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalidaSSISalida.docx",buf);
              		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalidaSSISalida.docx");
              		 }
@@ -1562,8 +1646,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			console.log("entra SIMPLE")
 			var content = fs				
@@ -1602,6 +1686,11 @@ Meteor.methods({
 										aval : avales,
 										tasaPor : tasaPor,
 										vigencia : vigencia.fechaLimite,
+										vigenciaMasUnDia : vigenciaMasUnDia,
+										autorizacionProveedorSi : autorizacionProveedorSi,
+									    autorizacionProveedorNo : autorizacionProveedorNo,
+									    autorizacionPublicidadSi : autorizacionPublicidadSi,
+									    autorizacionPublicidadNo : autorizacionPublicidadNo,
 										//garantias: 
 				});
 								
