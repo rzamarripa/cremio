@@ -248,7 +248,7 @@ angular.module("creditoMio")
 																																			publicidad			: rc.credito.publicidad,
 																																			datosPersonales	: rc.credito.datosPersonales, } })
 							
-							Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id, rc.tipoIngreso._id,rc.function(error,result){
+							Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id, rc.tipoIngreso._id, function(error,result){
 								if(error){
 									console.log(error);
 									toastr.error('Error al guardar los datos.');
