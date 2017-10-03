@@ -1249,78 +1249,182 @@ Meteor.methods({
             return Millones(data.enteros) + ' ' + data.letrasMonedaSingular + ' ' + data.letrasCentavos;
         else
             return Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
-    };
-		
+    };	
 			
 		var letra = NumeroALetras(contrato.capitalSolicitado);
 		var tasaPor = NumeroALetras(contrato.tasa);
-	
-		
+		const formatCurrency = require('format-currency')
+			
 	if (avales == undefined) {
 		avales = cliente
-		
-
 	}
+	if (contrato.periodoPago == "Semanal") {
+		contrato.periodoPago = "SEMANAL"
+	}
+	if (contrato.periodoPago == "Quincenal") {
+		contrato.periodoPago = "QUINCENAL"
+	}
+	if (contrato.periodoPago == "Mensual") {
+		contrato.periodoPago = "MENSUAL"
+	}
+
+
 	if (contrato.seguro == undefined) {
 		contrato.seguro = 0
 	}
-		var fecha = new Date();
-			var f = fecha;
-	 		var dia = fecha.getUTCDate()
- 		    var mes = fecha.getUTCMonth()+1
- 		    var anio = fecha.getUTCFullYear()
- 		    if (Number(dia) < 10) {
- 		    	dia = "0" + dia;
- 		    }
- 		    if (Number(mes) < 10) {
- 		    	mes = "0" + mes;
- 		    }
- 		    fecha = dia+ "-" + mes + "-" + anio
- 		    const formatCurrency = require('format-currency')
- 		    //console.log(avales,"papu los avales papa")
-	  
-  	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
-  	cliente.colonia = cliente.coloniaCliente.nombre
-  	cliente.estado = cliente.estadoCliente.nombre
-  	cliente.ocupacion = cliente.ocupacionCliente.nombre
-  	cliente.ciudad = cliente.ciudadCliente.nombre
-  	cliente.municipio = cliente.municipioCliente.nombre
-  	 _.each(planPagos,function(pp){
-		 	pp.importeRegular = parseFloat(pp.importeRegular.toFixed(2))
-		 	pp.importeRegular = formatCurrency(pp.importeRegular)
-		 	pp.iva = parseFloat(pp.iva.toFixed(2))
-		 	pp.iva = formatCurrency(pp.iva)
-		 	if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
-		 		pp.sumatoria = formatCurrency(pp.sumatoria)
-		 	if (pp.total) {pp.total = parseFloat(pp.total.toFixed(2))}
-		 		pp.total = formatCurrency(pp.total)
-		 	if (pp.capital) {pp.capital = parseFloat(pp.capital.toFixed(2))}
-		 		pp.capital = formatCurrency(pp.capital)
-		 	if (pp.liquidar) {pp.liquidar = parseFloat(pp.liquidar.toFixed(2))}
-		 		pp.liquidar = formatCurrency(pp.liquidar)
-		 	pp.fechaLimite = moment(pp.fechaLimite).format("DD-MM-YYYY")
 
-		 });
+		  	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
+		  	cliente.colonia = cliente.coloniaCliente.nombre
+		  	cliente.estado = cliente.estadoCliente.nombre
+		  	cliente.ocupacion = cliente.ocupacionCliente.nombre
+		  	cliente.ciudad = cliente.ciudadCliente.nombre
+		  	cliente.municipio = cliente.municipioCliente.nombre
+		  	
+		  	var all = planPagos[planPagos.length - 1]
+		  	var total = all.sumatoria
+  	 		_.each(planPagos,function(pp){
+			 	pp.importeRegular = parseFloat(pp.importeRegular.toFixed(2))
+			 	pp.importeRegular = formatCurrency(pp.importeRegular)
+			 	pp.iva = parseFloat(pp.iva.toFixed(2))
+			 	pp.iva = formatCurrency(pp.iva)
+			 	if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
+			 		pp.sumatoria = formatCurrency(pp.sumatoria)
+			 	if (pp.total) {pp.total = parseFloat(pp.total.toFixed(2))}
+			 		pp.total = formatCurrency(pp.total)
+			 	if (pp.capital) {pp.capital = parseFloat(pp.capital.toFixed(2))}
+			 		pp.capital = formatCurrency(pp.capital)
+					pp.liquidar = total
+			 		total -= (parseFloat(pp.importeRegular).toFixed(2));
+			 		pp.liquidar = parseFloat(pp.liquidar.toFixed(2))
+			 	    pp.liquidar = formatCurrency(pp.liquidar)
+			 	    pp.fechaLimitePago = pp.fechaLimite
+			 	    pp.fechaLimitePago =  moment(pp.fechaLimitePago).format("DD-MM-YYYY")	
+		 	});
+
+
   	 _.each(contrato.garantias,function(item){
   	 	item.fechaFiniquito = moment(item.fechaFiniquito).format("DD-MM-YYYY")
   	 	item.fechaComercializacion = moment(item.fechaComercializacion).format("DD-MM-YYYY")
-
+  	 	if (item.comisionGastos) {
+  	 	item.comisionGastos = parseFloat(item.comisionGastos.toFixed(2))
+  	 	item.comisionGastosLetra = NumeroALetras(item.comisionGastos);
+  	 	item.comisionGastos = formatCurrency(item.comisionGastos)
+  	    }
+  	    if (item.porcentajePrestamoGeneral) {
+  	 	item.porcentajePrestamoGeneral = parseFloat(item.porcentajePrestamoGeneral.toFixed(2))
+  	 	item.porcentajePrestamoGeneralLetra = NumeroALetras(item.porcentajePrestamoGeneral);
+  	    }
+  	     if (item.porcentajePrestamoMobiliria) {
+  	 	item.porcentajePrestamoMobiliria = parseFloat(item.porcentajePrestamoMobiliria.toFixed(2))
+  	 	 item.porcentajePrestamoMobiliariaLetra = NumeroALetras(item.porcentajePrestamoMobiliria);
+  	    }
+  	    if (item.avaluoGeneral) {
+  	 	item.avaluoGeneral = parseFloat(item.avaluoGeneral.toFixed(2))
+  	 	item.avaluoGeneralLetra = NumeroALetras(item.avaluoGeneral);
+  	 	item.avaluoGeneral = formatCurrency(item.avaluoGeneral)
+  	    }
+  	    if (item.avaluoMobiliaria) {
+  	 	item.avaluoMobiliaria = parseFloat(item.avaluoMobiliaria.toFixed(2))
+  	 	item.avaluoMobiliaria = formatCurrency(item.avaluoMobiliaria)
+  	 	item.avaluoMobiliariaLetra = NumeroALetras(item.avaluoMobiliaria);
+  	    }
+  	    if (item.almacenaje) {
+  	 	item.almacenaje = parseFloat(item.almacenaje.toFixed(2))
+  	 	item.almacenaje = formatCurrency(item.almacenaje)}
+  	 	if (item.comercializacion) {
+  	 	item.comercializacion = parseFloat(item.comercializacion.toFixed(2))
+  	 	item.comercializacion = formatCurrency(item.comercializacion)}
+  	 	if (item.desempenioExtemporaneo) {
+  	 	item.desempenioExtemporaneo = parseFloat(item.desempenioExtemporaneo.toFixed(2))
+  	 	item.desempenioExtemporaneo = formatCurrency(item.desempenioExtemporaneo)}
+  	 	if (item.reposicionContrato) {
+  	 	item.reposicionContrato = parseFloat(item.reposicionContrato.toFixed(2))
+  	 	item.reposicionContrato = formatCurrency(item.reposicionContrato)}
   	 });
   	  contrato.fechaEntrega =moment(contrato.fechaEntrega).format("DD-MM-YYYY")
   	  var vigencia = planPagos[planPagos.length - 1];
-  	//var garantias = contrato.garantias[0]
+  	  var vigenciaFecha = vigencia.fechaLimite
 
-  
+  	     var fecha = new Date();
+	 	
+ 		    //console.log(fecha,"FECHA")
+
+  	    function formatDate(date) {
+  	    	date = new Date(date);
+		  var monthNames = [
+		    "ENERO", "FEBRERO", "MARZO",
+		    "ABRIL", "MAYO", "JUNIO", "JULIO",
+		    "AGOSTO", "SEPTIEMBRE", "OCTUBRE",
+		    "NOVIEMBRE", "DICIEMBRE"
+		  ];
+		  //console.log(date,"date")
+		  var day = date.getDate();
+		  //console.log(day,"DIA")
+		  var monthIndex = date.getMonth();
+		  var year = date.getFullYear();
+	
+		  return day + ' ' + 'DE' + ' '  + monthNames[monthIndex] + ' ' + ' DEL'  + ' ' + year;
+		}
+		function formatDia(date) {
+  	    	date = new Date(date);
+		  var monthNames = [
+		    "ENERO", "FEBRERO", "MARZO",
+		    "ABRIL", "MAYO", "JUNIO", "JULIO",
+		    "AGOSTO", "SEPTIEMBRE", "OCTUBRE",
+		    "NOVIEMBRE", "DICIEMBRE"
+		  ];
+		  console.log(date,"date")
+		  var day = date.getDate();
+		  console.log(day,"DIA")
+		  var monthIndex = date.getMonth();
+		  var year = date.getFullYear();
+	
+		  return day + ' ' + 'DE' + ' '  + monthNames[monthIndex] + ' ' + ' DEL'  + ' ' + year;
+		}
+        var fechaVigencia = formatDate(vigenciaFecha);
+        contrato.capitalSolicitado = formatCurrency(contrato.capitalSolicitado) 
+        var fechaLetra = formatDia(fecha);
+        console.log(contrato.avisoPrivacidad,"contrato")
+
+        var autorizacionProveedorSi = contrato.avisoPrivacidad;
+        var autorizacionProveedorNo = "";
+        if (autorizacionProveedorSi == 0) {
+        	autorizacionProveedorSi = "X"
+        }else{
+        	autorizacionProveedorNo = "X"
+        }
+        var autorizacionPublicidadSi = contrato.publicidad;
+        var autorizacionPublicidadNo = "";
+        if (autorizacionPublicidadSi == "0") {
+        	autorizacionPublicidadSi = "X"
+        }else{
+        	autorizacionPublicidadNo = "X"
+        }
+        console.log(autorizacionProveedorSi,"contrato")
+
+	 		var diaV = vigencia.fechaLimite.getUTCDate()
+	 		var diaV2 = vigencia.fechaLimite.getUTCDate()+1
+ 		    var mesV = vigencia.fechaLimite.getUTCMonth()+1
+ 		    var anioV = vigencia.fechaLimite.getUTCFullYear()
+ 		    if (Number(diaV) < 10) {
+ 		    	diaV = "0" + diaV;
+ 		    }
+ 		    if (Number(diaV2) < 10) {
+ 		    	diaV2 = "0" + diaV2;
+ 		    }
+ 		    if (Number(mesV) < 10) {
+ 		    	mesV = "0" + mesV;
+ 		    }
+ 		    vigencia.fechaLimite = diaV+ "-" + mesV + "-" + anioV
+ 		    var vigenciaMasUnDia = diaV2+ "-" + mesV + "-" + anioV
   		
   	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
-	
-	    //console.log(contrato,"contratos  sin aval ni garantias")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 				
 				if (contrato.tipoInteres.tipoInteres == "Simple") {
 					var content = fs
@@ -1345,23 +1449,23 @@ Meteor.methods({
 			}
 			return "";
 		}});
-		
-		
-            
- 		    //console.log("la vigencia",vigencia)
-	    
+
 	  		doc.setData({			items: 	   contrato,
-									fecha:     fecha,
+									fecha:     fechaLetra,
 									cliente: cliente,
 									contrato: contrato,
 									pp: planPagos,
 									letra : letra,
 									aval: avales,
 									tasaPor : tasaPor,
-									vigencia : vigencia.fechaLimite,
+									vigencia : fechaVigencia,
+									vigenciaMasUnDia : vigenciaMasUnDia,
+									autorizacionProveedorSi : autorizacionProveedorSi,
+									autorizacionProveedorNo : autorizacionProveedorNo,
+									autorizacionPublicidadSi : autorizacionPublicidadSi,
+									autorizacionPublicidadNo : autorizacionPublicidadNo,
 													
 				});
-								
 		doc.render();
  
 		var buf = doc.getZip()
@@ -1391,8 +1495,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-	    var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+	    //var produccion = "/home/cremio/archivos/";
+		 var produccion = meteor_root+"/web.browser/app/plantillas/";
 
 	    if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
@@ -1420,14 +1524,19 @@ Meteor.methods({
 		
 	    
 	  		doc.setData({				items: 		 contrato,
-									    fecha:     fecha,
+									    fecha:     fechaLetra,
 									    cliente:    cliente,
 									    pp: planPagos,
 									    contrato: contrato,
 									    letra : letra,
 									    aval: avales,
 									    tasaPor : tasaPor,
-									    vigencia : vigencia.fechaLimite,
+									    vigencia : fechaVigencia,
+									    vigenciaMasUnDia : vigenciaMasUnDia,
+									    autorizacionProveedorSi : autorizacionProveedorSi,
+									    autorizacionProveedorNo : autorizacionProveedorNo,
+									    autorizacionPublicidadSi : autorizacionPublicidadSi,
+									    autorizacionPublicidadNo : autorizacionPublicidadNo,
 
 				});
 								
@@ -1459,8 +1568,8 @@ Meteor.methods({
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-	    //var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+	    var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			var content = fs
 					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -1489,14 +1598,19 @@ Meteor.methods({
 		
 		
 	  		doc.setData({		    items: 	   contrato,
-									fecha:     fecha,
+									fecha:     fechaLetra,
 									cliente: cliente,
 									contrato: contrato,
 									pp: planPagos,
 									letra : letra,
 									aval: avales,
 									tasaPor : tasaPor,
-									vigencia : vigencia.fechaLimite,
+									vigencia : fechaVigencia,
+									vigenciaMasUnDia : vigenciaMasUnDia,
+									autorizacionProveedorSi : autorizacionProveedorSi,
+									autorizacionProveedorNo : autorizacionProveedorNo,
+									autorizacionPublicidadSi : autorizacionPublicidadSi,
+									autorizacionPublicidadNo : autorizacionPublicidadNo,
 													
 				});
 								
@@ -1506,7 +1620,7 @@ Meteor.methods({
 				var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
              		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-             		 	console.log(",cjecj")
+             		 	//console.log(",cjecj")
              		 	fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalidaSSISalida.docx",buf);
              		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalidaSSISalida.docx");
              		 }
@@ -1531,8 +1645,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
 			console.log("entra SIMPLE")
 			var content = fs				
@@ -1563,14 +1677,19 @@ Meteor.methods({
 		
 	    
 	  		doc.setData({				items: 	   contrato,
-									    fecha:     fecha,
+									    fecha:     fechaLetra,
 									    cliente:   cliente,
 										contrato: contrato,
 										pp: planPagos,
 										letra : letra,
 										aval : avales,
 										tasaPor : tasaPor,
-										vigencia : vigencia.fechaLimite,
+										vigencia : fechaVigencia,
+										vigenciaMasUnDia : vigenciaMasUnDia,
+										autorizacionProveedorSi : autorizacionProveedorSi,
+										autorizacionProveedorNo : autorizacionProveedorNo,
+										autorizacionPublicidadSi : autorizacionPublicidadSi,
+										autorizacionPublicidadNo : autorizacionPublicidadNo,
 										//garantias: 
 				});
 								
