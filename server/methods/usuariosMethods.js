@@ -2,17 +2,13 @@
 
 Meteor.methods({
   createUsuario: function (usuario, rol, grupo) {
-  	//console.log(usuario)
-  	// _.each(usuario.profile, function(item){
-			// delete item.$$hashKey;
-			// });	
-	  
+
 	  var sucursal;
 	  if (rol == "Cliente")
 		{
 				
 				sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
-				var numero = usuario.profile.numeroCliente;
+				var numero = parseInt(usuario.profile.numeroCliente);
 				
 				//se desactivo para que ellos empiecena capturar el numero-----------------
 				/*
@@ -26,13 +22,13 @@ Meteor.methods({
 				*/
 				
 				if (numero < 10)
-					 usuario.username = sucursal.clave + '-C000' + numero;
+					 usuario.username = sucursal.clave + '-C000' + numero.toString();
 				else if (numero < 100)
-	  			 usuario.username = sucursal.clave + '-C00' + numero;
+	  			 usuario.username = sucursal.clave + '-C00' + numero.toString();
 	  		else if (numero < 1000)
-	  			 usuario.username = sucursal.clave + '-C0' + numero;	 
+	  			 usuario.username = sucursal.clave + '-C0' + numero.toString();	 
 	  		else
-	  			 usuario.username = sucursal.clave + '-C' + numero;
+	  			 usuario.username = sucursal.clave + '-C' + numero.toString();
 	  			 	  			 	 
 	  		//usuario.contrasena = Math.random().toString(36).substring(2,7);
 	  		usuario.password = '123';
@@ -44,7 +40,7 @@ Meteor.methods({
 	  {
 		  	sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
 		  	//console.log(sucursal)
-		  	console.log(sucursal.folioDistribuidor);
+				
 				var numero;// = usuario.profile.numeroDistribuidor;
 				
 		 	  numero = sucursal.folioDistribuidor + 1;
@@ -134,9 +130,8 @@ Meteor.methods({
 		if (!Roles.userIsInRole(usuario, rol, grupo)) {
 	    throw new Meteor.Error(403, "Usted no tiene permiso para entrar a " + vista);
 	  }
-	},
-	/*
-createGerenteSucursal: function (usuario, rol) {
+	},	
+	createGerenteSucursal: function (usuario, rol) {
 
 		var usuario_id = Accounts.createUser({
 			username: usuario.username,
@@ -147,12 +142,51 @@ createGerenteSucursal: function (usuario, rol) {
 		Roles.addUsersToRoles(usuario_id, rol);
 		
 	},
-*/
 	updateUsuario: function (usuario, referenciasPersonales, rol, cambiarPassword) {
 		
-	  var user = Meteor.users.findOne({_id : usuario._id});
-		
+	  var user = Meteor.users.findOne({_id : usuario._id});		
 		user.profile = usuario.profile;
+		
+		 if (rol == "Cliente")
+		{
+				
+				sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
+
+				var numero = parseInt(usuario.profile.numeroCliente);
+
+				if (isNaN(numero) == false) //es Número
+				{
+
+					if (numero < 10)
+						 usuario.profile.numeroCliente = sucursal.clave + '-C000' + numero.toString();
+					else if (numero < 100)
+		  			 usuario.profile.numeroCliente = sucursal.clave + '-C00' + numero.toString();
+		  		else if (numero < 1000)
+		  			 usuario.profile.numeroCliente = sucursal.clave + '-C0' + numero.toString();	 
+		  		else
+		  			 usuario.profile.numeroCliente = sucursal.clave + '-C' + numero.toString();
+					
+				}
+				
+	  		
+	  } 
+	  else if (rol == "Distribuidor")
+	  {
+		  	sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
+				
+				var numero = parseInt(usuario.profile.numeroDistribuidor);
+								
+				if (numero < 10)
+					 usuario.profile.numeroDistribuidor = sucursal.clave + '-D000' + numero.toString();
+				else if (numero < 100)
+	  			 usuario.profile.numeroDistribuidor = sucursal.clave + '-D00' + numero.toString();
+	  		else if (numero < 1000)
+	  			 usuario.profile.numeroDistribuidor = sucursal.clave + '-D0' + numero.toString();	 
+	  		else
+	  			 usuario.profile.numeroDistribuidor = sucursal.clave + '-D' + numero.toString();
+	  		
+	  }
+		
 		
 		_.each(referenciasPersonales, function(referenciaPersonal){
 				

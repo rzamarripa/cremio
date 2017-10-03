@@ -40,7 +40,9 @@ angular.module("creditoMio")
   });  
 
 		this.subscribe('buscarRootClientesDistribuidoresNumero', () => {
-	
+			
+			console.log(rc.getReactively("buscar.numeroCliente"));
+			
 			if(rc.getReactively("buscar.numeroCliente").length > 4 )
 			{
 				 rc.buscando = true;	
