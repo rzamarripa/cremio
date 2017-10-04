@@ -388,21 +388,25 @@
 																<div class="row">
 														    	<div class="col-sm-4"> 					    
 															    	<label>Sup. de terreno y construcción</label>
-															    	<input name="terreno" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ge.garantia.terrenoYconstruccion">
+															    	<input name="terreno" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ge.garantia.terrenoYconstruccion" capitalize >
 														    	</div>
-														    	<div class="col-sm-4"> 					    
+														    	<div class="col-sm-2"> 					    
+															    	<label>Ubicación </label>
+															    	<input name="ubicacion" type="text" class="form-control" placeholder="Ubicación" ng-model="ge.garantia.ubicacion" capitalize>
+														    	</div>
+														    	<div class="col-sm-2"> 					    
 															    	<label>Avalúo </label>
 															    	<input name="avaluo" type="number" class="form-control" placeholder="Avalúo" ng-model="ge.garantia.avaluoGeneral" ng-change="ge.calcularPorcentajeGeneral()">
 														    	</div>
 																	<div class="col-sm-4">					    
-															    	<label>Porcentaje del préstamo sobre el avalúo</label>
+															    	<label>% del préstamo sobre el avalúo</label>
 															    	<input name="porcentaje" type="number" class="form-control" placeholder="Porcentaje del préstamo sobre el avalúo" ng-model="ge.garantia.porcentajePrestamoGeneral" disabled="true">
 														    	</div>
 																</div>	
 																<div class="row">
 														    	<div class="col-sm-6"> 					    
 															    	<label>Medidas, colindancias, clave castral</label>
-															    	<textarea name="medidas" rows="3" class="form-control" placeholder="Medidas, colindancias, clave castral"  ng-model="ge.garantia.medidasColindancias">
+															    	<textarea name="medidas" rows="3" class="form-control" placeholder="Medidas, colindancias, clave castral"  ng-model="ge.garantia.medidasColindancias" >
 														    	</div>
 														    	<div class="col-sm-6"> 					    
 															    	<label>Comisión y gastos, por escrituración e inscripción de registro público</label>
@@ -603,7 +607,11 @@
 										    	<label>Sup. de terreno y construcción</label>
 										    	<input name="terreno" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ge.garantia.terrenoYconstruccion">
 									    	</div>
-									    	<div class="col-sm-4"> 					    
+									    	<div class="col-sm-2"> 					    
+										    	<label>Ubicación </label>
+										    	<input name="ubicacion" type="text" class="form-control" placeholder="Ubicación" ng-model="ge.garantia.ubicacion" >
+									    	</div>
+									    	<div class="col-sm-2"> 					    
 										    	<label>Avalúo </label>
 										    	<input name="avaluo" type="number" class="form-control" placeholder="Avalúo" ng-model="ge.garantia.avaluoGeneral" ng-change="ge.calcularPorcentajeGeneral()">
 									    	</div>

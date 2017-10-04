@@ -657,6 +657,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 							//av.num = a.num;
 							av.terrenoYconstruccion = a.terrenoYconstruccion;
 							av.avaluoGeneral = a.avaluoGeneral;
+							av.ubicacion = a.ubicacion;
 							av.porcentajePrestamoGeneral = a.porcentajePrestamoGeneral;
 							av.medidasColindancias = a.medidasColindancias;						  
 							av.comisionGastos = a.comisionGastos;
@@ -804,6 +805,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 					this.garantia.num = a.num;
 			    this.garantia.medidasColindancias = a.medidasColindancias;
 			    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion;
+			    this.garantia.ubicacion = a.ubicacion;
 			    this.garantia.avaluoGeneral = a.avaluoGeneral;
 			    this.garantia.porcentajePrestamoGeneral = a.porcentajePrestamoGeneral;
 			    this.garantia.comisionGastos = a.comisionGastos;
@@ -853,6 +855,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 					this.mob = false;
 			    this.garantia.num = a.num
 			    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion;
+			    this.garantia.ubicacion = a.ubicacion;
 			    this.garantia.medidasColindancias = a.medidasColindancias;
 			    this.garantia.avaluoGeneral = a.avaluoGeneral;
 			    this.garantia.porcentajePrestamoGeneral = a.porcentajePrestamoGeneral;
