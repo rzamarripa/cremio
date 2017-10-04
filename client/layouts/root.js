@@ -11,12 +11,21 @@ angular.module("creditoMio")
 	this.buscar.numeroCliente = "";
 	this.buscando = false;
 	rc.porNumero = false;
+	
 	//this.clientesRoot = [];
 	this.clientes_ids = [];
 
 	this.hoy = new Date();
+	
+	rc.nc = "";
+	rc.nd = "";
+	rc.sucursal = {};
 	//this.caja = {};
 	//this.nombreCliente = "";
+	
+	this.subscribe('sucursales', () => {
+			return [{_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""}]
+	});	
 	
 
 	this.subscribe('buscarRootClientesDistribuidores', () => {
@@ -24,6 +33,7 @@ angular.module("creditoMio")
 		
 		if(rc.getReactively("buscar.nombre").length > 4){
 			
+			rc.clientesRoot = [];
 			rc.buscando = true;			
 			return [{
 		    options : { limit: 20 },
@@ -39,24 +49,57 @@ angular.module("creditoMio")
 
   });  
 
-		this.subscribe('buscarRootClientesDistribuidoresNumero', () => {
+	this.subscribe('buscarRootClientesDistribuidoresNumero', () => {
 			
-			console.log(rc.getReactively("buscar.numeroCliente"));
+			rc.clientesRoot = [];
+			rc.nc = rc.getReactively("buscar.numeroCliente");
+			rc.nd = rc.getReactively("buscar.numeroCliente");
+
+			var clave = rc.getReactively("sucursal.clave");
+
+			//armar el numero
+			var numero = parseInt(rc.nc);
+
+			if (isNaN(numero) == false) //es Número
+			{
+
+				if (numero < 10)
+				{
+					 rc.nc = clave + '-C000' + numero.toString();
+					 rc.nd = clave + '-D000' + numero.toString();
+				}	 
+				else if (numero < 100)
+				{
+	  			 rc.nc = clave + '-C00' + numero.toString();
+					 rc.nd = clave + '-D00' + numero.toString();
+	  		}	 
+	  		else if (numero < 1000)
+	  		{
+	  			 rc.nc = clave + '-C0' + numero.toString();	 
+					 rc.nd = clave + '-D0' + numero.toString();	 
+	  		}	 
+	  		else
+	  		{
+	  			 rc.nc = clave + '-C' + numero.toString();
+					 rc.nd = clave + '-D' + numero.toString();
+	  		}	 
+
+			}			
 			
-			if(rc.getReactively("buscar.numeroCliente").length > 4 )
+			if(rc.getReactively("buscar.numeroCliente").length > 0 )
 			{
 				 rc.buscando = true;	
 				return [{
 			    options : { limit: 20 },
 			    where : { 
-						numeroCliente : rc.getReactively('buscar.numeroCliente'),
-						numeroDistribuidor : rc.getReactively('buscar.numeroCliente')
+						numeroCliente 			: rc.nc,
+						numeroDistribuidor 	: rc.nd
 					} 		   
 		    }];
 			}
-		else if (rc.getReactively("buscar.numeroCliente").length  == 0 ){
-			this.buscando = false;		
-		}
+			else if (rc.getReactively("buscar.numeroCliente").length  == 0 ){
+				this.buscando = false;		
+			}
 
   }); 
 
@@ -65,10 +108,22 @@ angular.module("creditoMio")
   this.helpers({
 		clientesRoot : () => {
 			
-			var clientes = Meteor.users.find({
-				"profile.nombreCompleto": { '$regex' : '.*' + rc.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
-		  	roles : {$in : ["Cliente", "Distribuidor"]}
-			}, { sort : {"profile.nombreCompleto" : 1 }}).fetch();
+			if (rc.getReactively('buscar.nombre').length > 4)
+			{
+				var clientes = Meteor.users.find({
+					"profile.nombreCompleto": { '$regex' : '.*' + rc.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
+			  	roles : {$in : ["Cliente", "Distribuidor"]}
+				}, { sort : {"profile.nombreCompleto" : 1 }}).fetch();
+			}
+			
+			if(rc.getReactively("buscar.numeroCliente").length > 0 )
+			{
+				
+				var clientes = Meteor.users.find({$or: [{"profile.numeroCliente": rc.nc},
+																								{"profile.numeroDistribuidor": rc.nd}]}).fetch();
+				
+			}
+				
 	
 			if(clientes){
 				this.clientes_ids = _.pluck(clientes, "_id");
@@ -81,6 +136,13 @@ angular.module("creditoMio")
 			return clientes;
 			
 		},
+		sucursal : () => {
+			var s = Sucursales.findOne({_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""});
+			if (s != undefined)
+					rc.sucursal = s;
+			
+			return rc.sucursal;
+		},	
 /*
 		inicio:()=>{
 			if (Meteor.user().username != "admin") {
