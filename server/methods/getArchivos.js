@@ -1254,6 +1254,9 @@ Meteor.methods({
 		var letra = NumeroALetras(contrato.capitalSolicitado);
 		var tasaPor = NumeroALetras(contrato.tasa);
 		const formatCurrency = require('format-currency')
+		if (contrato.seguro) {contrato.seguroLetra = NumeroALetras(contrato.seguro)}
+		
+		
 			
 	if (avales == undefined) {
 		avales = cliente
@@ -1279,7 +1282,6 @@ Meteor.methods({
 		  	cliente.ocupacion = cliente.ocupacionCliente.nombre
 		  	cliente.ciudad = cliente.ciudadCliente.nombre
 		  	cliente.municipio = cliente.municipioCliente.nombre
-		  	
 		  	var all = planPagos[planPagos.length - 1]
 		  	var total = all.sumatoria
   	 		_.each(planPagos,function(pp){
@@ -1300,7 +1302,6 @@ Meteor.methods({
 			 	    pp.fechaLimitePago = pp.fechaLimite
 			 	    pp.fechaLimitePago =  moment(pp.fechaLimitePago).format("DD-MM-YYYY")	
 		 	});
-
 
   	 _.each(contrato.garantias,function(item){
   	 	item.fechaFiniquito = moment(item.fechaFiniquito).format("DD-MM-YYYY")
@@ -1330,25 +1331,30 @@ Meteor.methods({
   	    }
   	    if (item.almacenaje) {
   	 	item.almacenaje = parseFloat(item.almacenaje.toFixed(2))
-  	 	item.almacenaje = formatCurrency(item.almacenaje)}
+  	 	item.almacenajeLetra = NumeroALetras(item.almacenaje)}
+  	 	item.almacenaje = formatCurrency(item.almacenaje)
   	 	if (item.comercializacion) {
   	 	item.comercializacion = parseFloat(item.comercializacion.toFixed(2))
-  	 	item.comercializacion = formatCurrency(item.comercializacion)}
+  	 	item.comercializacionLetra = NumeroALetras(item.comercializacion)}
+  	 	item.comercializacion = formatCurrency(item.comercializacion)
+  	    
   	 	if (item.desempenioExtemporaneo) {
   	 	item.desempenioExtemporaneo = parseFloat(item.desempenioExtemporaneo.toFixed(2))
-  	 	item.desempenioExtemporaneo = formatCurrency(item.desempenioExtemporaneo)}
+  	 	item.desempenioLetra = NumeroALetras(item.desempenioExtemporaneo)}
+  	 	item.desempenioExtemporaneo = formatCurrency(item.desempenioExtemporaneo)
   	 	if (item.reposicionContrato) {
   	 	item.reposicionContrato = parseFloat(item.reposicionContrato.toFixed(2))
-  	 	item.reposicionContrato = formatCurrency(item.reposicionContrato)}
+  	 	item.reposicionLetra = NumeroALetras(item.reposicionContrato)}
+  	 	item.reposicionContrato = formatCurrency(item.reposicionContrato)
   	 });
   	  contrato.fechaEntrega =moment(contrato.fechaEntrega).format("DD-MM-YYYY")
   	  var vigencia = planPagos[planPagos.length - 1];
   	  var vigenciaFecha = vigencia.fechaLimite
 
   	     var fecha = new Date();
+  	     
 	 	
  		    //console.log(fecha,"FECHA")
-
   	    function formatDate(date) {
   	    	date = new Date(date);
 		  var monthNames = [
@@ -1373,6 +1379,22 @@ Meteor.methods({
 		    "AGOSTO", "SEPTIEMBRE", "OCTUBRE",
 		    "NOVIEMBRE", "DICIEMBRE"
 		  ];
+		  //console.log(date,"date")
+		  var day = date.getDate();
+		  console.log(day,"DIA")
+		  var monthIndex = date.getMonth();
+		  var year = date.getFullYear();
+	
+		  return day + ' ' + 'DE' + ' '  + monthNames[monthIndex] + ' ' + ' DEL'  + ' ' + year;
+		}
+		function formatDa(date) {
+  	    	date = new Date(date);
+		  var monthNames = [
+		    "ENERO", "FEBRERO", "MARZO",
+		    "ABRIL", "MAYO", "JUNIO", "JULIO",
+		    "AGOSTO", "SEPTIEMBRE", "OCTUBRE",
+		    "NOVIEMBRE", "DICIEMBRE"
+		  ];
 		  console.log(date,"date")
 		  var day = date.getDate();
 		  console.log(day,"DIA")
@@ -1381,10 +1403,12 @@ Meteor.methods({
 	
 		  return day + ' ' + 'DE' + ' '  + monthNames[monthIndex] + ' ' + ' DEL'  + ' ' + year;
 		}
+
         var fechaVigencia = formatDate(vigenciaFecha);
         contrato.capitalSolicitado = formatCurrency(contrato.capitalSolicitado) 
         var fechaLetra = formatDia(fecha);
-        console.log(contrato.avisoPrivacidad,"contrato")
+        
+        //console.log(contrato.avisoPrivacidad,"contrato")
 
         var autorizacionProveedorSi = contrato.avisoPrivacidad;
         var autorizacionProveedorNo = "";
@@ -1400,23 +1424,40 @@ Meteor.methods({
         }else{
         	autorizacionPublicidadNo = "X"
         }
-        console.log(autorizacionProveedorSi,"contrato")
+        //console.log(autorizacionProveedorSi,"contrato")
+        function sumarDias(fecha){
+ 		 fecha.setDate(fecha.getDate() + 1);
+  		return fecha;
+		}
+		var fechaFiniquitoVigencia = sumarDias(vigencia.fechaLimite)
+		console.log(fechaFiniquitoVigencia,"nandaaa")
+		var vigenciaMasUnDia= formatDate(vigenciaFecha);
+		  
 
 	 		var diaV = vigencia.fechaLimite.getUTCDate()
-	 		var diaV2 = vigencia.fechaLimite.getUTCDate()+1
  		    var mesV = vigencia.fechaLimite.getUTCMonth()+1
  		    var anioV = vigencia.fechaLimite.getUTCFullYear()
  		    if (Number(diaV) < 10) {
  		    	diaV = "0" + diaV;
  		    }
- 		    if (Number(diaV2) < 10) {
- 		    	diaV2 = "0" + diaV2;
- 		    }
  		    if (Number(mesV) < 10) {
  		    	mesV = "0" + mesV;
  		    }
  		    vigencia.fechaLimite = diaV+ "-" + mesV + "-" + anioV
- 		    var vigenciaMasUnDia = diaV2+ "-" + mesV + "-" + anioV
+
+ 		    // var diaV2 = fechaFiniquitoVigencia.getUTCDate()
+ 		    // var mesV2 = fechaFiniquitoVigencia.getUTCMonth()+1
+ 		    // var anioV2 = fechaFiniquitoVigencia.getUTCFullYear()
+ 		    // if (Number(diaV2) < 10) {
+ 		    // 	diaV2 = "0" + diaV2;
+ 		    // }
+
+ 		    // if (Number(mesV2) < 10) {
+ 		    // 	mesV2 = "0" + mesV2;
+ 		    // }
+ 		    // var vigenciaMasUnDia = diaV2+ "-" + mesV2 + "-" + anioV2
+ 		    // console.log(vigenciaMasUnDia,"perro")
+
   		
   	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
 		var fs = require('fs');
@@ -1946,8 +1987,8 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		var ImageModule = require('docxtemplater-image-module');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";
+		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		//var produccion = "/home/cremio/archivos/";
 
 			var opts = {}
 			opts.centered = false;
@@ -1977,14 +2018,33 @@ Meteor.methods({
 			}
 			return "";
 		}});
+								//console.log(imagen,"IMAGEN MORRO")
 
 								var f = String(imagen);
+					//if (data:image/jpeg;base64) {}
+					if (imagen.indexOf('jpeg') > -1){
+						console.log("entro con jpeg")
 					imagen = f.replace('data:image/jpeg;base64,', '');
-
 					var bitmap = new Buffer(imagen, 'base64');
-
 					fs.writeFileSync(produccion+".jpeg", bitmap);
 					imagen = produccion+".jpeg";
+
+					}
+					if (imagen.indexOf('png') > -1){
+						console.log("entro con png")
+					imagen = f.replace('data:image/png;base64,', '');
+					var bitmap = new Buffer(imagen, 'base64');
+					fs.writeFileSync(produccion+".png", bitmap);
+					imagen = produccion+".png";
+					}
+					if (imagen.indexOf('jpg') > -1){
+						console.log("entro con jpg")
+					imagen = f.replace('data:image/jpg;base64,', '');
+					var bitmap = new Buffer(imagen, 'base64');
+					fs.writeFileSync(produccion+".jpg", bitmap);
+					imagen = produccion+".jpg";
+					}
+										
 		
 		var fecha = new Date();
 	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
