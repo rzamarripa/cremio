@@ -31,7 +31,7 @@ Meteor.publish("buscarRootClientesDistribuidores",function(options){
 			  	"profile.nombreCompleto": { '$regex' : '.*' + options.where.nombreCompleto || '' + '.*', '$options' : 'i' },
 			  	roles : {$in : ["Cliente", "Distribuidor"]}
 				}
-
+					
 				return Meteor.users.find(selector, { fields: {roles													: 1,
 																											"profile.nombreCompleto"			: 1, 
 																											"profile.sexo"								: 1, 
@@ -46,38 +46,16 @@ Meteor.publish("buscarRootClientesDistribuidoresNumero",function(options){
 				//console.log("entro",options)
 				
 					let selector = {
-				  	"profile.numeroCliente": { '$regex' : '.*' + options.where.numeroCliente || '' + '.*', '$options' : 'i' },
-				  	roles : {$in : ["Cliente","Distribuidor"]}
+				  	$or: [{"profile.numeroCliente": options.where.numeroCliente}, {"profile.numeroDistribuidor": options.where.numeroDistribuidor}]
 					}
 	
-					let selector2 = {
 					
-				  	"profile.numeroDistribuidor": { '$regex' : '.*' + options.where.numeroDistribuidor || '' + '.*', '$options' : 'i' },
-				  	roles : {$in : [ "Distribuidor"]}
-					}
-					console.log(options.where,"el options")
-				
-				if (options.where.numeroCliente.indexOf("C")!= -1)
-				 {
-				 	console.log("selector1",options)
 					return Meteor.users.find(selector, { fields: {roles												: 1,
 																											"profile.nombreCompleto"			: 1, 
 																											"profile.sexo"								: 1, 
 																											"profile.foto"								: 1,
 																											"profile.numeroDistribuidor"	: 1,
 																											"profile.numeroCliente"				: 1 }}, options.options);
-				}else{
-										console.log("selector2")
-					return Meteor.users.find(selector2, { fields: {roles											: 1,
-																											"profile.nombreCompleto"			: 1, 
-																											"profile.sexo"								: 1, 
-																											"profile.foto"								: 1,
-																											"profile.numeroDistribuidor"	: 1 }}, options.options);
-
-				}
-			
-
-
 				
 			}
 
