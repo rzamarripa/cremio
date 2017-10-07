@@ -291,15 +291,17 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		                  		result.apellidoMaterno = ""
 		                  	}
 		                      //Recorrer las relaciones 
+		                      
 		                      rc.referenciasPersonales.push({//buscarPersona_id : referenciaPersonal.referenciaPersonal_id,
 		                                                     nombre           : result.nombre,
 		                                                     apellidoPaterno  : result.apellidoPaterno,
 		                                                     apellidoMaterno  : result.apellidoMaterno,
 		                                                     parentesco       : referenciaPersonal.parentesco,
 		                                                     direccion        : result.direccion,
-		                                                     //telefono         : result.telefono,
+		                                                     telefono         : result.telefono,
 		                                                     tiempo           : referenciaPersonal.tiempoConocerlo,
-		                                                     num              : referenciaPersonal.num
+		                                                     num              : referenciaPersonal.num,
+		                                                     nombreCompleto		:	result.nombreCompleto
 		                                                     //cliente          : result.cliente,
 		                                                     //cliente_id       : result.cliente_id,
 		                                                     //tipoPersona      : result.tipoPersona,
@@ -938,69 +940,28 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
   this.generarFicha= function(objeto) 
   {
-
-  	
-		//console.log("entro:", objeto);
-		//console.log("refes", objeto.referenciasPersonales_ids)	 
-	    Meteor.call('getPeople',objeto._id,objeto.profile.referenciasPersonales_ids.referenciaPersonal_id, function(error, result){           					
+	   Meteor.call('getPeople',objeto._id,objeto.profile.referenciasPersonales_ids.referenciaPersonal_id, function(error, result){           					
 				if (result)
 				{
+	
+					loading(true);
+					rc.datosCliente = result.profile;
+					
+					Meteor.call('getFicha', rc.datosCliente, rc.referenciasPersonales, 'pdf', function(error, response) {
 
-					rc.datosCliente = result.profile
-
-	   
-	   //console.log("cliente",rc.datosCliente)
-	   // console.log("refes",rc.referencias)
-	 
-		Meteor.call('getFicha', rc.datosCliente, rc.referencias, function(error, response) {
-
-		   if(error)
-		   {
-		    console.log('ERROR :', error);
-		    return;
-		   }
-		   else
-		   {
- 				function b64toBlob(b64Data, contentType, sliceSize) {
-					  contentType = contentType || '';
-					  sliceSize = sliceSize || 512;
-					
-					  var byteCharacters = atob(b64Data);
-					  var byteArrays = [];
-					
-					  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-					    var slice = byteCharacters.slice(offset, offset + sliceSize);
-					
-					    var byteNumbers = new Array(slice.length);
-					    for (var i = 0; i < slice.length; i++) {
-					      byteNumbers[i] = slice.charCodeAt(i);
-					    }
-					
-					    var byteArray = new Uint8Array(byteNumbers);
-					
-					    byteArrays.push(byteArray);
-					  }
-					    
-					  var blob = new Blob(byteArrays, {type: contentType});
-					  return blob;
+						   if(error)
+						   {
+						    console.log('ERROR :', error);
+						    return;
+						   }
+						   else
+						   {
+							 		downloadFile(response);
+							 		loading(false);
+							 }
+					});
 				}
-							
-						var blob = b64toBlob(response, "application/docx");
-					  var url = window.URL.createObjectURL(blob);
-					  
-					  //console.log(url);
-					  var dlnk = document.getElementById('dwnldLnk');
-
-				    dlnk.download = "FICHASOCIO.docx"; 
-						dlnk.href = url;
-						dlnk.click();		    
-					  window.URL.revokeObjectURL(url);
-
-					}
-				});
-		   }
 		});
-		
 	}; 
 
 	this.diarioCobranza= function(objeto) {

@@ -47,3 +47,4 @@ angularui:ui-calendar
 planettraining:jquery-fullcalendar
 shell-server
 mrt:cron
+mrt:nprogress

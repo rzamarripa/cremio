@@ -264,7 +264,7 @@ Meteor.methods({
 			return persona;
 	},
 
-		obAvales: function (idReferencia) {
+	obAvales: function (idReferencia) {
 			var aval = Avales.findOne(idReferencia);
 			//console.log(aval,"avales server")
 			
@@ -323,22 +323,36 @@ Meteor.methods({
 	},
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  getFicha: function (objeto,referencia) {
-  	console.log(objeto.referencias,"FICHA")
+  getFicha: function (objeto,referencia, tipo) {
+  	//console.log(objeto.referencias,"FICHA")
   	if (objeto.numeroDistribuidor) {
   		objeto.numeroCliente = objeto.numeroDistribuidor
   	}
-	
 		
+		
+		const formatCurrency = require('format-currency');
 		var fs = require('fs');
-        var Docxtemplater = require('docxtemplater');
+    var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var cmd = require('node-cmd');
 		var ImageModule = require('docxtemplater-image-module');
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-
+		
+		var unoconv = require('better-unoconv');
+    var future = require('fibers/future');
+		
+		
+		var templateType = (tipo === 'pdf') ? '.docx' : (tipo === 'excel' ? '.xlsx' : '.docx');
+    if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/" + "FICHASOCIO" + templateType;
+      var produccionFoto = publicPath + "public/fotos/" + "FICHASOCIO";
+    }else{
+      var publicPath = '/home/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "plantillas/" + "FICHASOCIO" + templateType;
+      var produccionFoto = publicPath + "public/fotos/" + "FICHASOCIO";
+    }
+		
 
 		var opts = {}
 			opts.centered = false;
@@ -353,107 +367,95 @@ Meteor.methods({
 		
 		var imageModule=new ImageModule(opts);
 
-		var content = fs
-    							.readFileSync(produccion+"FICHASOCIO.docx", "binary");
+		var content = fs.readFileSync(produccion, "binary");
 
+		var res = new future();
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
 								.attachModule(imageModule)
 								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			return "";
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
+				if (!part.module) {
+				return "";
+				}
+				if (part.module === "rawxml") {
+				return "";
+				}
+				return "";
 		}});
 
 
 		
 		var fecha = new Date();
-			    hora = fecha.getHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+		var hora = moment(fecha).format("hh:mm:ss a");
 
 		fecha.setHours(0,0,0,0);
-		//var fechaNaci = objeto.profile.fechaNacimiento;
+	  var fechaEmision = new Date()
+
+    var f = String(objeto.foto);
+		objeto.foto = f.replace('data:image/jpeg;base64,', '');
+
+		var bitmap = new Buffer(objeto.foto, 'base64');
 		
-    	//var f = fecha;
-    	
-    	//fechaAltaCliente = new Date(objeto.profile.fechaCreacion)
-    	// fechaAltaCliente.setHours(0,0,0,0)
-    	// fechaAlta = fechaAltaCliente.getUTCDate()+'-'+(fechaAltaCliente.getUTCMonth()+1)+'-'+fechaAltaCliente.getUTCFullYear();
-	    // fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    //fechaNacimiento = fechaNaci.getUTCDate()+'-'+(fechaNaci.getUTCMonth()+1)+'-'+fechaNaci.getUTCFullYear();
-	    var fechaEmision = new Date()
-	    
+		fs.writeFileSync(produccionFoto + objeto.nombreCompleto + ".jpeg", bitmap);
+		objeto.foto = produccionFoto + objeto.nombreCompleto + ".jpeg";
+			
+		//objeto.referenciasPersonales_ids.referencia .find(objeto.referenciasPersonales_ids.r
+		
+		
+		objeto.fechaCreacion =moment(objeto.fechaCreacion).format("DD-MM-YYYY")
+		objeto.fechaNacimiento =moment(objeto.fechaNacimiento).format("DD-MM-YYYY")
+		objeto.fechaEmision = fechaEmision
+		objeto.fechaEmision= moment(objeto.fechaEmision).format("DD-MM-YYYY")
 
-
-	    var f = String(objeto.foto);
-					objeto.foto = f.replace('data:image/jpeg;base64,', '');
-
-					var bitmap = new Buffer(objeto.foto, 'base64');
-
-					fs.writeFileSync(produccion+".jpeg", bitmap);
-					objeto.foto = produccion+".jpeg";
-						
-						 	//objeto.referenciasPersonales_ids.referencia .find(objeto.referenciasPersonales_ids.r
-
-						objeto.fechaCreacion =moment(objeto.fechaCreacion).format("DD-MM-YYYY")
-						objeto.fechaNacimiento =moment(objeto.fechaNacimiento).format("DD-MM-YYYY")
-						objeto.fechaEmision = fechaEmision
-						objeto.fechaEmision= moment(objeto.fechaEmision).format("DD-MM-YYYY")
-
-						    objeto.pais = objeto.paisCliente.nombre
-							objeto.ciudad = objeto.ciudadCliente.nombre
-							objeto.sucursal = objeto.sucursales.nombreSucursal
-							objeto.colonia = objeto.coloniaCliente.nombre
-							objeto.municipio = objeto.municipioCliente.nombre
-							objeto.estado = objeto.estadoCliente.nombre
-							objeto.nacionalidad = objeto.nacionalidadCliente.nombre
-							objeto.estadoCivil = objeto.estadoCivilCliente.nombre
-							objeto.ocupacion = objeto.ocupacionCliente.nombre
-							objeto.cp = objeto.codigoPostal
-							objeto.telefonoMovilContacto = objeto.celular
-							objeto.telefonoContacto = objeto.particular
-							objeto.nombreConyu = objeto.nombreConyuge
-							objeto.empresaC = Empresas.findOne(objeto.empresa_id);
-							objeto.empresaC.municipio = Municipios.findOne(objeto.empresaC.municipio_id);
-							objeto.municipioEmpresa = objeto.empresaC.municipio.nombre
-							objeto.empresaC.municipio = Municipios.findOne(objeto.empresaC.municipio_id);
-							objeto.municipioEmpresa = objeto.empresaC.municipio.nombre
-							objeto.empresaC.estado = Estados.findOne(objeto.empresaC.estado_id);
-							objeto.estadoEmpresa = objeto.empresaC.estado.nombre
-							objeto.empresaC.colonia = Colonias.findOne(objeto.empresaC.colonia_id);
-							objeto.coloniaEmpresa = objeto.empresaC.colonia.nombre
-							objeto.empresaC.pais = Paises.findOne(objeto.empresaC.pais_id);
-							objeto.paisEmpresa = objeto.empresaC.pais.nombre
-							objeto.numeroEmpresa = objeto.empresaC.no
-							objeto.empresa = objeto.empresaC.nombre
-							objeto.calleEmpresa = objeto.empresaC.calle
-							objeto.numeroEmpresa = objeto.empresaC.numero
-
-
-						 	
-
-						
-
-
-		doc.setData({				item: 		objeto,//bien
-									foto: objeto.foto,
-									referencias: objeto.referencias,
-									fechaEmision : objeto.fechaEmision,
-					
-
-
-								}) 
-									
-								
-		doc.render();
+	  objeto.pais = objeto.paisCliente.nombre
+		objeto.ciudad = objeto.ciudadCliente.nombre
+		objeto.sucursal = objeto.sucursales.nombreSucursal
+		objeto.colonia = objeto.coloniaCliente.nombre
+		objeto.municipio = objeto.municipioCliente.nombre
+		objeto.estado = objeto.estadoCliente.nombre
+		objeto.nacionalidad = objeto.nacionalidadCliente.nombre
+		objeto.estadoCivil = objeto.estadoCivilCliente.nombre
+		objeto.ocupacion = objeto.ocupacionCliente.nombre
+		objeto.cp = objeto.codigoPostal
+		objeto.telefonoMovilContacto = objeto.celular
+		objeto.telefonoContacto = objeto.particular
+		objeto.nombreConyu = objeto.nombreConyuge
+		objeto.empresaC = Empresas.findOne(objeto.empresa_id);
+		objeto.empresaC.municipio = Municipios.findOne(objeto.empresaC.municipio_id);
+		objeto.municipioEmpresa = objeto.empresaC.municipio.nombre
+		objeto.empresaC.municipio = Municipios.findOne(objeto.empresaC.municipio_id);
+		objeto.municipioEmpresa = objeto.empresaC.municipio.nombre
+		objeto.empresaC.estado = Estados.findOne(objeto.empresaC.estado_id);
+		objeto.estadoEmpresa = objeto.empresaC.estado.nombre
+		objeto.empresaC.colonia = Colonias.findOne(objeto.empresaC.colonia_id);
+		objeto.coloniaEmpresa = objeto.empresaC.colonia.nombre
+		objeto.empresaC.pais = Paises.findOne(objeto.empresaC.pais_id);
+		objeto.paisEmpresa = objeto.empresaC.pais.nombre
+		objeto.numeroEmpresa = objeto.empresaC.no
+		objeto.empresa = objeto.empresaC.nombre
+		objeto.calleEmpresa = objeto.empresaC.calle
+		objeto.cpEmpresa	= objeto.empresaC.codigoPostal;
+		objeto.numeroEmpresa = objeto.empresaC.numero
+		
+		objeto.ingresosPersonales 	= formatCurrency(objeto.ingresosPersonales);
+		objeto.ingresosConyuge		 	= formatCurrency(objeto.ingresosConyuge);
+		objeto.otrosIngresos				= formatCurrency(objeto.otrosIngresos);
+		objeto.gastosFijos 					= formatCurrency(objeto.gastosFijos);
+		objeto.gastosEventuales 		= formatCurrency(objeto.gastosEventuales);
+		
+		console.log(objeto);
+		
+		doc.setData({	item					: objeto,
+									foto					: objeto.foto,
+									referencias		: referencia,
+									fechaEmision 	: objeto.fechaEmision,
+									hora					: hora,
+								});								
+		doc.render(); 
+		var buf = doc.getZip().generate({type:"nodebuffer"});
  
-		var buf = doc.getZip()
-             		 .generate({type:"nodebuffer"});
- 
-		fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);		
+		/*
+fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
@@ -461,8 +463,30 @@ Meteor.methods({
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
+*/
 		
-		
+		if (tipo == 'pdf') {
+      var rutaOutput = publicPath + (Meteor.isDevelopment ? ".outputs/" : "plantillas/") + "FICHASOCIOOut" + moment().format('x') + templateType;
+      fs.writeFileSync(rutaOutput, buf);
+      unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+        if(!err){
+          fs.unlink(rutaOutput);
+          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "FICHASOCIOOut" + '.pdf' });
+        }else{
+          res['return']({err: err});
+        }
+      });
+    } else {
+      var mime;
+      if (templateType === '.xlsx') {
+        mime = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      } else {
+        mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      }
+      res['return']({ uri: 'data:application/' + mime + ';base64,' + buf.toString('base64'), nombre: "FICHASOCIOOut" + templateType });
+    }
+    return res.wait();
+				
   },
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -788,7 +812,6 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
-
   ReporteCreditos: function (objeto,inicial,final) {
 	
 		//console.log(objeto,"fwfe ")
@@ -908,7 +931,6 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
-
   ReporteMovimientoCuenta: function (objeto,inicial,final) {
 	
 		console.log(objeto,"creditos ")
@@ -1092,9 +1114,6 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
-  
-  
-  
   contratos: function (contrato,credito,cliente,planPagos,avales) {
 
     function Unidades(num){
@@ -1253,7 +1272,7 @@ Meteor.methods({
 			
 		var letra = NumeroALetras(contrato.capitalSolicitado);
 		var tasaPor = NumeroALetras(contrato.tasa);
-		const formatCurrency = require('format-currency')
+		const formatCurrency = require('format-currency');
 		if (contrato.seguro) {contrato.seguroLetra = NumeroALetras(contrato.seguro)}
 		
 		
@@ -1810,8 +1829,7 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   }, 
-
-  imprimirHistorial: function (objeto,cliente,credito) {
+	imprimirHistorial: function (objeto,cliente,credito) {
 	
 		console.log(cliente,"cliente")
 		var fs = require('fs');
@@ -1938,7 +1956,6 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   }, 
-
   formaSolicitud: function () {
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
@@ -2067,5 +2084,99 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
+  
+  
+  report: function(params) {
+    var Docxtemplater = require('docxtemplater');
+    var JSZip = require('jszip');
+    var unoconv = require('better-unoconv');
+    var future = require('fibers/future');
+    var fs = require('fs');
+    var objParse = function(datos, obj, prof) {
+      if (!obj) {
+        obj = {};
+      }
+      _.each(datos, function(d, dd) {
+        var i = prof ? prof + dd : dd;
+        if (_.isDate(d)) {
+          obj[i] = moment(d).format('DD-MM-YYYY');
+        } else if (_.isArray(d)) {
+          obj[i] = arrParse(d, []);
+        } else if (_.isObject(d)) {
+          objParse(d, obj, i + '.');
+        } else {
+          obj[i] = d;
+        }
+      });
+      return obj
+    };
+
+    var arrParse = function(datos, arr) {
+      _.each(datos, function(d) {
+        if (_.isArray(d)){
+          arr.push(arrParse(d, []));
+        }else if (_.isObject(d)){
+          var obj = objParse(d, {});
+          arr.push(obj);
+        } else {
+          arr.push(!_.isDate(d) ? d : moment(d).format('DD-MM-YYYY'));
+        }
+      });
+      return arr
+    };
+
+    params.datos = objParse(params.datos);
+    params.datos.fechaReporte = moment().format('DD-MM-YYYY');  
+    var templateType = (params.type === 'pdf') ? '.docx' : (params.type === 'excel' ? '.xlsx' : '.docx');
+    if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var templateRoute = publicPath + "public/templates/" + params.templateNombre + templateType;
+    }else{
+      var publicPath = '/home/casserole/bundle/programs/web.browser/app/';
+      var templateRoute = publicPath + "templates/" + params.templateNombre + templateType;
+    }
+
+    var content = fs.readFileSync(templateRoute, "binary");
+    var res = new future();
+    var zip = new JSZip(content);
+    var doc = new Docxtemplater().loadZip(zip).setOptions({
+      nullGetter: function(part) {
+        if (!part.module) {
+          return "";
+        }
+        if (part.module === "rawxml") {
+          return "";
+        }
+        return "";
+      }
+    });
+
+    doc.setData(params.datos);
+    doc.render();
+    var buf = doc.getZip().generate({ type: "nodebuffer" });
+    if (params.type == 'pdf') {
+      var rutaOutput = publicPath + (Meteor.isDevelopment ? ".outputs/" : "templates/") + params.reportNombre + moment().format('x') + templateType;
+      fs.writeFileSync(rutaOutput, buf);
+      unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+        if(!err){
+          fs.unlink(rutaOutput);
+          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: params.reportNombre + '.pdf' });
+        }else{
+          res['return']({err: err});
+        }
+      });
+    } else {
+      var mime;
+      if (templateType === '.xlsx') {
+        mime = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      } else {
+        mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      }
+      res['return']({ uri: 'data:application/' + mime + ';base64,' + buf.toString('base64'), nombre: params.reportNombre + templateType });
+    }
+    return res.wait()
+  }
+  
 	
 });

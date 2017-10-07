@@ -706,10 +706,10 @@ angular.module("creditoMio")
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   this.borrarDoc = function($index)
   {
-	  console.log($index);	
-	  console.log(rc.documents);	
+	  //console.log($index);	
+	  //console.log(rc.documents);	
     rc.documents.splice($index, 1);
-    console.log(rc.documents);	
+    //console.log(rc.documents);	
   };
   
   //busca un elemento en el arreglo
@@ -742,7 +742,7 @@ angular.module("creditoMio")
   
         if (file.type.match(imageType)) {
           
-          if (file.size <= 512000)
+          if (file.size <= 2048000)
           {
             
             var reader = new FileReader();
@@ -752,7 +752,7 @@ angular.module("creditoMio")
             }
             reader.readAsDataURL(file);     
           }else {
-            toastr.error("Error la Imagen supera los 512 KB");
+            toastr.error("Error la Imagen supera los 2 MB");
             return;
           }
         } else {
