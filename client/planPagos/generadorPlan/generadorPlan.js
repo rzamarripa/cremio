@@ -940,7 +940,11 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			else 
 					rc.garantia.porcentajePrestamoMobiliria = 0;
   };
-
+	
+	this.mostrarModalValidarBeneficiado = function()
+	{
+		$("#modalvalidaBeneficiario").modal();
+	};
 	
 	
 

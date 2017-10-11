@@ -1,5 +1,5 @@
 Meteor.methods({
-		getcartaRecordatorio: function (objeto) {
+	getcartaRecordatorio: function (objeto) {
 		//console.log(objeto,"recordatori")
    // var produccion = "/home/cremio/archivos/";
 		
@@ -148,7 +148,7 @@ Meteor.methods({
 
 
   getcartaCertificado: function (objeto,objeto_id) {
-	console.log(objeto,"certificacionPatrimonial")
+	//console.log(objeto,"certificacionPatrimonial")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -340,17 +340,16 @@ Meteor.methods({
 		var unoconv = require('better-unoconv');
     var future = require('fibers/future');
 		
-		
 		var templateType = (tipo === 'pdf') ? '.docx' : (tipo === 'excel' ? '.xlsx' : '.docx');
     if(Meteor.isDevelopment){
       var path = require('path');
       var publicPath = path.resolve('.').split('.meteor')[0];
       var produccion = publicPath + "public/plantillas/" + "FICHASOCIO" + templateType;
       var produccionFoto = publicPath + "public/fotos/" + "FICHASOCIO";
-    }else{
-      var publicPath = '/home/cremio/bundle/programs/web.browser/app/';
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
       var produccion = publicPath + "plantillas/" + "FICHASOCIO" + templateType;
-      var produccionFoto = publicPath + "public/fotos/" + "FICHASOCIO";
+      var produccionFoto = publicPath + "fotos/" + "FICHASOCIO";
     }
 		
 
@@ -399,8 +398,7 @@ Meteor.methods({
 		fs.writeFileSync(produccionFoto + objeto.nombreCompleto + ".jpeg", bitmap);
 		objeto.foto = produccionFoto + objeto.nombreCompleto + ".jpeg";
 			
-		//objeto.referenciasPersonales_ids.referencia .find(objeto.referenciasPersonales_ids.r
-		
+		//objeto.referenciasPersonales_ids.referencia .find(objeto.referenciasPersonales_ids.r		
 		
 		objeto.fechaCreacion =moment(objeto.fechaCreacion).format("DD-MM-YYYY")
 		objeto.fechaNacimiento =moment(objeto.fechaNacimiento).format("DD-MM-YYYY")
@@ -443,8 +441,6 @@ Meteor.methods({
 		objeto.gastosFijos 					= formatCurrency(objeto.gastosFijos);
 		objeto.gastosEventuales 		= formatCurrency(objeto.gastosEventuales);
 		
-		console.log(objeto);
-		
 		doc.setData({	item					: objeto,
 									foto					: objeto.foto,
 									referencias		: referencia,
@@ -455,7 +451,7 @@ Meteor.methods({
 		var buf = doc.getZip().generate({type:"nodebuffer"});
  
 		/*
-fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);		
+		fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
@@ -463,20 +459,35 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
-*/
+		*/
+		//console.log(objeto);
 		
 		if (tipo == 'pdf') {
-      var rutaOutput = publicPath + (Meteor.isDevelopment ? ".outputs/" : "plantillas/") + "FICHASOCIOOut" + moment().format('x') + templateType;
+      var rutaOutput = publicPath + (Meteor.isDevelopment ? "public/generados/" : "generados/") + "FICHASOCIOOut" + moment().format('x') + templateType;
       fs.writeFileSync(rutaOutput, buf);
-      unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+
+      var bitmap = fs.readFileSync(rutaOutput);
+      var base = Buffer(bitmap).toString('base64');
+            
+      fs.unlink(rutaOutput);
+      res['return']({ uri: 'data:application/msword;base64,' + base, nombre: objeto.nombreCompleto + '.docx' });
+      
+      /*
+unoconv.convert(rutaOutput, 'pdf', function(err, result) {
         if(!err){
           fs.unlink(rutaOutput);
           res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "FICHASOCIOOut" + '.pdf' });
         }else{
           res['return']({err: err});
+          console.log(err);
         }
       });
-    } else {
+*/
+			
+    } 
+    /*
+
+    else {
       var mime;
       if (templateType === '.xlsx') {
         mime = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -485,6 +496,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
       }
       res['return']({ uri: 'data:application/' + mime + ';base64,' + buf.toString('base64'), nombre: "FICHASOCIOOut" + templateType });
     }
+*/
     return res.wait();
 				
   },
@@ -493,7 +505,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
 
   getRecibos: function (objeto) {
 	
-		console.log(objeto,"planPagos")
+		//console.log(objeto,"planPagos")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -555,7 +567,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
   },
 
   getCreditoReporte: function (objeto,credito,avales,total) {
-    	console.log(total,"total")
+    	//console.log(total,"total")
 	
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
@@ -666,7 +678,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
   },
   ReporteCobranza: function (objeto,inicial,final,) {
 	
-		console.log(objeto,"creditos ")
+		//console.log(objeto,"creditos ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -933,7 +945,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
   },
   ReporteMovimientoCuenta: function (objeto,inicial,final) {
 	
-		console.log(objeto,"creditos ")
+		//console.log(objeto,"creditos ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -967,7 +979,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
 	    	
 	    });
 	    
-	    console.log(objeto.planPagos);
+	    //console.log(objeto.planPagos);
 		
 		doc.setData({				items: 		 objeto,
 												fecha:     fecha,
@@ -992,7 +1004,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
   },
   ReportesBanco: function (objeto,inicial,final) {
 	
-		console.log(objeto,"creditos ")
+		//console.log(objeto,"creditos ")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -1400,7 +1412,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
 		  ];
 		  //console.log(date,"date")
 		  var day = date.getDate();
-		  console.log(day,"DIA")
+		  //console.log(day,"DIA")
 		  var monthIndex = date.getMonth();
 		  var year = date.getFullYear();
 	
@@ -1414,9 +1426,9 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
 		    "AGOSTO", "SEPTIEMBRE", "OCTUBRE",
 		    "NOVIEMBRE", "DICIEMBRE"
 		  ];
-		  console.log(date,"date")
+		  //console.log(date,"date")
 		  var day = date.getDate();
-		  console.log(day,"DIA")
+		  //console.log(day,"DIA")
 		  var monthIndex = date.getMonth();
 		  var year = date.getFullYear();
 	
@@ -1449,7 +1461,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
   		return fecha;
 		}
 		var fechaFiniquitoVigencia = sumarDias(vigencia.fechaLimite)
-		console.log(fechaFiniquitoVigencia,"nandaaa")
+		//console.log(fechaFiniquitoVigencia,"nandaaa")
 		var vigenciaMasUnDia= formatDate(vigenciaFecha);
 		  
 
@@ -1708,17 +1720,17 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
 		var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		if (contrato.tipoInteres.tipoInteres == "Simple") {
-			console.log("entra SIMPLE")
+			//console.log("entra SIMPLE")
 			var content = fs				
 					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.docx", "binary");
 		}
 		if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-			console.log("entra saldos")
+			//console.log("entra saldos")
 			var content = fs				
 					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASSI.docx", "binary");
 		}
 		if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-			console.log("entra COMPUESTO")
+			//console.log("entra COMPUESTO")
 			var content = fs				
 					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIACOMPUESTO.docx", "binary");
 		}
@@ -1780,7 +1792,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
 },
 	getListaCobranza: function (objeto) {
 	
-		console.log(objeto,"planPagos")
+		//console.log(objeto,"planPagos")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -1831,7 +1843,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
   }, 
 	imprimirHistorial: function (objeto,cliente,credito) {
 	
-		console.log(cliente,"cliente")
+		//console.log(cliente,"cliente")
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -2040,7 +2052,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
 								var f = String(imagen);
 					//if (data:image/jpeg;base64) {}
 					if (imagen.indexOf('jpeg') > -1){
-						console.log("entro con jpeg")
+						//console.log("entro con jpeg")
 					imagen = f.replace('data:image/jpeg;base64,', '');
 					var bitmap = new Buffer(imagen, 'base64');
 					fs.writeFileSync(produccion+".jpeg", bitmap);
@@ -2048,14 +2060,14 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
 
 					}
 					if (imagen.indexOf('png') > -1){
-						console.log("entro con png")
+					//	console.log("entro con png")
 					imagen = f.replace('data:image/png;base64,', '');
 					var bitmap = new Buffer(imagen, 'base64');
 					fs.writeFileSync(produccion+".png", bitmap);
 					imagen = produccion+".png";
 					}
 					if (imagen.indexOf('jpg') > -1){
-						console.log("entro con jpg")
+					//	console.log("entro con jpg")
 					imagen = f.replace('data:image/jpg;base64,', '');
 					var bitmap = new Buffer(imagen, 'base64');
 					fs.writeFileSync(produccion+".jpg", bitmap);
@@ -2133,7 +2145,7 @@ fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);
       var publicPath = path.resolve('.').split('.meteor')[0];
       var templateRoute = publicPath + "public/templates/" + params.templateNombre + templateType;
     }else{
-      var publicPath = '/home/casserole/bundle/programs/web.browser/app/';
+      var publicPath = '/var/www/credmio/bundle/programs/web.browser/app/';
       var templateRoute = publicPath + "templates/" + params.templateNombre + templateType;
     }
 

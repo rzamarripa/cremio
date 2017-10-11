@@ -358,7 +358,8 @@ angular.module("creditoMio")
 			tipoGarantia 				: this.credito.tipoGarantia,
 			tasa								: this.credito.tasa,
 			conSeguro 					: this.credito.conSeguro,
-			seguro							: this.credito.seguro
+			seguro							: this.credito.seguro,
+			tipo								:	this.credito.tipo
 		};
 				
 		credito.avales = angular.copy(this.avales);

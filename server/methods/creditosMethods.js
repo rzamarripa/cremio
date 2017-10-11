@@ -10,8 +10,7 @@ Meteor.methods({
 		cliente._id = c.cliente_id;
 		
 		var planPagos = Meteor.call("generarPlanPagos", c, cliente);
-				
-		
+						
 		var saldoActual = 0;
 		_.each(planPagos,function(pago){
 			saldoActual += Number(parseFloat(pago.cargo).toFixed(2));
@@ -218,8 +217,35 @@ Meteor.methods({
 			throw new Meteor.Error(500, 'Error 500: Conflicto', 'Credito Invalido');
 		if(!caja)
 			throw new Meteor.Error(500, 'Error 500: Conflicto', 'Usuario Sin Caja Asignada');
+		
+		
+		//console.log("Suma:", suma);
+		//Validar que el cliente tenga saldo en el crédito si es Vale
+		if (credito.tipo == "vale")
+		{
+				//console.log("Es vale");
+				var cliente = Meteor.users.findOne(credito.cliente_id);
+				var suma = 0;
+				
+				_.each(montos.caja,(monto,index)=>{
+						if (Number(monto.saldo) > 0)
+								suma += Number(parseFloat(monto.saldo).toFixed(2));
+				});	
+				
+				
+				if (cliente.saldoCredito < suma)
+						throw new Meteor.Error(500, 'Error', 'El Distribuidor no tiene Saldo');
+				
+				
+				
+		}
 
+		
+		
+		
+		
 		credito.entrega = {movimientosCaja:[],movimientosCuentas:[]};		
+		
 		
 		_.each(montos.caja,(monto,index)=>{
 			
@@ -249,34 +275,16 @@ Meteor.methods({
 			}	
 		});
 
+		
+				
+		
+
+		
 		delete caja._id
 		caja.updated = true;
 		caja.updatedAt = new Date();
 		caja.updatedBy = user._id;
 		Cajas.update({_id:cajaid},{$set:caja});
-
-		/*
-_.each(montos.cuenta,(monto,index)=>{
-			var movimiento = {
-				tipoMovimiento : "Retiro",
-				origen : "Entrega de Credito",
-				origen_id : creditoid,
-				monto : monto.saldo * -1,
-				cuenta_id : index,
-				sucursal_id : user.profile.sucursal_id,
-				createdAt : new Date(),
-				createdBy : user._id,
-				updated : false,
-				estatus : 1
-			}
-			var cuenta = Cuentas.findOne(index);
-
-			var movimientoid = MovimientosCuenta.insert(movimiento);
-			credito.entrega.movimientosCuentas.push(movimientoid);
-			//console.log(cuenta);
-			Cuentas.update({_id:cuenta._id},{$set:{saldo:cuenta.saldo-monto.saldo}});
-		})
-*/
 
 		//credito.entregado = true;
 		credito.estatus = 4;
@@ -284,6 +292,8 @@ _.each(montos.cuenta,(monto,index)=>{
 
 		delete credito._id ;
 		Creditos.update({_id:creditoid},{$set:credito});
+		
+
 
 		return "200";
 	},

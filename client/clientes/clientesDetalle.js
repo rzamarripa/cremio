@@ -76,6 +76,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('tiposCreditos',()=>{
 		return [{}]
 	});
+	
+	this.subscribe('estadoCivil',()=>{
+		return [{}]
+	});
+	
 	this.subscribe('pagos',()=>{
 		return [{}];
 	});
@@ -704,7 +709,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				          if (result)
 				          {
 				          	rc.objeto = result;
-				          	//console.log(result)
+				          	
 									}
 						})
 						$scope.$apply();
@@ -956,6 +961,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 						   }
 						   else
 						   {
+							   	//console.log(response);
 							 		downloadFile(response);
 							 		loading(false);
 							 }
@@ -1386,7 +1392,7 @@ if(estatus == 0){
 		};
 
 	 this.imprimirContratos = function(contrato,cliente,avales){
-	 	console.log("nanato",contrato.planPagos)
+	 	//console.log("nanato",contrato.planPagos)
 
 	 	//console.log(contrato.avales_ids[0].aval_id)
 	 		if (contrato.avales_ids.length > 0) {
@@ -1592,7 +1598,7 @@ if(estatus == 0){
 		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
 		};
 
-		this.imprimirHistorial= function(objeto,cliente,credito) 
+	this.imprimirHistorial= function(objeto,cliente,credito) 
   {
   	//console.log(objeto,"pp")
 

@@ -76,6 +76,10 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 	this.subscribe('tiposCreditos',()=>{
 		return [{}]
 	});
+	
+	this.subscribe('estadoCivil',()=>{
+		return [{}]
+	});
 	this.subscribe('pagos',()=>{
 		return [{}];
 	});
@@ -334,6 +338,8 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 				objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id);
 				objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id);
 				
+				console.log("EC:", objeto.estadoCivil);
+				
 				_.each(objeto.referenciasPersonales_ids, function(referencia){
 						Meteor.call('getReferencias', referencia, function(error, result){	
 					//console.log("entra aqui",referencia)					
@@ -353,8 +359,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			});
 
 			if(cli){
-				this.ocupacion_id = cli.profile.ocupacion_id;
-				
+				this.ocupacion_id = cli.profile.ocupacion_id;				
 				var ec = EstadoCivil.findOne(cli.profile.estadoCivil_id);
 				if (ec != undefined)
 						this.estadoCivilSeleccionado = 	ec.nombre;
@@ -700,13 +705,13 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 	          if (result)
 	          {
 	          	rc.empresaCliente = result;
-	              console.log("empresa",result);
+	              //console.log("empresa",result);
 				    
 			 Meteor.call('getClienteInformacion',cliente, function(error, result) {           
 	          if (result)
 	          {
-	          	//rc.objeto = result;
-	              console.log("cliente",result);
+	          		rc.objeto = result;
+	              //console.log("cliente",result);
 
 	          }
 	          $scope.$apply();

@@ -17,6 +17,7 @@
     <div ng-show = "ecCtrl.verDiaPago">
       <div class="well">      
           <div class="row ">
+<!--
             <div class="col-sm-3" ng-if="ecCtrl.credito.periodoPago == 'Semanal'" valida>
               <label>Día preferido de pago *</label>
               <select name="diaPreferidoPago" class="form-control" ng-change="ecCtrl.fechaPago(ecCtrl.credito.diaPreferidoPago, ecCtrl.credito.periodoPago)" ng-model="ecCtrl.credito.diaPreferidoPago">
@@ -28,13 +29,14 @@
                 <option value="6">Sábado</option>
               </select>
             </div>
+-->
             <div class="col-sm-3" valida>
               <label>Primer abono</label>
-              <input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ecCtrl.objeto.primerAbono" name="fechaPrimerAbono"/>
+              <input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ecCtrl.objeto.primerAbono" name="fechaPrimerAbono" disabled="true"/>
             </div>
             <div class="col-sm-3">            
 								<br>
-								<button ng-if="ecCtrl.credito.tipo == 'creditoP'" class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Crédito</button>
+<!-- 								<button ng-if="ecCtrl.credito.tipo == 'creditoP'" class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Crédito</button> -->
                 <button ng-if="ecCtrl.credito.tipo == 'vale'" class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Vale</button>          
             </div>  
           </div>         
