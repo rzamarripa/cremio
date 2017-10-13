@@ -156,7 +156,8 @@ angular.module("creditoMio")
 								{
 										_.each(c.cuenta, function(cue, index){
 											 var ti = TiposIngreso.findOne({_id:index});
-											 rc.cuentas.push({tipoIngreso: ti.nombre, saldo: cue.saldo});
+											 if (ti != undefined)
+											 		rc.cuentas.push({tipoIngreso: ti.nombre, saldo: cue.saldo});
 										});								
 								}		
 						}

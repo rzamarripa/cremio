@@ -84,13 +84,13 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	  	
 	  	_.each(rc.credito.avales_ids,function(aval){
 		  			
-		  			console.log("Aval :",aval);
+		  			//console.log("Aval :",aval);
 						Meteor.call('getAval', aval.aval_id, function(error, result){						
 									if (result)
 									{
 											
 											//console.log("Aval Get Persona:",result);
-											
+																						
 											rc.avales.push({aval_id							: aval.aval_id,
 																		  nombreCompleto			: result.nombreCompleto,
 																		  nombre							: result.nombre,
@@ -117,14 +117,25 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 
 											});
 											
-											$scope.$apply();
+											
 									}
 						});	
 	  	});
 			
-			
-			rc.garantias = rc.credito.garantias;
+			if (rc.credito.tipoGarantia == 'general')
+			{
+				 rc.garantiasGeneral = rc.credito.garantias;	
+				
+			}
+			else
+			{
+				 rc.garantias = rc.credito.garantias;
+			}
+
 			rc.credito.primerAbono = rc.credito.fechaPrimerAbono;
+			
+			$scope.$apply();
+
 		}
 	});
 	
@@ -282,6 +293,8 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		}
 		
 		
+		console.log()
+		
 		var credito = {
 			cliente_id 						: this.cliente._id,
 			tipoCredito_id 				: this.credito.tipoCredito_id,
@@ -290,7 +303,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			adeudoInicial 				: this.credito.capitalSolicitado,
 			saldoActual 					: this.credito.capitalSolicitado,
 			periodoPago 					: this.credito.periodoPago,
-			fechaPrimerAbono 			: this.credito.primerAbono,
+			fechaPrimerAbono 			: this.credito.fechaPrimerAbono,
 			multasPendientes 			: 0.00,
 			saldoMultas 					: 0.00,
 			saldoRecibo 					: 0.00,
@@ -322,6 +335,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				credito.garantias = angular.copy(this.garantias);
 		else
 				credito.garantias = angular.copy(this.garantiasGeneral);
+					
 				
 		Meteor.apply('actualizarCredito', [this.cliente, credito, $stateParams.credito_id], function(error, result){
 			//console.log(result,error)
@@ -558,19 +572,29 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	
 	this.actualizarGarantia = function(tipo, a)
 	{
+
 			if (tipo == "mobiliaria")
 			{
-					a.num = this.numG;
+					//a.num = this.numG;
 			
 					_.each(this.garantias, function(av){
 						if (av.num == a.num)
 						{
-							av.tipo = a.tipo;
-							av.marca = a.marca;
-							av.modelo = a.modelo;			
-							av.serie = a.serie;
-							av.color = a.color;
-							av.estadoActual = a.estadoActual;
+							av.almacenaje = a.almacenaje;
+							av.comercializacion = a.comercializacion;
+							av.desempenioExtemporaneo = a.desempenioExtemporaneo;
+							av.reposicionContrato = a.reposicionContrato;
+							av.descripcion = a.descripcion;
+							av.caracteristicas = a.caracteristicas;
+							av.avaluoMobiliaria = a.avaluoMobiliaria;			
+							av.porcentajePrestamoMobiliria = a.porcentajePrestamoMobiliria;
+							/*
+							av.prestamo = a.prestamo;
+							av.monto = a.monto;
+							av.porcentaje = a.porcentaje;
+							av.fechaComercializacion = a.fechaComercializacion;
+							av.fechaFiniquito = a.fechaFiniquito;
+							*/
 						}
 					})
 				
@@ -580,13 +604,19 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			}
 			else
 			{
-					a.num = this.numGen;
+					//a.num = this.numGen;
 			
 					_.each(this.garantiasGeneral, function(av){
 						if (av.num == a.num)
 						{
-							av.descripcion = a.descripcion;
-							av.valorEstimado = a.valorEstimado;
+							//av.num = a.num;
+							av.terrenoYconstruccion = a.terrenoYconstruccion;
+							av.avaluoGeneral = a.avaluoGeneral;
+							av.ubicacion = a.ubicacion;
+							av.porcentajePrestamoGeneral = a.porcentajePrestamoGeneral;
+							av.medidasColindancias = a.medidasColindancias;						  
+							av.comisionGastos = a.comisionGastos;
+							
 						}
 					})
 				
@@ -684,7 +714,99 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			rc.credito.primerAbono = fecha;
 	};
 	
+	this.editarGarantia = function(tipo, a)
+	{ 
 
+			if (tipo == "mobiliaria")
+			{
+					
+					this.garantia.num 												= a.num;
+					this.garantia.almacenaje 									= a.almacenaje;
+					this.garantia.comercializacion 						= a.comercializacion;
+					this.garantia.desempenioExtemporaneo 			= a.desempenioExtemporaneo;
+					this.garantia.reposicionContrato 					= a.reposicionContrato;
+																										
+					this.garantia.descripcion 								= a.descripcion;
+					this.garantia.caracteristicas 						= a.caracteristicas;
+					this.garantia.avaluoMobiliaria 						= a.avaluoMobiliaria;			
+					this.garantia.porcentajePrestamoMobiliria = a.porcentajePrestamoMobiliria;
+					/*
+
+					this.garantia.prestamo = a.prestamo;
+					this.garantia.monto = a.monto;
+					this.garantia.porcentaje = a.porcentaje;
+					this.garantia.fechaComercializacion = a.fechaComercializacion;
+					this.garantia.fechaFiniquito = a.fechaFiniquito;					
+				
+					*/
+					this.actionGarantia = false;
+			}
+			else
+			{
+					this.garantia.num = a.num;
+			    this.garantia.medidasColindancias = a.medidasColindancias;
+			    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion;
+			    this.garantia.ubicacion = a.ubicacion;
+			    this.garantia.avaluoGeneral = a.avaluoGeneral;
+			    this.garantia.porcentajePrestamoGeneral = a.porcentajePrestamoGeneral;
+			    this.garantia.comisionGastos = a.comisionGastos;
+			    
+					/*
+				 	this.garantia.prestamoSobreAvaluo = a.prestamoSobreAvaluo
+			    this.garantia.prestamo = a.prestamo
+			    
+			    this.garantia.montoAvaluo = a.montoAvaluo
+					
+					*/
+					
+					//this.garantia.escrituracion = a.escrituracion;
+					
+					
+					this.actionGarantia = false;
+			}		
+	};
+
+	this.verGarantia = function(tipo,a)
+	{
+		//console.log(tipo)
+		$("#modalGarantia").modal('show');
+			
+			if (tipo == "mobiliaria")
+			{
+					this.mob = true;
+					this.general = false;
+					
+					this.garantia.num 												= a.num;
+					this.garantia.almacenaje 									= a.almacenaje;
+					this.garantia.comercializacion 						= a.comercializacion;
+					this.garantia.desempenioExtemporaneo 			= a.desempenioExtemporaneo;
+					this.garantia.reposicionContrato 					= a.reposicionContrato;
+					
+					
+					this.garantia.descripcion 								= a.descripcion;
+					this.garantia.caracteristicas 						= a.caracteristicas;
+					this.garantia.avaluoMobiliaria 						= a.avaluoMobiliaria;			
+					this.garantia.porcentajePrestamoMobiliria = a.porcentajePrestamoMobiliria;
+
+					this.actionGarantia = false;
+			}
+			else
+			{		
+					this.general = true;
+					this.mob = false;
+			    this.garantia.num = a.num
+			    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion;
+			    this.garantia.ubicacion = a.ubicacion;
+			    this.garantia.medidasColindancias = a.medidasColindancias;
+			    this.garantia.avaluoGeneral = a.avaluoGeneral;
+			    this.garantia.porcentajePrestamoGeneral = a.porcentajePrestamoGeneral;
+			    
+			    this.garantia.comisionGastos = a.comisionGastos;
+					
+					this.actionGarantia = false;
+			}	
+	
+	};
 	
 	//busca un elemento en el arreglo
 	function functiontofindIndexByKeyValue(arraytosearch, key, valuetosearch) {
@@ -766,86 +888,31 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 					rc.planPagos.push(pago)
 					$scope.$apply();
 				});
-				console.log("Prueba",rc.planPagos)
+				//console.log("Prueba",rc.planPagos)
 			}
 				
 		})
 		
 		return rc.planPagos;
 	}
-
-
-	this.editarGarantia = function(tipo, a)
-	{ 
-
-			if (tipo == "mobiliaria")
-			{
-					this.garantia.descripcion = a.descripcion;
-					this.garantia.caracteristicas = a.caracteristicas;
-					this.garantia.avaluo = a.avaluo;			
-					this.garantia.prestamoPorcentaje = a.prestamoPorcentaje;
-					this.garantia.prestamo = a.prestamo;
-					this.garantia.monto = a.monto;
-					this.garantia.porcentaje = a.porcentaje;
-					this.garantia.fechaComercializacion = a.fechaComercializacion;
-					this.garantia.fechaFiniquito = a.fechaFiniquito;					
-				
-					this.actionGarantia = false;
-			}
-			else
-			{
-				    this.garantia.medidasColindancias = a.medidasColindancias
-				    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion
-				    this.garantia.prestamoSobreAvaluo = a.prestamoSobreAvaluo
-				    this.garantia.prestamo = a.prestamo
-				    this.garantia.num = a.num
-				    this.garantia.montoAvaluo = a.montoAvaluo
-					this.garantia.avaluo = a.avaluo;
-					this.garantia.comisionGastos = a.comisionGastos;
-					this.garantia.escrituracion = a.escrituracion;
-					this.garantia.porcentajePrestamo = a.porcentajePrestamo;
-					
-					this.actionGarantia = false;
-			}		
-	};
-
-	this.verGarantia = function(tipo,a)
-	{
-		//console.log(a,"aval p")
-		$("#modalGarantia").modal('show');
-				if (tipo == "mobiliaria")
-			{
-				this.mob = true
-					this.garantia.descripcion = a.descripcion;
-					this.garantia.caracteristicas = a.caracteristicas;
-					this.garantia.avaluo = a.avaluo;			
-					this.garantia.prestamoPorcentaje = a.prestamoPorcentaje;
-					this.garantia.prestamo = a.prestamo;
-					this.garantia.monto = a.monto;
-					this.garantia.porcentaje = a.porcentaje;
-					this.garantia.fechaComercializacion = a.fechaComercializacion;
-					this.garantia.fechaFiniquito = a.fechaFiniquito;					
-				
-					this.actionGarantia = false;
-			}
-			else
-			{		this.general = true
-				    this.garantia.medidasColindancias = a.medidasColindancias
-				    this.garantia.terrenoYconstruccion = a.terrenoYconstruccion
-				    this.garantia.prestamoSobreAvaluo = a.prestamoSobreAvaluo
-				    this.garantia.prestamo = a.prestamo
-				    this.garantia.num = a.num
-				    this.garantia.montoAvaluo = a.montoAvaluo
-					this.garantia.avaluo = a.avaluo;
-					this.garantia.comisionGastos = a.comisionGastos;
-					this.garantia.escrituracion = a.escrituracion;
-					this.garantia.porcentajePrestamo = a.porcentajePrestamo;
-					
-					this.actionGarantia = false;
-			}	
 	
-	};
-	
+	this.calcularPorcentajeGeneral = function(){
+
+    	if (rc.garantia.avaluoGeneral != undefined)
+					rc.garantia.porcentajePrestamoGeneral = Math.round(rc.garantia.avaluoGeneral / rc.credito.capitalSolicitado * 100);
+			else 
+					rc.garantia.porcentajePrestamoGeneral = 0;
+
+  };
+  
+  this.calcularPorcentajeMobiliaria = function(){
+
+    	if (rc.garantia.avaluoMobiliaria != undefined)
+					rc.garantia.porcentajePrestamoMobiliria = Math.round(rc.garantia.avaluoMobiliaria / rc.credito.capitalSolicitado * 100);
+			else 
+					rc.garantia.porcentajePrestamoMobiliria = 0;
+  };
+
 	
 
 };

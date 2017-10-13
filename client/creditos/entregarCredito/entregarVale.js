@@ -390,6 +390,7 @@ if (this.credito.tipoGarantia == "mobiliaria")
 
 	this.imprimirContrato = function(contrato,cliente){
 		
+			console.log("Imprmir contrato");
 			contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
 
 		  rc.planPagos = [];
@@ -425,17 +426,17 @@ if (this.credito.tipoGarantia == "mobiliaria")
 				seguro: this.credito.seguro
 			};
 
-			Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
+			Meteor.call("getPlanPagos",this.credito_id,function(error,result){
 			
 				if(error){
 					console.log(error);
 					toastr.error('Error al calcular el nuevo plan de pagos.');
 				}
 				else{
-					console.log(result);
+					console.log("Plan Pagos:", result);
+
 					_.each(result,function (pago) {
-						
-						
+												
 						//console.log(pago,"pauisa")
 						var pag = pago
 						var pa = _.toArray(pag);

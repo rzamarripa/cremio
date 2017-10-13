@@ -112,10 +112,14 @@ Meteor.methods({
 				adeudoInicial 				: credito.capitalSolicitado,
 				saldoActual 					: credito.capitalSolicitado,
 				periodoPago 					: credito.periodoPago,
-				fechaPrimerAbono 			: credito.primerAbono,
+				fechaPrimerAbono 			: credito.fechaPrimerAbono,
+				multasPendientes 			: 0.00,
+				saldoMultas 					: 0.00,
+				saldoRecibo 					: 0.00,
 				estatus 							: credito.estatus,
 				requiereVerificacion	: credito.requiereVerificacion,
 				turno 								: credito.turno,
+				sucursal_id 					: credito.sucursal_id,
 				fechaVerificacion			: credito.fechaVerificacion,
 				tipoGarantia 					: credito.tipoGarantia,
 				tasa									: credito.tasa,
@@ -125,6 +129,7 @@ Meteor.methods({
 				beneficiado 					: credito.beneficiado
 		};
 		
+				
 		c.avales_ids 	= [];
 		c.garantias 	= credito.garantias;
 		//c.avales_ids 	= credito.avales_ids;

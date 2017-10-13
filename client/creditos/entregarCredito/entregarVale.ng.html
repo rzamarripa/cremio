@@ -36,7 +36,6 @@
             </div>
             <div class="col-sm-3">            
 								<br>
-<!-- 								<button ng-if="ecCtrl.credito.tipo == 'creditoP'" class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Crédito</button> -->
                 <button ng-if="ecCtrl.credito.tipo == 'vale'" class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Vale</button>          
             </div>  
           </div>         
@@ -86,7 +85,7 @@
               </div>
                <div class="row "> 
                     <div class="col-sm-4" ng-show="ecCtrl.imprecion"><br/>   
-												<input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirContrato(ecCtrl.credito,ecCtrl.cliente);ecCtrl.generarPlanPagos(rc.credito)" value="Imprimir" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
+												<input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirContrato(ecCtrl.credito,ecCtrl.cliente)" value="Imprimir" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
               </div>
             </div>
               </div>

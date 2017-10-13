@@ -325,91 +325,90 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 					rc.sucursalCredito = result
 					//////////////////////// EL METODO DEBE IR ASI PAPU
 
-	  	if (rc.cliente.roles == "Distribuidor") {
-			console.log("distri")
-			rc.credito.tasa = rc.sucursalCredito.tasaVales
-			rc.credito.tipo = "vale"
-			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id
-			console.log(rc.credito.tipoCredito_id)
-		}else if (rc.cliente.roles == "Cliente") {
-			console.log("clientaso")
-			rc.credito.tipo = "creditoP"
-			rc.credito.tasa = rc.credito.tasa
+			  	if (rc.cliente.roles == "Distribuidor") {
+						rc.credito.tasa = rc.sucursalCredito.tasaVales;
+						rc.credito.tipo = "vale";
+						rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;
 
-		}
+					}else if (rc.cliente.roles == "Cliente") {
+
+						rc.credito.tipo = "creditoP";
+						rc.credito.tasa = rc.credito.tasa;
+			
+					}
 	 
 		
-		var credito = {
-			cliente_id : rc.cliente._id,
-			tipoCredito_id : rc.credito.tipoCredito_id,
-			fechaSolicito : new Date(),
-			duracionMeses : rc.credito.duracionMeses,
-			capitalSolicitado : rc.credito.capitalSolicitado,
-			adeudoInicial : rc.credito.capitalSolicitado,
-			saldoActual : rc.credito.capitalSolicitado,
-			periodoPago : rc.credito.periodoPago,
-			fechaPrimerAbono : rc.credito.primerAbono,
-			multasPendientes : 0,
-			saldoMultas : 0.00,
-			saldoRecibo : 0.00,
-			estatus : 1,
-			requiereVerificacion: rc.credito.requiereVerificacion,
-			sucursal_id : Meteor.user().profile.sucursal_id,
-			fechaVerificacion: rc.credito.fechaVerificacion,
-			turno : rc.credito.turno,
-			tipoGarantia : rc.credito.tipoGarantia,
-			tasa: rc.credito.tasa,
-			conSeguro : rc.credito.conSeguro,
-			seguro: rc.credito.seguro,
-			tipo : rc.credito.tipo,
-			beneficiado : rc.credito.beneficiado
+					var credito = {
+			cliente_id 						: rc.cliente._id,
+			tipoCredito_id 				: rc.credito.tipoCredito_id,
+			fechaSolicito 				: new Date(),
+			duracionMeses 				: rc.credito.duracionMeses,
+			capitalSolicitado 		: rc.credito.capitalSolicitado,
+			adeudoInicial 				: rc.credito.capitalSolicitado,
+			saldoActual 					: rc.credito.capitalSolicitado,
+			periodoPago 					: rc.credito.periodoPago,
+			fechaPrimerAbono 			: rc.credito.primerAbono,
+			multasPendientes 			: 0,
+			saldoMultas 					: 0.00,
+			saldoRecibo 					: 0.00,
+			estatus 							: 1,
+			requiereVerificacion	: rc.credito.requiereVerificacion,
+			sucursal_id 					: Meteor.user().profile.sucursal_id,
+			fechaVerificacion			: rc.credito.fechaVerificacion,
+			turno 								: rc.credito.turno,
+			tipoGarantia 					: rc.credito.tipoGarantia,
+			tasa									: rc.credito.tasa,
+			conSeguro 						: rc.credito.conSeguro,
+			seguro								: rc.credito.seguro,
+			tipo 									: rc.credito.tipo,
+			beneficiado 					: rc.credito.beneficiado
 		};
 		
-		//console.log(credito,"mi credito")
-		
-		if (rc.cliente.roles == "Distribuidor") {
-
-			rc.credito.tipo = "vale"
-			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
-
-			credito.estatus = 1;
-		}
-		else if (rc.cliente.roles == 'Cliente') {
-
-			rc.credito.tipo = "creditoP"
-		}
-
-		
-				
-		credito.avales = angular.copy(rc.avales);
-		
-		//Duda se guardan los dos???
-		
-		if (rc.credito.tipoGarantia == "mobiliaria")
-				credito.garantias = angular.copy(rc.garantias);
-		else
-				credito.garantias = angular.copy(rc.garantiasGeneral);
-				
-
-		//Cambie el metodo	
-
-			Meteor.apply('generarCreditoPeticion', [rc.cliente, credito], function(error, result){
-				if(result == "hecho"){
-					toastr.success('Se ha guardado la solicitud de crédito correctamente');
-					rc.planPagos = [];
-					rc.avales = [];
-					if (rc.cliente.roles == "Distribuidor") {
-						$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
-					}
-					if (rc.cliente.roles == "Cliente") {
-						$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
-					}
+					//console.log(credito,"mi credito")
 					
-				}
-				$scope.$apply();
-				/////////////////AQUI
-			});
-		}
+					if (rc.cliente.roles == "Distribuidor") {
+			
+						rc.credito.tipo = "vale"
+						rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+			
+						credito.estatus = 1;
+					}
+					else if (rc.cliente.roles == 'Cliente') {
+			
+						rc.credito.tipo = "creditoP"
+					}
+
+		
+				
+					credito.avales = angular.copy(rc.avales);
+					
+					//Duda se guardan los dos???
+					
+					if (rc.credito.tipoGarantia == "mobiliaria")
+							credito.garantias = angular.copy(rc.garantias);
+					else
+							credito.garantias = angular.copy(rc.garantiasGeneral);
+				
+
+				//Cambie el metodo	
+		
+					Meteor.apply('generarCreditoPeticion', [rc.cliente, credito], function(error, result){
+						if(result == "hecho"){
+							toastr.success('Se ha guardado la solicitud de crédito correctamente');
+							rc.planPagos = [];
+							rc.avales = [];
+							if (rc.cliente.roles == "Distribuidor") {
+								$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
+							}
+							if (rc.cliente.roles == "Cliente") {
+								$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+							}
+							
+						}
+						$scope.$apply();
+						/////////////////AQUI
+					});
+			}
 		
 		});
 		
@@ -827,7 +826,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 
 	this.verGarantia = function(tipo,a)
 	{
-		console.log(tipo)
+		//console.log(tipo)
 		$("#modalGarantia").modal('show');
 			
 			if (tipo == "mobiliaria")
@@ -927,7 +926,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.calcularPorcentajeGeneral = function(){
 
     	if (rc.garantia.avaluoGeneral != undefined)
-					rc.garantia.porcentajePrestamoGeneral = rc.garantia.avaluoGeneral / rc.credito.capitalSolicitado * 100;
+					rc.garantia.porcentajePrestamoGeneral = Math.round(rc.garantia.avaluoGeneral / rc.credito.capitalSolicitado * 100);
 			else 
 					rc.garantia.porcentajePrestamoGeneral = 0;
 
@@ -936,7 +935,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
   this.calcularPorcentajeMobiliaria = function(){
 
     	if (rc.garantia.avaluoMobiliaria != undefined)
-					rc.garantia.porcentajePrestamoMobiliria = rc.garantia.avaluoMobiliaria / rc.credito.capitalSolicitado * 100;
+					rc.garantia.porcentajePrestamoMobiliria = Math.round(rc.garantia.avaluoMobiliaria / rc.credito.capitalSolicitado * 100);
 			else 
 					rc.garantia.porcentajePrestamoMobiliria = 0;
   };

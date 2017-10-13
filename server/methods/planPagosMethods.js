@@ -11,6 +11,9 @@ Meteor.methods({
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		
 		var mfecha = moment(credito.fechaPrimerAbono);
+		
+		console.log(mfecha);
+		
 		mfecha.set({hour:0,minute:0,second:0,millisecond:0});
 		
 		var fechaLimite;// = mfecha;
@@ -1019,5 +1022,6 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 	getPago:function(pago_id){
 			return Pagos.findOne(pago_id);		
 	},
+	
 	
 });

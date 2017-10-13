@@ -307,11 +307,11 @@
 														    <div class="row">
 														    	<div class="col-sm-6"> 					    
 															    	<label>Descripción Generica</label>
-															    	<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN" ng-model="ge.garantia.descripcion">
+															    	<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN" ng-model="ge.garantia.descripcion" capitalize>
 														    	</div>
 														    	<div class="col-sm-6"> 					    
 															    	<label>Características	</label>
-															    	<input name="caracteristicas" type="text" class="form-control" placeholder="Caracteristicas" ng-model="ge.garantia.caracteristicas">
+															    	<input name="caracteristicas" type="text" class="form-control" placeholder="Caracteristicas" ng-model="ge.garantia.caracteristicas" capitalize>
 														    	</div>
 														    </div>
 														    <div class="row">	
@@ -323,17 +323,6 @@
 															    	<label>Porcentaje del prestamo sobre el avalúo</label>
 															    	<input name="porcentajePrestamo" type="number" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ge.garantia.porcentajePrestamoMobiliria" disabled="true">
 														    	</div>
-<!--
-														    	<div class="col-sm-4">					    
-															    	<label>Fecha de inico de comercialización</label>
-															    	<input name="serie" class="form-control" placeholder="FECHA DE INICIO DE COMERCIALIZACIÓN" ng-model="ge.garantia.fechaComercializacion" date-time format="dd-MM-yyyy" view="date" max-view="year" min-view="date">
-														    	</div>
-														    	
-														    	<div class="col-sm-4">					    
-															    	<label>Fecha limite de finquito</label>
-															    	<input name="serie"  class="form-control" placeholder="FECHA LIMITE DE FINIQUITO" ng-model="ge.garantia.fechaFiniquito" date-time format="dd-MM-yyyy" view="date" max-view="year" min-view="date">
-														    	</div>
--->
 														    </div>
 														    <div class="row">		<br/>
 														    	<div class="col-sm-3">
@@ -347,8 +336,7 @@
 																	<div class="col-sm-12">
 																		<table class="table table-bordered">
 																			<thead>
-																				<!-- DESCRIPCIÓN GENÉRICA	CARACTERÍSTICAS	AVALÚO	PRÉSTAMO	% PRESTAMO SOBRE AVALÚO -->
-																				<!-- 		MONTO DEL AVALÚO $	PORCENTAJE DEL PRÉSTAMO SOBRE EL AVALÚO: % FECHA DE INICIO DE COMERCIALIZACIÓN	FECHA LÍMITE DE FINIQUITO -->								
+
 																				<tr>
 																					<th width="5%">Número</th>
 																					<th width="15%">Descripción genérica</th>
