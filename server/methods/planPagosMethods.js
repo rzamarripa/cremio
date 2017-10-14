@@ -12,8 +12,6 @@ Meteor.methods({
 		
 		var mfecha = moment(credito.fechaPrimerAbono);
 		
-		console.log(mfecha);
-		
 		mfecha.set({hour:0,minute:0,second:0,millisecond:0});
 		
 		var fechaLimite;// = mfecha;
@@ -168,7 +166,7 @@ Meteor.methods({
 						fechaLimite					: new Date(new Date(fechaLimite.toDate().getTime()).setHours(23,59,59)),
 						diaSemana						: fechaLimite.weekday(),
 						tipoPlan						: credito.periodoPago,
-						tipoCredito					: credito.tipo,
+						tipoCredito					: credito.tipo, //si es vale o CP
 						numeroPago					: i + 1,
 						importeRegular			: importeParcial,
 						iva									: iva,
@@ -193,7 +191,7 @@ Meteor.methods({
 						mes									: fechaLimite.get('month') + 1,
 						anio								: fechaLimite.get('year'),
 						cargo								: importeParcial,	
-						movimiento					: "Recibo",
+						movimiento					: "Recibo"
 					}
 					
 					plan.push(clonar(pago));

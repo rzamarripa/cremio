@@ -33,7 +33,7 @@ angular.module("creditoMio")
 			
 			var cpu = [] ;
 			
-			var creditos = Creditos.find({estatus : 1},{ sort : {fechaSolicito : 1 }}).fetch();
+			var creditos = Creditos.find({estatus : 1, tipo : {$in :["creditoP",undefined]}},{ sort : {fechaSolicito : 1 }}).fetch();
 			if(creditos){
 				
 				rc.clientes_ids = _.pluck(creditos, "cliente_id");
@@ -54,7 +54,7 @@ angular.module("creditoMio")
 					 	autorizar.verificacionEstatus = credito.verificacionEstatus;
 					 	autorizar.avales_ids 					= credito.avales_ids;
 					 	autorizar.indicacion 					= credito.indicacion;
-					 	autorizar.tipo								= "Crédito Personal"
+					 	autorizar.tipo								= "Crédito Personal";
 					 	
 						
 						Meteor.call('getVerificacionesCredito', credito._id, function(error, result) {

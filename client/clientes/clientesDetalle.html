@@ -478,35 +478,35 @@
 							      <div class="panel-body">
 							        	<div class="col-sm-3" valida> 					    
 										    	<label>Nombre *</label>
-										    	<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cd.objeto.profile.nombreConyuge" required="" capitalize>
+										    	<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cd.objeto.profile.nombreConyuge" disabled>
 									    	</div>
 									    	<div class="col-sm-3" valida>					    
 										    	<label>Dirección *</label>
-										    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cd.objeto.profile.direccionConyuge" required="" capitalize>
+										    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cd.objeto.profile.direccionConyuge" disabled>
 									    	</div>
 									    	<div class="col-sm-3" valida>					    
 										    	<label>Dirección del trabajo *</label>
-										    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cd.objeto.profile.direccionConyugeTrabajo" required="" capitalize>
+										    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cd.objeto.profile.direccionConyugeTrabajo" disabled>
 									    	</div>
 									    	<div class="col-sm-3" valida>					    
 										    	<label>Puesto *</label>
-										    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cd.objeto.profile.puestoConyuge" required="" capitalize>
+										    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cd.objeto.profile.puestoConyuge" disabled>
 									    	</div>
 									    	<div class="col-sm-3" valida>					    
 										    	<label>Teléfono Particular *</label>
-										    	<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoConyuge" required="">
+										    	<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoConyuge" disabled>
 									    	</div>
 									    	<div class="col-sm-3">					    
 										    	<label>Teléfono del trabajo</label>
-										    	<input name="telefonoConyugeTrabajo" type="number" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoConyugeTrabajo" >
+										    	<input name="telefonoConyugeTrabajo" type="number" class="form-control" placeholder="Teléfono" ng-model="cd.objeto.profile.telefonoConyugeTrabajo" disabled >
 									    	</div>
 									    	<div class="col-sm-3">					    
 										    	<label>Ocupación</label>
-										    	<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cd.objeto.profile.ocupacionConyuge" capitalize>
+										    	<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cd.objeto.profile.ocupacionConyuge" disabled>
 									    	</div>	
 									    	<div class="col-sm-3">					    
 										    	<label>Dirección Trabajo</label>
-										    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion" ng-model="cd.objeto.profile.direccionTrabajoConyuge" capitalize>
+										    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion" ng-model="cd.objeto.profile.direccionTrabajoConyuge" disabled>
 									    	</div>		   				    	    
 									    </div>
 							      
@@ -903,8 +903,13 @@
 																	{{aprobado.tipoCredito.nombre}}
 																</small><br>
 																<small>Tiene Aval: {{aprobado.tieneAval}}</small><br>
+																<div ng-if="aprobado.tieneAval == 'SI'">
+																	<small>{{aprobado.avales_ids[0].nombreCompleto}}</small><br>
+																</div>	
+<!--
 																<div class="po-markup" ng-if="aprobado.tieneAval == 'SI'">
-																    <a href="javascript:void(0);" >AVAL</a>
+																    <a href="#" >AVAL</a>
+																    <a href="#" data-toggle="popover" title="Nombre" data-content="{{aprobado.avales_ids[0].nombreCompleto}}">AVAL</a> 
 																    <div class="po-content hidden">
 																        <div class="po-title">
 																          Nombre
@@ -917,6 +922,7 @@
 																        </div>
 																    </div>  
 																</div>
+-->
  																<br ng-if="pendiente.tieneAval == 'NO'">
 																<small>Plan: {{aprobado.periodoPago}}</small>
 																<small>Fecha: {{aprobado.fechaSolicito.getUTCDate() +"/"+ (aprobado.fechaSolicito.getUTCMonth()+1) +"/"+ aprobado.fechaSolicito.getUTCFullYear()}}</small>			

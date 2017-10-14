@@ -764,7 +764,7 @@
 												<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar</a>
 											</div>
 											<div class="panel-footer no-padding">						
-												<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Autorizar</a>
+												<a ui-sref="root.actualizarVale({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Autorizar</a>
 											</div>
 											
 										</div>
@@ -864,23 +864,16 @@
 									<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="aprobado in dis.creditosAprobados">
 										<div class="panel panel-blueDark">
 											<div class="panel-heading">
-												<h3 class="panel-title">
-													Vale</h3>
+												<h3 class="panel-title">Vale</h3>
 											</div>
 											<div class="panel-body no-padding text-align-center">
 												<div class="the-price">
-													<h1>
-														{{aprobado.capitalSolicitado|currency}}
-													</h1>
-													<h2>
+													<h2>{{aprobado.capitalSolicitado|currency}}</h2>
+													<h3>
 														{{aprobado.duracionMeses}}
 														<span class="subscript">/meses</span>
-													</h2>
-													<small>
-														{{aprobado.tipoCredito.nombre}}
-													</small><br>
-													<small>Tiene Aval: {{aprobado.tieneAval}}</small><br>
-													<small>Plan: {{aprobado.periodoPago}}</small>
+													</h3>
+													<small style="font-size: x-small">{{aprobado.beneficiado}}</small>
 													<small>Fecha: {{aprobado.fechaSolicito.getUTCDate() +"/"+ (aprobado.fechaSolicito.getUTCMonth()+1) +"/"+ aprobado.fechaSolicito.getUTCFullYear()}}</small>
 													
 												</div>
@@ -1240,6 +1233,39 @@
 </div>
 <!--		 //////////////////////////////////////////////////////////// -->
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a> 
+<!-- Modal para Validar Beneficiado Vales -->
+<div id="modalvalidaBeneficiario" class="modal fade bs-cargos-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Validar Beneficiado</h4>
+		    </div>
+				<div class="modal-body">
+							<form name="form2" novalidate>
+									<div class="well">	    
+										<div class="row">
+								    	<div class="col-sm-8"> 					    
+									    	<label>Nombre	</label>
+									    	<input name="buscar" type="text" class="form-control" placeholder="Buscar..." ng-model="ge.buscarBeneficiado" capitalize>
+								    	</div>
+										</div>	
+										<div class="row">
+												
+												
+												
+										</div>	
+									</div>
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+     
+  </div>
+</div>
+
   
 
 

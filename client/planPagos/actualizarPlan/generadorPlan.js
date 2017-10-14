@@ -292,9 +292,6 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				return;	
 		}
 		
-		
-		console.log()
-		
 		var credito = {
 			cliente_id 						: this.cliente._id,
 			tipoCredito_id 				: this.credito.tipoCredito_id,
