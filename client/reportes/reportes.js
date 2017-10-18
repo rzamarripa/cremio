@@ -141,12 +141,10 @@ angular.module("creditoMio")
 								rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
 								if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
 								rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
-								
-								rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
 							}
 								
 						});
-						
+						rc.totalCobranza += Number(parseFloat(rc.sumaInteres + rc.sumaSeguro + rc.sumaIva + rc.sumaCapital).toFixed(2));
 						
 						$scope.$apply();
 				}
@@ -191,7 +189,7 @@ angular.module("creditoMio")
 									
 							});
 							
-							rc.totalCobranza = rc.sumaCapital + rc.sumaInteres + rc.sumaIva + rc.sumaSeguro;
+							rc.totalCobranza += Number(parseFloat(rc.sumaInteres + rc.sumaSeguro + rc.sumaIva + rc.sumaCapital).toFixed(2));
 							$scope.$apply();
 					}
 			});
@@ -234,7 +232,7 @@ angular.module("creditoMio")
 									
 							});
 							
-							rc.totalCobranza = rc.sumaCapital + rc.sumaInteres + rc.sumaIva + rc.sumaSeguro;
+							rc.totalCobranza += Number(parseFloat(rc.sumaInteres + rc.sumaSeguro + rc.sumaIva + rc.sumaCapital).toFixed(2));
 							$scope.$apply();
 					}
 			});

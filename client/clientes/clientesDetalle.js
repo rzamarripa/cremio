@@ -262,7 +262,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 			if (cli != undefined)
 			{
-					console.log("Cliente:", cli);
+					//console.log("Cliente:", cli);
 					/*
 var empresa = Empresas.findOne(cli.profile.empresa_id);
 
@@ -320,12 +320,15 @@ rc.referenciasPersonales = [];
 		            }); 
 		      });
 */
-					this.ocupacion_id = cli.profile.ocupacion_id;
+				/*
+	this.ocupacion_id = cli.profile.ocupacion_id;
 				
 					var ec = EstadoCivil.findOne(cli.profile.estadoCivil_id);
 					if (ec != undefined)
 							this.estadoCivilSeleccionado = 	ec.nombre;
-					
+*/
+				/*
+	
 					
 					_.each(cli, function(objeto){
 
@@ -340,6 +343,7 @@ rc.referenciasPersonales = [];
 						objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id);
 						
 					});
+*/
 					
 					
 			}
