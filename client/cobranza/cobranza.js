@@ -53,7 +53,7 @@ angular.module("creditoMio")
   this.subscribe("tiposCredito", ()=>{
     return [{}]
   });
-  
+/*  
   this.subscribe("estadoCivil", ()=>{
     return [{estatus : true}]
   });
@@ -64,6 +64,7 @@ angular.module("creditoMio")
   this.subscribe("ocupaciones", ()=>{
     return [{}]
   });
+
   this.subscribe("paises", ()=>{
     return [{}]
   });
@@ -82,6 +83,7 @@ angular.module("creditoMio")
   this.subscribe("empresas", ()=>{
     return [{}]
   });   
+*/
 
   this.subscribe('notas',()=>{
     return [{cliente_id:this.getReactively("cliente_id"),}]
@@ -91,21 +93,24 @@ angular.module("creditoMio")
     return [{credito_id : this.getReactively("credito_id") }]
   });
 
-    this.subscribe('personas', () => {
+/*
+  this.subscribe('personas', () => {
     return [{ }];
   });
+*/
   this.subscribe('creditos', () => {
     return [{cliente_id : rc.getReactively("cliente_id")}];
   });
 
+/*
   this.subscribe('pagos', () => {
     return [{ }];
   });  
+  
   this.subscribe('sucursales', () => {
     return [{ }];
   });
-
-
+*/
   
   this.helpers({
     tiposCredito : () => {
@@ -257,7 +262,7 @@ angular.module("creditoMio")
 
         })
 
-        console.log(filtrado,"filtrado")
+        //console.log(filtrado,"filtrado")
         return filtrado;
       }
       
@@ -425,7 +430,7 @@ angular.module("creditoMio")
       
       
       //Meteor.call("actualizarMultas",function(err, res){console.log("Fue por multas:",res)});
-      
+      loading(true);
       Meteor.call('getCobranza', FI, FF, op, Meteor.user().profile.sucursal_id, function(error, result) {           
           if (result)
           {
@@ -442,162 +447,89 @@ angular.module("creditoMio")
               });
 
               $scope.$apply();
+              loading(false);
           }
-        
       }); 
+      
+      
   }
   
   this.selCredito=function(objeto, num)
   {
-   
 			
-			//objeto.classPago = "text-primary";
 			//console.log(objeto);
-          Meteor.call('getPeople',objeto.cliente._id, function(error, result){                     
+			
+      Meteor.call('getPeople',objeto.cliente._id, function(error, result){                     
           if (result)
           {
 
-            objeto.cliente = result
- //console.log(rc.cliente,"kaka" )
-         
+            objeto.cliente = result;
+						
+						console.log("Objeto:", objeto);
+						
+			      rc.cliente_id = objeto.cliente._id
 			
-      rc.cliente_id = objeto.cliente._id
-
-      Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
-
-      objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
-
-      rc.ban = !rc.ban;
-
-      rc.credito_id = objeto.credito._id;
-      //console.log("Objeto: ",objeto)
-      rc.historial = objeto
-
-      //Información del Cliente
-      rc.cliente = objeto.cliente;
-      console.log(rc.cliente,"popo");
-      var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
-      if (ec != undefined) rc.cliente.profile.estadoCivil = ec.nombre; 
-      var nac = Nacionalidades.findOne(rc.cliente.profile.nacionalidad_id);
-      if (nac != undefined) rc.cliente.profile.nacionalidad = nac.nombre;
-      var ocu = Ocupaciones.findOne(rc.cliente.profile.ocupacion_id);
-      if (ocu != undefined) rc.cliente.profile.ocupacion = ocu.nombre;
-      
-      var pais = Paises.findOne(rc.cliente.profile.pais_id);
-      if (pais != undefined) rc.cliente.profile.pais = pais.nombre; 
-      var edo = Estados.findOne(rc.cliente.profile.estado_id);
-      if (edo != undefined) rc.cliente.profile.estado = edo.nombre;
-      var mun = Municipios.findOne(rc.cliente.profile.municipio_id);
-      if (mun != undefined) rc.cliente.profile.municipio = mun.nombre;
-      var ciu = Ciudades.findOne(rc.cliente.profile.ciudad_id);
-      if (ciu != undefined) rc.cliente.profile.ciudad = ciu.nombre;
-      var col = Colonias.findOne(rc.cliente.profile.colonia_id);
-      if (col != undefined) rc.cliente.profile.colonia = col.nombre;
-      
-      var emp = Empresas.findOne(rc.cliente.profile.empresa_id);
-      if (emp != undefined) rc.cliente.profile.empresa = emp;
-      
-      pais = Paises.findOne(rc.cliente.profile.empresa.pais_id);
-      if (pais != undefined) rc.cliente.profile.empresa.pais = pais.nombre; 
-      edo = Estados.findOne(rc.cliente.profile.empresa.estado_id);
-      if (edo != undefined) rc.cliente.profile.empresa.estado = edo.nombre;
-      mun = Municipios.findOne(rc.cliente.profile.empresa.municipio_id);
-      if (mun != undefined) rc.cliente.profile.empresa.municipio = mun.nombre;
-      ciu = Ciudades.findOne(rc.cliente.profile.empresa.ciudad_id);
-      if (ciu != undefined) rc.cliente.profile.empresa.ciudad = ciu.nombre;
-      col = Colonias.findOne(rc.cliente.profile.empresa.colonia_id);
-      if (col != undefined) rc.cliente.profile.empresa.colonia = col.nombre;
-      
-      var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
-      if (ec != undefined)
-          this.estadoCivilSeleccionado =  ec.nombre;
-
-         objeto.nombreCompleto = rc.cliente.profile.nombreCompleto
-         objeto.calle = rc.cliente.profile.calle
-         objeto.colonia = rc.cliente.profile.colonia
-         objeto.municipio = rc.cliente.profile.municipio
-         objeto.estado = rc.cliente.profile.estado
-         objeto.pais = rc.cliente.profile.pais
-         objeto.cantidadPagos = objeto.credito.numeroPagos
-         objeto.telefono = rc.cliente.profile.particular
-         objeto.telefonoOficina = rc.cliente.profile.telefonoOficina
-         objeto.celular = rc.cliente.profile.celular
-         objeto.folioCredito = objeto.credito.folio
-         objeto.saldoActual = objeto.credito.saldoActual
-        // console.log(objeto,"objetisimo")
-
-         //objeto.municipio = rc.cliente.profile.municipio
-
-       //_.each(obj,function(item){});
-      
-      rc.referenciasPersonales = [];
-      
-      _.each(rc.cliente.profile.referenciasPersonales_ids,function(referenciaPersonal_id){
-            Meteor.call('getPersona', referenciaPersonal_id, objeto.cliente._id, function(error, result){           
-                  if (result)
-                  {
-                      //Recorrer las relaciones 
-                      //console.log("RP:",result);
-                      rc.referenciasPersonales.push({buscarPersona_id : referenciaPersonal_id,
-                                                     nombre           : result.nombre,
-                                                     apellidoPaterno  : result.apellidoPaterno,
-                                                     apellidoMaterno  : result.apellidoMaterno,
-                                                     parentezco       : result.parentezco,
-                                                     direccion        : result.direccion,
-                                                     telefono         : result.telefono,
-                                                     tiempo           : result.tiempo,
-                                                     num              : result.num,
-                                                     cliente          : result.cliente,
-                                                     cliente_id       : result.cliente_id,
-                                                     tipoPersona      : result.tipoPersona,
-                                                     estatus          : result.estatus
-                      });
-                      $scope.$apply();
-                  }
-            }); 
-      });
-      
-      //-----------------------------------------------------------------------------
-      
-      //Información del Crédito
-    
-      rc.credito = objeto.credito;  
-      var tipocredito = TiposCredito.findOne(objeto.credito.tipoCredito_id);
-      //console.log(tipocredito);
-      objeto.credito.tipoCredito = tipocredito.nombre;
+			      Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
 			
-      rc.avales = [];
-      _.each(rc.credito.avales_ids,function(aval_id){
-            Meteor.call('getPersona', aval_id, function(error, result){           
-                  if (result)
-                  {
-                      rc.avales.push(result);
-                      $scope.$apply();      
-                  }
-            }); 
-      });
-      //-----------------------------------------------------------------------------
+			      objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
+			
+			      rc.ban = !rc.ban;
+			
+			      rc.credito_id = objeto.credito._id;
+			      //console.log("Objeto: ",objeto)
+			      rc.historial = objeto
+			
+			      //Información del Cliente
+			      rc.cliente = objeto.cliente;
+			      
+			      var ec = EstadoCivil.findOne(rc.cliente.profile.estadoCivil_id);
+			      if (ec != undefined)
+			          this.estadoCivilSeleccionado =  ec.nombre;
+			
       
-      //Historial Crediticio
-      Meteor.call('gethistorialPago', rc.credito._id, function(error, result) {
-            if (result)
-            {
-                rc.historialCrediticio = result;
-                $scope.$apply();
-                //console.log(rc.historialCrediticio);
-            }
-      });
+			      //-----------------------------------------------------------------------------
+			      
+			      //Información del Crédito
+			    
+			      rc.credito = objeto.credito;  
+			      var tipocredito = TiposCredito.findOne(objeto.credito.tipoCredito_id);
+			      //console.log(tipocredito);
+			      objeto.credito.tipoCredito = tipocredito.nombre;
+						
+			      rc.avales = [];
+			      _.each(rc.credito.avales_ids,function(aval){
+				      		console.log("A:", aval);
+			            Meteor.call('getPersona', aval.aval_id, function(error, result){           
+			                  if (result)
+			                  {
+				                  	console.log("R:", result)
+			                      rc.avales.push(result);
+			                      $scope.$apply();      
+			                  }
+			            }); 
+			      });
+			      //-----------------------------------------------------------------------------
+			      
+			      //Historial Crediticio
+			      Meteor.call('gethistorialPago', rc.credito._id, function(error, result) {
+			            if (result)
+			            {
+			                rc.historialCrediticio = result;
+			                $scope.$apply();
+			                //console.log(rc.historialCrediticio);
+			            }
+			      });
 
        
-      //-----------------------------------------------------------------------------
-      
-      console.log("no llega")
-      rc.selected_numero = num;
+			      //-----------------------------------------------------------------------------
+			      
+			
+			      rc.selected_numero = num;
        }
-        });
+      });
   };
 
-   this.selCredito2=function(objeto)
+  this.selCredito2=function(objeto)
   {
 
       //objeto.fechaEntrega = new Date();
@@ -970,7 +902,9 @@ angular.module("creditoMio")
   this.imprimirRecibos= function(objeto) 
   {
     var toPrint = [];
-   
+		
+		console.log(objeto);
+		
     _.each(objeto,function(item, key){
       if (item.imprimir) {
         item.cliente.profile.colonia = Colonias.findOne(item.cliente.profile.colonia_id)
@@ -1257,7 +1191,7 @@ angular.module("creditoMio")
     });
   };  
 
-   this.checkValue1= function() 
+  this.checkValue1= function() 
   {
     expect(element(by.repeater('credito in rc.historialDelCredito').row(0).column('credito')).getAttribute('class')).
       toMatch(/odd/);

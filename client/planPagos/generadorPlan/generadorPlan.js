@@ -694,7 +694,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 					pos = functiontofindIndexByKeyValue(this.garantias, "num", numero);
 					this.garantias.splice(pos, 1);
 					if (this.garantias.length == 0) 
-						this.con = 0;
+						this.conG = 0;
 			 
 					functiontoOrginiceNum(this.garantias, "num");
 			}
@@ -703,7 +703,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 					pos = functiontofindIndexByKeyValue(this.garantiasGeneral, "num", numero);
 					this.garantiasGeneral.splice(pos, 1);
 					if (this.garantiasGeneral.length == 0) 
-						this.con = 0;
+						this.conGen = 0;
 			 
 					functiontoOrginiceNum(this.garantiasGeneral, "num");		
 				

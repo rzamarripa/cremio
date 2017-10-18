@@ -40,11 +40,11 @@
     												<li ng-repeat="v in credito.verificaciones">
         											<a ng-if = "v.tipoVerificacion == 'vecino'" 
         												 href="javascript:void(0);" 
-          											 ui-sref="root.verificacionVecino({id : credito._id, verificacion_id: v._id})">{{v.tipoVerificacion}}
+          											 ui-sref="root.verificacionVecino({id : v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V')})">{{v.tipoVerificacion}}
             									</a>
             									<a ng-if = "v.tipoVerificacion == 'solicitante o aval'" 
         												 href="javascript:void(0);" 
-          											 ui-sref="root.verificacion({id : credito._id, verificacion_id: v._id})">{{v.tipoVerificacion}}
+          											 ui-sref="root.verificacion({id : v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V')})">{{v.tipoVerificacion}}
             									</a>
     												</li>
   												</ul>		

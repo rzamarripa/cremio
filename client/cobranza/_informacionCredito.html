@@ -58,25 +58,41 @@
 			    </div>
 			      <div class="panel-body">    
 						    <div class="row">
-							    <div class="col-sm-4">
+							    <div class="col-sm-3">
 							    	<label>Tipo de crédito</label>
 							    	<input name="tipoCredito" type="text" class="form-control" placeholder="Tipo Credito" ng-model="cob.credito.tipoCredito" disabled="">
 						    	</div>
-						    	<div class="col-sm-4">
+						    	<div class="col-sm-3">
 							    	<label>Periodo de pago</label>
 							    	<input name="periodoCreditoNuevo" type="text" class="form-control" placeholder="Periodo de pago" ng-model="cob.credito.periodoPago" disabled="">
 						    	</div>									    	
-						    	<div class="col-sm-4">					    
+						    	<div class="col-sm-3">					    
 							    	<label>Duración (Meses)</label>
 							    	<input name="duracionMesesCreditoNuevo" type="number" class="form-control" placeholder="Duración en Meses" ng-model="cob.credito.duracionMeses" disabled="">
+						    	</div>
+						    	<div class="col-sm-3">					    
+							    	<label>Tasa</label>
+							    	<input name="tasa" type="number" class="form-control" placeholder="Duración en Meses" ng-model="cob.credito.tasa" disabled="">
 						    	</div>									    	
 						    </div>
 						    <div class="row">
-						    	<div class="col-sm-4">
+						    	<div class="col-sm-2">
 							    	<label>Capital solicitado</label>
-							    	<input name="capitalSolicitadoCreditoNuevo" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="cob.credito.capitalSolicitado" disabled="">
+							    	<input name="capitalSolicitado" style="text-align: right" type="text" class="form-control" value="{{cob.credito.capitalSolicitado | currency}}" disabled="">
 						    	</div>
-						    	<div class="col-sm-4">
+						    	<div class="col-sm-2">
+							    	<label>Total a pagar</label>
+							    	<input name="adeudoInicial" style="text-align: right" type="text" class="form-control" value="{{cob.credito.adeudoInicial | currency}}" disabled="">
+						    	</div>
+						    	<div class="col-sm-2">
+							    	<label>Saldo</label>
+							    	<input name="saldoActual" style="text-align: right" type="text" class="form-control" value="{{cob.credito.saldoActual | currency}}" disabled="">
+						    	</div>
+						    	<div class="col-sm-2">
+							    	<label>Saldo Multas</label>
+							    	<input name="saldoMultas" style="text-align: right" type="text" class="form-control" value="{{cob.credito.saldoMultas | currency}}" disabled="">
+						    	</div>
+						    	<div class="col-sm-2">
 							    	<label>Fecha que lo solicitó</label>
 							    	<input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="cob.credito.fechaSolicito" name="fechaCreditoNuevo" disabled=""/>
 						    	</div>
@@ -100,30 +116,16 @@
 												<thead>
 													<tr>
 														<th width="5%">Número</th>
-														<th width="15%">Nombre</th>
-														<th width="5%">Estado Civil</th>
-														<th width="5%">Ocupación</th>
-														<th width="15%">Dirección</th>
-														<th width="10%">Empresa</th>
-														<th width="5%">Puesto</th>
-														<th width="5%">Antiguedad</th>
-														<th width="15%">Dirección Empresa</th>
-														<th width="10%">Parentezco</th>
+														<th width="15%">Nombre</th>														
+														<th width="10%">Parentesco</th>
 														<th width="10%">Tiempo Conocerlo</th>
 													</tr>
 												</thead>
 												<tbody>
-													<tr ng-repeat="aval in cob.avales">
+													<tr ng-repeat="aval in cob.credito.avales_ids">
 														<td>{{aval.num}}</td>
-														<td>{{aval.nombre}}</td>
-														<td>{{aval.estadoCivil}}</td>
-														<td>{{aval.ocupacion}}</td>
-														<td>{{aval.direccion}}</td>
-														<td>{{aval.empresa}}</td>
-														<td>{{aval.puesto}}</td>
-														<td>{{aval.antiguedad}}</td>
-														<td>{{aval.direccionEmpresa}}</td>
-														<td>{{aval.parentezco}}</td>
+														<td>{{aval.nombreCompleto}}</td>
+														<td>{{aval.parentesco}}</td>
 														<td>{{aval.tiempoConocerlo}}</td>
 													</tr>
 												</tbody>
@@ -145,19 +147,18 @@
 				      <div class="panel-body">
 				        	<div class="row">
 										<div class="col-sm-12">
-											<table class="table table-bordered" ng-if="cob.credito.tipoGarantia=='mobiliaria'">
+											<table class="table table-bordered" ng-if="cob.credito.tipoGarantia =='mobiliaria'">
 												<thead>
 													<tr>
 														<th width="5%">Número</th>
-													<th width="15%">Descripción genérica</th>
-													<th width="15%">Características</th>
-													<th width="15%">Avalúo</th>
-													<th width="15%">Préstamo</th>
-													<th width="15%">Préstamo sobre avalúo</th>
-													<th width="15%">Monto del avalúo</th>
-													<th width="15%">Porcentaje del préstamo sobre el avalúo</th>
-													<th width="15%">Fecha de inicio de comercialización</th>
-													<th width="15%">Fecha limite de finiquito</th>
+														<th width="15%">Descripción genérica</th>
+														<th width="15%">Características</th>
+														<th width="15%">Avalúo</th>
+														<th width="15%">% Avalúo</th>
+														<th width="15%">Almacenaje</th>
+														<th width="15%">Comercialización</th>
+														<th width="15%">D. Exemporaneo</th>
+														<th width="15%">R. Contrato</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -165,30 +166,26 @@
 														<td>{{garantia.num}}</td>
 														<td>{{garantia.descripcion}}</td>
 														<td>{{garantia.caracteristicas}}</td>
-														<td>{{garantia.avaluo}}</td>
-														<td>{{garantia.prestamo}}</td>
-														<td>{{garantia.prestamoPorcentaje}}</td>
-														<td>{{garantia.monto}}</td>
-														<td>{{garantia.porcentaje}}</td>
-														<td>{{garantia.fechaComercializacion | date:"dd-MM-yyyy"}}</td>
-														<td>{{garantia.fechaFiniquito | date:"dd-MM-yyyy"}}</td>
+														<td style="text-align: right">{{garantia.avaluoMobiliaria | currency}}</td>
+														<td style="text-align: center">{{garantia.porcentajePrestamoMobiliria}}</td>
+														<td style="text-align: right">{{garantia.almacenaje | currency}}</td>
+														<td style="text-align: right">{{garantia.comercializacion | currency}}</td>
+														<td style="text-align: right">{{garantia.desempenioExtemporaneo | currency}}</td>
+														<td style="text-align: right">{{garantia.reposicionContrato | currency}}</td>
 													</tr>
 												</tbody>
 											</table>
-											<table class="table table-bordered">
+											<table class="table table-bordered" ng-if="cob.credito.tipoGarantia =='general'">
 											<thead>
 												<tr>
 													<th width="5%">Número</th>
 													<th width="15%">Sup. de terreno y construcción</th>
 													<th width="15%">Medidas, colindancias, clave astral</th>
+													<th width="15%">Ubicación</th>
 													<th width="15%">Avalúo</th>
-													<th width="15%">Préstamo</th>
-													<th width="15%">Préstamo sobre avalúo</th>
-													<th width="15%">Monto de avalúo</th>
-													<th width="15%">% Porcentaje del préstamo sobre el avaluo</th>
-													<th width="15%">Comisión y gastos</th>
-													<th width="15%">Por escrituración e inscripción de registro público</th>
-													<th width="5%">Acción</th>
+													<th width="15%">% Avalúo</th>
+													<th width="15%">Comisión y Gastos</th>
+													
 												</tr>
 											</thead>
 											<tbody>
@@ -196,17 +193,10 @@
 													<td>{{garantia.num}}</td>
 													<td>{{garantia.terrenoYconstruccion}}</td>
 													<td>{{garantia.medidasColindancias}}</td>
-													<td>{{garantia.avaluo}}</td>
-													<td>{{garantia.prestamo}}</td>
-													<td>{{garantia.prestamoSobreAvaluo}}</td>
-													<td>{{garantia.montoAvaluo}}</td>
-													<td>{{garantia.porcentajePrestamo}}</td>
-													<td>{{garantia.comisionGastos}}</td>
-													<td>{{garantia.escrituracion}}</td>
-													<td>
-															<a href="#" ng-click="cob.quitarGarantia(cob.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
-															<a href="#" ng-click="cob.editarGarantia(cob.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
-													</td>
+													<td>{{garantia.ubicacion}}</td>
+													<td style="text-align: right">{{garantia.avaluoGeneral | currency}}</td>
+													<td style="text-align: center">{{garantia.porcentajePrestamoGeneral}}</td>
+													<td style="text-align: right">{{garantia.comisionGastos | currency}}</td>
 												</tr>
 											</tbody>
 										</table>

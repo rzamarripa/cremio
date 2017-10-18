@@ -263,7 +263,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			if (cli != undefined)
 			{
 					
-					var empresa = Empresas.findOne(cli.profile.empresa_id);
+					/*
+var empresa = Empresas.findOne(cli.profile.empresa_id);
 
 					if (empresa != undefined)
 					{
@@ -281,9 +282,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 						cli.profile.empresa = empresa;				
 					}	
-					
-					
-					rc.referenciasPersonales = [];
+*/
+					/*
+rc.referenciasPersonales = [];
 					
 					//console.log(cli.profile.referenciasPersonales_ids);
 		      _.each(cli.profile.referenciasPersonales_ids,function(referenciaPersonal){
@@ -318,59 +319,34 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		                  }
 		            }); 
 		      });
+*/
+					this.ocupacion_id = cli.profile.ocupacion_id;
+				
+					var ec = EstadoCivil.findOne(cli.profile.estadoCivil_id);
+					if (ec != undefined)
+							this.estadoCivilSeleccionado = 	ec.nombre;
+					
+					
+					/*
+_.each(cli, function(objeto){
 
+						objeto.documento = Documentos.findOne(objeto.documento_id);
+						objeto.pais = Paises.findOne(objeto.pais_id);
+						objeto.estado = Estados.findOne(objeto.estado_id);
+						objeto.municipio = Municipios.findOne(objeto.municipio_id);
+						objeto.ciudad = Ciudades.findOne(objeto.ciudad_id);
+						objeto.colonia = Colonias.findOne(objeto.colonia_id);
+						objeto.ocupacion = Ocupaciones.findOne(objeto.ocupacion_id);
+						objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id);
+						objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id);
+						
+					});
+*/
 					
 					
 			}
 			
-			_.each(cli, function(objeto){
-
-				 rc.referencias = [];
-				 //rc.empresas = [];
-				
-				
-				// objeto.documento = Documentos.findOne(objeto.docuemnto_id)
-				objeto.documento = Documentos.findOne(objeto.documento_id);
-				objeto.pais = Paises.findOne(objeto.pais_id);
-				objeto.estado = Estados.findOne(objeto.estado_id);
-				objeto.municipio = Municipios.findOne(objeto.municipio_id);
-				objeto.ciudad = Ciudades.findOne(objeto.ciudad_id);
-				objeto.colonia = Colonias.findOne(objeto.colonia_id);
-				objeto.ocupacion = Ocupaciones.findOne(objeto.ocupacion_id);
-				objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id);
-				objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id);
-				
-				/*
-				_.each(objeto.referenciasPersonales_ids, function(referencia){
-						Meteor.call('getReferencias', referencia, function(error, result){	
-					//console.log("entra aqui",referencia)					
-						if (result)
-							//console.log(result,"caraculo")
-						{
-							//console.log("entra aqui");
-							//console.log("result",result);
-							rc.referencias.push(result);
-							if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-					    		$scope.$apply();
-							}
-						}
-					});	
-				});
-				*/
-
-                     
-				
-			});
-
-			if(cli){
-				this.ocupacion_id = cli.profile.ocupacion_id;
-				
-				var ec = EstadoCivil.findOne(cli.profile.estadoCivil_id);
-				if (ec != undefined)
-						this.estadoCivilSeleccionado = 	ec.nombre;
-
-				return cli;
-			}		
+			return cli;	
 		},	
 		
 		planPagos : () => {
@@ -714,9 +690,47 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					});
 				}
 		});
+		
+		rc.referenciasPersonales = [];
+					
+		//console.log(cli.profile.referenciasPersonales_ids);
+    _.each(cliente.profile.referenciasPersonales_ids,function(referenciaPersonal){
+      		//console.log("RP ARRay:",referenciaPersonal);
+          Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
+                if (result)
+                {
+                  //console.log("RP:",result);
+                	if (result.apellidoMaterno == null) {
+                		result.apellidoMaterno = ""
+                	}
+                    //Recorrer las relaciones 
+                    
+                    rc.referenciasPersonales.push({//buscarPersona_id : referenciaPersonal.referenciaPersonal_id,
+                                                   nombre           : result.nombre,
+                                                   apellidoPaterno  : result.apellidoPaterno,
+                                                   apellidoMaterno  : result.apellidoMaterno,
+                                                   parentesco       : referenciaPersonal.parentesco,
+                                                   direccion        : result.direccion,
+                                                   telefono         : result.telefono,
+                                                   tiempo           : referenciaPersonal.tiempoConocerlo,
+                                                   num              : referenciaPersonal.num,
+                                                   nombreCompleto		:	result.nombreCompleto
+                                                   //cliente          : result.cliente,
+                                                   //cliente_id       : result.cliente_id,
+                                                   //tipoPersona      : result.tipoPersona,
+                                                   //estatus          : result.estatus
+                    });
+										if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+								    		$scope.$apply();
+										}
+                }
+          }); 
+    });
+
 
 
 	};
+	
 	this.creditosActivos = function(){
 		this.creditoAc = !this.creditoAc;
 		this.solicitudesCre = false;

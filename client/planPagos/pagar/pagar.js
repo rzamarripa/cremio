@@ -380,12 +380,6 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
           credito.nombreTipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
         })
       }
-/*
-      _.each(rc.getReactively("planPagosViejo"), function(pp) {
-    
-
-      })
-*/
 
       if (creditos) {
         _.each(creditos, function(credito) {

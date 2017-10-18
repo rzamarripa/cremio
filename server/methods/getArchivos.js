@@ -238,22 +238,35 @@ Meteor.methods({
 			var persona = Meteor.users.findOne(idReferencia);
 			
 				_.each(persona, function(objeto){
-					objeto.nacionalidadCliente = Nacionalidades.findOne(objeto.nacionalidad_id);
-					objeto.coloniaCliente = Colonias.findOne(objeto.colonia_id);
-					objeto.estadoCliente = Estados.findOne(objeto.estado_id);
-					objeto.municipioCliente = Municipios.findOne(objeto.municipio_id);
-					objeto.paisCliente = Paises.findOne(objeto.pais_id);
-					objeto.ocupacionCliente = Ocupaciones.findOne(objeto.ocupacion_id);
-					objeto.ciudadCliente = Ciudades.findOne(objeto.ciudad_id);
-					objeto.sucursales = Sucursales.findOne(objeto.sucursal_id);
-					objeto.estadoCivilCliente = EstadoCivil.findOne(objeto.estadoCivil_id);
-					objeto.empresa = Empresas.findOne(objeto.empresa_id);
-					_.each(objeto.referenciasPersonales_ids, function(item){
-					objeto.referencias = ReferenciasPersonales.findOne(item.referenciaPersonal_id)
+						objeto.nacionalidadCliente = Nacionalidades.findOne(objeto.nacionalidad_id);
+						objeto.coloniaCliente = Colonias.findOne(objeto.colonia_id);
+						objeto.estadoCliente = Estados.findOne(objeto.estado_id);
+						objeto.municipioCliente = Municipios.findOne(objeto.municipio_id);
+						objeto.paisCliente = Paises.findOne(objeto.pais_id);
+						objeto.ocupacionCliente = Ocupaciones.findOne(objeto.ocupacion_id);
+						objeto.ciudadCliente = Ciudades.findOne(objeto.ciudad_id);
+						objeto.sucursales = Sucursales.findOne(objeto.sucursal_id);
+						objeto.estadoCivilCliente = EstadoCivil.findOne(objeto.estadoCivil_id);
+						objeto.empresa = Empresas.findOne(objeto.empresa_id);
+						
 
-				})
-
-		
+						if (objeto.empresa != undefined)
+						{
+							 objeto.paisEmpresa = Paises.findOne(objeto.empresa.pais_id);
+							 objeto.estadoEmpresa = Estados.findOne(objeto.empresa.estado_id);
+							 objeto.municipioEmpresa = Municipios.findOne(objeto.empresa.municipio_id);
+							 objeto.ciudadEmpresa = Ciudades.findOne(objeto.empresa.ciudad_id);	 
+							 objeto.coloniaEmpresa = Colonias.findOne(objeto.empresa.colonia_id);	 
+							 							 
+						}	 						
+					/*
+	
+						objeto.referencias = [];
+						_.each(objeto.referenciasPersonales_ids, function(item){
+							var referencias = ReferenciasPersonales.findOne(item.referenciaPersonal_id);
+							objeto.referencias.push(referencias);	
+						})
+*/
 
 
 				});
@@ -510,46 +523,54 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-				 
-		    var content = fs
-    	   .readFileSync(produccion+"RECIBOS.docx", "binary");
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "plantillas/";
+    }
+						 
+		var content = fs.readFileSync(produccion+"RECIBOS.docx", "binary");
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
 								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			return "";
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
+																					if (!part.module) {
+																					return "";
+																					}
+																					if (part.module === "rawxml") {
+																					return "";
+																					}
+																					return "";
+																				}});
 		
 		var fecha = new Date();
 		var f = fecha;
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	  fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	    
-	 _.each(objeto,function(item){
-      item.fechaLimite =moment(item.fechaLimite).format("DD-MM-YYYY")
-      
-      if (item.proximoPago== "No hay proximo pago") {
-      	item.proximoPago = "No hay próximo pago" 
-      }else{
-      	item.proximoPago =moment(item.proximoPago).format("DD-MM-YYYY")
-      }
-      
+		_.each(objeto,function(item){
+	      
+	    	item.fechaLimite   = moment(item.fechaLimite).format("DD-MM-YYYY");
+	      item.numeroCliente = item.cliente.profile.numeroCliente; 
+	    				
+				var num = (item.numeroPago + 1);
+				var pp = PlanPagos.findOne({credito_id: item.credito._id, numeroPago: num});
 
-	 });
-
-	  //console.log(objeto.planPagos);
+				if (pp) {
+	      	item.proximoPago = moment(pp.fechaLimite).format("DD-MM-YYYY"); 
+	      }else{
+	      	item.proximoPago = "No hay próximo pago";
+	      }
+				
+				
+				
+		});
 		
-		doc.setData({				items: 		objeto,
-									fecha:     fecha,
-									
-
-				  });
+		doc.setData({	items: 		objeto,
+									fecha:    fecha,
+								});
 								
 		doc.render();
  
@@ -1292,7 +1313,7 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
             return Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
     };	
 			
-		var letra = NumeroALetras(contrato.capitalSolicitado);
+		var letra = NumeroALetras(contrato.adeudoInicial);
 		var tasaPor = NumeroALetras(contrato.tasa);
 		const formatCurrency = require('format-currency');
 		if (contrato.seguro) {contrato.seguroLetra = NumeroALetras(contrato.seguro)}
@@ -1448,7 +1469,7 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		}
 
     var fechaVigencia = formatDate(vigenciaFecha);
-    contrato.capitalSolicitado = formatCurrency(contrato.capitalSolicitado) 
+    contrato.capitalSolicitado = formatCurrency(contrato.adeudoInicial) 
     var fechaLetra = formatDia(fecha);
     
     //console.log(contrato.avisoPrivacidad,"contrato")

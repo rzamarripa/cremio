@@ -26,7 +26,14 @@
 							    	<label>Apellido Materno</label>
 							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cob.cliente.profile.apellidoMaterno" disabled="">
 						    	</div>	    				    	    
+						    	<div class="col-sm-3">					    
+							    	<label>Número cliente</label>
+							    	<input name="numeroCliente" type="text" class="form-control" placeholder="Número de Cliente" ng-model="cob.cliente.profile.numeroCliente" disabled="">
+						    	</div>
 						    </div>
+						    <div class="row">
+							    
+						    </div>  
 			      </div>
 			   
 			  </div>
@@ -56,15 +63,15 @@
 							    <div class="row">
 								    <div class="col-sm-3">					    
 								    	<label>Teléfono Alternativo</label>
-								    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cob.cliente.profile.telefonoAlternativo" disabled="">
+								    	<input name="telefonoalternativo" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cob.cliente.profile.telefonoAlternativo" disabled="">
 							    	</div>	  
 							    	<div class="col-sm-3">					    
 								    	<label>Dueño</label>
-								    	<input name="otroTelefono" type="text" class="form-control" placeholder="Dueño" ng-model="cob.cliente.profile.duenoAlternativo" disabled="">
+								    	<input name="duenio" type="text" class="form-control" placeholder="Dueño" ng-model="cob.cliente.profile.duenoAlternativo" disabled="">
 							    	</div>
 							    	<div class="col-sm-3">					    
-								    	<label>Parentezco</label>
-								    	<input name="otroTelefono" type="text" class="form-control" placeholder="Parentezco" ng-model="cob.cliente.profile.parentescoAlternativo" disabled="">
+								    	<label>Parentesco</label>
+								    	<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="cob.cliente.profile.parentescoAlternativo" disabled="">
 							    	</div>
 							    	<div class="col-sm-3">					    
 								    	<label>Correo</label>
@@ -85,17 +92,13 @@
 			  
 			      <div class="panel-body">
 			        	<div class="row">
-									<div class="col-sm-3" >
-								    <label for="sexo">Sexo </label>
-								    <select name="sexo" ng-model="cob.cliente.profile.sexo" data-placeholder="Seleccione" class="form-control" disabled>
-										    <option value=""></option>
-										    <option value="Masculino">Masculino</option>
-										    <option value="Femenino">Femenino</option>
-										</select>
-						    	</div>
+									<div class="col-sm-3">
+										<label for="estadocivil">Sexo</label>
+										<input name="Sexo" type="text" class="form-control" placeholder="Sexo" ng-model="cob.cliente.profile.sexo" disabled="">
+									</div>
 						    	<div class="col-sm-3">
 										<label for="estadocivil">Estado Civil </label>
-										<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="cob.cliente.profile.estadoCivil.nombre" disabled="">
+										<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="cob.cliente.profile.estadoCivilCliente.nombre" disabled="">
 									</div>
 										
 						    	<div class="col-sm-3">					    
@@ -105,13 +108,13 @@
 									
 									<div class="col-sm-3">
 										<label for="nacionalidad">Nacionalidad</label>
-										<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="cob.cliente.profile.nacionalidad" disabled="">
+										<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="cob.cliente.profile.nacionalidadCliente.nombre" disabled="">
 									</div>			
 						    </div>
 						    <div class="row">
 							    <div class="col-sm-3">
 										<label for="ocupacion">Ocupación </label>
-										<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="cob.cliente.profile.ocupacion" disabled="">
+										<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="cob.cliente.profile.ocupacionCliente.nombre" disabled="">
 									</div>		
 						    	<div class="col-sm-3">					    
 							    	<label>CURP</label>
@@ -152,25 +155,25 @@
 								    <div class="row">
 									    <div class="col-sm-3" >
 													<label >Pais </label>
-													<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="cob.cliente.profile.pais" disabled>
+													<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="cob.cliente.profile.paisCliente.nombre" disabled>
 											</div>
 										  <div class="col-sm-3" >
 													<label for="seccion_id">Estado </label>
-													<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="cob.cliente.profile.estado" disabled>
+													<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="cob.cliente.profile.estadoCliente.nombre" disabled>
 											</div>	
 											<div class="col-sm-3" >
 													<label >Municipio </label>
-													<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="cob.cliente.profile.municipio" disabled>
+													<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="cob.cliente.profile.municipioCliente.nombre" disabled>
 											</div>
 											<div class="col-sm-3" >
 													<label for="seccion_id">Ciudad </label>
-													<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="cob.cliente.profile.ciudad" disabled>
+													<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="cob.cliente.profile.ciudadCliente.nombre" disabled>
 											</div>	
 								    </div>
 								    <div class="row">
 									    <div class="col-sm-3" >
 													<label for="seccion_id">Colonia </label>
-													<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="cob.cliente.profile.colonia" disabled>
+													<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="cob.cliente.profile.coloniaCliente.nombre" disabled>
 											</div>
 											<div class="col-sm-3">					    
 									    	<label>Tiempo Residencia</label>
@@ -241,7 +244,7 @@
 				      </div>
 				    
 				</div>
-				<div class="panel panel-default" ng-if="cob.estadoCivilSeleccionado == 'CASADO (A)'">
+				<div class="panel panel-default" ng-if="cob.cliente.profile.estadoCivilCliente.nombre == 'CASADO (A)'">
 				    <div class="panel-heading" role="tab" id="headingSix">
 				      <h4 class="panel-title">
 				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href6" aria-expanded="false" aria-controls="href6">
@@ -253,35 +256,35 @@
 				      <div class="panel-body">
 				        	<div class="col-sm-3" valida> 					    
 							    	<label>Nombre *</label>
-							    	<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cob.cliente.profile.nombreConyuge" required="" capitalize>
+							    	<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cob.cliente.profile.nombreConyuge" required="" disabled>
 						    	</div>
 						    	<div class="col-sm-3" valida>					    
 							    	<label>Dirección *</label>
-							    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cob.cliente.profile.direccionConyuge" required="" capitalize>
+							    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cob.cliente.profile.direccionConyuge" disabled>
 						    	</div>
 						    	<div class="col-sm-3" valida>					    
 							    	<label>Dirección del trabajo *</label>
-							    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cob.cliente.profile.direccionConyugeTrabajo" required="" capitalize>
+							    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección  Conyuge" ng-model="cob.cliente.profile.direccionConyugeTrabajo" disabled>
 						    	</div>
 						    	<div class="col-sm-3" valida>					    
 							    	<label>Puesto *</label>
-							    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cob.cliente.profile.puestoConyuge" required="" capitalize>
+							    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cob.cliente.profile.puestoConyuge" disabled>
 						    	</div>
 						    	<div class="col-sm-3" valida>					    
 							    	<label>Teléfono Particular *</label>
-							    	<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="cob.cliente.profile.telefonoConyuge" required="">
+							    	<input name="telefonoConyuge" type="number" class="form-control" placeholder="Teléfono" ng-model="cob.cliente.profile.telefonoConyuge" disabled>
 						    	</div>
 						    	<div class="col-sm-3">					    
 							    	<label>Teléfono del trabajo</label>
-							    	<input name="telefonoConyugeTrabajo" type="number" class="form-control" placeholder="Teléfono" ng-model="cob.cliente.profile.telefonoConyugeTrabajo" >
+							    	<input name="telefonoConyugeTrabajo" type="number" class="form-control" placeholder="Teléfono" ng-model="cob.cliente.profile.telefonoConyugeTrabajo" disabled>
 						    	</div>
 						    	<div class="col-sm-3">					    
 							    	<label>Ocupación</label>
-							    	<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cob.cliente.profile.ocupacionConyuge" capitalize>
+							    	<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cob.cliente.profile.ocupacionConyuge" disabled>
 						    	</div>	
 						    	<div class="col-sm-3">					    
 							    	<label>Dirección Trabajo</label>
-							    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion" ng-model="cob.cliente.profile.direccionTrabajoConyuge" capitalize>
+							    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion" ng-model="cob.cliente.profile.direccionTrabajoConyuge" disabled>
 						    	</div>		   				    	    
 						    </div>
 					    </div>
@@ -302,19 +305,15 @@
 													<th width="5%">Número</th>
 													<th width="20%">Nombre</th>
 													<th width="5%">Parentesco</th>
-													<th width="30%">Dirección</th>
-													<th width="10%">Telefono</th>
 													<th width="10%">Tiempo</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="p in cob.referenciasPersonales">
+												<tr ng-repeat="p in cob.cliente.profile.referenciasPersonales_ids">
 													<td>{{p.num}}</td>
-													<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}} </td>
-													<td>{{p.parentezco}}</td>
-													<td>{{p.direccion}}</td>
-													<td>{{p.telefono}}</td>
-													<td>{{p.tiempo}}</td>
+													<td>{{p.nombreCompleto}}</td>
+													<td>{{p.parentesco}}</td>
+													<td>{{p.tiempoConocerlo}}</td>
 												</tr>
 											</tbody>
 										</table>
@@ -350,7 +349,7 @@
 								    	</div>  				    	    
 								    	<div class="col-sm-6" >					    
 									    	<label>Colonia </label>
-									    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cob.cliente.profile.empresa.colonia" disabled="">
+									    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cob.cliente.profile.coloniaEmpresa.nombre" disabled="">
 								    	</div>
 								    </div>
 								    <div class="row">
@@ -384,19 +383,19 @@
 										<div class="row">
 											<div class="col-sm-3" >
 													<label >Pais </label>
-													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cob.cliente.profile.empresa.pais" disabled="">
+													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cob.cliente.profile.paisEmpresa.nombre" disabled="">
 											</div>
 										  <div class="col-sm-3" >
 													<label for="seccion_id">Estado </label>
-													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cob.cliente.profile.empresa.estado" disabled="">
+													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cob.cliente.profile.estadoEmpresa.nombre" disabled="">
 											</div>	
 											<div class="col-sm-3" >
 													<label >Municipio </label>
-													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cob.cliente.profile.empresa.municipio" disabled="">
+													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cob.cliente.profile.municipioEmpresa.nombre" disabled="">
 											</div>
 											<div class="col-sm-3" >
 													<label for="seccion_id">Ciudad </label>
-													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="cob.cliente.profile.empresa.ciudad" disabled="">
+													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="cob.cliente.profile.ciudadEmpresa.nombre" disabled="">
 											</div>	
 							    </div>
 				      </div>

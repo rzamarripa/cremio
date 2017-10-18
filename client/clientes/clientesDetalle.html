@@ -285,15 +285,15 @@
 										    <div class="row">
 											    <div class="col-sm-3">					    
 											    	<label>Teléfono Alternativo</label>
-											    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cd.objeto.profile.telefonoAlternativo" disabled="">
+											    	<input name="telefonoAlternativo" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cd.objeto.profile.telefonoAlternativo" disabled="">
 										    	</div>	  
 										    	<div class="col-sm-3">					    
 											    	<label>Dueño</label>
-											    	<input name="otroTelefono" type="text" class="form-control" placeholder="Dueño" ng-model="cd.objeto.profile.duenoAlternativo" disabled="">
+											    	<input name="dueno" type="text" class="form-control" placeholder="Dueño" ng-model="cd.objeto.profile.duenoAlternativo" disabled="">
 										    	</div>
 										    	<div class="col-sm-3">					    
-											    	<label>Parentezco</label>
-											    	<input name="otroTelefono" type="text" class="form-control" placeholder="Parentezco" ng-model="cd.objeto.profile.parentescoAlternativo" disabled="">
+											    	<label>Parentesco</label>
+											    	<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="cd.objeto.profile.parentescoAlternativo" disabled="">
 										    	</div>
 										    	<div class="col-sm-3">					    
 											    	<label>Correo</label>
@@ -755,9 +755,12 @@
 																<small>
 																	{{pendiente.tipoCredito.nombre}}
 																</small><br>													
-																<small>Tiene Aval: {{pendiente.tieneAval}}</small>
-																
-																<div class="po-markup" ng-if="pendiente.tieneAval == 'SI'">
+																<small>Tiene Aval: {{pendiente.tieneAval}}</small><br>
+																<div ng-if="pendiente.tieneAval == 'SI'">
+																	<small>{{pendiente.avales_ids[0].nombreCompleto}}</small><br>
+																</div>
+																<!--
+<div class="po-markup" ng-if="pendiente.tieneAval == 'SI'">
 																    <a href="javascript:void(0);" >AVAL</a>
 																    <div class="po-content hidden">
 																        <div class="po-title">
@@ -771,6 +774,7 @@
 																        </div>
 																    </div>  
 																</div>
+-->
 																
  																<br ng-if="pendiente.tieneAval == 'NO'">
 																<small>Plan: {{pendiente.periodoPago}}</small><br>

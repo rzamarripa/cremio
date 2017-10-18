@@ -40,10 +40,10 @@
 						  <ul class="dropdown-menu dropdown-menu-right text-left">
 <!-- 						    <li><a ui-sref="root.verificacionVecino({id: verificacion.credito_id, verificacion_id: verificacion._id})"> <i class="fa fa-eye"></i> Ver</a></li>  -->
 						    <li ng-if ="verificacion.tipoVerificacion == 'vecino'">
-						    		<a ui-sref="root.verificacionVecino({id: verificacion.credito_id, verificacion_id: verificacion._id})"><i class="fa fa-pencil"></i> Editar</a>
+						    		<a ui-sref="root.verificacionVecino({id: verificacion.credito_id, verificacion_id: verificacion._id, tipo: (verificacion.tipo == 'Crédito Personal'?'CP':'V')})"><i class="fa fa-pencil"></i> Editar</a>
 						    </li>
 						    <li ng-if ="verificacion.tipoVerificacion == 'solicitante o aval'">
-						    		<a ui-sref="root.verificacion({id: verificacion.credito_id, verificacion_id: verificacion._id})"><i class="fa fa-pencil"></i> Editar</a>
+						    		<a ui-sref="root.verificacion({id: verificacion.credito_id, verificacion_id: verificacion._id, tipo: (verificacion.tipo == 'Crédito Personal'?'CP':'V')})"><i class="fa fa-pencil"></i> Editar</a>
 						    </li>
 						  </ul>
 						</div>
