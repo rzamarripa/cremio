@@ -245,9 +245,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
 			
 			_.each(rc.getReactively("notaPerfil"), function(nota){
-				//console.log(rc.notaPerfil.cliente_id,"nota a l avga")
+
 				if (cli._id == rc.notaPerfil.cliente_id) {
-					//console.log("entro aqui compilla")
+
 					if (rc.notaPerfil.tipo == "Cuenta") {
 
 						$("#notaPerfil").modal("hide");
@@ -262,7 +262,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 			if (cli != undefined)
 			{
-					
+					console.log("Cliente:", cli);
 					/*
 var empresa = Empresas.findOne(cli.profile.empresa_id);
 
@@ -327,8 +327,7 @@ rc.referenciasPersonales = [];
 							this.estadoCivilSeleccionado = 	ec.nombre;
 					
 					
-					/*
-_.each(cli, function(objeto){
+					_.each(cli, function(objeto){
 
 						objeto.documento = Documentos.findOne(objeto.documento_id);
 						objeto.pais = Paises.findOne(objeto.pais_id);
@@ -341,7 +340,6 @@ _.each(cli, function(objeto){
 						objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id);
 						
 					});
-*/
 					
 					
 			}
@@ -1615,7 +1613,8 @@ if(estatus == 0){
 	};
 	this.CreditoSolicitar= function(id)
 	{
-
+			
+			console.log(id);
     	$state.go("root.generadorPlan",{objeto_id : id});
 	  
 	    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"

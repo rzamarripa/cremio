@@ -92,8 +92,6 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.subscribe('ocupaciones', () => {
 		return [{estatus: true}];
 	});
-
-
 	
 	this.helpers({
 		avalesHelper : () => {
@@ -104,11 +102,12 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			return aval;
 		},
 		cliente : () => {
-			var cliente = Meteor.users.findOne($stateParams.objeto_id);
-			//console.log(cliente,"el cliente paps")
-			if (true) {}
-
-			return  cliente
+			var c = Meteor.users.findOne($stateParams.objeto_id);
+			
+			if (c != undefined) {
+				return  c;	
+			}
+			
 		},
 		tiposCredito : () => {
 			return TiposCredito.find();

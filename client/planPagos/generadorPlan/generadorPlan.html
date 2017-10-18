@@ -1,19 +1,19 @@
 
-<div class="row" ng-show="ver.cliente.profile != undefined">
+<div class="row" ng-show="ge.cliente.profile != undefined">
 	<div class="col-sm-12">
 		<div class="well">	
 			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
-				<h2 class="alge-title txt-color-blueDark" ng-if="ver.cliente.roles[0] == 'Cliente'">
+				<h2 class="alge-title txt-color-blueDark" ng-if="ge.cliente.roles[0] == 'Cliente'">
 					<i class="fa fa-list fa-fw "></i>
-						Solicitud del Crédito - <span>{{ver.cliente.profile.nombreCompleto}}</span> 
+						Solicitud de Crédito - <span>{{ge.cliente.profile.nombreCompleto}}</span> 
 				</h2>
-				<h2 class="alge-title txt-color-blueDark" ng-if="ver.cliente.roles[0] == 'Distribuidor'">
+				<h2 class="alge-title txt-color-blueDark" ng-if="ge.cliente.roles[0] == 'Distribuidor'">
 					<i class="fa fa-list fa-fw "></i>
-						Solicitud del Vale - <span>{{ver.cliente.profile.nombreCompleto}}</span>
+						Solicitud de Vale - <span>{{ge.cliente.profile.nombreCompleto}}</span>
 				</h2>
 			</div>
-			<a style="margin: 5px;" ng-if="ver.cliente.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : ver.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
-			<a style="margin: 5px;" ng-show="ver.cliente.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : ver.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;		
+			<a style="margin: 5px;" ng-if="ge.cliente.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
+			<a style="margin: 5px;" ng-show="ge.cliente.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;		
 			<div class="row">				
 				<div class="col-sm-12">
 					<form name="form" class="form-horizontal" role="form" novalidate>
@@ -22,25 +22,25 @@
 					  		<div class="col-sm-12">
 					  			<div class="alert alert-info">
 					  			 <p><i class="fa-fw fa fa-info"></i> Para 
-						  			 <strong ng-if="ver.cliente.roles[0] == 'Cliente'">crear un nuevo crédito</strong><strong ng-if="ver.cliente.roles[0] == 'Distribuidor'">crear un nuevo vale</strong>
+						  			 <strong ng-if="ge.cliente.roles[0] == 'Cliente'">crear un nuevo crédito</strong><strong ng-if="ge.cliente.roles[0] == 'Distribuidor'">crear un nuevo vale</strong>
 						  			  es importante que pongamos la información correcta. <strong>(Revisar bien los datos.)</strong></p>
 					  			</div>
 					  		</div>
 					  	</div>
 					    <div class="row">
-						    <div class="col-sm-4" valida ng-if="ver.cliente.roles == 'Cliente'">
+						    <div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Tipo de crédito *</label>
-						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="ver.credito.tipoCredito_id" required="">
-							    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in ver.tiposCredito">{{tipoCredito.nombre}}</option>
+						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="ge.credito.tipoCredito_id" required="">
+							    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in ge.tiposCredito">{{tipoCredito.nombre}}</option>
 						    	</select>
 					    	</div>
-					    	<div class="col-sm-4" valida  ng-if="ver.cliente.roles == 'Cliente'">
+					    	<div class="col-sm-4" valida  ng-if="ge.cliente.roles == 'Cliente'">
 							    <label>Tasa %*</label>
-						    	<input name="tasa" min="0" type="number" class="form-control" ng-model="ver.credito.tasa" required>
+						    	<input name="tasa" min="0" type="number" class="form-control" ng-model="ge.credito.tasa" required>
 						    </div>
-					    	<div class="col-sm-4" valida ng-if="ver.cliente.roles == 'Cliente'">
+					    	<div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Periodo de pago *</label>
-						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ver.credito.periodoPago" required="">
+						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ge.credito.periodoPago" required="">
 							    	<option value="Semanal">Semanal</option>
 							    	<option value="Quincenal">Quincenal</option>
 							    	<option value="Mensual">Mensual</option>
@@ -48,25 +48,25 @@
 					    	</div>
 					    </div>
 					    
-					    <div class="row" ng-if="ver.cliente.roles[0] == 'Distribuidor'">
+					    <div class="row" ng-if="ge.cliente.roles[0] == 'Distribuidor'">
 						    	<div class="col-sm-6" valida>
 								    <label>Nombre del Beneficiado</label>
-							    	<input name="beneficiado" type="text" class="form-control" ng-model="ver.credito.beneficiado" required capitalize>
+							    	<input name="beneficiado" type="text" class="form-control" ng-model="ge.credito.beneficiado" required capitalize>
 							    </div>	
 							    <div class="col-sm-3">
-								    <a href="javascript:void(0);" ng-click="ver.mostrarModalValidarBeneficiado()" class="btn btn-default btn-circle"><i class="glyphicon glyphicon-ok"></i></a>
+								    <a href="javascript:void(0);" ng-click="ge.mostrarModalValidarBeneficiado()" class="btn btn-default btn-circle"><i class="glyphicon glyphicon-ok"></i></a>
 							    </div> 
 						    
 					    </div>
 					    
 					    <div class="row">
-						    <div class="col-sm-3" valida ng-if="ver.cliente.roles == 'Cliente'">					    
+						    <div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">					    
 						    	<label>Duración (Meses) *</label>
-						    	<input name="duracionMesesCreditoNuevo" min="1" max="12" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ver.credito.duracionMeses" required="">
+						    	<input name="duracionMesesCreditoNuevo" min="1" max="12" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ge.credito.duracionMeses" required="">
 					    	</div>
-					    	<div class="col-sm-3" valida ng-if="ver.cliente.roles == 'Distribuidor'">
+					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
 						    	<label>Duración (Meses) *</label>
-						    	<select name="duracionMesesCreditoNuevo" class="form-control" ng-model="ver.credito.duracionMeses" required="">
+						    	<select name="duracionMesesCreditoNuevo" class="form-control" ng-model="ge.credito.duracionMeses" required="">
 							    	<option value="3">3</option>
 							    	<option value="4">4</option>
 							    	<option value="5">5</option>
@@ -75,13 +75,13 @@
 							    	<option value="8">8</option>
 						    	</select>
 					    	</div>
-					    	<div class="col-sm-3" valida ng-if="ver.cliente.roles == 'Cliente'">
+					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Capital Solicitado *</label>
-						    	<input name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ver.credito.capitalSolicitado" required="">
+						    	<input name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ge.credito.capitalSolicitado" required="">
 					    	</div>
-					    	<div class="col-sm-3" valida ng-if="ver.cliente.roles == 'Distribuidor'">
+					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
 						    	<label>Capital Solicitado *</label>
-						    	<select name="capitalSolicitadoCreditoNuevo" class="form-control" ng-model="ver.credito.capitalSolicitado" placeholder="Capital Solicitado" required="">
+						    	<select name="capitalSolicitadoCreditoNuevo" class="form-control" ng-model="ge.credito.capitalSolicitado" placeholder="Capital Solicitado" required="">
 							    	<option value="1500">1500</option>
 							    	<option value="2000">2000</option>
 							    	<option value="2500">2500</option>
@@ -97,25 +97,25 @@
 					    	</div>
 					    	<div class="col-sm-3">					    
 						    	<label>Con Seguro</label>
-						    	<input name="conSeguro" type="checkbox" min="0" class="form-control" ng-model="ver.credito.conSeguro">
+						    	<input name="conSeguro" type="checkbox" min="0" class="form-control" ng-model="ge.credito.conSeguro">
 					    	</div>	
-					    	<div class="col-sm-3" ng-if="ver.credito.conSeguro" valida>
+					    	<div class="col-sm-3" ng-if="ge.credito.conSeguro" valida>
 							    <label>Importe seguro *</label>
-						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ver.credito.seguro"  required>
+						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ge.credito.seguro"  required>
 						    </div>		
 					    </div>
-					    <div class="row" ng-if="ver.cliente.roles == 'Cliente'">
+					    <div class="row" ng-if="ge.cliente.roles == 'Cliente'">
 								<div class="col-sm-2">					    
 						    	<label>Requiere Verificación</label>
-						    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ver.credito.requiereVerificacion">
+						    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ge.credito.requiereVerificacion">
 					    	</div>
 					    	<div class="col-sm-2" valida>
 						    	<label>Fecha Verificación</label>
-						    	<input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ver.credito.fechaVerificacion" ng-disabled="!ver.credito.requiereVerificacion" />
+						    	<input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ge.credito.fechaVerificacion" ng-disabled="!ge.credito.requiereVerificacion" />
 					    	</div>
 								<div class="col-sm-2" valida>
 						    	<label>Horario</label>
-						    	<select name="horario" class="form-control" ng-model="ver.credito.turno" ng-disabled="!ver.credito.requiereVerificacion">
+						    	<select name="horario" class="form-control" ng-model="ge.credito.turno" ng-disabled="!ge.credito.requiereVerificacion">
 							    	<option value="mañana">Mañana</option>
 							    	<option value="tarde">Tarde</option>
 						    	</select>
@@ -123,7 +123,7 @@
 						</div>
 						</div>
 						
-						<div role="content" ng-if="ver.cliente.roles[0] == 'Cliente'">
+						<div role="content" ng-if="ge.cliente.roles[0] == 'Cliente'">
 									<!-- widget edit box -->
 									<div class="jarviswidget-editbox">
 									</div>
@@ -153,35 +153,35 @@
 												    <div class="row">
 												    	<div class="col-sm-4"> 					    
 													    	<label>Nombre</label>
-													    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ver.aval.nombre" disabled="true">
+													    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ge.aval.nombre" disabled="true">
 												    	</div>
 												    	<div class="col-sm-4"> 					    
 													    	<label>Apellido Paterno</label>
-													    	<input name="apellidoPaternoAval" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ver.aval.apellidoPaterno" disabled="true">
+													    	<input name="apellidoPaternoAval" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ge.aval.apellidoPaterno" disabled="true">
 												    	</div>
 												    	<div class="col-sm-4"> 					    
 													    	<label>Apellido Materno</label>
-													    	<input name="apellidoMaternoAval" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ver.aval.apellidoMaterno" disabled="true">
+													    	<input name="apellidoMaternoAval" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ge.aval.apellidoMaterno" disabled="true">
 												    	</div>
 												    </div>
 												    <div class="row">	
 													    <div class="col-sm-4">					    
 													    	<label>Calle</label>
-													    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ver.aval.calle" capitalize>
+													    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ge.aval.calle" capitalize>
 												    	</div>
 												    	<div class="col-sm-2">					    
 													    	<label>Número</label>
-													    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ver.aval.numero" capitalize>
+													    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ge.aval.numero" capitalize>
 												    	</div>
 												    	<div class="col-sm-2">					    
 													    	<label>Código Postal</label>
-													    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ver.aval.codigoPostal" >
+													    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ge.aval.codigoPostal" >
 												    	</div>
 													    
 													    <div class="col-sm-4"> 					    
 														    <label for="estadocivil">Estado Civil *</label>					
-																<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="ver.aval.estadoCivil_id" >
-																	<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in ver.estadosCiviles">
+																<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="ge.aval.estadoCivil_id" >
+																	<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in ge.estadosCiviles">
 																		{{estadoCivil.nombre}}
 																	</option>
 																</select>
@@ -190,52 +190,52 @@
 												    <div class="row">		
 													    <div class="col-sm-3"> 				
 														    <label>Ocupación</label>
-									              <select ng-options="ocupacion._id as ocupacion.nombre for ocupacion in ver.ocupaciones" 
-									             					ng-model="ver.aval.ocupacion_id" class="js-example-basic-single js-states form-control" 
+									              <select ng-options="ocupacion._id as ocupacion.nombre for ocupacion in ge.ocupaciones" 
+									             					ng-model="ge.aval.ocupacion_id" class="js-example-basic-single js-states form-control" 
 										             				placeholder="Seleccione" style="width: 200px;" >
 										            </select>	    
 												    	</div>
 												    	<div class="col-sm-3">					    
 													    	<label>Empresa</label>
-													    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="ver.aval.empresa" disabled="true">
+													    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="ge.aval.empresa" disabled="true">
 												    	</div>
 												    	<div class="col-sm-3">					    
 													    	<label>Puesto</label>
-													    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ver.aval.puesto" capitalize>
+													    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ge.aval.puesto" capitalize>
 												    	</div>					    	
 												    	<div class="col-sm-3">					    
 													    	<label>Tiempo Laborando</label>
-													    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="ver.aval.tiempoLaborando" capitalize>
+													    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="ge.aval.tiempoLaborando" capitalize>
 												    	</div>
 												    </div>
 												    <div class="row">	
 													    <div class="col-sm-4">					    
 													    	<label>Calle</label>
-													    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ver.aval.calleEmpresa" capitalize>
+													    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ge.aval.calleEmpresa" capitalize>
 												    	</div>
 												    	<div class="col-sm-2">					    
 													    	<label>Número</label>
-													    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ver.aval.numeroEmpresa" capitalize>
+													    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ge.aval.numeroEmpresa" capitalize>
 												    	</div>
 												    	<div class="col-sm-2">					    
 													    	<label>Código Postal</label>
-													    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ver.aval.codigoPostalEmpresa" >
+													    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ge.aval.codigoPostalEmpresa" >
 												    	</div>
 												    	<div class="col-sm-2">					    
 													    	<label>Parentesco</label>
-													    	<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="ver.aval.parentesco" capitalize>
+													    	<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="ge.aval.parentesco" capitalize>
 												    	</div>
 												    	<div class="col-sm-2">					    
 													    	<label>T. Conocerlo</label>
-													    	<input name="tiempoConocerlo" type="text" class="form-control" placeholder="Tiempo en Conocerlo" ng-model="ver.aval.tiempoConocerlo" capitalize>
+													    	<input name="tiempoConocerlo" type="text" class="form-control" placeholder="Tiempo en Conocerlo" ng-model="ge.aval.tiempoConocerlo" capitalize>
 												    	</div>
 												    </div>
 												    <div class="row">		
 												    	<div class="col-sm-3">
-														   	<input type="button" ng-click="ver.insertarAval()" value="Agregar" ng-show="ver.actionAval" class="btn btn-primary"> 	
-														   	<input type="button" ng-click="ver.borrarReferencia()" value="Quitar Aval" ng-show="ver.aval._id" class="btn btn-warning">
-														   	<input type="button" ng-click="ver.actualizarAval(ver.aval)" value="Actualizar" ng-show="!ver.actionAval" class="btn btn-primary">
-														   	<input type="button" ng-click="ver.cancelarAval()" value="Cancelar" ng-show="!ver.actionAval" class="btn btn-danger">	   				
+														   	<input type="button" ng-click="ge.insertarAval()" value="Agregar" ng-show="ge.actionAval" class="btn btn-primary"> 	
+														   	<input type="button" ng-click="ge.borrarReferencia()" value="Quitar Aval" ng-show="ge.aval._id" class="btn btn-warning">
+														   	<input type="button" ng-click="ge.actualizarAval(ge.aval)" value="Actualizar" ng-show="!ge.actionAval" class="btn btn-primary">
+														   	<input type="button" ng-click="ge.cancelarAval()" value="Cancelar" ng-show="!ge.actionAval" class="btn btn-danger">	   				
 															</div>
 												    </div>
 												    <br/>
@@ -252,15 +252,15 @@
 																		</tr>
 																	</thead>
 																	<tbody>
-																		<tr ng-repeat="aval in ver.avales">
+																		<tr ng-repeat="aval in ge.avales">
 																			<td>{{aval.num}}</td>
 																			<td>{{aval.nombreCompleto}}</td>
 																			<td>{{aval.parentesco}}</td>
 																			<td>{{aval.tiempoConocerlo}}</td>
 																			<td>
-																					<a href="#" class="btn btn-primary" ng-click="ver.verAval(aval)"><i class="fa fa-eye"></i></a>
-																					<a href="#" class="btn btn-warning" ng-click="ver.editarAval(aval)"><i class="fa fa-pencil"></i></a>
-																					<a href="#" class="btn btn-danger" ng-click="ver.quitarAval(aval.num, aval)"><i class="fa fa-trash"></i></a>
+																					<a href="#" class="btn btn-primary" ng-click="ge.verAval(aval)"><i class="fa fa-eye"></i></a>
+																					<a href="#" class="btn btn-warning" ng-click="ge.editarAval(aval)"><i class="fa fa-pencil"></i></a>
+																					<a href="#" class="btn btn-danger" ng-click="ge.quitarAval(aval.num, aval)"><i class="fa fa-trash"></i></a>
 																			</td>
 																		</tr>
 																	</tbody>
@@ -272,63 +272,63 @@
 											</div>
 											<div class="tab-pane fade" id="s2">
 												<p>
-														<div class="well" ng-if="ver.cliente.roles[0] == 'Cliente'">	    
+														<div class="well" ng-if="ge.cliente.roles[0] == 'Cliente'">	    
 															<div class="row">
 																<div class="col-sm-4" valida>
 															    	<label>Tipo de garantía</label>
-															    	<select name="horario" class="form-control" ng-model="ver.credito.tipoGarantia">
+															    	<select name="horario" class="form-control" ng-model="ge.credito.tipoGarantia">
 																    	<option value="general">General o inmobiliaria</option>
 																    	<option value="mobiliaria">Mobiliaria</option>
 															    	</select>
 														    </div>
 															</div>
 															
-															<div  ng-if="ver.credito.tipoGarantia == 'mobiliaria'">
+															<div  ng-if="ge.credito.tipoGarantia == 'mobiliaria'">
 																<br>
 																<h4>Comisiones</h4>
 																<div class="row">
 																	<div class="col-sm-3">
 																		<label>Almacenaje</label>
-															    	<input name="almacenaje" type="number" class="form-control" placeholder="Almacenaje" ng-model="ver.garantia.almacenaje">
+															    	<input name="almacenaje" type="number" class="form-control" placeholder="Almacenaje" ng-model="ge.garantia.almacenaje">
 																	</div>
 																	<div class="col-sm-3">
 																		<label>Comercialización</label>
-															    	<input name="comercializacion" type="number" class="form-control" placeholder="Comercialización" ng-model="ver.garantia.comercializacion">
+															    	<input name="comercializacion" type="number" class="form-control" placeholder="Comercialización" ng-model="ge.garantia.comercializacion">
 																	</div>
 																	<div class="col-sm-3">
 																		<label>Desempeño Extemporaneo</label>
-															    	<input name="desempenioExtemporaneo" type="number" class="form-control" placeholder="Desempeño Extemporaneo" ng-model="ver.garantia.desempenioExtemporaneo">
+															    	<input name="desempenioExtemporaneo" type="number" class="form-control" placeholder="Desempeño Extemporaneo" ng-model="ge.garantia.desempenioExtemporaneo">
 																	</div>
 																	<div class="col-sm-3">
 																		<label>Reposición de Contrato</label>
-															    	<input name="reposicionContrato" type="number" class="form-control" placeholder="Reposición de Contrato" ng-model="ver.garantia.reposicionContrato">
+															    	<input name="reposicionContrato" type="number" class="form-control" placeholder="Reposición de Contrato" ng-model="ge.garantia.reposicionContrato">
 																	</div>
 																</div>
 														    <div class="row">
 														    	<div class="col-sm-6"> 					    
 															    	<label>Descripción Genérica</label>
-															    	<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN" ng-model="ver.garantia.descripcion" capitalize>
+															    	<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN" ng-model="ge.garantia.descripcion" capitalize>
 														    	</div>
 														    	<div class="col-sm-6"> 					    
 															    	<label>Características	</label>
-															    	<input name="caracteristicas" type="text" class="form-control" placeholder="Caracteristicas" ng-model="ver.garantia.caracteristicas" capitalize>
+															    	<input name="caracteristicas" type="text" class="form-control" placeholder="Caracteristicas" ng-model="ge.garantia.caracteristicas" capitalize>
 														    	</div>
 														    </div>
 														    <div class="row">	
 															    <div class="col-sm-2"> 					    
 															    	<label>Avalúo</label>
-															    	<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO" ng-model="ver.garantia.avaluoMobiliaria" ng-change="ver.calcularPorcentajeMobiliaria()">
+															    	<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO" ng-model="ge.garantia.avaluoMobiliaria" ng-change="ge.calcularPorcentajeMobiliaria()">
 														    	</div>
 														    	 <div class="col-sm-4">					    
 															    	<label>Porcentaje del prestamo sobre el avalúo</label>
-															    	<input name="porcentajePrestamo" type="number" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ver.garantia.porcentajePrestamoMobiliria" disabled="true">
+															    	<input name="porcentajePrestamo" type="number" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ge.garantia.porcentajePrestamoMobiliria" disabled="true">
 														    	</div>
 														    </div>
 														    <div class="row">		<br/>
 														    	<div class="col-sm-3">
-																   	<input type="button" ng-click="ver.insertarGarantia(ver.credito.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
-																   	<input type="button" ng-click="ver.actualizarGarantia(ver.credito.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
-																   	<input type="button" ng-click="ver.cancelarGarantia(ver.credito.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
+																   	<input type="button" ng-click="ge.insertarGarantia(ge.credito.tipoGarantia)" value="Agregar" ng-show="ge.actionGarantia" class="btn btn-primary"> 	
+																   	<input type="button" ng-click="ge.actualizarGarantia(ge.credito.tipoGarantia, ge.garantia)" value="Actualizar" ng-show="!ge.actionGarantia" class="btn btn-primary">
+																   	<input type="button" ng-click="ge.cancelarGarantia(ge.credito.tipoGarantia)" value="Cancelar" ng-show="!ge.actionGarantia" class="btn btn-danger">	   				
 																	</div>
 														    </div>
 														    <br/>
@@ -352,7 +352,7 @@
 																				</tr>
 																			</thead>
 																			<tbody>
-																				<tr ng-repeat="garantia in ver.garantias">
+																				<tr ng-repeat="garantia in ge.garantias">
 																					<td>{{garantia.num}}</td>
 																					<td>{{garantia.descripcion}}</td>
 																				<!-- 	<td>{{garantia.caracteristicas}}</td>
@@ -364,9 +364,9 @@
 																					<td>{{garantia.fechaComercializacion | date:"dd-MM-yyyy"}}</td>
 																					<td>{{garantia.fechaFiniquito | date:"dd-MM-yyyy"}}</td> -->
 																					<td>
-																					<a href="#" class="btn btn-primary" ng-click="ver.verGarantia(ver.credito.tipoGarantia, garantia)"><i class="fa fa-eye"></i></a>
-																							<a href="#" class="btn btn-warning" ng-click="ver.editarGarantia(ver.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
-																							<a href="#" class="btn btn-danger" ng-click="ver.quitarGarantia(ver.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
+																					<a href="#" class="btn btn-primary" ng-click="ge.verGarantia(ge.credito.tipoGarantia, garantia)"><i class="fa fa-eye"></i></a>
+																							<a href="#" class="btn btn-warning" ng-click="ge.editarGarantia(ge.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
+																							<a href="#" class="btn btn-danger" ng-click="ge.quitarGarantia(ge.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
 																					</td>
 																				</tr>
 																			</tbody>
@@ -375,40 +375,40 @@
 																</div>
 															</div>
 															
-															<div  ng-if="ver.credito.tipoGarantia == 'general'">
+															<div  ng-if="ge.credito.tipoGarantia == 'general'">
 																<div class="row">
 														    	<div class="col-sm-4"> 					    
 															    	<label>Sup. de terreno y construcción</label>
-															    	<input name="terreno" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ver.garantia.terrenoYconstruccion" capitalize >
+															    	<input name="terreno" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ge.garantia.terrenoYconstruccion" capitalize >
 														    	</div>
 														    	<div class="col-sm-2"> 					    
 															    	<label>Ubicación </label>
-															    	<input name="ubicacion" type="text" class="form-control" placeholder="Ubicación" ng-model="ver.garantia.ubicacion" capitalize>
+															    	<input name="ubicacion" type="text" class="form-control" placeholder="Ubicación" ng-model="ge.garantia.ubicacion" capitalize>
 														    	</div>
 														    	<div class="col-sm-2"> 					    
 															    	<label>Avalúo </label>
-															    	<input name="avaluo" type="number" class="form-control" placeholder="Avalúo" ng-model="ver.garantia.avaluoGeneral" ng-change="ver.calcularPorcentajeGeneral()">
+															    	<input name="avaluo" type="number" class="form-control" placeholder="Avalúo" ng-model="ge.garantia.avaluoGeneral" ng-change="ge.calcularPorcentajeGeneral()">
 														    	</div>
 																	<div class="col-sm-4">					    
 															    	<label>% del préstamo sobre el avalúo</label>
-															    	<input name="porcentaje" type="number" class="form-control" placeholder="Porcentaje del préstamo sobre el avalúo" ng-model="ver.garantia.porcentajePrestamoGeneral" disabled="true">
+															    	<input name="porcentaje" type="number" class="form-control" placeholder="Porcentaje del préstamo sobre el avalúo" ng-model="ge.garantia.porcentajePrestamoGeneral" disabled="true">
 														    	</div>
 																</div>	
 																<div class="row">
 														    	<div class="col-sm-6"> 					    
 															    	<label>Medidas, colindancias, clave castral</label>
-															    	<textarea name="medidas" rows="3" class="form-control" placeholder="Medidas, colindancias, clave castral"  ng-model="ver.garantia.medidasColindancias" >
+															    	<textarea name="medidas" rows="3" class="form-control" placeholder="Medidas, colindancias, clave castral"  ng-model="ge.garantia.medidasColindancias" >
 														    	</div>
 														    	<div class="col-sm-6"> 					    
 															    	<label>Comisión y gastos, por escrituración e inscripción de registro público</label>
-															    	<input name="comision" type="number" class="form-control" placeholder="Comisión y gastos" ng-model="ver.garantia.comisionGastos">
+															    	<input name="comision" type="number" class="form-control" placeholder="Comisión y gastos" ng-model="ge.garantia.comisionGastos">
 														    	</div>							
 															</div>
 																<div class="row">		
 														    	<div class="col-sm-3">
-																   	<input type="button" ng-click="ver.insertarGarantia(ver.credito.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
-																   	<input type="button" ng-click="ver.actualizarGarantia(ver.credito.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
-																   	<input type="button" ng-click="ver.cancelarGarantia(ver.credito.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
+																   	<input type="button" ng-click="ge.insertarGarantia(ge.credito.tipoGarantia)" value="Agregar" ng-show="ge.actionGarantia" class="btn btn-primary"> 	
+																   	<input type="button" ng-click="ge.actualizarGarantia(ge.credito.tipoGarantia, ge.garantia)" value="Actualizar" ng-show="!ge.actionGarantia" class="btn btn-primary">
+																   	<input type="button" ng-click="ge.cancelarGarantia(ge.credito.tipoGarantia)" value="Cancelar" ng-show="!ge.actionGarantia" class="btn btn-danger">	   				
 																	</div>
 														    </div>
 															<div class="row"><br/>
@@ -427,7 +427,7 @@
 																			</tr>
 																		</thead>
 																		<tbody>
-																			<tr ng-repeat="garantia in ver.garantiasGeneral">
+																			<tr ng-repeat="garantia in ge.garantiasGeneral">
 																				<td>{{garantia.num}}</td>
 																				<td>{{garantia.terrenoYconstruccion}}</td>
 																				<td>{{garantia.avaluoGeneral}}</td>
@@ -439,9 +439,9 @@
 																				<td>{{garantia.comisionGastos}}</td>
 																				<td>{{garantia.escrituracion}}</td> -->
 																				<td>
-																					<a href="#" class="btn btn-primary" ng-click="ver.verGarantia(ver.credito.tipoGarantia, garantia)"><i class="fa fa-eye"></i></a>
-																							<a href="#" class="btn btn-warning" ng-click="ver.editarGarantia(ver.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
-																							<a href="#" class="btn btn-danger" ng-click="ver.quitarGarantia(ver.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
+																					<a href="#" class="btn btn-primary" ng-click="ge.verGarantia(ge.credito.tipoGarantia, garantia)"><i class="fa fa-eye"></i></a>
+																							<a href="#" class="btn btn-warning" ng-click="ge.editarGarantia(ge.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
+																							<a href="#" class="btn btn-danger" ng-click="ge.quitarGarantia(ge.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
 																					</td>
 																			</tr>
 																		</tbody>
@@ -464,15 +464,15 @@
 						</div>	
 						
 						<div class="row">
-							<div class="col-sm-3" ng-if="ver.cliente.roles == 'Cliente'">
-								<button class="btn btn-success"  ng-click="ver.generarCredito(form)" valida-form formulario="form">Guardar Solicitud de Crédito
+							<div class="col-sm-3" ng-if="ge.cliente.roles == 'Cliente'">
+								<button class="btn btn-success"  ng-click="ge.generarCredito(form)" valida-form formulario="form">Guardar Solicitud de Crédito
 								</button>
 							</div>
-							<div class="col-sm-3" ng-if="ver.cliente.roles == 'Distribuidor'">
-								<button class="btn btn-success" ng-click="ver.generarCredito(form)" valida-form formulario="form">Guardar Solicitud de Vale</button>
+							<div class="col-sm-3" ng-if="ge.cliente.roles == 'Distribuidor'">
+								<button class="btn btn-success" ng-click="ge.generarCredito(form)" valida-form formulario="form">Guardar Solicitud de Vale</button>
 							</div>
 							<div class="col-sm-3">
-								<button class="btn btn-info" ng-click="ver.generarPlanPagos(ver.credito, form)" valida-form formulario="form">Calcular Plan de Pagos</button>
+								<button class="btn btn-info" ng-click="ge.generarPlanPagos(ge.credito, form)" valida-form formulario="form">Calcular Plan de Pagos</button>
 							</div>
 						</div>	  
 					</form>
@@ -502,10 +502,10 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-class="( pago.estatus == 1 ) ? 'success' : ( pago.fecha < ver.fechaActual && pago.estatus == 0 ) ? 'warning' : ( pago.estatus == 2 ) ? 'danger' : 'info'" ng-repeat="pago in ver.planPagos">
+						<tr ng-class="( pago.estatus == 1 ) ? 'success' : ( pago.fecha < ge.fechaActual && pago.estatus == 0 ) ? 'warning' : ( pago.estatus == 2 ) ? 'danger' : 'info'" ng-repeat="pago in ge.planPagos">
 							<td class="text-center">{{$index + 1}}</td>	
 							<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-							<td class="text-center">{{pago.numeroPago}} - {{ver.planPagos.length}}</td>
+							<td class="text-center">{{pago.numeroPago}} - {{ge.planPagos.length}}</td>
 							<td class="text-right">{{pago.capital | currency}}</td>
 							<td class="text-right">{{pago.interes | currency}}</td>
 							<td class="text-right">{{pago.iva | currency}}</td>
@@ -530,55 +530,55 @@
 									<div class="well">	    
 								    <div class="row">
 											<div class="col-sm-3">
-								    		<img style="max-width:170px;" src="{{ver.aval.foto}}" >
+								    		<img style="max-width:170px;" src="{{ge.aval.foto}}" >
 											</div>	
 										</div>
 							    	<div class="col-sm-6"> 					    
 								    	<label>Nombre</label>
-								    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ver.aval.nombreCompleto" disabled="true">
+								    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ge.aval.nombreCompleto" disabled="true">
 							    	</div>
 					    	
 					       </div>
 					    <div class="row">	
 						    <div class="col-sm-4">					    
 						    	<label>Calle</label>
-						    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ver.aval.calle" disabled="true">
+						    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ge.aval.calle" disabled="true">
 					    	</div>
 					    	<div class="col-sm-2">					    
 						    	<label>Número</label>
-						    	<input name="numero" type="text" class="form-control" placeholder="Calle" ng-model="ver.aval.numero" disabled="true">
+						    	<input name="numero" type="text" class="form-control" placeholder="Calle" ng-model="ge.aval.numero" disabled="true">
 					    	</div>
 					    	<div class="col-sm-2">					    
 						    	<label>Código Postal</label>
-						    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ver.aval.codigoPostal" disabled="true">
+						    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ge.aval.codigoPostal" disabled="true">
 					    	</div>
 						    <div class="col-sm-4"> 					    
 						    	<label>Estado Civil</label>
-						    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="ver.aval.estadoCivil" disabled="true">
+						    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="ge.aval.estadoCivil" disabled="true">
 					    	</div>
 					    </div>
 					    <div class="row">		
 						    <div class="col-sm-3"> 					    
 						    	<label>Ocupación</label>
-						    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="ver.aval.ocupacion" disabled="true">
+						    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="ge.aval.ocupacion" disabled="true">
 					    	</div>
 					    	<div class="col-sm-3">					    
 						    	<label>Empresa</label>
-						    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="ver.aval.empresa" disabled="true">
+						    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="ge.aval.empresa" disabled="true">
 					    	</div>
 					    	<div class="col-sm-3">					    
 						    	<label>Puesto</label>
-						    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ver.aval.puesto" disabled="true">
+						    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ge.aval.puesto" disabled="true">
 					    	</div>					    	
 					    	<div class="col-sm-3">					    
 						    	<label>Tiempo Laborando</label>
-						    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="ver.aval.tiempoLaborando" disabled="true">
+						    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="ge.aval.tiempoLaborando" disabled="true">
 					    	</div>
 									</div>
 							</form>
 	      </div>	
 	      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" ng-click="ver.cancelarAval()" data-dismiss="modal">Cerrar</button>
+		        <button type="button" class="btn btn-default" ng-click="ge.cancelarAval()" data-dismiss="modal">Cerrar</button>
 		     </div>
      </div>
      
@@ -591,82 +591,82 @@
 		       
 		    </div>
 				<div class="modal-body">
-							<div class="row" ng-if="ver.general == true">
+							<div class="row" ng-if="ge.general == true">
 								<div class="col-sm-12"> 
 						    	<div class="row">
 									    	<div class="col-sm-4"> 					    
 										    	<label>Sup. de terreno y construcción</label>
-										    	<input name="terreno" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ver.garantia.terrenoYconstruccion">
+										    	<input name="terreno" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ge.garantia.terrenoYconstruccion">
 									    	</div>
 									    	<div class="col-sm-2"> 					    
 										    	<label>Ubicación </label>
-										    	<input name="ubicacion" type="text" class="form-control" placeholder="Ubicación" ng-model="ver.garantia.ubicacion" >
+										    	<input name="ubicacion" type="text" class="form-control" placeholder="Ubicación" ng-model="ge.garantia.ubicacion" >
 									    	</div>
 									    	<div class="col-sm-2"> 					    
 										    	<label>Avalúo </label>
-										    	<input name="avaluo" type="number" class="form-control" placeholder="Avalúo" ng-model="ver.garantia.avaluoGeneral" ng-change="ver.calcularPorcentajeGeneral()">
+										    	<input name="avaluo" type="number" class="form-control" placeholder="Avalúo" ng-model="ge.garantia.avaluoGeneral" ng-change="ge.calcularPorcentajeGeneral()">
 									    	</div>
 												<div class="col-sm-4">					    
 										    	<label>Porcentaje del préstamo sobre el avalúo</label>
-										    	<input name="porcentaje" type="number" class="form-control" placeholder="Porcentaje del préstamo sobre el avalúo" ng-model="ver.garantia.porcentajePrestamoGeneral" disabled="true">
+										    	<input name="porcentaje" type="number" class="form-control" placeholder="Porcentaje del préstamo sobre el avalúo" ng-model="ge.garantia.porcentajePrestamoGeneral" disabled="true">
 									    	</div>
 											</div>	
 									<div class="row">
 								    	<div class="col-sm-6"> 					    
 									    	<label>Medidas, colindancias, clave castral</label>
-									    	<textarea name="medidas" rows="3" class="form-control" placeholder="Medidas, colindancias, clave castral"  ng-model="ver.garantia.medidasColindancias">
+									    	<textarea name="medidas" rows="3" class="form-control" placeholder="Medidas, colindancias, clave castral"  ng-model="ge.garantia.medidasColindancias">
 								    	</div>
 								    	<div class="col-sm-6"> 					    
 									    	<label>Comisión y gastos, por escrituración e inscripción de registro público</label>
-									    	<input name="comision" type="number" class="form-control" placeholder="Comisión y gastos" ng-model="ver.garantia.comisionGastos">
+									    	<input name="comision" type="number" class="form-control" placeholder="Comisión y gastos" ng-model="ge.garantia.comisionGastos">
 								    	</div>							
 									</div>
 								</div>
 							</div>
 								
-							<div class="row" ng-if="ver.mob == true">
+							<div class="row" ng-if="ge.mob == true">
 									<div class="row">
 											<div class="col-sm-3">
 												<label>Almacenaje</label>
-									    	<input name="almacenaje" type="text" class="form-control" placeholder="Almacenaje" ng-model="ver.garantia.almacenaje">
+									    	<input name="almacenaje" type="text" class="form-control" placeholder="Almacenaje" ng-model="ge.garantia.almacenaje">
 											</div>
 											<div class="col-sm-3">
 												<label>Comercialización</label>
-									    	<input name="comercializacion" type="text" class="form-control" placeholder="Comercialización" ng-model="ver.garantia.comercializacion">
+									    	<input name="comercializacion" type="text" class="form-control" placeholder="Comercialización" ng-model="ge.garantia.comercializacion">
 											</div>
 											<div class="col-sm-3">
 												<label>Desempeño Extemporaneo</label>
-									    	<input name="desempenioExtemporaneo" type="text" class="form-control" placeholder="Desempeño Extemporaneo" ng-model="ver.garantia.desempenioExtemporaneo">
+									    	<input name="desempenioExtemporaneo" type="text" class="form-control" placeholder="Desempeño Extemporaneo" ng-model="ge.garantia.desempenioExtemporaneo">
 											</div>
 											<div class="col-sm-3">
 												<label>Reposición de Contrato</label>
-									    	<input name="reposicionContrato" type="text" class="form-control" placeholder="Reposición de Contrato" ng-model="ver.garantia.reposicionContrato">
+									    	<input name="reposicionContrato" type="text" class="form-control" placeholder="Reposición de Contrato" ng-model="ge.garantia.reposicionContrato">
 											</div>
 										</div>
 								  <div class="row">
 								    	<div class="col-sm-6"> 					    
 									    	<label>Descripción Generica</label>
-									    	<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN" ng-model="ver.garantia.descripcion">
+									    	<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN" ng-model="ge.garantia.descripcion">
 								    	</div>
 								    	<div class="col-sm-6"> 					    
 									    	<label>Características	</label>
-									    	<input name="caracteristicas" type="text" class="form-control" placeholder="Caracteristicas" ng-model="ver.garantia.caracteristicas">
+									    	<input name="caracteristicas" type="text" class="form-control" placeholder="Caracteristicas" ng-model="ge.garantia.caracteristicas">
 								    	</div>
 								  </div>
 								  <div class="row">	
 									   <div class="col-sm-2"> 					    
 									    	<label>Avalúo</label>
-									    	<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO" ng-model="ver.garantia.avaluoMobiliaria" ng-change="ver.calcularPorcentajeMobiliaria()">
+									    	<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO" ng-model="ge.garantia.avaluoMobiliaria" ng-change="ge.calcularPorcentajeMobiliaria()">
 								    	</div>
 								    	 <div class="col-sm-4">					    
 									    	<label>Porcentaje del prestamo sobre el avalúo</label>
-									    	<input name="porcentajePrestamo" type="number" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ver.garantia.porcentajePrestamoMobiliria" disabled="true">
+									    	<input name="porcentajePrestamo" type="number" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ge.garantia.porcentajePrestamoMobiliria" disabled="true">
 								    	</div>
 								    </div>
 							</div>
 	      </div>	
 					<div class="modal-footer">
-		        <button type="button" class="btn btn-default" ng-click="ver.cancelarGarantia(ver.credito.tipoGarantia)" data-dismiss="modal">Cerrar</button>
+		        <button type="button" class="btn btn-default" ng-click="ge.cancelarGarantia(ge.credito.tipoGarantia)" data-dismiss="modal">Cerrar</button>
 					</div>
      </div>
      
