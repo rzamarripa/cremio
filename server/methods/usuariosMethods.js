@@ -56,7 +56,7 @@ Meteor.methods({
 	  			 	  			 	 
 	  		//usuario.contrasena = Math.random().toString(36).substring(2,7);
 	  		usuario.password = '123';
-	  		console.log(usuario.username);
+	  		//console.log(usuario.username);
 	  		sucursal.folioDistribuidor = numero;
 	  		usuario.profile.numeroDistribuidor = usuario.username;
 	  		
@@ -396,6 +396,48 @@ if (referenciaPersonal.buscarPersona_id)
 																																{ fields: {nombreCompleto:1, clientes: 1 }}, 
 																																{ sort : {nombreCompleto : 1 }}).fetch();
 	  return personas;
+	},
+	getPersonasDeudas: function (nombre) {	//Se hizo para la validacion de Clientes, Avales y Referencias Personales
+	  var personas = {};
+	  personas 		= [];
+	  //personas.Beneficiados	= [];
+	  
+	  var buscarClientes = Meteor.users.find({ "profile.nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }, roles : ["Cliente"]}, 
+	  																			{ fields: {"profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, roles: 1 }}, 
+																					{ sort : {"profile.nombreCompleto" : 1 }}, {"profile.nombreCompleto":1, "profile.referenciasPersonales_ids":1}).fetch();
+		
+																																								
+		
+		_.each(buscarClientes, function(cliente){				
+				
+				var creditos = Creditos.find({$and: [ {cliente_id: cliente._id, saldoActual: {$gt:0}, estatus:4}]}).fetch();
+				
+				var deuda = 0;
+				_.each(creditos, function(credito){
+						deuda += Number(parseFloat(credito.saldoActual).toFixed(2));
+				})
+				
+				personas.push({ _id						: cliente._id,
+												nombre				: cliente.profile.nombreCompleto,
+												tipo					: "Cliente",
+												deuda					: deuda, 
+												creditos			: creditos
+											});
+				
+		});
+		
+		
+		
+		
+		
+		
+		
+																					
+
+																	
+
+	  return personas;
 	}
+	
 	
 });

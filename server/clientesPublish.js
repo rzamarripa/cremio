@@ -6,8 +6,6 @@ Meteor.publish("buscarClientes",function(options){
 			  	 roles : {$in : ["Cliente", "Distribuidor"]}
 				}				
 				
-
-				
 				return Meteor.users.find(selector, { fields: {roles: 1,
 																											"profile.nombreCompleto"			: 1, 
 																											"profile.nombre"							: 1, 

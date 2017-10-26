@@ -894,7 +894,7 @@ angular.module("creditoMio")
   };
 
   this.imprimirDoc = function(imagen) {
-    console.log(imagen)
+     //console.log(imagen)
       Meteor.call('imprimirImagenDocumento', imagen, function(error, response) {
        if(error)
        {

@@ -135,6 +135,14 @@
 															<div class="col-sm-6"> 
 																	<div ng-include=" 'client/planPagos/actualizarPlan/_buscarAval.html' "></div>
 															</div>
+															<div class="col-sm-3">
+																<section>
+																	<label class="checkbox">
+																		<input type="checkbox" name="requiereVerificacionAval" ng-model="ae.credito.requiereVerificacionAval" ng-disabled="!ae.credito.requiereVerificacion">
+																		Requiere Verificación Aval
+																	</label>
+																</section>
+															</div>
 														</div>
 												    <div class="row">
 												    	<div class="col-sm-4"> 					    

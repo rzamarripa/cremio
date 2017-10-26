@@ -718,8 +718,8 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
     }
 */
 		
-		//var produccion = "/home/cremio/archivos/";
-		var produccion = meteor_root+"/web.browser/app/plantillas/";
+		var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
     	   .readFileSync(produccion+"reporteDiarioCobranza.docx", "binary");
@@ -1327,7 +1327,8 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
             return Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
     };	
 			
-		var letra = NumeroALetras(contrato.adeudoInicial);
+		var letra = NumeroALetras(contrato.capitalsolicitado);
+		var letraAI = NumeroALetras(contrato.adeudoInicial);
 		var tasaPor = NumeroALetras(contrato.tasa);
 		const formatCurrency = require('format-currency');
 		if (contrato.seguro) {contrato.seguroLetra = NumeroALetras(contrato.seguro)}
@@ -1483,7 +1484,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		}
 
     var fechaVigencia = formatDate(vigenciaFecha);
-    contrato.capitalSolicitado = formatCurrency(contrato.adeudoInicial) 
+    contrato.capitalSolicitado = formatCurrency(contrato.capitalSolicitado) 
+    contrato.adeudoInicial = formatCurrency(contrato.adeudoInicial) 
+    
     var fechaLetra = formatDia(fecha);
     
     //console.log(contrato.avisoPrivacidad,"contrato")

@@ -38,13 +38,21 @@
                     <td class="text-left" style="padding: 0px">
 	                    		<ul style="padding-left: 15px">
     												<li ng-repeat="v in credito.verificaciones">
-        											<a ng-if = "v.tipoVerificacion == 'vecino'" 
+            									<a ng-if = "v.tipoVerificacion == 'solicitante o aval' && v.verificacionPersona == 1" 
         												 href="javascript:void(0);" 
-          											 ui-sref="root.verificacionVecino({id : v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V')})">{{v.tipoVerificacion}}
+          											 ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Solicitante
             									</a>
-            									<a ng-if = "v.tipoVerificacion == 'solicitante o aval'" 
+            									<a ng-if = "v.tipoVerificacion == 'solicitante o aval' && v.verificacionPersona == 2" 
         												 href="javascript:void(0);" 
-          											 ui-sref="root.verificacion({id : v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V')})">{{v.tipoVerificacion}}
+          											 ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Aval
+            									</a>
+            									<a ng-if = "v.tipoVerificacion == 'vecino' && v.verificacionPersona == 1" 
+        												 href="javascript:void(0);" 
+          											 ui-sref="root.verificacionVecino({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Vecino Solicitante
+            									</a>
+            									<a ng-if = "v.tipoVerificacion == 'vecino' && v.verificacionPersona == 2" 
+        												 href="javascript:void(0);" 
+          											 ui-sref="root.verificacionVecino({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Vecino Aval
             									</a>
     												</li>
   												</ul>		

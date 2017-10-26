@@ -90,7 +90,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
   });
   
   this.subscribe('cajas', () => {
-    return [{usuario_id : Meteor.userId
+    return [{usuario_id : Meteor.userId()
     }]
   });
 
@@ -409,7 +409,11 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
       return Notas.find().fetch();
     },
     caja: () => {
-      return Cajas.findOne();
+	  	var c = Cajas.findOne({usuario_id: Meteor.userId()});   
+      if (c != undefined)
+      {
+	      	return c;	      	
+      }
     },
   });
   this.getFolio = function(credito_id) {
@@ -537,6 +541,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 	};
 
   this.guardarPago = function(pago, credito) {
+		
+		
 		
 		if (rc.caja.estadoCaja == "Cerrada")
 		{

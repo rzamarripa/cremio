@@ -298,11 +298,11 @@ this.verMenu =()=>{
   
   this.cambiarNumero = function() 
   {
-  	rc.porNumero = true
+  	rc.porNumero = false;
   };
   this.cambiarNombre = function() 
   {
-  	rc.porNumero = false
+  	rc.porNumero = true;
 
   };
 

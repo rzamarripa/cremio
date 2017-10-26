@@ -189,6 +189,21 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 			var ver = Verificaciones.find({}).fetch();
 			
 			_.each(ver, function(v){
+				
+				if (v.tipoVerificacion == 'solicitante o aval' && v.verificacionPersona == 1)
+						v.tipoVerificacionTabla = 'Solicitante';
+				if (v.tipoVerificacion == 'solicitante o aval' && v.verificacionPersona == 2)
+						v.tipoVerificacionTabla = 'Aval';
+				if (v.tipoVerificacion == 'vecino' && v.verificacionPersona == 1)
+						v.tipoVerificacionTabla = 'Vecino Solicitante';		
+				if (v.tipoVerificacion == 'vecino' && v.verificacionPersona == 2)
+						v.tipoVerificacionTabla = 'Vecino Aval';
+						
+				
+			});
+			
+			
+			_.each(ver, function(v){
 					Meteor.apply('getUsuario', [v.cliente_id], function(error, result) {
 					   if(error)
 					   {
@@ -251,7 +266,9 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 			{
 					var credito = Creditos.findOne(rc.creditoSeleccionado);
 					var numeroVerificaciones = 0;
-					if (credito.avales_ids.length == 0)
+					
+					
+					if (credito.requiereVerificacion == true && (credito.requiereVerificacionAval == undefined || credito.requiereVerificacionAval == false))
 						 numeroVerificaciones = 1;
 					else		 
 						numeroVerificaciones = 2;

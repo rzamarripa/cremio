@@ -763,8 +763,8 @@
 											<div class="panel-footer no-padding">						
 												<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar</a>
 											</div>
-											<div class="panel-footer no-padding">						
-												<a ui-sref="root.actualizarVale({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Autorizar</a>
+											<div class="panel-footer no-padding">
+												<a ng-click ="dis.mostrarModalValidaBeneficiario(pendiente.beneficiado)" class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">Autorizar</a>
 											</div>
 											
 										</div>
@@ -1247,18 +1247,39 @@
 										<div class="row">
 								    	<div class="col-sm-8"> 					    
 									    	<label>Nombre	</label>
-									    	<input name="buscar" type="text" class="form-control" placeholder="Buscar..." ng-model="ge.buscarBeneficiado" capitalize>
+									    	<input name="buscar" type="text" class="form-control" placeholder="Buscar..." ng-model="dis.buscar.nombreBeneficiado" capitalize>
 								    	</div>
+								    	<div class="col-sm-3">
+										    <a href="javascript:void(0);" ng-click="dis.validarBeneficiado()" class="btn btn-default btn-circle"><i class="glyphicon glyphicon-ok"></i></a>
+									    </div> 
 										</div>	
 										<div class="row">
-												
-												
-												
+												<div class="col-sm-12">
+													<table class="table table-bordered">
+															<thead>
+																<tr>
+																	<th width="20%">Nombre</th>
+																	<th width="10%">Tipo</th>
+																	<th width="10%">Deuda</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-repeat="persona in dis.BeneficiadosDeudas">
+																	<td>{{persona.nombre}}</td>
+																	<td>{{persona.tipo}}</td>
+																	<td style="text-align: right">{{persona.deuda | currency}}</td>
+																</tr>
+															</tbody>
+														</table>
+												</div>		
+								
 										</div>	
 									</div>
 							</form>
 	      </div>	
 	      <div class="modal-footer">
+		      	<button type="button" class="btn btn-success" data-dismiss="modal">Autorizar</button>
+		      	<button type="button" class="btn btn-danger" data-dismiss="modal">Rechazar</button>
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 		     </div>
      </div>

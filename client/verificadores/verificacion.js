@@ -13,7 +13,8 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.numG = 0;
 	this.conGen = 0;
 	this.numGen = 0;
-
+	
+	//rc.credito = {};
   rc.objeto = {};
 	
 	this.garantias = [];
@@ -21,6 +22,10 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	this.garantia = {};
 	
 	this.tipo = $stateParams.tipo;
+	
+	this.actualizarNo = false;
+	if ($stateParams.persona == -1)
+		 this.actualizarNo = true;	 
 	
 	if ($stateParams.verificacion_id == "-1")
 	{
@@ -32,12 +37,14 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	}	 
 	
 	this.subscribe('verificaciones',()=>{
-			return [{_id : $stateParams.verificacion_id }]
+			if ($stateParams.verificacion_id != -1)
+					return [{_id : $stateParams.verificacion_id }]
 	});
 	
 	
 	if ($stateParams.tipo == "CP")
 	{	
+		
 		this.subscribe('creditos',()=>{
 				return [{_id : $stateParams.id }]
 		});	
@@ -52,35 +59,53 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
   this.helpers({
 	  verificaciones : () => {		  
 		  
-		  rc.objeto = Verificaciones.findOne();
 		  
-		  if (rc.objeto != undefined)
+		  if ($stateParams.verificacion_id != -1)
 		  {
-				  if (rc.objeto.tipoGarantia == "general")
-				  	 this.garantiasGeneral = angular.copy(rc.objeto.garantias);
-				  else if (rc.objeto.tipoGarantia == "mobiliario")	 
-				  	 this.garantias = angular.copy(rc.objeto.garantias); 
-		  }
+				  rc.objeto = Verificaciones.findOne();
+				  if (rc.objeto != undefined)
+				  {
+					  	
+						  if (rc.objeto.tipoGarantia == "general")
+						  { 
+						  	 this.garantiasGeneral = angular.copy(rc.objeto.garantias);
+						  	  if (this.garantias.length > 0)
+						  	  {
+						  	  		var ele = this.garantias[this.garantias.length - 1];
+						  	  		this.conGen = ele.num;
+						  	  }
+						  }	 
+						  else if (rc.objeto.tipoGarantia == "mobiliaria")	 
+						  {
+						  	 this.garantias = angular.copy(rc.objeto.garantias); 
+						  	 if (this.garantias.length > 0)
+						  	 {
+						  	  		var ele = this.garantias[this.garantias.length - 1];
+						  	  		this.conG = ele.num;
+						  	 }
+						  }				  	
+				  }
+			}	  
+
 	  }, 
 	  credito : () => {
 		  var c = Creditos.findOne();
 		  
 		  if (c != undefined)
 		  {
+					
 			 		if (c.tipoGarantia == "mobiliaria") 	
 			 				this.garantias = c.garantias;
 			 		else if (c.tipoGarantia == "general") 	
-			 				this.garantiasGeneral = c.garantias;		
-				 	
-				 	return c;  	
+			 				this.garantiasGeneral = c.garantias;
+			 		
+			 	 	return c;  	
 		  }	
-		   
-			
+		
 		},
   });
-
-
   
+    
   this.guardar = function(obj, form)
 	{	
 			
@@ -94,30 +119,32 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			obj.tipoVerificacion = "solicitante o aval";
 			obj.fechaVerificacion = new Date();
 			obj.sucursal_id = Meteor.user().profile.sucursal_id;
-
+			obj.verificacionPersona = $stateParams.persona;
+				
+			//console.clear();
+				
 			if ($stateParams.tipo == "CP")
 			{
 				obj.cliente_id = rc.credito.cliente_id;
 				obj.credito_id = $stateParams.id;
 				obj.tipo 			= "Crédito Personal";
-				
-				if (this.objeto.tipoGarantia == "mobiliaria")
-					obj.garantias = angular.copy(this.garantias);
-				else
-					obj.garantias = angular.copy(this.garantiasGeneral);	
-										
+			
+				obj.garantias = [];
 				var credito = Creditos.findOne($stateParams.id);
 				
-				if (credito.tipoGarantia == undefined )
-						credito.tipoGarantia = [];
-				
-				credito.tipoGarantia = this.objeto.tipoGarantia;
-				
-				
-				if (this.credito.tipoGarantia == "mobiliaria")
-						Creditos.update({_id: obj.credito_id}, {$set:{garantias: angular.copy(this.garantias), tipoGarantia: this.objeto.tipoGarantia}})
+				if (obj.tipoGarantia == "mobiliaria")
+				{
+					//console.log("Entro");
+					obj.garantias = angular.copy(this.garantias)
+					Creditos.update({_id: credito._id}, {$set:{garantias: angular.copy(this.garantias), tipoGarantia: this.objeto.tipoGarantia}})
+ 				}	
 				else
-						Creditos.update({_id: obj.credito_id}, {$set:{garantias: angular.copy(this.garantiasGeneral), tipoGarantia: this.objeto.tipoGarantia}})
+				{
+					
+					obj.garantias = angular.copy(this.garantiasGeneral);	
+					Creditos.update({_id: credito._id}, {$set:{garantias: angular.copy(this.garantiasGeneral), tipoGarantia: this.objeto.tipoGarantia}})
+
+				}						 						
 				
 			}
 			else if ($stateParams.tipo == "V")	
@@ -167,7 +194,7 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 				
 				credito.tipoGarantia = this.objeto.tipoGarantia;
 								
-				if (this.credito.tipoGarantia == "mobiliaria")
+				if (credito.tipoGarantia == "mobiliaria")
 						Creditos.update({_id: $stateParams.id}, {$set:{garantias: angular.copy(this.garantias), tipoGarantia: "mobiliaria"}})
 				else
 						Creditos.update({_id: $stateParams.id}, {$set:{garantias: angular.copy(this.garantiasGeneral), tipoGarantia: "general"}})

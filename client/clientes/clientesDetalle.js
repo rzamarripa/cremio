@@ -603,7 +603,6 @@ rc.referenciasPersonales = [];
 
   };
 
-
 	//console.log("nota ",rc.notaCuenta1)
 	this.actualizar = function(cliente,form){
 

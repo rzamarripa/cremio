@@ -338,30 +338,31 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	 
 		
 					var credito = {
-			cliente_id 						: rc.cliente._id,
-			tipoCredito_id 				: rc.credito.tipoCredito_id,
-			fechaSolicito 				: new Date(),
-			duracionMeses 				: rc.credito.duracionMeses,
-			capitalSolicitado 		: rc.credito.capitalSolicitado,
-			adeudoInicial 				: rc.credito.capitalSolicitado,
-			saldoActual 					: rc.credito.capitalSolicitado,
-			periodoPago 					: rc.credito.periodoPago,
-			fechaPrimerAbono 			: rc.credito.primerAbono,
-			multasPendientes 			: 0,
-			saldoMultas 					: 0.00,
-			saldoRecibo 					: 0.00,
-			estatus 							: 1,
-			requiereVerificacion	: rc.credito.requiereVerificacion,
-			sucursal_id 					: Meteor.user().profile.sucursal_id,
-			fechaVerificacion			: rc.credito.fechaVerificacion,
-			turno 								: rc.credito.turno,
-			tipoGarantia 					: rc.credito.tipoGarantia,
-			tasa									: rc.credito.tasa,
-			conSeguro 						: rc.credito.conSeguro,
-			seguro								: rc.credito.seguro,
-			tipo 									: rc.credito.tipo,
-			beneficiado 					: rc.credito.beneficiado
-		};
+						cliente_id 								: rc.cliente._id,
+						tipoCredito_id 						: rc.credito.tipoCredito_id,
+						fechaSolicito 						: new Date(),
+						duracionMeses 						: rc.credito.duracionMeses,
+						capitalSolicitado 				: rc.credito.capitalSolicitado,
+						adeudoInicial 						: rc.credito.capitalSolicitado,
+						saldoActual 							: rc.credito.capitalSolicitado,
+						periodoPago 							: rc.credito.periodoPago,
+						fechaPrimerAbono 					: rc.credito.primerAbono,
+						multasPendientes 					: 0,
+						saldoMultas 							: 0.00,
+						saldoRecibo 							: 0.00,
+						estatus 									: 1,
+						requiereVerificacion			: rc.credito.requiereVerificacion,
+						requiereVerificacionAval	: rc.credito.requiereVerificacionAval,
+						sucursal_id 							: Meteor.user().profile.sucursal_id,
+						fechaVerificacion					: rc.credito.fechaVerificacion,
+						turno 										: rc.credito.turno,
+						tipoGarantia 							: rc.credito.tipoGarantia,
+						tasa											: rc.credito.tasa,
+						conSeguro 								: rc.credito.conSeguro,
+						seguro										: rc.credito.seguro,
+						tipo 											: rc.credito.tipo,
+						beneficiado 							: rc.credito.beneficiado
+					};
 		
 					//console.log(credito,"mi credito")
 					

@@ -5,6 +5,10 @@ angular
 function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams) {
 	
 	rc = $reactive(this).attach($scope);
+	window.rc = rc;
+	
+	this.buscar = {};
+	this.buscar.nombreBeneficiado = "";
 	
 	this.fechaActual = new Date();
 	this.creditos = [];
@@ -22,8 +26,8 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 	this.notasCre = false;
 	rc.cancelacion = {};
 	rc.nota = {};
-	rc.pagos = ""
-	window.rc = rc;
+	rc.pagos = "";
+	
 	this.imagenes = []
 	rc.openModal = false
 	rc.empresa = {}
@@ -46,6 +50,8 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 	rc.puedeSolicitar = true;
 	
 	rc.estatusCaja = "";
+	
+	rc.BeneficiadosDeudas = [];
 	
 	this.subscribe('cajas',()=>{
 		return [{}];
@@ -144,7 +150,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		},
 
 		creditos : () => {
-			var creditos = Creditos.find({estatus:4}).fetch();
+			var creditos = Creditos.find({estatus:4}, {sort:{fechaSolicito:1}}).fetch();
 			
 			_.each(creditos, function(credito){
 				if (credito.saldoMultas == 0) {
@@ -182,15 +188,14 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 	
 		creditosAprobados : () =>{
-			var creditos = Creditos.find({estatus:2}).fetch();			
+			var creditos = Creditos.find({estatus:2}, {sort:{fechaSolicito:1}}).fetch();			
 			if(creditos != undefined){
 				_.each(creditos, function(credito){	
 					 credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
 					 if (credito.avales_ids.length > 0)
 					 		credito.tieneAval = "SI";
 					 else
-					 		credito.tieneAval = "NO";		
-					 				
+					 		credito.tieneAval = "NO";							 				
 				})
 			}
 			return creditos;
@@ -199,7 +204,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			return Creditos.find({estatus:3});
 		},
 		creditosPendientes : () =>{
-			var creditos = Creditos.find({estatus:{$in:[0,1]}}).fetch();
+			var creditos = Creditos.find({estatus:{$in:[0,1]}}, {sort:{fechaSolicito:1}}).fetch();
 			
 			if(creditos.length > 0){
 				_.each(creditos, function(credito){				
@@ -338,7 +343,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 				objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id);
 				objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id);
 				
-				console.log("EC:", objeto.estadoCivil);
+				//console.log("EC:", objeto.estadoCivil);
 				
 				_.each(objeto.referenciasPersonales_ids, function(referencia){
 						Meteor.call('getReferencias', referencia, function(error, result){	
@@ -572,21 +577,13 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			return creditos;
 		},
 
-		  //   historialCredito : () => {
-    //   var creditos = [];
-    //   rc.clientes_id = _.pluck(rc.objeto,"_id")
- 
-    //     return creditos
-    // },
-
-
 		cajero: () => {
 			var c = Meteor.users.findOne({roles: "Cajero"});
 			
 			if (c != undefined)
 			{
 					var caja = Cajas.findOne({usuario_id: c._id});
-					console.log(caja);
+					//console.log(caja);
 					if (caja != undefined)
 					{
 							if (caja.estadoCaja == "Cerrada")
@@ -596,8 +593,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 					}
 					else
 							rc.estatusCaja = false;
-			}			
-			console.log(rc.estatusCaja);
+			}	
 			return c;
 		},
 		
@@ -701,26 +697,26 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		this.masInfoCredito = false;
 		this.creditoApro = false
 		this.creditosRechazados = false;
-			 Meteor.call('getEmpresaInfo',rc.objeto.profile.empresa_id, function(error, result) {           
+		Meteor.call('getEmpresaInfo',rc.objeto.profile.empresa_id, function(error, result) {           
 	          if (result)
 	          {
-	          	rc.empresaCliente = result;
+	          		rc.empresaCliente = result;
 	              //console.log("empresa",result);
 				    
-			 Meteor.call('getClienteInformacion',cliente, function(error, result) {           
-	          if (result)
-	          {
-	          		rc.objeto = result;
-	              //console.log("cliente",result);
+								Meteor.call('getClienteInformacion',cliente, function(error, result) {           
+						          if (result)
+						          {
+						          		rc.objeto = result;
+						              //console.log("cliente",result);
+					
+						          }
+						          $scope.$apply();
+			          }); 
+						}
+	  });
 
-	          }
-	          $scope.$apply();
-	          }) 
-			}
-	    })
 
-
-    };
+  };
 	this.creditosActivos = function(){
 		this.creditoAc = !this.creditoAc;
 		this.solicitudesCre = false;
@@ -801,10 +797,6 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		
 	}
 
-
-
-
-
 	this.contestarNota = function(id){
 
 		this.nota = Notas.findOne({_id:id});
@@ -828,7 +820,6 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 	};
 	
-
 /*
 	this.imprimirDocumento = function(aprobado){
 			Meteor.call('imprimirDocumentos', aprobado, function(error, response) {
@@ -878,7 +869,6 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 				});	
 	};	
 */
-
 	
 	this.cancelarCredito = function(motivo){
 			var cre = Creditos.findOne({_id : rc.cancelacion._id});
@@ -948,14 +938,11 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 	};
 
-	
-
-
   this.generarFicha= function(objeto) 
   {
 
   	
-		console.log("entro:", objeto);
+		//console.log("entro:", objeto);
 		//console.log("refes", objeto.referenciasPersonales_ids)	 
 	  		    Meteor.call('getPeople',objeto._id,objeto.profile.referenciasPersonales_ids.referenciaPersonal_id, function(error, result){           					
 							if (result)
@@ -964,7 +951,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 								rc.datosCliente = result.profile
 
 	   
-	    console.log("cliente",rc.datosCliente)
+	    //console.log("cliente",rc.datosCliente)
 	   // console.log("refes",rc.referencias)
 	 
 		Meteor.call('getFicha', rc.datosCliente, rc.referencias, function(error, response) {
@@ -1065,31 +1052,13 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 	function obtenerClaseEstatus(valor){
 		
-		console.log(valor);
 		if (valor )
 			 return "warning";
 		else
 			 return "info";  	
 		
 		
-		/*
-if(estatus == 0){
-			return "danger";
-		}else if(estatus == 1){
-			return "warning";
-		}else if(estatus == 2){
-			return "primary";
-		}else if(estatus == 3){
-			return "danger";
-		}else if(estatus == 4){
-			return "info";
-		}else if(estatus == 5){
-			return "success";
-		}else if(estatus == 6){
-			return "danger";
-		}
-*/
-	};
+		};
 	
 	this.mostrarReestructuracion= function(objeto)
 	{
@@ -1417,7 +1386,7 @@ if(estatus == 0){
 					
 	}
 	this.seleccionContrato=function(contrato){
-		console.log( contrato)
+		//console.log( contrato)
 					
 	}
 	this.trance= function(credito)
@@ -1434,8 +1403,8 @@ if(estatus == 0){
 
 			});
 		};
-		this.getAvales= function(credito)
-		{
+	this.getAvales= function(credito)
+	{
 				console.log(credito.avales_ids[0].aval_id)
 				rc.avalpapu = credito.avales_ids[0].aval_id
 		    Meteor.call('obAvales',rc.avalpapu, function(error, result){           					
@@ -1449,7 +1418,7 @@ if(estatus == 0){
 			});
 		};
 
-	 this.imprimirContratos = function(contrato,cliente,avales){
+	this.imprimirContratos = function(contrato,cliente,avales){
 	 	toastr.error('No existe contrato aun.');
 	 // 	avales = rc.avalesCliente
 
@@ -1614,9 +1583,8 @@ if(estatus == 0){
 
 		};
 
-		this.recuperarCredito= function(id)
-		{
-		
+	this.recuperarCredito= function(id){
+
 		    var r = confirm("Selecciona una opción");
 		    if (r == true) {
 		        var objeto = Creditos.findOne({_id:id});
@@ -1632,19 +1600,53 @@ if(estatus == 0){
 	       
 		   	}		
 		};
-		this.CreditoSolicitar= function(id)
-		{
+	
+	this.CreditoSolicitar= function(id)
+	{
 
 	    	$state.go("root.generadorPlan",{objeto_id : id});
 		  
 		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
 		};
-		this.btnCerrar= function()
-		{
+	
+	this.btnCerrar= function()
+	{
 
 	    	rc.btnCerrarRespuesta = false
 		  
 		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
 		};	  	
+	
+	this.mostrarModalValidaBeneficiario= function(objeto)
+	{			
+			rc.buscar.nombreBeneficiado = objeto;
+			rc.BeneficiadosDeudas = [];
+			$("#modalvalidaBeneficiario").modal();
+	};
+	
+	this.validarBeneficiado = function()
+	{			
+			
+			Meteor.call('getPersonasDeudas',rc.buscar.nombreBeneficiado, function(error, result) {           
+	          if (result)
+	          {
+		          	
+		          	rc.BeneficiadosDeudas = result;	
+		          	$scope.$apply();
+		        }  
+			});
+			
+	};
+	
+	this.autorizarVale = function(id, tipo){
+
+	  if (tipo == "CP")	
+	  {
+		  	Creditos.update({_id : id}, { $set : {estatus : 2}});	
+				toastr.success("Se autorizó correctamente.");
+	  }
+	  		
+  }
+	
 	
 }

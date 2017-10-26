@@ -6,21 +6,17 @@
 				<div class="row">
 					<div class="col-sm-6" valida> 					    
 						<label>Nombre de quien se está verificando *</label>
-			    	<input name="verificado" type="text" class="form-control" placeholder="Antiguedad domicilio" ng-model="ver.objeto.verificado" required capitalize>
+			    	<input name="verificado" type="text" class="form-control" placeholder="Nombre verificado" ng-model="ver.objeto.verificado" required capitalize>
 					</div>
 				</div> 
 		    <div class="row">
 		    	<div class="col-sm-4" valida> 					    
-			    	<label>¿Cuál es la antiguedad en su domicilio? *</label>
-			    	<input name="nombre" type="text" class="form-control" placeholder="Antiguedad domicilio" ng-model="ver.objeto.antiguedad" required capitalize>
+			    	<label>¿Cuál es la antigüedad en su domicilio? *</label>
+			    	<input name="nombre" type="text" class="form-control" placeholder="Antigüedad domicilio" ng-model="ver.objeto.antiguedad" required capitalize>
 		    	</div>
 		    	<div class="col-sm-4" valida>					    
 			    	<label>¿Su vivienda es? *</label>
-			    	<select name="vivienda" ng-model="ver.objeto.vivienda" data-placeholder="Seleccione" class="form-control" required>
-							<option value=""></option>
-							<option value="PROPIA">Propia</option>
-							<option value="RENTA">Renta</option>
-						</select>
+			    	<input name="vivienda" type="text" class="form-control" placeholder="Vivienda" ng-model="ver.objeto.vivienda" required capitalize>
 		    	</div>
 		    	<div class="col-sm-4">					    
 			    	<label>Nombre de la empresa donde trabaja</label>
@@ -29,8 +25,8 @@
 		    </div>
 		    <div class="row">
 			    	<div class="col-sm-4" valida> 					    
-				    	<label>¿Qué antiguedad tiene en dicha empresa? *</label>
-				    	<input name="antiguedadEmpresa" type="text" class="form-control" placeholder="Antiguedad empresa" ng-model="ver.objeto.antiguedadEmpresa" required="" capitalize>
+				    	<label>¿Qué antigüedad tiene en dicha empresa? *</label>
+				    	<input name="antiguedadEmpresa" type="text" class="form-control" placeholder="Antigüedad empresa" ng-model="ver.objeto.antiguedadEmpresa" required="" capitalize>
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>¿Cómo se llama su esposo(a) *</label>
@@ -38,7 +34,7 @@
 			    	</div>		    				    	    
 			    	<div class="col-sm-4" valida>					    
 				    	<label>¿Dónde trabaja su esposo(a) *</label>
-				    	<input name="lugarTrajaboEsposo" type="text" class="form-control" placeholder="lugar Trabajo" ng-model="ver.objeto.lugarTrabajoEsposo" required="" capitalize>
+				    	<input name="lugarTrajaboEsposo" type="text" class="form-control" placeholder="Lugar Trabajo" ng-model="ver.objeto.lugarTrabajoEsposo" required="" capitalize>
 					  </div>
 		    </div>
 		    <div class="row">
@@ -52,14 +48,7 @@
 			    	</div>		    				    	    
 			    	<div class="col-sm-6" valida>					    
 				    	<label>¿Ha tenido o tiene créditos vigentes en algun banco , financiera o prestamista? *</label>
-				    	<input name="creditoOtro" type="text" class="form-control" placeholder="tiene otros créditos" ng-model="ver.objeto.creditoOtro" required="" capitalize>
-<!--
-				    	<select name="creditoOtro" ng-model="ver.objeto.creditoOtro" data-placeholder="Seleccione" class="form-control" required>
-								<option value=""></option>
-								<option value="SI">Si</option>
-								<option value="NO">No</option>
-							</select>
--->
+				    	<input name="creditoOtro" type="text" class="form-control" placeholder="Tiene otros créditos" ng-model="ver.objeto.creditoOtro" required="" capitalize>
 					  </div>
 		    </div>  
 		    <div class="row">
@@ -139,14 +128,14 @@
 							<div class="row">
 								<div class="col-sm-4" valida>
 							    	<label>Tipo de garantía</label>
-							    	<select name="horario" class="form-control" ng-model="ver.credito.tipoGarantia">
+							    	<select name="horario" class="form-control" ng-model="ver.objeto.tipoGarantia">
 								    	<option value="general">General o inmobiliaria</option>
 								    	<option value="mobiliaria">Mobiliaria</option>
 							    	</select>
 						    </div>
 							</div>
 														
-							<div  ng-if="ver.credito.tipoGarantia == 'mobiliaria'">
+							<div  ng-if="ver.objeto.tipoGarantia == 'mobiliaria'">
 
 									<br>
 									<h4>Comisiones</h4>
@@ -190,9 +179,9 @@
 							    </div>
 							    <div class="row">		<br/>
 							    	<div class="col-sm-3">
-									   	<input type="button" ng-click="ver.insertarGarantia(ver.credito.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
-									   	<input type="button" ng-click="ver.actualizarGarantia(ver.credito.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
-									   	<input type="button" ng-click="ver.cancelarGarantia(ver.credito.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
+									   	<input type="button" ng-click="ver.insertarGarantia(ver.objeto.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
+									   	<input type="button" ng-click="ver.actualizarGarantia(ver.objeto.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
+									   	<input type="button" ng-click="ver.cancelarGarantia(ver.objeto.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
 										</div>
 							    </div>
 							    <br/>
@@ -236,7 +225,7 @@
 									</div>
 							</div>
 															
-							<div  ng-if="ver.credito.tipoGarantia == 'general'">
+							<div  ng-if="ver.objeto.tipoGarantia == 'general'">
 								<div class="row">
 						    	<div class="col-sm-4"> 					    
 							    	<label>Sup. de terreno y construcción</label>
@@ -267,9 +256,9 @@
 							</div>
 								<div class="row">		
 						    	<div class="col-sm-3">
-								   	<input type="button" ng-click="ver.insertarGarantia(ver.credito.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
-								   	<input type="button" ng-click="ver.actualizarGarantia(ver.credito.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
-								   	<input type="button" ng-click="ver.cancelarGarantia(ver.credito.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
+								   	<input type="button" ng-click="ver.insertarGarantia(ver.objeto.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
+								   	<input type="button" ng-click="ver.actualizarGarantia(ver.objeto.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
+								   	<input type="button" ng-click="ver.cancelarGarantia(ver.objeto.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
 									</div>
 						    </div>
 							<div class="row"><br/>
@@ -460,7 +449,7 @@
 			    <div class="row">
 						<div class="col-sm-12">
 							<input type="submit" ng-click="ver.guardar(ver.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="ver.action" valida-form formulario="form">
-							<input type="submit" ng-click="ver.actualizar(ver.objeto,form)" value="Actualizar" class="btn btn-primary" ng-hide="ver.action" valida-form formulario="form">
+							<input type="submit" ng-click="ver.actualizar(ver.objeto,form)" value="Actualizar" class="btn btn-primary" ng-hide="ver.actualizarNo" valida-form formulario="form">
 						</div>
 					</div>
 		  </div>    

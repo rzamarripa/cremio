@@ -481,7 +481,7 @@ angular.module("creditoMio")
 
 						rc.referenciaPersonal._id = referenciaPersonal._id;
 						var RP = ReferenciasPersonales.findOne(referenciaPersonal._id);
-						console.log(RP);
+						//console.log(RP);
 						RP.clientes.push({cliente_id			: objeto._id,
 															nombreCompleto	: objeto.profile.nombreCompleto,
 														  parentesco			: referenciaPersonal.parentesco, 

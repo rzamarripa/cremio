@@ -94,48 +94,47 @@ Meteor.methods({
 	},//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	actualizarCredito : function(cliente, credito, idCredito ) {
 		
-		if (credito.estatus != 4){		
-				if(credito.requiereVerificacion == true){
+		if (credito.estatus == 1)
+				if(credito.requiereVerificacion == true)
 					credito.estatus = 0;
-				}else if(credito.requiereVerificacion == false){
+					
+		if (credito.estatus == 0)
+				if(credito.requiereVerificacion == false)
 					credito.estatus = 1;
-				}
-		}
+					
 		
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		//var cre = Creditos.findOne(idCredito);
 		
 		var c = {
-				tipoCredito_id 				: credito.tipoCredito_id,
-				duracionMeses 				: credito.duracionMeses,
-				capitalSolicitado 		: credito.capitalSolicitado,
-				adeudoInicial 				: credito.capitalSolicitado,
-				saldoActual 					: credito.capitalSolicitado,
-				periodoPago 					: credito.periodoPago,
-				fechaPrimerAbono 			: credito.fechaPrimerAbono,
-				multasPendientes 			: 0.00,
-				saldoMultas 					: 0.00,
-				saldoRecibo 					: 0.00,
-				estatus 							: credito.estatus,
-				requiereVerificacion	: credito.requiereVerificacion,
-				turno 								: credito.turno,
-				sucursal_id 					: credito.sucursal_id,
-				fechaVerificacion			: credito.fechaVerificacion,
-				tipoGarantia 					: credito.tipoGarantia,
-				tasa									: credito.tasa,
-				conSeguro 						: credito.conSeguro,
-				seguro								: credito.seguro,
-				tipo 									: credito.tipo,
-				beneficiado 					: credito.beneficiado
+				tipoCredito_id 						: credito.tipoCredito_id,
+				duracionMeses 						: credito.duracionMeses,
+				capitalSolicitado 				: credito.capitalSolicitado,
+				adeudoInicial 						: credito.capitalSolicitado,
+				saldoActual 							: credito.capitalSolicitado,
+				periodoPago 							: credito.periodoPago,
+				fechaPrimerAbono 					: credito.fechaPrimerAbono,
+				multasPendientes 					: 0.00,
+				saldoMultas 							: 0.00,
+				saldoRecibo 							: 0.00,
+				estatus 									: credito.estatus,
+				requiereVerificacion			: credito.requiereVerificacion,
+				requiereVerificacionAval	: credito.requiereVerificacionAval,
+				turno 										: credito.turno,
+				sucursal_id 							: credito.sucursal_id,
+				fechaVerificacion					: credito.fechaVerificacion,
+				tipoGarantia 							: credito.tipoGarantia,
+				tasa											: credito.tasa,
+				conSeguro 								: credito.conSeguro,
+				seguro										: credito.seguro,
+				tipo 											: credito.tipo,
+				beneficiado 							: credito.beneficiado
 		};
 		
-				
+		
+		
 		c.avales_ids 	= [];
 		c.garantias 	= credito.garantias;
-		//c.avales_ids 	= credito.avales_ids;
-		
-		//console.log("CA:",credito.avales);
-		//credito.avales_ids = c.avales_ids; Con lo anterior de personas				
 		_.each(credito.avales, function(aval){
 				if (aval.estatus == "N"){					
 						aval.estatus = "G";

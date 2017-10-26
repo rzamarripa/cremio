@@ -15,7 +15,11 @@ function VerificacionVecinoCtrl($scope, $meteor, $reactive,  $state, $stateParam
 		 this.action = true;
 	else
 		 this.action = false;		 	
-
+		 
+	this.actualizarNo = false;
+	if ($stateParams.persona == -1)
+		 this.actualizarNo = true;	 
+	 
 		
 	this.subscribe('verificaciones',()=>{
 			return [{_id : $stateParams.verificacion_id }]
@@ -58,6 +62,7 @@ function VerificacionVecinoCtrl($scope, $meteor, $reactive,  $state, $stateParam
 			obj.tipoVerificacion = "vecino";
 			obj.fechaVerificacion = new Date();
 			obj.sucursal_id = Meteor.user().profile.sucursal_id;
+			obj.verificacionPersona = $stateParams.persona;
 			
 			if ($stateParams.tipo == "CP")
 			{

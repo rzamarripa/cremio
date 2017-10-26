@@ -774,7 +774,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			}
 		})
 		.state('root.verificacion', {
-			url: '/verificacion/:id/:verificacion_id/:tipo',
+			url: '/verificacion/:id/:verificacion_id/:tipo/:persona',
 			templateUrl: 'client/verificadores/verificacion.ng.html',
 			controller: 'VerificacionCtrl as ver',
 			resolve: {
@@ -784,7 +784,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			}
 		})
 		.state('root.verificacionVecino', {
-			url: '/verificacionVecino/:id/:verificacion_id/:tipo',
+			url: '/verificacionVecino/:id/:verificacion_id/:tipo/:persona',
 			templateUrl: 'client/verificadores/verificacionVecino.ng.html',
 			controller: 'VerificacionVecinoCtrl as verV',
 			resolve: {
