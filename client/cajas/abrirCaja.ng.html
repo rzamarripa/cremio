@@ -7,14 +7,14 @@
 					 
 					   <div class="col-sm-6" valida>
 						    <label>Saldo de Apartura {{tipo.nombre}} *</label>
-					    	<input name="maximoEfectivo" type="number" class="form-control" placeholder="Saldo Maximo" ng-model="ocaj.objeto.cuenta[tipo._id].saldo" required>
+					    	<input name="maximoEfectivo" type="number" class="form-control" placeholder="Saldo Maximo" ng-model="ocaj.objeto.cuenta[tipo._id].saldo" required disabled="true">
 					   </div>
 				</div>
 			</div>
 		  	<div class="well">	    
 			   		<div class="row">
 						<div class="col-sm-12">
-							<input type="submit" ng-click="ocaj.guardar(ocaj.objeto,form)" value="Guardar" class="btn btn-primary" valida-form formulario="form">
+							<input type="submit" ng-click="ocaj.guardar(ocaj.objeto,form)" value="Abrir" class="btn btn-primary" valida-form formulario="form">
 						</div>
 					</div>
 		  	</div>  

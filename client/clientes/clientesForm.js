@@ -893,9 +893,10 @@ angular.module("creditoMio")
 			this.nuevoEmpresa = false;
   };
 
-  this.imprimirDoc = function(imagen) {
+  this.imprimirDoc = function(img) {
      //console.log(imagen)
-      Meteor.call('imprimirImagenDocumento', imagen, function(error, response) {
+     /*
+Meteor.call('imprimirImagenDocumento', imagen, function(error, response) {
        if(error)
        {
         console.log('ERROR :', error);
@@ -940,6 +941,16 @@ angular.module("creditoMio")
   
        }
     });
+*/
+     
+     var html  = "<html><head>" +
+        "</head>" +
+        "<body  style ='-webkit-print-color-adjust:exact;'>"+
+        "<img src=\"" + img + "\" onload=\"javascript:window.print();\"/>" +
+        "</body>";
+    var win = window.open("about:blank","_blank");
+    win.document.write(html);
+     
   }
 
   this.insertarAval = function()
@@ -961,6 +972,8 @@ angular.module("creditoMio")
   this.refreshColonias = function(colonia) {
     	
   }
+  
+  
 
   
 };

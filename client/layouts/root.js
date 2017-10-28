@@ -22,8 +22,11 @@ angular.module("creditoMio")
 	rc.sucursal = {};
 	//this.caja = {};
 	//this.nombreCliente = "";
+	var user = Meteor.users.findOne();
 	
 	this.subscribe('sucursales', () => {
+		
+		if (user.username != "admin")
 			return [{_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""}]
 	});	
 	
@@ -137,11 +140,15 @@ angular.module("creditoMio")
 			
 		},
 		sucursal : () => {
-			var s = Sucursales.findOne({_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""});
-			if (s != undefined)
-					rc.sucursal = s;
 			
-			return rc.sucursal;
+			if (user.username != "admin")
+			{	 
+				var s = Sucursales.findOne({_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""});
+				if (s != undefined)
+						rc.sucursal = s;
+				
+				return rc.sucursal;
+			}	
 		},	
 /*
 		inicio:()=>{

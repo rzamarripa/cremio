@@ -945,9 +945,22 @@ rc.referenciasPersonales = [];
 
 	this.modalDoc= function(img)
 	{
+
 		var imagen = '<img class="img-responsive" src="'+img+'" style="margin:auto;">';
 		$('#imagenDiv').empty().append(imagen);
 		$("#modaldoc").modal('show');
+	};
+	
+	this.imprimirDoc= function(img)
+	{
+
+		var html  = "<html><head>" +
+        "</head>" +
+        "<body  style ='-webkit-print-color-adjust:exact;'>"+
+        "<img src=\"" + img + "\" onload=\"javascript:window.print();\"/>" +
+        "</body>";
+    var win = window.open("about:blank","_blank");
+    win.document.write(html);
 	};
 
 
@@ -1617,7 +1630,7 @@ if(estatus == 0){
 	this.CreditoSolicitar= function(id)
 	{
 			
-			console.log(id);
+			//console.log(id);
     	$state.go("root.generadorPlan",{objeto_id : id});
 	  
 	    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
@@ -1747,7 +1760,6 @@ if(estatus == 0){
 	
 	});
 */
-	
 	
 	  	
 	

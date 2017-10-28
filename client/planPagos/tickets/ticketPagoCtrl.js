@@ -28,12 +28,15 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 			rc.pago = Pagos.findOne($stateParams.pago_id);
 			rc.tipoIngreso = TiposIngreso.findOne(rc.pago.tipoIngreso_id);
 			rc.pago = rc.pago? rc.pago:{};
-
-
+			
+			rc.pago.planPagos = rc.pago.planPagos.sort(function(a, b) {
+																																	return a["folioCredito"] - b["folioCredito"] || a["numeroPago"] - b["numeroPago"];
+																																});
+			
 			Meteor.call('datosCliente', rc.pago.usuario_id ,function(err, res){
 				rc.cliente = res;
 			});
-			
+		
 			Meteor.call('getCredito', rc.pago.credito_id ,function(err, res){
 				rc.credito = res;
 			});
