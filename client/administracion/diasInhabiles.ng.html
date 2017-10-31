@@ -1,58 +1,62 @@
 <h2>Días Inhábiles</h2>
-<div class="row">
-	<div class="col-sm-12">
-		<a class="btn btn-{{di.nuevo == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
-			href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ng-click="di.Nuevo()">
-		   {{di.nuevo == true ? 'Nuevo' : 'Cancelar'}}
-		</a>
-		<div class="collapse" id="collapseExample">
-			<form name="form" class="form-horizontal" role="form">
-		  	<div class="well">	    
-			    <div class="row">
-				    <div class="col-sm-12">
-				    	<div class="col-sm-4" valida>
-								<label for="tipo">Tipo *</label>
-								<select name="tipo" ng-model="di.objeto.tipo" data-placeholder="Seleccione" class="form-control" required >
-										<option value="DIA">DÍA</option>
-										<option value="FECHA">FECHA</option>
-								</select>
-							</div>
-				    	<div class="col-sm-4" ng-if="di.objeto.tipo == 'DIA'" valida>
-								<label for="dia">Seleccione día</label>
-								<select name="tipo" ng-model="di.objeto.dia" data-placeholder="Seleccione" class="form-control" required >
-										<option value=""></option>
-										<option value="1">LUNES</option>
-										<option value="2">MARTES</option>
-										<option value="3">MIÉRCOLES</option>
-										<option value="4">JUEVES</option>
-										<option value="5">VIERNES</option>
-										<option value="6">SÁBADO</option>
-										<option value="7">DOMINGO</option>
-								</select>
-							</div>	
-							<div class="col-sm-2" ng-if="di.objeto.tipo == 'FECHA'" valida>
-	              <label>Fecha *</label>
-	              <input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="di.objeto.fecha" name="fecha"/>
-	            </div> 
-				    </div>
-					</div>
-					<br />
-			    <div class="row">
-						<div class="col-sm-12">
-							<input type="submit" ng-click="di.guardar(di.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="di.action" valida-form formulario="form">
-							<input type="submit" ng-click="di.actualizar(di.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!di.action" valida-form formulario="form">	
+<div class = "well">
+	<div class="row">
+		<div class="col-sm-12">
+			<a class="btn btn-{{di.nuevo == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
+				href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ng-click="di.Nuevo()">
+			   {{di.nuevo == true ? 'Nuevo' : 'Cancelar'}}
+			</a>
+			<div class="collapse" id="collapseExample">
+				<form name="form" class="form-horizontal" role="form">
+			  	<div class="well">	    
+				    <div class="row">
+					    <div class="col-sm-12">
+					    	<div class="col-sm-4" valida>
+									<label for="tipo">Tipo *</label>
+									<select name="tipo" ng-model="di.objeto.tipo" data-placeholder="Seleccione" class="form-control" required >
+											<option value="DIA">DÍA</option>
+											<option value="FECHA">FECHA</option>
+									</select>
+								</div>
+					    	<div class="col-sm-4" ng-if="di.objeto.tipo == 'DIA'" valida>
+									<label for="dia">Seleccione día</label>
+									<select name="tipo" ng-model="di.objeto.dia" data-placeholder="Seleccione" class="form-control" required >
+											<option value=""></option>
+											<option value="1">LUNES</option>
+											<option value="2">MARTES</option>
+											<option value="3">MIÉRCOLES</option>
+											<option value="4">JUEVES</option>
+											<option value="5">VIERNES</option>
+											<option value="6">SÁBADO</option>
+											<option value="7">DOMINGO</option>
+									</select>
+								</div>	
+								<div class="col-sm-2" ng-if="di.objeto.tipo == 'FECHA'" valida>
+		              <label>Fecha *</label>
+		              <input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="di.objeto.fecha" name="fecha"/>
+		            </div> 
+					    </div>
 						</div>
-					</div>
-		  	</div>  
-		  </form>
+						<br />
+				    <div class="row">
+							<div class="col-sm-12">
+								<input type="submit" ng-click="di.guardar(di.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="di.action" valida-form formulario="form">
+								<input type="submit" ng-click="di.actualizar(di.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!di.action" valida-form formulario="form">	
+							</div>
+						</div>
+			  	</div>  
+			  </form>
+			</div>
+	
 		</div>
 	</div>
 </div>
 <br>
 <!-- List -->
-<div class="row">
-	<div class="col-sm-12">
-		<table class="table table-bordered">
+<div class = "well">
+	<div class="row">
+		<div class="col-sm-12">
+			<table class="table table-bordered">
 			<thead>
 				<tr>
 				<th width="5%"><div class="text-center">No.</div></th>
@@ -104,5 +108,6 @@
 		    </tr>
 			</tbody>
 		</table>
+		</div>
 	</div>
-</div>
+</div>	

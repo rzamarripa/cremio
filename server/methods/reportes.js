@@ -28,12 +28,16 @@ Meteor.methods({
 	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
 	  																
 	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
-	  																{fields: {"profile.nombreCompleto": 1}});											
-	  												
-	  					plan.cajero = cajero.profile.nombreCompleto;
+	  																{fields: {"profile.nombre": 1}});											
+	  					
+	  					
+	  					plan.cajero = cajero.profile.nombre;
 	  									
 							plan.numeroCliente = user.profile.numeroCliente;	
 							plan.nombreCompleto = user.profile.nombreCompleto;
+							
+							cobranza.push(plan);
+/*
 							if (plan.tipoCuenta == "Consignia"){
 								plan.mostrar = true;
 								cobranza.push(plan);
@@ -42,6 +46,7 @@ Meteor.methods({
 							else{
 								plan.mostrar = false;
 							}
+*/
 							
 					})
 					

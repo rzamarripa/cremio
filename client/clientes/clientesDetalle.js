@@ -429,7 +429,7 @@ rc.referenciasPersonales = [];
 		},
 		planPagosHistorial  : () => {
 			
-			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
+			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}, {sort:{numeroPago:1}} ).fetch()
 			//rc.creditos_id = _.pluck(planes, "cliente_id");
 
 			return planes
@@ -937,9 +937,11 @@ rc.referenciasPersonales = [];
 		rc.openModal = true
 		////console.log(rc.pagos,"pagos")
 		//console.log(rc.historial,"historial act")
-			_.each(rc.getReactively("historial"),function (pago) {
+		/*
+	_.each(rc.getReactively("historial"),function (pago) {
 
 			});
+*/
 
 	};
 
@@ -1021,7 +1023,6 @@ rc.referenciasPersonales = [];
 						
 	}
 
-
 	this.quitarNota = function(id)
 	{
 
@@ -1039,8 +1040,6 @@ rc.referenciasPersonales = [];
 			}else{$("#notaPerfil").modal('hide');}
 			
 	}
-
-
 
 	function obtenerClaseEstatus(valor){
 		
@@ -1679,13 +1678,7 @@ if(estatus == 0){
         
     });
     
-      //console.log(cliente,"objeto")
-      //console.log(credito,"credito")
-  
-  
- 
-    // var toPrint = [];
-    
+         
 
     Meteor.call('imprimirHistorial', objeto, cliente,credito, function(error, response) {     
        if(error)

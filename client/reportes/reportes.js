@@ -123,7 +123,8 @@ angular.module("creditoMio")
     rc.sumaSeguro = 0;
     
     rc.totalCobranza = 0;
-				
+		
+		loading(true);		
 		Meteor.call("getCobranzaDiaria", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id, function(error, result){
 				if  (result)
 				{
@@ -131,8 +132,8 @@ angular.module("creditoMio")
 						
 						_.each(rc.planPagos, function(plan){
 							//console.log(plan);
-							if (plan.tipoCuenta == "Consignia")
-							{							
+							//if (plan.tipoCuenta == "Consignia")
+							//{							
 								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
 								rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
 								if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
@@ -141,11 +142,14 @@ angular.module("creditoMio")
 								rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
 								if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
 								rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
-							}
+								
+								rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
+								
+							//}
 								
 						});
-						rc.totalCobranza += Number(parseFloat(rc.sumaInteres + rc.sumaSeguro + rc.sumaIva + rc.sumaCapital).toFixed(2));
-						
+						//rc.totalCobranza += Number(parseFloat(rc.sumaInteres + rc.sumaSeguro + rc.sumaIva + rc.sumaCapital).toFixed(2));
+						loading(false);
 						$scope.$apply();
 				}
 		});
@@ -184,12 +188,14 @@ angular.module("creditoMio")
 									rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
 									if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
 									rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
+									
+									rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
 								}
 
 									
 							});
 							
-							rc.totalCobranza += Number(parseFloat(rc.sumaInteres + rc.sumaSeguro + rc.sumaIva + rc.sumaCapital).toFixed(2));
+							//rc.totalCobranza += Number(parseFloat(rc.sumaInteres + rc.sumaSeguro + rc.sumaIva + rc.sumaCapital).toFixed(2));
 							$scope.$apply();
 					}
 			});
@@ -197,7 +203,7 @@ angular.module("creditoMio")
 	};
 
 	this.diarioDocumentos = function(){
-		console.log("buscando")
+		//console.log("buscando")
 
 		var usuario = Meteor.user();
 					
@@ -228,11 +234,13 @@ angular.module("creditoMio")
 									rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
 									if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
 									rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
+									
+									rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
 								}
 									
 							});
 							
-							rc.totalCobranza += Number(parseFloat(rc.sumaInteres + rc.sumaSeguro + rc.sumaIva + rc.sumaCapital).toFixed(2));
+							//rc.totalCobranza += Number(parseFloat(rc.sumaInteres + rc.sumaSeguro + rc.sumaIva + rc.sumaCapital).toFixed(2));
 							$scope.$apply();
 					}
 			});

@@ -528,10 +528,17 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
       var path = require('path');
       var publicPath = path.resolve('.').split('.meteor')[0];
       var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
     }else{						 
       var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
-      var produccion = publicPath + "plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
     }
+		
+		//var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+    
+    
+    
 						 
 		var content = fs.readFileSync(produccion+"RECIBOS.docx", "binary");
 		var zip = new JSZip(content);
@@ -576,11 +583,11 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"RECIBOSSalida.docx",buf);		
+		fs.writeFileSync(produccionSalida+"RECIBOSSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"RECIBOSSalida.docx");
+    var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -1168,9 +1175,10 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
       var path = require('path');
       var publicPath = path.resolve('.').split('.meteor')[0];
       var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
     }else{						 
       var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
-      var produccion = publicPath + "plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
     }
 
     function Unidades(num){
@@ -1585,16 +1593,16 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
              		 .generate({type:"nodebuffer"});
 			
  		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-     		 	fs.writeFileSync(produccion+"CONTRATOINTERESSalidaSSISalida.docx",buf);
-     		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOINTERESSalidaSSISalida.docx");
+     		 	fs.writeFileSync(produccionSalida+"CONTRATOINTERESSalidaSSISalida.docx",buf);
+     		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOINTERESSalidaSSISalida.docx");
      		 }
      		 if (contrato.tipoInteres.tipoInteres == "Simple") {
-     		 	fs.writeFileSync(produccion+"CONTRATOINTERESSalida.docx",buf);
-     		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOINTERESSalida.docx");
+     		 	fs.writeFileSync(produccionSalida+"CONTRATOINTERESSalida.docx",buf);
+     		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOINTERESSalida.docx");
      		 }
      		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-     		 	fs.writeFileSync(produccion+"CONTRATOINTERESSalidaCOMPUESTOSalida.docx",buf);
-     		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOINTERESSalidaCOMPUESTOSalida.docx");
+     		 	fs.writeFileSync(produccionSalida+"CONTRATOINTERESSalidaCOMPUESTOSalida.docx",buf);
+     		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOINTERESSalidaCOMPUESTOSalida.docx");
      		 }		
 
     
@@ -1661,16 +1669,16 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
  	           		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-             		 	fs.writeFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalidaSSISalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalidaSSISalida.docx");
+             		 	fs.writeFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaSSISalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaSSISalida.docx");
              		 }
              		 if (contrato.tipoInteres.tipoInteres == "Simple") {
-             		 	fs.writeFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalida.docx");
+             		 	fs.writeFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalida.docx");
              		 }
              		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-             		 	fs.writeFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalidaCOMPUESTOSalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSalidaCOMPUESTOSalida.docx");
+             		 	fs.writeFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaCOMPUESTOSalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaCOMPUESTOSalida.docx");
              		 }	
 				
     // convert binary data to base64 encoded string
@@ -1742,16 +1750,16 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
              		 .generate({type:"nodebuffer"});
              		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
              		 	//console.log(",cjecj")
-             		 	fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalidaSSISalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalidaSSISalida.docx");
+             		 	fs.writeFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaSSISalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaSSISalida.docx");
              		 }
              		 if (contrato.tipoInteres.tipoInteres == "Simple") {
-             		 	fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalida.docx");
+             		 	fs.writeFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalida.docx");
              		 }
              		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-             		 	fs.writeFileSync(produccion+"CONTRATOHIPOTECARIOSalidaCOMPUESTOSalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOHIPOTECARIOSalidaCOMPUESTOSalida.docx");
+             		 	fs.writeFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaCOMPUESTOSalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaCOMPUESTOSalida.docx");
              		 }
 				    
   
@@ -1826,16 +1834,16 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
              		 .generate({type:"nodebuffer"});
              		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
              		 	//console.log(",monndddrigoo")
-             		 	fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIASSISalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASSISalida.docx");
+             		 	fs.writeFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASSISalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASSISalida.docx");
              		 }
              		 if (contrato.tipoInteres.tipoInteres == "Simple") {
-             		 	fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx");
+             		 	fs.writeFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASalida.docx");
              		 }
              		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-             		 	fs.writeFileSync(produccion+"CONTRATOGARANTIAPRENDARIACOMPUESTOSalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIACOMPUESTOSalida.docx");
+             		 	fs.writeFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIACOMPUESTOSalida.docx",buf);
+             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIACOMPUESTOSalida.docx");
              		 }
 				
 
@@ -1898,14 +1906,29 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
   }, 
 	imprimirHistorial: function (objeto,cliente,credito) {
 	
-		//console.log(cliente,"cliente")
+	
+
+		
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		var ImageModule = require('docxtemplater-image-module');
-		var produccion = "/home/cremio/archivos/";
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+		
+		//var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		
+		
 		var opts = {}
 			opts.centered = false;
 			opts.getImage=function(tagValue, tagName) {
@@ -1958,30 +1981,32 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 	 	 		credito.numeroPagos = "0"+credito.numeroPagos
 	 	 	}
 
-      var totalCargos = 0
-      var totalAbonos = 0 
+      var totalCargos = 0;
+      var totalAbonos = 0;
+      
       _.each(objeto,function(item){
-      item.fechaSolicito =moment(item.fechaSolicito).format("DD-MM-YYYY")
-      item.saldo = parseFloat(item.saldo.toFixed(2))
-      item.saldo = formatCurrency(item.saldo)
-      item.cargo = parseFloat(item.cargo.toFixed(2))
-      item.cargo = formatCurrency(item.cargo)
-      totalAbonos = parseFloat(item.sumaAbonos.toFixed(2))
-      totalAbonos = formatCurrency(totalAbonos)
-      totalCargos = parseFloat(item.sumaCargos.toFixed(2))
-      totalCargos = formatCurrency(totalCargos)
-      totalSaldo =  parseFloat(item.ultimoSaldo.toFixed(2))
-      totalSaldo = formatCurrency(totalSaldo)
+		      item.fechaSolicito =moment(item.fechaSolicito).format("DD-MM-YYYY")
+		      item.saldo = parseFloat(item.saldo.toFixed(2))
+		      item.saldo = formatCurrency(item.saldo)
+		      item.cargo = parseFloat(item.cargo.toFixed(2))
+		      item.cargo = formatCurrency(item.cargo)
+		      totalAbonos = parseFloat(item.sumaAbonos.toFixed(2))
+		      totalAbonos = formatCurrency(totalAbonos)
+		      totalCargos = parseFloat(item.sumaCargos.toFixed(2))
+		      totalCargos = formatCurrency(totalCargos)
+		      totalSaldo =  parseFloat(item.ultimoSaldo.toFixed(2))
+		      totalSaldo = formatCurrency(totalSaldo)
+		
+			});
 
-	 });
-	 		cliente.ciudad = cliente.ciudadCliente.nombre
-			cliente.sucursal = cliente.sucursales.nombreSucursal
-			cliente.colonia = cliente.coloniaCliente.nombre
-			cliente.municipio = cliente.municipioCliente.nombre
-			cliente.estado = cliente.estadoCliente.nombre
-			cliente.nacionalidad = cliente.nacionalidadCliente.nombre
-			cliente.estadoCivil = cliente.estadoCivilCliente.nombre
-			cliente.ocupacion = cliente.ocupacionCliente.nombre
+	 		cliente.ciudad 				= cliente.ciudadCliente.nombre;
+			cliente.sucursal 			= cliente.sucursales.nombreSucursal;
+			cliente.colonia 			= cliente.coloniaCliente.nombre;
+			cliente.municipio 		= cliente.municipioCliente.nombre;
+			cliente.estado 				= cliente.estadoCliente.nombre;
+			cliente.nacionalidad 	= cliente.nacionalidadCliente.nombre;
+			cliente.estadoCivil 	= cliente.estadoCivilCliente.nombre;
+			cliente.ocupacion 		= cliente.ocupacionCliente.nombre;
 	    
 	    // 	 if (item.folio < 10) {
 	 	 	// 	item.folio = "0"+item.folio
@@ -2015,9 +2040,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		doc.render();
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"HISTORIALCREDITICIOSalida.docx",buf);		
+		fs.writeFileSync(produccionSalida+"HISTORIALCREDITICIOSalida.docx",buf);		
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"HISTORIALCREDITICIOSalida.docx");
+    var bitmap = fs.readFileSync(produccionSalida+"HISTORIALCREDITICIOSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');

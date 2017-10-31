@@ -306,12 +306,14 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
     tiposIngreso: () => {
       return TiposIngreso.find()
     },
-    planPagos: () => {
+    /*
+planPagos: () => {
       return PlanPagos.find({
         cliente_id: $stateParams.objeto_id,
         credito_id: { $in: this.getCollectionReactively("creditos_id") },
       }, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } });
     },
+*/
     tiposCredito: () => {
       return TiposCredito.find();
     },
@@ -371,7 +373,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
       
     },
     creditos: () => {
-      var creditos = Creditos.find({}).fetch();
+      var creditos = Creditos.find({estatus: 4}).fetch();
       if (creditos != undefined) {
         rc.creditos_id = _.pluck(creditos, "_id");
 
@@ -488,11 +490,12 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		      		      
 		      if (p.pagoSeleccionado != undefined) {
 		        if (p.pagoSeleccionado == true) {
-		           rc.pago.totalPago += p.importepagado;
+		           rc.pago.totalPago += Number(parseFloat(p.importepagado).toFixed(2));
 		        }
 		      }
 				}		
     });
+    rc.pago.totalPago = Number(parseFloat(rc.pago.totalPago).toFixed(2));
   }
   
   this.seleccionarMontoPago = function(pago) {
@@ -562,7 +565,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		  	toastr.warning("Ingrese la cantidad a cobrar correctamente");
 		  	return;
 	  }
-	  
+	  console.log(pago.pagar);
+	  console.log(pago.totalPago);
 	  if (pago.pagar < pago.totalPago)
 	  {
 		  	toastr.warning("No alcanza a pagar con el total ingresado");
@@ -592,7 +596,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 				//Si existen creditos Validar que alcance sobre el total
 				var ban = false;				
 			  _.each(rc.creditosAutorizados, function(ca) {
-			      if (ca.capitalSolicitado > pago.totalPago)
+			      if (ca.capitalSolicitado >= pago.totalPago)
 			      {
 								ban = true;
 								ca.esRefinanciado = ban;
@@ -802,28 +806,50 @@ if(pago.descripcion=="Cargo Moratorio")
 	this.guardarRefinanciamiento = function() 
 	{
 			
+			var fechaProximoPago = "";			
+			rc.creditoRefinanciar.refinanciar = Number(parseFloat(rc.pagoR.totalPago).toFixed(2));
 			
-			rc.creditoRefinanciar.refinanciar = rc.pagoR.totalPago;
-			
+			var fechaProximoPagoArray = [];
 			var seleccionadosId = [];
 	    _.each(rc.planPagosViejo, function(p) {
-	      if (p.pagoSeleccionado)
-	        seleccionadosId.push({ id: p._id, importe: p.importepagado })
-	
+	      if (p.pagoSeleccionado){
+					 if (p.descripcion == "Recibo") sePagaraRecibo = true;
+					 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
+		       seleccionadosId.push({ id: p._id, importe: p.importepagado })
+	      }
+	      
+	      if (p.importepagado != p.importeRegular)				      				      
+      	 	 fechaProximoPagoArray.push(p.fechaLimite);
+	      
 	    });
 	    
-	    //console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
-	    Meteor.call("pagoParcialCredito", seleccionadosId, rc.pagoR.pagar, rc.pagoR.totalPago, rc.pagoR.tipoIngreso_id, $stateParams.objeto_id, function(error, success) {
+	    fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
+						
+			if (fechaProximoPago == "Invalid Date")
+					fechaProximoPago = "";
+	    
+	    
+			//cons ole.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
+	    Meteor.call("pagoParcialCredito", seleccionadosId, 
+	    																	rc.pagoR.pagar, 
+	    																	rc.pagoR.totalPago, 
+	    																	rc.pagoR.tipoIngreso_id, 
+	    																	$stateParams.objeto_id, 
+	    																	rc.ocultarMultas, 
+	    																	rc.subtotal,  
+	    																	rc.cargosMoratorios, 
+	    																	rc.total, 
+	    																	fechaProximoPago,function(error, success) {
 	      if (!success) {
 	        toastr.error('Error al guardar.');
 	        return;
 	      }
-	      
+	      console.log("Entro a actualizar ");
 	      //Actualizar Creditos
 	      
-	      var tempId = rc.creditoRefinanciar._id;
-	      delete rc.creditoRefinanciar._id;
-	      Creditos.update({_id: tempId},{$set:rc.creditoRefinanciar});
+	      //var tempId = rc.creditoRefinanciar._id;
+	      //delete rc.creditoRefinanciar._id;
+	      Creditos.update({_id: rc.creditoRefinanciar._id}, {$set: {esRefinanciado: true, refinanciar: rc.creditoRefinanciar.refinanciar}});
 	      
 	      toastr.success('Guardado correctamente.');
 	      rc.pago = {};
@@ -845,8 +871,8 @@ if(pago.descripcion=="Cargo Moratorio")
 			rc.selectedRow = index;
 			rc.creditoRefinanciar = credito;
 			
-			console.log(index);
-			console.log(rc.selectedRow);
+			//console.log(index);
+			//console.log(rc.selectedRow);
 			
 	}
 	

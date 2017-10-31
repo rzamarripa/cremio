@@ -53,11 +53,13 @@ angular.module("creditoMio")
   this.subscribe("tiposCredito", ()=>{
     return [{}]
   });
-/*  
+  
   this.subscribe("estadoCivil", ()=>{
     return [{estatus : true}]
   });
-  
+
+	//Quitar
+ 
   this.subscribe("nacionalidades", ()=>{
     return [{}]
   });
@@ -83,7 +85,8 @@ angular.module("creditoMio")
   this.subscribe("empresas", ()=>{
     return [{}]
   });   
-*/
+  
+  
 
   this.subscribe('notas',()=>{
     return [{cliente_id:this.getReactively("cliente_id"),}]
@@ -175,7 +178,9 @@ angular.module("creditoMio")
           rc.saldo+=planPago.cargo
         
         fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
+        
         //console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
+        
         arreglo.push({saldo:rc.saldo,
           numeroPago : planPago.numeroPago,
           cantidad : credito.numeroPagos,
@@ -191,7 +196,7 @@ angular.module("creditoMio")
           pagos : planPago.pagos,
           _id: planPago._id
           // saldoActualizado : planPago.cargo - planPago[key+1].pago
-          });
+         });
           
         
         if(planPago.pagos.length>0)
@@ -276,7 +281,6 @@ angular.module("creditoMio")
       return rc.planPagos.length
 
     },
-
 
     historialCredito : () => {
       var creditos = [];
@@ -465,7 +469,7 @@ angular.module("creditoMio")
 
             objeto.cliente = result;
 						
-						console.log("Objeto:", objeto);
+						//console.log("Objeto:", objeto);
 						
 			      rc.cliente_id = objeto.cliente._id
 			
@@ -498,7 +502,7 @@ angular.module("creditoMio")
 						
 			      rc.avales = [];
 			      _.each(rc.credito.avales_ids,function(aval){
-				      		console.log("A:", aval);
+				      		//console.log("A:", aval);
 			            Meteor.call('getPersona', aval.aval_id, function(error, result){           
 			                  if (result)
 			                  {
@@ -519,11 +523,9 @@ angular.module("creditoMio")
 			                //console.log(rc.historialCrediticio);
 			            }
 			      });
-
-       
+			             
 			      //-----------------------------------------------------------------------------
-			      
-			
+
 			      rc.selected_numero = num;
        }
       });
@@ -536,7 +538,7 @@ angular.module("creditoMio")
       rc.cliente_id = objeto.cliente._id
       //console.log(rc.cliente_id)
       Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
-      objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"), estatus: 4}).fetch()
+      objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"), estatus: {$in: [4,5]}}).fetch()
 
       rc.credito_id = objeto.credito._id;
       //console.log("Objeto: ",objeto)
@@ -903,7 +905,7 @@ angular.module("creditoMio")
   {
     var toPrint = [];
 		
-		console.log(objeto);
+		//console.log(objeto);
 		
     _.each(objeto,function(item, key){
       if (item.imprimir) {
@@ -1094,8 +1096,10 @@ angular.module("creditoMio")
 
   this.imprimirHistorial= function(objeto,cliente,credito) 
   {
-
-    var sumaCargos = 0
+		//console.log("Cliente:", cliente);
+		
+    /*
+var sumaCargos = 0
     var sumaAbonos = 0
     var popo = 0
     objeto.objetoFinal = objeto[objeto.length - 1];
@@ -1124,35 +1128,68 @@ angular.module("creditoMio")
         
     });
     _.each(objeto,function(item){
-    //console.log(item,"item")
+	    //console.log(item,"item")
       cliente.cliente = cliente.profile.nombreCompleto
       cliente.clienteSucursal = Sucursales.findOne(cliente.profile.sucursal_id)
       cliente.sucursal = cliente.clienteSucursal.nombre
       cliente.fechaCreacion = cliente.profile.fechaCreacion
       cliente.sexo = cliente.profile.sexo
-      cliente.clienteNacionalidad = Nacionalidades.findOne(cliente.profile.nacionalidad_id)
-      cliente.nacionalidad = cliente.clienteNacionalidad.nombre
-      cliente.estadoCivilCliente = EstadoCivil.findOne(cliente.profile.estadoCivil_id)
-      cliente.estadoCivil = cliente.estadoCivilCliente.nombre
+      //cliente.clienteNacionalidad = Nacionalidades.findOne(cliente.profile.nacionalidad_id)
+      cliente.nacionalidad = cliente.profile.nacionalidadCliente.nombre
+      //cliente.estadoCivilCliente = EstadoCivil.findOne(cliente.profile.estadoCivil_id)
+      cliente.estadoCivil = cliente.profile.estadoCivilCliente.nombre
       cliente.fechaNa = cliente.profile.fechaNacimiento
       cliente.lugarNacimiento = cliente.profile.lugarNacimiento
       if (cliente.profile.lugarNacimiento) {
         cliente.lugarNacimiento = cliente.profile.lugarNacimiento
       }
-      cliente.ocupacionCliente = Ocupaciones.findOne(cliente.profile.ocupacion_id)
-      cliente.ocupacion = cliente.ocupacionCliente.nombre
+      //cliente.ocupacionCliente = Ocupaciones.findOne(cliente.profile.ocupacion_id)
+      cliente.ocupacion = cliente.profile.ocupacionCliente.nombre
       item.foto = cliente.profile.foto
       cliente.foto = cliente.profile.foto
       
 
     });
-      console.log(objeto,"objeto")
-      console.log(credito,"credito")
+    console.log(objeto,"objeto")
+    console.log(credito,"credito")
   
   
  
     var toPrint = [];
+*/
     
+    cliente = rc.cliente.profile;
+    //console.log("toshtta japon",cliente)
+
+    var sumaCargos = 0
+    var sumaAbonos = 0
+    var popo = 0
+    objeto.objetoFinal = objeto[objeto.length - 1];
+     _.each(objeto,function(item){
+
+        if (item.movimiento == "Cargo Moratorio") {
+          sumaCargos += item.importe
+          sumaAbonos += item.pago
+
+        }
+        if (item.movimiento == "Abono") {
+          sumaAbonos += item.pago
+
+        }
+      
+        //suma += item.capitalSolicitado
+        //sumaSol += item.adeudoInicial
+        popo = objeto.objetoFinal.saldo
+        item.ultimoSaldo =  popo
+     
+      });
+
+       _.each(objeto,function(item){
+       item.sumaCargos = sumaCargos
+       item.sumaAbonos = sumaAbonos
+        
+    });
+
 
     Meteor.call('imprimirHistorial', objeto, cliente,credito, function(error, response) {     
        if(error)
@@ -1162,7 +1199,7 @@ angular.module("creditoMio")
        }
        else
        {
-      function b64toBlob(b64Data, contentType, sliceSize) {
+			 		function b64toBlob(b64Data, contentType, sliceSize) {
           contentType = contentType || '';
           sliceSize = sliceSize || 512;
           var byteCharacters = atob(b64Data);
@@ -1183,12 +1220,16 @@ angular.module("creditoMio")
           var url = window.URL.createObjectURL(blob);
           var dlnk = document.getElementById('dwnldLnk');
 
-           dlnk.download = "HISTORIALCREDITICIO.docx"; 
+          dlnk.download = "HISTORIALCREDITICIO.docx"; 
           dlnk.href = url;
           dlnk.click();       
           window.URL.revokeObjectURL(url);
-      }
+				}
     });
+    
+    
+    
+    
   };  
 
   this.checkValue1= function() 
