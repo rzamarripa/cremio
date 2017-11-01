@@ -21,7 +21,7 @@ Meteor.methods({
 		
 		var fecha = new Date();
 		var f = fecha;
-    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+    fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
     var cliente =objeto.cliente.profile.nombreCompleto
     var nombreCliente  = cliente.toUpperCase();
     var calle = objeto.cliente.profile.calle
@@ -94,7 +94,7 @@ Meteor.methods({
 		
 		var fecha = new Date();
 		var f = fecha;
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	    var cliente =objeto.cliente.profile.nombreCompleto
 	    var nombreCliente  = cliente.toUpperCase();
 	    var calle = objeto.cliente.profile.calle
@@ -146,7 +146,6 @@ Meteor.methods({
 
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
   getcartaCertificado: function (objeto,objeto_id) {
 	//console.log(objeto,"certificacionPatrimonial")
 		var fs = require('fs');
@@ -154,7 +153,19 @@ Meteor.methods({
 		var JSZip = require('jszip');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+		
+		//var produccion = "/home/cremio/archivos/";
 		//var produccion = "/home/cremio/archivos/";
 				 
 		
@@ -169,7 +180,7 @@ Meteor.methods({
 		
 		var fecha = new Date();
 		var f = fecha;
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	    var cliente =objeto.cliente.profile.nombreCompleto
 	    var nombreCliente  = cliente.toUpperCase();
 	    var calle = objeto.cliente.profile.calle
@@ -206,11 +217,11 @@ Meteor.methods({
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
  
-		fs.writeFileSync(produccion+"certificacionPatrimonialSalida.docx",buf);		
+		fs.writeFileSync(produccionSalida+"certificacionPatrimonialSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"certificacionPatrimonialSalida.docx");
+    var bitmap = fs.readFileSync(produccionSalida+"certificacionPatrimonialSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -303,34 +314,7 @@ Meteor.methods({
 				
 			return aval;
 	},
-	// getEmpresas: function (idEmpresa) {
-	// 		//console.log('hi');
-	// 		Meteor.apply('findSomeShit',['Empresas', {_id: idEmpresa}, true], function(err, empresa){
-	// 			Meteor.call('findSomeShit',['Ciudades', {_id: empresa.empresa_id}, true], function(err, ciudad){
-	// 				Meteor.call('findSomeShit',['Municipios', {_id: empresa.municipio_id}, true], function(err, municipio){
-	// 					Meteor.call('findSomeShit',['Estados', {_id: empresa.estado_id}, true], function(err, estado){
-	// 						Meteor.call('findSomeShit',['Paises', {_id: empresa.pais_id}, true], function(err, pais){
-	// 							Meteor.call('findSomeShit',['Colonias', {_id: empresa.colonia_id}, true], function(err, colonia){
-	// 								empresa.ciudad = ciudad;
-	// 								empresa.municipio = municipio;
-	// 								empresa.estado = estado;
-	// 								empresa.pais = pais;
-	// 								empresa.colonia = colonia;
-	// 								res['return'] = empresa;
-	// 							});
-	// 						});
-	// 					});
-	// 				});
-	// 			});
-	// 		});
-	// 		// empresa.municipio = Municipios.findOne(empresa.municipio_id);
-	// 		// empresa.estado = Estados.findOne(empresa.estado_id);
-	// 		// empresa.colonia = Colonias.findOne(empresa.colonia_id);
-	// 		// empresa.pais = Paises.findOne(empresa.pais_id);
-	// 		// console.log("esta es la empresa",empresa)
-	// 		return res.wait();
-	// },
-
+	
 	findSomeShit: function (collection, find, findOne){
 		return findOne ? eval(collection).findOne(find) : eval(collection).find(find);
 	},
@@ -531,6 +515,7 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
       var produccionSalida = publicPath + "public/generados/";
     }else{						 
       var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
       var produccionSalida = "/home/cremio/archivos/";
     }
 		
@@ -555,7 +540,7 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		
 		var fecha = new Date();
 		var f = fecha;
-	  fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	  fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	    
 		_.each(objeto,function(item){
 	      
@@ -601,7 +586,20 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-	    var produccion = "/home/cremio/archivos/";
+		
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+		
+	   // var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
@@ -621,14 +619,14 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		var fecha = new Date();
 
 		var f = fecha;
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	 	 	//objeto.cargo.toLocaleString()
 	 	const formatCurrency = require('format-currency')
 	 	 	_.each(objeto,function(item){
 	 	 		
 	 	 		//console.log(item,"Credito")
 	 	 		
-	 	 		//item.fechaLimite = item.fechaLimite.getUTCDate()+'-'+(item.fechaLimite.getUTCMonth()+1)+'-'+item.fechaLimite.getUTCFullYear();
+	 	 		//item.fechaLimite = item.fechaLimite.getDate()+'-'+(item.fechaLimite.getMonth()+1)+'-'+item.fechaLimite.getFullYear();
 	 	 		 //if (item.fechaLimite.length < 2) item.fechaLimite = '0' + item.fechaLimite;
 	 	 		   item.cargo = parseFloat(item.cargo.toFixed(2).toLocaleString())
 	 	 		   item.cargo = formatCurrency(item.cargo)
@@ -649,9 +647,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 	 	 		    }
 
 	 	 		    
-	 	 		    var dia = item.fechaLimite.getUTCDate()
-	 	 		    var mes = item.fechaLimite.getUTCMonth()+1
-	 	 		    var anio = item.fechaLimite.getUTCFullYear()
+	 	 		    var dia = item.fechaLimite.getDate()
+	 	 		    var mes = item.fechaLimite.getMonth()+1
+	 	 		    var anio = item.fechaLimite.getFullYear()
 	 	 		    if (Number(dia) < 10) {
 	 	 		    	dia = "0" + dia;
 	 	 		    }
@@ -694,11 +692,11 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"ReporteCreditoSalida.docx",buf);		
+		fs.writeFileSync(produccionSalida+"ReporteCreditoSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"ReporteCreditoSalida.docx");
+    var bitmap = fs.readFileSync(produccionSalida+"ReporteCreditoSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -713,22 +711,18 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
-		/*
-
-	  if(Meteor.isDevelopment){
+		if(Meteor.isDevelopment){
       var path = require('path');
       var publicPath = path.resolve('.').split('.meteor')[0];
       var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
     }else{						 
       var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
-      var produccion = publicPath + "plantillas/";
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
     }
-*/
-		
-		var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-				 
-				var content = fs
+						 
+		var content = fs
     	   .readFileSync(produccion+"reporteDiarioCobranza.docx", "binary");
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
@@ -742,13 +736,15 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 			return "";
 		}});
 		const formatCurrency = require('format-currency')
-			var fecha = new Date();
-			var f = fecha;
-			var fechaInicial = inicial
-			var fechaFinal = final
-	    // fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
-	    // fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
-	    var suma = 0
+
+
+		var fecha = new Date();
+		var f = fecha;
+		var fechaInicial = inicial;
+		var fechaFinal = final;
+
+    
+	  var suma = 0
 		var sumaInter = 0
 		var sumaIva = 0
 		var sumaSeguro = 0
@@ -762,14 +758,13 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 	      }else{
 	      	item.movimiento = "C"
 	      }
-	    
-	  
-	       suma += item.pagoCapital
-	       sumaInter += item.pagoInteres
-	       sumaIva += item.pagoIva
-	       sumaSeguro += item.pagoSeguro
-
-	       totalcobranza = suma + sumaIva + sumaInter
+	    	  
+	       suma += item.pagoCapital;
+	       sumaInter += item.pagoInteres;
+	       sumaIva += item.pagoIva;
+	       sumaSeguro += item.pagoSeguro;
+	       totalcobranza += parseFloat(item.totalPago);
+	       
 
 	        item.cargo = parseFloat(item.totalPago.toFixed(2))
 	        item.cargo = formatCurrency(item.cargo)
@@ -793,39 +788,39 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 	    });
 	    
 
-
- 		    var dia = fecha.getUTCDate()
- 		    var mes = fecha.getUTCMonth()+1
- 		    var anio = fecha.getUTCFullYear()
+ 		    var dia = fecha.getDate()
+ 		    var mes = fecha.getMonth()+1
+ 		    var anio = fecha.getFullYear()
  		    if (Number(dia) < 10) {
  		    	dia = "0" + dia;
  		    }
  		    if (Number(mes) < 10) {
  		    	mes = "0" + mes;
  		    }
- 		    fecha = dia+ "-" + mes + "-" + anio
+ 		    fecha = dia+ "-" + mes + "-" + anio;
 
- 		    var dia2 = fechaInicial.getUTCDate()
- 		    var mes2 = fechaInicial.getUTCMonth()+1
- 		    var anio2 = fechaInicial.getUTCFullYear()
+ 		    var dia2 = fechaInicial.getDate()
+ 		    var mes2 = fechaInicial.getMonth()+1
+ 		    var anio2 = fechaInicial.getFullYear()
  		    if (Number(dia2) < 10) {
- 		    	dia2 = "0" + dia;
+ 		    	dia2 = "0" + dia2;
  		    }
  		    if (Number(mes2) < 10) {
  		    	mes2 = "0" + mes2;
  		    }
- 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
+ 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2;
 
- 		    var dia3 = fechaFinal.getUTCDate()
- 		    var mes3 = fechaFinal.getUTCMonth()+1
- 		    var anio3 = fechaFinal.getUTCFullYear()
+ 		    var dia3 = fechaFinal.getDate()
+ 		    var mes3 = fechaFinal.getMonth()+1
+ 		    var anio3 = fechaFinal.getFullYear()
  		    if (Number(dia3) < 10) {
- 		    	dia2 = "0" + dia;
+ 		    	dia3 = "0" + dia3;
  		    }
  		    if (Number(mes3) < 10) {
  		    	mes3 = "0" + mes3;
  		    }
- 		    fechaFinal = dia3 + "-" + mes3 + "-" + anio3
+ 		    fechaFinal = dia3 + "-" + mes3 + "-" + anio3;
+ 		    
  		    parseFloat(suma.toFixed(2))
  		    suma = formatCurrency(suma)
  		    parseFloat(sumaInter.toFixed(2))
@@ -837,7 +832,7 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  		    parseFloat(totalcobranza.toFixed(2))
  		    totalcobranza = formatCurrency(totalcobranza)
 	
-	    //console.log(objeto.planPagos);
+ 				//console.log(objeto.planPagos);
 		
 		      doc.setData({				
       	            items: 		      objeto,
@@ -856,11 +851,11 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"reporteDiarioCobranzaSalida.docx",buf);		
+		fs.writeFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"reporteDiarioCobranzaSalida.docx");
+    var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -875,7 +870,18 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
 		
-		var produccion = "/home/cremio/archivos/";
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+    
+		//var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
@@ -891,17 +897,14 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 			}
 			return "";
 		}});
-		const formatCurrency = require('format-currency')
+			const formatCurrency = require('format-currency')
 			var fecha = new Date();
 			var f = fecha;
 			var fechaInicial = inicial
 			var fechaFinal = final
-	    //fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	     // fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
-	     // fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
 	   
-          var suma = 0
-          var sumaSol = 0
+      var suma = 0
+      var sumaSol = 0
 	    _.each(objeto,function(item){
 	    	item.fechaEntrega = moment(item.fechaEntrega).format("DD-MM-YYYY")
 	    	suma = item.sumaCapital
@@ -922,9 +925,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 
 	    });	       
 	 		    
- 		    var dia = fecha.getUTCDate()
- 		    var mes = fecha.getUTCMonth()+1
- 		    var anio = fecha.getUTCFullYear()
+ 		    var dia = fecha.getDate()
+ 		    var mes = fecha.getMonth()+1
+ 		    var anio = fecha.getFullYear()
  		    if (Number(dia) < 10) {
  		    	dia = "0" + dia;
  		    }
@@ -933,9 +936,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  		    }
  		    fecha = dia+ "-" + mes + "-" + anio
 
- 		    var dia2 = fechaInicial.getUTCDate()
- 		    var mes2 = fechaInicial.getUTCMonth()+1
- 		    var anio2 = fechaInicial.getUTCFullYear()
+ 		    var dia2 = fechaInicial.getDate()
+ 		    var mes2 = fechaInicial.getMonth()+1
+ 		    var anio2 = fechaInicial.getFullYear()
  		    if (Number(dia2) < 10) {
  		    	dia2 = "0" + dia2;
  		    }
@@ -944,9 +947,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  		    }
  		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
 
- 		    var dia3 = fechaFinal.getUTCDate()
- 		    var mes3 = fechaFinal.getUTCMonth()+1
- 		    var anio3 = fechaFinal.getUTCFullYear()
+ 		    var dia3 = fechaFinal.getDate()
+ 		    var mes3 = fechaFinal.getMonth()+1
+ 		    var anio3 = fechaFinal.getFullYear()
  		    if (Number(dia3) < 10) {
  		    	dia3 = "0" + dia3;
  		    }
@@ -975,11 +978,141 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"ReporteDiarioCreditosSalida.docx",buf);		
+		fs.writeFileSync(produccionSalida+"ReporteDiarioCreditosSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"ReporteDiarioCreditosSalida.docx");
+    var bitmap = fs.readFileSync(produccionSalida+"ReporteDiarioCreditosSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+  },
+  ReporteCreditosLiquidados: function (objeto,inicial,final) {
+	
+		//console.log(objeto,"fwfe ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+    
+		//var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+				 
+				var content = fs
+    	   .readFileSync(produccion+"ReporteDiarioCreditosLiquidados.docx", "binary");
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			return "";
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		const formatCurrency = require('format-currency')
+			var fecha = new Date();
+			var f = fecha;
+			var fechaInicial = inicial
+			var fechaFinal = final
+	    //fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	     // fInicial = fechaInicial.getDate()+'-'+(fechaInicial.getMonth()+1)+'-'+fechaInicial.getFullYear(); 
+	     // fFinal = fechaFinal.getDate()+'-'+(fechaFinal.getMonth()+1)+'-'+fechaFinal.getFullYear(); 
+	   
+          var suma = 0
+          var sumaSol = 0
+	    _.each(objeto,function(item){
+	    	item.fechaEntrega = moment(item.fechaEntrega).format("DD-MM-YYYY")
+	    	suma = item.sumaCapital
+	    	sumaSol = item.sumaAPagar
+	    	item.numeroCliente = item.numeroCliente + "";
+	    	item.adeudoInicial = parseFloat(item.adeudoInicial.toFixed(2))
+	    	item.adeudoInicial = formatCurrency(item.adeudoInicial)
+	    	item.saldoActual = parseFloat(item.saldoActual.toFixed(2))
+	    	item.saldoActual = formatCurrency(item.saldoActual)
+	    	item.capitalSolicitado = parseFloat(item.capitalSolicitado.toFixed(2))
+	    	item.capitalSolicitado = formatCurrency(item.capitalSolicitado)
+	    	 if (item.folio < 10) {
+	 	 		item.folio = "0"+item.folio
+	 	 	}
+	 	 	if (item.numeroPagos < 10) {
+	 	 		item.numeroPagos = "0"+item.numeroPagos
+	 	 	}
+
+	    });	       
+	 		    
+ 		    var dia = fecha.getDate()
+ 		    var mes = fecha.getMonth()+1
+ 		    var anio = fecha.getFullYear()
+ 		    if (Number(dia) < 10) {
+ 		    	dia = "0" + dia;
+ 		    }
+ 		    if (Number(mes) < 10) {
+ 		    	mes = "0" + mes;
+ 		    }
+ 		    fecha = dia+ "-" + mes + "-" + anio
+
+ 		    var dia2 = fechaInicial.getDate()
+ 		    var mes2 = fechaInicial.getMonth()+1
+ 		    var anio2 = fechaInicial.getFullYear()
+ 		    if (Number(dia2) < 10) {
+ 		    	dia2 = "0" + dia2;
+ 		    }
+ 		    if (Number(mes2) < 10) {
+ 		    	mes2 = "0" + mes2;
+ 		    }
+ 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
+
+ 		    var dia3 = fechaFinal.getDate()
+ 		    var mes3 = fechaFinal.getMonth()+1
+ 		    var anio3 = fechaFinal.getFullYear()
+ 		    if (Number(dia3) < 10) {
+ 		    	dia3 = "0" + dia3;
+ 		    }
+ 		    if (Number(mes3) < 10) {
+ 		    	mes3 = "0" + mes3;
+ 		    }
+ 		    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
+ 		    parseFloat(sumaSol.toFixed(2))
+ 		    sumaSol = formatCurrency(sumaSol)
+ 		    parseFloat(suma.toFixed(2))
+ 		    suma = formatCurrency(suma)
+
+		
+		doc.setData({				
+						items: 		 objeto,
+						fecha:     fecha,
+						inicial:    fechaInicial,
+						final:      fechaFinal,
+						sumaCapital : suma,
+						sumaAPagar: sumaSol,
+													
+				
+				  });
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccionSalida+"ReporteDiarioCreditosLiquidadosSalida.docx",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccionSalida+"ReporteDiarioCreditosLiquidadosSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -992,7 +1125,19 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+		
+		//var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
@@ -1013,9 +1158,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 			var f = fecha;
 			var fechaInicial = inicial
 			var fechaFinal = final
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	    fInicial = fechaInicial.getUTCDate()+'-'+(fechaInicial.getUTCMonth()+1)+'-'+fechaInicial.getUTCFullYear(); 
-	    fFinal = fechaFinal.getUTCDate()+'-'+(fechaFinal.getUTCMonth()+1)+'-'+fechaFinal.getUTCFullYear(); 
+	    fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    fInicial = fechaInicial.getDate()+'-'+(fechaInicial.getMonth()+1)+'-'+fechaInicial.getFullYear(); 
+	    fFinal = fechaFinal.getDate()+'-'+(fechaFinal.getMonth()+1)+'-'+fechaFinal.getFullYear(); 
 	    _.each(objeto,function(item){
 	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
 	    	
@@ -1034,11 +1179,11 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"ReporteMovimientoCuentasSalida.docx",buf);		
+		fs.writeFileSync(produccionSalida+"ReporteMovimientoCuentasSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"ReporteMovimientoCuentasSalida.docx");
+    var bitmap = fs.readFileSync(produccionSalida+"ReporteMovimientoCuentasSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -1051,7 +1196,20 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+
+		
+		//var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 		var content = fs
@@ -1073,7 +1231,7 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 			var fechaInicial = inicial
 			var fechaFinal = final
 
-	       var suma = 0
+	     var suma = 0
 		   var sumaInter = 0
 		   var sumaIva = 0
 		   var sumaSeguro = 0
@@ -1083,7 +1241,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 	    	suma += item.pagoCapital
 	        sumaInter += item.pagoInteres
 	        sumaIva += item.pagoIva
-	        sumaSeguro += item.pagoSeguro
+	        sumaSeguro += item.pagoSeguro;
+	        totalcobranza += parseFloat(item.totalPago);
+	        
 	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
 	    	item.totalPago = parseFloat(item.totalPago.toFixed(2))
 	    	item.totalPago = formatCurrency(item.totalPago)
@@ -1097,9 +1257,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 	    
 
 	 		    
- 		   var dia = fecha.getUTCDate()
- 		    var mes = fecha.getUTCMonth()+1
- 		    var anio = fecha.getUTCFullYear()
+ 		   var dia = fecha.getDate()
+ 		    var mes = fecha.getMonth()+1
+ 		    var anio = fecha.getFullYear()
  		    if (Number(dia) < 10) {
  		    	dia = "0" + dia;
  		    }
@@ -1108,9 +1268,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  		    }
  		    fecha = dia+ "-" + mes + "-" + anio
 
- 		    var dia2 = fechaInicial.getUTCDate()
- 		    var mes2 = fechaInicial.getUTCMonth()+1
- 		    var anio2 = fechaInicial.getUTCFullYear()
+ 		    var dia2 = fechaInicial.getDate()
+ 		    var mes2 = fechaInicial.getMonth()+1
+ 		    var anio2 = fechaInicial.getFullYear()
  		    if (Number(dia2) < 10) {
  		    	dia2 = "0" + dia2;
  		    }
@@ -1119,9 +1279,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  		    }
  		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
 
- 		    var dia3 = fechaFinal.getUTCDate()
- 		    var mes3 = fechaFinal.getUTCMonth()+1
- 		    var anio3 = fechaFinal.getUTCFullYear()
+ 		    var dia3 = fechaFinal.getDate()
+ 		    var mes3 = fechaFinal.getMonth()+1
+ 		    var anio3 = fechaFinal.getFullYear()
  		    if (Number(dia3) < 10) {
  		    	dia3 = "0" + dia3;
  		    }
@@ -1129,8 +1289,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  		    	mes3 = "0" + mes3;
  		    }
  		    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
- 		    totalcobranza = suma + sumaIva + sumaInter
-            parseFloat(suma.toFixed(2))
+ 		    //totalcobranza = suma + sumaIva + sumaInter
+ 		    
+        parseFloat(suma.toFixed(2))
  		    suma = formatCurrency(suma)
  		    parseFloat(sumaInter.toFixed(2))
  		    sumaInter = formatCurrency(sumaInter)
@@ -1158,11 +1319,11 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"ReporteBancosSalida.docx",buf);		
+		fs.writeFileSync(produccionSalida+"ReporteBancosSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"ReporteBancosSalida.docx");
+    var bitmap = fs.readFileSync(produccionSalida+"ReporteBancosSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -1178,6 +1339,7 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
       var produccionSalida = publicPath + "public/generados/";
     }else{						 
       var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
       var produccionSalida = "/home/cremio/archivos/";
     }
 
@@ -1524,9 +1686,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		var vigenciaMasUnDia = formatDate(vigenciaFecha);
 		  
 
-		var diaV = vigencia.fechaLimite.getUTCDate()
-    var mesV = vigencia.fechaLimite.getUTCMonth()+1
-    var anioV = vigencia.fechaLimite.getUTCFullYear()
+		var diaV = vigencia.fechaLimite.getDate()
+    var mesV = vigencia.fechaLimite.getMonth()+1
+    var anioV = vigencia.fechaLimite.getFullYear()
     if (Number(diaV) < 10) {
     	diaV = "0" + diaV;
     }
@@ -1860,10 +2022,22 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+		
+		//var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
-				var content = fs
+		var content = fs
     	   .readFileSync(produccion+"LISTACOBRANZA.docx", "binary");
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
@@ -1879,26 +2053,48 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		
 
 		var fecha = new Date();
-		var f = fecha;
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+		var dia = fecha.getDate()
+    var mes = fecha.getMonth()+1
+    var anio = fecha.getFullYear()
+    if (Number(dia) < 10) {
+    	dia = "0" + dia;
+    }
+    if (Number(mes) < 10) {
+    	mes = "0" + mes;
+    }
+    fecha = dia+ "-" + mes + "-" + anio;
 	    
-	 _.each(objeto,function(item){
-      item.fechaLimite =moment(item.fechaLimite).format("DD-MM-YYYY")
-     
-	 });
+		_.each(objeto,function(item){
+	      item.fechaLimite =moment(item.fechaLimite).format("DD-MM-YYYY")
+	     
+		});
 		
-			doc.setData({				items: 		objeto,
-										fecha:     fecha,
-									
-
-				  });
+		/*
+objeto.sort(function(a, b){
+		    var keyAF = Number(a.folio),
+		        keyBF = Number(b.folio),
+		        keyANP = Number(a.numeroPago),
+		        keyBNP = Number(b.numeroPago);
+		        
+		    // Compare the 2 dates
+		    if(keyAF < keyBF && keyANP > keyBNP) return -1;
+		    if(keyAF > keyBF && keyANP < keyBNP) return 1;
+		    return 0;
+		});
+		
+		console.log(objeto);
+*/
+		
+		doc.setData({	items: 	objeto,
+									fecha:  fecha,
+		});
 								
 		doc.render();
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"LISTACOBRANZASalida.docx",buf);		
+		fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);		
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"LISTACOBRANZASalida.docx");
+    var bitmap = fs.readFileSync(produccionSalida+"LISTACOBRANZASalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -1906,8 +2102,6 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
   }, 
 	imprimirHistorial: function (objeto,cliente,credito) {
 	
-	
-
 		
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
@@ -1922,6 +2116,7 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
       var produccionSalida = publicPath + "public/generados/";
     }else{						 
       var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
       var produccionSalida = "/home/cremio/archivos/";
     }
 		
@@ -2013,9 +2208,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 	 	 	// }
 	 	 	
 	 		    
- 		   var dia = fecha.getUTCDate()
- 		    var mes = fecha.getUTCMonth()+1
- 		    var anio = fecha.getUTCFullYear()
+ 		   var dia = fecha.getDate()
+ 		    var mes = fecha.getMonth()+1
+ 		    var anio = fecha.getFullYear()
  		    if (Number(dia) < 10) {
  		    	dia = "0" + dia;
  		    }
@@ -2053,7 +2248,20 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		var produccion = "/home/cremio/archivos/";
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+
+		
+		//var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
 				var content = fs
@@ -2072,7 +2280,7 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		
 		var fecha = new Date();
 		var f = fecha;
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 	   
 			doc.setData({				
 
@@ -2081,9 +2289,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		doc.render();
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"FormatuSolSalida.docx",buf);		
+		fs.writeFileSync(produccionSalida+"FormatuSolSalida.docx",buf);		
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"FormatuSolSalida.docx");
+    var bitmap = fs.readFileSync(produccionSalida+"FormatuSolSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -2096,8 +2304,21 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		var JSZip = require('jszip');
 		var ImageModule = require('docxtemplater-image-module');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+		
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		var produccion = "/home/cremio/archivos/";
+		//var produccion = "/home/cremio/archivos/";
 
 			var opts = {}
 			opts.centered = false;
@@ -2156,7 +2377,7 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 										
 		
 		var fecha = new Date();
-	    fecha = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	    fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 		
 		doc.setData({				imagen:    imagen,
 									fecha:     fecha,
@@ -2166,11 +2387,11 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccion+"imagenDocumentoSalida.docx",buf);		
+		fs.writeFileSync(produccionSalida+"imagenDocumentoSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccion+"imagenDocumentoSalida.docx");
+    var bitmap = fs.readFileSync(produccionSalida+"imagenDocumentoSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');

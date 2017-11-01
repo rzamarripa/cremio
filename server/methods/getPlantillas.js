@@ -37,7 +37,7 @@ Meteor.methods({
 		
 		var fecha = new Date();
 		var f = fecha;
-		f = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+		f = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 		
 		doc.setData({	fecha: new Date(), 
 									nombreCompleto: "Nombre de Prueba", 
@@ -105,7 +105,7 @@ Meteor.methods({
 		_.each(pp,function (planPago) {
 				
 				planPago.monto = formatCurrency(Monto);
-				planPago.fecha = planPago.fechaLimite.getUTCDate() +"-"+ (planPago.fechaLimite.getUTCMonth()+1) +"-"+ planPago.fechaLimite.getUTCFullYear();
+				planPago.fecha = planPago.fechaLimite.getDate() +"-"+ (planPago.fechaLimite.getMonth()+1) +"-"+ planPago.fechaLimite.getFullYear();
 				planPago.importe = formatCurrency(planPago.capital + planPago.interes + planPago.seguro + planPago.iva);
 				
 				Monto -= planPago.importe;
@@ -124,7 +124,7 @@ Meteor.methods({
 		
 		var fecha = new Date();
 		var f = fecha;
-		f = fecha.getUTCDate()+'-'+(fecha.getUTCMonth()+1)+'-'+fecha.getUTCFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+		f = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 		
 		//console.log(aval);
 		if (aval == undefined)

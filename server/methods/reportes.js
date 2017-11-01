@@ -22,8 +22,6 @@ Meteor.methods({
 							plan.tipoIngreso = tipoIngreso.nombre;
 							plan.tipoCuenta = cuenta.tipoCuenta;
 							
-								 
-							
 							var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
 	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
 	  																
@@ -162,8 +160,9 @@ Meteor.methods({
 			
 	},
 	getCreditosEntregados:function(fechaInicial, fechaFinal, sucursal_id){
-					
 			
+			
+								
 			var creditosEntregados = Creditos.find({sucursal_id: sucursal_id, fechaEntrega : { $gte : fechaInicial, $lte : fechaFinal}}).fetch();
 			
 			_.each(creditosEntregados, function(credito){

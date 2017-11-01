@@ -1038,16 +1038,16 @@ angular.module("creditoMio")
     var toPrint = [];
     
 
-    _.each(lista,function(item){
-      if (item.imprimir) {
-      item.folioCredito = item.credito.folio
-      item.nombreCompleto = item.cliente.profile.nombreCompleto
-      toPrint.push(item);
-    }
+	  _.each(lista,function(item){
+	      if (item.imprimir) {
+	      item.folioCredito = item.credito.folio
+	      item.nombreCompleto = item.cliente.profile.nombreCompleto
+	      toPrint.push(item);
+	    };
 
     });
 
-    //console.log(lista,"lista")
+    console.log(lista,"lista")
 
     Meteor.call('getListaCobranza', toPrint, function(error, response) {     
        if(error)
