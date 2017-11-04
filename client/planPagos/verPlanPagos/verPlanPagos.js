@@ -94,8 +94,9 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			 return pagos
 		},
 
+
 		planPagosTrue : () => {	 
-			 pagos = PlanPagos.find({pagoSeleccionado:true},{sort : {numeroPago : 1}}).fetch();
+			 pagos = PlanPagos.find({multa:1},{sort : {numeroPago : 1}}).fetch();
 			 return pagos
 		},
 		creditos : () => {
@@ -330,7 +331,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		pago.usuario_id = Meteor.userId()
 		pago.sucursalPago_id = Meteor.user().profile.sucursal_id
 		pago.estatus = true;
-		var pago_id =  Pagos.insert(pago);
+		var pago_id = Pagos.insert(pago);
 		this.pago = {}
 
         _.each(rc.planPagosViejo, function(p){
@@ -343,8 +344,12 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 
 	        	if (p.pagoSeleccionado == true) {
-	        		var idTemp = p._id;
+	        		//plan = PlanPagos.find({credito_id: p.credito_id,estatus:0})
+
+	        		var idTemporal = p._id;
 			        delete p._id;
+
+			       // console.log("el id",plan)
 			        var diaSemana = moment(new Date()).weekday();
 					p.pago_id = pago_id
 					p.cambio =  pago.pagar - pago.totalPago
@@ -358,13 +363,13 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 						if (p.descripcion == "Multa") {
 							console.log("entro aqui a la multa")
 							planPago = PlanPagos.findOne({numeroPago:p.numeroPago,credito_id: p.credito_id})
-							var idTemp = planPago._id;
-	        				delete planPago._id;
-							console.log("el id ",planPago)
+							var idTemp = p._id;
+	        				//delete planPago._id;
+							//console.log("el id ",planPago)
+							//console.log("idTemp ",idTemp)
 							
-						
 
-							PlanPagos.update({_id:idTemp},
+							PlanPagos.update({_id:planPago._id},
 								 { $set : { multa : 1}});
 
 							p.estatus = 1
@@ -376,6 +381,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 							console.log("despues del insert y del update",p,rc.planPagosViejo)
 
 						}else{
+							console.log("entro al else")
 
 							if (p.fechaLimite > p.fechaPago) 
 							{
@@ -395,7 +401,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 							if (isNaN(p.importeRegular)) {
 								p.importeRegular = 0;
 	 						}
-	 						PlanPagos.update({_id:idTemp},{$set:p});
+	 						PlanPagos.update({_id:idTemporal},{$set:p});
 
 
 						}

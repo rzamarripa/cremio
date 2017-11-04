@@ -367,14 +367,8 @@
 								
 
 								<header role="heading"><div class="jarviswidget-ctrls" role="menu">   <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus "></i></a>  <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Delete"><i class="fa fa-times"></i></a></div>
-									<h2>Tabs left </h2>
-									<div class="widget-toolbar hidden-phone" role="menu">
-										<div class="smart-form">
-											<label class="toggle">
-												<input type="checkbox" id="demo-switch-to-pills" name="checkbox-toggle">
-												<i data-swchon-text="TRUE" data-swchoff-text="FALSE"></i>Switch Navs / Pills</label>
-										</div>
-									</div>
+							
+							
 								<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
 				
 								<!-- widget div-->
@@ -409,26 +403,50 @@
 												<div>
 										
 													 <div class="collapse" id="collapseExampleDetalles">
-														<div><h8>Tipo de Credito:&nbsp;&nbsp; <strong> {{credito.nombreTipoCredito.nombre}}</strong></h8></div>
-														<div><h8>Periodo de Pago:&nbsp;&nbsp; <strong> {{credito.periodoPago}}</strong></h8></div>
-														<div><h8>Capital Solicitado: <strong>{{credito.capitalSolicitado}}</strong> <h8/></div>
-														<div><h8>Duración:&nbsp;&nbsp; <strong> {{credito.duracionMeses}}</h8></div>
+
+
+														<div class="table-responsive">
+													
+		
+														<dl class="dl-horizontal">
+														  <dt>Tipo de Credito</dt>
+														  <dd>{{credito.nombreTipoCredito.nombre}}</dd>
+														  <dt>Periodo de Pago</dt>
+														  <dd>{{credito.periodoPago}}</dd>
+														  <dt>Capital Solicitado</dt>
+														  <dd>{{credito.capitalSolicitado}}</dd>
+														  <dt>Duración</dt>
+														  <dd>{{credito.duracionMeses}}</dd>
+														
+
+														</dl>
+														
 													</div>
+										</div>
+									</div>
 
 											
 												<div class="tab-pane" id="tab-r2">
 													
-													<div  class="collapse" id="collapseExampleAvales">
-
-														<div><h8>Nombre:&nbsp;&nbsp; <strong>{{credito.avales[0].nombre}}</h8></strong></div>
-														<div><h8>Estado Civil:&nbsp;&nbsp;<strong> {{credito.avales[0].estadoCivil}}</strong> </h8></div>
-														<div><h8>Capital Solicitado: <strong>{{credito.avales[0].ocupacion}}</strong> <h8/></div>
-														<div><h8>Empresa:&nbsp;&nbsp;<strong>{{credito.avales[0].empresa}}</strong></h8></div>
-														<div><h8>Puesto:&nbsp;&nbsp;<strong>{{credito.avales[0].puesto}}</strong></h8></div>
-														<div><h8>Antiguedad:&nbsp;&nbsp;<strong>{{credito.avales[0].antiguedad}}</strong></h8></div>
-														<div><h8>Dirección:&nbsp;&nbsp;<strong>{{credito.avales[0].direccion}}</strong></h8></div>
-														<div><h8>Parentezco:&nbsp;&nbsp;<strong>{{credito.avales[0].parentezco}}</strong></h8></div>
-														<div><h8>Tiempo de Conocerlo:&nbsp;&nbsp;<strong>{{credito.avales[0].tiempoConocerlo}}</strong></h8></div>
+													<div  class="collapse" id="collapseExampleAvales">										
+														<dl class="dl-horizontal">
+														  <dt>Nombre:</dt>
+														  <dd>{{credito.avales[0].nombre}}</dd>
+														  <dt>Estado Civil:</dt>
+														  <dd>{{credito.avales[0].estadoCivil}}</dd>
+														  <dt>Ocupación:</dt>
+														  <dd>{{credito.avales[0].ocupacion}}</dd>
+														  <dt>Empresa:</dt>
+														  <dd>{{credito.avales[0].empresa}}</dd>
+														  <dt>Antiguedad:</dt>
+														  <dd>{{credito.avales[0].antiguedad}}</dd>
+														  <dt>Dirección:</dt>
+														  <dd>{{credito.avales[0].direccion}}</dd>
+														  <dt>Parentezco:</dt>
+														  <dd>{{credito.avales[0].parentezco}}</dd>
+														  <dt>Tiempo de Conocerlo:</dt>
+														  <dd>{{credito.avales[0].tiempoConocerlo}}</dd>
+														</dl>
 
 													 </div>
 												</div>
@@ -436,14 +454,34 @@
 
 													 <div  class="collapse" id="collapseExampleGarantias">
 
-														<div><h8>Tipo:&nbsp;&nbsp; <strong>{{credito.garantias[0].tipo}}</strong></h8></div>
-														<div><h8>Marca:&nbsp;&nbsp; <strong>{{credito.garantias[0].marca}}</strong> </h8></div>
-														<div><h8>Capital Solicitado: <strong>{{credito.garantias[0].modelo}}</strong></strong> <h8/></div>
-														<div><h8>Empresa:&nbsp;&nbsp;<strong>{{credito.garantias[0].num}}</strong></h8></div>
 														
-														<div><h8>Antiguedad:&nbsp;&nbsp;<strong>{{credito.garantias[0].serie}}</strong></h8></div>
+										
+														
 														<div><h8>Dirección:&nbsp;&nbsp;<strong>{{credito.garantias[0].color}}</strong></h8></div>
 														<div><h8>Parentezco:&nbsp;&nbsp;<strong>{{credito.garantias[0].estadoActual}}</strong></h8></div>
+
+
+
+														<dl class="dl-horizontal">
+														  <dt>Tipo</dt>
+														  <dd>{{credito.garantias[0].tipo}}</dd>
+														  <dt>Marca</dt>
+														  <dd>{{credito.garantias[0].marca}}</dd>
+														  <dt>Modelo</dt>
+														  <dd>{{credito.garantias[0].modelo}}</dd>
+														  <dt>Duración</dt>
+														  <dd>{{credito.garantias[0].duracionMeses}}</dd>
+														  <dt>Num</dt>
+														  <dd>{{credito.garantias[0].num}}</dd>
+														  <dt>serie</dt>
+														  <dd>{{credito.garantias[0].serie}}</dd>
+														  <dt>Color</dt>
+														  <dd>{{credito.garantias[0].color}}</dd>
+														   <dt>Estado actual</dt>
+														  <dd>{{credito.garantias[0].estadoActual}}</dd>
+														
+
+														</dl>
 
 									 				</div>
 
