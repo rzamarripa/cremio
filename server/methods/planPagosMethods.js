@@ -608,7 +608,7 @@ Meteor.methods({
 		});
 
 	},
-	pagoParcialCredito:function(pagos, abono, totalPago, tipoIngresoId, pusuario_id, ocultaMulta, subtotal, cargosMoratorios, total, fechaProximoPago){
+	pagoParcialCredito:function(pagos, abono, totalPago, tipoIngresoId, pusuario_id, ocultaMulta, subtotal, cargosMoratorios, total, fechaProximoPago, fechaDeposito){
 		
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
@@ -648,8 +648,8 @@ Meteor.methods({
 		pago.semanaPago = ffecha.isoWeek();
 		pago.mesPago = ahora.getMonth();
 		pago.estatus = 1;
-		
-		
+		pago.fechaDeposito = fechaDeposito;
+				
 		
 		pago.saldoAnterior = Number(parseFloat(total).toFixed(2));
 		pago.saldoActual	 = Number(parseFloat(total - totalPago).toFixed(2));
@@ -908,20 +908,21 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 				
 				credit = Creditos.findOne(pago.credito_id);
 
-				var npp = { pago_id		 	: pago_id,
-										totalPago	 	: ttpago,
-										estatus		 	: p.estatus,
-										fechaPago  	: pago.fechaPago, 
-										numeroPago 	: p.numeroPago,
-										numeroPagos	: credit.numeroPagos,
-										movimiento	: p.movimiento,
-										cargo				: p.importe,
-										planPago_id	: p._id,
-										pagoCapital : abonos.pagoCapital, 
-										pagoInteres	: abonos.pagoInteres,
-										pagoIva 		: abonos.pagoIva, 
-										pagoSeguro 	: abonos.pagoSeguro, 
-										usuario_id	: pusuario_id};
+				var npp = { pago_id		 		: pago_id,
+										totalPago	 		: ttpago,
+										estatus		 		: p.estatus,
+										fechaPago  		: pago.fechaPago, 
+										fechaDeposito : fechaDeposito,
+										numeroPago 		: p.numeroPago,
+										numeroPagos		: credit.numeroPagos,
+										movimiento		: p.movimiento,
+										cargo					: p.importe,
+										planPago_id		: p._id,
+										pagoCapital 	: abonos.pagoCapital, 
+										pagoInteres		: abonos.pagoInteres,
+										pagoIva 			: abonos.pagoIva, 
+										pagoSeguro 		: abonos.pagoSeguro, 
+										usuario_id		: pusuario_id};
 
 				p.pagos.push(npp);
 				
@@ -931,6 +932,7 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 										 estatus			: p.estatus, 
 										 descripcion	: p.descripcion,
 										 fechaPago		: pago.fechaPago, 
+										 fechaDeposito: fechaDeposito,
 										 numeroPago 	: p.numeroPago,
 										 numeroPagos	: credit.numeroPagos,
 										 folioCredito	: credit.folio,
@@ -954,6 +956,8 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 		
 		//Actualizar el Credito SaldoActual
 		
+		idCreditos = _.uniq(idCreditos);
+		
 		//console.log("idCreditos:",idCreditos);
 		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus del credito
 		_.each(idCreditos,function(c){
@@ -963,6 +967,7 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 				var ban = true;
 				var banR = true;
 				var banCM = true;
+				var numeroCargosMoratorios = 0;
 				_.each(pp,function(p){
 						if (p.importeRegular > 0)
 								ban = false;							
@@ -971,14 +976,66 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 								banR = false;							
 						
 						if (p.importeRegular > 0 && p.descripcion == "Cargo Moratorio")
-								banCM = false;										
+								banCM = false;
+								
+						if (p.descripcion == "Cargo Moratorio")
+								numeroCargosMoratorios += 1;
+
 				});			
 				
 				
 				if (ban)
 				{
 						var fecha = new Date();
-						Creditos.update({_id : c},{$set : {estatus : 5 , fechaLiquidacion : fecha, saldoActual: 0, saldoMultas: 0}})
+						Creditos.update({_id : c},{$set : {estatus : 5 , fechaLiquidacion : fecha, saldoActual: 0, saldoMultas: 0}});
+						
+						if (numeroCargosMoratorios == 0)
+						{
+							 Parametrizacion.insert({cliente_id 			: pusuario_id,
+								 											 credito_id 			: c,
+								 											 fechaLiquidacion	: new Date(),
+								 											 mensaje					: "TIENE UN INCREMENTO DE 500 A 1500 PESOS",
+								 											 estatus					: 1
+							 												})
+						}
+						else if (numeroCargosMoratorios >= 1 && numeroCargosMoratorios <= 2 )
+						{
+							 Parametrizacion.insert({cliente_id 			: pusuario_id,
+								 											 credito_id 			: c,
+								 											 fechaLiquidacion	: new Date(),
+								 											 mensaje					: "TIENE UN INCREMENTO DE 500 HASTA DE 1000 PESOS",
+								 											 estatus					: 1
+							 												})
+						}
+						else if (numeroCargosMoratorios == 3)
+						{
+							 Parametrizacion.insert({cliente_id 			: pusuario_id,
+								 											 credito_id 			: c,
+								 											 fechaLiquidacion	: new Date(),
+								 											 mensaje					: "TIENE UN INCREMENTO DE 500 PESOS",
+								 											 estatus					: 1
+							 												})
+						}
+						else if (numeroCargosMoratorios >= 4 && numeroCargosMoratorios <= 5 )
+						{ 
+							 Parametrizacion.insert({cliente_id 			: pusuario_id,
+								 											 credito_id 			: c,
+								 											 fechaLiquidacion	: new Date(),
+								 											 mensaje					: "PERMANECE LA MISMA LINEA DE CRÉDITO",
+								 											 estatus					: 1
+							 												})
+						}
+						else if (numeroCargosMoratorios > 6)
+						{
+							 Parametrizacion.insert({cliente_id 			: pusuario_id,
+								 											 credito_id 			: c,
+								 											 fechaLiquidacion	: new Date(),
+								 											 mensaje					: "SE LE REDUCE LA LINEA DE CREDITO EN UN 10%",
+								 											 estatus					: 1
+							 												})
+						}
+							
+						
 				}
 				if (banR)
 				{
@@ -1022,4 +1079,4 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 	},
 	
 	
-});
+}); 

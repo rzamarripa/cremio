@@ -27,13 +27,15 @@
 										<h5>{{cd.objeto.profile.numeroCliente}}</h5>
 										</h1>				
 							</div>
-								
-										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px;">
-		 									<i class="fa fa-pencil" ></i> Modificar
-	 								  </a>&nbsp;
-	 								  <small><a ng-click="cd.generarFicha(cd.objeto,cd.objeto._id)" class="btn btn-primary"><i class="fa fa-download" ></i> Ficha</a></small>
+							<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px;">
+									<i class="fa fa-pencil" ></i> Modificar
+							</a>&nbsp;
+							<small><a ng-click="cd.generarFicha(cd.objeto,cd.objeto._id)" class="btn btn-primary"><i class="fa fa-download" ></i> Ficha</a></small>
 							
 							</div>
+							<div class="col-sm-6">
+								<span style="font-size: small"> {{cd.parametrizacion.mensaje}}</span>
+							</div>	
 							<div class="col-sm-12">				
 
 								<div class="widget-body">

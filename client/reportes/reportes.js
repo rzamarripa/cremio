@@ -28,6 +28,7 @@ angular.module("creditoMio")
   var FI, FF;
   rc.cliente = {};
   rc.credito = {};
+  
   rc.historialCrediticio = {};
   rc.reportesPago = {};
   rc.cobranza = {};
@@ -53,9 +54,12 @@ angular.module("creditoMio")
   this.diarioCreditos = false
   this.caja = { _id: 0 };
   this.pagos_id = [];
+  
+  rc.arregloTiposIngresos = [];
+  rc.arregloTiposIngresosobjetos = [];
+  rc.arregloCarteraVencida = [];
 
-  //console.log($stateParams)
- 
+
   this.subscribe("tiposCredito", ()=>{
 		return [{}]
 	});
@@ -115,7 +119,7 @@ angular.module("creditoMio")
 		var usuario = Meteor.user();
 				
 	  rc.fechaInicial.setHours(0,0,0,0);
-		rc.fechaFinal.setHours(23,0,0,0);
+		rc.fechaFinal.setHours(23,59,59,999);
 		
 		rc.sumaCapital = 0;
     rc.sumaInteres = 0;
@@ -125,12 +129,14 @@ angular.module("creditoMio")
     rc.totalCobranza = 0;
     
     rc.planPagos = [];
+    rc.arregloTiposIngresos = [];
+    rc.arregloTiposIngresosobjetos = [];
 		
 		loading(true);		
 		Meteor.call("getCobranzaDiaria", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id, function(error, result){
 				if  (result)
 				{
-						rc.planPagos = result;
+						rc.planPagos = result;						
 						
 						_.each(rc.planPagos, function(plan){
 							//console.log(plan);
@@ -147,15 +153,26 @@ angular.module("creditoMio")
 								
 								rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
 								
+							
+								if (rc.arregloTiposIngresos[plan.tipoIngreso] == undefined)
+										rc.arregloTiposIngresos[plan.tipoIngreso] = Number(parseFloat(plan.totalPago).toFixed(2));
+								else
+									rc.arregloTiposIngresos[plan.tipoIngreso] += Number(parseFloat(plan.totalPago).toFixed(2));
+								
 							//}
 								
 						});
 						//rc.totalCobranza += Number(parseFloat(rc.sumaInteres + rc.sumaSeguro + rc.sumaIva + rc.sumaCapital).toFixed(2));
+										
+						for (var key in rc.arregloTiposIngresos) {
+						  rc.arregloTiposIngresosobjetos.push({tipoPago: key, total: rc.arregloTiposIngresos[key]})
+						}
+						
 						loading(false);
 						$scope.$apply();
 				}
 		});
-		
+			
 	};
 
 	this.diarioBancos = function(){
@@ -163,7 +180,7 @@ angular.module("creditoMio")
 			var usuario = Meteor.user();
 					
 	    rc.fechaInicial.setHours(0,0,0,0);
-			rc.fechaFinal.setHours(23,0,0,0);
+			rc.fechaFinal.setHours(23,59,59,999);
 			
 			rc.sumaCapital = 0;
 	    rc.sumaInteres = 0;
@@ -212,7 +229,7 @@ angular.module("creditoMio")
 			var usuario = Meteor.user();
 					
 	    rc.fechaInicial.setHours(0,0,0,0);
-			rc.fechaFinal.setHours(23,0,0,0);
+			rc.fechaFinal.setHours(23,59,59,999);
 			
 			rc.sumaCapital = 0;
 	    rc.sumaInteres = 0;
@@ -259,7 +276,7 @@ angular.module("creditoMio")
 		var usuario = Meteor.user();
 				
 	  rc.fechaInicial.setHours(0,0,0,0);
-		rc.fechaFinal.setHours(23,0,0,0);
+		rc.fechaFinal.setHours(23,59,59,999);
 		
 		rc.totalSolicitado = 0;
     rc.totalPagar = 0;
@@ -296,7 +313,7 @@ angular.module("creditoMio")
 		var usuario = Meteor.user();
 				
 	  rc.fechaInicial.setHours(0,0,0,0);
-		rc.fechaFinal.setHours(23,0,0,0);
+		rc.fechaFinal.setHours(23,59,59,999);
 		
 		rc.totalSolicitado = 0;
     rc.totalPagar = 0;
@@ -326,6 +343,23 @@ angular.module("creditoMio")
 				}
 		});
 		
+	};
+	
+	this.carteraVencida = function(){
+
+		var usuario = Meteor.user();
+	  rc.arregloCarteraVencida = [];
+		
+		loading(true);		
+		Meteor.call("getCarteraVencida", usuario.profile.sucursal_id, function(error, result){
+				if  (result)
+				{
+						rc.arregloCarteraVencida = result;						
+						loading(false);
+						$scope.$apply();
+				}
+		});
+			
 	};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
@@ -668,7 +702,7 @@ this.guardarNotaCobranza=function(nota){
 	 	});
 
 
-		   Meteor.call('ReporteCobranza', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
+		   Meteor.call('ReporteCobranza', objeto,rc.fechaInicial,rc.fechaFinal, rc.arregloTiposIngresosobjetos ,function(error, response) {
 
 
 		   if(error)
@@ -953,4 +987,57 @@ this.guardarNotaCobranza=function(nota){
 		   }
 		});
 	};
+	this.imprimirReporteCarteraVencida = function(objeto){
+		//console.log(objeto)
+		
+
+		   Meteor.call('ReporteCarteraVencida', rc.arregloCarteraVencida ,function(error, response) {
+
+
+		   if(error)
+		   {
+		    console.log('ERROR :', error);
+		    return;
+		   }
+		   else
+		   {
+			 				function b64toBlob(b64Data, contentType, sliceSize) {
+								  contentType = contentType || '';
+								  sliceSize = sliceSize || 512;
+								
+								  var byteCharacters = atob(b64Data);
+								  var byteArrays = [];
+								
+								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+								    var slice = byteCharacters.slice(offset, offset + sliceSize);
+								
+								    var byteNumbers = new Array(slice.length);
+								    for (var i = 0; i < slice.length; i++) {
+								      byteNumbers[i] = slice.charCodeAt(i);
+								    }
+								
+								    var byteArray = new Uint8Array(byteNumbers);
+								
+								    byteArrays.push(byteArray);
+								  }
+								    
+								  var blob = new Blob(byteArrays, {type: contentType});
+								  return blob;
+							}
+							
+							var blob = b64toBlob(response, "application/docx");
+						  var url = window.URL.createObjectURL(blob);
+						  
+						  //console.log(url);
+						  var dlnk = document.getElementById('dwnldLnk');
+
+					    dlnk.download = "reporteDiarioCobranza.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+  
+		   }
+		});
+		
+	}
 };

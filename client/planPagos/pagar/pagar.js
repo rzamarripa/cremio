@@ -61,6 +61,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
   this.subscribe('pagos', () => {
     return [{ estatus: 1 }];
   });
+/*
   this.subscribe('ocupaciones', () => {
     return [{ estatus: true }];
   });
@@ -79,14 +80,17 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
   this.subscribe('empresas', () => {
     return [{ estatus: true }];
   });
+*/
 
   this.subscribe('personas', () => {
     return [{}];
   });
   this.subscribe('tiposIngreso', () => {
-    return [{
-      estatus: true
-    }]
+    return [{estatus: true}]
+  });
+  
+  this.subscribe('cuentas', () => {
+    return [{}]
   });
   
   this.subscribe('cajas', () => {
@@ -304,16 +308,25 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 			return arreglo;
 		},
     tiposIngreso: () => {
-      return TiposIngreso.find()
-    },
-    /*
-planPagos: () => {
-      return PlanPagos.find({
-        cliente_id: $stateParams.objeto_id,
-        credito_id: { $in: this.getCollectionReactively("creditos_id") },
-      }, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } });
-    },
-*/
+	    
+	    var ti = TiposIngreso.find().fetch();
+	    
+	    if (ti != undefined)
+	    {
+		  		var fondos = Cuentas.find({}).fetch();
+					//console.log("Fonfo:",fondos);  	
+					if (fondos != undefined)
+					{
+							_.each(ti, function(tipo){
+									
+									var fondo = Cuentas.findOne({tipoIngreso_id: tipo._id});
+									if (fondo != undefined)
+											tipo.tipoCuenta = fondo.tipoCuenta;
+							});	
+					}
+					return ti;
+	    }
+    },	
     tiposCredito: () => {
       return TiposCredito.find();
     },
@@ -565,8 +578,7 @@ planPagos: () => {
 		  	toastr.warning("Ingrese la cantidad a cobrar correctamente");
 		  	return;
 	  }
-	  console.log(pago.pagar);
-	  console.log(pago.totalPago);
+	  
 	  if (pago.pagar < pago.totalPago)
 	  {
 		  	toastr.warning("No alcanza a pagar con el total ingresado");
@@ -698,7 +710,8 @@ planPagos: () => {
 		    																	rc.subtotal,  
 		    																	rc.cargosMoratorios, 
 		    																	rc.total, 
-		    																	fechaProximoPago, function(error, success) {
+		    																	fechaProximoPago,
+		    																	pago.fechaDeposito, function(error, success) {
 		      if (!success) {
 			      
 		        toastr.error('Error al guardar.', success);
@@ -712,11 +725,10 @@ planPagos: () => {
 		      rc.ocultarMultas = false;
 		      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
 		      window.open(url, '_blank');
+		      
+		      rc.tipoIngresoSeleccionado = {};
 
 		    });
-		    
-		   
-
 
 		  
 	  }
@@ -839,12 +851,13 @@ if(pago.descripcion=="Cargo Moratorio")
 	    																	rc.subtotal,  
 	    																	rc.cargosMoratorios, 
 	    																	rc.total, 
-	    																	fechaProximoPago,function(error, success) {
+	    																	fechaProximoPago, 
+	    																	undefined, function(error, success) {
 	      if (!success) {
 	        toastr.error('Error al guardar.');
 	        return;
 	      }
-	      console.log("Entro a actualizar ");
+	      //console.log("Entro a actualizar ");
 	      //Actualizar Creditos
 	      
 	      //var tempId = rc.creditoRefinanciar._id;
@@ -886,8 +899,8 @@ if(pago.descripcion=="Cargo Moratorio")
 	{
 
 			var ti = TiposIngreso.findOne(tipoIngreso);
-					//console.log(nc);
-			
+			rc.tipoIngresoSeleccionado = Cuentas.findOne({tipoIngreso_id: tipoIngreso});
+
 			if (ti.nombre == "Nota de Credito")
 			{
 					var p = document.getElementById('cobro');

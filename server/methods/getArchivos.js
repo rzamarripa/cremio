@@ -144,7 +144,7 @@ Meteor.methods({
   },
 
 
- ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////5
 
   getcartaCertificado: function (objeto,objeto_id) {
 	//console.log(objeto,"certificacionPatrimonial")
@@ -702,7 +702,7 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
     return new Buffer(bitmap).toString('base64');
 		
   },
-  ReporteCobranza: function (objeto,inicial,final,) {
+  ReporteCobranza: function (objeto,inicial,final,tiposIngreso) {
 	
 		//console.log(objeto,"creditos ")
 		var fs = require('fs');
@@ -831,21 +831,25 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
  		    sumaSeguro = formatCurrency(sumaSeguro)
  		    parseFloat(totalcobranza.toFixed(2))
  		    totalcobranza = formatCurrency(totalcobranza)
+ 				
+ 				//Tipos de Ingreso
+ 				_.each(tiposIngreso, function(ti){
+	 				ti.total = formatCurrency(ti.total)
+ 				});
+		
+	      doc.setData({				
+    	            items: 		      objeto,
+									fecha:          fecha,
+									inicial:        fechaInicial,
+									final:          fechaFinal,
+									sumaCapital:    suma,
+									sumaIntereses:  sumaInter,
+									sumaIva:        sumaIva,
+									totalSeguro:    sumaSeguro,
+									totalCobranza:  totalcobranza,
+									tiposIngreso	:	tiposIngreso
 	
- 				//console.log(objeto.planPagos);
-		
-		      doc.setData({				
-      	            items: 		      objeto,
-										fecha:          fecha,
-										inicial:        fechaInicial,
-										final:          fechaFinal,
-										sumaCapital:    suma,
-										sumaIntereses:  sumaInter,
-										sumaIva:        sumaIva,
-										totalSeguro:    sumaSeguro,
-										totalCobranza:  totalcobranza,
-		
-				  });
+			  });
 								
 		doc.render();
  
@@ -856,6 +860,139 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 		//Pasar a base64
 		// read binary data
     var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+  },
+  ReporteCarteraVencida: function (objeto) {
+	
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+						 
+		var content = fs
+    	   .readFileSync(produccion+"ReporteCarteraVencida.docx", "binary");
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			return "";
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		const formatCurrency = require('format-currency')
+
+
+		var fecha = new Date();
+		var hora = moment(fecha).format("hh:mm:ss a");
+   
+		var numeroClientes	= 0;
+		var sumaTotal	= 0;
+		var sumaSaldo = 0;
+		var sumaCargosMoratorios = 0;
+		var sumaPorVencer = 0;
+		var sumaTotalVencido = 0;
+		var suma7Dias = 0;
+		var suma14Dias = 0;
+		var suma21Dias = 0;
+		var suma28Dias = 0;
+		var sumaMas28Dias = 0;
+		
+		
+	  _.each(objeto,function(cliente){
+		  	
+		
+				numeroClientes 				+= 1;
+		  	sumaTotal 						+= Number(parseFloat(cliente.total).toFixed(2));
+				sumaSaldo 						+= Number(parseFloat(cliente.saldo).toFixed(2));
+	  		sumaCargosMoratorios 	+= Number(parseFloat(cliente.saldoCargosMoratorios).toFixed(2));
+	  		sumaPorVencer 				+= Number(parseFloat(cliente.porVencer).toFixed(2));
+	  		sumaTotalVencido 			+= Number(parseFloat(cliente.totalVencido).toFixed(2));
+	  		suma7Dias 						+= Number(parseFloat(cliente.sieteDias).toFixed(2));	  		
+				suma14Dias 						+= Number(parseFloat(cliente.siete14Dias).toFixed(2));
+				suma21Dias 						+= Number(parseFloat(cliente.catorce21Dias).toFixed(2));
+				suma28Dias 						+= Number(parseFloat(cliente.ventiuno28Dias).toFixed(2));
+				sumaMas28Dias 				+= Number(parseFloat(cliente.mas28Dias).toFixed(2));
+
+	  		cliente.total = formatCurrency(cliente.total);
+	  		cliente.saldo = formatCurrency(cliente.saldo);
+	  		cliente.saldoCargosMoratorios = formatCurrency(cliente.saldoCargosMoratorios);
+	  		cliente.porVencer = formatCurrency(cliente.porVencer);
+	  		cliente.totalVencido = formatCurrency(cliente.totalVencido);
+	  		cliente.sieteDias = formatCurrency(cliente.sieteDias);	  		
+				cliente.siete14Dias = formatCurrency(cliente.siete14Dias);
+				cliente.catorce21Dias = formatCurrency(cliente.catorce21Dias);
+				cliente.ventiuno28Dias = formatCurrency(cliente.ventiuno28Dias);
+				cliente.mas28Dias = formatCurrency(cliente.mas28Dias);
+	  	
+	  });
+	   
+		sumaTotal 						= formatCurrency(sumaTotal);
+		sumaSaldo 						= formatCurrency(sumaSaldo);
+		sumaCargosMoratorios 	= formatCurrency(sumaCargosMoratorios);
+		sumaPorVencer 				= formatCurrency(sumaPorVencer);
+		sumaTotalVencido 			= formatCurrency(sumaTotalVencido);
+		suma7Dias 						= formatCurrency(suma7Dias);	  		
+		suma14Dias 						= formatCurrency(suma14Dias);
+		suma21Dias 						= formatCurrency(suma21Dias);
+		suma28Dias 						= formatCurrency(suma28Dias);
+		sumaMas28Dias 				= formatCurrency(sumaMas28Dias);
+
+
+    var dia = fecha.getDate()
+    var mes = fecha.getMonth()+1
+    var anio = fecha.getFullYear()
+    if (Number(dia) < 10) {
+    	dia = "0" + dia;
+    }
+    if (Number(mes) < 10) {
+    	mes = "0" + mes;
+    }
+    fecha = dia+ "-" + mes + "-" + anio;
+		
+	  doc.setData({				
+	            items									:	objeto,
+							fecha									: fecha,
+							hora									:	hora,
+							sumaTotal							: sumaTotal,
+							sumaSaldo							: sumaSaldo,
+							sumaCargosMoratorios 	: sumaCargosMoratorios,
+							sumaPorVencer					: sumaPorVencer,
+							sumaTotalVencido			: sumaTotalVencido,
+							suma7Dias							: suma7Dias,
+							suma14Dias						: suma14Dias,
+							suma21Dias						: suma21Dias,
+							suma28Dias						: suma28Dias,
+							sumaMas28Dias					: sumaMas28Dias,
+							numeroClientes				: numeroClientes
+	  });
+					
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+		fs.writeFileSync(produccionSalida+"ReporteCarteraVencidaSalida.docx",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccionSalida+"ReporteCarteraVencidaSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -1244,7 +1381,9 @@ unoconv.convert(rutaOutput, 'pdf', function(err, result) {
 	        sumaSeguro += item.pagoSeguro;
 	        totalcobranza += parseFloat(item.totalPago);
 	        
-	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
+	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY");
+	    	item.fechaDeposito = moment(item.fechaDeposito).format("DD-MM-YYYY");
+	    	
 	    	item.totalPago = parseFloat(item.totalPago.toFixed(2))
 	    	item.totalPago = formatCurrency(item.totalPago)
 	    	item.pagoInteres = parseFloat(item.pagoInteres.toFixed(2))
@@ -2374,7 +2513,7 @@ objeto.sort(function(a, b){
 					fs.writeFileSync(produccion+".jpg", bitmap);
 					imagen = produccion+".jpg";
 					}
-										
+								
 		
 		var fecha = new Date();
 	    fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
@@ -2397,8 +2536,7 @@ objeto.sort(function(a, b){
     return new Buffer(bitmap).toString('base64');
 		
   },
-  
-  
+    
   report: function(params) {
     var Docxtemplater = require('docxtemplater');
     var JSZip = require('jszip');

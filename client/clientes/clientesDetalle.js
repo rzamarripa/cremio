@@ -47,12 +47,17 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	rc.estatusCaja = "";
 	
+	rc.parametrizacion = {};
+	
 	this.subscribe('cajas',()=>{
 		return [{}];
 	});
 	
 	this.subscribe('cliente', () => {
 		return [{_id : $stateParams.objeto_id}];
+	});
+	this.subscribe('parametrizacion', () => {
+		return [{cliente_id : $stateParams.objeto_id}];
 	});
 	this.subscribe('creditos', () => {
 		return [{cliente_id : $stateParams.objeto_id}];
@@ -174,7 +179,16 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 			return creditos;
 		},
-
+		
+		parametrizacion : () => {
+			rc.parametrizacion = Parametrizacion.findOne({});
+			if (rc.parametrizacion)
+			{
+				return rc.parametrizacion;
+			}	
+		},
+		
+		
 		creditosAprobados : () =>{
 			var creditos = Creditos.find({estatus:2}, {sort:{fechaSolicito:1}}).fetch();			
 			if(creditos != undefined){

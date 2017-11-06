@@ -27,13 +27,13 @@
 </div>
 <div class="well">
 	<div class="row">
-		<div class="col-sm-3">
+		<div class="col-sm-2">
 			<div class="form-group">
 				<label for="fecha">Fecha Inicial:</label>
 				<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaInicial"/>
 			</div>
 		</div>
-		<div class="col-sm-3">
+		<div class="col-sm-2">
 			<div class="form-group">
 				<label for="fecha">Fecha Final:</label>
 				<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaFinal"/>
@@ -44,11 +44,22 @@
 			<input type="button" class="btn btn-primary" ng-click="re.diarioCobranza()" value="Buscar" />
 			<input type="button" class="btn btn-primary" ng-click="re.imprimirReporteCobranza(re.planPagos)" value="Imprimir" />
 		</div>	
+		<div class="col-sm-4">
+			<table class="table">
+				<tbody>
+					<tr ng-repeat = "tipo in re.arregloTiposIngresosobjetos">
+						<td style="font-size: x-small">{{tipo.tipoPago}}</td>
+						<td style="font-size: x-small; text-align: right">{{tipo.total | currency}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>	
 	</div>
 </div>
-<div class="row">
-	<div class="col-sm-12" >
-		<table class="table table-bordered">
+<div class="well">
+	<div class="row">
+		<div class="col-sm-12" >
+			<table class="table table-bordered">
 			<thead>
 				<tr>
 				  <th style="text-align: center; width: 3%"><div class="text-center">No.</div></th>
@@ -86,5 +97,6 @@
 		    </tr>
 			</tbody>
 		</table>
+		</div>
 	</div>
 </div>

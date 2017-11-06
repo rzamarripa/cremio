@@ -3,65 +3,57 @@
 	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 		<h1 class="alge-title txt-color-blueDark">
 			<i class="fa fa-list fa-fw "></i>
-				Reportes
+				Reporte de Cartera Vencida
 		</h1>
 	</div>
-
 </div>
-<br>
 
 <div class="well">
 	<div class="row">
-		<div class="col-sm-3">
-			<form class="form-inline">
-				<div class="form-group">
-					<label for="fecha">Fecha Inicial:</label>
-					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaInicial"/>
-				</div>
-			</form>
-		</div>
-		<div class="col-sm-3 pull-left">
-			<form class="form-inline">
-				<div class="form-group">
-					<label for="fecha">Fecha Final:</label>
-					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaFinal"/>
-				</div>
-			</form>
-		</div>
+		<div class="col-sm-3" style="padding: 0px 85px 0px 0px">
+			<input type="button" class="btn btn-primary" ng-click="re.carteraVencida()" value="Buscar" />
+			<input type="button" class="btn btn-primary" ng-click="re.imprimirReporteCarteraVencida(re.carteraVencida)" value="Imprimir" />
+		</div>	
 	</div>	
-	<br />
 </div>
 
-
-<div class="col-sm-12" >
-	<H5>Cartera Vencida</H5>
-	<div>
-		<a href="" class="btn btn-primary pull-right" ng-click="re.imprimirReporteMovimiento(re.planPagos)" >Imprimir Tabla</a>
-		</div>
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-				    <th width="5%"><div class="text-center">No.</div></th>
-					<th><div class="text-center">Pagare</div></th>
-					<th><div class="text-center">Fecha</div></th>
-					<th><div class="text-center">Recibo</div></th>
-					<th><div class="text-center">Nombre</div></th>
-					<th><div class="text-center">Garantia</div></th>
-					<th><div class="text-center">Saldo Multas</div></th>
-				
-				</tr>
-			</thead>
-			<tbody>
-		    <tr ng-repeat="objeto in re.planPagos | filter:buscar">
-		    	<td>{{$index + 1}}</td>
-		    	<td>{{objeto.folio}}</td>
-			    <td>{{objeto.ultimaModificacion  | date:"dd-MM-yyyy"}}</td>
-			    <td>{{objeto.numeroPago || objeto.numeroPagoMulta}} - {{objeto.credito.numeroPagos}}</td>
-			    <td>{{objeto.nombreCompleto}}</td>
-			    <td>{{objeto.garantias}}</td>
-			    <td>{{objeto.credito.saldoMultas}}</td> 
-			
-		    </tr>
-			</tbody>
-		</table>
-	</div>
+<div class="well">
+	<div class="row">
+		<div class="col-sm-12" >
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+						  <th width="6%"><div class="text-center">No.</div></th>
+							<th width="15%" style="text-align: center">Nombre</th>
+							<th style="text-align: center">Total</th>
+							<th style="text-align: center">Saldo</th>
+							<th style="text-align: center">Saldo C.M.</th>
+							<th style="text-align: center">Por vencer</th>
+							<th style="text-align: center">Total vencido</th>
+							<th style="text-align: center">7 dias</th>
+							<th style="text-align: center">7 - 14 dias</th>
+							<th style="text-align: center">14 - 21 dias</th>
+							<th style="text-align: center">21 - 28 dias</th>
+							<th style="text-align: center">+28 dias</th>
+						</tr>
+					</thead>
+					<tbody>
+				    <tr ng-repeat="objeto in re.arregloCarteraVencida">
+				    	<td style="font-size: x-small">{{objeto.numeroCliente}}</td>
+				    	<td style="font-size: x-small">{{objeto.nombre}}</td>
+					    <td style="text-align: right">{{objeto.total | currency}}</td>
+					    <td style="text-align: right">{{objeto.saldo | currency}}</td>
+					    <td style="text-align: right">{{objeto.saldoCargosMoratorios | currency}}</td>
+					    <td style="text-align: right">{{objeto.porVencer | currency}}</td>
+					    <td style="text-align: right">{{objeto.totalVencido | currency}}</td> 
+					    <td style="text-align: right">{{objeto.sieteDias | currency}}</td>
+					    <td style="text-align: right">{{objeto.siete14Dias | currency}}</td>
+					    <td style="text-align: right">{{objeto.catorce21Dias | currency}}</td>
+					    <td style="text-align: right">{{objeto.ventiuno28Dias | currency}}</td>
+					    <td style="text-align: right">{{objeto.mas28Dias | currency}}</td>
+				    </tr>
+					</tbody>
+				</table>
+			</div>
+	</div>		
+</div>		
