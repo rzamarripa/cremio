@@ -23,7 +23,10 @@ Meteor.methods({
 							plan.tipoCuenta = cuenta.tipoCuenta;
 							
 							var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
-	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
+	  																{fields: {"profile.nombreCompleto": 1,
+		  																				"profile.nombre": 1,
+		  																				"profile.apellidoPaterno": 1,
+		  																				"profile.numeroCliente": 1 }});
 	  																
 	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
 	  																{fields: {"profile.nombre": 1}});											
@@ -32,7 +35,7 @@ Meteor.methods({
 	  					plan.cajero = cajero.profile.nombre;
 	  									
 							plan.numeroCliente = user.profile.numeroCliente;	
-							plan.nombreCompleto = user.profile.nombreCompleto;
+							plan.nombreCompleto = user.profile.nombre  + ' ' + user.profile.apellidoPaterno;
 							
 							cobranza.push(plan);
 /*
@@ -255,140 +258,144 @@ Meteor.methods({
 					var ventiuno28Dias		= 0;
 					var mas28Dias					= 0;
 					
+					if (creditos.length > 0)
+					{
 					
-					var saldoCargosMoratorios = 0;
-					_.each(creditos, function(credito){
-																				
-							total += Number(parseFloat(credito.adeudoInicial).toFixed(2));
-							saldo += Number(parseFloat(credito.saldoActual).toFixed(2));
-							saldoCargosMoratorios += Number(parseFloat(credito.saldoMultas).toFixed(2));							
-							
-							porVencer 				= 0;
-							totalVencido 			= 0;
-							sieteDias					= 0;
-							siete14Dias				= 0;
-							catorce21Dias			= 0;
-							ventiuno28Dias		= 0;
-							mas28Dias					= 0;
-							
-							
-							//por Vencer
-							var planPagos = PlanPagos.find({credito_id: credito._id, fechaLimite: {$gte: fechaFinal}, descripcion: "Recibo" , estatus: { $ne: 1 }}).fetch();
-							_.each(planPagos, function(planPago){
-									porVencer += Number(parseFloat(planPago.importeRegular).toFixed(2));							
+							var saldoCargosMoratorios = 0;
+							_.each(creditos, function(credito){
+																						
+									total += Number(parseFloat(credito.adeudoInicial).toFixed(2));
+									saldo += Number(parseFloat(credito.saldoActual).toFixed(2));
+									saldoCargosMoratorios += Number(parseFloat(credito.saldoMultas).toFixed(2));							
+									
+									porVencer 				= 0;
+									totalVencido 			= 0;
+									sieteDias					= 0;
+									siete14Dias				= 0;
+									catorce21Dias			= 0;
+									ventiuno28Dias		= 0;
+									mas28Dias					= 0;
+									
+									
+									//por Vencer
+									var planPagos = PlanPagos.find({credito_id: credito._id, fechaLimite: {$gte: fechaFinal}, descripcion: "Recibo" , estatus: { $ne: 1 }}).fetch();
+									_.each(planPagos, function(planPago){
+											porVencer += Number(parseFloat(planPago.importeRegular).toFixed(2));							
+									});
+									
+									//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+									
+									//Total Vencido Unicamente Recibos
+									var planPagosTV = PlanPagos.find({credito_id: credito._id, fechaLimite: {$lte: fechaFinal}, descripcion: "Recibo" , estatus: { $ne: 1 }}).fetch();
+									_.each(planPagosTV, function(planPago){
+											totalVencido += Number(parseFloat(planPago.importeRegular).toFixed(2));							
+									});
+		
+									//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+									
+									//7 Dias
+									var fechaMenor7dias = moment(new Date()).add();
+									fechaMenor7dias = fechaMenor7dias.subtract(7, 'days');
+									var ff7dias = new Date(fechaMenor7dias);
+									ff7dias.setHours(0,0,0,0);
+									var planPagos7 = PlanPagos.find({credito_id: credito._id, fechaLimite: { $gte : ff7dias, $lte : fechaInicial}, descripcion: "Recibo", estatus: { $ne: 1 }}).fetch();
+									_.each(planPagos7, function(planPago){
+											sieteDias += Number(parseFloat(planPago.importeRegular).toFixed(2));							
+									});
+									
+									//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////						
+									
+									//7 - 14 dias Dias
+									
+									var fechaMenor7dias = moment(new Date()).add();
+									fechaMenor7dias = fechaMenor7dias.subtract(7, 'days');
+									var fi7dias = new Date(fechaMenor7dias);
+									fi7dias.setHours(23,59,59,999);
+									
+									var fechaMenor7dias = moment(new Date()).add();
+									fechaMenor7dias = fechaMenor7dias.subtract(14, 'days');
+									var ff14dias = new Date(fechaMenor7dias);
+									ff14dias.setHours(0,0,0,0);
+									
+									var planPagos14 = PlanPagos.find({credito_id: credito._id, fechaLimite: { $gte : ff14dias, $lte : fi7dias}, descripcion: "Recibo" , estatus: { $ne: 1 }}).fetch();
+									_.each(planPagos14, function(planPago){
+											siete14Dias += Number(parseFloat(planPago.importeRegular).toFixed(2));							
+									});
+									
+									//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////						
+								
+									//14 - 21 dias Dias
+									
+									var fechaMenor7dias = moment(new Date()).add();
+									fechaMenor7dias = fechaMenor7dias.subtract(14, 'days');
+									var fi14dias = new Date(fechaMenor7dias);
+									fi14dias.setHours(23,59,59,999);
+									
+									var fechaMenor7dias = moment(new Date()).add();
+									fechaMenor7dias = fechaMenor7dias.subtract(21, 'days');
+									var ff21dias = new Date(fechaMenor7dias);
+									ff21dias.setHours(0,0,0,0);
+									
+									var planPagos21 = PlanPagos.find({credito_id: credito._id, fechaLimite: { $gte : ff21dias, $lte : fi14dias}, descripcion: "Recibo" , estatus: { $ne: 1 }}).fetch();
+									_.each(planPagos21, function(planPago){
+											catorce21Dias += Number(parseFloat(planPago.importeRegular).toFixed(2));							
+									});
+									
+									//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+									
+									//21 - 28 dias Dias
+									
+									var fechaMenor7dias = moment(new Date()).add();
+									fechaMenor7dias = fechaMenor7dias.subtract(21, 'days');
+									var fi21dias = new Date(fechaMenor7dias);
+									fi21dias.setHours(23,59,59,999);
+									
+									var fechaMenor7dias = moment(new Date()).add();
+									fechaMenor7dias = fechaMenor7dias.subtract(28, 'days');
+									var ff28dias = new Date(fechaMenor7dias);
+									ff28dias.setHours(0,0,0,0);
+									
+									var planPagos28 = PlanPagos.find({credito_id: credito._id, fechaLimite: { $lte : ff28dias, $gte : fi21dias}, descripcion: "Recibo" , estatus: { $ne: 1 }}).fetch();
+									_.each(planPagos28, function(planPago){
+											ventiuno28Dias += Number(parseFloat(planPago.importeRegular).toFixed(2));							
+									});
+									
+									//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+									
+									//mas de 28 dias Dias
+									
+									var fechaMenor7dias = moment(new Date()).add();
+									fechaMenor7dias = fechaMenor7dias.subtract(28, 'days');
+									var ff28dias = new Date(fechaMenor7dias);
+									ff28dias.setHours(0,0,0,0);
+									
+									var planPagosMas28 = PlanPagos.find({credito_id: credito._id, fechaLimite: {$lt : ff28dias}, descripcion: "Recibo", estatus: { $ne: 1 }}).fetch();
+									_.each(planPagosMas28, function(planPago){
+											mas28Dias += Number(parseFloat(planPago.importeRegular).toFixed(2));							
+									});
+									
+									//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+									
+								
 							});
 							
-							//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 							
-							//Total Vencido Unicamente Recibos
-							var planPagosTV = PlanPagos.find({credito_id: credito._id, fechaLimite: {$lte: fechaFinal}, descripcion: "Recibo" , estatus: { $ne: 1 }}).fetch();
-							_.each(planPagosTV, function(planPago){
-									totalVencido += Number(parseFloat(planPago.importeRegular).toFixed(2));							
-							});
-
-							//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+							var clienteCarteraVencida = { numeroCliente					: cliente.profile.numeroCliente,
+																						nombre								: cliente.profile.nombreCompleto,
+																						total									: total,
+																						saldo									: saldo,
+																						saldoCargosMoratorios	: saldoCargosMoratorios,
+																						porVencer							: porVencer,
+																						totalVencido					: totalVencido,
+																						sieteDias							: sieteDias,
+																						siete14Dias						: siete14Dias,
+																						catorce21Dias					: catorce21Dias,
+																						ventiuno28Dias				: ventiuno28Dias,
+																						mas28Dias							: mas28Dias
+																						};
+							carteraVencida.push(clienteCarteraVencida);			
 							
-							//7 Dias
-							var fechaMenor7dias = moment(new Date()).add();
-							fechaMenor7dias = fechaMenor7dias.subtract(7, 'days');
-							var ff7dias = new Date(fechaMenor7dias);
-							ff7dias.setHours(0,0,0,0);
-							var planPagos7 = PlanPagos.find({credito_id: credito._id, fechaLimite: { $gte : ff7dias, $lte : fechaInicial}, descripcion: "Recibo", estatus: { $ne: 1 }}).fetch();
-							_.each(planPagos7, function(planPago){
-									sieteDias += Number(parseFloat(planPago.importeRegular).toFixed(2));							
-							});
-							
-							//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////						
-							
-							//7 - 14 dias Dias
-							
-							var fechaMenor7dias = moment(new Date()).add();
-							fechaMenor7dias = fechaMenor7dias.subtract(7, 'days');
-							var fi7dias = new Date(fechaMenor7dias);
-							fi7dias.setHours(23,59,59,999);
-							
-							var fechaMenor7dias = moment(new Date()).add();
-							fechaMenor7dias = fechaMenor7dias.subtract(14, 'days');
-							var ff14dias = new Date(fechaMenor7dias);
-							ff14dias.setHours(0,0,0,0);
-							
-							var planPagos14 = PlanPagos.find({credito_id: credito._id, fechaLimite: { $gte : ff14dias, $lte : fi7dias}, descripcion: "Recibo" , estatus: { $ne: 1 }}).fetch();
-							_.each(planPagos14, function(planPago){
-									siete14Dias += Number(parseFloat(planPago.importeRegular).toFixed(2));							
-							});
-							
-							//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////						
-						
-							//14 - 21 dias Dias
-							
-							var fechaMenor7dias = moment(new Date()).add();
-							fechaMenor7dias = fechaMenor7dias.subtract(14, 'days');
-							var fi14dias = new Date(fechaMenor7dias);
-							fi14dias.setHours(23,59,59,999);
-							
-							var fechaMenor7dias = moment(new Date()).add();
-							fechaMenor7dias = fechaMenor7dias.subtract(21, 'days');
-							var ff21dias = new Date(fechaMenor7dias);
-							ff21dias.setHours(0,0,0,0);
-							
-							var planPagos21 = PlanPagos.find({credito_id: credito._id, fechaLimite: { $gte : ff21dias, $lte : fi14dias}, descripcion: "Recibo" , estatus: { $ne: 1 }}).fetch();
-							_.each(planPagos21, function(planPago){
-									catorce21Dias += Number(parseFloat(planPago.importeRegular).toFixed(2));							
-							});
-							
-							//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-							
-							//21 - 28 dias Dias
-							
-							var fechaMenor7dias = moment(new Date()).add();
-							fechaMenor7dias = fechaMenor7dias.subtract(21, 'days');
-							var fi21dias = new Date(fechaMenor7dias);
-							fi21dias.setHours(23,59,59,999);
-							
-							var fechaMenor7dias = moment(new Date()).add();
-							fechaMenor7dias = fechaMenor7dias.subtract(28, 'days');
-							var ff28dias = new Date(fechaMenor7dias);
-							ff28dias.setHours(0,0,0,0);
-							
-							var planPagos28 = PlanPagos.find({credito_id: credito._id, fechaLimite: { $lte : ff28dias, $gte : fi21dias}, descripcion: "Recibo" , estatus: { $ne: 1 }}).fetch();
-							_.each(planPagos28, function(planPago){
-									ventiuno28Dias += Number(parseFloat(planPago.importeRegular).toFixed(2));							
-							});
-							
-							//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-							
-							//mas de 28 dias Dias
-							
-							var fechaMenor7dias = moment(new Date()).add();
-							fechaMenor7dias = fechaMenor7dias.subtract(28, 'days');
-							var ff28dias = new Date(fechaMenor7dias);
-							ff28dias.setHours(0,0,0,0);
-							
-							var planPagosMas28 = PlanPagos.find({credito_id: credito._id, fechaLimite: {$lt : ff28dias}, descripcion: "Recibo", estatus: { $ne: 1 }}).fetch();
-							_.each(planPagosMas28, function(planPago){
-									mas28Dias += Number(parseFloat(planPago.importeRegular).toFixed(2));							
-							});
-							
-							//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-							
-						
-					});
-					
-					
-					var clienteCarteraVencida = { numeroCliente					: cliente.profile.numeroCliente,
-																				nombre								: cliente.profile.nombreCompleto,
-																				total									: total,
-																				saldo									: saldo,
-																				saldoCargosMoratorios	: saldoCargosMoratorios,
-																				porVencer							: porVencer,
-																				totalVencido					: totalVencido,
-																				sieteDias							: sieteDias,
-																				siete14Dias						: siete14Dias,
-																				catorce21Dias					: catorce21Dias,
-																				ventiuno28Dias				: ventiuno28Dias,
-																				mas28Dias							: mas28Dias
-																				};
-					carteraVencida.push(clienteCarteraVencida);															
+					}														
 																					
 			});
 			

@@ -1,11 +1,11 @@
-<div class="container">
+<div class="container"  style="font-size: larger">
 	<div class="widget-body no-padding">
 		<div class="padding-10">
 			<div class="row text-center">
 				<div class="col-sm-4 col-sm-offset-4">
-				<span id="logo"> <img src="img/logoCreditoMio.png" alt="SmartAdmin" style="margin-top: -5px;width: 170px;height: 100px;"> </span>
-					<strong> <h2>Credito Mio</h2> </strong>
-					<strong>-----------INGRESOS POR FORMA DE PAGO------------</strong>
+				<span id="logo"> <img src="img/logoCreditoMioBN.png" alt="SmartAdmin" style="margin-top: -18px;width: 170px;height: 100px;"> </span>
+					<br/>
+					<strong>-----INGRESOS POR FORMA DE PAGO-----</strong>
 					<table class="table">
 						<tr ng-repeat="(key, resu) in cj.ingresosAgrupados">
 							<td>
@@ -17,14 +17,14 @@
 						</tr>
 						<tr>
 							<td>
-								<strong>Total: </strong>
+								<strong>TOTAL: </strong>
 							</td>
 							<td>
 								<strong>{{cj.totalIngresos | currency}}</strong>
 							</td>
 						</tr>
 					</table>
-					<strong>-----------------ENTREGA DE CREDITOS-----------------</strong>
+					<strong>--------ENTREGA DE CREDITOS---------</strong>
 					<table class="table">
 						<tr>
 							<td>
@@ -44,14 +44,14 @@
 						</tr>
 						<tr>
 							<td>
-								<strong>Total: </strong>
+								<strong>TOTAL: </strong>
 							</td>
 							<td>
 								<strong>{{cj.totalCreditos | currency}}</strong>
 							</td>
 						</tr>
 					</table>
-					<strong>----------TRANSF. DE FONDOS A VENTANILLA----------</strong>
+					<strong>----TRANSF. DE FONDOS A VENTANILLA-----</strong>
 					<table class="table">
 						<tr>
 							<td>
@@ -62,7 +62,7 @@
 							</td>
 						</tr>
 					</table>
-					<strong>---------RETIRO DE FONDOS DE VENTANILLA---------</strong>
+					<strong>----RETIRO DE FONDOS DE VENTANILLA----</strong>
 					<table class="table">
 						<tr>
 							<td>
@@ -85,9 +85,9 @@
 						ADMINISTRADOR (A):<br>
 						VENTANILLA: {{cj.caja.nombre}}<br>
 
-						Rubidia Martinez Alcaraz<br>
-						Blvd Emiliano Zapata 3125 Local 12BC<br>
-						Colonia Lomas del Boulevard<br>
+						RUBIDIA MARTINEZ ALCARAZ<br>
+						BLVD. EMILIANO ZAPATA 3125 LOCAL 12BC<br>
+						COLONIA LOMAS DEL BOULEVARD<br>
 						MAAR-661007-BF5<br>
 						(667) 717-21-21<br>
 					</address>

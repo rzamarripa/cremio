@@ -6,19 +6,32 @@
 			<div class="row text-center">
 				<div class="col-sm-4 col-sm-offset-4">
 
-				<span id="logo"> <img src="img/logoCreditoMio.png" alt="SmartAdmin" style="margin-top: -5px;width: 170px;height: 100px;"> </span>
-					<strong> <h2>Credito Mio</h2> </strong>
-					<strong>----------------------RECIBO DE PAGO----------------------</strong>
-					<address>
-						RECIBIMOS DE {{tkpctrl.cliente.profile.nombreCompleto}} (CLIENTE No. {{tkpctrl.cliente.profile.numeroCliente}}) CON DOMICILIO EN: CALLE {{tkpctrl.cliente.profile.calle}} NO. {{tkpctrl.cliente.profile.numero}} {{tkpctrl.cliente.profile.colonia.nombre}}. {{tkpctrl.cliente.profile.municipio.nombre}}, {{tkpctrl.cliente.profile.estado.nombre}}.
+					<span id="logo"> <img src="img/logoCreditoMioBN.png" alt="SmartAdmin" style="margin-top: -18px;width: 200px;height: 110px;"> </span>
+					<address style="font-size: larger">
+						RUBIDIA MARTINEZ ALCARAZ<br>
+						BLVD. EMILIANO ZAPATA 3125 LOCAL 12BC<br>
+						COLONIA LOMAS DEL BOULEVARD<br>
+						MAAR-661007-BF5<br>
+						(667) 717-21-21<br>
 					</address>
-					
-					<span class="pull-left">LA CANTIDAD DE: {{tkpctrl.pago.totalPago | currency}}</span>
-					<br>
-					<span class="pull-left"> POR CONCEPTO DE ABONO A SU CUENTA</span>
-					<br>
-					<strong>--------------DETALLE DEL PAGO/ABONO>-------------</strong>
-					<table class="table">
+					<strong style="font-size: larger">----------------RECIBO DE PAGO---------------</strong>
+					<div class="row" style="font-size: larger">
+						<div class="col-sm-12">
+							<span class="pull-left">RECIBIMOS DE <strong>{{tkpctrl.cliente.profile.nombreCompleto}}</strong> (CLIENTE No. {{tkpctrl.cliente.profile.numeroCliente}}) CON DOMICILIO EN: CALLE {{tkpctrl.cliente.profile.calle}} NO. {{tkpctrl.cliente.profile.numero}} {{tkpctrl.cliente.profile.colonia.nombre}}. {{tkpctrl.cliente.profile.municipio.nombre}}, {{tkpctrl.cliente.profile.estado.nombre}}.
+							</span>
+						</div>
+					</div>	
+					<div class="row">
+						<div class="col-sm-12">
+							<span class="pull-left" style="font-size: larger">LA CANTIDAD DE:<strong> {{tkpctrl.pago.totalPago | currency}}</strong></span>
+							<br>
+							<span class="pull-left" style="font-size: larger">SON: {{tkpctrl.pago.letra}} PESOS {{tkpctrl.pago.centavos}}/100 M.N.</span>
+							<br/>
+							<span class="pull-left" style="font-size: larger"> POR CONCEPTO DE ABONO A SU CUENTA</span>
+						</div>	
+					</div>
+					<strong style="font-size: larger">---------DETALLE DEL PAGO/ABONO---------</strong>
+					<table class="table" style="font-size: larger">
 						<tbody>
 							<tr>
 								<th align="center">CREDITO</th>
@@ -35,10 +48,10 @@
 						</tbody>
 					</table>
 
-					<table class="table">
+					<table class="table" style="font-size: larger">
 						<tr>
 							<td>
-								<strong>Total: </strong>
+								<strong>TOTAL: </strong>
 							</td>
 							<td>
 								<strong>{{tkpctrl.pago.totalPago | currency}}</strong>
@@ -46,7 +59,7 @@
 						</tr>
 						<tr>
 							<td>
-								<strong>Pagó: </strong>
+								<strong>PAGÓ: </strong>
 							</td>
 							<td>
 								{{tkpctrl.pago.pago | currency}}
@@ -54,14 +67,14 @@
 						</tr>
 						<tr>
 							<td>
-								<strong>Cambio: </strong>
+								<strong>CAMBIO: </strong>
 							</td>
 							<td>
 								{{tkpctrl.pago.cambio | currency}}
 							</td>
 						</tr>
 					</table>
-					<table>
+					<table style="font-size: larger">
 						<tr>
 							<td class="col-sm-3" style="text-align: left">SALDO ANTERIOR: </td>
 							<td class="col-sm-3" style="text-align: right">{{tkpctrl.pago.saldoAnterior | currency}}</td>							
@@ -94,29 +107,24 @@
 						<div style="text-align: left" class="col-sm-10">FORMA PAGO    : {{tkpctrl.tipoIngreso.nombre}}</div>
 					</div>
 -->
-					<br>
-						Atendio:<br>
-						{{tkpctrl.cajero.profile.nombre}}
-					<br>
-					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
-					<strong><center>FIRMA DEL CAJERO Y SELLO DE LA CAJA</center></strong>
-					<div class="row">
-						<div class="col-sm-6 pull-left">VENTANILLA: {{tkpctrl.caja.nombre}}</div>
+					<div class="row" style="font-size: larger">
+						<div class="col-sm-12">
+							ATENDIO:<br>
+						{{tkpctrl.cajero.profile.nombre}}	
+						</div>
+					</div>	
+					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;font-size: larger">
+					<strong style="font-size: larger"><center>FIRMA DEL CAJERO Y SELLO DE LA CAJA</center></strong>
+					<div class="row" style="font-size: larger">
+						<div  class="col-sm-6 pull-left">VENTANILLA: {{tkpctrl.caja.nombre}}</div>
 						<div class="col-sm-6 pull-right">TURNO: 0000</div>
 					</div>
-					<div class="row">
+					<div class="row" style="font-size: larger">
 						<div class="col-sm-6 pull-left">{{ tkpctrl.pago.fechaPago | date:'H:mm:ss'}}</div>
 						<div class="col-sm-6 pull-right">{{ tkpctrl.pago.fechaPago | date:'dd-MM-yyyy'}}</div>
 					</div>
-					<address>
-						Rubidia Martinez Alcaraz<br>
-						Blvd Emiliano Zapata 3125 Local 12BC<br>
-						Colonia Lomas del Boulevard<br>
-						MAAR-661007-BF5<br>
-						(667) 717-21-21<br>
-					</address>
 					<br>
-						<div><a class="btn btn-primary" id="printpagebutton" ng-click="tkpctrl.borrarBotonImprimir()">Imprimir</a></div>
+						<div style="font-size: larger"><a class="btn btn-primary" id="printpagebutton" ng-click="tkpctrl.borrarBotonImprimir()">Imprimir</a></div>
 				</div>
 			</div>
 		</div>

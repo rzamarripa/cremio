@@ -643,7 +643,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		var apMaterno = cliente.profile.apMaterno != undefined ? cliente.profile.apMaterno : "";
 		cliente.profile.nombreCompleto = nombre + apPaterno + apMaterno;
 		delete cliente.profile.repeatPassword;
-		Meteor.call('updateGerenteVenta', rc.cliente, "cliente");
+		Meteor.call('updateUsuario', rc.cliente, "cliente");
 		toastr.success('Actualizado correctamente.');
 		$('.collapse').collapse('hide');
 		this.nuevo = true;

@@ -473,7 +473,7 @@ angular.module("creditoMio")
     
     
     Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Cliente", this.cambiarContrasena, function(error,result){
-	    	console.log(result);
+	    	//console.log(result);
 	    	if (result)
 	    	{
 		    		toastr.success('Actualizado correctamente.');

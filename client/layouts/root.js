@@ -2,7 +2,6 @@ angular.module("creditoMio")
 .controller("RootCtrl", RootCtrl);
  function RootCtrl($scope, $meteor, $reactive,  $state, toastr) {
 
-	
 	let rc = $reactive(this).attach($scope);
 	window.rc = rc;
 	
@@ -32,7 +31,6 @@ angular.module("creditoMio")
 	
 
 	this.subscribe('buscarRootClientesDistribuidores', () => {
-
 		
 		if(rc.getReactively("buscar.nombre").length > 4){
 			
@@ -258,8 +256,6 @@ this.verMenu =()=>{
     	
     }    
   });	
-
-
 
 	this.descargarFormato = function() 
   {

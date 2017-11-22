@@ -2,7 +2,12 @@
 
 Meteor.methods({
   createUsuario: function (usuario, rol, grupo) {
-
+ 
+		_.each(usuario.profile.documentos, function(documento){
+				delete documento.$$hashKey;
+				
+		});
+		
 	  var sucursal;
 	  if (rol == "Cliente")
 		{
@@ -147,7 +152,7 @@ Meteor.methods({
 	  var user = Meteor.users.findOne({_id : usuario._id});		
 		user.profile = usuario.profile;
 		
-		 if (rol == "Cliente")
+		if (rol == "Cliente")
 		{
 				
 				sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
