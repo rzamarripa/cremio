@@ -248,9 +248,9 @@ angular.module("creditoMio")
     },
 */
     imagenesDocs : () => {
-      var imagen = rc.imagenes
+      var imagen = rc.imagenes;
       _.each(rc.getReactively("imagenes"),function(imagen){
-        imagen.archivo = rc.imagen
+        imagen.archivo = rc.imagen;
 
       });
       return imagen
@@ -416,10 +416,11 @@ angular.module("creditoMio")
       var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-
+			loading(true);
       Meteor.call('createUsuario', objeto, "Cliente", function(e,r){
           if (r)
           {
+	          	loading(false);
               toastr.success('Guardado correctamente.');
               this.usuario = {};
               $('.collapse').collapse('hide');
@@ -471,11 +472,12 @@ angular.module("creditoMio")
 	    delete d.$$hashKey;
     })
     
-    
+    loading(true);
     Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Cliente", this.cambiarContrasena, function(error,result){
 	    	//console.log(result);
 	    	if (result)
 	    	{
+		    		loading(false);
 		    		toastr.success('Actualizado correctamente.');
 				    //$('.collapse').collapse('hide');
 				    this.nuevo = true;
@@ -730,9 +732,10 @@ angular.module("creditoMio")
         arraytosearch[i][key] = i + 1;  
       }
   };
-
+	
   $(document).ready( function() {
-      //$(".Mselect2").select2();
+			
+
       var fileInput1 = document.getElementById('fileInput1');
       //var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
             //JavaScript para agregar la Foto
@@ -747,8 +750,13 @@ angular.module("creditoMio")
             
             var reader = new FileReader();
             reader.onload = function(e) {
-              rc.imagen = reader.result;
-              //console.log(reader.result);
+            	rc.imagen = reader.result;
+              
+               
+                         	
+            	
+      	
+              
             }
             reader.readAsDataURL(file);     
           }else {
@@ -759,7 +767,7 @@ angular.module("creditoMio")
           //fileDisplayArea1.innerHTML = "File not supported!";
         }
       });   
-      });
+   });
 
   this.agregarDoc = function(doc,imagen)
   {

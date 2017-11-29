@@ -1656,13 +1656,8 @@ Meteor.methods({
         else
             return Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
     };	
-			
-		var letra = NumeroALetras(contrato.capitalsolicitado);
-		var letraAI = NumeroALetras(contrato.adeudoInicial);
-		var tasaPor = NumeroALetras(contrato.tasa);
-		const formatCurrency = require('format-currency');
-		if (contrato.seguro) {contrato.seguroLetra = NumeroALetras(contrato.seguro)}
 		
+		const formatCurrency = require('format-currency');
 		
 			
 		if (avales == undefined) {
@@ -1814,13 +1809,31 @@ Meteor.methods({
 		}
 
     var fechaVigencia = formatDate(vigenciaFecha);
-    contrato.capitalSolicitado = formatCurrency(contrato.capitalSolicitado) 
-    contrato.adeudoInicial = formatCurrency(contrato.adeudoInicial) 
-    
+    contrato.capitalSolicitado = formatCurrency(contrato.capitalSolicitado);
+    contrato.adeudoInicial = formatCurrency(contrato.adeudoInicial);
+		
+		contrato.centavosSeg = "00";
+		if (contrato.seguro){
+				
+				var valoresSeg = (contrato.seguro).toString().split('.');
+				contrato.centavosSeg = valoresSeg[1];
+				contrato.seguroLetra = NumeroALetras(valoresSeg[0])
+						
+		}
+		
+		var valoresCS = (contrato.capitalSolicitado).toString().split('.');
+		var centavosCS = valoresCS[1];
+		var letra = NumeroALetras(valoresCS[0].replace(',',''));
+		
+		contrato.centavosCS = centavosCS;
+		
+		var valoresAI = (contrato.adeudoInicial).toString().split('.');
+		var centavosAI = valoresAI[1];
+		var letraAI = NumeroALetras(valoresAI[0].replace(',',''));
+		
+		var tasaPor = NumeroALetras(contrato.tasa);
+   
     var fechaLetra = formatDia(fecha);
-    
-    //console.log(contrato.avisoPrivacidad,"contrato")
-    //console.log("contrato:", contrato);
 
     var autorizacionProveedorSi = contrato.avisoPrivacidad;
     var autorizacionProveedorNo = "";
@@ -1856,322 +1869,312 @@ Meteor.methods({
     	mesV = "0" + mesV;
     }
     vigencia.fechaLimite = diaV+ "-" + mesV + "-" + anioV
-
- 		  
   		
-  	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
-		var fs = require('fs');
-    	var Docxtemplater = require('docxtemplater');
-		var JSZip = require('jszip');
-		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		
-		////////////////////////////////////////////
-		//var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+  	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) 
+  	{
+				var fs = require('fs');
+		    	var Docxtemplater = require('docxtemplater');
+				var JSZip = require('jszip');
+				var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 				
-		if (contrato.tipoInteres.tipoInteres == "Simple") {
-			var content = fs
-			.readFileSync(produccion+"CONTRATOINTERES.docx", "binary");
-		}
-		if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-			var content = fs
-			.readFileSync(produccion+"CONTRATOINTERESSSI.docx", "binary");
-		}
-		if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-			var content = fs
-			.readFileSync(produccion+"CONTRATOINTERESCOMPUESTO.docx", "binary");
-		}
-					
-		var zip = new JSZip(content);
-		var doc=new Docxtemplater()
-								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
-
-		doc.setData({			items: 	   contrato,
-							fecha:     fechaLetra,
-							cliente: cliente,
-							contrato: contrato,
-							pp: planPagos,
-							letra : letra,
-							aval: avales,
-							tasaPor : tasaPor,
-							vigencia : fechaVigencia,
-							vigenciaMasUnDia : vigenciaMasUnDia,
-							autorizacionProveedorSi : autorizacionProveedorSi,
-							autorizacionProveedorNo : autorizacionProveedorNo,
-							autorizacionPublicidadSi : autorizacionPublicidadSi,
-							autorizacionPublicidadNo : autorizacionPublicidadNo,
-											
-		});
-		doc.render();
- 
-		var buf = doc.getZip()
-             		 .generate({type:"nodebuffer"});
-			
- 		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-     		 	fs.writeFileSync(produccionSalida+"CONTRATOINTERESSalidaSSISalida.docx",buf);
-     		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOINTERESSalidaSSISalida.docx");
-     		 }
-     		 if (contrato.tipoInteres.tipoInteres == "Simple") {
-     		 	fs.writeFileSync(produccionSalida+"CONTRATOINTERESSalida.docx",buf);
-     		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOINTERESSalida.docx");
-     		 }
-     		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-     		 	fs.writeFileSync(produccionSalida+"CONTRATOINTERESSalidaCOMPUESTOSalida.docx",buf);
-     		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOINTERESSalidaCOMPUESTOSalida.docx");
-     		 }		
-
-    
-    // convert binary data to base64 encoded string
-    return new Buffer(bitmap).toString('base64');
+				////////////////////////////////////////////
+				//var produccion = "/home/cremio/archivos/";
+				//var produccion = meteor_root+"/web.browser/app/plantillas/";
+						
+				if (contrato.tipoInteres.tipoInteres == "Simple") {
+					var content = fs
+					.readFileSync(produccion+"CONTRATOINTERES.docx", "binary");
+				}
+				if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+					var content = fs
+					.readFileSync(produccion+"CONTRATOINTERESSSI.docx", "binary");
+				}
+				if (contrato.tipoInteres.tipoInteres == "Compuesto") {
+					var content = fs
+					.readFileSync(produccion+"CONTRATOINTERESCOMPUESTO.docx", "binary");
+				}
+							
+				var zip = new JSZip(content);
+				var doc=new Docxtemplater()
+										.loadZip(zip).setOptions({nullGetter: function(part) {
+					if (!part.module) {
+					}
+					if (part.module === "rawxml") {
+					return "";
+					}
+					return "";
+				}});
 		
-   }
-   	if (contrato.avales_ids && _.isEmpty(contrato.garantias)) {
-   	//console.log(contrato,"contratos con aval sin garantias ")
-		var fs = require('fs');
-    	var Docxtemplater = require('docxtemplater');
-		var JSZip = require('jszip');
-		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-	   
-	  
-	  //////////////////////////////
-	  //var produccion = "/home/cremio/archivos/";
-		// var produccion = meteor_root+"/web.browser/app/plantillas/";
-
-	    if (contrato.tipoInteres.tipoInteres == "Simple") {
-			var content = fs
-					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO.docx", "binary");
-		}
-		if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-			var content = fs
-					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOCOMPUESTO.docx", "binary");
-		}
-		if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-			var content = fs
-					.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSSI.docx", "binary");
-		}
-    	   
-		var zip = new JSZip(content);
-		var doc=new Docxtemplater()
-								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
-		
-	    
-	  		doc.setData({				items: 		 contrato,
-									    fecha:     fechaLetra,
-									    cliente:    cliente,
-									    pp: planPagos,
-									    contrato: contrato,
-									    letra : letra,
-									    aval: avales,
-									    tasaPor : tasaPor,
-									    vigencia : fechaVigencia,
-									    vigenciaMasUnDia : vigenciaMasUnDia,
-									    autorizacionProveedorSi : autorizacionProveedorSi,
-									    autorizacionProveedorNo : autorizacionProveedorNo,
-									    autorizacionPublicidadSi : autorizacionPublicidadSi,
-									    autorizacionPublicidadNo : autorizacionPublicidadNo,
-
-				});
-								
-		doc.render();
- 
-		var buf = doc.getZip()
-             		 .generate({type:"nodebuffer"});
- 	           		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-             		 	fs.writeFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaSSISalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaSSISalida.docx");
-             		 }
-             		 if (contrato.tipoInteres.tipoInteres == "Simple") {
-             		 	fs.writeFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalida.docx");
-             		 }
-             		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-             		 	fs.writeFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaCOMPUESTOSalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaCOMPUESTOSalida.docx");
-             		 }	
-				
-    // convert binary data to base64 encoded string
-    return new Buffer(bitmap).toString('base64');
-   }
-
-
-  if (contrato.garantias && contrato.tipoGarantia == "general") {
-   	//console.log(contrato,"hipotecarios ")
-		var fs = require('fs');
-    	var Docxtemplater = require('docxtemplater');
-		var JSZip = require('jszip');
-		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		
-		
-		
-		
-		////////////////////////////////
-		//var produccion = "/home/cremio/archivos/";
-	  //var produccion = meteor_root+"/web.browser/app/plantillas/";
-		
-		
-		if (contrato.tipoInteres.tipoInteres == "Simple") {
-			var content = fs
-					.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
-		}
-		if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-			var content = fs
-					.readFileSync(produccion+"CONTRATOHIPOTECARIOCOMPUESTO.docx", "binary");
-		}
-		if (contrato.tipoInteres.tipoInteres == "saldos Insolutos") {
-			var content = fs
-					.readFileSync(produccion+"CONTRATOHIPOTECARIOSSI.docx", "binary");
-		}
-				
-    	   
-		var zip = new JSZip(content);
-		var doc=new Docxtemplater()
-								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
-		
-	  		doc.setData({		    items: 	   contrato,
-									fecha:     fechaLetra,
-									cliente: cliente,
-									contrato: contrato,
-									pp: planPagos,
-									letra : letra,
-									aval: avales,
-									tasaPor : tasaPor,
-									vigencia : fechaVigencia,
-									vigenciaMasUnDia : vigenciaMasUnDia,
-									autorizacionProveedorSi : autorizacionProveedorSi,
-									autorizacionProveedorNo : autorizacionProveedorNo,
-									autorizacionPublicidadSi : autorizacionPublicidadSi,
-									autorizacionPublicidadNo : autorizacionPublicidadNo,
+				doc.setData({ items: 	   contrato,
+											fecha:     fechaLetra,
+											cliente: cliente,
+											contrato: contrato,
+											pp: planPagos,
+											letra : letra,
+											letraAI: letraAI,
+											centavosAI: centavosAI,
+											aval: avales,
+											tasaPor : tasaPor,
+											vigencia : fechaVigencia,
+											vigenciaMasUnDia : vigenciaMasUnDia,
+											autorizacionProveedorSi : autorizacionProveedorSi,
+											autorizacionProveedorNo : autorizacionProveedorNo,
+											autorizacionPublicidadSi : autorizacionPublicidadSi,
+											autorizacionPublicidadNo : autorizacionPublicidadNo,
 													
 				});
-								
-		doc.render();
- 
-			
+				doc.render();
+		 
 				var buf = doc.getZip()
-             		 .generate({type:"nodebuffer"});
-             		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-             		 	//console.log(",cjecj")
-             		 	fs.writeFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaSSISalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaSSISalida.docx");
-             		 }
-             		 if (contrato.tipoInteres.tipoInteres == "Simple") {
-             		 	fs.writeFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalida.docx");
-             		 }
-             		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-             		 	fs.writeFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaCOMPUESTOSalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaCOMPUESTOSalida.docx");
-             		 }
-				    
-  
-    // convert binary data to base64 encoded string
-    return new Buffer(bitmap).toString('base64');
+		             		 .generate({type:"nodebuffer"});
+					
+		 		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+		     		 	fs.writeFileSync(produccionSalida+"CONTRATOINTERESSalidaSSISalida.docx",buf);
+		     		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOINTERESSalidaSSISalida.docx");
+		     		 }
+		     		 if (contrato.tipoInteres.tipoInteres == "Simple") {
+		     		 	fs.writeFileSync(produccionSalida+"CONTRATOINTERESSalida.docx",buf);
+		     		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOINTERESSalida.docx");
+		     		 }
+		     		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
+		     		 	fs.writeFileSync(produccionSalida+"CONTRATOINTERESSalidaCOMPUESTOSalida.docx",buf);
+		     		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOINTERESSalidaCOMPUESTOSalida.docx");
+		     		 }		
+		
+		    
+		    // convert binary data to base64 encoded string
+		    return new Buffer(bitmap).toString('base64');
+		
+   }
+   	if (contrato.avales_ids && _.isEmpty(contrato.garantias)) 
+   	{
+		   	//console.log(contrato,"contratos con aval sin garantias ")
+				var fs = require('fs');
+		    	var Docxtemplater = require('docxtemplater');
+				var JSZip = require('jszip');
+				var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+			   
+			  //////////////////////////////
+			  //var produccion = "/home/cremio/archivos/";
+				// var produccion = meteor_root+"/web.browser/app/plantillas/";
+		
+			  if (contrato.tipoInteres.tipoInteres == "Simple") {
+					var content = fs
+							.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIO.docx", "binary");
+				}
+				if (contrato.tipoInteres.tipoInteres == "Compuesto") {
+					var content = fs
+							.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOCOMPUESTO.docx", "binary");
+				}
+				if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+					var content = fs
+							.readFileSync(produccion+"CONTRATOOBLIGADOSOLIDARIOSSI.docx", "binary");
+				}
+		    	   
+				var zip = new JSZip(content);
+				var doc=new Docxtemplater()
+										.loadZip(zip).setOptions({nullGetter: function(part) {
+					if (!part.module) {
+					}
+					if (part.module === "rawxml") {
+					return "";
+					}
+					return "";
+				}});
+				
+			    
+			  		doc.setData({				items: 		 contrato,
+											    fecha:     fechaLetra,
+											    cliente:    cliente,
+											    pp: planPagos,
+											    contrato: contrato,
+											    letra : letra,
+											    letraAI: letraAI,
+													centavosAI: centavosAI,
+											    aval: avales,
+											    tasaPor : tasaPor,
+											    vigencia : fechaVigencia,
+											    vigenciaMasUnDia : vigenciaMasUnDia,
+											    autorizacionProveedorSi : autorizacionProveedorSi,
+											    autorizacionProveedorNo : autorizacionProveedorNo,
+											    autorizacionPublicidadSi : autorizacionPublicidadSi,
+											    autorizacionPublicidadNo : autorizacionPublicidadNo,
+		
+						});
+										
+				doc.render();
+		 
+				var buf = doc.getZip()
+		             		 .generate({type:"nodebuffer"});
+		 	           		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+		             		 	fs.writeFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaSSISalida.docx",buf);
+		             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaSSISalida.docx");
+		             		 }
+		             		 if (contrato.tipoInteres.tipoInteres == "Simple") {
+		             		 	fs.writeFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalida.docx",buf);
+		             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalida.docx");
+		             		 }
+		             		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
+		             		 	fs.writeFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaCOMPUESTOSalida.docx",buf);
+		             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOOBLIGADOSOLIDARIOSalidaCOMPUESTOSalida.docx");
+		             		 }	
+						
+		    // convert binary data to base64 encoded string
+		    return new Buffer(bitmap).toString('base64');
+   }
+	 	if (contrato.garantias && contrato.tipoGarantia == "general") 
+	 	{
+
+				var fs = require('fs');
+		    	var Docxtemplater = require('docxtemplater');
+				var JSZip = require('jszip');
+				var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+				
+				if (contrato.tipoInteres.tipoInteres == "Simple") {
+					var content = fs
+							.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
+				}
+				if (contrato.tipoInteres.tipoInteres == "Compuesto") {
+					var content = fs
+							.readFileSync(produccion+"CONTRATOHIPOTECARIOCOMPUESTO.docx", "binary");
+				}
+				if (contrato.tipoInteres.tipoInteres == "saldos Insolutos") {
+					var content = fs
+							.readFileSync(produccion+"CONTRATOHIPOTECARIOSSI.docx", "binary");
+				}
+						
+		    	   
+				var zip = new JSZip(content);
+				var doc=new Docxtemplater()
+										.loadZip(zip).setOptions({nullGetter: function(part) {
+					if (!part.module) {
+					}
+					if (part.module === "rawxml") {
+					return "";
+					}
+					return "";
+				}});
+				
+			  		doc.setData({		    items: 	   contrato,
+											fecha:     fechaLetra,
+											cliente: cliente,
+											contrato: contrato,
+											pp: planPagos,
+											letra : letra,
+											letraAI: letraAI,
+											centavosAI: centavosAI,
+											aval: avales,
+											tasaPor : tasaPor,
+											vigencia : fechaVigencia,
+											vigenciaMasUnDia : vigenciaMasUnDia,
+											autorizacionProveedorSi : autorizacionProveedorSi,
+											autorizacionProveedorNo : autorizacionProveedorNo,
+											autorizacionPublicidadSi : autorizacionPublicidadSi,
+											autorizacionPublicidadNo : autorizacionPublicidadNo,
+															
+						});
+										
+				doc.render();
+		 
+					
+						var buf = doc.getZip()
+		             		 .generate({type:"nodebuffer"});
+		             		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+		             		 	//console.log(",cjecj")
+		             		 	fs.writeFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaSSISalida.docx",buf);
+		             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaSSISalida.docx");
+		             		 }
+		             		 if (contrato.tipoInteres.tipoInteres == "Simple") {
+		             		 	fs.writeFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalida.docx",buf);
+		             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalida.docx");
+		             		 }
+		             		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
+		             		 	fs.writeFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaCOMPUESTOSalida.docx",buf);
+		             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaCOMPUESTOSalida.docx");
+		             		 }
+						    
+		  
+		    // convert binary data to base64 encoded string
+		    return new Buffer(bitmap).toString('base64');
 
    }
-   
-   
-   
-   if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
-   		//console.log(contrato,"mobiliaria ")
-		var fs = require('fs');
-    	var Docxtemplater = require('docxtemplater');
-		var JSZip = require('jszip');
-		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		
-		
-		/////////////////////////////////////
-		//var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-		
-		if (contrato.tipoInteres.tipoInteres == "Simple") {
-			//console.log("entra SIMPLE")
-			var content = fs				
-					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.docx", "binary");
-		}
-		if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-			//console.log("entra saldos")
-			var content = fs				
-					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASSI.docx", "binary");
-		}
-		if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-			//console.log("entra COMPUESTO")
-			var content = fs				
-					.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIACOMPUESTO.docx", "binary");
-		}
+	 	if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") 
+	 	{
+
+				var fs = require('fs');
+		    	var Docxtemplater = require('docxtemplater');
+				var JSZip = require('jszip');
+				var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 				
-    	   
-		var zip = new JSZip(content);
-		var doc=new Docxtemplater()
-								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
-		
-	    
-	  		doc.setData({				items: 	   contrato,
+				if (contrato.tipoInteres.tipoInteres == "Simple") {
+					//console.log("entra SIMPLE")
+					var content = fs				
+							.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.docx", "binary");
+				}
+				if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+					//console.log("entra saldos")
+					var content = fs				
+							.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASSI.docx", "binary");
+				}
+				if (contrato.tipoInteres.tipoInteres == "Compuesto") {
+					//console.log("entra COMPUESTO")
+					var content = fs				
+							.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIACOMPUESTO.docx", "binary");
+				}
+		    	   
+				var zip = new JSZip(content);
+				var doc=new Docxtemplater()
+										.loadZip(zip).setOptions({nullGetter: function(part) {
+					if (!part.module) {
+					}
+					if (part.module === "rawxml") {
+					return "";
+					}
+					return "";
+				}});
+				
+			    
+	  		doc.setData({	items										: contrato,
 									    fecha:     fechaLetra,
 									    cliente:   cliente,
-										contrato: contrato,
-										pp: planPagos,
-										letra : letra,
-										aval : avales,
-										tasaPor : tasaPor,
-										vigencia : fechaVigencia,
-										vigenciaMasUnDia : vigenciaMasUnDia,
-										autorizacionProveedorSi : autorizacionProveedorSi,
-										autorizacionProveedorNo : autorizacionProveedorNo,
-										autorizacionPublicidadSi : autorizacionPublicidadSi,
-										autorizacionPublicidadNo : autorizacionPublicidadNo,
+											contrato: contrato,
+											pp: planPagos,
+											letra : letra,
+											letraAI: letraAI,
+											centavosAI: centavosAI,
+											aval : avales,
+											tasaPor : tasaPor,
+											vigencia : fechaVigencia,
+											vigenciaMasUnDia : vigenciaMasUnDia,
+											autorizacionProveedorSi : autorizacionProveedorSi,
+											autorizacionProveedorNo : autorizacionProveedorNo,
+											autorizacionPublicidadSi : autorizacionPublicidadSi,
+											autorizacionPublicidadNo : autorizacionPublicidadNo,
 										//garantias: 
 				});
-								
-		doc.render();
- 
-		var buf = doc.getZip()
-             		 .generate({type:"nodebuffer"});
-             		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-             		 	//console.log(",monndddrigoo")
-             		 	fs.writeFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASSISalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASSISalida.docx");
-             		 }
-             		 if (contrato.tipoInteres.tipoInteres == "Simple") {
-             		 	fs.writeFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASalida.docx");
-             		 }
-             		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-             		 	fs.writeFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIACOMPUESTOSalida.docx",buf);
-             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIACOMPUESTOSalida.docx");
-             		 }
-				
-
-    //var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx");
-    
-    return new Buffer(bitmap).toString('base64');
+										
+				doc.render();
+		 
+				var buf = doc.getZip()
+		             		 .generate({type:"nodebuffer"});
+		             		 if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+		             		 	//console.log(",monndddrigoo")
+		             		 	fs.writeFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASSISalida.docx",buf);
+		             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASSISalida.docx");
+		             		 }
+		             		 if (contrato.tipoInteres.tipoInteres == "Simple") {
+		             		 	fs.writeFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASalida.docx",buf);
+		             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIASalida.docx");
+		             		 }
+		             		 if (contrato.tipoInteres.tipoInteres == "Compuesto") {
+		             		 	fs.writeFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIACOMPUESTOSalida.docx",buf);
+		             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOGARANTIAPRENDARIACOMPUESTOSalida.docx");
+		             		 }
+						
+		
+		    //var bitmap = fs.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASalida.docx");
+		    
+		    return new Buffer(bitmap).toString('base64');
 
    }
 },
