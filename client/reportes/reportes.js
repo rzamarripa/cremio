@@ -8,7 +8,7 @@ angular.module("creditoMio")
   this.fechaInicial = new Date();
   this.fechaInicial.setHours(0,0,0,0);
   this.fechaFinal = new Date();
-  this.fechaFinal.setHours(23,0,0,0);
+  this.fechaFinal.setHours(23,59,59,999);
   
   rc.buscar = {};
   rc.buscar.nombre = "";

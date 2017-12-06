@@ -113,15 +113,15 @@ angular.module("creditoMio")
 										
 					if (n >= 5 && n < 20)
 					{
-							rc.objeto.primerAbono = (moment(new Date()).date(0).toDate());
-							
+							rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),1,0,0,0,0);
 					}
 					else 
 					{
+							
 							if (n < 5)
-									rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),15,0,0,0,0);
+									rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
 							else if (n >= 20)
-							   	rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,15,0,0,0,0);								
+							   	rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);								
 					}
 			}	
 		
@@ -150,14 +150,17 @@ angular.module("creditoMio")
 
 	this.guardar = function (){
 						
-			if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagare!=true || this.validar.tabla!=true)
+			/*
+if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagare!=true || this.validar.tabla!=true)
 			{
 					toastr.error('Es obligatorio verificar los documentos.');
 					return
 			}
+*/
 			
 			//Validar que no sea Nota de Credito ni refinanciamiento
-			var ti = TiposIngreso.findOne(rc.tipoIngreso._id);
+			//var ti = TiposIngreso.findOne(rc.tipoIngreso._id);
+/*
 
 			if (ti.nombre == "Nota de Credito" || ti.nombre == "REFINANCIAMIENTO")
 			{
@@ -179,6 +182,7 @@ angular.module("creditoMio")
 						return;
 					}
 			}
+*/
 			
 			//Validar que tenga dinero en el tipo de Ingreso	
 			var validarSaldoCaja = rc.caja.cuenta[rc.tipoIngreso._id];
@@ -196,7 +200,7 @@ angular.module("creditoMio")
 					//console.log("Resultado:", result);
 					if (!result)
 					{
-							toastr.error('El cliente tiene Cargos Moratorios Activos no es posible Entregarle el crédito.');
+							toastr.error('El cliente tiene Cargos Moratorios Activos no es posible Entregarle el vale.');
 							return;		
 					}
 					else if (result)
@@ -232,7 +236,8 @@ angular.module("creditoMio")
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	this.fechaPago = function(diaSeleccionado, periodoPago)
+	/*
+this.fechaPago = function(diaSeleccionado, periodoPago)
 	{		
 			
 			//console.log(periodoPago);
@@ -287,6 +292,7 @@ angular.module("creditoMio")
 
 			}
 	};
+*/
 	
 	this.generarCredito = function(){
 		
@@ -315,17 +321,7 @@ angular.module("creditoMio")
 			tipo								:	this.credito.tipo
 		};
 				
-		//credito.avales = angular.copy(this.avales);
-				
-		/*
-if (this.credito.tipoGarantia == "mobiliaria")
-				credito.garantias = angular.copy(this.garantias);
-		else
-				credito.garantias = angular.copy(this.garantiasGeneral);
-*/
-		
-		
-		console.log(this.credito);
+		//console.log(this.credito);
 		
 		Meteor.apply('generarCredito', [credito, $stateParams.credito_id], function(error, result){
 			if(result == "hecho"){

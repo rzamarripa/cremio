@@ -1,4 +1,4 @@
-Meteor.methods({
+ Meteor.methods({
 	generarPlanPagos: function(credito,cliente){
 
 		function clonar( original )  {		    
@@ -11,6 +11,7 @@ Meteor.methods({
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		
 		var mfecha = moment(credito.fechaPrimerAbono);
+		
 		
 		mfecha.set({hour:0,minute:0,second:0,millisecond:0});
 		
@@ -48,8 +49,8 @@ Meteor.methods({
 			var diaMes = fechaMes.getDate();
 			if (diaMes > 2 && diaMes <= 16)
 			{
-		 	 	 mfecha = mfecha.date(16);
-		 	 	 semanaQuincena	= 2;
+		 	 	 		mfecha = mfecha.date(16);	 
+		 	 	 		semanaQuincena	= 2;
 		 	} 	 
 		  else 
 		  {
@@ -79,7 +80,7 @@ Meteor.methods({
 						if (Number(dia.dia) === diaFecha)
 						{
 							 ban = true;	
-							 return;							 
+							 return ban;							 
 						}	 
 				})
 				var fechaBuscar = new Date(fecha);
@@ -88,7 +89,7 @@ Meteor.methods({
 				if (fechaInhabil != undefined)
 				{
 					 ban = true;
-					 return;	
+					 return ban;	
 				}
 				return ban;
 		};
@@ -97,15 +98,18 @@ Meteor.methods({
 		//Evaluar la validación de dia inhabil
 	  var validaFecha = true;
 	  fechaLimite = moment(mfecha);
+	  //console.log(mfecha);
 	  while(validaFecha)
 	  {		
 				validaFecha = verificarDiaInhabil(fechaLimite);
 				if (validaFecha == true)
 							fechaLimite = fechaLimite.add(1, 'days');					 
 	  }	
+	  
+	  //console.log(fechaLimite);
 		
 		var plan = [];
-		
+
 		if (tipoCredito.tipoInteres == "Compuesto" || tipoCredito.tipoInteres == "Simple")
 		{
 				var importeParcial = 0;
@@ -126,7 +130,7 @@ Meteor.methods({
 						importeParcial=Math.round(importeParcial * 100) / 100;
 						suma += importeParcial;
 						suma = Math.round(suma * 100) / 100;
-												
+						
 				}
 				else if(tipoCredito.tipoInteres == "Compuesto")
 				{
@@ -153,7 +157,7 @@ Meteor.methods({
 								importeParcial = Number(parseFloat(capital + interes + iva).toFixed(2));						 
 						
 				}
-			
+
 				if (cliente == undefined){
 					 cliente = {}; 
 					 cliente._id = "Prospecto";
@@ -475,8 +479,7 @@ Meteor.methods({
 	generarMultas:function(){
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
-		//ahora.setHours(23,59,59,999);
-		//console.log("Fecha:",ahora);
+		
 		var pagos = PlanPagos.find({$and:[
 											{
 												$or:[
@@ -595,8 +598,8 @@ Meteor.methods({
 						
 						credito.saldoMultas += multas;
 						
-						credito.saldoMultas = parseFloat(credito.saldoMultas).toFixed(2);
-						credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
+						credito.saldoMultas = Number(parseFloat(credito.saldoMultas).toFixed(2));
+						//credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
 						Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 
 				}
@@ -1077,6 +1080,5 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 	getPago:function(pago_id){
 			return Pagos.findOne(pago_id);		
 	},
-	
 	
 }); 

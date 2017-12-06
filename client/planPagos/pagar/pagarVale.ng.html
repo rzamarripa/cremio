@@ -11,30 +11,30 @@
 							</div>
 							<div class="col-sm-12">
 								<div class="row">
-								<a style="margin: 5px;" ng-if="pvpp.objeto.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : pvpp.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
-								<a style="margin: 5px;" ng-if="pvpp.objeto.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : pvpp.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;						
+								<a style="margin: 5px;" ng-if="pagV.objeto.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : pagV.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
+								<a style="margin: 5px;" ng-if="pagV.objeto.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : pagV.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;						
 									<div class="col-sm-8">
-										<h1>{{pvpp.objeto.profile.nombre}} <span class="semi-bold">{{pvpp.objeto.profile.apellidoPaterno}} {{pvpp.objeto.profile.apellidoMaterno}}</span>
-										<small> (Cliente)</small></h1>
-										<h5>{{pvpp.objeto.profile.numeroCliente}}</h5>
+										<h1>{{pagV.objeto.profile.nombre}} <span class="semi-bold">{{pagV.objeto.profile.apellidoPaterno}} {{pagV.objeto.profile.apellidoMaterno}}</span>
+										<small> (Distribuidor)</small></h1>
+										<h5>{{pagV.objeto.profile.numeroCliente}}</h5>
 									</div>
 								</div>
 								<!-- <div class="row">
 									<div class="col-sm-12">
 											<ul class="nav nav-tabs">
 												<li class="pull-right">
-													<a ng-click="pvpp.masInformacion()" role="button" data-toggle="collapse"
-														href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{pvpp.masInfo == true ? 'plus':'minus'}} fa-lg"></i> Información del cliente</a>
+													<a ng-click="pagV.masInformacion()" role="button" data-toggle="collapse"
+														href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{pagV.masInfo == true ? 'plus':'minus'}} fa-lg"></i> Información del cliente</a>
 												</li>
 
 												<li class="pull-right">
-												<a ng-click="pvpp.masInformacionCrdito()" data-toggle="collapse"
-												   href="#masInformacionCredito" aria-expanded="false" aria-controls="masInformacionCredito"> <i class="fa fa-{{pvpp.masInfoCredito == true ? 'plus':'minus'}} fa-lg">
+												<a ng-click="pagV.masInformacionCrdito()" data-toggle="collapse"
+												   href="#masInformacionCredito" aria-expanded="false" aria-controls="masInformacionCredito"> <i class="fa fa-{{pagV.masInfoCredito == true ? 'plus':'minus'}} fa-lg">
 												   </i> Historial Crediticio </a>
 												</li>
 												<li class="pull-right">
-												<a ng-click="pvpp.creditosAprobados()" data-toggle="collapse"
-												   href="#creditosAprobados" aria-expanded="false" aria-controls="creditosAprobados"> <i class="fa fa-{{pvpp.creditoAp == true ? 'plus':'minus'}} fa-lg">
+												<a ng-click="pagV.creditosAprobados()" data-toggle="collapse"
+												   href="#creditosAprobados" aria-expanded="false" aria-controls="creditosAprobados"> <i class="fa fa-{{pagV.creditoAp == true ? 'plus':'minus'}} fa-lg">
 												   </i> Créditos Aprobados </a>
 												</li>
 											</ul>
@@ -55,15 +55,15 @@
 						    <div class="row">
 						    	<div class="col-sm-4" > 					    
 							    	<label>Nombre (s)</label>
-							    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="pvpp.objeto.profile.nombre" disabled="">
+							    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="pagV.objeto.profile.nombre" disabled="">
 						    	</div>
 						    	<div class="col-sm-4" >					    
 							    	<label>Apellido Paterno</label>
-							    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="pvpp.objeto.profile.apellidoPaterno" disabled="">
+							    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="pagV.objeto.profile.apellidoPaterno" disabled="">
 						    	</div>
 						    	<div class="col-sm-4">					    
 							    	<label>Apellido Materno</label>
-							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="pvpp.objeto.profile.apellidoMaterno" disabled="">
+							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="pagV.objeto.profile.apellidoMaterno" disabled="">
 						    	</div>	    				    	    
 						    </div>
 			      </div>
@@ -85,19 +85,19 @@
 			        	<div class="row">
 						    	<div class="col-sm-3" > 					    
 							    	<label>Teléfono </label>
-							    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="pvpp.objeto.profile.particular"  disabled="">
+							    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="pagV.objeto.profile.particular"  disabled="">
 						    	</div>
 						    	<div class="col-sm-3" >					    
 							    	<label>Celular </label>
-							    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="pvpp.objeto.profile.celular" disabled="">
+							    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="pagV.objeto.profile.celular" disabled="">
 						    	</div>
 						    	<div class="col-sm-3">					    
 							    	<label>Otro Teléfono</label>
-							    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="pvpp.objeto.profile.telefonoAlternativo" disabled="" >
+							    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="pagV.objeto.profile.telefonoAlternativo" disabled="" >
 						    	</div>	  
 						    	<div class="col-sm-3">					    
 							    	<label>Correo</label>
-							    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="pvpp.objeto.profile.correo" disabled="">
+							    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="pagV.objeto.profile.correo" disabled="">
 						    	</div>  				    	    
 						    </div>
 			      </div>
@@ -116,7 +116,7 @@
 			        	<div class="row">
 									<div class="col-sm-3" >
 								    <label for="sexo">Sexo </label>
-								    <select name="sexo" ng-model="pvpp.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" disabled>
+								    <select name="sexo" ng-model="pagV.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" disabled>
 										    <option value=""></option>
 										    <option value="Masculino">Masculino</option>
 										    <option value="Femenino">Femenino</option>
@@ -124,31 +124,31 @@
 						    	</div>
 						    	<div class="col-sm-3">
 										<label for="estadocivil">Estado Civil </label>
-										<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="pvpp.objeto.profile.estadoCivil.nombre" disabled="">
+										<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="pagV.objeto.profile.estadoCivil.nombre" disabled="">
 									</div>
 										
 						    	<div class="col-sm-3">					    
 							    	<label>Fecha Nacimiento </label>
-							    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="pvpp.objeto.profile.fechaNacimiento" disabled="">
+							    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="pagV.objeto.profile.fechaNacimiento" disabled="">
 						    	</div>	
 									
 									<div class="col-sm-3">
 										<label for="nacionalidad">Nacionalidad</label>
-										<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="pvpp.objeto.profile.nacionalidad.nombre" disabled="">
+										<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="pagV.objeto.profile.nacionalidad.nombre" disabled="">
 									</div>			
 						    </div>
 						    <div class="row">
 							    <div class="col-sm-3">
 										<label for="ocupacion">Ocupación </label>
-										<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="pvpp.objeto.profile.ocupacion.nombre" disabled="">
+										<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="pagV.objeto.profile.ocupacion.nombre" disabled="">
 									</div>		
 						    	<div class="col-sm-3">					    
 							    	<label>CURP</label>
-							    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="pvpp.objeto.profile.curp" disabled>
+							    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="pagV.objeto.profile.curp" disabled>
 						    	</div>
 						      <div class="col-sm-3">					    
 							    	<label>Lugar de Nacimiento</label>
-							    	<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="pvpp.objeto.profile.lugarNacimiento" disabled>
+							    	<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="pagV.objeto.profile.lugarNacimiento" disabled>
 						    	</div>	
 						    </div>		
 			      </div>
@@ -167,55 +167,55 @@
 				        	<div class="row">
 									    <div class="col-sm-6" >					    
 									    	<label>Calle </label>
-									    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="pvpp.objeto.profile.calle" disabled="">
+									    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="pagV.objeto.profile.calle" disabled="">
 								    	</div>
 								    	<div class="col-sm-3" >					    
 									    	<label>Numero </label>
-									    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="pvpp.objeto.profile.numero" disabled="">
+									    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="pagV.objeto.profile.numero" disabled="">
 								    	</div>
 								    	<div class="col-sm-3" >					    
 									    	<label>CP </label>
-									    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="pvpp.objeto.profile.codigoPostal" disabled="">
+									    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="pagV.objeto.profile.codigoPostal" disabled="">
 								    	</div>
 								    </div>
 								    <div class="row">
 									    <div class="col-sm-3" >
 													<label >Pais </label>
-													<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="pvpp.objeto.profile.pais.nombre" disabled>
+													<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="pagV.objeto.profile.pais.nombre" disabled>
 											</div>
 										  <div class="col-sm-3" >
 													<label for="seccion_id">Estado </label>
-													<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="pvpp.objeto.profile.estado.nombre" disabled>
+													<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="pagV.objeto.profile.estado.nombre" disabled>
 											</div>	
 											<div class="col-sm-3" >
 													<label >Municipio </label>
-													<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="pvpp.objeto.profile.municipio.nombre" disabled>
+													<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="pagV.objeto.profile.municipio.nombre" disabled>
 											</div>
 											<div class="col-sm-3" >
 													<label for="seccion_id">Ciudad </label>
-													<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="pvpp.objeto.profile.ciudad.nombre" disabled>
+													<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="pagV.objeto.profile.ciudad.nombre" disabled>
 											</div>	
 								    </div>
 								    <div class="row">
 									    <div class="col-sm-3" >
 													<label for="seccion_id">Colonia </label>
-													<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="pvpp.objeto.profile.colonia.nombre" disabled>
+													<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="pagV.objeto.profile.colonia.nombre" disabled>
 											</div>
 											<div class="col-sm-3">					    
 									    	<label>Tiempo Residencia</label>
-									    	<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="pvpp.objeto.profile.tiempoResdencia" disabled>
+									    	<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="pagV.objeto.profile.tiempoResdencia" disabled>
 								    	</div>
 								    	<div class="col-sm-2">					    
 									    	<label>Renta</label>
-									    	<input name="rentaMes" type="checkbox" class="form-control" ng-model="pvpp.objeto.profile.renta" disabled>
+									    	<input name="rentaMes" type="checkbox" class="form-control" ng-model="pagV.objeto.profile.renta" disabled>
 								    	</div>
-								    	<div class="col-sm-3" ng-if="pvpp.objeto.profile.renta">					    
+								    	<div class="col-sm-3" ng-if="pagV.objeto.profile.renta">					    
 									    	<label>Renta Mes </label>
-									    	<input name="tiempo" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="pvpp.objeto.profile.rentaMes" disabled>
+									    	<input name="tiempo" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="pagV.objeto.profile.rentaMes" disabled>
 								    	</div>
 											<div class="col-sm-12">					    
 									    	<label>Señas Particulares</label>
-									    	<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="pvpp.objeto.profile.senasParticulares" disabled>
+									    	<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="pagV.objeto.profile.senasParticulares" disabled>
 								    	</div>
 								    </div>	
 				      </div>
@@ -234,37 +234,37 @@
 				        	<div class="row">
 							    	<div class="col-sm-3" > 					    
 								    	<label>Ingresos Personales</label>
-								    	<input name="ingresosPersonales" type="text" class="form-control" placeholder="Ingresos Personales" ng-model="pvpp.objeto.profile.ingresosPersonales" disabled>
+								    	<input name="ingresosPersonales" type="text" class="form-control" placeholder="Ingresos Personales" ng-model="pagV.objeto.profile.ingresosPersonales" disabled>
 							    	</div>
 							    	<div class="col-sm-3" >					    
 								    	<label>Ingresos Conyuge</label>
-								    	<input name="ingresosConyuge" type="text" class="form-control" placeholder="Ingresos Conyuge" ng-model="pvpp.objeto.profile.ingresosConyuge" disabled>
+								    	<input name="ingresosConyuge" type="text" class="form-control" placeholder="Ingresos Conyuge" ng-model="pagV.objeto.profile.ingresosConyuge" disabled>
 							    	</div>
 							    	<div class="col-sm-3">					    
 								    	<label>Otros Ingresos</label>
-								    	<input name="otrosIngresos" type="text" class="form-control" placeholder="Otros Ingresos" ng-model="pvpp.objeto.profile.otrosIngresos" disabled>
+								    	<input name="otrosIngresos" type="text" class="form-control" placeholder="Otros Ingresos" ng-model="pagV.objeto.profile.otrosIngresos" disabled>
 							    	</div>	  
 							    	<div class="col-sm-3">					    
 								    	<label>Total Ingresos</label>
-								    	<input name="totalIngresos" type="text" class="form-control" placeholder="Total Ingresos" ng-model="pvpp.objeto.profile.totalIngresos" disabled>
+								    	<input name="totalIngresos" type="text" class="form-control" placeholder="Total Ingresos" ng-model="pagV.objeto.profile.totalIngresos" disabled>
 							    	</div>  				    	    
 							    </div>
 							    <div class="row">
 							    	<div class="col-sm-3" > 					    
 								    	<label>Gastos Fijos</label>
-								    	<input name="gastosFijos" type="text" class="form-control" placeholder="Gastos Fijos" ng-model="pvpp.objeto.profile.gastosFijos" disabled>
+								    	<input name="gastosFijos" type="text" class="form-control" placeholder="Gastos Fijos" ng-model="pagV.objeto.profile.gastosFijos" disabled>
 							    	</div>
 							    	<div class="col-sm-3" >					    
 								    	<label>Gastos Eventuales</label>
-								    	<input name="gastosEventuales" type="text" class="form-control" placeholder="Gastos Eventuales" ng-model="pvpp.objeto.profile.gastosEventuales" disabled>
+								    	<input name="gastosEventuales" type="text" class="form-control" placeholder="Gastos Eventuales" ng-model="pagV.objeto.profile.gastosEventuales" disabled>
 							    	</div>
 							    	<div class="col-sm-3">					    
 								    	<label>Total Gastos</label>
-								    	<input name="totalGastos" type="text" class="form-control" placeholder="Total Gastos" ng-model="pvpp.objeto.profile.totalGastos" disabled>
+								    	<input name="totalGastos" type="text" class="form-control" placeholder="Total Gastos" ng-model="pagV.objeto.profile.totalGastos" disabled>
 							    	</div>	  
 							    	<div class="col-sm-3">					    
 								    	<label>Resultado Neto</label>
-								    	<input name="resultadoNeto" type="text" class="form-control" placeholder="Resultado Neto" ng-model="pvpp.objeto.profile.resultadoNeto" disabled>
+								    	<input name="resultadoNeto" type="text" class="form-control" placeholder="Resultado Neto" ng-model="pagV.objeto.profile.resultadoNeto" disabled>
 							    	</div>  				    	    
 							    </div>
 				      </div>
@@ -295,7 +295,7 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="p in pvpp.referencias">
+												<tr ng-repeat="p in pagV.referencias">
 													<td ng-repeat-start="r in p.relaciones">{{r.num}}</td>
 													<td>{{p.nombreCompleto}} </td>
 													<td>{{r.parentezco}}</td>
@@ -322,19 +322,19 @@
 				        	<div class="row">
 								    	<div class="col-sm-6" > 					    
 									    	<label>Nombre</label>
-									    	<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="pvpp.objeto.profile.empresa.nombre" disabled>
+									    	<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="pagV.objeto.profile.empresa.nombre" disabled>
 								    	</div>
 								    	<div class="col-sm-6" >					    
 									    	<label>Razón Social</label>
-									    	<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="pvpp.objeto.profile.empresa.razonSocial" disabled>
+									    	<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="pagV.objeto.profile.empresa.razonSocial" disabled>
 								    	</div>
 								    	<div class="col-sm-4" >					    
 									    	<label>Calle</label>
-									    	<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="pvpp.objeto.profile.empresa.calle" disabled="" >
+									    	<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="pagV.objeto.profile.empresa.calle" disabled="" >
 								    	</div>	  
 								    	<div class="col-sm-2" >					    
 									    	<label>Número </label>
-									    	<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="pvpp.objeto.profile.empresa.numero" disabled="" >
+									    	<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="pagV.objeto.profile.empresa.numero" disabled="" >
 								    	</div>  				    	    
 								    	<div class="col-sm-6" >					    
 									    	<label>Colonia </label>
@@ -344,19 +344,19 @@
 										<div class="row">
 											<div class="col-sm-3" >
 													<label >Pais </label>
-													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="pvpp.empresas.pais.nombre" disabled="">
+													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="pagV.empresas.pais.nombre" disabled="">
 											</div>
 										  <div class="col-sm-3" >
 													<label for="seccion_id">Estado </label>
-													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="pvpp.empresas.estado.nombre"disabled="">
+													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="pagV.empresas.estado.nombre"disabled="">
 											</div>	
 											<div class="col-sm-3" >
 													<label >Municipio </label>
-													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="pvpp.empresas.muncipio.nombre" disabled="">
+													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="pagV.empresas.muncipio.nombre" disabled="">
 											</div>
 											<div class="col-sm-3" >
 													<label for="seccion_id">Ciudad </label>
-													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="pvpp.empresas.ciudad.nombre" disabled="">
+													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="pagV.empresas.ciudad.nombre" disabled="">
 											</div>	
 							    </div>
 				      </div>
@@ -383,13 +383,13 @@
 					<th class="text-center" width="15%">Adeudo Inicial</th>
 					<th class="text-center" width="20%">Saldo Actual</th>
 					<th class="text-center" width="10%">Acciones</th>
-					<th ng-show="pvpp.openModal"></th>
+					<th ng-show="pagV.openModal"></th>
 				
 					
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="credito in pvpp.historialCreditos">
+				<tr ng-repeat="credito in pagV.historialCreditos">
 						
 					<td class="text-center">{{credito.folio}}</td>	
 					<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
@@ -399,16 +399,16 @@
 					<td >{{credito.saldoActual | currency}}</td>
 					<td>
 						<div class="text-center">
-								<button type="button" class="btn btn-link" ng-click="pvpp.verPagos(credito)">Ver Pagos</button>
+								<button type="button" class="btn btn-link" ng-click="pagV.verPagos(credito)">Ver Pagos</button>
 						</div>						
 					</td>
-					<td ng-show="pvpp.openModal"></td>
+					<td ng-show="pagV.openModal"></td>
 					Pagos cliente
 
 
 
 
-<td ng-show="pvpp.openModal" colspan="-1">
+<td ng-show="pagV.openModal" colspan="-1">
 <div id="modalpagos" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
 	  <div class="modal-dialog modal-lg" role="document">
 	    <div class="modal-content">
@@ -431,7 +431,7 @@
 						</tr>
 					</thead>
 						<tbody>
-							<tr  ng-repeat="credito in pvpp.historial" 
+							<tr  ng-repeat="credito in pagV.historial" 
 							ng-class="(credito.tipoPar == 'par') ? 'default' : (credito.tipoPar == 'impar') ? 'info': 'success'">
 								<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
 								<td class="text-center">{{credito.movimiento}}</td>	
@@ -448,7 +448,7 @@
 				 </div>
 				</div>
 				<div class="modal-footer">
-				    <button ng-click="pvpp.cerrarModal()" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				    <button ng-click="pagV.cerrarModal()" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 
 				 </div>
 			</div>
@@ -485,7 +485,7 @@
 
 								<div class="row ">
 									<br/>
-									<div class="col-xs-12 col-sm-4 col-md-2"  ng-repeat="aprobado in pvpp.creditos">
+									<div class="col-xs-12 col-sm-4 col-md-2"  ng-repeat="aprobado in pagV.creditos">
 										<div class="panel panel-blueDark">
 											<div class="panel-heading">
 												<h3 class="panel-title">
@@ -549,39 +549,39 @@
 			    <div class="row">
 			    	<div class="col-sm-4" valida>
 				    	<label>Fecha Inicial *</label>
-				    	<input date-time format="dd-MM-yyyy" class="form-control" view="year" max-view="year" min-view="date" ng-model="pvpp.cambioSemanasPlanPagos.fechaInicial" name="fechacambioSemanasPlanPagos" required/>
+				    	<input date-time format="dd-MM-yyyy" class="form-control" view="year" max-view="year" min-view="date" ng-model="pagV.cambioSemanasPlanPagos.fechaInicial" name="fechacambioSemanasPlanPagos" required/>
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>Total de Pagos *</label>
-				    	<input name="totalPagosCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pvpp.cambioSemanasPlanPagos.totalPagos" required="">
+				    	<input name="totalPagosCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pagV.cambioSemanasPlanPagos.totalPagos" required="">
 			    	</div>
 			    </div>
 			    <div class="row">
 			    	<div class="col-sm-4" valida>
 				    	<label>Importe *</label>
-				    	<input name="importeRegularCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Nuevo costo colegiatura" ng-model="pvpp.cambioSemanasPlanPagos.importeRegular" required="">
+				    	<input name="importeRegularCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Nuevo costo colegiatura" ng-model="pagV.cambioSemanasPlanPagos.importeRegular" required="">
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>Importe Recargo *</label>
-				    	<input name="importeRecargoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto recargo" ng-model="pvpp.cambioSemanasPlanPagos.importeRecargo" required="">
+				    	<input name="importeRecargoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto recargo" ng-model="pagV.cambioSemanasPlanPagos.importeRecargo" required="">
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>Importe Descuento *</label>
-				    	<input name="importeDescuentoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto descuento" ng-model="pvpp.cambioSemanasPlanPagos.importeDescuento" required="">
+				    	<input name="importeDescuentoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto descuento" ng-model="pagV.cambioSemanasPlanPagos.importeDescuento" required="">
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>Días Recargo *</label>
-				    	<input name="diasRecargoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pvpp.cambioSemanasPlanPagos.diasRecargo" required="">
+				    	<input name="diasRecargoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pagV.cambioSemanasPlanPagos.diasRecargo" required="">
 			    	</div>
 			    	<div class="col-sm-4" valida>					    
 				    	<label>Días Descuento *</label>
-				    	<input name="diasDescuentoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pvpp.cambioSemanasPlanPagos.diasDescuento" required="">
+				    	<input name="diasDescuentoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pagV.cambioSemanasPlanPagos.diasDescuento" required="">
 			    	</div>
 			    </div> 
 				</div>
 				<div class="row">
 					<div class="col-sm-12">
-						<button class="btn btn-info" ng-click="pvpp.planPagosSemana(pvpp.cambioSemanasPlanPagos, formMasivoSemanas)" valida-form formulario="formMasivoSemanas">Calcular Plan de Pagos</button>
+						<button class="btn btn-info" ng-click="pagV.planPagosSemana(pagV.cambioSemanasPlanPagos, formMasivoSemanas)" valida-form formulario="formMasivoSemanas">Calcular Plan de Pagos</button>
 					</div>
 				</div>	  
 		  </form>
@@ -589,11 +589,11 @@
 	</div>
 </div> -->
 <!-- Tabla para mostrar los pagos -->
-<div  class="well">
+<div class="well">
 		<div class="row">
 				<div class="col-sm-2">
 				    <label>Ordenar por:</label>
-				    <select name="ordenar" ng-model="pvpp.valorOrdenar" ng-change="pvpp.funcionOrdenar()" data-placeholder="Ordenar" class="form-control" >
+				    <select name="ordenar" ng-model="pagV.valorOrdenar" ng-change="pagV.funcionOrdenar()" data-placeholder="Ordenar" class="form-control" >
 						    <option value=""></option>
 						    <option value="Folio">Folio</option>
 						    <option value="Fecha">Fecha</option>
@@ -602,85 +602,92 @@
 		  	</div>
 		  	<div class="col-sm-2">					    
 		    	<label>Ocultar Multas</label>
-		    	<input name="ocultarMultas" type="checkbox" class="form-control" ng-click="pvpp.ocultar()" ng-model="pvpp.ocultarMultas">
+		    	<input name="ocultarMultas" type="checkbox" class="form-control" ng-click="pagV.ocultar()" ng-model="pagV.ocultarMultas">
 	    	</div>
 		  	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 						<ul id="sparks" class="">
 							<li class="sparks-info">
-								<h5 style="text-align: center"> Subtotal <span class="txt-color-green" style="text-align: right">{{pvpp.subtotal | currency}}</span></h5>
+								<h5 style="text-align: center"> Subtotal <span class="txt-color-green" style="text-align: right">{{pagV.subtotal | currency}}</span></h5>
 							</li>	
 							<li class="sparks-info">
-								<h5 style="text-align: center"> Total Cargos Moratorios <span class="txt-color-red" style="text-align: right">{{pvpp.cargosMoratorios | currency}}</span></h5>
+								<h5 style="text-align: center"> Total Cargos Moratorios <span class="txt-color-red" style="text-align: right">{{pagV.cargosMoratorios | currency}}</span></h5>
 							</li>	
 							<li class="sparks-info">
-								<h5 style="text-align: center"> Total <span class="txt-color-green" style="text-align: right">{{pvpp.total | currency}}</span></h5>
+								<h5 style="text-align: center"> Total <span class="txt-color-green" style="text-align: right">{{pagV.total | currency}}</span></h5>
 							</li>	
 						</ul>
 				</div>									  	
 		</div>	
-		<div class="row"><br/>
-			
-			<div class="col-sm-9">
-
+		<div class="row">
+			<div class="col-sm-12">
 				<table class="table table-bordered table-condensed font-xs">
 					<thead class="thead">
 						<tr>
-							<th class="text-center" width="5%"></th>
-							<th class="text-center" width="5%">No.</th>
-							<th class="text-center" width="5%">Folio Crédito</th>
+							<th class="text-center" width="3%"></th>
+							<th class="text-center" width="3%">No.</th>
+							<th class="text-center" width="3%">Folio</th>
+							<th class="text-center" width="20%">Beneficiado</th>
 							<th class="text-center" width="10%">Movimiento</th>
-							<th class="text-center" width="20%">Fecha de Pago</th>
+							<th class="text-center" width="10%">Fecha de Pago</th>
 							<th class="text-center" width="5%">Recibo</th>
-							<th class="text-center" width="10%">Capital</th>
+							<th class="text-center" width="7%">Capital</th>
 							<th class="text-center" width="5%">Interes</th>
-							<th class="text-center" width="10%">Seguro</th>
+							<th class="text-center" width="5%">Seguro</th>
 							<th class="text-center" width="5%">IVA</th>
-							<th class="text-center" width="10%">Saldo</th>
+							<th class="text-center" width="7%">Bonificación</th>
+							<th class="text-center" width="7%">Saldo</th>
 							<th class="text-center" width="5%">Pago</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-class="pago.color" ng-repeat="pago in pvpp.planPagosViejo | orderBy: pvpp.funcionOrdenar()" ng-if="pago.verCargo">
+						<tr ng-class="pago.color" ng-repeat="pago in pagV.planPagosViejo | orderBy: pagV.funcionOrdenar()" ng-if="pago.verCargo">
 
-							<td ><a ng-model="pago.pagoSeleccionado" ng-click="pvpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
+							<td ><a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
 
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
+							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.beneficiado }}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.movimiento }}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pvpp.getnumeroPagos(pago.credito_id)}}</td>
+							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pagV.getnumeroPagos(pago.credito_id)}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.capital  | currency}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.interes  | currency}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
+							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.bonificacion  | currency}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
-							<td ><input style="width: 80px" min="0" type="number" ng-change="pvpp.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
+							<td ><input style="width: 80px" min="0" type="number" ng-change="pagV.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
 						</tr>
 					</tbody>
 				</table>	
 			</div>
-
+		</div>
+		<div class="row">
 			<div class="col-sm-3 pull-right" valida>
-				<h4>Total a pagar: {{pvpp.pago.totalPago | currency }}</h4>
+				<h4>Total a pagar: {{pagV.pago.totalPago | currency }}</h4>
+				<br/>
+				<h4>Bonificación: {{pagV.pago.bonificacion | currency }}</h4>
 				<br/>
 				<caption>Forma de Pago: </caption> 
-				<select name="TipoIngreso" class="form-control select2" placeholder="Seleccione" ng-model="pvpp.pago.tipoIngreso_id" ng-change = "pvpp.seleccionTipoIngreso(pvpp.pago.tipoIngreso_id)" required>
-					<option ng-repeat="tipo in pvpp.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
+				<select name="TipoIngreso" class="form-control select2" placeholder="Seleccione" ng-model="pagV.pago.tipoIngreso_id" ng-change = "pagV.seleccionTipoIngreso(pagV.pago.tipoIngreso_id)" required>
+					<option ng-repeat="tipo in pagV.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
 				</select>
 				<br/>
-				<caption>Paga con: </caption> <input id="cobro" min="0" type="number" class="form-control" placeholder="Pagar" ng-model="pvpp.pago.pagar" required="true">
+				<caption>Paga con: </caption> <input id="cobro" min="0" type="number" class="form-control" placeholder="Pagar" ng-model="pagV.pago.pagar" required="true">
 				<br/>
-				<h4>Cambio: {{pvpp.pago.pagar - pvpp.pago.totalPago | currency }}</h4>
+				<h4>Cambio: {{pagV.pago.pagar - (pagV.pago.totalPago - pagV.pago.bonificacion)  | currency }}</h4>
 				<br/>
 				
-				<div class="form-group" ng-if = "pvpp.tipoIngresoSeleccionado.tipoCuenta == 'Banco'">
+				<div class="form-group" ng-if = "pagV.tipoIngresoSeleccionado.tipoCuenta == 'Banco'">
 						<label for="fecha">Fecha Deposito:</label>
-						<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="pvpp.pago.fechaDeposito"/>
+						<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="pagV.pago.fechaDeposito"/>
 				</div>
 				<br/>
-				<a class="btn btn-primary pull-left" ng-click="pvpp.guardarPago(pvpp.pago,pvpp.credito)">Hacer Cobro</a>
+				<a class="btn btn-primary pull-left" ng-click="pagV.guardarPago(pagV.pago,pagV.credito)">Hacer Cobro</a>
 			</div>
-		</div>
+		</div>	
+		
+									
 </div>									
 						<!--
 		</div>
@@ -718,12 +725,12 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr ng-repeat="credito in pvpp.creditosAutorizados" ng-class="($index == selectedRow) ?'text-info':''">
-												<td style="text-align: center" ng-class="($index == pvpp.selectedRow)?'text-success':''">{{$index + 1}}</td>
-												<td style="text-align: right" ng-class="($index == pvpp.selectedRow)?'text-success':''">{{credito.capitalSolicitado | currency}}</td>
-												<td style="text-align: center" ng-class="($index == pvpp.selectedRow)?'text-success':''">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
-												<td style="text-align: center" ng-class="($index == pvpp.selectedRow)?'text-success':''">
-														<a ng-click="pvpp.marcarRefinanciamiento(credito, $index)" class="btn txt-color-white bg-color-green btn-sm pull-center" style="margin: 5px;">
+											<tr ng-repeat="credito in pagV.creditosAutorizados" ng-class="($index == selectedRow) ?'text-info':''">
+												<td style="text-align: center" ng-class="($index == pagV.selectedRow)?'text-success':''">{{$index + 1}}</td>
+												<td style="text-align: right" ng-class="($index == pagV.selectedRow)?'text-success':''">{{credito.capitalSolicitado | currency}}</td>
+												<td style="text-align: center" ng-class="($index == pagV.selectedRow)?'text-success':''">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
+												<td style="text-align: center" ng-class="($index == pagV.selectedRow)?'text-success':''">
+														<a ng-click="pagV.marcarRefinanciamiento(credito, $index)" class="btn txt-color-white bg-color-green btn-sm pull-center" style="margin: 5px;">
 															<i class="fa fa-check"></i>
 														</a>
 												</td>	
@@ -736,8 +743,8 @@
 				</form>
   </div>
 					<div class="modal-footer">
-          <button type="button" ng-click="pvpp.guardarRefinanciamiento()" class="btn btn-success">Guardar</button>
-          <button type="button" ng-click="pvpp.cerrarRefinanciamiento()" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <button type="button" ng-click="pagV.guardarRefinanciamiento()" class="btn btn-success">Guardar</button>
+          <button type="button" ng-click="pagV.cerrarRefinanciamiento()" class="btn btn-default" data-dismiss="modal">Cerrar</button>
         </div>
 	    </div>
 	  </div>

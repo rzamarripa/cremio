@@ -38,7 +38,7 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 				rc.cliente = res;
 			});
 			
-			console.log(rc.pago.totalPago);
+			//console.log(rc.pago.totalPago);
 			
 			function Unidades(num){
 

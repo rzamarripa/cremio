@@ -53,6 +53,10 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 	
 	rc.BeneficiadosDeudas = [];
 	
+	/////////////////////////////////////
+	rc.vale_id = "";
+	
+	
 	this.subscribe('cajas',()=>{
 		return [{}];
 	});
@@ -931,7 +935,64 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		$('#imagenDiv').empty().append(imagen);
 		$("#modaldoc").modal('show');
 	};
+	
+	this.imprimirDoc= function(img)
+	{
+		 Meteor.call('imprimirImagenDocumento', img, function(error, response) {
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+              function b64toBlob(b64Data, contentType, sliceSize) {
+                  contentType = contentType || '';
+                  sliceSize = sliceSize || 512;
+                
+                  var byteCharacters = atob(b64Data);
+                  var byteArrays = [];
+                
+                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+                
+                    var byteNumbers = new Array(slice.length);
+                    for (var i = 0; i < slice.length; i++) {
+                      byteNumbers[i] = slice.charCodeAt(i);
+                    }
+                
+                    var byteArray = new Uint8Array(byteNumbers);
+                
+                    byteArrays.push(byteArray);
+                  }
+                    
+                  var blob = new Blob(byteArrays, {type: contentType});
+                  return blob;
+              }
+              
+              var blob = b64toBlob(response, "application/docx");
+              var url = window.URL.createObjectURL(blob);
+              
+              //console.log(url);
+              var dlnk = document.getElementById('dwnldLnk');
 
+              dlnk.download = "imagenDocumento.docx"; 
+              dlnk.href = url;
+              dlnk.click();       
+              window.URL.revokeObjectURL(url);
+  
+       }
+    });
+		/*
+var html  = "<html><head>" +
+        "</head>" +
+        "<body  style ='-webkit-print-color-adjust:exact;'>"+
+        "<img src=\"" + img + "\" onload=\"javascript:window.print();\"/>" +
+        "</body>";
+    var win = window.open("about:blank","_blank");
+    win.document.write(html);
+*/
+	};
 
 	this.cerrarModal= function() {
 		rc.openModal = false
@@ -1617,16 +1678,17 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
 		};	  	
 	
-	this.mostrarModalValidaBeneficiario= function(objeto)
+	this.mostrarModalValidaBeneficiario= function(objeto, credito_id)
 	{			
+			
 			rc.buscar.nombreBeneficiado = objeto;
+			rc.vale_id = credito_id;
 			rc.BeneficiadosDeudas = [];
 			$("#modalvalidaBeneficiario").modal();
 	};
 	
 	this.validarBeneficiado = function()
 	{			
-			
 			Meteor.call('getPersonasDeudas',rc.buscar.nombreBeneficiado, function(error, result) {           
 	          if (result)
 	          {
@@ -1638,15 +1700,150 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			
 	};
 	
-	this.autorizarVale = function(id, tipo){
-
-	  if (tipo == "CP")	
-	  {
-		  	Creditos.update({_id : id}, { $set : {estatus : 2}});	
-				toastr.success("Se autorizó correctamente.");
-	  }
-	  		
+	this.autorizarVale = function(){
+	  	Creditos.update({_id : rc.vale_id}, { $set : {estatus : 2}});	
+			toastr.success("Se autorizó el vale.");
   }
+  
+  this.rechazarVale = function(){
+		  Creditos.update({_id : rc.vale_id}, { $set : {estatus : 3}});	
+			toastr.success("Se rechazo el vale.");
+  }
+  
+  this.imprimirVales = function()
+  {
+			
+			var fecha = new Date();
+			var n = fecha.getDate();
+			
+			var fechaLimite;
+			if (n > 16)
+					fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1 ,1,0,0,0,0);		
+			else 
+			{
+					fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
+			}
+	  
+			fechaLimite.setHours(23,59,59,999);	  
+			
+			var vales = PlanPagos.find({importeRegular : {$gt : 0}, fechaLimite			: {$lte: fechaLimite}}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
+			//console.log(pp);
+      
+      
+      function currency(value, decimals, separators) {
+			    decimals = decimals >= 0 ? parseInt(decimals, 0) : 2;
+			    separators = separators || ['.', "'", ','];
+			    var number = (parseFloat(value) || 0).toFixed(decimals);
+			    if (number.length <= (4 + decimals))
+			        return number.replace('.', separators[separators.length - 1]);
+			    var parts = number.split(/[-.]/);
+			    value = parts[parts.length > 1 ? parts.length - 2 : 0];
+			    var result = value.substr(value.length - 3, 3) + (parts.length > 1 ?
+			        separators[separators.length - 1] + parts[parts.length - 1] : '');
+			    var start = value.length - 6;
+			    var idx = 0;
+			    while (start > -3) {
+			        result = (start > 0 ? value.substr(start, 3) : value.substr(0, 3 + start))
+			            + separators[idx] + result;
+			        idx = (++idx) % 2;
+			        start -= 3;
+			    }
+			    return (parts.length == 3 ? '-' : '') + result;
+			}
+      
+			
+			if (vales != undefined)
+			{
+					_.each(vales, function(pago){
+						
+		        var fecha = new Date();
+						var n = fecha.getDate();
+						var mes = fecha.getMonth();
+					
+						var fechaPago = pago.fechaLimite;
+						var nfp = fechaPago.getDate();
+						var mesfp = fechaPago.getMonth();
+						
+						var comision = 0;
+						
+						if (mes == mesfp && n >= nfp)
+						{
+								switch(n)
+								{
+									case 1: comision = 15; break;
+									case 2: comision = 14; break;
+									case 3: comision = 13; break;
+									case 4: comision = 12; break;
+									case 5: comision = 11; break;
+									case 6: comision = 10; break;
+									case 7: comision = 9; break;
+									case 8: comision = 8; break;
+									case 16: comision = 15; break;
+									case 17: comision = 14; break;
+									case 18: comision = 13; break;
+									case 19: comision = 12; break;
+									case 20: comision = 11; break;
+									case 21: comision = 10; break;
+									case 22: comision = 9; break;
+									case 23: comision = 8; break;
+								}	
+						}
+		        
+		        pago.bonificacion = parseFloat(((pago.capital + pago.interes) * (comision / 100))).toFixed(2);
+		        
+		        var cre = Creditos.findOne({_id: pago.credito_id});
+		        pago.beneficiado =  cre.beneficiado;
+					
+		        var user = Meteor.users.findOne(cre.cliente_id);
+		        pago.distribuidor = user.profile.nombreCompleto;
+		        
+		        pago.saldo = Number(parseFloat(pago.importeRegular - pago.bonificacion).toFixed(2));
+		        
+		        if (pago.descripcion == "Recibo")
+		        		rc.subtotal +=  pago.importeRegular;
+		        else if (pago.descripcion == "Cargo Moratorio")
+		        {
+		        		rc.cargosMoratorios +=  pago.importeRegular;
+		        		//console.log("Entro: CM", pago)
+		        }
+		        pago.folio = cre.folio;
+		        
+		       	var fecha = new Date();
+					 	pago.fecha = fecha.getDate()+'/'+(fecha.getMonth()+1)+'/'+fecha.getFullYear();
+					 	
+					 	var fechaLimite = new Date(pago.fechaLimite);
+		       	pago.fechaV = fechaLimite.getDate()+'/'+(fechaLimite.getMonth()+1)+'/'+ fechaLimite.getFullYear();
+					 	
+		       	pago.importe = currency(pago.importeRegular, 2, [',', "'", '.']);
+		       	pago.noPago = pago.numeroPago; 
+		        
+		        pago.saldoNuevo = currency(Number(parseFloat(cre.saldoActual - pago.importeRegular).toFixed(2)), 2, [',', "'", '.']);
+		        
+		        
+		        				      								
+		      });
+					
+			}		
+			var datos = {};
+			datos.vales = vales;
+			
+			loading(true);
+			Meteor.call('report', {
+	      templateNombre: 'vales',
+	      reportNombre: 'valesOut',
+	      type: 'pdf',  
+	      datos: datos,
+		    }, function(err, file) {
+		      if(!err){
+		        downloadFile(file);
+		      }else{
+		        toastr.warning("Error al generar el reporte");
+		      }
+		      loading(false);
+		  });
+		  
 	
+  }
+  
 	
 }

@@ -10,7 +10,7 @@ Meteor.methods({
 		cliente._id = c.cliente_id;
 		
 		var planPagos = Meteor.call("generarPlanPagos", c, cliente);
-						
+								
 		var saldoActual = 0;
 		_.each(planPagos,function(pago){
 			saldoActual += Number(parseFloat(pago.cargo).toFixed(2));
@@ -18,7 +18,7 @@ Meteor.methods({
 		c.numeroPagos 	= planPagos.length;
 		c.saldoActual 	= Number(parseFloat(saldoActual).toFixed(2));
 		c.adeudoInicial = Number(parseFloat(saldoActual).toFixed(2));
-
+		
 		var sucursal = Sucursales.findOne({_id : c.sucursal_id});
 		
 		if (sucursal.folioCredito != undefined)				
@@ -75,6 +75,7 @@ Meteor.methods({
 		
 		delete credito['avales'];
 		var credito_id = Creditos.insert(credito);
+		
 		_.each(credito.avales_ids, function(aval){
 				var a = Avales.findOne(aval.aval_id);
 				var cliente = Meteor.users.findOne(credito.cliente_id);
@@ -91,7 +92,7 @@ Meteor.methods({
 		});
 
 		return "hecho";
-	},//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	},
 	actualizarCredito : function(cliente, credito, idCredito ) {
 		
 		if (credito.estatus == 1)
@@ -222,8 +223,6 @@ Meteor.methods({
 		if(!caja)
 			throw new Meteor.Error(500, 'Error 500: Conflicto', 'Usuario Sin Caja Asignada');
 		
-		
-		//console.log("Suma:", suma);
 		//Validar que el cliente tenga saldo en el crédito si es Vale
 		if (credito.tipo == "vale")
 		{
@@ -243,12 +242,14 @@ Meteor.methods({
 				
 				
 		}
-
-		
-		
-		
-		
+	
 		credito.entrega = {movimientosCaja:[],movimientosCuentas:[]};		
+		
+		var origen = "";
+		if (credito.tipo == "vale")
+				origen = "Entrega de Vale";
+		else
+				origen = "Entrega de Credito";		
 		
 		
 		_.each(montos.caja,(monto,index)=>{
@@ -258,7 +259,7 @@ Meteor.methods({
 			
 					var movimiento = {
 						tipoMovimiento  : "Retiro",
-						origen 					: "Entrega de Credito",
+						origen 					: origen,
 						origen_id 			: creditoid,
 						tipoIngreso_id 	: tipoIngreso_id,
 						caja_id 				: cajaid,
@@ -278,11 +279,6 @@ Meteor.methods({
 
 			}	
 		});
-
-		
-				
-		
-
 		
 		delete caja._id
 		caja.updated = true;
@@ -293,11 +289,25 @@ Meteor.methods({
 		//credito.entregado = true;
 		credito.estatus = 4;
 		credito.usuario_id = user._id;
-
+		
 		delete credito._id ;
 		Creditos.update({_id:creditoid},{$set:credito});
 		
-
+		//Actualizar el saldo al Distribuidor--------------
+		if (credito.tipo == "vale")
+		{
+				var saldo = 0;
+				var u = Meteor.users.findOne({_id: cliente._id});
+				saldo = u.profile.saldoCredito;
+				
+				saldo -= Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+				
+				Meteor.users.update({_id: cliente._id}, {$set: {"profile.saldoCredito": saldo}});
+			
+		}
+		
+		
+		//-------------------------------------------------
 
 		return "200";
 	},
@@ -306,12 +316,17 @@ Meteor.methods({
 		return credito;
 	},
 	validarCreditosSaldoEnMultas: function (cliente_id) {	
-	  var creditos = Creditos.find({cliente_id : cliente_id}).fetch();
+	  var creditos = Creditos.find({cliente_id : cliente_id, estatus: 4}).fetch();
 	  var ban = true;
 	  _.each(creditos, function(c){
 		  	if (c.saldoMultas > 0)
-		  			ban = false;
+		  	{
+			  	 ban = false;
+			  	 console.log(c.saldoMultas);
+		  	}
 	  });	  
+	  console.log(ban);
+	  
 		return ban;
 	},
 	generarAval : function(avales){

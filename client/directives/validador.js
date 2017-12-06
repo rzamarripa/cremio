@@ -1,25 +1,27 @@
 
 angular.module('creditoMio').directive('valida', validador);
-function validador () {
+  function validador () {
   return {
     restrict: 'A',
     link: function(scope, element, attrs) {
-    	element.carga = false
-			input = element.find('.form-control');
-    	var formName = element.parents('form').attr('name');
-    	scope.$watch(formName + '.' + input[0].name + '.$invalid', function (val) {
-    		if(element.carga){
+      element[0].carga = false;
+      input = element.find('.form-control');
+      var formName = element.parents('form').attr('name');
+      
+      scope.$watch(formName + '.' + input[0].name + '.$invalid', function (val) {
+        if(element[0].carga){
           if(val)
-          	element.addClass('has-error');
+            element.addClass('has-error');
           else
-          	element.removeClass('has-error');
+            element.removeClass('has-error');
         }else{
-          element.carga = true
+          element[0].carga = true
         }
       });
     }
   };
 }
+
 angular.module('creditoMio').filter('abs', function () {
   return function(val) {
     return Math.abs(val);
@@ -27,7 +29,7 @@ angular.module('creditoMio').filter('abs', function () {
 });
 
 angular.module('creditoMio').directive('validaForm', validaForm);
-	function validaForm () {
+  function validaForm () {
   return {
     restrict: 'A',
       scope:{
@@ -54,6 +56,8 @@ angular.module('creditoMio').directive('validaForm', validaForm);
     }
   }
 }
+
+
 
 
 

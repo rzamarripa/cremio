@@ -222,83 +222,82 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			
 		if (!this.credito.requiereVerificacion)
 				this.credito.turno = "";
-			  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
-			if (result)
-			{
-					//console.log(result,"sucursal bebe");
-					//rc.sucursalCliente.push(result);
-					//console.log(rc.sucursalCliente,"sucursal del cliente");
-						if (rc.cliente.roles == "Distribuidor") {
-						console.log("distri")
-						rc.credito.tasa = result.tasaVales
-						
-						console.log(rc.credito.tipoCredito_id)
-					}else if (rc.cliente.roles == "Cliente") {
-						console.log("clientaso")
-						rc.credito.tasa = rc.credito.tasa
-						
-			
-					}
-			
-			if (rc.cliente.roles == "Distribuidor") {
-				rc.credito.tipoCredito_id = rc.tiposCredito[0]._id
-
-			}
-
-			var _credito = {
-				cliente_id : rc.cliente._id,
-				tipoCredito_id : rc.credito.tipoCredito_id,
-				fechaSolicito : new Date(),
-				duracionMeses : rc.credito.duracionMeses,
-				capitalSolicitado : rc.credito.capitalSolicitado,
-				adeudoInicial : rc.credito.capitalSolicitado,
-				saldoActual : rc.credito.capitalSolicitado,
-				periodoPago : rc.credito.periodoPago,
-				fechaPrimerAbono : rc.credito.primerAbono,
-				multasPendientes : 0,
-				saldoMultas : 0.00,
-				saldoRecibo : 0.00,
-				estatus : 1,
-				requiereVerificacion: rc.credito.requiereVerificacion,
-				turno : rc.credito.turno,
-				sucursal_id : Meteor.user().profile.sucursal_id,
-				fechaVerificacion: rc.credito.fechaVerificacion,
-				turno: rc.credito.turno,
-				tasa: rc.credito.tasa,
-				conSeguro : rc.credito.conSeguro,
-				seguro: rc.credito.seguro
-			};  
-			 console.log(_credito,"creditoJaime")
-			 Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
-		
-			if(error){
-				console.log(error);
-				toastr.error('Error al calcular el nuevo plan de pagos.');
-			}
-			else{
-				_.each(result,function (pago) {
-					rc.planPagos.push(pago)
-					$scope.$apply();
-				});
-			}
 				
-		})
+	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
+				if (result)
+				{
+						var fechaPrimerAbono = new Date();
+					
+						if (rc.cliente.roles == "Distribuidor") {
+								rc.credito.tasa = result.tasaVales;
+								rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;	//Ojo corregir
+								
+								var n = fechaPrimerAbono.getDate();
+								if (n >= 5 && n < 20)
+								{
+										fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),1,0,0,0,0);		
+								}
+								else 
+								{
+										if (n < 5)
+												fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),16,0,0,0,0);
+										else if (n >= 20)
+										   	fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth() + 1,16,0,0,0,0);								
+								}
+							
+						}else if (rc.cliente.roles == "Cliente") {
+								rc.credito.tasa = rc.credito.tasa;
+							
+						}
 
-		}
+						var _credito = {
+							cliente_id 							: rc.cliente._id,
+							tipoCredito_id 					: rc.credito.tipoCredito_id,
+							fechaSolicito  					: new Date(),
+							duracionMeses  					: Number(rc.credito.duracionMeses),
+							capitalSolicitado 			: Number(rc.credito.capitalSolicitado),
+							adeudoInicial 					: Number(rc.credito.capitalSolicitado),
+							saldoActual 						: Number(rc.credito.capitalSolicitado),
+							periodoPago 						: rc.credito.periodoPago,
+							fechaPrimerAbono 				: fechaPrimerAbono,
+							multasPendientes 				: 0,
+							saldoMultas 						: 0.00,
+							saldoRecibo 						: 0.00,
+							estatus 								: 1,
+							requiereVerificacion		: rc.credito.requiereVerificacion,
+							turno 									: rc.credito.turno,
+							sucursal_id 						: Meteor.user().profile.sucursal_id,
+							fechaVerificacion				: rc.credito.fechaVerificacion,
+							turno										: rc.credito.turno,
+							tasa 										: rc.credito.tasa,
+							conSeguro 							: rc.credito.conSeguro,
+							seguro									: rc.credito.seguro
+						};  
+	
+						 //console.log(_credito,"creditoJaime")
+						Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
+					
+								if(error){
+									console.log(error);
+									toastr.error('Error al calcular el nuevo plan de pagos.');
+								}
+								else{
+									_.each(result,function (pago) {
+										rc.planPagos.push(pago)
+										$scope.$apply();
+									});
+								}
+						});
 
-		
+				}
 		});
-		
-
-		
-		
 		return rc.planPagos;
 	}
 	
 	this.generarCredito = function(form){
 		
 		if(form.$invalid){
-				toastr.error("Error al guardar la solicitud de crédito, llene todos los campos.");
+				toastr.error("Error al guardar la solicitud, llene todos los campos.");
 				return;
 		}	
 		if (rc.cliente.profile.renta == true && this.avales.length == 0 && rc.cliente.roles != "Distribuidor")		
@@ -328,6 +327,22 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 						rc.credito.tasa = rc.sucursalCredito.tasaVales;
 						rc.credito.tipo = "vale";
 						rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;
+						
+						var fechaPrimerAbono = new Date();
+						var n = fechaPrimerAbono.getDate();
+						if (n >= 5 && n < 20)
+						{
+								fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),1,0,0,0,0);		
+						}
+						else 
+						{
+								if (n < 5)
+										fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),16,0,0,0,0);
+								else if (n >= 20)
+								   	fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth() + 1,16,0,0,0,0);								
+						}
+						
+						rc.credito.primerAbono = fechaPrimerAbono;
 
 					}else if (rc.cliente.roles == "Cliente") {
 
@@ -341,10 +356,10 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 						cliente_id 								: rc.cliente._id,
 						tipoCredito_id 						: rc.credito.tipoCredito_id,
 						fechaSolicito 						: new Date(),
-						duracionMeses 						: rc.credito.duracionMeses,
-						capitalSolicitado 				: rc.credito.capitalSolicitado,
-						adeudoInicial 						: rc.credito.capitalSolicitado,
-						saldoActual 							: rc.credito.capitalSolicitado,
+						duracionMeses 						: Number(rc.credito.duracionMeses),
+						capitalSolicitado 				: Number(rc.credito.capitalSolicitado),
+						adeudoInicial 						: Number(rc.credito.capitalSolicitado),
+						saldoActual 							: Number(rc.credito.capitalSolicitado),
 						periodoPago 							: rc.credito.periodoPago,
 						fechaPrimerAbono 					: rc.credito.primerAbono,
 						multasPendientes 					: 0,
@@ -375,26 +390,24 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 					}
 					else if (rc.cliente.roles == 'Cliente') {
 			
-						rc.credito.tipo = "creditoP"
+						rc.credito.tipo = "creditoP";
+						
+						credito.avales = angular.copy(rc.avales);
+					
+						//Duda se guardan los dos???
+						
+						if (rc.credito.tipoGarantia == "mobiliaria")
+								credito.garantias = angular.copy(rc.garantias);
+						else
+								credito.garantias = angular.copy(rc.garantiasGeneral);
+							
 					}
-
-		
-				
-					credito.avales = angular.copy(rc.avales);
-					
-					//Duda se guardan los dos???
-					
-					if (rc.credito.tipoGarantia == "mobiliaria")
-							credito.garantias = angular.copy(rc.garantias);
-					else
-							credito.garantias = angular.copy(rc.garantiasGeneral);
-				
 
 				//Cambie el metodo	
 		
 					Meteor.apply('generarCreditoPeticion', [rc.cliente, credito], function(error, result){
 						if(result == "hecho"){
-							toastr.success('Se ha guardado la solicitud de crédito correctamente');
+							toastr.success('Se ha guardado la solicitud correctamente');
 							rc.planPagos = [];
 							rc.avales = [];
 							if (rc.cliente.roles == "Distribuidor") {
@@ -822,7 +835,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 					
 					this.actionGarantia = false;
 			}		
-	};
+	}; 
 
 	this.verGarantia = function(tipo,a)
 	{

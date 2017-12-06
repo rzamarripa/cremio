@@ -418,18 +418,18 @@ angular.module("creditoMio")
 							avales = rc.avalesCliente
 				    }
 				});
-		    }
+		}
 		
 				contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
 								
 
-			  rc.planPagos = [];
-				this.tablaAmort = true;
-					
-				if(rc.credito.requiereVerificacion == true)
-					rc.credito.estatus = 0;
-				else
-					rc.credito.estatus = 1;
+		  rc.planPagos = [];
+			this.tablaAmort = true;
+				
+			if(rc.credito.requiereVerificacion == true)
+				rc.credito.estatus = 0;
+			else
+				rc.credito.estatus = 1;
 			
 				
 			var _credito = {

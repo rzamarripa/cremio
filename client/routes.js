@@ -506,6 +506,22 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.pagarVale', {
+			url: '/pagarVale/:objeto_id',
+			templateUrl: 'client/planPagos/pagar/pagarVale.ng.html',
+			controller: 'PagarValeCtrl as pagV',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 	
+					});
+				}]
+			}
+		})
 		.state('root.tiposCredito', {
 			url: '/tiposCredito',
 			templateUrl: 'client/tiposCredito/tiposCredito.ng.html',

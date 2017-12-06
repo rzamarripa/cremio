@@ -901,10 +901,9 @@ angular.module("creditoMio")
 			this.nuevoEmpresa = false;
   };
 
-  this.imprimirDoc = function(img) {
+  this.imprimirDoc = function(imagen) {
      //console.log(imagen)
-     /*
-Meteor.call('imprimirImagenDocumento', imagen, function(error, response) {
+     Meteor.call('imprimirImagenDocumento', imagen, function(error, response) {
        if(error)
        {
         console.log('ERROR :', error);
@@ -949,15 +948,16 @@ Meteor.call('imprimirImagenDocumento', imagen, function(error, response) {
   
        }
     });
-*/
      
-     var html  = "<html><head>" +
+    /*
+ var html  = "<html><head>" +
         "</head>" +
         "<body  style ='-webkit-print-color-adjust:exact;'>"+
-        "<img src=\"" + img + "\" onload=\"javascript:window.print();\"/>" +
+        "<img src=\"" + imagen + "\" onload=\"javascript:window.print();\"/>" +
         "</body>";
     var win = window.open("about:blank","_blank");
     win.document.write(html);
+*/
      
   }
 

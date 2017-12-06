@@ -1491,7 +1491,6 @@ Meteor.methods({
   },
   contratos: function (contrato,credito,cliente,planPagos,avales) {
 	  
-	  
 	  if(Meteor.isDevelopment){
       var path = require('path');
       var publicPath = path.resolve('.').split('.meteor')[0];
@@ -2491,7 +2490,7 @@ objeto.sort(function(a, b){
 		}
 		
 		opts.getSize=function(img,tagValue, tagName) {
-		    return [400,250];
+		    return [400,600];
 		}
 		
 		var imageModule=new ImageModule(opts);
@@ -2540,7 +2539,7 @@ objeto.sort(function(a, b){
 								
 		
 		var fecha = new Date();
-	    fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
+	  fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
 		
 		doc.setData({				imagen:    imagen,
 									fecha:     fecha,
@@ -2606,7 +2605,7 @@ objeto.sort(function(a, b){
     if(Meteor.isDevelopment){
       var path = require('path');
       var publicPath = path.resolve('.').split('.meteor')[0];
-      var templateRoute = publicPath + "public/templates/" + params.templateNombre + templateType;
+      var templateRoute = publicPath + "public/plantillas/" + params.templateNombre + templateType;
     }else{
       var publicPath = '/var/www/credmio/bundle/programs/web.browser/app/';
       var templateRoute = publicPath + "templates/" + params.templateNombre + templateType;
@@ -2631,7 +2630,7 @@ objeto.sort(function(a, b){
     doc.render();
     var buf = doc.getZip().generate({ type: "nodebuffer" });
     if (params.type == 'pdf') {
-      var rutaOutput = publicPath + (Meteor.isDevelopment ? ".outputs/" : "templates/") + params.reportNombre + moment().format('x') + templateType;
+      var rutaOutput = publicPath + (Meteor.isDevelopment ? ".outputs/" : "plantillas/") + params.reportNombre + moment().format('x') + templateType;
       fs.writeFileSync(rutaOutput, buf);
       unoconv.convert(rutaOutput, 'pdf', function(err, result) {
         if(!err){

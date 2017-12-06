@@ -27,6 +27,7 @@ Meteor.startup(function () {
     events:{
       "0 1 * * *"  : multas
     }
+    //el primer valor es a que minuto se ejecuta
   });
 
   

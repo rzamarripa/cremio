@@ -969,14 +969,60 @@ rc.referenciasPersonales = [];
 	
 	this.imprimirDoc= function(img)
 	{
+		 Meteor.call('imprimirImagenDocumento', img, function(error, response) {
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       else
+       {
+              function b64toBlob(b64Data, contentType, sliceSize) {
+                  contentType = contentType || '';
+                  sliceSize = sliceSize || 512;
+                
+                  var byteCharacters = atob(b64Data);
+                  var byteArrays = [];
+                
+                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+                
+                    var byteNumbers = new Array(slice.length);
+                    for (var i = 0; i < slice.length; i++) {
+                      byteNumbers[i] = slice.charCodeAt(i);
+                    }
+                
+                    var byteArray = new Uint8Array(byteNumbers);
+                
+                    byteArrays.push(byteArray);
+                  }
+                    
+                  var blob = new Blob(byteArrays, {type: contentType});
+                  return blob;
+              }
+              
+              var blob = b64toBlob(response, "application/docx");
+              var url = window.URL.createObjectURL(blob);
+              
+              //console.log(url);
+              var dlnk = document.getElementById('dwnldLnk');
 
-		var html  = "<html><head>" +
+              dlnk.download = "imagenDocumento.docx"; 
+              dlnk.href = url;
+              dlnk.click();       
+              window.URL.revokeObjectURL(url);
+  
+       }
+    });
+		/*
+var html  = "<html><head>" +
         "</head>" +
         "<body  style ='-webkit-print-color-adjust:exact;'>"+
         "<img src=\"" + img + "\" onload=\"javascript:window.print();\"/>" +
         "</body>";
     var win = window.open("about:blank","_blank");
     win.document.write(html);
+*/
 	};
 
 
@@ -1424,8 +1470,9 @@ if(estatus == 0){
 				
 	};
 
-	this.imprimirContratos = function(contrato,cliente,avales){
-
+	this.imprimirContratos = function(contrato,cliente){
+			
+			var avales = [];
 	 		if (contrato.avales_ids.length > 0) {
 					rc.avalpapu = contrato.avales_ids[0].aval_id
 	        Meteor.call('obAvales',rc.avalpapu, function(error, result){           					
@@ -1437,6 +1484,8 @@ if(estatus == 0){
 					});
 		  }	
 			contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
+			
+			
 	    Meteor.call('getPeople',cliente,contrato._id, function(error, result){           					
 				if (result)
 				{
@@ -1448,8 +1497,8 @@ if(estatus == 0){
 						fechaSolicito 					: new Date(),
 						duracionMeses 					: contrato.duracionMeses,
 						capitalSolicitado 			: contrato.capitalSolicitado,
-						adeudoInicial 					: contrato.capitalSolicitado,
-						saldoActual 						: contrato.capitalSolicitado,
+						adeudoInicial 					: 0,
+						saldoActual 						: 0,
 						periodoPago 						: contrato.periodoPago,
 						fechaPrimerAbono 				: contrato.fechaPrimerAbono,
 						multasPendientes 				: 0,
@@ -1469,7 +1518,7 @@ if(estatus == 0){
 
 						if (result)
 						{
-								
+								//console.log("Plan Pagos", result);
 								Meteor.call('contratos', contrato, contrato._id,rc.datosCliente,result, avales, function(error, response) {
 								   if(error)
 								   {
@@ -1612,14 +1661,8 @@ if(estatus == 0){
 								});//meteorcontratos							
 						}
 					});	
-					
-					
-	
-
 				}
-
 			});
-
 	};
 
 	this.recuperarCredito= function(id)

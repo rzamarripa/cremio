@@ -6,38 +6,43 @@
 				<div class="col-sm-12 col-md-12 col-lg-12">
 					<div class="well well-light well-sm no-margin no-padding">
 						<div class="row">
-							<div class="col-sm-12">
-							<a ng-click="cd.CreditoSolicitar(cd.objeto._id)"  class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;">
-								<i class="fa fa-plus"></i> N. Solicitud
-							</a>&nbsp;
-							<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px;">
-								<i class="fa fa-plus"></i> N. Nota de Credito
-							</a>&nbsp;
-							<a ng-click="cd.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' " style="margin: 5px;">
-								<i class="fa fa-plus"></i> N. Nota de Cliente
-							</a>&nbsp;
-							<a ng-click="cd.crearCargoMoratorio(credito)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px">
-								 <i class="fa fa-plus"></i> N. Cargo Moratorio
-							</a>&nbsp;	
-							<a ui-sref="root.pagarPlanPagos({objeto_id : cd.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero' && cd.estatusCaja == true" style="margin: 5px;">
-								<i class="fa fa-plus"></i> N. Pago
-							</a>&nbsp;
-							<div class="col-sm-3">
-										<h1>{{cd.objeto.profile.nombre}} <span class="semi-bold">{{cd.objeto.profile.apellidoPaterno}} {{cd.objeto.profile.apellidoMaterno}}</span>
-										<h5>{{cd.objeto.profile.numeroCliente}}</h5>
-										</h1>				
-							</div>
-							<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px;">
-									<i class="fa fa-pencil" ></i> Modificar
-							</a>&nbsp;
-							<small><a ng-click="cd.generarFicha(cd.objeto,cd.objeto._id)" class="btn btn-primary"><i class="fa fa-download" ></i> Ficha</a></small>
-							
-							</div>
+<!-- 							<div class="col-sm-12"> -->
+								<div class="col-sm-3">
+									<img style="max-width:200px;" src="{{cd.objeto.profile.foto}}" >
+								</div>
+								<div class="col-sm-9">	
+									<div class="row">
+										<a ng-click="cd.CreditoSolicitar(cd.objeto._id)"  class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;; margin-right: 18px">
+											<i class="fa fa-plus"></i> N. Solicitud
+										</a>&nbsp;
+										<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px;">
+											<i class="fa fa-plus"></i> N. Nota de Credito
+										</a>&nbsp;
+										<a ng-click="cd.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' " style="margin: 5px;">
+											<i class="fa fa-plus"></i> N. Nota de Cliente
+										</a>&nbsp;
+										<a ng-click="cd.crearCargoMoratorio(credito)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px">
+											 <i class="fa fa-plus"></i> N. Cargo Moratorio
+										</a>&nbsp;	
+										<a ui-sref="root.pagarPlanPagos({objeto_id : cd.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero' && cd.estatusCaja == true" style="margin: 5px;">
+											<i class="fa fa-plus"></i> N. Pago
+										</a>&nbsp;
+										<a ng-click="cd.generarFicha(cd.objeto,cd.objeto._id)" class="btn btn-primary"><i class="fa fa-download" ></i> Ficha</a>&nbsp;
+										<a	ui-sref="root.editarCliente({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px;">
+												<i class="fa fa-pencil" ></i> Modificar
+										</a>&nbsp;
+									</div>
+									<div class="row">
+											<h1>{{cd.objeto.profile.nombre}} <span class="semi-bold">{{cd.objeto.profile.apellidoPaterno}} {{cd.objeto.profile.apellidoMaterno}}</span>
+											<h5>{{cd.objeto.profile.numeroCliente}}</h5>
+											</h1>				
+									</div>		
+								</div>	
+							<!-- </div> -->
 							<div class="col-sm-6">
 								<span style="font-size: small"> {{cd.parametrizacion.mensaje}}</span>
 							</div>	
 							<div class="col-sm-12">				
-
 								<div class="widget-body">
 	<hr class="simple">
 
@@ -66,8 +71,6 @@
 			<a href="#rechazados" ng-click="cd.creRechazados()" data-toggle="tab"><span class="badge bg-color-red txt-color-white pull-right" style="padding-right: 12px;padding-left: 12px ">{{cd.creditosCancelados.length}}</span>Solicitudes Rechazadas</a>
 		</li>
 	</ul>
-
-
 			<div class="tab-pane fade in active" id="creditosActivos" ng-show="cd.creditoAc" >
 				<p>
 					<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
@@ -218,10 +221,6 @@
 						    </div>
 						      <div class="panel-body">    
 									    <div class="row">
-									    	<div class="col-sm-3">
-									    		<img style="max-width:200px;" src="{{cd.objeto.profile.foto}}" >
-									    	</div>
-			
 									    	<div class="col-sm-3" > 					    
 										    	<label>Nombre (s)</label>
 										    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cd.objeto.profile.nombre" disabled="">
@@ -234,37 +233,34 @@
 										    	<label>Apellido Materno</label>
 										    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cd.objeto.profile.apellidoMaterno" disabled="">
 									    	</div>	 
-									    	<div class="col-sm-3">
-													<br/>
-													<div class="well padding-10">
-														<h5 class="margin-top-0"><i class="fa fa-file"></i> Documentos:</h5>
-														<div class="row">			
-															<div class="col-lg-12">
-																<table class="table">
-																	<thead>
-																		<tr>
-																			<th>Documento</th>
-																			<th>Ver</th>
-																			<th>Imprimir</th>
-																		</tr>	
-																	</thead>
-																	<tbody>
-																		<tr ng-repeat="item in cd.objeto.profile.documentos">
-																			<td>{{item.nombre}}</td>
-																		  <td><a  ng-click="cd.modalDoc(item.imagen)"> <i class="fa fa-eye"></a></td>
-																			<td><a ng-click="cd.imprimirDoc(item.imagen)"> <i class="fa fa-print"></i></a></td>
-																		</tr>	
-																	</tbody>	
-																</table>	
-															</div>
-														</div>
-													</div>
-												</div>
-									    	<div class="col-sm-3">					    
+									    		<div class="col-sm-3">					    
 										    	<label>Número cliente</label>
 										    	<input name="numeroCliente" type="text" class="form-control" placeholder="Número de Cliente" ng-model="cd.objeto.profile.numeroCliente" disabled="">
-									    	</div>  				    	    
+									    	</div> 
 									    </div>
+									    <div class="row">
+										    <div class="col-sm-6">
+													<br/>
+													<div class="well padding-10">
+														<table class="table">
+															<thead>
+																<tr>
+																	<th>Documento</th>
+																	<th>Ver</th>
+																	<th>Imprimir</th>
+																</tr>	
+															</thead>
+															<tbody>
+																<tr ng-repeat="item in cd.objeto.profile.documentos">
+																	<td>{{item.nombre}}</td>
+																  <td><a  ng-click="cd.modalDoc(item.imagen)"> <i class="fa fa-eye"></a></td>
+																	<td><a ng-click="cd.imprimirDoc(item.imagen)"> <i class="fa fa-print"></i></a></td>
+																</tr>	
+															</tbody>	
+														</table>	
+													</div>
+												</div>
+									    </div>  
 						      </div>
 						  </div>
 						  <div class="panel panel-default">
@@ -1010,10 +1006,9 @@
 				</p>
 			</div>
 							</div>
-
-						</div>
+							</div>
 						
-					</div>
+						</div>
 
 							</div>													
 						</div>
@@ -1077,7 +1072,6 @@
 			<!-- Modal content-->
 					<div class="modal-content">
 						<div class="modal-header">
-					
 							<h4 class="modal-title">Nota para cliente</h4>
 						</div>
 						<div class="modal-body">
@@ -1089,8 +1083,7 @@
 						</div>
 						<div class="modal-footer">
 	    				    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-	    				     <button type="button" ng-click="cd.quitarNota(cd.notaPerfil._id)" class="btn btn-default" data-dismiss="modal">Quitar</button>
-	        
+	    				    <button type="button" ng-click="cd.quitarNota(cd.notaPerfil._id)" class="btn btn-default" data-dismiss="modal">Quitar</button>
      				 </div>
 					</div>
 				</div>
