@@ -33,11 +33,10 @@
 	 								
 								</div>
 								<div class="row">
-									<h1>{{dis.objeto.profile.nombre}} <span class="semi-bold">{{dis.objeto.profile.apellidoPaterno}} {{dis.objeto.profile.apellidoMaterno}}</span>
-									<h5>{{dis.objeto.profile.numeroDistribuidor}} <a href="" ng-click="dis.imprimirContrato()" class="btn btn-info"><i class="fa fa-print"></i> Contrato </a></h5>
-									<h6>Limite Crédito: {{dis.objeto.profile.limiteCredito | currency}}</h6>
-									<h6>Saldo  Crédito: {{dis.objeto.profile.saldoCredito | currency}}</h6>
-									</h1>
+										<h1>{{dis.objeto.profile.nombre}} <span class="semi-bold">{{dis.objeto.profile.apellidoPaterno}} {{dis.objeto.profile.apellidoMaterno}}</span></h1>
+										<h5>{{dis.objeto.profile.numeroDistribuidor}} <a href="" ng-click="dis.imprimirContrato()" class="btn btn-info"><i class="fa fa-print"></i> Contrato </a></h5>
+										<h6>Limite Crédito: {{dis.objeto.profile.limiteCredito | currency}}</h6>
+										<h6>Saldo  Crédito: {{dis.objeto.profile.saldoCredito | currency}}</h6>
 								</div>		
 							</div>
 							<div class="col-sm-12">				
@@ -79,7 +78,7 @@
 										
 										<header role="heading">
 											<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-											<h2>Vales Activos   <a href="" ng-click="dis.imprimirVales()" class="btn btn-info"><i class="fa fa-print"></i> Imprimir Vales </a></h2>
+												<h2>Vales Activos  <!--  <a href="" ng-click="dis.imprimirVales()" class="btn btn-info"><i class="fa fa-print"></i> Imprimir Vales </a> --></h2>
 <!--
 											<ul class="nav nav-tabs pull-right" id="myTab">
 												<li class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in dis.creditos track by $index">
@@ -110,6 +109,16 @@
 																	<option ng-repeat="ben in dis.beneficiarios" value="{{ben.credito_id}}">{{ben.beneficiario}}</option>
 																</select>
 															</div>
+															<div class="col-sm-3">
+																<label>Saldo</label>
+																<br />
+																<h4><span>{{dis.saldo | currency}}</span></h4>
+															</div>	
+															<div class="col-sm-3">	
+																<label>Cargos Moratorios </label>
+																<br />
+																<h4><span>{{dis.cargosMoratorios | currency}}</span></h4>
+															</div>	
 														</div>
 														<br />
 														<!-- Detalle -->
@@ -1379,21 +1388,23 @@
 								    	<table class="table table-striped table-bordered table-condensed font-xs">
 												<thead class="thead">
 													<tr>
-														<th class="text-center" width="7%">Folio Vale</th>
-														<th class="text-center" width="7%">Recibo No.</th>
-														<th class="text-center" width="10%">Movimiento</th>
-														<th class="text-center" width="10%">Capital</th>
-														<th class="text-center" width="10%">Intereses</th>
-														<th class="text-center" width="10%">IVA</th>
-														<th class="text-center" width="10%">Seguro</th>
-														<th class="text-center" width="10%">Bonificación</th>
-														<th class="text-center" width="10%">Total</th>
+														<th class="text-center" width="5%">F. Vale</th>
+														<th class="text-center" width="15%">Beneficiado</th>
+														<th class="text-center" width="10%">Fecha</th>
+														<th class="text-center" width="5%">Mov.</th>
+														<th class="text-center" width="5%">Capital</th>
+														<th class="text-center" width="5%">Intereses</th>
+														<th class="text-center" width="5%">IVA</th>
+														<th class="text-center" width="5%">Seguro</th>
+														<th class="text-center" width="5%">Bonificación</th>
+														<th class="text-center" width="5%">Total</th>
 													</tr>
 												</thead>
 												<tbody>
 													<tr  ng-repeat="pp in dis.pagoPlanPago">
 														<td class="text-center">{{pp.folioCredito}}</td>
-														<td class="text-center">{{pp.numeroPago}} - {{pp.numeroPagos}}</td>	
+														<td class="text-left">{{pp.beneficiado}}</td>
+														<td class="text-center">{{pp.fechaLimite | date: "dd-MM-yyyy"}}</td>	
 														<td class="text-center">{{pp.descripcion}}</td>
 														<td class="text-right">{{pp.pagoCapital | currency}}</td>
 														<td class="text-right">{{pp.pagoInteres | currency}}</td>

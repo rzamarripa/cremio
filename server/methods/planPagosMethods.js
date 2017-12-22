@@ -1129,8 +1129,8 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 		pago.fechaDeposito = fechaDeposito;
 				
 		//corregir---*********
-		pago.saldoAnterior = 0;//Number(parseFloat(total).toFixed(2));
-		pago.saldoActual	 = 0;//Number(parseFloat(total - totalPago).toFixed(2));
+		pago.saldoAnterior = Number(parseFloat(total).toFixed(2));
+		pago.saldoActual	 = Number(parseFloat(total - totalPago).toFixed(2));
 		
 		if (ocultaMulta)
 			 pago.saldoCargoMoratorio = 0;
@@ -1383,10 +1383,12 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 				diaPago								= mfecha.weekday();
 				
 				credit = Creditos.findOne(pago.credito_id);
-
+					
 				var npp = { pago_id		 		: pago_id,
 										totalPago	 		: ttpago,
 										bonificacion	: bonificacionesId[p._id],
+										fechaLimite		: p.fechaLimite,
+										beneficiado		: credit.beneficiado,
 										estatus		 		: p.estatus,
 										fechaPago  		: pago.fechaPago, 
 										fechaDeposito : fechaDeposito,
@@ -1407,6 +1409,8 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 				var npago= { planPago_id	: p._id,
 										 totalPago		: ttpago,
 										 bonificacion	: bonificacionesId[p._id],
+										 fechaLimite	: p.fechaLimite,
+										 beneficiado	: credit.beneficiado,
 										 estatus			: p.estatus, 
 										 descripcion	: p.descripcion,
 										 fechaPago		: pago.fechaPago, 

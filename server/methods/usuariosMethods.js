@@ -432,11 +432,21 @@ if (referenciaPersonal.buscarPersona_id)
 		});
 		
 		
+		var buscarValesBeneficiados = Creditos.find({ "beneficiado": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }, estatus: 4}, 
+																										{ sort : {"beneficiado" : 1 }}).fetch();
 		
 		
 		
-		
-		
+		_.each(buscarValesBeneficiados, function(vale){
+				
+				personas.push({ _id						: vale._id,
+												nombre				: vale.beneficiado,
+												tipo					: "Vale",
+												deuda					: vale.saldoActual, 
+												creditos			: vale
+											});
+				
+		});
 																					
 
 																	

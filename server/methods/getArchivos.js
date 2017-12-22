@@ -2437,7 +2437,7 @@ Meteor.methods({
   	
   	//Aval*******************************************************************
   	var aval = {};
-  	console.log(user.profile.avales_ids[0]._id);
+  	
   	var avalTemp = Avales.findOne({_id: user.profile.avales_ids[0]._id});
   	aval.nombreCompleto = avalTemp.profile.nombreCompleto;
 		nacionalidad = Nacionalidades.findOne(avalTemp.profile.nacionalidad_id);
@@ -2463,9 +2463,14 @@ Meteor.methods({
 		var letra = NumeroALetras(valoresCS[0].replace(',',''));
   	var fecha = new Date();
 		var fechaLetra = formatDia(fecha);
-  	var vigencia = fecha.getMonth() + 11;
-  	var fechaVigencia = formatDia(vigencia);
   	
+		var year = fecha.getFullYear();
+		var month = fecha.getMonth();
+		var day = fecha.getDate();
+		var vigencia = new Date(year + 1, month, day)
+ 	
+  	var fechaVigencia = formatDia(vigencia);
+
 
 /*
     var autorizacionProveedorSi = contrato.avisoPrivacidad;

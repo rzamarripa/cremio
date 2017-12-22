@@ -316,6 +316,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		if (rc.cliente.roles == "Distribuidor") {
 			this.credito.periodoPago = "Quincenal"
 		}
+		
+		loading(true);
 	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
 			if (result)
 			{
@@ -420,6 +422,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 						}
 						$scope.$apply();
 						/////////////////AQUI
+						
+						loading(false);
 					});
 			}
 		

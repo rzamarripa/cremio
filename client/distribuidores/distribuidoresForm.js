@@ -453,10 +453,12 @@ angular.module("creditoMio")
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
       objeto.profile.avales_ids = rc.avales;
-    
-       Meteor.call('createUsuario', objeto, "Distribuidor", function(e,r){
+			
+			loading(true);
+      Meteor.call('createUsuario', objeto, "Distribuidor", function(e,r){
           if (r)
           {
+	          	loading(false);
               toastr.success('Guardado correctamente.');
               this.usuario = {};
               $('.collapse').collapse('hide');

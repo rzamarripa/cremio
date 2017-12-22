@@ -63,6 +63,9 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 	/////////////////////////////////////
 	rc.vale_id = "";
 	
+	rc.saldo = 0;
+	rc.cargosMoratorios = 0;
+	
 	
 	this.subscribe('cajas',()=>{
 		return [{}];
@@ -391,6 +394,9 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		planPagos : () => {
 			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:-1}}).fetch();
 			
+			rc.saldo = 0;
+			rc.cargosMoratorios = 0;
+			
 			if(rc.getReactively("creditos") && rc.creditos.length > 0 && planPagos.length > 0){	
 				_.each(rc.getReactively("creditos"), function(credito){
 					credito.planPagos = [];
@@ -404,7 +410,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 					credito.tieneCargoMoratorio = false;
 					
 					credito.pagos = 0;
-
+					
 					_.each(planPagos, function(pago){
 
 						pago.credito = Creditos.findOne(credito._id);
@@ -427,6 +433,8 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 									  credito.pagados++;
 									  credito.sumaPagosRecibos += pago.cargo;
 								}
+								else
+										rc.saldo += pago.importeRegular;	
 							}
 							
 							if (pago.descripcion == "Cargo Moratorio")
@@ -438,16 +446,24 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 									  credito.pagadosCargoM++;
 									  credito.sumaPendientesCargoM += pago.cargo;
 								}
+								else
+										rc.cargosMoratorios += pago.importeRegular;
+										
+										
 								credito.numeroPagosCargoMoratorios += 1;
 								credito.sumaCargoMoratorios += pago.cargo;
 							}
-								
+							
 						}
 						
 					})
 				})
 			}
-
+			
+			rc.saldo 						= Number(parseFloat(rc.saldo).toFixed(2));
+			rc.cargosMoratorios	= Number(parseFloat(rc.cargosMoratorios).toFixed(2));
+			
+			
 			_.each(rc.empresas, function(empresa){
 
 					empresa.ciudad = Ciudades.findOne(empresa.ciudad_id)
@@ -1731,10 +1747,23 @@ var html  = "<html><head>" +
 	
 	this.CreditoSolicitar= function(id)
 	{
-
-	    	$state.go("root.generadorPlan",{objeto_id : id});
+			
+			var user = Meteor.users.findOne($stateParams.objeto_id);
+			if (user.profile.estatusCredito == undefined)
+			{
+					toastr.warning("No se ha autorizado al distribuidor...");
+					return;
+				
+			}
+			else if (user.profile.estatusCredito == 2)
+			{
+					toastr.error("Se rechazó al distribuidor...");
+					return;
+			}
+			else
+	    		$state.go("root.generadorPlan",{objeto_id : id});
 		  
-		    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
+
 		};
 	
 	this.btnCerrar= function()
@@ -1768,7 +1797,6 @@ var html  = "<html><head>" +
 		          	else
 		          		rc.BeneficiadosDeudas = result;	
 
-		          	
 		          	$scope.$apply();
 		        }  
 			});

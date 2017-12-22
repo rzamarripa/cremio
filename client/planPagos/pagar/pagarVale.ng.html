@@ -562,23 +562,23 @@
 				</div>									  	
 		</div>	
 		<div class="row">
-			<div class="col-sm-12">
+			<div class="col-sm-9">
 				<table class="table table-bordered table-condensed font-xs">
 					<thead class="thead">
 						<tr>
 							<!-- <th class="text-center" width="3%"></th> -->
-							<th class="text-center" width="3%">No.</th>
+							<!-- <th class="text-center" width="3%">No.</th> -->
 							<th class="text-center" width="3%">Folio</th>
-							<th class="text-center" width="20%">Beneficiado</th>
-							<th class="text-center" width="10%">Movimiento</th>
-							<th class="text-center" width="10%">Fecha de Pago</th>
+							<th class="text-center" width="15%">Beneficiado</th>
+							<th class="text-center" width="5%">Movimiento</th>
+							<th class="text-center" width="20%">Fecha de Pago</th>
 							<th class="text-center" width="5%">Recibo</th>
-							<th class="text-center" width="7%">Capital</th>
-							<th class="text-center" width="5%">Interes</th>
+							<th class="text-center" width="5%">Capital</th>
+							<th class="text-center" width="5%">Interés</th>
 							<th class="text-center" width="5%">Seguro</th>
 							<th class="text-center" width="5%">IVA</th>
-							<th class="text-center" width="7%">Bonificación</th>
-							<th class="text-center" width="7%">Saldo</th>
+							<th class="text-center" width="7%">Bonf.</th>
+							<th class="text-center" width="5%">Saldo</th>
 							<th class="text-center" width="5%">Pago</th>
 						</tr>
 					</thead>
@@ -587,7 +587,7 @@
 
 							<!-- <td ><a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td> -->
 
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	
+							<!-- <td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	 -->
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.beneficiado }}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.movimiento }}</td>
@@ -604,8 +604,7 @@
 					</tbody>
 				</table>	
 			</div>
-		</div>
-		<div class="row">
+			
 			<div class="col-sm-3 pull-right">
 				<table class="table" style="font-size: larger">
 					<tbody>
@@ -619,7 +618,7 @@
 						</tr>	
 						<tr>
 							<td>A pagar</td>
-							<td>{{pagV.pago.totalPago - pagV.pago.bonificacion  | currency }}	</td>
+							<td>{{pagV.pago.aPagar  | currency }}	</td>
 						</tr>	
 					</tbody>
 				</table>
@@ -629,7 +628,8 @@
 					<option ng-repeat="tipo in pagV.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
 				</select>
 				<br/>
-				<caption>Paga con: </caption> <input id="cobro" min="0" type="number" class="form-control" placeholder="Pagar" ng-model="pagV.pago.pagar" required="true">
+				<caption>Paga con: </caption> 
+				<input id="cobro" min="0" type="number" class="form-control" placeholder="Pagar" ng-model="pagV.pago.pagar" required="true">
 				<br/>
 				<h4>Cambio: {{pagV.pago.pagar - (pagV.pago.totalPago - pagV.pago.bonificacion)  | currency }}</h4>
 				<br/>
@@ -638,12 +638,11 @@
 						<label for="fecha">Fecha Deposito:</label>
 						<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="pagV.pago.fechaDeposito"/>
 				</div>
-				<br/>
-				<a class="btn btn-primary pull-left" ng-click="pagV.guardarPago(pagV.pago,pagV.credito)">Hacer Cobro</a>
+				<a class="btn btn-primary pull-left" ng-click="pagV.guardarPago(pagV.pago,pagV.credito)">Hacer Cobro</a>&nbsp
+				<a class="btn btn-info pull-left" ng-click="pagV.calcularAbono()">Calcular</a>
+								
 			</div>
-		</div>	
-		
-									
+		</div>
 </div>									
 
 
