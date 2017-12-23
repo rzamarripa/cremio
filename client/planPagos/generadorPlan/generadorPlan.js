@@ -282,10 +282,40 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 									toastr.error('Error al calcular el nuevo plan de pagos.');
 								}
 								else{
-									_.each(result,function (pago) {
+									/*
+_.each(result,function (pago) {
+										
 										rc.planPagos.push(pago)
 										$scope.$apply();
 									});
+*/
+
+									_.each(result,function (pago) {
+											var pag = pago
+											var pa = _.toArray(pag);
+						
+											var all = pa[pa.length - 1]
+											rc.total = all
+						
+											rc.planPagos.push(pago)
+											$scope.$apply();
+										});
+										
+										var total = rc.total;
+										//console.log(total,"total")
+										_.each(rc.planPagos,function (pago) {
+											
+											pago.liquidar = total;  						
+											total -= Number(parseFloat(pago.importeRegular).toFixed(2));
+											
+											total = Number(parseFloat(total).toFixed(2));
+											
+											//console.log(total,"liquidar")
+														
+											$scope.$apply();
+										});
+									
+									
 								}
 						});
 

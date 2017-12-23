@@ -31,9 +31,9 @@
 											<option value="7">DOMINGO</option>
 									</select>
 								</div>	
-								<div class="col-sm-2" ng-if="di.objeto.tipo == 'FECHA'" valida>
+								<div class="col-sm-4" ng-if="di.objeto.tipo == 'FECHA'" valida>
 		              <label>Fecha *</label>
-		              <input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="di.objeto.fecha" name="fecha"/>
+		              <input type="date" format="dd-MM-yyyy" class="form-control" ng-model="di.objeto.fecha" name="fecha"/>
 		            </div> 
 					    </div>
 						</div>

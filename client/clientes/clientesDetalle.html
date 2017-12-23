@@ -175,7 +175,7 @@
 													</div>
 													<div>
 															<small>
-																	<a ng-click="cd.mostrarReestructuracion(credito)" ng-if="currentUser.roles[0] == 'Gerente'" class="btn btn-primary">Reestructuración del crédito</a>
+																	<a ng-click="cd.mostrarReestructuracion(credito)" class="btn btn-primary">Reestructuración del crédito</a>
 															</small>
 															<br/><br/>
 															<small><a ng-click="cd.imprimirContratos(credito,cd.objeto._id)" class="btn btn-primary">Imprimir Contrato</a></small>
@@ -1018,53 +1018,40 @@
 			</div>
 		</div>
  <!-- /////////////////////////MODAL NOTA CUENTA ////////////////////////// -->
-<div class="container">
+<!-- <div class="container"> -->
 		<div class="modal fade" id="myModal"	data-backdrop="static" role="dialog">
 				<div class="modal-dialog">
 			<!-- Modal content-->
 					<div class="modal-content">
 						<div class="modal-header">
 							<h4 class="modal-title">Responder Nota</h4>
+							Título: <strong>{{cd.notaCuenta1.titulo}}</strong>
 						</div>
 						<div class="modal-body">
-							<h6>Información de la nota</h6><br/>
-								<p>Por: <strong>{{cd.usuario.profile.nombreCompleto}}</strong></p>
-								<p>Fecha: <strong>{{cd.notaCuenta1.fecha | date:'dd-MM-yyyy'}}, {{cd.notaCuenta1.hora}}</strong></p>
+							<h6>Información de la nota</h6>
+							<p>{{cd.notaCuenta1.descripcion}} </p> 
+							<p>Por: <strong>{{cd.usuario.profile.nombreCompleto}}</strong></p>
+							<p>Fecha: <strong>{{cd.notaCuenta1.fecha | date:'dd-MM-yyyy'}}, {{cd.notaCuenta1.hora}}</strong></p>
 						</div>
 						<div class="modal-footer">
-								<div class="row">
-								<div class="col-sm-12">
-								<div class="col-sm-12">
-								 	<h6 class="pull-left" ><strong>{{cd.notaCuenta1.titulo}}</strong></h6><br/><br/>
-								</div>
-								<div class="col-sm-12"> 
-									<p class="pull-left">{{cd.notaCuenta1.descripcion}} </p>
-								</div>
+							<div class="row">
 								<div class="col-sm-12" ng-if="cd.notaCuenta1.respuesta == true">
 									<label class="pull-left">Respuesta:</label>
-									<textarea type="text" class="form-control"	ng-model="cd.notaCuenta1.respuestaNota" >
+									<textarea type="text" class="form-control" ng-model="cd.notaCuenta1.respuestaNota" >
 								</div>
 								<div class="col-sm-12 "><br/>
-									<a	class="btn btn-success" ng-click="cd.contestarNota(cd.notaCuenta1._id)"
-									ng-show="cd.notaCuenta1.respuesta">Contestar</a>
-									<button type="button" ng-click="cd.quitarNota(cd.notaCuenta1._id)" class="btn btn-default" data-dismiss="modal" ng-show="!cd.notaCuenta1.respuesta">Quitar</button>
-									<button type="button" id="cerrarRespuesta" class="btn btn-default" data-dismiss="modal"
-									  ng-show="cd.btnCerrarRespuesta">Cerrar</button>
-									 <button type="button" class="btn btn-default" data-dismiss="modal"
-									  ng-show="!cd.notaCuenta1.respuesta">Cerrar</button>
-									  
+									<button type="button" ng-click="cd.contestarNota(cd.notaCuenta1._id)" class="btn btn-success" ng-show="cd.notaCuenta1.respuesta">Contestar</button>
+									<button type="button" ng-click="cd.quitarNota(cd.notaCuenta1._id)" class="btn btn-warning" data-dismiss="modal">Quitar</button>
+									<button type="button" id="cerrarRespuesta" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 								</div>
-					</div>								 
+							</div>								 
+						</div>
 					</div>
-			
-					
-					</div>
-					
 				</div>
-			</div>
+		
 		</div>
-</div>
-<!--		 //////////////////////////////////////////////////////////// -->
+<!-- </div> -->
+<!--		 /////////////////Nota para el Cliente////////////////////// -->
 <div class="container">
 				<!-- Modal -->
 			<div class="modal fade" id="notaPerfil"	data-backdrop="static" role="dialog">
@@ -1072,18 +1059,17 @@
 			<!-- Modal content-->
 					<div class="modal-content">
 						<div class="modal-header">
-							<h4 class="modal-title">Nota para cliente</h4>
+							<h4 class="modal-title">Nota para el Cliente</h4>
+							Título: <strong>{{cd.notaPerfil.titulo}}</strong>
 						</div>
 						<div class="modal-body">
-						<p>Fecha: <strong>{{cd.notaPerfil.fecha | date:'dd-MM-yyyy'}}, {{cd.notaPerfil.hora}}</strong></p><br/>
-						</div>
-						<div class="modal-body">
-							<h6>Información de la nota</h6><br/>
-						<div >{{cd.notaPerfil.descripcion}}</div>
+							<h6>Información de la nota</h6>
+						  <p>{{cd.notaPerfil.descripcion}}</p>
+						  Fecha: {{cd.notaPerfil.fecha | date:'dd-MM-yyyy'}}, {{cd.notaPerfil.hora}} <br />
 						</div>
 						<div class="modal-footer">
-	    				    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-	    				    <button type="button" ng-click="cd.quitarNota(cd.notaPerfil._id)" class="btn btn-default" data-dismiss="modal">Quitar</button>
+	    				    <button type="button" class="btn btn-warning" ng-click="cd.quitarNota(cd.notaPerfil._id)" data-dismiss="modal">Quitar</button>
+	    				    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
      				 </div>
 					</div>
 				</div>
@@ -1118,8 +1104,8 @@
      
   </div>
 </div>
-<!--		 //////////////////////////////////////////////////////////// -->
-<!-- /////////////////////////MODAL NOTA CLIENTE ////////////////////////// -->
+<!--//////////////////////////////////////////////////////////// -->
+<!-- ///////////////MODAL NOTA CLIENTE/CUENTA/////////////////// -->
 <div class="container">
 <!-- Modal -->
 	<div class="modal fade" id="modalCliente"	data-backdrop="static" role="dialog">
@@ -1127,7 +1113,7 @@
 	<!-- Modal content-->
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Escribir Nota para el cliente</h4>
+					<h4 class="modal-title">Escribir Nota</h4>
 				</div>
 				<div class="modal-body">
 						<div class="row">
@@ -1144,14 +1130,12 @@
 										<textarea type="text" class="form-control"	ng-model="cd.nota.descripcion" >
 									</div>
 									<label style="visibility: hidden;"  id="cuentaNota" class="checkbox-inline"><input  type="checkbox"   ng-click=" cd.cambioEstatusRespuesta()"  > Requiere respuesta</label>
-									<div class="col-sm-12 "><br/>
-										<a	class="btn btn-success" ng-click="cd.guardarNota(cd.nota)">Guardar</a>
-									</div>
 							</div>								 
 						</div>
 			  </div>
 			  <div class="modal-footer">
-				    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				  	<a	class="btn btn-success" ng-click="cd.guardarNota(cd.nota)">Guardar</a>
+				    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 				</div>
 			</div>
 		</div>

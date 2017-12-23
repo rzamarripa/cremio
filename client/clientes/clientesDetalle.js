@@ -49,6 +49,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	rc.parametrizacion = {};
 	
+	rc.notaPerfil = {};
+	rc.notaCuenta1 = {};
+	
+	rc.saldo = 0;
+	rc.cargosMoratorios = 0;
+	
+	rc.banderaContestar = false;
+	
 	this.subscribe('cajas',()=>{
 		return [{}];
 	});
@@ -71,7 +79,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		}];
 	});
 	this.subscribe('notas',()=>{
-		return [{cliente_id:this.getReactively("cliente_id")}]
+		//return [{cliente_id: this.getReactively("cliente_id")}]
+		return [{cliente_id	: $stateParams.objeto_id,
+						estatus 		: true,
+						tipo				: {$in : ["Cliente", "Cuenta"]} 	
+		}]
 	});
 
 	this.subscribe('tiposNotasCredito',()=>{
@@ -106,6 +118,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	});
 			
 	this.helpers({
+/*
 		ciudades : () => {
 			var ciudades = {};
 			_.each(Ciudades.find().fetch(), function(ciudad){
@@ -141,6 +154,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			});
 			return colonias
 		},
+*/
 
 		creditos : () => {
 			var creditos = Creditos.find({estatus:4}, {sort:{fechaSolicito:1}}).fetch();
@@ -224,12 +238,14 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		},
 		notasCredito : () =>{
 			var notas = NotasCredito.find({},{sort:{fecha:1}});
-			return notas
-
+			return notas;
 		},
+		/*
 		notaPerfil: () => {
-			var nota = Notas.find({perfil : "perfil",estatus:true}).fetch()
-
+			//var nota = Notas.find({perfil : "perfil",estatus:true}).fetch()
+			
+			//console.log("Notas Cre:", rc.getReactively("notasCredito"))
+			
 			_.each(rc.getReactively("notasCredito"), function(nota){
 				//console.log("notas de credito compilla",nota)
 				if (nota.tieneVigencia == true ) {
@@ -239,14 +255,19 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 				}
 
 			});
-
-			return nota[nota.length - 1];
+			
+			//console.log("Nota:", nota)
+			
+			//return nota[nota.length - 1];
 		
 		},
-		notaCuenta1: () => {
+*/
+		/*
+notaCuenta1: () => {
 			var nota = Notas.find({tipo : "Cuenta"}).fetch()
 			_.each(nota, function(notita){
 				if (notita.estatus == true && notita.cliente_id == rc.objeto._id) {
+					console.log("notaCuenta1")
 					$("#myModal").modal(); 
 				}
 			 });
@@ -254,28 +275,58 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			
 			
 		},
+*/
 		
 		objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
-			
-			_.each(rc.getReactively("notaPerfil"), function(nota){
-
-				if (cli._id == rc.notaPerfil.cliente_id) {
-
-					if (rc.notaPerfil.tipo == "Cuenta") {
-
-						$("#notaPerfil").modal("hide");
-
-					}else{
-						//console.log("modal abrir")
-						$("#notaPerfil").modal();
-					}
-				}
-			});
-
 
 			if (cli != undefined)
 			{
+					
+					
+					var notas = Notas.find({cliente_id	: $stateParams.objeto_id,
+																	estatus 		: true,
+																	tipo				: {$in : ["Cliente", "Cuenta"]}}).fetch();
+					
+					if (rc.banderaContestar == false)
+					{
+							_.each(notas, function(nota){
+								
+								if (nota.tipo == "Cuenta") {
+										//$("#notaPerfil").modal("hide");
+										rc.notaCuenta1 = nota;
+										$("#myModal").modal(); 
+									}
+									else if (nota.tipo == "Cliente")
+									{
+										//Esta abre la nota de Cliente
+										rc.notaPerfil = nota;
+										
+										$("#notaPerfil").modal();
+									}
+							});
+					}
+							
+					/*
+_.each(rc.getReactively("notaPerfil"), function(nota){
+
+						if (cli._id == rc.notaPerfil.cliente_id) {
+		
+							if (rc.notaPerfil.tipo == "Cuenta") {
+		
+								$("#notaPerfil").modal("hide");
+		
+							}
+							else
+							{
+								//console.log("modal abrir")
+								//Esta abre la nota de Cliente
+								$("#notaPerfil").modal();
+							}
+						}
+					});		
+*/
+					
 					//console.log("Cliente:", cli);
 					/*
 var empresa = Empresas.findOne(cli.profile.empresa_id);
@@ -334,14 +385,14 @@ rc.referenciasPersonales = [];
 		            }); 
 		      });
 */
-				/*
+					/*
 	this.ocupacion_id = cli.profile.ocupacion_id;
 				
 					var ec = EstadoCivil.findOne(cli.profile.estadoCivil_id);
 					if (ec != undefined)
 							this.estadoCivilSeleccionado = 	ec.nombre;
 */
-				/*
+					/*
 	
 					
 					_.each(cli, function(objeto){
@@ -367,6 +418,9 @@ rc.referenciasPersonales = [];
 		
 		planPagos : () => {
 			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:-1}}).fetch();
+			
+			rc.saldo = 0;
+			rc.cargosMoratorios = 0;
 			
 			if(rc.getReactively("creditos") && rc.creditos.length > 0 && planPagos.length > 0){	
 				_.each(rc.getReactively("creditos"), function(credito){
@@ -404,6 +458,8 @@ rc.referenciasPersonales = [];
 									  credito.pagados++;
 									  credito.sumaPagosRecibos += pago.cargo;
 								}
+								else
+										rc.saldo += pago.importeRegular;
 							}
 							
 							if (pago.descripcion == "Cargo Moratorio")
@@ -415,6 +471,9 @@ rc.referenciasPersonales = [];
 									  credito.pagadosCargoM++;
 									  credito.sumaPendientesCargoM += pago.cargo;
 								}
+								else
+										rc.cargosMoratorios += pago.importeRegular;
+										
 								credito.numeroPagosCargoMoratorios += 1;
 								credito.sumaCargoMoratorios += pago.cargo;
 							}
@@ -828,30 +887,6 @@ rc.referenciasPersonales = [];
 		
 	}
 
-	this.contestarNota = function(id){
-
-		this.nota = Notas.findOne({_id:id});
-
-		//console.log(this.nota)
-		
-		if (rc.notaCuenta1.respuestaNota != undefined) {
-			//console.log("entro")
-			this.nota.respuestaNota = rc.notaCuenta1.respuestaNota
-			var idTemp = this.nota._id;
-			delete this.nota._id;
-			this.nota.respuesta = false
-			this.nota.estatus = false
-			Notas.update({_id:idTemp},{$set:this.nota});
-			toastr.success('Comentario guardado.');
-			$("#myModal").modal('hide');
-		}else{
-			toastr.error('Comentario vacio.');
-		}
-
-
-	};
-	
-
 /*
 	this.imprimirDocumento = function(aprobado){
 			Meteor.call('imprimirDocumentos', aprobado, function(error, response) {
@@ -916,7 +951,7 @@ rc.referenciasPersonales = [];
 			 rc.motivo = "";
 	};
 	
-
+	////*********************************************************************************************************************
 	this.mostrarNotaCliente = function(){
 		$("#modalCliente").modal();
 		rc.nota = {};
@@ -930,17 +965,58 @@ rc.referenciasPersonales = [];
 		objeto.cliente_id = rc.objeto._id
 		objeto.nombreCliente = rc.objeto.profile.nombreCompleto
 		//objeto.respuesta = true;
-		objeto.usuario = rc.objeto.profile.nombreCompleto
+		objeto.usuario_id = Meteor.userId();
 		objeto.respuesta =  this.respuestaNotaCLiente	
 		objeto.fecha = new Date()
-	    objeto.hora = moment(objeto.fecha).format("hh:mm:ss a")
-		objeto.estatus = true;
+	  objeto.hora = moment(objeto.fecha).format("hh:mm:ss a")
+		objeto.estatus = true; //Significa esta Activa
 		Notas.insert(objeto);
 		toastr.success('Nota guardada.');
 		rc.nota = {};
 		$("#modalCliente").modal('hide');
 	};
+	
+	this.quitarNota = function(id)
+	{
+		var nota = Notas.findOne({_id:id});
+		
+		Notas.update({_id: id},{$set :  {estatus : false}});
+		if (nota.tipo == "Cuenta") 
+		{
+			$("#myModal").modal('hide');
+		}
+		else
+		{
+			$("#notaPerfil").modal('hide');
+		}
+			
+	}
+	
+	this.contestarNota = function(id){
 
+		this.nota = Notas.findOne({_id:id});
+
+		//console.log(this.nota)
+		
+		if (rc.notaCuenta1.respuestaNota != undefined) {
+			//console.log("entro")
+			this.nota.respuestaNota = rc.notaCuenta1.respuestaNota
+			var idTemp = this.nota._id;
+			delete this.nota._id;
+			//this.nota.respuesta = false
+			//this.nota.estatus = false
+			Notas.update({_id:idTemp},{$set:this.nota});
+			//toastr.success('Comentario guardado.');
+			$("#myModal").modal('hide');
+			rc.banderaContestar = true;
+		}else{
+			toastr.warning('Comentario vacio.');
+		}
+
+	};
+	
+	////*********************************************************************************************************************
+	
 	this.verPagos= function(credito) {
 
 		rc.credito = credito;
@@ -1083,23 +1159,7 @@ var html  = "<html><head>" +
 						
 	}
 
-	this.quitarNota = function(id)
-	{
-
-		//console.log(nota,"seraaaaaaaaaa")
-		var nota = Notas.findOne({_id:id});
-			if(nota.estatus == true)
-				nota.estatus = false;
-			else
-				nota.estatus = true;
-			
-			Notas.update({_id: id},{$set :  {estatus : nota.estatus}});
-			if (nota.tipo == "Cuenta") {
-				$("#myModal").modal('hide');
-
-			}else{$("#notaPerfil").modal('hide');}
-			
-	}
+	
 
 	function obtenerClaseEstatus(valor){
 		
@@ -1685,11 +1745,16 @@ if(estatus == 0){
 	};
 	this.CreditoSolicitar= function(id)
 	{
+			console.log(rc.cargosMoratorios);
 			
-			//console.log(id);
-    	$state.go("root.generadorPlan",{objeto_id : id});
-	  
-	    // ui-sref="root.generadorPlan({objeto_id : cd.objeto._id})"
+			if (Number(parseFloat(rc.cargosMoratorios.toFixed(2))) > 0 )
+			{
+					toastr.error("No es posible hacer una nueva solicitud ya que tiene Cargos Moratorios");
+					return;
+			}
+			else	
+    			$state.go("root.generadorPlan",{objeto_id : id});
+	    
 	};
 	this.btnCerrar= function()
 	{

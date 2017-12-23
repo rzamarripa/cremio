@@ -9,8 +9,8 @@
 			<th class="text-center" width="10%"><div class="text-center">Fecha Solicitud</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
 			<th class="text-center" width="5%"><div class="text-center">Turno</div></th>
-			<th class="text-center" width="5%"><div class="text-center">Verificar</div></th>
-			<th class="text-center" width="5%"><div class="text-center">Acción</div></th>
+			<th ng-show="currentUser.roles[0] != 'Cajero'" class="text-center" width="5%"><div class="text-center">Verificar</div></th>
+			<th ng-show="currentUser.roles[0] != 'Cajero'" class="text-center" width="5%"><div class="text-center">Acción</div></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -22,7 +22,7 @@
 	    <td class="text-center">{{credito.fechaSolicito.getUTCDate() +"/"+ (credito.fechaSolicito.getUTCMonth()+1) +"/"+ credito.fechaSolicito.getUTCFullYear()}} </td>
 	    <td class="text-center">{{credito.fechaVerificacion.getUTCDate() +"/"+ (credito.fechaVerificacion.getUTCMonth()+1) +"/"+ credito.fechaVerificacion.getUTCFullYear()}} </td>
 	    <td class="text-center">{{credito.turno}}</td>
-	    <td>
+	    <td ng-show="currentUser.roles[0] != 'Cajero'">
 			    <div class="text-center">
 				    <div class="btn-group">
 						  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -38,7 +38,7 @@
 						</div>
 			    </div>				    
 			</td>
-	    <td class="text-center">
+	    <td ng-show="currentUser.roles[0] != 'Cajero'" class="text-center">
 		    	<button type="button" class="btn btn-primary" ng-click="pver.mostrarEvaluacion(credito._id)">Evaluar</button>
 	    </td>
     </tr>

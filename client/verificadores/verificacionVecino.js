@@ -7,19 +7,33 @@ function VerificacionVecinoCtrl($scope, $meteor, $reactive,  $state, $stateParam
 	
 	window = rc;
 	
-	this.action = true;
+	rc.action = true;
   rc.objeto = {};
   
 
+/*
 	if ($stateParams.verificacion_id == "-1")
 		 this.action = true;
 	else
 		 this.action = false;		 	
+*/
 		 
-	this.actualizarNo = false;
+	//rc.actualizarNo = false;
+/*
 	if ($stateParams.persona == -1)
 		 this.actualizarNo = true;	 
-	 
+*/
+	
+	if ($stateParams.verificacion_id == "-1")
+	{
+		 rc.action = true;
+		 rc.actualizarNo = false;
+	}	 
+	else
+	{
+		 rc.action = false;
+		 rc.actualizarNo = true;
+	}	 
 		
 	this.subscribe('verificaciones',()=>{
 			return [{_id : $stateParams.verificacion_id }]

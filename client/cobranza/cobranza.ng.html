@@ -33,7 +33,7 @@
 			<form class="form-inline">
 				<div class="form-group">
 					<label for="fecha">Fecha:</label>
-					<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="cob.fechaInicial" ng-change="cob.porFecha()"/>
+					<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" ng-model="cob.fechaInicial" ng-change="cob.porFecha()"/>
 				</div>
 			</form>
 		</div>

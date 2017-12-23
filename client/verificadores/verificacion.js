@@ -4,10 +4,9 @@ angular
 function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
 
 	let rc = $reactive(this).attach($scope);
-	
 	window = rc;
 	
-	this.action = true;	
+	rc.action = true;	
 	this.actionGarantia = true;
 	this.conG = 0;
 	this.numG = 0;
@@ -23,19 +22,25 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	
 	this.tipo = $stateParams.tipo;
 	
-	this.actualizarNo = false;
+	//rc.actualizarNo = false;
+	
+/*
 	if ($stateParams.persona == -1)
-		 this.actualizarNo = true;	 
+		 rc.actualizarNo = true;	 
+*/
 	
 	if ($stateParams.verificacion_id == "-1")
 	{
-		 this.action = true;
+		 rc.action = true;
+		 rc.actualizarNo = false;
 	}	 
 	else
 	{
-		 this.action = false;
-	}	 
+		 rc.action = false;
+		 rc.actualizarNo = true;
+	}
 	
+
 	this.subscribe('verificaciones',()=>{
 			if ($stateParams.verificacion_id != -1)
 					return [{_id : $stateParams.verificacion_id }]

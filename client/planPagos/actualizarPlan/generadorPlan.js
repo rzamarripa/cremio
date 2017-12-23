@@ -134,6 +134,14 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 
 			rc.credito.primerAbono = rc.credito.fechaPrimerAbono;
 			
+			var u = Meteor.users.findOne($stateParams.objeto_id);
+			if (u != undefined && u.roles[0] == "Distribuidor")
+			{
+					rc.credito.duracionMeses 			= String(rc.credito.duracionMeses);
+					rc.credito.capitalSolicitado	= String(rc.credito.capitalSolicitado);
+					
+			}
+			
 			$scope.$apply();
 
 		}
@@ -155,8 +163,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		},
 		cliente : () => {
 			var cliente = Meteor.users.findOne($stateParams.objeto_id);
-			//return Meteor.users.findOne({roles : ["Cliente"]});
-			return cliente
+			return cliente;
 		},
 		tiposCredito : () => {
 			return TiposCredito.find();
@@ -295,10 +302,10 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		var credito = {
 			cliente_id 								: this.cliente._id,
 			tipoCredito_id 						: this.credito.tipoCredito_id,
-			duracionMeses 						: this.credito.duracionMeses,
-			capitalSolicitado 				: this.credito.capitalSolicitado,
-			adeudoInicial 						: this.credito.capitalSolicitado,
-			saldoActual 							: this.credito.capitalSolicitado,
+			duracionMeses 						: Number(this.credito.duracionMeses),
+			capitalSolicitado 				: Number(this.credito.capitalSolicitado),
+			adeudoInicial 						: Number(this.credito.capitalSolicitado),
+			saldoActual 							: Number(this.credito.capitalSolicitado),
 			periodoPago 							: this.credito.periodoPago,
 			fechaPrimerAbono 					: this.credito.fechaPrimerAbono,
 			multasPendientes 					: 0.00,
@@ -826,6 +833,128 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
   };
 	
 	this.generarPlanPagos = function(credito, form){
+
+		if(form.$invalid){
+			toastr.error('Error al calcular el nuevo plan de pagos, llene todos los campos.');
+			return;
+		}
+		rc.planPagos = [];
+		this.tablaAmort = true;
+		
+		var usuario = Meteor.users.findOne(Meteor.userId());
+		if (usuario.roles[0] == "Cajero" && (credito.tasa < usuario.profile.tasaMinima || credito.tasa > usuario.profile.tasaMaxima) && rc.cliente.roles != "Distribuidor")
+		{
+				toastr.warning('La tasa no es válida. debe ser entre ' + usuario.profile.tasaMinima + " y " +  usuario.profile.tasaMaxima);
+				return;	
+		}
+		
+		if (rc.cliente.roles == "Distribuidor") {
+			this.credito.periodoPago = "Quincenal"
+		}
+		if(rc.credito.requiereVerificacion == true)
+			rc.credito.estatus = 0;
+		else
+			rc.credito.estatus = 1;
+			
+		if (!this.credito.requiereVerificacion)
+				this.credito.turno = "";
+				
+	  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
+				if (result)
+				{
+						var fechaPrimerAbono = new Date();
+					
+						if (rc.cliente.roles == "Distribuidor") {
+								rc.credito.tasa = result.tasaVales;
+								rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;	//Ojo corregir
+								
+								var n = fechaPrimerAbono.getDate();
+								if (n >= 5 && n < 20)
+								{
+										fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),1,0,0,0,0);		
+								}
+								else 
+								{
+										if (n < 5)
+												fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),16,0,0,0,0);
+										else if (n >= 20)
+										   	fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth() + 1,16,0,0,0,0);								
+								}
+							
+						}else if (rc.cliente.roles == "Cliente") {
+								rc.credito.tasa = rc.credito.tasa;
+							
+						}
+
+						var _credito = {
+							cliente_id 							: rc.cliente._id,
+							tipoCredito_id 					: rc.credito.tipoCredito_id,
+							fechaSolicito  					: new Date(),
+							duracionMeses  					: Number(rc.credito.duracionMeses),
+							capitalSolicitado 			: Number(rc.credito.capitalSolicitado),
+							adeudoInicial 					: Number(rc.credito.capitalSolicitado),
+							saldoActual 						: Number(rc.credito.capitalSolicitado),
+							periodoPago 						: rc.credito.periodoPago,
+							fechaPrimerAbono 				: fechaPrimerAbono,
+							multasPendientes 				: 0,
+							saldoMultas 						: 0.00,
+							saldoRecibo 						: 0.00,
+							estatus 								: 1,
+							requiereVerificacion		: rc.credito.requiereVerificacion,
+							turno 									: rc.credito.turno,
+							sucursal_id 						: Meteor.user().profile.sucursal_id,
+							fechaVerificacion				: rc.credito.fechaVerificacion,
+							turno										: rc.credito.turno,
+							tasa 										: rc.credito.tasa,
+							conSeguro 							: rc.credito.conSeguro,
+							seguro									: rc.credito.seguro
+						};  
+	
+						 //console.log(_credito,"creditoJaime")
+						Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
+					
+								if(error){
+									console.log(error);
+									toastr.error('Error al calcular el nuevo plan de pagos.');
+								}
+								else{
+							
+									_.each(result,function (pago) {
+											var pag = pago
+											var pa = _.toArray(pag);
+						
+											var all = pa[pa.length - 1]
+											rc.total = all
+						
+											rc.planPagos.push(pago)
+											$scope.$apply();
+										});
+										
+										var total = rc.total;
+										//console.log(total,"total")
+										_.each(rc.planPagos,function (pago) {
+											
+											pago.liquidar = total;  						
+											total -= Number(parseFloat(pago.importeRegular).toFixed(2));
+											
+											total = Number(parseFloat(total).toFixed(2));
+											
+											//console.log(total,"liquidar")
+														
+											$scope.$apply();
+										});
+									
+									
+								}
+						});
+
+				}
+		});
+		return rc.planPagos;
+	}
+	
+	/*
+this.generarPlanPagos = function(credito, form){
 			
 		
 		if(form.$invalid){
@@ -850,7 +979,16 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			
 		if (!this.credito.requiereVerificacion)
 				this.credito.turno = "";
-
+		
+		console.log(this.credito.primerAbono);
+				
+		if (this.credito.primerAbono == null)
+		{
+				this.credito.primerAbono = new Date();		
+			
+		}
+		console.log(this.credito.primerAbono);
+				
 		var _credito = {
 			cliente_id : this.cliente._id,
 			tipoCredito_id : this.credito.tipoCredito_id,
@@ -882,10 +1020,30 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				toastr.error('Error al calcular el nuevo plan de pagos.');
 			}
 			else{
-				_.each(result,function (pago) {
-					rc.planPagos.push(pago)
-					$scope.$apply();
-				});
+							_.each(result,function (pago) {
+						var pag = pago
+						var pa = _.toArray(pag);
+	
+						var all = pa[pa.length - 1]
+						rc.total = all
+	
+						rc.planPagos.push(pago)
+						$scope.$apply();
+					});
+					
+					var total = rc.total;
+					//console.log(total,"total")
+					_.each(rc.planPagos,function (pago) {
+						
+						pago.liquidar = total;  						
+						total -= Number(parseFloat(pago.importeRegular).toFixed(2));
+						
+						total = Number(parseFloat(total).toFixed(2));
+						
+						//console.log(total,"liquidar")
+									
+						$scope.$apply();
+					});
 				//console.log("Prueba",rc.planPagos)
 			}
 				
@@ -893,6 +1051,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		
 		return rc.planPagos;
 	}
+*/
 	
 	this.calcularPorcentajeGeneral = function(){
 

@@ -30,7 +30,7 @@
             </div>
             <div class="col-sm-3" valida>
               <label>Primer abono</label>
-              <input date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ecCtrl.objeto.primerAbono" name="fechaPrimerAbono" ng-disabled="ecCrtl.esVale"/>
+              <input type="date" format="dd-MM-yyyy" class="form-control" ng-model="ecCtrl.objeto.primerAbono" name="fechaPrimerAbono" ng-disabled="ecCrtl.esVale"/>
             </div>
             <div class="col-sm-3">            
 								<br>
@@ -57,8 +57,9 @@
 									</select>
 									<input name="tipo._id" type="number" class="form-control" placeholder="Monto" ng-model="ecCtrl.objeto.caja[ecCtrl.tipoIngreso._id].saldo" ng-change="ecCtrl.calcular()"  required>
                 </div>
-                <div class="col-sm-8">
-                <div class="row">
+              <div class="col-sm-8">
+<!--
+              	<div class="row">
                     <div class="col-sm-6 checkbox" >
 		                  <label>
 			                  <input type="checkbox"  ng-model="ecCtrl.validar.contrato" name="contrato" required> Contrato de Préstamo y Garantía Prendaria.*
@@ -69,20 +70,21 @@
 			                  <input type="checkbox" ng-model="ecCtrl.validar.ficha" name="ficha" required> Ficha de Información del Cliente.*
 			                </label>
 		                </div>
-              </div>
-              <div class="row ">
-                <div class="col-sm-6 checkbox" >
-                  <label>
-                  <input type="checkbox"  ng-model="ecCtrl.validar.pagare" name="págare" required> Pagare.*
-                </label>
-                </div>
-                <div class="col-sm-6 checkbox" >
-	                <label>
-	                  <input type="checkbox"  ng-model="ecCtrl.validar.tabla" name="tabla" required> Tabla de Amortización.*
+								</div>
+								<div class="row ">
+	                <div class="col-sm-6 checkbox" >
+	                  <label>
+	                  <input type="checkbox"  ng-model="ecCtrl.validar.pagare" name="págare" required> Pagare.*
 	                </label>
-                </div>
-              </div>
-              <br>
+	                </div>
+	                <div class="col-sm-6 checkbox" >
+		                <label>
+		                  <input type="checkbox"  ng-model="ecCtrl.validar.tabla" name="tabla" required> Tabla de Amortización.*
+		                </label>
+	                </div>
+								</div>
+-->
+              <!-- <br> -->
                <div class="row "> 
                     <div class="col-sm-3" ng-show="ecCtrl.imprecion">
 												<input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirContrato(ecCtrl.credito,ecCtrl.cliente);ecCtrl.generarPlanPagos(rc.credito)" value="Imprimir" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />

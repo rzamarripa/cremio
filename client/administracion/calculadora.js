@@ -33,12 +33,15 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 		}
 		
 		//Validar la tasa
-		var usuario = Meteor.users.findOne();
+		
 		var tasa = Number(rc.credito.tasa);
-		if ((tasa < 9 || tasa > 10) && (usuario.roles[0] == "Cajero" || usuario.roles[0] == "Verificador"))
+		
+		var usuario = Meteor.users.findOne(Meteor.userId());
+		
+		if (usuario.roles[0] == "Cajero" && (credito.tasa < usuario.profile.tasaMinima || credito.tasa > usuario.profile.tasaMaxima) )
 		{
-				toastr.warning("La tasa no es valida para este tipo de usuario");
-				return;
+				toastr.warning('La tasa no es válida. debe ser entre ' + usuario.profile.tasaMinima + " y " +  usuario.profile.tasaMaxima);
+				return;	
 		}
 		
 		rc.planPagos = [];
@@ -84,10 +87,9 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 					
 					var pag = pago
 					var pa = _.toArray(pag);
-					//console.log("nand",pago)
+
 					var all = pa[pa.length - 1]
 					rc.total = all
-					//console.log(all,"liquidar")
 
 					rc.planPagos.push(pago)
 					$scope.$apply();
@@ -99,6 +101,9 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 					
 					pago.liquidar = total;  						
 					total -= Number(parseFloat(pago.importeRegular).toFixed(2));
+					
+					total = Number(parseFloat(total).toFixed(2));
+					
 					console.log(total,"liquidar")
 								
 					$scope.$apply();

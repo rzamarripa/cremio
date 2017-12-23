@@ -31,7 +31,7 @@
 						</div>	
 					</div>
 					<strong style="font-size: larger">---------DETALLE DEL PAGO/ABONO---------</strong>
-					<table class="table" style="font-size: larger">
+					<table class="table" style="font-size: small">
 						<tbody>
 							<tr>
 								<th align="center">CREDITO</th>
@@ -39,7 +39,7 @@
 								<th align="center">ABONO</th>
 								<th align="center">CONCEPTO</th>					
 							</tr>
-							<tr ng-repeat="pago in tkpctrl.pago.planPagos">
+							<tr ng-repeat="pago in tkpctrl.pago.planPagos" style="padding: 0; margin: 0">
 								<td align="center">{{pago.folioCredito}}</td>
 								<td align="center">{{pago.numeroPago}} / {{pago.numeroPagos}}</td>
 								<td align="center">{{pago.totalPago | currency:""}}</td>
@@ -48,28 +48,28 @@
 						</tbody>
 					</table>
 
-					<table class="table" style="font-size: larger">
+					<table class="table" style="font-size: small">
 						<tr>
-							<td>
+							<td align="left">
 								<strong>TOTAL: </strong>
 							</td>
-							<td>
+							<td style="text-align: right">
 								<strong>{{tkpctrl.pago.totalPago | currency}}</strong>
 							</td>
 						</tr>
 						<tr>
-							<td>
+							<td align="left">
 								<strong>PAGÓ: </strong>
 							</td>
-							<td>
+							<td style="text-align: right"> 
 								{{tkpctrl.pago.pago | currency}}
 							</td>
 						</tr>
 						<tr>
-							<td>
+							<td align="left">
 								<strong>CAMBIO: </strong>
 							</td>
-							<td>
+							<td style="text-align: right">
 								{{tkpctrl.pago.cambio | currency}}
 							</td>
 						</tr>

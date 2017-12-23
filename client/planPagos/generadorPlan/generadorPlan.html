@@ -495,13 +495,14 @@
 					<thead class="thead">
 						<tr>
 							<th class="text-center" width="5%">No.</th>
-							<th class="text-center" width="20%">Fecha de Pago</th>
-							<th class="text-center" width="15%">Pago</th>
+							<th class="text-center" width="10%">Fecha de Pago</th>
+							<th class="text-center" width="5%">Pago</th>
 							<th class="text-center" width="10%">Capital</th>
 							<th class="text-center" width="10%">Interes</th>
 							<th class="text-center" width="10%">IVA</th>
 							<th class="text-center" width="10%">Seguro</th>
 							<th class="text-center" width="10%">Importe total</th>
+							<th class="text-center" width="15%">Saldo Liquidar</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -514,7 +515,9 @@
 							<td class="text-right">{{pago.iva | currency}}</td>
 							<td class="text-right">{{pago.seguro | currency}}</td>
 							<td class="text-right">{{pago.importeRegular | currency}}</td>
+							<td class="text-right">{{pago.liquidar | currency}}</td>
 						</tr>
+						<tr><td colspan="10" class="text-right">Total: {{ge.total | currency}}</td></tr>
 					</tbody>
 				</table>
 				</div>

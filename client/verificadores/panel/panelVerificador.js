@@ -138,7 +138,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 		  FI.setHours(23,0,0,0);	
 			
 			return [{ sucursal_id				: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
-								usuarioVerifico 	: Meteor.user() != undefined ? Meteor.userId():"", 
+								//usuarioVerifico 	: Meteor.user() != undefined ? Meteor.userId():"", 
 								fechaVerificacion : { $gte : rc.getReactively("fechaInicial"), $lte : FI}}]
 	});
 	

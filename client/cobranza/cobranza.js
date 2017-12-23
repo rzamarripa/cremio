@@ -120,7 +120,27 @@ angular.module("creditoMio")
       return TiposCredito.find();
     },
     notas : () => {
-      return Notas.find().fetch();
+	    
+	    var not = Notas.find().fetch();
+	    
+	    _.each(not, function(nota){
+		    	 Meteor.call('getUsuario', nota.usuario_id, function(error, result) {           
+			          if (result)
+			          {
+			              nota.usuario = result.nombre;
+			              $scope.$apply();
+			          }
+			        
+			    }); 
+			    
+			    if (nota.respuestaNota != undefined)
+			    {
+				    	nota.descripcion = nota.descripcion + " - " + nota.respuestaNota;
+			    }
+		    	
+	    });
+	    
+      return not;
     },
     usuario : () => {
       return Meteor.users.findOne();
@@ -651,7 +671,7 @@ angular.module("creditoMio")
 			nota.estatus = true;
 			nota.fecha = new Date()
 			nota.hora = moment(nota.fecha).format("hh:mm:ss a")
-			rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+			rc.notaCobranza.usuario_id = Meteor.userId();
 			rc.notaCobranza.tipo = "Cobranza"
 			Notas.insert(nota);
 			this.notaCobranza = {}
@@ -665,20 +685,20 @@ angular.module("creditoMio")
 		rc.notaCobranza.recibo = objeto.numeroPago;
 	  rc.notaCobranza.cliente_id = objeto.cliente_id;
 		rc.cobranza_id = objeto.credito._id;
-		console.log("rc.cobranza_id",rc.cobranza_id);
+		//console.log("rc.cobranza_id",rc.cobranza_id);
 		$("#myModal").modal();
 
 
 	}
 
 	this.mostrarNotaCliente=function(objeto){
-		console.log("Nota de Cliente:",objeto);
-		rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto;
+		//console.log("Nota de Cliente:",objeto);
+		rc.notaCobranza.cliente = objeto.cliente.profile.nombreCompleto;
 		rc.notaCobranza.folioCredito = objeto.credito.folio;
-		rc.notaCobranza.recibo= objeto.numeroPago;
+		rc.notaCobranza.recibo = objeto.numeroPago;
     rc.cobranza_id = objeto.credito_id;
     rc.notaCobranza.cliente_id = objeto.cliente_id;
-    console.log("rc.cobranza_id",rc.cobranza_id);
+    //console.log("rc.cobranza_id",rc.cobranza_id);
     $("#modalCliente").modal();
 
 
@@ -689,7 +709,7 @@ angular.module("creditoMio")
       nota.estatus = true;
       nota.fecha = new Date()
       nota.hora = moment(nota.fecha).format("hh:mm:ss a")
-      rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+      rc.notaCobranza.usuario_id = Meteor.userId();
       rc.notaCobranza.tipo = "Cliente"
         //rc.notaCobranza.cliente_id = objeto.cliente._id
       rc.notaCobranza.respuesta =  this.respuestaNotaCLiente      
@@ -704,7 +724,7 @@ angular.module("creditoMio")
   }
 
   this.mostrarNotaCuenta=function(objeto){
-    console.log(objeto)
+    //console.log(objeto)
     rc.notaCobranza.cliente= objeto.cliente.profile.nombreCompleto 
     rc.notaCobranza.folioCredito = objeto.credito.folio 
     rc.notaCobranza.recibo= objeto.numeroPago
@@ -715,11 +735,11 @@ angular.module("creditoMio")
 
   }
   this.guardarNotaCuenta=function(nota){
-      console.log(nota);      
+      //console.log(nota);      
       nota.estatus = true;
       nota.fecha = new Date()
       nota.hora = moment(nota.fecha).format("hh:mm:ss a")
-      rc.notaCobranza.usuario = rc.usuario.profile.nombreCompleto
+      rc.notaCobranza.usuario_id = Meteor.userId();
       rc.notaCobranza.tipo = "Cuenta"
       rc.notaCobranza.respuesta =  this.respuestaNotaCLiente  
        // rc.notaCobranza.cliente_id = objeto.cliente._id

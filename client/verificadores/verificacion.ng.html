@@ -449,7 +449,7 @@
 			    <div class="row">
 						<div class="col-sm-12">
 							<input type="submit" ng-click="ver.guardar(ver.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="ver.action" valida-form formulario="form">
-							<input type="submit" ng-click="ver.actualizar(ver.objeto,form)" value="Actualizar" class="btn btn-primary" ng-hide="ver.actualizarNo" valida-form formulario="form">
+							<input type="submit" ng-click="ver.actualizar(ver.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="ver.actualizarNo && currentUser.roles[0] != 'Cajero'" valida-form formulario="form">
 						</div>
 					</div>
 		  </div>    
