@@ -75,7 +75,8 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 																													nombreCompleto : nombre + apPaterno + apMaterno,
 																													sucursal_id : result,
 																													estatus : true,
-																													sexo : objeto.sexo
+																													sexo : objeto.sexo,
+																													passwordDesbloqueo : objeto.profile.passwordDesbloqueo
 																												}
 																											}
 																											
@@ -146,6 +147,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 																															sucursal_id : idTemp,
 																															estatus : true,
 																															sexo : objeto.sexo,
+																															passwordDesbloqueo : objeto.profile.passwordDesbloqueo
 																															//folioDistribuidor : objeto.folioDistribuidor
 																														}
 																													}

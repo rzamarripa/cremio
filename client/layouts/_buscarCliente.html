@@ -1,17 +1,16 @@
-
-<div class="input-group">
-	<input type="text" class="form-control" placeholder="Escribe el nombre del cliente" ng-show="ro.porNumero" ng-model="ro.buscar.nombre" capitalize>
-	<input type="text" class="form-control" placeholder="Escribe el número del cliente" ng-show="!ro.porNumero" ng-model="ro.buscar.numeroCliente " capitalize>
-	<span class="input-group-btn">
-		<button class="btn btn-default" type="button" style="height: 34px;">
-			<i class="fa fa-search"></i>
-		</button>&nbsp;
-		<a class="btn btn-default" ng-show="ro.porNumero" ng-click="ro.cambiarNumero()" style="height: 34px;" type="button">Buscar por número</a> 
-		<a class="btn btn-default" ng-show="!ro.porNumero" ng-click="ro.cambiarNombre()" style="height: 34px;" type="button">Buscar por nombre</a> 
-
-		
-	</span>
-</div>
+<!-- <div class="col-sm-10 pull-right"> -->
+	<div class="input-group">
+		<input type="text" class="form-control" placeholder="Escribe el nombre del cliente" ng-show="ro.porNumero" ng-model="ro.buscar.nombre" capitalize>
+		<input type="text" class="form-control" placeholder="Escribe el número del cliente" ng-show="!ro.porNumero" ng-model="ro.buscar.numeroCliente " capitalize>
+		<span class="input-group-btn">
+			<button class="btn btn-default" type="button" style="height: 34px;">
+				<i class="fa fa-search"></i>
+			</button>&nbsp;
+			<a class="btn btn-default" ng-show="ro.porNumero" ng-click="ro.cambiarNumero()" style="height: 34px;" type="button">Buscar por número</a> 
+			<a class="btn btn-default" ng-show="!ro.porNumero" ng-click="ro.cambiarNombre()" style="height: 34px;" type="button">Buscar por nombre</a> 
+		</span>
+	</div>
+<!-- </div>	 -->
 <div class="ajax-dropdown" ng-show="ro.buscando" style="display: block; width: 100% !important;">
 	<div class="ajax-notifications custom-scroll">
 		

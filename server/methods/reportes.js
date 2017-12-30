@@ -404,4 +404,37 @@ Meteor.methods({
 			
 	},
 	
+	
+	//Método para Impresión de Tickets
+	getPagosDiarios:function(usuario_id, fechaInicial, fechaFinal){
+			
+			var pagos = Pagos.find({usuarioCobro_id : usuario_id
+								 						,fechaPago				: { $gte : fechaInicial, $lte : fechaFinal}}).fetch();
+								 						
+			_.each(pagos, function(pago){
+					
+					//**********************************************************************************************************************************************************
+					var cliente = Meteor.users.findOne({_id: pago.usuario_id}, 
+																						 {fields: {"profile.nombreCompleto": 1, 
+																							 				 "profile.numeroCliente": 1,
+																							 				 "profile.numeroDistribuidor": 1,
+																							 				 roles: 1 }});
+																							 				 
+					pago.cliente = cliente.profile.nombreCompleto;
+					pago.numero = cliente.profile.numeroCliente != undefined ? cliente.profile.numeroCliente : cliente.profile.numeroDistribuidor;
+					
+					//**********************************************************************************************************************************************************
+					var tipoIngreso = TiposIngreso.findOne({_id: pago.tipoIngreso_id});
+					pago.tipoIngreso = tipoIngreso.nombre;
+					
+					//**********************************************************************************************************************************************************
+					var movimientoCaja = MovimientosCajas.findOne({_id: pago.movimientoCaja_id});
+					pago.movimientoCaja = movimientoCaja.origen;
+					
+			});
+			
+			return pagos;
+	},	
+	
+	
 });	

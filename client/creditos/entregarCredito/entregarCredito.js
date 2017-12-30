@@ -15,6 +15,8 @@ angular.module("creditoMio")
 	rc.cliente = {};
 	rc.cliente._id = "" ;
 	rc.datosCliente = "";
+	
+	rc.estatusFecha ;
 		
 	this.subscribe('tiposIngreso',()=>{
 		return [{
@@ -99,10 +101,18 @@ angular.module("creditoMio")
 		},
 		credito : () => {
 			var c = Creditos.findOne({_id:$stateParams.credito_id}); 
-			//console.log(c,"credito")
 
 			if (c != undefined)
 			{		
+				
+					var usuario = Meteor.users.findOne(Meteor.userId());
+		
+					if (usuario.roles[0] == "Cajero")
+							rc.estatusFecha = true;
+					else	
+							rc.estatusFecha = false;
+							
+				
 					//El 0 es SI----
 					c.avisoPrivacidad = 0;
 					c.publicidad 			= 0;
@@ -112,7 +122,6 @@ angular.module("creditoMio")
 					if (c.folio)
 						  this.verDiaPago = false;
 
-/*
 					if (c.periodoPago == "Quincenal")
 					{
 							var fecha;
@@ -122,28 +131,33 @@ angular.module("creditoMio")
 							var numeroMes   = check.format('MM');
 							var numeroAnio   = check.format('YYYY');
 							
-							if (numeroDia <=15)
+							if (numeroDia <= 8)
 							{
-									var f = numeroMes + "/15/" + numeroAnio;							
+									var f = numeroMes + "/16/" + numeroAnio;							
 									fecha = new Date(f);
 							}
+							else if (numeroDia > 8 && numeroDia <= 22)
+							{
+									fecha = new Date(date.getFullYear(),date.getMonth() + 1,1,0,0,0,0);	
+							}		
 							else
 							{
-									var ultimoDiaMes = moment().daysInMonth();
-									var f = numeroMes + "/"+ultimoDiaMes+"/" + numeroAnio;							
-									fecha = new Date(f);
-							}							
+									fecha = new Date(date.getFullYear(),date.getMonth() + 1,16,0,0,0,0);	
+									
+							}					
 							this.objeto.primerAbono = fecha;						
 					}
 					else if (c.periodoPago == "Mensual")
 					{
-							var ultimoDiaMes = moment().daysInMonth();
-							var f = numeroMes + "/"+ultimoDiaMes+"/" + numeroAnio;							
-							fecha = new Date(f);	    					    
-					    this.objeto.primerAbono = fecha;
-					}		
-*/
-				
+							rc.estatusFecha = false;
+							
+							var fecha;
+							var date = new Date();
+							fecha = new Date(date.getFullYear(),date.getMonth() + 1,1,0,0,0,0);	
+						  this.objeto.primerAbono = fecha;
+						 											    
+					    
+					}
 			}	
 		
 			return c;
@@ -252,7 +266,6 @@ if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagar
 			
 
 	}
-	
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -648,6 +661,40 @@ if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagar
 			return rc.planPagos;
 		
 		};
+	
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	this.mostrarModalActivarFecha = function()
+	{
+			$("#modalActivarFecha").modal();
+	}
+	
+	
+	this.validaCredenciales = function(credenciales)
+	{
+			console.log("Entro");
+			
+			var usuario = Meteor.users.findOne(Meteor.userId());
+								
+		
+	    Meteor.call('validarCredenciales', credenciales, usuario.profile.sucursal_id , function(err, result) {
+	      if (result) {
+		      
+		      console.log(resut);
+	        console.log('the passwords match!');
+	      }
+	    });  
+              
+      	   
+      
+		
+			$("#modalActivarFecha").modal('hide');
+	}
+	
+	
+	
+	
 	
 	/////FINAL///
 };

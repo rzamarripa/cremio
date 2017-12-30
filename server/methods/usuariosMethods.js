@@ -348,8 +348,22 @@ if (referenciaPersonal.buscarPersona_id)
 		return true;		
 				
 	},
+	updateGerenteSucursal: function (usuario, rol) {
+		//console.log(usuario)
+		var user = Meteor.users.findOne({username : usuario.username});			
+		user.profile = usuario.profile;
+		
+		Meteor.users.update({username: user.username}, {$set:{
+			username: user.username,
+			roles: [rol],
+			profile: user.profile
+		}});
+		
+		Accounts.setPassword(user._id, usuario.password, {logout: false});		
+		
+	},
 	getUsuario: function (usuario) {	
-	  var user = Meteor.users.findOne({"_id" : usuario}, {fields: {"profile.nombreCompleto":1, "profile.nombre":1, "profile.numeroCliente": 1 }});
+	  var user = Meteor.users.findOne({"_id" : usuario}, {fields: {"profile.nombreCompleto":1, "profile.nombre":1, "profile.numeroCliente": 1, "profile.numeroDistribuidor": 1 }});
 	  
 		return user.profile;
 	},
@@ -452,7 +466,20 @@ if (referenciaPersonal.buscarPersona_id)
 																	
 
 	  return personas;
-	}
-	
+	},
+	validarCredenciales: function(usuario, sucursal_id) {
+    
+    var u = Meteor.users.findOne({username: usuario.username, roles: {$in : ['Gerente','Supervisor']}, "profile.sucursal_id": sucursal_id});
+    
+		if (u != undefined)
+		{
+	    	console.log(u.profile.passwordDesbloqueo);
+	    	if (u.profile.passwordDesbloqueo == usuario.password)
+	    			return true;
+				else
+						return false;
+		}
+		    
+  }
 	
 });

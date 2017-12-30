@@ -71,13 +71,15 @@
         </table>
     </div>
 </div>
-<!-- /////////////////////////MODAL NOTA CLIENTE ////////////////////////// -->
+
+
 <div class="container">
     <!-- Modal -->
     <div class="modal fade" id="modalRechazo" data-backdrop="static" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
+	            <form name="formCancelar" novalidate>
                 <div class="modal-header">
                     <h4 class="modal-title">Autorización de créditos</h4>
                 </div>
@@ -86,18 +88,16 @@
                         <div class="col-sm-12">
                             <div class="col-sm-12">
                                 <label class="pull-left">Motivo del rechazo:</label>
-                                <textarea type="text" class="form-control" ng-model="cpa.motivo">
-                            </div>
-                            <div class="col-sm-12 ">
-                                <br/>
-                                <a class="btn btn-success" ng-click="cpa.rechazar(cpa.motivo)">Guardar</a>
+                                <textarea name="cancelar" type="text" rows="3" class="form-control" ng-model="cpa.motivo" required="" capitalize>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
+	                	<input type="submit" ng-click="cpa.rechazar(cpa.motivo, formCancelar)" value="Aceptar" class="btn btn-success" valida-form formulario="formCancelar">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 </div>
+              </form>	  
             </div>
         </div>
     </div>

@@ -42,6 +42,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	this.personasTipos = [];
 	this.personas_ids = [];
 	
+	//paa que el cajero no pueda actualizar a un 
+	rc.capitalSolicitadoAnterior = 0;
+	
 	
 	this.subscribe('buscarAvales', () => {
 		if(this.getReactively("buscar.nombre").length > 3){
@@ -141,6 +144,9 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 					rc.credito.capitalSolicitado	= String(rc.credito.capitalSolicitado);
 					
 			}
+			else //Cliente 		
+					rc.capitalSolicitadoAnterior = rc.credito.capitalSolicitado;
+			 
 			
 			$scope.$apply();
 
@@ -293,11 +299,19 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				this.credito.turno = "";	
 		
 		var usuario = Meteor.users.findOne(Meteor.userId());
+		
 		if (usuario.roles[0] == "Cajero" && (this.credito.tasa < usuario.profile.tasaMinima || this.credito.tasa > usuario.profile.tasaMaxima) && rc.cliente.roles != "Distribuidor")
 		{
 				toastr.warning('La tasa no es válida. debe ser entre ' + usuario.profile.tasaMinima + " y " +  usuario.profile.tasaMaxima);
 				return;	
 		}
+				
+		if (usuario.roles[0] == "Cajero" && rc.credito.capitalSolicitado > rc.capitalSolicitadoAnterior && this.credito.estatus == 2)
+		{
+				toastr.warning('El capital solicitado no debe ser mayor al aprobado');
+				return;	
+		}
+		
 		
 		var credito = {
 			cliente_id 								: this.cliente._id,

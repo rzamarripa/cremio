@@ -11,9 +11,13 @@
 							</div>
 							<div class="col-sm-12">
 								<div class="row">
-								<a style="margin: 5px;" ng-if="pvpp.objeto.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : pvpp.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
-								<a style="margin: 5px;" ng-if="pvpp.objeto.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : pvpp.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;						
-									<div class="col-sm-8">
+									<div class="col-sm-2">
+										<img style="max-width:150px;" src="{{pvpp.objeto.profile.foto}}" >
+									</div>
+																		
+									<a style="margin: 5px;" ng-if="pvpp.objeto.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : pvpp.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
+									<a style="margin: 5px;" ng-if="pvpp.objeto.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : pvpp.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;						
+									<div class="col-sm-6">
 										<h1>{{pvpp.objeto.profile.nombre}} <span class="semi-bold">{{pvpp.objeto.profile.apellidoPaterno}} {{pvpp.objeto.profile.apellidoMaterno}}</span>
 										<small> (Cliente)</small></h1>
 										<h5>{{pvpp.objeto.profile.numeroCliente}}</h5>

@@ -207,8 +207,7 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
     cajeros: () => {
       return Meteor.users.find({ roles: ["Cajero"] });
     },
-    /*
-movimientosCaja: () => {
+    movimientosCaja: () => {
       var ret = [];
       var caj = Cajas.findOne({ _id: $stateParams.caja_id });  
       console.log(caj);    
@@ -234,7 +233,7 @@ movimientosCaja: () => {
           var d = {};
           
           console.log(mov.origen);
-          if (mov.origen == "Pago de Cliente" || mov.origen == "Cancelación de pago") {
+          if (mov.origen == "Pago de Cliente" || mov.origen == "Pago de Distribuidor" || mov.origen == "Cancelación de pago") {
             	pagos_id.push(mov.origen_id);
 							var p = Pagos.findOne(mov.origen_id);
 							if (p != undefined)
@@ -252,7 +251,7 @@ movimientosCaja: () => {
 							}
           }
           
-          if (mov.origen == "Entrega de Credito" || mov.origen == "Cancelación de Ent. de Crédito") {
+          if (mov.origen == "Entrega de Credito" || mov.origen == "Entrega de Vale" || mov.origen == "Cancelación de Ent. de Crédito") {
          
 	          	Meteor.apply('getCredito', [mov.origen_id], function(err, result) {
 						      if (err) {
@@ -323,7 +322,6 @@ movimientosCaja: () => {
 			
       return ret
     },
-*/
     /*
 traspasos: () => {
       var traspasos = Traspasos.find({}, { order: { createdAt: -1 } }).fetch();

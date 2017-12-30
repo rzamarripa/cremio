@@ -21,7 +21,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
   
   
   this.subscribe('cajas', () => {
-    return [{ _id: $stateParams.caja_id }]
+    return [{ estadoCaja: "Abierta"}]
   });
   this.subscribe('tiposIngreso', () => {
     return [{}]
@@ -64,6 +64,9 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
       }
       return caj
     },
+    cajas: () => {
+      return Cajas.find({});
+    },    
     cuentas: () => {
       var cuentas = Cuentas.find().fetch();
       _.each(cuentas, function(cuenta) {
@@ -116,7 +119,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
         _.each(movimientos, function(mov) {
 
           var d = {};
-          if (mov.origen == "Pago de Cliente" || mov.origen == "Cancelación de pago") {
+          if (mov.origen == "Pago de Cliente" || mov.origen == "Pago de Distribuidor" || mov.origen == "Cancelación de pago") {
             	pagos_id.push(mov.origen_id);
 							var p = Pagos.findOne(mov.origen_id);
 							if (p != undefined)
@@ -126,7 +129,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 						        toastr.warning('Error al consultar los datos');
 						      } else {
 						        var u = result;
-						        d.numeroCliente = u.numeroCliente;
+						        d.numeroCliente = u.numeroCliente != undefined ? u.numeroCliente : u.numeroDistribuidor;
 										d.nombreCliente = u.nombreCompleto;
 										$scope.$apply();
 						      }
@@ -138,7 +141,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
           
           var credito = {};
           
-          if (mov.origen == "Entrega de Credito" || mov.origen == "Cancelación de Ent. de Crédito") {
+          if (mov.origen == "Entrega de Credito" || mov.origen == "Entrega de Vale" || mov.origen == "Cancelación de Ent. de Crédito") {
          
 	          	Meteor.call('getCredito', mov.origen_id, function(err, result) {
 						      if (err) {
@@ -154,7 +157,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 									        toastr.warning('Error al consultar los datos');
 									      } else {
 									        var u = result;
-									        d.numeroCliente = u.numeroCliente;
+									        d.numeroCliente = u.numeroCliente != undefined ? u.numeroCliente : u.numeroDistribuidor;
 													d.nombreCliente = u.nombreCompleto;
 													$scope.$apply();
 									      }
@@ -371,10 +374,21 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 	}
 
   this.detalle = function(_id) {
+/*
+	  console.log("Que es esto:", _id);
+	  console.log("Cajas:", rc.cajas);
+	  console.log("Cuentas:", rc.cuentas);
+*/
+	  
     rc.detalleOrigenDestino = _.findWhere(rc.cajas, {_id: _id}) || _.findWhere(rc.cuentas, {_id: _id});
+    
+    //console.log(rc.detalleOrigenDestino)
   };
 
   this.nuevoTraspasoGuardar = function(datos, form) {
+	  
+	  //console.log("Datos:", datos);
+	  
     if(form.$invalid){
       toastr.error('Completa todos los campos correctamente');
       return;

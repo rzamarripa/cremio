@@ -666,7 +666,13 @@ angular.module("creditoMio")
 
 
 	var fecha = moment();
-	this.guardarNotaCobranza=function(nota){
+	this.guardarNotaCobranza=function(nota, form){
+		
+			if(form.$invalid){
+		     toastr.error('Faltan Datos.');
+		     return;
+		  }
+			
 			//console.log(nota);			
 			nota.estatus = true;
 			nota.fecha = new Date()
@@ -703,8 +709,13 @@ angular.module("creditoMio")
 
 
   }
-  this.guardarNotaCliente=function(nota){
+  this.guardarNotaCliente=function(nota, form){
       //console.log(nota);
+      if(form.$invalid){
+		     toastr.error('Faltan Datos.');
+		     return;
+		  }
+      
       nota.perfil = "perfil"      
       nota.estatus = true;
       nota.fecha = new Date()
@@ -734,8 +745,14 @@ angular.module("creditoMio")
      $("#modalCuenta").modal();
 
   }
-  this.guardarNotaCuenta=function(nota){
+  this.guardarNotaCuenta=function(nota, form){
       //console.log(nota);      
+      
+      if(form.$invalid){
+		     toastr.error('Faltan Datos.');
+		     return;
+		  }
+      
       nota.estatus = true;
       nota.fecha = new Date()
       nota.hora = moment(nota.fecha).format("hh:mm:ss a")

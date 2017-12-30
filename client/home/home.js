@@ -7,6 +7,8 @@ angular.module("creditoMio")
  	rc.estaCerrada = false;
  	rc.cuentas = [];
  	
+ 	rc.cajas = [];
+ 	
  	this.caja_id = "";
  	this.cajero_id = "";
   this.cajeros_id = [];

@@ -4,6 +4,7 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#resumenInactiva" aria-controls="resumenInactiva" role="tab" data-toggle="tab">Resumen</a></li>
     <li role="presentation"><a href="#operacionesInactiva" aria-controls="operacionesInactiva" role="tab" data-toggle="tab">Operaciones</a></li>
+    <li role="presentation"><a href="#traspasos" aria-controls="traspasos" role="tab" data-toggle="tab">Traspasos</a></li>
   </ul>
   <!-- Tab panes -->
   <div class="tab-content">
@@ -77,6 +78,32 @@
         </div>
       </div>
       </div>	
+    </div>
+    <div role="tabpanel" class="tab-pane" id="traspasos">
+	    <div class="well">
+      	<div class="row">
+        <div class="col-sm-12">
+          <table class="table table-bordered table-stripped table-hover">
+           <thead>
+             <tr>
+               <th align="center">Fecha</th>
+               <th align="center">Origen</th>
+               <th align="center">Destino</th>
+               <th align="center">Monto</th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr ng-repeat="t in vca.traspasos">
+               <td>{{t.createdAt | date:"dd-MM-yyyy"}}</td>
+               <td>{{t.origen.nombre}}</td>
+               <td>{{t.destino.nombre}}</td>
+               <td align="right">{{t.importe | currency}}</td>
+             </tr>
+           </tbody>
+          </table>
+        </div>
+      </div>
+	    </div>	
     </div>
   </div>
 </div>

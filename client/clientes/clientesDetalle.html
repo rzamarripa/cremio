@@ -174,7 +174,7 @@
 														</div>
 													</div>
 													<div>
-															<small>
+															<small ng-if="currentUser.roles[0] == 'Gerente'">
 																	<a ng-click="cd.mostrarReestructuracion(credito)" class="btn btn-primary">Reestructuración del crédito</a>
 															</small>
 															<br/><br/>
@@ -1078,28 +1078,28 @@
 <!--//////////////////////////////////// //////////////////////////////////////////////////////////// -->
 <!-- Modal para cancelar credito -->
 <div id="cancelaCredito" class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
+	    <form name="formCancelar" novalidate>
 	    	<div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		        <h4 class="modal-title" id="myModalLabel">Cancelar Crédito</h4>
 		    </div>
-				<div class="modal-body">
-							<form name="form2" novalidate>
-									<div class="well">	    
-								    <div class="row">
-								    	<div class="col-sm-6" valida> 					    
-												  <label for="comment">Motivo:</label>
-												  <textarea class="form-control" rows="5" ng-model="cd.motivo" required="" name="comment"></textarea>
-								    	</div>
-								    </div>
-									</div>
-							</form>
+				<div class="modal-body">	
+						<div class="well">	    
+					    <div class="row">
+					    	<div class="col-sm-12" valida> 					    
+									  <label for="comment">Motivo:</label>
+									  <textarea class="form-control" rows="3" ng-model="cd.motivo" required="" name="comment" capitalize></textarea>
+					    	</div>
+					    </div>
+						</div>
 	      </div>	
 	      <div class="modal-footer"s>
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-		        <input type="submit" ng-click="cd.cancelarCredito(cd.motivo)" value="Aceptar" class="btn btn-primary" valida-form formulario="form2">
+		        <input type="submit" ng-click="cd.cancelarCredito(cd.motivo, formCancelar)" value="Aceptar" class="btn btn-success" valida-form formulario="formCancelar">
+		        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 		     </div>
+			</form>	 
      </div>
      
   </div>
@@ -1222,7 +1222,7 @@
 					</div>
 				</form>
   </div>
-					<div class="modal-footer">
+			<div class="modal-footer">
           <button type="button" ng-click="cd.agregarPago()" class="btn btn-primary">Agregar</button>
           <button type="button" ng-click="cd.guardarplanPagos()" class="btn btn-success">Guardar</button>
           <button type="button" ng-click="cd.cerrar()" class="btn btn-default" data-dismiss="modal">Cerrar</button>

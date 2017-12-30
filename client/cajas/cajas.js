@@ -32,7 +32,6 @@ angular.module("creditoMio")
 	this.helpers({
 		cajas : () => {
 			var c = Cajas.find().fetch();
-						
 			if (c != undefined){
 				_.each(c, function(caja){
 						var cajero = Meteor.users.findOne({_id: caja.usuario_id});
@@ -140,6 +139,22 @@ angular.module("creditoMio")
 					toastr.warning('La ventanilla abierta, no es posible editarla');
 					return;
 			}
+			
+
+			
+			//Arreglar 
+			
+			_.each(objeto.cuenta, function(cuenta){
+
+				console.log(cuenta);
+				cuenta.saldo = 0;
+				
+				cuenta.cuenta = Cuentas.findOne(cuenta.cuenta_id);
+				cuenta.tipoIngreso = TiposIngreso.findOne(cuenta.cuenta.tipoIngreso_id);
+					
+				
+				
+			});
 			
 			var cajaAbierta = Cajas.findOne({usuario_id: objeto.usuario_id});
 			if (cajaAbierta != undefined  && cajaAbierta.estadoCaja == "Abierta")

@@ -145,7 +145,13 @@ angular.module("creditoMio")
 	  toastr.success("Se autorizó correctamente.")
   }
   
-  this.rechazar = function(motivo){
+  this.rechazar = function(motivo, form){
+	  
+	  if(form.$invalid){
+		        toastr.error('Error al cancelar.');
+		        return;
+		  }
+	  
 	  
 	  if (this.tipo == "Crédito Personal")
 	  		Creditos.update({_id : this.creditoRechazar}, { $set : {motivo: motivo, estatus : 3}});

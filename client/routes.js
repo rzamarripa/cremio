@@ -1038,6 +1038,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.reimpresionTickets', {
+			url: '/reimpresionTickets',
+			templateUrl: 'client/reimpresionTickets/reimpresionTickets.ng.html',
+			controller: 'ReimpresionTicketsCtrl as impt',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 }]);
 
 function irArriba(){

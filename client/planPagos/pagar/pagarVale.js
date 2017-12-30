@@ -724,6 +724,20 @@ if (pago.pagar < pago.totalPago)
 	  var tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id);
 	  if (tipoIngreso.nombre == "REFINANCIAMIENTO")
 	  {
+		  	//Validar que no tenga cargos Moratorios
+		  	var CM = 0;
+		  	
+		  	var pp = PlanPagos.find({movimiento: "Cargo Moratorio"}).fetch();
+		  	_.each(pp, function(pago){
+			  		
+			  		CM += pago.importeRegular;
+		  	});
+		  	
+		  	if (CM > 0)
+		  	{
+			  	 toastr.warning("No es posible refinanciar con cargos moratorios");	
+			  	 return;
+		  	}
 		  		
 		  		
 		  	//Validar si hay creditos Autorizados

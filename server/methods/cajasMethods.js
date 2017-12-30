@@ -9,6 +9,7 @@ Meteor.methods({
       if (cajavieja.estadoCaja == "Abierta")
         throw new Meteor.Error(500, 'Error 500: Conflicto', 'El usuario tiene una Caja Abierta');
     }
+    
     caja.sucursal_id = user.profile.sucursal_id;
     caja.createdBy = user._id;
     caja.createdAt = new Date();
@@ -19,7 +20,9 @@ Meteor.methods({
     var cajaid = Cajas.insert(caja)
     if (usuario.profile.caja_id)
        Cajas.update({ _id: cajavieja._id }, { $set: { usuario_id: "" } });
+    
     Meteor.users.update({ _id: caja.usuario_id }, { $set: { 'profile.caja_id': cajaid } })
+    
     return cajaid;
   },
   actualizarCaja: function(caja) {
@@ -508,6 +511,10 @@ Meteor.methods({
     };
     //Efectivo en Caja
     var caja = Cajas.findOne(caja_id);
+    var cajero = Meteor.users.findOne({_id: caja.usuario_id}, {fields: {"profile.nombre":1}});
+    
+    
+    
     var totalEnCaja = 0;
     _.each(caja.cuenta, function(cuenta, key){
     	cuenta.tipoIngreso = TiposIngreso.findOne(key);
@@ -524,7 +531,9 @@ Meteor.methods({
 							creditosEntregados			: creditosEntregados,
 							totalTransAVentanilla		: totalTransAVentanilla,
 							totalTransDeVentanilla	: totalTransDeVentanilla,
-							totalEnCaja
+							totalEnCaja,
+							cajero,
+							caja
 						};
   },
   getCorte: (corte_id) => {
@@ -582,7 +591,7 @@ Meteor.methods({
 				else if(movs.tipoMovimiento == 'Retiro' || movs.origen == 'Cancelación de Ent. de Crédito')
 				{
 					  
-					  console.log(movs);
+					  //console.log(movs);
 						movs.tipoIngreso = TiposIngreso.findOne(movs.cuenta_id);
 		        if (creditosAgrupados[movs.tipoIngreso.nombre] == undefined) {
 		          creditosAgrupados[movs.tipoIngreso.nombre] = 0;
@@ -618,6 +627,9 @@ Meteor.methods({
 		totalCreditos = totalCreditos*-1;
 		
     //Efectivo en Caja
+    var caja = Cajas.findOne(corte.caja_id);
+    var cajero = Meteor.users.findOne({_id: caja.usuario_id}, {fields: {"profile.nombre":1}});
+    
     _.each(corte.cuenta, function(cuenta, key){
     		cuenta.tipoIngreso = TiposIngreso.findOne(key);
 				var c = Cuentas.findOne({tipoIngreso_id: cuenta.tipoIngreso._id});
@@ -636,7 +648,9 @@ Meteor.methods({
 							totalTransAVentanilla		: totalTransAVentanilla,
 							totalTransDeVentanilla	: totalTransDeVentanilla,
 							totalAperura						:	totalAperura,
-							totalEnCaja
+							totalEnCaja,
+							cajero,
+							caja
 						};
   },
   

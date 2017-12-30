@@ -218,7 +218,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return creditos;
 		},
 		creditosCancelados : () =>{
-			return Creditos.find({estatus:3});
+			return Creditos.find({estatus: {$in: [3,6]}});
 		},
 		creditosPendientes : () =>{
 			var creditos = Creditos.find({estatus:{$in:[0,1]} }, {sort:{fechaSolicito:1}}).fetch();
@@ -510,20 +510,23 @@ rc.referenciasPersonales = [];
 		},
 		historial : () => {
 			arreglo = [];
+			
 			var saldoPago = 0;
 			var saldoActual = 0; 
-			rc.saldo =0;	
+			rc.saldo = 0;	
 			var credito = rc.credito
-			rc.saldoMultas=0;
+			rc.saldoMultas = 0;
 			
 
-			_.each(rc.getReactively("planPagosHistorial"), function(planPago){
-				
+			_.each(rc.getReactively("planPagosHistorial"), function(planPago){	
 				if(planPago.descripcion == "Recibo")
-					rc.saldo+=planPago.cargo;
+					rc.saldo += Number(parseFloat(planPago.cargo).toFixed(2));
 				if(planPago.descripcion == "Cargo Moratorio")
-					rc.saldoMultas+=planPago.importeRegular;
+					rc.saldoMultas += Number(parseFloat(planPago.importeRegular).toFixed(2));
 			});
+			
+			rc.saldo 				= Number(parseFloat(rc.saldo).toFixed(2));
+			rc.saldoMultas 	= Number(parseFloat(rc.saldoMultas).toFixed(2));
 			
 			_.each(rc.getReactively("planPagosHistorial"), function(planPago, index){
 				
@@ -536,19 +539,19 @@ rc.referenciasPersonales = [];
 				
 				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
 				//console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
-				arreglo.push({saldo:rc.saldo,
-					numeroPago : planPago.numeroPago,
-					cantidad : rc.credito.numeroPagos,
-					fechaSolicito : rc.credito.fechaSolicito,
-					fecha : fechaini,
-					pago : 0, 
-					cargo : planPago.cargo,
-					movimiento : planPago.movimiento,
-					planPago_id : planPago._id,
-					credito_id : planPago.credito_id,
-					descripcion : planPago.descripcion,
-					importe : planPago.importeRegular,
-					pagos : planPago.pagos
+				arreglo.push({saldo					:rc.saldo,
+											numeroPago  	: planPago.numeroPago,
+											cantidad 			: rc.credito.numeroPagos,
+											fechaSolicito : rc.credito.fechaSolicito,
+											fecha 				: fechaini,
+											pago  				: 0, 
+											cargo 				: planPago.cargo,
+											movimiento 		: planPago.movimiento,
+											planPago_id 	: planPago._id,
+											credito_id 		: planPago.credito_id,
+											descripcion 	: planPago.descripcion,
+											importe 			: planPago.importeRegular,
+											pagos 				: planPago.pagos
 			  	});				
 				if(planPago.pagos.length>0)
 					_.each(planPago.pagos,function (pago) {
@@ -570,6 +573,8 @@ rc.referenciasPersonales = [];
 					})
 				//console.log(rc.saldo)
 			});
+		
+		
 		if(this.getReactively("credito_id")){
         var filtrado = [];
         var flags = {
@@ -938,7 +943,14 @@ rc.referenciasPersonales = [];
 */
 
 	
-	this.cancelarCredito = function(motivo){
+	this.cancelarCredito = function(motivo, form){
+			
+			
+			if(form.$invalid){
+		        toastr.error('Error al cancelar.');
+		        return;
+		  }
+			
 			var cre = Creditos.findOne({_id : rc.cancelacion._id});
 			Creditos.update({_id : cre._id}, { $set : {estatus : 6, motivo: motivo}});
 			toastr.success("El crédito se ha cancelado.")

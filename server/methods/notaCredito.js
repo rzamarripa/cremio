@@ -102,11 +102,11 @@ Meteor.methods({
 		
 		//console.log(notas);
 		_.each(notas,function(nota){
-			var usuario = Meteor.users.findOne(nota.cliente_id);
-			usuario.profile.notasCredito.saldo -= Number(parseFloat(nota.saldo).toFixed(2));
+			//var usuario = Meteor.users.findOne(nota.cliente_id);
+			//usuario.profile.notasCredito.saldo -= Number(parseFloat(nota.saldo).toFixed(2));
 			//nota.saldo = 0;
 			nota.estatus = 2;
-				Meteor.users.update({_id:usuario._id},{$set:{'profile':usuario.profile}});
+			//Meteor.users.update({_id:usuario._id},{$set:{'profile':usuario.profile}});
 			NotasCredito.update({_id:nota._id},{$set:{estatus:2}});
 		});
 

@@ -10,6 +10,7 @@ angular.module("creditoMio")
   });
  	Meteor.apply('getCorte', [$stateParams.corte_id], function(err, result){
  		rc = _.extend(rc, result);
+ 		console.log(result);
  	 	$scope.$apply();
  	});
  	

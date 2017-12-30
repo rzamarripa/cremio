@@ -243,6 +243,14 @@
             <span class="menu-item-parent">Panel Verificadores</span>
         </a>
     </li>
+    
+    <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Cajero'">
+        <a ui-sref="root.reimpresionTickets" tilte="Credito Mio">
+            <i class="fa fa-lg fa-fw fa-ticket"></i>
+            <span class="menu-item-parent">Reimpresión Tickets</span>
+        </a>
+    </li>
+    
     <li data-menu-collapse>
         <a  href="#" ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">
             <i class="fa fa-lg fa-fw fa-user"></i>

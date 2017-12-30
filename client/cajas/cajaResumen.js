@@ -5,11 +5,13 @@ angular.module("creditoMio")
  	window.rc = rc;
  	rc.total = 0;
  	rc.$stateParams = $stateParams;
+ 	
  	this.subscribe('movimientosCaja', () => {
     return [{}]
   });
  	Meteor.apply('getResumen', [$stateParams.caja_id, $stateParams.fechaApertura], function(err, result){
  		rc = _.extend(rc, result);
+ 		console.log(result);
  	 	$scope.$apply();
  	});
  	
