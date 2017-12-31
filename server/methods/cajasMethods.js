@@ -653,6 +653,5 @@ Meteor.methods({
 							caja
 						};
   },
-  
-  
+    
 });

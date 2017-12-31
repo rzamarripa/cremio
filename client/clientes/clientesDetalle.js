@@ -57,6 +57,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	rc.banderaContestar = false;
 	
+	rc.pago_id = "";
+	
 	this.subscribe('cajas',()=>{
 		return [{}];
 	});
@@ -98,9 +100,11 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		return [{}]
 	});
 	
+
 	this.subscribe('pagos',()=>{
-		return [{}];
+		return [{_id : rc.getReactively("pago_id")}];
 	});
+
 	
 	this.subscribe('personas',()=>{
 		return [{rol:"Cliente"}];
@@ -502,8 +506,9 @@ rc.referenciasPersonales = [];
 		},
 		planPagosHistorial  : () => {
 			
-			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}, {sort:{numeroPago:1}} ).fetch()
-			//rc.creditos_id = _.pluck(planes, "cliente_id");
+			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}, {sort:{numeroPago	: 1, 
+																																												fechaLimite	: 1, 
+																																												descripcion	: -1}} ).fetch()
 
 			return planes
 
@@ -530,52 +535,77 @@ rc.referenciasPersonales = [];
 			
 			_.each(rc.getReactively("planPagosHistorial"), function(planPago, index){
 				
-				//console.log("entro al segundo")
-				///console.log("credito",credito)
+					
+				if (planPago.descripcion=="Cargo Moratorio")
+				{
+				
+						rc.saldo += planPago.cargo
+				}		
+				
 
-				
-				if(planPago.descripcion=="Cargo Moratorio")
-					rc.saldo+=planPago.cargo
-				
-				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
-				//console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
-				arreglo.push({saldo					:rc.saldo,
-											numeroPago  	: planPago.numeroPago,
-											cantidad 			: rc.credito.numeroPagos,
-											fechaSolicito : rc.credito.fechaSolicito,
-											fecha 				: fechaini,
-											pago  				: 0, 
-											cargo 				: planPago.cargo,
-											movimiento 		: planPago.movimiento,
-											planPago_id 	: planPago._id,
-											credito_id 		: planPago.credito_id,
-											descripcion 	: planPago.descripcion,
-											importe 			: planPago.importeRegular,
-											pagos 				: planPago.pagos
-			  	});				
-				if(planPago.pagos.length>0)
+				arreglo.push({saldo							: rc.saldo,
+											numeroPago  			: planPago.numeroPago,
+											cantidad 					: rc.credito.numeroPagos,
+											fechaSolicito 		: rc.credito.fechaSolicito,
+											fecha 						: planPago.fechaLimite,
+											pago  						: 0, 
+											cargo 						: planPago.cargo,
+											movimiento 				: planPago.movimiento,
+											planPago_id 			: planPago._id,
+											credito_id 				: planPago.credito_id,
+											descripcion 			: planPago.descripcion,
+											importe 					: planPago.importeRegular,
+											pagos 						: planPago.pagos,
+											notaCredito				: 0,
+											saldoActualizado	: (planPago.descripcion == "Cargo Moratorio" && planPago.pagos.length == 0) ? planPago.importeRegular :0 
+			  	});			
+			  		
+				if (planPago.pagos.length > 0)
+				{
 					_.each(planPago.pagos,function (pago) {
-						rc.saldo-=pago.totalPago
-						arreglo.push({saldo:rc.saldo,
-							numeroPago : planPago.numeroPago,
-							cantidad : credito.numeroPagos,
-							fechaSolicito : rc.credito.fechaSolicito,
-							fecha : pago.fechaPago,
-							pago : pago.totalPago, 
-							cargo : 0,
-							movimiento : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
-							planPago_id : planPago._id,
-							credito_id : planPago.credito_id,
-							descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
-							importe : planPago.importeRegular,
-							pagos : planPago.pagos
+						
+							//Ir por la Forma de Pago
+							
+							var formaPago = "";
+							
+							rc.pago_id = pago.pago_id;
+											
+							var pag = Pagos.findOne(rc.pago_id);
+							if (pag != undefined)
+							{
+								 var ti = TiposIngreso.findOne(pag.tipoIngreso_id);
+								 formaPago = ti.nombre;
+							}
+							
+							//console.log("Forma PAgo:", formaPago);
+						
+							rc.saldo -= pago.totalPago
+							arreglo.push({saldo							: rc.saldo,
+														numeroPago 				: planPago.numeroPago,
+														cantidad 					: credito.numeroPagos,
+														fechaSolicito 		: rc.credito.fechaSolicito,
+														fecha 						: pago.fechaPago,
+														pago  						: pago.totalPago, 
+														cargo 						: 0,
+														movimiento 				: planPago.descripcion == "Cargo Moratorio"? "Abono de Cargo Moratorio": "Abono",
+														planPago_id 			: planPago._id,
+														credito_id 				: planPago.credito_id,
+														descripcion 			: planPago.descripcion == "Cargo Moratorio"? "Abono de Cargo Moratorio": "Abono",
+														importe 					: planPago.importeRegular,
+														pagos 						: planPago.pagos,
+														notaCredito				: formaPago == 'Nota de Credito' ? pago.totalPago : 0,
+														saldoActualizado	: 0
 					  	});
 					})
-				//console.log(rc.saldo)
+				}
+				
+				
+					
 			});
 		
 		
-		if(this.getReactively("credito_id")){
+			/*
+if(this.getReactively("credito_id")){
         var filtrado = [];
         var flags = {
           abonoKey: undefined,
@@ -622,8 +652,9 @@ rc.referenciasPersonales = [];
         //console.log(filtrado,"filtrado")
         return filtrado;
       }
-
+*/
 			//console.log("el ARREGLO del helper historial",arreglo)
+			
 			return arreglo;
 		},
 		historialCreditos : () => {

@@ -210,7 +210,7 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
     movimientosCaja: () => {
       var ret = [];
       var caj = Cajas.findOne({ _id: $stateParams.caja_id });  
-      console.log(caj);    
+      //console.log(caj);    
       //console.log("Caj:", this.getReactively('caja._id'));
       
       
@@ -232,7 +232,7 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 	        //console.log(mov);
           var d = {};
           
-          console.log(mov.origen);
+          //console.log(mov.origen);
           if (mov.origen == "Pago de Cliente" || mov.origen == "Pago de Distribuidor" || mov.origen == "Cancelación de pago") {
             	pagos_id.push(mov.origen_id);
 							var p = Pagos.findOne(mov.origen_id);

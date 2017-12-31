@@ -667,29 +667,31 @@ if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagar
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	this.mostrarModalActivarFecha = function()
 	{
+			rc.credentials = {};
 			$("#modalActivarFecha").modal();
 	}
 	
 	
 	this.validaCredenciales = function(credenciales)
 	{
-			console.log("Entro");
-			
 			var usuario = Meteor.users.findOne(Meteor.userId());
-								
-		
 	    Meteor.call('validarCredenciales', credenciales, usuario.profile.sucursal_id , function(err, result) {
 	      if (result) {
 		      
-		      console.log(resut);
-	        console.log('the passwords match!');
+		      console.log("VER:", result);
+	        rc.estatusFecha = false;
+	        $scope.$apply();
+	        $("#modalActivarFecha").modal('hide');
+	      }
+	      else if (result == false)
+	      {
+		      	console.log("FAL:", result);
+		      	toastr.warning("No concide con la clave de desbloqueo")
 	      }
 	    });  
-              
-      	   
-      
 		
-			$("#modalActivarFecha").modal('hide');
+			console.log(rc.estatusFecha);
+			
 	}
 	
 	

@@ -471,14 +471,12 @@ if (referenciaPersonal.buscarPersona_id)
     
     var u = Meteor.users.findOne({username: usuario.username, roles: {$in : ['Gerente','Supervisor']}, "profile.sucursal_id": sucursal_id});
     
+    ban = false;
 		if (u != undefined)
-		{
-	    	console.log(u.profile.passwordDesbloqueo);
-	    	if (u.profile.passwordDesbloqueo == usuario.password)
-	    			return true;
-				else
-						return false;
-		}
+    	if (u.profile.passwordDesbloqueo == usuario.password)
+    			ban = true;
+		
+		return ban;
 		    
   }
 	
