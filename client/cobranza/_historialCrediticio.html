@@ -50,7 +50,7 @@
 				</thead>
 				<tbody>
 					<tr  ng-repeat="credito in cob.historialDelCredito" 
-					ng-class="(credito.descripcion == 'Multa') ? 'danger' : (credito.descripcion == 'Recibo') ? 'info':'success'">
+					ng-class="(credito.descripcion == 'Cargo Moratorio') ? 'danger' : (credito.descripcion == 'Recibo') ? 'info':'success'">
 						<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
 						<td class="text-center">{{credito.movimiento}}</td>	
 						<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
@@ -58,7 +58,7 @@
 						<td class="text-right">{{credito.pago | currency}}</td>
 						<td >{{credito.saldo | currency}}</td>
 						<td >0</td>
-						<td >0</td>
+						<td >{{credito.saldoActualizado}}</td>
 					</tr>
 					
 				</tbody>

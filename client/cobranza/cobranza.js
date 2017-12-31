@@ -86,7 +86,7 @@ angular.module("creditoMio")
   });
 
    this.subscribe("planPagos", ()=>{
-    return [{ credito_id : this.getReactively("credito_id") }]
+    return [{credito_id : this.getReactively("credito_id") }]
   });
 
     this.subscribe('personas', () => {
@@ -155,7 +155,7 @@ angular.module("creditoMio")
           rc.saldoMultas+=planPago.importeRegular;
       });
       
-      _.each(rc.getReactively("planPagosViejo"), function(planPago, index){
+      _.each(rc.getReactively("planPagosViejo"), function(planPago, index, key){
 
         
         if(planPago.descripcion=="Cargo Moratorio")
@@ -175,12 +175,15 @@ angular.module("creditoMio")
           credito_id : planPago.credito_id,
           descripcion : planPago.descripcion,
           importe : planPago.importeRegular,
-          pagos : planPago.pagos
+          pagos : planPago.pagos,
+          _id: planPago._id
+          // saldoActualizado : planPago.cargo - planPago[key+1].pago
           });
           
         
         if(planPago.pagos.length>0)
           _.each(planPago.pagos,function (pago) {
+            //console.log(pago,"pago")
             rc.saldo-=pago.totalPago
             arreglo.push({saldo:rc.saldo,
               numeroPago : planPago.numeroPago,
@@ -194,11 +197,49 @@ angular.module("creditoMio")
               credito_id : planPago.credito_id,
               descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
               importe : planPago.importeRegular,
-              pagos : planPago.pagos
+              pagos : planPago.pagos,
+             
+             // item.proximoPago = objeto[key+1].fechaLimite
               });
           })
         //console.log(rc.saldo)
       });
+
+      if(this.getReactively("credito_id")){
+        var filtrado = [];
+        var flags = {
+          abonoKey: undefined,
+          multaKey:undefined
+        };
+        _.each(arreglo, function(pago,key){
+          if(pago.descripcion == "Cargo Moratorio"){
+            flags.multaKey = key;
+          }
+          if(pago.descripcion == "Recibo"){
+            flags.abonoKey = key;
+          }
+          if(pago.descripcion == "Abono de Multa"){
+            console.log(flags);
+            console.log(arreglo[flags.multaKey].saldoActualizado);
+            if(arreglo[flags.multaKey].saldoActualizado){
+              arreglo[flags.multaKey].saldoActualizado -= pago.pago;
+            }else{
+              arreglo[flags.multaKey].saldoActualizado = arreglo[flags.multaKey].cargo - pago.pago;
+            }
+          }
+          if(pago.descripcion == "Abono"){
+            if(arreglo[flags.abonoKey].saldoActualizado){
+              arreglo[flags.abonoKey].saldoActualizado -= pago.pago;
+            }else{
+              arreglo[flags.abonoKey].saldoActualizado = arreglo[flags.abonoKey].cargo - pago.pago;
+            }
+          }
+          if(pago.credito_id == rc.credito_id){
+            filtrado.push(pago);
+          }
+        })
+        return filtrado;
+      }
       
 
       console.log("el ARREGLO del helper historial",arreglo)
@@ -386,9 +427,7 @@ angular.module("creditoMio")
   
   this.selCredito=function(objeto, num)
   {
-    	//console.log(objeto,"objeto")
-
-        
+    	console.log(objeto,"objeto")
 
       rc.cliente_id = objeto.cliente._id
       //console.log(rc.cliente_id)
@@ -402,7 +441,6 @@ angular.module("creditoMio")
       //console.log("Objeto: ",objeto)
       rc.historial = objeto
 
-      
       //Información del Cliente
       rc.cliente = objeto.cliente;
       //console.log(rc.cliente);
@@ -902,7 +940,7 @@ angular.module("creditoMio")
           if (objeto[key+1]  == undefined) {
             item.proximoPago = "No hay proximo pago"
           }else{
-          item.proximoPago = objeto[key+1].fechaLimite
+          
          }
 
         
@@ -970,7 +1008,10 @@ angular.module("creditoMio")
 
 
   this.verPagos= function(credito) {
+
     //console.log(credito,"el ob ")
+    rc.credito = credito;
+    rc.credito_id = credito._id;
     $("#modalpagos").modal();
     credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
     rc.mostrarModal = true
