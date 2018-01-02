@@ -55,6 +55,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.saldo = 0;
 	rc.cargosMoratorios = 0;
 	
+	rc.abonosRecibos 					= 0;
+	rc.abonosCargorMoratorios = 0;
+	
 	rc.banderaContestar = false;
 	
 	rc.pago_id = "";
@@ -521,7 +524,9 @@ rc.referenciasPersonales = [];
 			rc.saldo = 0;	
 			var credito = rc.credito
 			rc.saldoMultas = 0;
-			
+
+			rc.abonosRecibos 					= 0;
+			rc.abonosCargorMoratorios = 0;
 
 			_.each(rc.getReactively("planPagosHistorial"), function(planPago){	
 				if(planPago.descripcion == "Recibo")
@@ -574,10 +579,14 @@ rc.referenciasPersonales = [];
 							if (pag != undefined)
 							{
 								 var ti = TiposIngreso.findOne(pag.tipoIngreso_id);
-								 formaPago = ti.nombre;
+								 if (ti != undefined)
+		 							 formaPago = ti.nombre;
 							}
 							
-							//console.log("Forma PAgo:", formaPago);
+							if (planPago.descripcion == 'Recibo')
+								rc.abonosRecibos += pago.totalPago;
+							else if (planPago.descripcion == "Cargo Moratorio")	
+								rc.abonosCargorMoratorios += pago.totalPago;
 						
 							rc.saldo -= pago.totalPago
 							arreglo.push({saldo							: rc.saldo,
@@ -658,7 +667,7 @@ if(this.getReactively("credito_id")){
 			return arreglo;
 		},
 		historialCreditos : () => {
-			var creditos = Creditos.find({estatus: {$in: [4,5]}}).fetch();
+			var creditos = Creditos.find({estatus: {$in: [4,5]}}, {sort : {fechaSolicito: -1}}).fetch();
 			if(creditos != undefined){
 				rc.creditos_id = _.pluck(creditos, "_id");
 			}	
@@ -1814,11 +1823,13 @@ if(estatus == 0){
     cliente = rc.datosCliente
     //console.log("toshtta japon",cliente)
 
-    var sumaCargos = 0
-    var sumaAbonos = 0
+    var sumaCargos = 0;
+    var sumaAbonos = 0;
+    var sumaAbonosCM = 0;
     var popo = 0
     objeto.objetoFinal = objeto[objeto.length - 1];
-     _.each(objeto,function(item){
+    
+    _.each(objeto,function(item){
 
         if (item.movimiento == "Cargo Moratorio") {
           sumaCargos += item.importe
@@ -1826,24 +1837,43 @@ if(estatus == 0){
 
         }
         if (item.movimiento == "Abono") {
-          sumaAbonos += item.pago
-
+          sumaAbonos += item.pago;
         }
-      
-        //suma += item.capitalSolicitado
-        //sumaSol += item.adeudoInicial
+        
+        if (item.movimiento == "Abono de Cargo Moratorio"){
+	        sumaAbonosCM += item.pago;
+        }
+
         popo = objeto.objetoFinal.saldo
         item.ultimoSaldo =  popo
      
-      });
-
-       _.each(objeto,function(item){
-       item.sumaCargos = sumaCargos
-       item.sumaAbonos = sumaAbonos
+    });
+		
+    _.each(objeto,function(item){
+       item.sumaCargos = sumaCargos;
+       item.sumaAbonos = sumaAbonos;
+       item.sumaAbonosCM = sumaAbonosCM;
         
     });
     
          
+		loading(true);
+		Meteor.call('imprimirHistorial', objeto, cliente, credito, 'pdf', function(error, response) {
+
+			   if(error)
+			   {
+			    console.log('ERROR :', error);
+			    return;
+			   }
+			   else
+			   {
+				   	//console.log(response);
+				 		downloadFile(response);
+				 		loading(false);
+				 }
+		});
+		
+		/*
 
     Meteor.call('imprimirHistorial', objeto, cliente,credito, function(error, response) {     
        if(error)
@@ -1880,6 +1910,11 @@ if(estatus == 0){
           window.URL.revokeObjectURL(url);
       }
     });
+    
+*/
+    
+    
+    
   };  
 
   this.obtenerGente= function(objeto)

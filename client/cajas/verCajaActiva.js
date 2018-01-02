@@ -21,7 +21,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
   
   
   this.subscribe('cajas', () => {
-    return [{ estadoCaja: "Abierta"}]
+    return [{ }]
   });
   this.subscribe('tiposIngreso', () => {
     return [{}]
@@ -252,6 +252,10 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
   }
 	
   this.nuevoTraspasoModal = function() {
+	  
+	  rc.cajas = Cajas.find({estadoCaja: "Abierta"}).fetch();
+		//console.log(rc.cajas);
+	  
     $('#nuevoTraspaso').modal('show');
   }
 
@@ -379,6 +383,8 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 	  console.log("Cajas:", rc.cajas);
 	  console.log("Cuentas:", rc.cuentas);
 */
+
+		
 	  
     rc.detalleOrigenDestino = _.findWhere(rc.cajas, {_id: _id}) || _.findWhere(rc.cuentas, {_id: _id});
     

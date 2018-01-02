@@ -44,15 +44,23 @@ angular.module("creditoMio")
   rc.conRespuesta = false
   //rc.cobranza.estatus = 
   
+  rc.pago_id = "";
+  
   this.estadoCivilSeleccionado = "";
   this.valorOrdenar = "Folio";
 
   rc.colonia =""
   
+  rc.abonosRecibos 					= 0;
+	rc.abonosCargorMoratorios = 0;
 
   this.subscribe("tiposCredito", ()=>{
     return [{}]
   });
+  
+  this.subscribe('pagos',()=>{
+		return [{_id : rc.getReactively("pago_id")}];
+	});
   
   this.subscribe("estadoCivil", ()=>{
     return [{estatus : true}]
@@ -96,24 +104,10 @@ angular.module("creditoMio")
     return [{credito_id : this.getReactively("credito_id") }]
   });
 
-/*
-  this.subscribe('personas', () => {
-    return [{ }];
-  });
-*/
   this.subscribe('creditos', () => {
     return [{cliente_id : rc.getReactively("cliente_id")}];
   });
 
-/*
-  this.subscribe('pagos', () => {
-    return [{ }];
-  });  
-  
-  this.subscribe('sucursales', () => {
-    return [{ }];
-  });
-*/
   
   this.helpers({
     tiposCredito : () => {
@@ -178,71 +172,107 @@ angular.module("creditoMio")
     historialDelCredito : () => {
       
       arreglo = [];
-      var saldoPago = 0;
-      var saldoActual = 0; 
-      rc.saldo =0;  
-      var credito = this.credito  
-      rc.saldoMultas=0;
+			
+			var saldoPago = 0;
+			var saldoActual = 0; 
+			rc.saldo = 0;	
+			var credito = rc.credito
+			rc.saldoMultas = 0;
+			
+			rc.abonosRecibos 					= 0;
+			rc.abonosCargorMoratorios = 0;
 
-      _.each(rc.getReactively("planPagosViejo"), function(planPago){
-        if(planPago.descripcion=="Recibo")
-          rc.saldo+=planPago.cargo;
-        if(planPago.descripcion=="Cargo Moratorio")
-          rc.saldoMultas+=planPago.importeRegular;
-      });
+			_.each(rc.getReactively("planPagosViejo"), function(planPago){	
+				if(planPago.descripcion == "Recibo")
+					rc.saldo += Number(parseFloat(planPago.cargo).toFixed(2));
+				if(planPago.descripcion == "Cargo Moratorio")
+					rc.saldoMultas += Number(parseFloat(planPago.importeRegular).toFixed(2));
+			});
+			
+			rc.saldo 				= Number(parseFloat(rc.saldo).toFixed(2));
+			rc.saldoMultas 	= Number(parseFloat(rc.saldoMultas).toFixed(2));
+			
+			_.each(rc.getReactively("planPagosViejo"), function(planPago, index){
+				
+					
+				if (planPago.descripcion=="Cargo Moratorio")
+				{
+				
+						rc.saldo += planPago.cargo
+				}		
+				
+
+				arreglo.push({saldo							: rc.saldo,
+											numeroPago  			: planPago.numeroPago,
+											cantidad 					: rc.credito.numeroPagos,
+											fechaSolicito 		: rc.credito.fechaSolicito,
+											fecha 						: planPago.fechaLimite,
+											pago  						: 0, 
+											cargo 						: planPago.cargo,
+											movimiento 				: planPago.movimiento,
+											planPago_id 			: planPago._id,
+											credito_id 				: planPago.credito_id,
+											descripcion 			: planPago.descripcion,
+											importe 					: planPago.importeRegular,
+											pagos 						: planPago.pagos,
+											notaCredito				: 0,
+											saldoActualizado	: (planPago.descripcion == "Cargo Moratorio" && planPago.pagos.length == 0) ? planPago.importeRegular :0 
+			  	});			
+			  		
+				if (planPago.pagos.length > 0)
+				{
+					_.each(planPago.pagos,function (pago) {
+						
+							//Ir por la Forma de Pago
+							
+							var formaPago = "";
+							
+							rc.pago_id = pago.pago_id;
+											
+							var pag = Pagos.findOne(rc.pago_id);
+							if (pag != undefined)
+							{
+								 var ti = TiposIngreso.findOne(pag.tipoIngreso_id);
+								 if (ti != undefined)
+								 		formaPago = ti.nombre;
+							}
+							
+							if (planPago.descripcion == 'Recibo')
+							{
+									rc.abonosRecibos += pago.totalPago;
+							}	
+							else if (planPago.descripcion == "Cargo Moratorio")	
+							{
+									rc.abonosCargorMoratorios += pago.totalPago;
+							}	
+								
+						
+							rc.saldo -= pago.totalPago
+							arreglo.push({saldo							: rc.saldo,
+														numeroPago 				: planPago.numeroPago,
+														cantidad 					: credito.numeroPagos,
+														fechaSolicito 		: rc.credito.fechaSolicito,
+														fecha 						: pago.fechaPago,
+														pago  						: pago.totalPago, 
+														cargo 						: 0,
+														movimiento 				: planPago.descripcion == "Cargo Moratorio"? "Abono de Cargo Moratorio": "Abono",
+														planPago_id 			: planPago._id,
+														credito_id 				: planPago.credito_id,
+														descripcion 			: planPago.descripcion == "Cargo Moratorio"? "Abono de Cargo Moratorio": "Abono",
+														importe 					: planPago.importeRegular,
+														pagos 						: planPago.pagos,
+														notaCredito				: formaPago == 'Nota de Credito' ? pago.totalPago : 0,
+														saldoActualizado	: 0
+					  	});
+					})
+				}
+				
+				
+					
+			});
       
-      _.each(rc.getReactively("planPagosViejo"), function(planPago, index, key){
-
-        
-        if(planPago.descripcion=="Cargo Moratorio")
-          rc.saldo+=planPago.cargo
-        
-        fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite
-        
-        //console.log(fechaini,planPago.fechaPago,planPago.fechaLimite)
-        
-        arreglo.push({saldo:rc.saldo,
-          numeroPago : planPago.numeroPago,
-          cantidad : credito.numeroPagos,
-          fechaSolicito : credito.fechaSolicito,
-          fecha : fechaini,
-          pago : 0, 
-          cargo : planPago.cargo,
-          movimiento : planPago.movimiento,
-          planPago_id : planPago._id,
-          credito_id : planPago.credito_id,
-          descripcion : planPago.descripcion,
-          importe : planPago.importeRegular,
-          pagos : planPago.pagos,
-          _id: planPago._id
-          // saldoActualizado : planPago.cargo - planPago[key+1].pago
-         });
-          
-        
-        if(planPago.pagos.length>0)
-          _.each(planPago.pagos,function (pago) {
-            //console.log(pago,"pago")
-            rc.saldo-=pago.totalPago
-            arreglo.push({saldo:rc.saldo,
-              numeroPago : planPago.numeroPago,
-              cantidad : credito.numeroPagos,
-              fechaSolicito : credito.fechaSolicito,
-              fecha : pago.fechaPago,
-              pago : pago.totalPago, 
-              cargo : 0,
-              movimiento : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
-              planPago_id : planPago._id,
-              credito_id : planPago.credito_id,
-              descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Multa":"Abono",
-              importe : planPago.importeRegular,
-              pagos : planPago.pagos,
-             
-             // item.proximoPago = objeto[key+1].fechaLimite
-              });
-          })
-        //console.log(rc.saldo)
-      });
-
+			/*
+			
       if(this.getReactively("credito_id")){
         var filtrado = [];
         var flags = {
@@ -291,6 +321,7 @@ angular.module("creditoMio")
         return filtrado;
       }
       
+*/
 
       //console.log("el ARREGLO del helper historial",arreglo)
       return arreglo;
@@ -557,12 +588,13 @@ angular.module("creditoMio")
       //objeto.fechaEntrega = new Date();
       rc.cliente_id = objeto.cliente._id
       //console.log(rc.cliente_id)
-      Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch()
-      objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"), estatus: {$in: [4,5]}}).fetch()
+      Creditos.find({cliente_id: rc.getReactively("cliente_id")}).fetch();
+      
+      objeto.historialCreditos = Creditos.find({cliente_id: rc.getReactively("cliente_id"), estatus: {$in: [4,5]}}, {sort : {fechaSolicito: -1}}).fetch()
 
       rc.credito_id = objeto.credito._id;
       //console.log("Objeto: ",objeto)
-      rc.historial = objeto
+      rc.historial = objeto;
 
     }
   
@@ -944,6 +976,12 @@ angular.module("creditoMio")
 		
 		//console.log(objeto);
 		
+		 if (objeto.length == 0)
+    {
+	    	toastr.warning("No ha seleccionado nada para imprimir");
+	    	return;
+    }
+		
     _.each(objeto,function(item, key){
       if (item.imprimir) {
         item.cliente.profile.colonia = Colonias.findOne(item.cliente.profile.colonia_id)
@@ -1074,6 +1112,13 @@ angular.module("creditoMio")
 
     var toPrint = [];
     
+    //console.log(lista,"lista")
+    
+    if (lista.length == 0)
+    {
+	    	toastr.warning("No ha seleccionado nada para imprimir");
+	    	return;
+    }
 
 	  _.each(lista,function(item){
 	      if (item.imprimir) {
@@ -1084,9 +1129,27 @@ angular.module("creditoMio")
 
     });
 
-    console.log(lista,"lista")
+    //console.log(lista,"lista")
+		
+		loading(true);
+		Meteor.call('getListaCobranza', toPrint, 'pdf', function(error, response) {
 
-    Meteor.call('getListaCobranza', toPrint, function(error, response) {     
+			   if(error)
+			   {
+			    console.log('ERROR :', error);
+			    loading(false);
+			    return;
+			   }
+			   else
+			   {
+				   	//console.log(response);
+				 		downloadFile(response);
+				 		loading(false);
+				 }
+		});
+		
+    /*
+Meteor.call('getListaCobranza', toPrint, function(error, response) {     
        if(error)
        {
         console.log('ERROR :', error);
@@ -1128,6 +1191,7 @@ angular.module("creditoMio")
       }
     
     });
+*/
 
   };
 
@@ -1198,11 +1262,14 @@ var sumaCargos = 0
     cliente = rc.cliente.profile;
     //console.log("toshtta japon",cliente)
 
-    var sumaCargos = 0
-    var sumaAbonos = 0
+    var sumaCargos = 0;
+    var sumaAbonos = 0;
+    var sumaAbonosCM = 0;
+     
     var popo = 0
     objeto.objetoFinal = objeto[objeto.length - 1];
-     _.each(objeto,function(item){
+    
+    _.each(objeto,function(item){
 
         if (item.movimiento == "Cargo Moratorio") {
           sumaCargos += item.importe
@@ -1213,22 +1280,42 @@ var sumaCargos = 0
           sumaAbonos += item.pago
 
         }
+        
+        if (item.movimiento == "Abono de Cargo Moratorio"){
+	        sumaAbonosCM += item.pago;
+        }
       
-        //suma += item.capitalSolicitado
-        //sumaSol += item.adeudoInicial
         popo = objeto.objetoFinal.saldo
         item.ultimoSaldo =  popo
      
       });
 
-       _.each(objeto,function(item){
+      _.each(objeto,function(item){
        item.sumaCargos = sumaCargos
        item.sumaAbonos = sumaAbonos
-        
-    });
+       item.sumaAbonosCM = sumaAbonosCM; 
+			});
 
-
-    Meteor.call('imprimirHistorial', objeto, cliente,credito, function(error, response) {     
+			
+			loading(true);
+			Meteor.call('imprimirHistorial', objeto, cliente, credito, 'pdf', function(error, response) {
+	
+				   if(error)
+				   {
+				    console.log('ERROR :', error);
+				    loading(false);
+				    return;
+				   }
+				   else
+				   {
+					   	//console.log(response);
+					 		downloadFile(response);
+					 		loading(false);
+					 }
+			});
+			
+			/*
+Meteor.call('imprimirHistorial', objeto, cliente,credito, function(error, response) {     
        if(error)
        {
         console.log('ERROR :', error);
@@ -1263,6 +1350,7 @@ var sumaCargos = 0
           window.URL.revokeObjectURL(url);
 				}
     });
+*/
     
     
     
