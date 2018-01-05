@@ -12,3 +12,8 @@ Meteor.publish("cuentas",function(params){
 		
   return Cuentas.find(where);
 });
+
+
+Meteor.publish("cuenta",function(params){
+  return Cuentas.find(params);
+});

@@ -61,6 +61,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.banderaContestar = false;
 	
 	rc.pago_id = "";
+	rc.pagos_ids = [];
 	
 	this.subscribe('cajas',()=>{
 		return [{}];
@@ -103,9 +104,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		return [{}]
 	});
 	
-
 	this.subscribe('pagos',()=>{
-		return [{_id : rc.getReactively("pago_id")}];
+		return [{ _id : { $in : rc.getReactively("pagos_ids")}}];
 	});
 
 	
@@ -114,10 +114,9 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	});
 
 	this.subscribe('tiposIngreso',()=>{
-		return [{
-			estatus : true
-		}] 
+		return [{}] 
 	});
+	
 	this.subscribe('tiposCredito',()=>{
 		return [{
 			estatus : true
@@ -537,16 +536,21 @@ rc.referenciasPersonales = [];
 			
 			rc.saldo 				= Number(parseFloat(rc.saldo).toFixed(2));
 			rc.saldoMultas 	= Number(parseFloat(rc.saldoMultas).toFixed(2));
+			rc.pagos_ids = [];
 			
 			_.each(rc.getReactively("planPagosHistorial"), function(planPago, index){
 				
 					
 				if (planPago.descripcion=="Cargo Moratorio")
 				{
-				
 						rc.saldo += planPago.cargo
 				}		
-				
+					
+				 var sa = 0;
+				 if (planPago.descripcion == 'Recibo')
+							sa = Number(parseFloat( planPago.cargo - (planPago.pagoInteres + planPago.pagoIva + planPago.pagoCapital +	planPago.pagoSeguro) ).toFixed(2)); 
+				 else if (planPago.descripcion == 'Cargo Moratorio')
+				 			sa = Number(parseFloat(planPago.cargo - planPago.pago).toFixed(2));
 
 				arreglo.push({saldo							: rc.saldo,
 											numeroPago  			: planPago.numeroPago,
@@ -562,20 +566,24 @@ rc.referenciasPersonales = [];
 											importe 					: planPago.importeRegular,
 											pagos 						: planPago.pagos,
 											notaCredito				: 0,
-											saldoActualizado	: (planPago.descripcion == "Cargo Moratorio" && planPago.pagos.length == 0) ? planPago.importeRegular :0 
+											saldoActualizado	: planPago.pagos.length == 0 ? planPago.importeRegular : sa
+																																																									 
 			  	});			
 			  		
 				if (planPago.pagos.length > 0)
 				{
+
+					_.each(planPago.pagos,function (pago) {
+							rc.pagos_ids.push(pago.pago_id);
+					});	
+					
+					
 					_.each(planPago.pagos,function (pago) {
 						
 							//Ir por la Forma de Pago
 							
 							var formaPago = "";
-							
-							rc.pago_id = pago.pago_id;
-											
-							var pag = Pagos.findOne(rc.pago_id);
+							var pag = Pagos.findOne(pago.pago_id);
 							if (pag != undefined)
 							{
 								 var ti = TiposIngreso.findOne(pag.tipoIngreso_id);
@@ -587,7 +595,7 @@ rc.referenciasPersonales = [];
 								rc.abonosRecibos += pago.totalPago;
 							else if (planPago.descripcion == "Cargo Moratorio")	
 								rc.abonosCargorMoratorios += pago.totalPago;
-						
+							
 							rc.saldo -= pago.totalPago
 							arreglo.push({saldo							: rc.saldo,
 														numeroPago 				: planPago.numeroPago,
@@ -606,6 +614,8 @@ rc.referenciasPersonales = [];
 														saldoActualizado	: 0
 					  	});
 					})
+					
+					
 				}
 				
 				
@@ -1849,6 +1859,7 @@ if(estatus == 0){
      
     });
 		
+				
     _.each(objeto,function(item){
        item.sumaCargos = sumaCargos;
        item.sumaAbonos = sumaAbonos;

@@ -90,6 +90,7 @@
                <th align="center">Origen</th>
                <th align="center">Destino</th>
                <th align="center">Monto</th>
+               <th width="5%">Acción</th>
              </tr>
            </thead>
            <tbody>
@@ -98,6 +99,18 @@
                <td>{{t.origen.nombre}}</td>
                <td>{{t.destino.nombre}}</td>
                <td align="right">{{t.importe | currency}}</td>
+               <td>
+              	<div class="btn-group">
+								  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								    <span class="caret"></span>
+								    <span class="sr-only">Toggle Dropdown</span>
+								  </button>
+                  <ul class="dropdown-menu dropdown-menu-right text-left">
+								    <li><a ui-sref="anon.imprimirTicketTraspaso({pago_id : t._id})" target="_blank"><i class="fa fa-file-text-o"></i> Ticket</a></li>
+								    <!-- <li><a ng-click="mov.origen=='Pago de Cliente'?vca.cancelarPago(mov.pago,1):vca.cancelarPago(mov,2)"><i class="fa fa-trash"></i> Cancelar</a></li> -->
+								  </ul>
+								</div>
+              </td>
              </tr>
            </tbody>
           </table>

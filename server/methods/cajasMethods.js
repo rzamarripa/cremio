@@ -77,49 +77,59 @@ Meteor.methods({
     if (!destino || !origen || !origen.cuenta || !cuenta ||
       !origen.cuenta[cuenta] || origen.cuenta[cuenta].saldo < cantidad || cantidad <= 0)
       throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
+    
     origen.cuenta[cuenta].saldo -= cantidad;
     destino.saldo += cantidad;
+    
+    origen.cuenta[cuenta].saldo = Number(parseFloat(origen.cuenta[cuenta].saldo).toFixed(2));
+    destino.saldo 							= Number(parseFloat(destino.saldo).toFixed(2));
 
     var objeto = {
-      origen_id: origen._id,
-      destino_id: destino._id,
-      tipoCuenta_id: cuenta,
-      importe: cantidad,
-      tipo: "CajaCuenta",
-      estatus: 1,
-      createdBy: user._id,
-      createdAt: new Date(),
-      sucursal_id: user.profile.sucursal_id,
-      updated: false
+      origen_id			: origen._id,
+      destino_id		: destino._id,
+      tipoCuenta_id	: cuenta,
+      importe				: cantidad,
+      tipo					: "CajaCuenta",
+      estatus				: 1,
+      createdBy			: user._id,
+      createdAt			: new Date(),
+      sucursal_id		: user.profile.sucursal_id,
+      updated				: false,
+      elaboro_id		: Meteor.userId(),
+      recibio_id		: origen.usuario_id
     }
 
     var traspaso_id = Traspasos.insert(objeto);
 
     var movimientoOrigen = {
-      tipoMovimiento: "Retiro Por Traspaso",
-      origen: "Traspaso Caja Cuenta",
-      origen_id: traspaso_id,
-      caja_id: origen._id,
-      cuenta_id: cuenta,
-      monto: cantidad * -1,
-      sucursal_id: user.profile.sucursal_id,
-      createdAt: new Date(),
-      createdBy: user._id,
-      updated: false,
-      estatus: 1
+      tipoMovimiento	: "Retiro Por Traspaso",
+      origen					: "Traspaso Caja Cuenta",
+      origen_id				: traspaso_id,
+      caja_id					: origen._id,
+      cuenta_id				: cuenta,
+      monto						: cantidad * -1,
+      sucursal_id			: user.profile.sucursal_id,
+      createdAt				: new Date(),
+      createdBy				: user._id,
+      updated					: false,
+      estatus					: 1,
+      elaboro_id			: Meteor.userId(),
+      recibio_id			: origen.usuario_id
     }
     var movimientoDestino = {
-      tipoMovimiento: "Ingreso Por Traspaso",
-      origen: "Traspaso Caja Cuenta",
-      origen_id: traspaso_id,
-      caja_id: origen._id,
-      cuenta_id: destino_id,
-      monto: cantidad,
-      sucursal_id: user.profile.sucursal_id,
-      createdAt: new Date(),
-      createdBy: user._id,
-      updated: false,
-      estatus: 1
+      tipoMovimiento	: "Ingreso Por Traspaso",
+      origen					: "Traspaso Caja Cuenta",
+      origen_id				: traspaso_id,
+      caja_id					: origen._id,
+      cuenta_id				: destino_id,
+      monto						: cantidad,
+      sucursal_id			: user.profile.sucursal_id,
+      createdAt				: new Date(),
+      createdBy				: user._id,
+      updated					: false,
+      estatus					: 1,
+      elaboro_id			: Meteor.userId(),
+      recibio_id			: origen.usuario_id
     }
     MovimientosCajas.insert(movimientoOrigen);
     MovimientosCuenta.insert(movimientoDestino);
@@ -151,50 +161,61 @@ Meteor.methods({
       throw new Meteor.Error(403, 'Error 403: Permiso denegado', 'Permiso denegado');
     if (!destino || !origen || !origen.cuenta || !origen.cuenta[cuenta] || origen.cuenta[cuenta].saldo < cantidad || cantidad <= 0)
       throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
+    
     origen.cuenta[cuenta].saldo -= cantidad;
     destino.cuenta[cuenta].saldo += cantidad;
+		
+		origen.cuenta[cuenta].saldo 	= Number(parseFloat(origen.cuenta[cuenta].saldo).toFixed(2));
+		destino.cuenta[cuenta].saldo 	= Number(parseFloat(destino.cuenta[cuenta].saldo).toFixed(2)); 
 
     var objeto = {
-      origen_id: origen._id,
-      destino_id: destino._id,
-      tipoCuenta_id: cuenta,
-      importe: cantidad,
-      tipo: "CajaCaja",
-      estatus: 1,
-      createdBy: user._id,
-      createdAt: new Date(),
-      sucursal_id: user.profile.sucursal_id,
-      updated: false
+      origen_id					: origen._id,
+      destino_id				: destino._id,
+      tipoCuenta_id			: cuenta,
+      importe						: cantidad,
+      tipo							: "CajaCaja",
+      estatus						: 1,
+      createdBy					: user._id,
+      createdAt					: new Date(),
+      sucursal_id				: user.profile.sucursal_id,
+      updated						: false,
+      usuarioOrigen_id 	: origen.usuario_id,
+      usuarioDestino_id	: destino.usuario_id
     }
 
     var traspaso_id = Traspasos.insert(objeto);
 
     var movimientoOrigen = {
-      tipoMovimiento: "Retiro Por Traspaso",
-      origen: "Traspaso Entre Cajas",
-      origen_id: traspaso_id,
-      caja_id: origen._id,
-      cuenta_id: cuenta,
-      monto: cantidad * -1,
-      sucursal_id: user.profile.sucursal_id,
-      createdAt: new Date(),
-      createdBy: user._id,
-      updated: false,
-      estatus: 1
+      tipoMovimiento		: "Retiro Por Traspaso",
+      origen						: "Traspaso Entre Cajas",
+      origen_id					: traspaso_id,
+      caja_id						: origen._id,
+      cuenta_id					: cuenta,
+      monto							: cantidad * -1,
+      sucursal_id				: user.profile.sucursal_id,
+      createdAt					: new Date(),
+      createdBy					: user._id,
+      updated						: false,
+      estatus						: 1,
+      usuarioOrigen_id 	: origen.usuario_id,
+      usuarioDestino_id	: destino.usuario_id
     }
     var movimientoDestino = {
-      tipoMovimiento: "Ingreso Por Traspaso",
-      origen: "Traspaso Entre Cajas",
-      origen_id: traspaso_id,
-      caja_id: destino._id,
-      cuenta_id: cuenta,
-      monto: cantidad,
-      sucursal_id: user.profile.sucursal_id,
-      createdAt: new Date(),
-      createdBy: user._id,
-      updated: false,
-      estatus: 1
+      tipoMovimiento		: "Ingreso Por Traspaso",
+      origen						: "Traspaso Entre Cajas",
+      origen_id					: traspaso_id,
+      caja_id						: destino._id,
+      cuenta_id					: cuenta,
+      monto							: cantidad,
+      sucursal_id				: user.profile.sucursal_id,
+      createdAt					: new Date(),
+      createdBy					: user._id,
+      updated						: false,
+      estatus						: 1,
+      usuarioOrigen_id 	: origen.usuario_id,
+      usuarioDestino_id	: destino.usuario_id
     }
+    
     MovimientosCajas.insert(movimientoOrigen)
     MovimientosCajas.insert(movimientoDestino)
 

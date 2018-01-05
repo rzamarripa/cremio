@@ -2744,8 +2744,9 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
       var totalCargos = 0;
       var totalAbonos = 0;
       
+      //console.log(objeto)
       _.each(objeto,function(item){
-		      item.fechaSolicito =moment(item.fechaSolicito).format("DD-MM-YYYY")
+		      item.fechaSolicito = moment(item.fechaSolicito).format("DD-MM-YYYY")
 		      item.saldo = parseFloat(item.saldo.toFixed(2))
 		      item.saldo = formatCurrency(item.saldo)
 		      item.cargo = parseFloat(item.cargo.toFixed(2))
@@ -2759,7 +2760,9 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
 		      
 		      item.totalCargosMoratorios = parseFloat(item.sumaAbonosCM).toFixed(2);
 		      totalCargosMoratorios = formatCurrency(item.totalCargosMoratorios )
-		
+					
+					item.notaCredito = formatCurrency(item.notaCredito);
+					
 			});
 
 	 		cliente.ciudad 				= cliente.ciudadCliente.nombre;
@@ -2820,7 +2823,7 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
 		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
       if(!err){
         fs.unlink(rutaOutput);
-        res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "HISTORIALCREDITICIOSOUT" + '.pdf' });
+        res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "HISTORIALCREDITICIOOUT" + '.pdf' });
       }else{
         res['return']({err: err});
         console.log("Error al convertir pdf:", err);

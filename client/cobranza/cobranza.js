@@ -45,6 +45,7 @@ angular.module("creditoMio")
   //rc.cobranza.estatus = 
   
   rc.pago_id = "";
+  rc.pagos_ids = [];
   
   this.estadoCivilSeleccionado = "";
   this.valorOrdenar = "Folio";
@@ -59,7 +60,7 @@ angular.module("creditoMio")
   });
   
   this.subscribe('pagos',()=>{
-		return [{_id : rc.getReactively("pago_id")}];
+		return [{ _id : { $in : rc.getReactively("pagos_ids")}}];
 	});
   
   this.subscribe("estadoCivil", ()=>{
@@ -94,7 +95,9 @@ angular.module("creditoMio")
     return [{}]
   });   
   
-  
+  this.subscribe('tiposIngreso',()=>{
+		return [{}] 
+	});
 
   this.subscribe('notas',()=>{
     return [{cliente_id:this.getReactively("cliente_id"),}]
@@ -191,16 +194,20 @@ angular.module("creditoMio")
 			
 			rc.saldo 				= Number(parseFloat(rc.saldo).toFixed(2));
 			rc.saldoMultas 	= Number(parseFloat(rc.saldoMultas).toFixed(2));
+			rc.pagos_ids = [];
 			
 			_.each(rc.getReactively("planPagosViejo"), function(planPago, index){
-				
 					
 				if (planPago.descripcion=="Cargo Moratorio")
 				{
-				
 						rc.saldo += planPago.cargo
 				}		
 				
+				var sa = 0;
+			  if (planPago.descripcion == 'Recibo')
+						sa = Number(parseFloat( planPago.cargo - (planPago.pagoInteres + planPago.pagoIva + planPago.pagoCapital +	planPago.pagoSeguro) ).toFixed(2)); 
+			  else if (planPago.descripcion == 'Cargo Moratorio')
+			 			sa = Number(parseFloat(planPago.cargo - planPago.pago).toFixed(2));
 
 				arreglo.push({saldo							: rc.saldo,
 											numeroPago  			: planPago.numeroPago,
@@ -216,20 +223,22 @@ angular.module("creditoMio")
 											importe 					: planPago.importeRegular,
 											pagos 						: planPago.pagos,
 											notaCredito				: 0,
-											saldoActualizado	: (planPago.descripcion == "Cargo Moratorio" && planPago.pagos.length == 0) ? planPago.importeRegular :0 
+											saldoActualizado	: planPago.pagos.length == 0 ? planPago.importeRegular : sa
 			  	});			
 			  		
 				if (planPago.pagos.length > 0)
 				{
 					_.each(planPago.pagos,function (pago) {
+							rc.pagos_ids.push(pago.pago_id);
+					});
+					
+					var pagos = Pagos.find({}).fetch();
+					
+					_.each(planPago.pagos,function (pago) {
 						
 							//Ir por la Forma de Pago
-							
 							var formaPago = "";
-							
-							rc.pago_id = pago.pago_id;
-											
-							var pag = Pagos.findOne(rc.pago_id);
+							var pag = Pagos.findOne(pago.pago_id);
 							if (pag != undefined)
 							{
 								 var ti = TiposIngreso.findOne(pag.tipoIngreso_id);
@@ -245,8 +254,7 @@ angular.module("creditoMio")
 							{
 									rc.abonosCargorMoratorios += pago.totalPago;
 							}	
-								
-						
+							
 							rc.saldo -= pago.totalPago
 							arreglo.push({saldo							: rc.saldo,
 														numeroPago 				: planPago.numeroPago,
@@ -270,60 +278,6 @@ angular.module("creditoMio")
 				
 					
 			});
-      
-			/*
-			
-      if(this.getReactively("credito_id")){
-        var filtrado = [];
-        var flags = {
-          abonoKey: undefined,
-          multaKey:undefined
-        };
-        _.each(arreglo, function(pago,key){
-          if(pago.descripcion == "Cargo Moratorio"){
-            flags.multaKey = key;
-          }
-          if(pago.descripcion == "Recibo"){
-            flags.abonoKey = key;
-          }
-          if(pago.descripcion == "Abono de Multa"){
-            //console.log(flags);
-            //console.log(arreglo[flags.multaKey].saldoActualizado);
-            if(arreglo[flags.multaKey].saldoActualizado){
-              arreglo[flags.multaKey].saldoActualizado -= pago.pago;
-            }else{
-              arreglo[flags.multaKey].saldoActualizado = arreglo[flags.multaKey].cargo - pago.pago;
-            }
-          }
-          if(pago.descripcion == "Abono"){
-            if(arreglo[flags.abonoKey].saldoActualizado){
-              arreglo[flags.abonoKey].saldoActualizado -= pago.pago;
-            }else{
-              arreglo[flags.abonoKey].saldoActualizado = arreglo[flags.abonoKey].cargo - pago.pago;
-            }
-          }
-          if(pago.credito_id == rc.credito_id){
-            filtrado.push(pago);
-          }
-          if(pago.numeroPago % 2 == 0)
-            {
-              
-              pago.tipoPar = "par"
-            }
-            else
-            {
-              pago.tipoPar = "impar"
-            }
-
-        })
-
-        //console.log(filtrado,"filtrado")
-        return filtrado;
-      }
-      
-*/
-
-      //console.log("el ARREGLO del helper historial",arreglo)
       return arreglo;
     },
 
