@@ -412,6 +412,10 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
         rc.detalleOrigenDestino = undefined;
         form.$setPristine();
         form.$setUntouched();
+        
+        var url = $state.href("anon.imprimirTicketTraspaso", { pago_id: result }, { newTab: true });
+		    window.open(url, '_blank');
+        
       });
     }else if(datos.tipo == 'a_cuenta'){
       Meteor.apply('traspasoCajaCuenta', [rc.caja._id, datos.origen_destino, datos.importe], function(err, result){
@@ -426,6 +430,10 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
         rc.detalleOrigenDestino = undefined;
         form.$setPristine();
         form.$setUntouched();
+        
+        var url = $state.href("anon.imprimirTicketTraspaso", { pago_id: result }, { newTab: true });
+		    window.open(url, '_blank');
+        
       });
     }else if(datos.tipo == 'desde_ventanilla'){
       Meteor.apply('traspasoCajaCaja', [datos.origen_destino, rc.caja._id, datos.importe, datos.tipoIngreso_id], function(err, result){
@@ -440,6 +448,9 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
         rc.detalleOrigenDestino = undefined;
         form.$setPristine();
         form.$setUntouched();
+        
+        var url = $state.href("anon.imprimirTicketTraspaso", { pago_id: result }, { newTab: true });
+		    window.open(url, '_blank');
       });
     }else if(datos.tipo == 'a_ventanilla'){
       Meteor.apply('traspasoCajaCaja', [rc.caja._id, datos.origen_destino, datos.importe, datos.tipoIngreso_id], function(err, result){
@@ -454,8 +465,15 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
         rc.detalleOrigenDestino = undefined;
         form.$setPristine();
         form.$setUntouched();
+        
+        var url = $state.href("anon.imprimirTicketTraspaso", { pago_id: result }, { newTab: true });
+		    window.open(url, '_blank');
+        
       });
     }
+    
+    
+    
   };
   
   this.corte = function(caja) {

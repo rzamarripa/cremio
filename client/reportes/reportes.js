@@ -349,12 +349,14 @@ angular.module("creditoMio")
 
 		var usuario = Meteor.user();
 	  rc.arregloCarteraVencida = [];
-		
+		rc.totales = {};
 		loading(true);		
 		Meteor.call("getCarteraVencida", usuario.profile.sucursal_id, function(error, result){
 				if  (result)
 				{
-						rc.arregloCarteraVencida = result;						
+						rc.arregloCarteraVencida = result.carteraVencida;
+						rc.totales = result.totales;
+												
 						loading(false);
 						$scope.$apply();
 				}
@@ -990,52 +992,25 @@ this.guardarNotaCobranza=function(nota){
 	this.imprimirReporteCarteraVencida = function(objeto){
 		//console.log(objeto)
 		
-
-		   Meteor.call('ReporteCarteraVencida', rc.arregloCarteraVencida ,function(error, response) {
-
+		if (rc.arregloCarteraVencida.length == 0)
+		{
+				toastr.warning("No hay nada que imprimir");
+				return;
+		}
+		
+		loading(true);	
+		Meteor.call('ReporteCarteraVencida', rc.arregloCarteraVencida, 'pdf' ,function(error, response) {
 
 		   if(error)
 		   {
-		    console.log('ERROR :', error);
+		    	console.log('ERROR :', error);
+					loading(false);
 		    return;
 		   }
-		   else
+		   if (response)
 		   {
-			 				function b64toBlob(b64Data, contentType, sliceSize) {
-								  contentType = contentType || '';
-								  sliceSize = sliceSize || 512;
-								
-								  var byteCharacters = atob(b64Data);
-								  var byteArrays = [];
-								
-								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-								    var byteNumbers = new Array(slice.length);
-								    for (var i = 0; i < slice.length; i++) {
-								      byteNumbers[i] = slice.charCodeAt(i);
-								    }
-								
-								    var byteArray = new Uint8Array(byteNumbers);
-								
-								    byteArrays.push(byteArray);
-								  }
-								    
-								  var blob = new Blob(byteArrays, {type: contentType});
-								  return blob;
-							}
-							
-							var blob = b64toBlob(response, "application/docx");
-						  var url = window.URL.createObjectURL(blob);
-						  
-						  //console.log(url);
-						  var dlnk = document.getElementById('dwnldLnk');
-
-					    dlnk.download = "reporteDiarioCobranza.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
-  
+				 		downloadFile(response);
+				 		loading(false);
 		   }
 		});
 		

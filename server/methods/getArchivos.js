@@ -464,19 +464,8 @@ Meteor.methods({
     //var rutaOutputpdf = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "FICHASOCIOOut.pdf" ;
      
     fs.writeFileSync(rutaOutput, buf);
-      
-
-     /*
- //word
-      var bitmap = fs.readFileSync(rutaOutput);
-      var base = Buffer(bitmap).toString('base64');
-            
-      fs.unlink(rutaOutput);
-      res['return']({ uri: 'data:application/msword;base64,' + base, nombre: objeto.nombreCompleto + '.docx' });
-*/
-      
      
-		 unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
         if(!err){
           fs.unlink(rutaOutput);
           res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "FICHASOCIOOut" + '.pdf' });
@@ -484,32 +473,7 @@ Meteor.methods({
           res['return']({err: err});
           console.log("Error al convertir pdf:", err);
         }
-      });
-			
-			
-			/*
- var cmd = require('node-cmd');
-    
-    cmd.get(
-		        'unoconv -f pdf '+ rutaOutput,
-		        function(data, err, stderr){
-			        	
-		            if (!err) {
-									
-									var bitmap = fs.readFileSync(rutaOutputpdf);
-									var base = Buffer(bitmap).toString('base64');
-
-									res['return']({ uri: 'data:application/pdf;base64,' + base, nombre: "FICHASOCIOOut" + '.pdf' });
-									
-		            } 
-		            if (err)
-		            {
-			            	console.log('Error cmd:', err);
-			            	return null;	
-		            }
-        		}
-		 );
-*/
+     });
 
     return res.wait();
 				
@@ -886,14 +850,18 @@ Meteor.methods({
     return new Buffer(bitmap).toString('base64');
 		
   },
-  ReporteCarteraVencida: function (objeto) {
+  ReporteCarteraVencida: function (objeto, tipo) {
 	
 		var fs = require('fs');
-    	var Docxtemplater = require('docxtemplater');
+    var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
+		
+		var unoconv = require('better-unoconv');
+    var future = require('fibers/future');
 		
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
+		var templateType = (tipo === 'pdf') ? '.docx' : (tipo === 'excel' ? '.xlsx' : '.docx');
 		if(Meteor.isDevelopment){
       var path = require('path');
       var publicPath = path.resolve('.').split('.meteor')[0];
@@ -908,6 +876,7 @@ Meteor.methods({
 		var content = fs
     	   .readFileSync(produccion+"ReporteCarteraVencida.docx", "binary");
 		var zip = new JSZip(content);
+		var res = new future();
 		var doc=new Docxtemplater()
 								.loadZip(zip).setOptions({nullGetter: function(part) {
 			if (!part.module) {
@@ -1009,14 +978,38 @@ Meteor.methods({
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccionSalida+"ReporteCarteraVencidaSalida.docx",buf);		
+		//fs.writeFileSync(produccionSalida+"ReporteCarteraVencidaSalida.docx",buf);		
+		
+		
+		var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "ReporteCarteraVencidaOut" + objeto.nombreCompleto + templateType;
+    //var rutaOutputpdf = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "FICHASOCIOOut.pdf" ;
+     
+    fs.writeFileSync(rutaOutput, buf);
+    
+		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+        if(!err){
+          fs.unlink(rutaOutput);
+          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "ReporteCarteraVencidaOut" + '.pdf' });
+        }else{
+          res['return']({err: err});
+          console.log("Error al convertir pdf:", err);
+        }
+     });
+
+    return res.wait();
+
+		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccionSalida+"ReporteCarteraVencidaSalida.docx");
+   /*  var bitmap = fs.readFileSync(produccionSalida+"ReporteCarteraVencidaSalida.docx"); */
     
     // convert binary data to base64 encoded string
-    return new Buffer(bitmap).toString('base64');
+    //return new Buffer(bitmap).toString('base64');
+    
+    
+    
+    
 		
   },
   ReporteCreditos: function (objeto,inicial,final) {

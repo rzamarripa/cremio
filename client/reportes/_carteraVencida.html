@@ -53,6 +53,21 @@
 					    <td style="text-align: right">{{objeto.mas28Dias | currency}}</td>
 				    </tr>
 					</tbody>
+					<tfoot>
+						<tr>
+						  <th colspan="2">No. Clientes: {{re.arregloCarteraVencida.length}}</th>
+							<th style="text-align: right">{{re.totales.sumaTotal | currency}}</th>
+							<th style="text-align: right">{{re.totales.sumaSaldo | currency}}</th>
+							<th style="text-align: right">{{re.totales.sumaCargosMoratorios | currency}}</th>
+							<th style="text-align: right">{{re.totales.sumaPorVencer | currency}}</th>
+							<th style="text-align: right">{{re.totales.sumaTotalVencido | currency}}</th>
+							<th style="text-align: right">{{re.totales.suma7Dias | currency}}</th>
+							<th style="text-align: right">{{re.totales.suma14Dias | currency}}</th>
+							<th style="text-align: right">{{re.totales.suma21Dias | currency}}</th>
+							<th style="text-align: right">{{re.totales.suma28Dias | currency}}</th>
+							<th style="text-align: right">{{re.totales.sumaMas28Dias | currency}}</th>
+						</tr>	
+					</tfoot>	
 				</table>
 			</div>
 	</div>		

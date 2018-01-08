@@ -147,7 +147,7 @@ Meteor.methods({
 		Cuentas.update({_id:origenid},{$set:origen});
 		Cajas.update({_id:destinoid},{$set:destino});
 
-		return "200";
+		return traspaso_id;
 	},
 	traspasoCuentaCuenta : function ( origen_id,destino_id,cantidad){
 		

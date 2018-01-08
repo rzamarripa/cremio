@@ -92,10 +92,10 @@
                <th align="center">Monto</th>
                <th width="5%">Acción</th>
              </tr>
-           </thead>
-           <tbody>
-             <tr ng-repeat="t in vca.traspasos">
-               <td>{{t.createdAt | date:"dd-MM-yyyy"}}</td>
+	           </thead>
+	           <tbody>
+	             <tr ng-repeat="t in vca.traspasos">
+	               <td>{{t.createdAt | date:"dd-MM-yyyy"}}</td>
                <td>{{t.origen.nombre}}</td>
                <td>{{t.destino.nombre}}</td>
                <td align="right">{{t.importe | currency}}</td>

@@ -241,6 +241,21 @@ Meteor.methods({
 			fechaInicial.setHours(0,0,0,0);
 			var fechaFinal	= new Date();
 			fechaFinal.setHours(23,59,59,999);
+			
+			var totales = {};
+			
+			totales.sumaTotal	= 0;
+			totales.sumaSaldo = 0;
+			totales.sumaCargosMoratorios = 0;
+			totales.sumaPorVencer = 0;
+			totales.sumaTotalVencido = 0;
+			totales.suma7Dias = 0;
+			totales.suma14Dias = 0;
+			totales.suma21Dias = 0;
+			totales.suma28Dias = 0;
+			totales.sumaMas28Dias = 0;
+			
+			
 		
 			var clientes = Meteor.users.find({"profile.sucursal_id": sucursal_id, roles : {$in : ["Cliente"]}}).fetch();
 			
@@ -376,9 +391,25 @@ Meteor.methods({
 									
 									//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 									
+							  	
+						  		
+
+									
+									
+									
 								
 							});
 							
+							totales.sumaTotal 						+= Number(parseFloat(total).toFixed(2));
+							totales.sumaSaldo 						+= Number(parseFloat(saldo).toFixed(2));
+							totales.sumaCargosMoratorios 	+= Number(parseFloat(saldoCargosMoratorios).toFixed(2));
+				  		totales.sumaPorVencer 				+= Number(parseFloat(porVencer).toFixed(2));
+				  		totales.sumaTotalVencido 			+= Number(parseFloat(totalVencido).toFixed(2));
+				  		totales.suma7Dias 						+= Number(parseFloat(sieteDias).toFixed(2));	  		
+							totales.suma14Dias 						+= Number(parseFloat(siete14Dias).toFixed(2));
+							totales.suma21Dias 						+= Number(parseFloat(catorce21Dias).toFixed(2));
+							totales.suma28Dias 						+= Number(parseFloat(ventiuno28Dias).toFixed(2));
+							totales.sumaMas28Dias 				+= Number(parseFloat(mas28Dias).toFixed(2));
 							
 							var clienteCarteraVencida = { numeroCliente					: cliente.profile.numeroCliente,
 																						nombre								: cliente.profile.nombreCompleto,
@@ -399,8 +430,13 @@ Meteor.methods({
 																					
 			});
 			
+			var resultado = {};
+			resultado.carteraVencida = [];
+			
+			resultado.carteraVencida = carteraVencida;
+			resultado.totales = totales;
 						
-			return carteraVencida;
+			return resultado;
 			
 	},
 	
