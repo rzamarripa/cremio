@@ -1651,10 +1651,12 @@ Meteor.methods({
 		
 		const formatCurrency = require('format-currency');
 		
+		console.log(avales);
 			
-		if (avales == undefined) {
+		if (avales == undefined || avales.length == 0) {
 			avales = cliente
 		}
+		
 		if (contrato.periodoPago == "Semanal") {
 			contrato.periodoPago = "SEMANAL"
 		}
@@ -1686,6 +1688,10 @@ Meteor.methods({
 		 	
 		 	pp.iva = parseFloat(pp.iva.toFixed(2))
 		 	pp.iva = formatCurrency(pp.iva)
+		 	
+		 	pp.interes = parseFloat(pp.interes.toFixed(2))
+		 	pp.interes = formatCurrency(pp.interes)
+		 	
 		 	if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 		 		pp.sumatoria = formatCurrency(pp.sumatoria)
 		 	if (pp.total) {pp.total = parseFloat(pp.total.toFixed(2))}
@@ -1701,57 +1707,101 @@ Meteor.methods({
 		});
 
  		_.each(contrato.garantias,function(item){
-	 	item.fechaFiniquito = moment(item.fechaFiniquito).format("DD-MM-YYYY")
-	 	item.fechaComercializacion = moment(item.fechaComercializacion).format("DD-MM-YYYY")
-	 	if (item.comisionGastos) {
-	 	item.comisionGastos = parseFloat(item.comisionGastos.toFixed(2))
-	 	item.comisionGastosLetra = NumeroALetras(item.comisionGastos);
-	 	item.comisionGastos = formatCurrency(item.comisionGastos)
-	    }
-	    if (item.porcentajePrestamoGeneral) {
-	 	item.porcentajePrestamoGeneral = parseFloat(item.porcentajePrestamoGeneral.toFixed(2))
-	 	item.porcentajePrestamoGeneralLetra = NumeroALetras(item.porcentajePrestamoGeneral);
-	    }
-    if (item.porcentajePrestamoMobiliria) {
-				  	    
-		 item.porcentajePrestamoMobiliria = parseFloat(item.porcentajePrestamoMobiliria.toFixed(2))
-		 item.porcentajePrestamoMobiliariaLetra = NumeroALetras(item.porcentajePrestamoMobiliria);
-    }
-	    if (item.avaluoGeneral) {
-	 	item.avaluoGeneral = parseFloat(item.avaluoGeneral.toFixed(2))
-	 	item.avaluoGeneralLetra = NumeroALetras(item.avaluoGeneral);
-	 	item.avaluoGeneral = formatCurrency(item.avaluoGeneral)
-	    }
-	    if (item.avaluoMobiliaria) {
-  	 	item.avaluoMobiliaria = parseFloat(item.avaluoMobiliaria.toFixed(2))
-  	 	item.avaluoMobiliariaLetra = NumeroALetras(item.avaluoMobiliaria);
-  	 	item.avaluoMobiliaria = formatCurrency(item.avaluoMobiliaria);
-  	 	console.log(item.avaluoMobiliariaLetra);
-	    }
-	    if (item.almacenaje) {
-	 	item.almacenaje = parseFloat(item.almacenaje.toFixed(2))
-	 	item.almacenajeLetra = NumeroALetras(item.almacenaje)}
-	 	item.almacenaje = formatCurrency(item.almacenaje)
-	 	if (item.comercializacion) {
-	 	item.comercializacion = parseFloat(item.comercializacion.toFixed(2))
-	 	item.comercializacionLetra = NumeroALetras(item.comercializacion)}
-	 	item.comercializacion = formatCurrency(item.comercializacion)
-	    
-	 	if (item.desempenioExtemporaneo) {
-	 	item.desempenioExtemporaneo = parseFloat(item.desempenioExtemporaneo.toFixed(2))
-	 	item.desempenioLetra = NumeroALetras(item.desempenioExtemporaneo)}
-	 	item.desempenioExtemporaneo = formatCurrency(item.desempenioExtemporaneo)
-	 	if (item.reposicionContrato) {
-	 	item.reposicionContrato = parseFloat(item.reposicionContrato.toFixed(2))
-	 	item.reposicionLetra = NumeroALetras(item.reposicionContrato)}
-	 	item.reposicionContrato = formatCurrency(item.reposicionContrato)
-	 });
-	  
-	  contrato.fechaEntrega =moment(contrato.fechaEntrega).format("DD-MM-YYYY")
+			 	item.fechaFiniquito = moment(item.fechaFiniquito).format("DD-MM-YYYY")
+			 	item.fechaComercializacion = moment(item.fechaComercializacion).format("DD-MM-YYYY")
+			 	
+			 	if (item.comisionGastos) {
+				 	item.comisionGastos = parseFloat(item.comisionGastos.toFixed(2))
+				 	item.comisionGastosLetra = NumeroALetras(item.comisionGastos);
+				 	item.comisionGastos = formatCurrency(item.comisionGastos)
+			  }
+			  
+			  if (item.porcentajePrestamoGeneral) {
+				 	item.porcentajePrestamoGeneral = parseFloat(item.porcentajePrestamoGeneral.toFixed(2))
+				 	
+				 	var valoresSeg = (item.porcentajePrestamoGeneral).toString().split('.');
+					
+					var entero = valoresSeg[0];
+					var decimales = valoresSeg[1];
+					
+					var letraEntero = NumeroALetras(entero);
+					var letraDecimales = "";
+					
+					if (Number(decimales) > 0)
+							letraDecimales =  "PUNTO " + NumeroALetras(decimales);
+				 	
+				 	
+				 	item.porcentajePrestamoGeneralLetra = letraEntero + letraDecimales;
+			  }
+		    
+		    if (item.porcentajePrestamoMobiliria) {		  	    
+					item.porcentajePrestamoMobiliria = parseFloat(item.porcentajePrestamoMobiliria.toFixed(2));
+
+					var valoresSeg = (item.porcentajePrestamoMobiliria).toString().split('.');
+					
+					var entero = valoresSeg[0];
+					var decimales = valoresSeg[1];
+					
+					var letraEntero = NumeroALetras(entero);
+					var letraDecimales = "";
+					
+					if (Number(decimales) > 0)
+							letraDecimales =  "PUNTO " + NumeroALetras(decimales);
+					
+					item.porcentajePrestamoMobiliariaLetra = letraEntero + letraDecimales;
+				 
+				 
+		    }
+			  
+			  if (item.avaluoGeneral) {
+				 	item.avaluoGeneral = parseFloat(item.avaluoGeneral.toFixed(2))
+				 	item.avaluoGeneralLetra = NumeroALetras(item.avaluoGeneral);
+				 	item.avaluoGeneral = formatCurrency(item.avaluoGeneral)
+			  }
+			  
+			  if (item.avaluoMobiliaria) {
+		  	 	item.avaluoMobiliaria = parseFloat(item.avaluoMobiliaria.toFixed(2))
+		  	 	item.avaluoMobiliariaLetra = NumeroALetras(item.avaluoMobiliaria);
+		  	 	item.avaluoMobiliaria = formatCurrency(item.avaluoMobiliaria);
+		  	 	//console.log(item.avaluoMobiliariaLetra);
+			  }
+			  if (item.almacenaje) {
+				 	item.almacenaje = parseFloat(item.almacenaje.toFixed(2))
+				 	item.almacenajeLetra = NumeroALetras(item.almacenaje)
+				 	item.almacenaje = formatCurrency(item.almacenaje)
+				}
+				
+			 	if (item.comercializacion) {
+				 	item.comercializacion = parseFloat(item.comercializacion.toFixed(2))
+				 	item.comercializacionLetra = NumeroALetras(item.comercializacion)
+				 	item.comercializacion = formatCurrency(item.comercializacion)
+				}
+			    
+			 	if (item.desempenioExtemporaneo) {
+				 	item.desempenioExtemporaneo = parseFloat(item.desempenioExtemporaneo.toFixed(2))
+				 	item.desempenioLetra = NumeroALetras(item.desempenioExtemporaneo)
+				 	item.desempenioExtemporaneo = formatCurrency(item.desempenioExtemporaneo)
+				}
+				
+			 	if (item.reposicionContrato) {
+				 	item.reposicionContrato = parseFloat(item.reposicionContrato.toFixed(2))
+				 	item.reposicionLetra = NumeroALetras(item.reposicionContrato)
+				 	item.reposicionContrato = formatCurrency(item.reposicionContrato)
+				}
+				 	
+	 	});
+ 		
+ 		var fecha;
+ 		if (contrato.fechaEntrega == undefined)
+ 		   fecha = new Date();
+ 		else 
+ 			 fecha = new Date(contrato.fechaEntrega);	   
+ 		   
+	  	  
+	  contrato.fechaEntrega = moment(contrato.fechaEntrega).format("DD-MM-YYYY")
 	  var vigencia = planPagos[planPagos.length - 1];
 	  var vigenciaFecha = vigencia.fechaLimite;
 	
-	  var fecha = new Date();
 
   	function formatDate(date) {
 	  	  date = new Date(date);

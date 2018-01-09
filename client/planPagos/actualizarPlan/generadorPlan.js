@@ -1070,7 +1070,7 @@ this.generarPlanPagos = function(credito, form){
 	this.calcularPorcentajeGeneral = function(){
 
     	if (rc.garantia.avaluoGeneral != undefined)
-					rc.garantia.porcentajePrestamoGeneral = Math.round(rc.garantia.avaluoGeneral / rc.credito.capitalSolicitado * 100);
+					rc.garantia.porcentajePrestamoGeneral = Number(parseFloat(rc.credito.capitalSolicitado * 100 / rc.garantia.avaluoGeneral).toFixed(2));
 			else 
 					rc.garantia.porcentajePrestamoGeneral = 0;
 
@@ -1079,7 +1079,7 @@ this.generarPlanPagos = function(credito, form){
   this.calcularPorcentajeMobiliaria = function(){
 
     	if (rc.garantia.avaluoMobiliaria != undefined)
-					rc.garantia.porcentajePrestamoMobiliria = Math.round(rc.garantia.avaluoMobiliaria / rc.credito.capitalSolicitado * 100);
+					rc.garantia.porcentajePrestamoMobiliria = Number(parseFloat(rc.credito.capitalSolicitado * 100 / rc.garantia.avaluoMobiliaria).toFixed(2));
 			else 
 					rc.garantia.porcentajePrestamoMobiliria = 0;
   };

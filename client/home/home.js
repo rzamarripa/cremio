@@ -156,6 +156,7 @@ angular.module("creditoMio")
 										rc.estaCerrada = true;								
 								else
 								{
+										rc.cuentas = [];
 										_.each(c.cuenta, function(cue, index){
 											 var ti = TiposIngreso.findOne({_id:index});
 											 if (ti != undefined)

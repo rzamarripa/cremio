@@ -1436,6 +1436,7 @@ if(estatus == 0){
 	
 	this.guardarCargoMoratorio = function(objeto)
 	{	
+		
 			if (rc.recibo._id == "")
 			{
 					toastr.error('Debe de seleccionar un recibo.');	
@@ -1443,7 +1444,7 @@ if(estatus == 0){
 				
 			}
 			
-			var c = Creditos.findOne({ob})
+			var c = Creditos.findOne({_id: objeto._id});
 			
 			var mfecha = moment(new Date());
 			var pago = PlanPagos.findOne(rc.recibo._id);

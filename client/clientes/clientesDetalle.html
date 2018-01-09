@@ -16,12 +16,12 @@
 											<i class="fa fa-plus"></i> N. Solicitud
 										</a>&nbsp;
 										<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px;">
-											<i class="fa fa-plus"></i> N. Nota de Credito
+											<i class="fa fa-plus"></i> N. Nota de Crédito
 										</a>&nbsp;
 										<a ng-click="cd.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' " style="margin: 5px;">
 											<i class="fa fa-plus"></i> N. Nota de Cliente
 										</a>&nbsp;
-										<a ng-click="cd.crearCargoMoratorio(credito)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px">
+										<a ng-click="cd.crearCargoMoratorio(credito)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px">
 											 <i class="fa fa-plus"></i> N. Cargo Moratorio
 										</a>&nbsp;	
 										<a ui-sref="root.pagarPlanPagos({objeto_id : cd.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero' && cd.estatusCaja == true" style="margin: 5px;">
