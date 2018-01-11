@@ -481,7 +481,7 @@ Meteor.methods({
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  getRecibos: function (objeto) {
+  getRecibos: function (objeto, tipo) {
 	
 		//console.log(objeto,"planPagos")
 		const formatCurrency = require('format-currency')
@@ -489,6 +489,11 @@ Meteor.methods({
     var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		
+		var unoconv = require('better-unoconv');
+    var future = require('fibers/future');
+		
+		var templateType = (tipo === 'pdf') ? '.docx' : (tipo === 'excel' ? '.xlsx' : '.docx');
 		
 		if(Meteor.isDevelopment){
       var path = require('path');
@@ -501,7 +506,7 @@ Meteor.methods({
       var produccionSalida = "/home/cremio/archivos/";
     }
 		
-						 
+		
 		var content = fs.readFileSync(produccion+"RECIBOS.docx", "binary");
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
@@ -541,6 +546,7 @@ Meteor.methods({
 				
 				
 		});
+		var res = new future();
 		
 		doc.setData({	items: 		objeto,
 									fecha:    fecha,
@@ -550,14 +556,32 @@ Meteor.methods({
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccionSalida+"RECIBOSSalida.docx",buf);		
+             		 
+    var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "RECIBOSSalida" + objeto.nombreCompleto + templateType;         		 
+    
+    fs.writeFileSync(rutaOutput, buf);
+		//fs.writeFileSync(produccionSalida+"RECIBOSSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
+    /*
+var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
+*/
+
+		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+      if(!err){
+        fs.unlink(rutaOutput);
+        res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "RECIBOSOUT" + '.pdf' });
+      }else{
+        res['return']({err: err});
+        console.log("Error al convertir pdf:", err);
+      }
+    });
+		
+    return res.wait();
 		
   },
 
@@ -1650,8 +1674,6 @@ Meteor.methods({
     };	
 		
 		const formatCurrency = require('format-currency');
-		
-		console.log(avales);
 			
 		if (avales == undefined || avales.length == 0) {
 			avales = cliente
@@ -2607,6 +2629,8 @@ Meteor.methods({
 		
 		var unoconv = require('better-unoconv');
     var future = require('fibers/future');
+    
+    const formatCurrency = require('format-currency')
 		
 		var templateType = (tipo === 'pdf') ? '.docx' : (tipo === 'excel' ? '.xlsx' : '.docx');
 		
@@ -2650,26 +2674,10 @@ Meteor.methods({
 	    
 		_.each(objeto,function(item){
 	      item.fechaLimite =moment(item.fechaLimite).format("DD-MM-YYYY")
-	     
+				item.cargo = formatCurrency(item.cargo);
+				item.importeRegular = formatCurrency(item.importeRegular);
 		});
-		
-		/*
-objeto.sort(function(a, b){
-		    var keyAF = Number(a.folio),
-		        keyBF = Number(b.folio),
-		        keyANP = Number(a.numeroPago),
-		        keyBNP = Number(b.numeroPago);
-		        
-		    // Compare the 2 dates
-		    if(keyAF < keyBF && keyANP > keyBNP) return -1;
-		    if(keyAF > keyBF && keyANP < keyBNP) return 1;
-		    return 0;
-		});
-		
-		console.log(objeto);
-*/
-		
-		
+				
 		doc.setData({	items: 	objeto,
 									fecha:  fecha,
 		});
@@ -2686,7 +2694,6 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
 */
-    
     
     var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "LISTACOBRANZASalida" + objeto.nombreCompleto + templateType;
      

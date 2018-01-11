@@ -30,7 +30,7 @@
 							  <span class="fa fa-file-text-o"> Resumen</span>
 							</a>				    
 			      </div>
-			      <div class="col-sm-2">
+			      <div class="col-sm-2" ng-if="currentUser.roles[0] == 'Gerente'">
 				      <a class="btn btn-danger btn-mini" ng-click="vca.corte(vca.caja)">
 							  <span class="fa fa-inbox"> Corte Ventanilla</span>
 							</a>				    
@@ -82,7 +82,7 @@
 										  </button>
 	                    <ul class="dropdown-menu dropdown-menu-right text-left">
 										    <li><a ui-sref="anon.imprimirTicket({pago_id:mov.pago._id})" target="_blank"><i class="fa fa-file-text-o"></i> Ticket</a></li>
-										    <li><a ng-click="mov.origen=='Pago de Cliente'?vca.cancelarPago(mov.pago,1):vca.cancelarPago(mov,2)"><i class="fa fa-trash"></i> Cancelar</a></li>
+										    <li ng-if="currentUser.roles[0] == 'Gerente'"><a ng-click="mov.origen=='Pago de Cliente'?vca.cancelarPago(mov.pago,1):vca.cancelarPago(mov,2)"><i class="fa fa-trash"></i> Cancelar</a></li>
 										  </ul>
 										</div>
 	                </td>
@@ -176,8 +176,8 @@
               <div class="col-sm-6" valida>
                 <label>Tipo</label>
                 <select ng-model="vca.nuevoTraspaso.tipo" name="tipo" class="form-control" required>
-                  <option value="desde_cuenta">Desde Cuenta (Transpaso)</option>
-                  <option value="a_cuenta">A Cuenta (Retiro)</option>
+                  <option value="desde_cuenta" ng-if="currentUser.roles[0] == 'Gerente'">Desde Cuenta (Transpaso)</option>
+                  <option value="a_cuenta" ng-if="currentUser.roles[0] == 'Gerente'">A Cuenta (Retiro)</option>
                   <option value="a_ventanilla">A Ventanilla (Transpaso)</option>
                   <option value="desde_ventanilla">Desde Ventanilla (Retiro)</option>
                 </select>

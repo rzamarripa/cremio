@@ -3,12 +3,10 @@ Meteor.methods({
 			
 			var arreglo = {};
 			
-			var creditos = Creditos.find({sucursal_id: sucursal_id, estatus: 4}).fetch(); //estatus 2 creditos entregado
+			var creditos = Creditos.find({sucursal_id: sucursal_id, estatus: 4, tipo: "creditoP" ,saldoMultas : {$gt: 0}}).fetch(); //estatus 2 creditos entregado
 			var creditos_ids = _.pluck(creditos, '_id'); // [45, 3]
 			
-			
 			var planPagos = {};
-
 			
 			if (op == 0)
 					var planPagos = PlanPagos.find({credito_id: { $in: creditos_ids }, fechaLimite: {$lte: fechaFinal} , estatus: { $ne: 1 }}).fetch();
@@ -296,5 +294,8 @@ Meteor.methods({
 			return emp;
 			
 	},
+	
+	
+	
 	
 });	

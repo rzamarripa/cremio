@@ -8,7 +8,7 @@ angular.module("creditoMio")
   this.fechaInicial = new Date();
   this.fechaInicial.setHours(0,0,0,0);
   this.fechaFinal = new Date();
-  this.fechaFinal.setHours(23,0,0,0);
+  this.fechaFinal.setHours(23,59,59,999);
   
   rc.buscar = {};
   rc.buscar.nombre = "";
@@ -982,16 +982,24 @@ angular.module("creditoMio")
        
     //console.log("reciboooooo:",objeto);
 
-
-    Meteor.call('getRecibos', toPrint, function(error, response) {     
+		loading(true);
+    Meteor.call('getRecibos', toPrint, 'pdf',function(error, response) {     
        if(error)
        {
         console.log('ERROR :', error);
+        loading(false);
         return;
        }
        else
-       {
-      function b64toBlob(b64Data, contentType, sliceSize) {
+		   {
+			   	//console.log(response);
+			 		downloadFile(response);
+			 		loading(false);
+			 }
+			 		
+			 
+			/*
+ function b64toBlob(b64Data, contentType, sliceSize) {
           contentType = contentType || '';
           sliceSize = sliceSize || 512;
           var byteCharacters = atob(b64Data);
@@ -1023,6 +1031,7 @@ angular.module("creditoMio")
           window.URL.revokeObjectURL(url);
    
       }
+*/
     
     });
     rc.recibo = [];
