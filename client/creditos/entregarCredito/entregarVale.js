@@ -113,12 +113,12 @@ angular.module("creditoMio")
 										
 					if (n >= 5 && n < 20)
 					{
-							rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),1,0,0,0,0);
+							rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth()  + 1,1,0,0,0,0);
 					}
 					else 
 					{
 							
-							if (n < 5)
+							if (n < 5 )
 									rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
 							else if (n >= 20)
 							   	rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);								

@@ -531,63 +531,6 @@
 		</div>
 	</div>
 </div>
-
-<!-- Formulario para cambiar algún dato de un pago -->
-<!-- <div class="row"> 
-	<div class="col-sm-12">
-		<div class="collapse" id="collapseMasivaSemanas">
-			<form name="formMasivoSemanas" class="form-horizontal" role="form" novalidate>
-		  	<div class="well">	    
-			  	<div class="row">
-			  		<div class="col-sm-12">
-			  			<div class="alert alert-warning">
-			  			 <p><i class="fa-fw fa fa-warning"></i> La <strong>actualización masiva</strong> es una herramienta que actualizará el importe, recargo y descuento en un rango de semanas dadas, por favor asegúrese de hacerlo correctamente.</p>
-			  			 <p><strong>No se pueden modificar colegiaturas pagadas</strong></p>
-			  			</div>
-			  		</div>
-			  	</div>
-			    <div class="row">
-			    	<div class="col-sm-4" valida>
-				    	<label>Fecha Inicial *</label>
-				    	<input date-time format="dd-MM-yyyy" class="form-control" view="year" max-view="year" min-view="date" ng-model="pagV.cambioSemanasPlanPagos.fechaInicial" name="fechacambioSemanasPlanPagos" required/>
-			    	</div>
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Total de Pagos *</label>
-				    	<input name="totalPagosCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pagV.cambioSemanasPlanPagos.totalPagos" required="">
-			    	</div>
-			    </div>
-			    <div class="row">
-			    	<div class="col-sm-4" valida>
-				    	<label>Importe *</label>
-				    	<input name="importeRegularCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Nuevo costo colegiatura" ng-model="pagV.cambioSemanasPlanPagos.importeRegular" required="">
-			    	</div>
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Importe Recargo *</label>
-				    	<input name="importeRecargoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto recargo" ng-model="pagV.cambioSemanasPlanPagos.importeRecargo" required="">
-			    	</div>
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Importe Descuento *</label>
-				    	<input name="importeDescuentoCambioSemanasPlanPagos" type="number" class="form-control" placeholder="Monto descuento" ng-model="pagV.cambioSemanasPlanPagos.importeDescuento" required="">
-			    	</div>
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Días Recargo *</label>
-				    	<input name="diasRecargoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pagV.cambioSemanasPlanPagos.diasRecargo" required="">
-			    	</div>
-			    	<div class="col-sm-4" valida>					    
-				    	<label>Días Descuento *</label>
-				    	<input name="diasDescuentoCambioSemanasPlanPagos" type="number" class="form-control" ng-model="pagV.cambioSemanasPlanPagos.diasDescuento" required="">
-			    	</div>
-			    </div> 
-				</div>
-				<div class="row">
-					<div class="col-sm-12">
-						<button class="btn btn-info" ng-click="pagV.planPagosSemana(pagV.cambioSemanasPlanPagos, formMasivoSemanas)" valida-form formulario="formMasivoSemanas">Calcular Plan de Pagos</button>
-					</div>
-				</div>	  
-		  </form>
-		</div>
-	</div>
-</div> -->
 <!-- Tabla para mostrar los pagos -->
 <div class="well">
 		<div class="row">
@@ -623,7 +566,7 @@
 				<table class="table table-bordered table-condensed font-xs">
 					<thead class="thead">
 						<tr>
-							<th class="text-center" width="3%"></th>
+							<!-- <th class="text-center" width="3%"></th> -->
 							<th class="text-center" width="3%">No.</th>
 							<th class="text-center" width="3%">Folio</th>
 							<th class="text-center" width="20%">Beneficiado</th>
@@ -642,7 +585,7 @@
 					<tbody>
 						<tr ng-class="pago.color" ng-repeat="pago in pagV.planPagosViejo | orderBy: pagV.funcionOrdenar()" ng-if="pago.verCargo">
 
-							<td ><a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
+							<!-- <td ><a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td> -->
 
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
@@ -656,18 +599,31 @@
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.bonificacion  | currency}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
-							<td ><input style="width: 80px" min="0" type="number" ng-change="pagV.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
+							<td ><input style="width: 80px" min="0" type="number" ng-change="pagV.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1" disabled="true"></td>
 						</tr>
 					</tbody>
 				</table>	
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-3 pull-right" valida>
-				<h4>Total a pagar: {{pagV.pago.totalPago | currency }}</h4>
-				<br/>
-				<h4>Bonificación: {{pagV.pago.bonificacion | currency }}</h4>
-				<br/>
+			<div class="col-sm-3 pull-right">
+				<table class="table" style="font-size: larger">
+					<tbody>
+						<tr>
+							<td>Total</td>
+							<td>{{pagV.pago.totalPago | currency }}	</td>
+						</tr>
+						<tr>
+							<td>Bonificación</td>
+							<td>{{pagV.pago.bonificacion | currency }}	</td>
+						</tr>	
+						<tr>
+							<td>A pagar</td>
+							<td>{{pagV.pago.totalPago - pagV.pago.bonificacion  | currency }}	</td>
+						</tr>	
+					</tbody>
+				</table>
+
 				<caption>Forma de Pago: </caption> 
 				<select name="TipoIngreso" class="form-control select2" placeholder="Seleccione" ng-model="pagV.pago.tipoIngreso_id" ng-change = "pagV.seleccionTipoIngreso(pagV.pago.tipoIngreso_id)" required>
 					<option ng-repeat="tipo in pagV.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
@@ -689,18 +645,6 @@
 		
 									
 </div>									
-						<!--
-		</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</article>
-</div>
--->
-
 
 
 <!-- ////////////////////////////////////////////////////////////////////////////////////////// -->

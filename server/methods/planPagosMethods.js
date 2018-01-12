@@ -11,7 +11,7 @@
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		
 		var mfecha = moment(credito.fechaPrimerAbono);
-		
+		//console.log("Primera Fecha:", mfecha);
 		
 		mfecha.set({hour:0,minute:0,second:0,millisecond:0});
 		
@@ -47,7 +47,18 @@
 			
 			var fechaMes = new Date(moment(credito.fechaPrimerAbono));
 			var diaMes = fechaMes.getDate();
-			if (diaMes > 2 && diaMes <= 16)
+			
+			//console.log("dia Mes:", diaMes);
+			
+			if (diaMes == 1)
+			{
+					semanaQuincena = 1;
+			}
+		  else if (diaMes == 16)
+			{
+					semanaQuincena = 2;
+			}
+			else if (diaMes > 2 && diaMes <= 16)
 			{
 		 	 	 		mfecha = mfecha.date(16);	 
 		 	 	 		semanaQuincena	= 2;
@@ -106,7 +117,7 @@
 							fechaLimite = fechaLimite.add(1, 'days');					 
 	  }	
 	  
-	  //console.log(fechaLimite);
+	  //console.log("Segunda Fecha:", fechaLimite);
 		
 		var plan = [];
 
@@ -961,7 +972,6 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 		
 		idCreditos = _.uniq(idCreditos);
 		
-		//console.log("idCreditos:",idCreditos);
 		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus del credito
 		_.each(idCreditos,function(c){
 				var pp = PlanPagos.find({credito_id: c}).fetch();
@@ -1037,8 +1047,6 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 								 											 estatus					: 1
 							 												})
 						}
-							
-						
 				}
 				if (banR)
 				{
@@ -1077,8 +1085,484 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 		return pago_id;
 
 	},
+	pagoParcialVale:function(pagos, abono, bonificacion, totalPago, tipoIngresoId, pusuario_id, ocultaMulta, subtotal, cargosMoratorios, total, fechaProximoPago, fechaDeposito){
+		
+		var ahora = new Date();
+		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
+		var puser = Meteor.users.findOne(pusuario_id);
+		var tingreso = TiposIngreso.findOne(tipoIngresoId);
+		
+		if(!tingreso || !puser || !puser.profile)
+			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
+		
+		if (tingreso.nombre == "Nota de Credito"){
+			var resmc = Meteor.call("actualizarNotaDeCredito",pusuario_id, totalPago);
+		}
+		
+		var cajaid = Meteor.user().profile.caja_id;
+		var user = Meteor.user();
+		var caja = Cajas.findOne(cajaid);
+
+		var sucursal = Sucursales.findOne({_id : Meteor.user().profile.sucursal_id});
+		sucursal.folioPago = sucursal.folioPago? sucursal.folioPago+1:1;	
+		var folioPago = sucursal.folioPago;
+
+		Sucursales.update({_id:sucursal._id},{$set:{folioPago:sucursal.folioPago}})  
+
+		var ffecha = moment(new Date());
+		var pago = {};
+		pago.fechaPago = new Date();
+		pago.folioPago =folioPago;
+		pago.usuario_id = pusuario_id;
+		pago.sucursalPago_id = Meteor.user().profile.sucursal_id;
+		pago.usuarioCobro_id = Meteor.userId();
+		pago.tipoIngreso_id = tipoIngresoId;
+		pago.pago = abono;
+		pago.totalPago = Number(parseFloat(totalPago - bonificacion).toFixed(2));
+		pago.bonificacion = bonificacion;
+		pago.cambio = abono - (totalPago - bonificacion);
+		pago.cambio = pago.cambio < 0 ? 0: Number(parseFloat(pago.cambio).toFixed(2));
+		pago.diaPago = ffecha.weekday();
+		pago.semanaPago = ffecha.isoWeek();
+		pago.mesPago = ahora.getMonth();
+		pago.estatus = 1;
+		pago.fechaDeposito = fechaDeposito;
+				
+		//corregir---*********
+		pago.saldoAnterior = 0;//Number(parseFloat(total).toFixed(2));
+		pago.saldoActual	 = 0;//Number(parseFloat(total - totalPago).toFixed(2));
+		
+		if (ocultaMulta)
+			 pago.saldoCargoMoratorio = 0;
+		else
+			 pago.saldoCargoMoratorio = Number(parseFloat(cargosMoratorios).toFixed(2));	 
+		
+		pago.liquidacion = Number(parseFloat(total).toFixed(2));;
+		
+		//Corregir---*********
+		pago.proximoPago = fechaProximoPago;	 
+		
+		//pago.credito_id = credito_id;
+		pago.planPagos=[];
+	
+		//insercción del Pago
+		var pago_id = undefined;
+		pago_id = Pagos.insert(pago);
+		
+		
+		var idCreditos 				= [];
+		var idpagos 					= [];
+		var bonificacionesId 	= {};
+		var pagosId 					= {};
+		var sumaCapital 			= 0;
+		
+		_.each(pagos,function (p) {
+				idpagos.push(p.id);
+				pagosId[p.id] 					= p.importe;
+				bonificacionesId[p.id] 	= p.bonificacion;
+		})
+		
+		var pagos = PlanPagos.find({_id:{$in:idpagos}},{sort:{descripcion:1}}).fetch();
+		
+		var mfecha = moment(ahora);
+		
+		_.each(pagos,function(p){
+			p.tipoIngreso_id = tipoIngresoId;
+			
+			if(p.estatus != 1)
+			{
+				var ttpago = 0;
+
+				var residuos 	= {pagoSeguro	:0,
+												 pagoInteres:0,
+												 pagoIva		:0,
+												 pagoCapital:0};
+												 
+				var abonos	 	= {pagoSeguro	:0,
+												 pagoInteres:0,
+												 pagoIva		:0,
+												 pagoCapital:0};								 
+				
+				//el pago que se ha hecho
+				p.pagoInteres = p.pagoInteres? 	p.pagoInteres	:0;
+				p.pagoIva 		= p.pagoIva? 		 	p.pagoIva			:0;
+				p.pagoCapital = p.pagoCapital? 	p.pagoCapital	:0;
+				p.pagoSeguro 	= p.pagoSeguro? 	p.pagoSeguro	:0; 
+								
+				if(p.importeRegular <= pagosId[p._id])
+				{
+					
+					residuos.pagoSeguro 	= Number((parseFloat(p.seguro).toFixed(2) - parseFloat(p.pagoSeguro).toFixed(2)).toFixed(2));
+				  residuos.pagoInteres  = Number((parseFloat(p.interes).toFixed(2) -parseFloat(p.pagoInteres).toFixed(2)).toFixed(2));
+				  residuos.pagoIva 		  = Number((parseFloat(p.iva).toFixed(2) - parseFloat(p.pagoIva).toFixed(2)).toFixed(2));
+				  residuos.pagoCapital  = Number((parseFloat(p.capital).toFixed(2) - parseFloat(p.pagoCapital).toFixed(2)).toFixed(2));
+					
+					if (p.descripcion == "Cargo Moratorio" && p.multa == 1)
+						 p.estatus = 1;
+					else if(p.multada == 1)
+					{
+						var multa = PlanPagos.findOne(p.multa_id);
+						multa.multa = 1;
+						p.estatus = 1;
+						if (multa.importeRegular == 0)
+							 multa.estatus = 1;
+		
+						delete multa._id;
+						PlanPagos.update({_id:p.multa_id},{$set:multa});
+					}					
+					
+					if (p.descripcion == "Recibo"){
+						 p.estatus 					  = 1;
+						 abonos.pagoSeguro 	  = residuos.pagoSeguro;
+						 abonos.pagoInteres 	= residuos.pagoInteres;
+						 abonos.pagoIva 			= residuos.pagoIva;
+						 abonos.pagoCapital 	= residuos.pagoCapital;
+						 
+						 p.pagoSeguro 				= p.seguro;
+						 p.pagoInteres 				= p.interes;
+						 p.pagoIva 						= p.iva;
+						 p.pagoCapital 				= p.capital;
+						 
+						 p.bonificacion				= bonificacionesId[p._id];
+						 	 
+					}
+					
+					abono -= p.importeRegular;
+					abono = Number(parseFloat(abono).toFixed(2));
+
+					//Decrementar el pago en el Saldo Actual Pago total
+					if (p.descripcion == "Recibo")
+					{
+							var credito 				= Creditos.findOne(p.credito_id);
+							credito.saldoActual -= Number(parseFloat(p.importeRegular).toFixed(2));
+							Creditos.update({_id:credito._id},{$set:{saldoActual:credito.saldoActual}})
+					}
+					else //Cargo Moratorio
+					{
+							var credito 				= Creditos.findOne(p.credito_id);
+							credito.saldoMultas -= Number(parseFloat(p.importeRegular).toFixed(2));
+							Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
+					}
+
+					ttpago = p.importeRegular;
+					p.pago += Number(parseFloat(p.importeRegular).toFixed(2));
+					p.importeRegular = 0;
+					
+					sumaCapital += Number(parseFloat(p.capital).toFixed(2));
+
+				}	
+				else
+				{
+					//console.log("parcial",p._id,p.descripcion, p.importeRegular)
+					
+				  residuos.pagoSeguro 	= Number((parseFloat(p.seguro).toFixed(2) - parseFloat(p.pagoSeguro).toFixed(2)).toFixed(2));
+				  residuos.pagoInteres  = Number((parseFloat(p.interes).toFixed(2) -parseFloat(p.pagoInteres).toFixed(2)).toFixed(2));
+				  residuos.pagoIva 		  = Number((parseFloat(p.iva).toFixed(2) - parseFloat(p.pagoIva).toFixed(2)).toFixed(2));
+				  residuos.pagoCapital  = Number((parseFloat(p.capital).toFixed(2) - parseFloat(p.pagoCapital).toFixed(2)).toFixed(2));
+
+										
+					ttpago = pagosId[p._id];
+					abono  = pagosId[p._id];
+															
+					p.importeRegular = p.importeRegular - abono;
+					p.importeRegular = Number(parseFloat(p.importeRegular).toFixed(2));
+	
+					p.pago += abono;
+					p.pago = Number(parseFloat(p.pago).toFixed(2));
+					
+					//Decrementar el pago en el Saldo Actual Pago Parcial
+					if (p.descripcion == "Recibo")
+					{
+							var credito = Creditos.findOne(p.credito_id);
+							credito.saldoActual -= abono;
+							credito.saldoActual = parseFloat(credito.saldoActual).toFixed(2);
+							credito.saldoActual = Math.round(credito.saldoActual * 100) / 100;
+							Creditos.update({_id:credito._id},{$set:{saldoActual:credito.saldoActual}})
+					}
+					else //Cargo Moratorio
+					{
+							var credito = Creditos.findOne(p.credito_id);
+							credito.saldoMultas -= p.importeRegular;
+							credito.saldoMultas = parseFloat(credito.saldoMultas).toFixed(2);
+							credito.saldoMultas = Math.round(credito.saldoMultas * 100) / 100;
+							Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
+					}
+					
+					p.estatus = 2;
+					
+					//Seguro					
+					if (abono > 0 && residuos.pagoSeguro > abono){
+						p.pagoSeguro += Number(abono);
+					  p.pagoSeguro = Number(parseFloat(p.pagoSeguro).toFixed(2));
+					  abonos.pagoSeguro = Number(parseFloat(abono).toFixed(2));
+						abono = 0;
+					}
+					else if(abono > 0 && residuos.pagoSeguro > 0){
+						p.pagoSeguro = Number(parseFloat(p.seguro).toFixed(2));
+						abonos.pagoSeguro = Number(parseFloat(residuos.pagoSeguro).toFixed(2));
+						abono -= Number(abono.pagoSeguro);
+						abono = Number(parseFloat(abono).toFixed(2));	
+					}
+					
+					//IVA					
+					if(abono > 0 && residuos.pagoIva > abono){
+						p.pagoIva += Number(abono);
+						p.pagoIva = Number(parseFloat(p.pagoIva).toFixed(2));
+						abonos.pagoIva = Number(parseFloat(abono).toFixed(2));
+						abono = 0;
+					}
+					else if(abono > 0 && residuos.pagoIva > 0){
+						p.pagoIva = Number(parseFloat(p.iva).toFixed(2));
+						abonos.pagoIva = Number(parseFloat(residuos.pagoIva).toFixed(2));
+						abono -= Number(residuos.pagoIva);
+						abono = Number(parseFloat(abono).toFixed(2));
+					}
+					
+					//Interes
+					/*
+if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
+						console.log("tres");
+						p.pagoInteres += abono / 1.16;
+						p.pagoInteres = parseFloat(p.pagoInteres).toFixed(2);
+						p.pagoIva += abono - (abono / 1.16);
+						p.pagoIva = parseFloat(p.pagoIva).toFixed(2);
+						residuos.pagoInteres = abono / 1.16;
+						residuos.pagoInteres = parseFloat(residuos.pagoInteres).toFixed(2);
+						residuos.pagoIva = abono - (abono / 1.16);
+						residuos.pagoIva = parseFloat(residuos.pagoIva).toFixed(2);
+						abono = 0;
+					}
+					else if( ((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > 0){
+						console.log("cuatro");
+						abono = abono - ((p.interes - p.pagoInteres) + (p.iva - p.pagoIva));
+						abono = parseFloat(abono).toFixed(2);
+						residuos.pagoInteres = (p.interes - p.pagoInteres);
+						residuos.pagoInteres = parseFloat(residuos.pagoInteres).toFixed(2);						
+						residuos.pagoIva = (p.iva - p.pagoIva);
+						residuos.pagoIva = parseFloat(residuos.pagoIva).toFixed(2);
+						p.pagoInteres = p.interes;
+						p.iva = p.iva;
+					}
+*/ //Como estaba
+					
+					if(abono > 0 && residuos.pagoInteres > abono){
+						p.pagoInteres += Number(abono);
+						p.pagoInteres = Number(parseFloat(p.pagoInteres).toFixed(2));
+						abonos.pagoInteres = Number(parseFloat(abono).toFixed(2));
+						abono = 0;
+					}
+					else if(abono > 0 && residuos.pagoInteres > 0){
+						p.pagoInteres = Number(parseFloat(p.interes).toFixed(2));
+						abonos.pagoInteres = Number(parseFloat(residuos.pagoInteres).toFixed(2));
+						abono -= Number(residuos.pagoInteres);
+						abono = Number(parseFloat(abono).toFixed(2));
+					}
+					//Capital
+					if (abono > 0 && residuos.pagoCapital > abono){
+						p.pagoCapital += Number(abono);
+						p.pagoCapital = Number(parseFloat(p.pagoCapital).toFixed(2));
+						abonos.pagoCapital = Number(parseFloat(abono).toFixed(2));
+						abono = 0;
+					}
+					else if (abono > 0 && residuos.pagoCapital > 0){
+						p.pagoCapital = Number(parseFloat(p.capital).toFixed(2));
+						abonos.pagoCapital = Number(parseFloat(residuos.pagoCapital).toFixed(2));
+						abono -= Number(residuos.pagoCapital);
+						abono = Number(parseFloat(abono).toFixed(2));
+					}
+										
+					abono = 0;
+					
+				}
+				
+				pago.credito_id 			= p.credito_id;
+				p.modificada 					= 1;
+				p.ultimaModificacion 	= ahora;
+				p.fechaPago 					= ahora;
+				semanaPago 						= mfecha.isoWeek();
+				diaPago								= mfecha.weekday();
+				
+				credit = Creditos.findOne(pago.credito_id);
+
+				var npp = { pago_id		 		: pago_id,
+										totalPago	 		: ttpago,
+										bonificacion	: bonificacionesId[p._id],
+										estatus		 		: p.estatus,
+										fechaPago  		: pago.fechaPago, 
+										fechaDeposito : fechaDeposito,
+										numeroPago 		: p.numeroPago,
+										numeroPagos		: credit.numeroPagos,
+										movimiento		: p.movimiento,
+										cargo					: p.importe,
+										planPago_id		: p._id,
+										pagoCapital 	: abonos.pagoCapital, 
+										pagoInteres		: abonos.pagoInteres,
+										pagoIva 			: abonos.pagoIva, 
+										pagoSeguro 		: abonos.pagoSeguro, 
+										usuario_id		: pusuario_id};
+
+				p.pagos.push(npp);
+				
+				
+				var npago= { planPago_id	: p._id,
+										 totalPago		: ttpago,
+										 bonificacion	: bonificacionesId[p._id],
+										 estatus			: p.estatus, 
+										 descripcion	: p.descripcion,
+										 fechaPago		: pago.fechaPago, 
+										 fechaDeposito: fechaDeposito,
+										 numeroPago 	: p.numeroPago,
+										 numeroPagos	: credit.numeroPagos,
+										 folioCredito	: credit.folio,
+										 pagoCapital 	: abonos.pagoCapital, 
+										 pagoInteres	: abonos.pagoInteres,
+										 pagoIva 		  : abonos.pagoIva, 
+										 pagoSeguro 	: abonos.pagoSeguro,
+										 usuario_id		: pusuario_id};
+				
+				pago.planPagos.push(npago); 
+
+
+				var pid = p._id;
+				delete p._id;
+				
+				PlanPagos.update({_id:pid},{$set:p})
+				
+			}
+			idCreditos.push(pago.credito_id);
+		});
+		
+		//Actualizar el Credito SaldoActual--------------------------------------------------
+		idCreditos = _.uniq(idCreditos);
+		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus del credito
+		_.each(idCreditos,function(c){
+				var pp = PlanPagos.find({credito_id: c}).fetch();
+				
+				var ban = true;
+				var banR = true;
+				var banCM = true;
+				var numeroCargosMoratorios = 0;
+				_.each(pp,function(p){
+						if (p.importeRegular > 0)
+								ban = false;							
+					
+						if (p.importeRegular > 0 && p.descripcion == "Recibo")
+								banR = false;							
+						
+						if (p.importeRegular > 0 && p.descripcion == "Cargo Moratorio")
+								banCM = false;
+								
+						if (p.descripcion == "Cargo Moratorio")
+								numeroCargosMoratorios += 1;
+
+				});			
+				
+				
+				if (ban)
+				{
+						var fecha = new Date();
+						Creditos.update({_id : c},{$set : {estatus : 5 , fechaLiquidacion : fecha, saldoActual: 0, saldoMultas: 0}});
+						/*
+	
+						//Parametrización------------------------------------------------------------------------------------------------
+						if (numeroCargosMoratorios == 0)
+						{
+							 Parametrizacion.insert({cliente_id 			: pusuario_id,
+								 											 credito_id 			: c,
+								 											 fechaLiquidacion	: new Date(),
+								 											 mensaje					: "TIENE UN INCREMENTO DE 500 A 1500 PESOS",
+								 											 estatus					: 1
+							 												})
+						}
+						else if (numeroCargosMoratorios >= 1 && numeroCargosMoratorios <= 2 )
+						{
+							 Parametrizacion.insert({cliente_id 			: pusuario_id,
+								 											 credito_id 			: c,
+								 											 fechaLiquidacion	: new Date(),
+								 											 mensaje					: "TIENE UN INCREMENTO DE 500 HASTA DE 1000 PESOS",
+								 											 estatus					: 1
+							 												})
+						}
+						else if (numeroCargosMoratorios == 3)
+						{
+							 Parametrizacion.insert({cliente_id 			: pusuario_id,
+								 											 credito_id 			: c,
+								 											 fechaLiquidacion	: new Date(),
+								 											 mensaje					: "TIENE UN INCREMENTO DE 500 PESOS",
+								 											 estatus					: 1
+							 												})
+						}
+						else if (numeroCargosMoratorios >= 4 && numeroCargosMoratorios <= 5 )
+						{ 
+							 Parametrizacion.insert({cliente_id 			: pusuario_id,
+								 											 credito_id 			: c,
+								 											 fechaLiquidacion	: new Date(),
+								 											 mensaje					: "PERMANECE LA MISMA LINEA DE CRÉDITO",
+								 											 estatus					: 1
+							 												})
+						}
+						else if (numeroCargosMoratorios > 6)
+						{
+							 Parametrizacion.insert({cliente_id 			: pusuario_id,
+								 											 credito_id 			: c,
+								 											 fechaLiquidacion	: new Date(),
+								 											 mensaje					: "SE LE REDUCE LA LINEA DE CREDITO EN UN 10%",
+								 											 estatus					: 1
+							 												})
+						}
+						
+*/
+						//---------------------------------------------------------------------------------------------------------------
+				}
+				if (banR)
+				{
+						var fecha = new Date();
+						Creditos.update({_id : c},{$set : {saldoActual: 0}})
+				}
+				if (banCM)
+				{
+						var fecha = new Date();
+						Creditos.update({_id : c},{$set : {saldoMultas: 0}})
+				}
+				
+		});
+		//-----------------------------------------------------------------------------------	
+		
+		//Actualizar Saldo Credito Distribuidor
+		var dis = Meteor.users.findOne(pusuario_id);
+		dis.profile.saldoCredito += Number(parseFloat(sumaCapital).toFixed(2));
+		Meteor.users.update({_id: pusuario_id}, {$set: {"profile.saldoCredito": dis.profile.saldoCredito}});
+		//--------------------------------------
+
+		
+		var movimiento = {
+				tipoMovimiento : "Pago",
+				origen : "Pago de Distribuidor",
+				origen_id : pago_id,
+				monto : pago.totalPago,
+				cuenta_id : tipoIngresoId,
+				caja_id : caja._id,
+				sucursal_id : user.profile.sucursal_id,
+				createdAt : new Date(),
+				createdBy : user._id,
+				updated : false,
+				estatus : 1
+			}
+		var movimientoid = MovimientosCajas.insert(movimiento);
+		delete pago._id;
+		pago.caja_id =caja._id;
+		pago.movimientoCaja_id = movimientoid;
+		Pagos.update({_id:pago_id},{$set:pago})
+		caja.cuenta[movimiento.cuenta_id].saldo = caja.cuenta[movimiento.cuenta_id].saldo? caja.cuenta[movimiento.cuenta_id].saldo+movimiento.monto:movimiento.monto;
+		Cajas.update({_id:caja._id},{$set:{cuenta:caja.cuenta}}); 
+		return pago_id;
+
+	},
 	getPago:function(pago_id){
 			return Pagos.findOne(pago_id);		
 	},
-	
+	getPagosDistribuidor: function(distribuidor_id){
+			return Pagos.find({usuario_id: distribuidor_id}, {sort:{fechaPago:-1}}).fetch();
+	},
+
 }); 

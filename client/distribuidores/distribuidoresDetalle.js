@@ -53,6 +53,13 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 	
 	rc.BeneficiadosDeudas = [];
 	
+	rc.beneficiarios 	= [];
+	rc.pagoPlanPago		 	= [];
+	rc.pagos					= [];
+	
+	rc.seleccionCredito_id = "";
+	//rc.fechaPago_id = "";
+	
 	/////////////////////////////////////
 	rc.vale_id = "";
 	
@@ -117,6 +124,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 			
 	this.helpers({
+/*
 		ciudades : () => {
 			var ciudades = {};
 			_.each(Ciudades.find().fetch(), function(ciudad){
@@ -152,11 +160,16 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			});
 			return colonias
 		},
-
+*/
+		
+		//Estos son los Vales Activos
 		creditos : () => {
 			var creditos = Creditos.find({estatus:4}, {sort:{fechaSolicito:1}}).fetch();
 			
+			rc.beneficiarios = [];
+			
 			_.each(creditos, function(credito){
+				
 				if (credito.saldoMultas == 0) {
 					rc.puedeSolicitar = true
 				}else{
@@ -166,7 +179,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 					rc.puedeSolicitar = false
 				}
 				
-				
+				rc.beneficiarios.push({beneficiario: credito.beneficiado, credito_id: credito._id});				
 				
 				credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
 				
@@ -189,7 +202,6 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 			return creditos;
 		},
-
 	
 		creditosAprobados : () =>{
 			var creditos = Creditos.find({estatus:2}, {sort:{fechaSolicito:1}}).fetch();			
@@ -522,7 +534,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 					})
 				//console.log(rc.saldo)
 			});
-		if(this.getReactively("credito_id")){
+			if(this.getReactively("credito_id")){
         var filtrado = [];
         var flags = {
           abonoKey: undefined,
@@ -573,13 +585,6 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			//console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
 		},
-		historialCreditos : () => {
-			var creditos = Creditos.find({estatus: {$in: [4,5]}}).fetch();
-			if(creditos != undefined){
-				rc.creditos_id = _.pluck(creditos, "_id");
-			}	
-			return creditos;
-		},
 
 		cajero: () => {
 			var c = Meteor.users.findOne({roles: "Cajero"});
@@ -611,6 +616,31 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
   		return imagen
 		},
+		
+		credito : () => {
+				var creditos = Creditos.find({estatus: {$in: [4,5]}}).fetch();
+				if(creditos != undefined){
+					rc.creditos_id = _.pluck(creditos, "_id");
+				}			
+			 if (rc.getReactively("seleccionCredito_id") != undefined)
+					 rc.credito = _.find(rc.creditos, function (c) { return c._id == rc.getReactively("seleccionCredito_id"); })	 	
+
+		 return rc.credito;	
+		},
+		
+	/*
+	pago : () => {
+					
+			var pago;
+				
+			if (rc.getReactively("fechaPago_id") != undefined)
+				 pago = _.find(rc.pagos, function (p) { return p._id == rc.getReactively("fechaPago_id"); })	 	
+			
+			 console.log("Pago:", pago);
+			 
+			return pago; 
+		},
+*/
 				
 	});
 
@@ -663,7 +693,8 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		});
 	};
 	
-	this.tieneFoto = function(sexo, foto){
+	/*
+this.tieneFoto = function(sexo, foto){
 		if(foto === undefined){
 			if(sexo === "Masculino")
 				return "img/badmenprofile.png";
@@ -691,6 +722,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		  return foto;
 	  }
   };
+*/
 
 	
 	this.masInformacion = function(cliente){
@@ -748,7 +780,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		this.creditoApro = false
 		this.creditosRechazados = false;
 	}
-	this.masInformacionCrdito = function(){
+	this.getPagos = function(){
 		this.masInfoCredito = !this.masInfoCredito;
 		this.creditoAc = false;
 		this.solicitudesCre = false;
@@ -756,6 +788,32 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		this.notasCre=false;
 		this.creditoApro = false;
 		this.creditosRechazados = false;
+		
+		
+		rc.fechaPago_id = "";
+		
+		loading(true);
+		Meteor.call ("getPagosDistribuidor", $stateParams.objeto_id, function(error,result){
+
+				if (error){
+					 console.log(error);
+					 toastr.error('Error al obtener pagos: ', error.details);
+					 loading(false);
+					 return
+				}
+				if (result)
+				{
+					 rc.pagos = result;
+					 //rc.fechaPagos = [];
+					 /*
+_.each(rc.pagos, function(pago){
+						 rc.fechaPagos.push({fechaPago: (pago.fechaPago.getDate() + "/" + (pago.fechaPago.getMonth() + 1) + "/" + pago.fechaPago.getFullYear()), pago_id: pago._id});
+					 });
+*/
+					 $scope.$apply();
+					 loading(false);							
+				}
+		});
 
 	}
 	this.creAprobados = function(){
@@ -913,9 +971,17 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		$("#modalCliente").modal('hide');
 	};
 
-	this.verPagos= function(credito) {
-
-		rc.credito = credito;
+	this.verPagos= function(pago) {
+		
+		
+		rc.pagoPlanPago = pago.planPagos;
+		
+		$("#modalPagos").modal();
+		
+		
+			
+		/*
+rc.credito = credito;
 		rc.credito_id = credito._id;
 		$("#modalpagos").modal();
 		credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
@@ -926,6 +992,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			_.each(rc.getReactively("historial"),function (pago) {
 
 			});
+*/
 
 	};
 
@@ -1109,7 +1176,7 @@ var html  = "<html><head>" +
 			
 	}
 
-
+	
 
 	function obtenerClaseEstatus(valor){
 		
@@ -1452,7 +1519,7 @@ var html  = "<html><head>" +
 	}
 	this.trance= function(credito)
 		{
-			console.log("creditop",credito)
+				//console.log("creditop",credito)
 				
 		    Meteor.call('numeroALetras',credito.capitalSolicitado, function(error, result){           					
 					if (result)
@@ -1692,8 +1759,16 @@ var html  = "<html><head>" +
 			Meteor.call('getPersonasDeudas',rc.buscar.nombreBeneficiado, function(error, result) {           
 	          if (result)
 	          {
+
+		          	if (result.length == 0)
+		          	{
+										toastr.success("Sin Deudas puede autorizar")          	
+						          	
+		          	}
+		          	else
+		          		rc.BeneficiadosDeudas = result;	
+
 		          	
-		          	rc.BeneficiadosDeudas = result;	
 		          	$scope.$apply();
 		        }  
 			});
@@ -1845,5 +1920,59 @@ var html  = "<html><head>" +
 	
   }
   
+  this.imprimirContrato= function()
+	{
+		 
+		 loading(true);
+		 Meteor.call('contratoDistribuidor', $stateParams.objeto_id, function(error, response) {
+       if(error)
+       {
+        console.log('ERROR :', error);
+        return;
+       }
+       if (response)
+       {
+              function b64toBlob(b64Data, contentType, sliceSize) {
+                  contentType = contentType || '';
+                  sliceSize = sliceSize || 512;
+                
+                  var byteCharacters = atob(b64Data);
+                  var byteArrays = [];
+                
+                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+                
+                    var byteNumbers = new Array(slice.length);
+                    for (var i = 0; i < slice.length; i++) {
+                      byteNumbers[i] = slice.charCodeAt(i);
+                    }
+                
+                    var byteArray = new Uint8Array(byteNumbers);
+                
+                    byteArrays.push(byteArray);
+                  }
+                    
+                  var blob = new Blob(byteArrays, {type: contentType});
+                  return blob;
+              }
+              
+              var blob = b64toBlob(response, "application/docx");
+              var url = window.URL.createObjectURL(blob);
+              
+              //console.log(url);
+              var dlnk = document.getElementById('dwnldLnk');
+
+              dlnk.download = "contrato.docx"; 
+              dlnk.href = url;
+              dlnk.click();       
+              window.URL.revokeObjectURL(url);
+       }
+    });
+    loading(false);
+	
+	};
+	
+	
+	
 	
 }

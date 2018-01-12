@@ -2177,6 +2177,379 @@ Meteor.methods({
 
    }
 },
+  contratoDistribuidor: function (distribuidor_id) {
+	  
+	  if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+
+    function Unidades(num){
+
+		        switch(num)
+		        {
+		            case 1: return 'UN';
+		            case 2: return 'DOS';
+		            case 3: return 'TRES';
+		            case 4: return 'CUATRO';
+		            case 5: return 'CINCO';
+		            case 6: return 'SEIS';
+		            case 7: return 'SIETE';
+		            case 8: return 'OCHO';
+		            case 9: return 'NUEVE';
+		        }
+		
+		        return '';
+		    
+    }//Unidades()
+		function Decenas(num){
+		
+		        let decena = Math.floor(num/10);
+		        let unidad = num - (decena * 10);
+		
+		        switch(decena)
+		        {
+		            case 1:
+		                switch(unidad)
+		                {
+		                    case 0: return 'DIEZ';
+		                    case 1: return 'ONCE';
+		                    case 2: return 'DOCE';
+		                    case 3: return 'TRECE';
+		                    case 4: return 'CATORCE';
+		                    case 5: return 'QUINCE';
+		                    default: return 'DIECI' + Unidades(unidad);
+		                }
+		            case 2:
+		                switch(unidad)
+		                {
+		                    case 0: return 'VEINTE';
+		                    default: return 'VEINTI' + Unidades(unidad);
+		                }
+		            case 3: return DecenasY('TREINTA', unidad);
+		            case 4: return DecenasY('CUARENTA', unidad);
+		            case 5: return DecenasY('CINCUENTA', unidad);
+		            case 6: return DecenasY('SESENTA', unidad);
+		            case 7: return DecenasY('SETENTA', unidad);
+		            case 8: return DecenasY('OCHENTA', unidad);
+		            case 9: return DecenasY('NOVENTA', unidad);
+		            case 0: return Unidades(unidad);
+		        }
+		    }//Unidades()
+    function DecenasY(strSin, numUnidades) {
+        if (numUnidades > 0)
+            return strSin + ' Y ' + Unidades(numUnidades)
+
+        return strSin;
+    }//DecenasY()
+    function Centenas(num) {
+		        let centenas = Math.floor(num / 100);
+		        let decenas = num - (centenas * 100);
+		
+		        switch(centenas)
+		        {
+		            case 1:
+		                if (decenas > 0)
+		                    return 'CIENTO ' + Decenas(decenas);
+		                return 'CIEN';
+		            case 2: return 'DOSCIENTOS ' + Decenas(decenas);
+		            case 3: return 'TRESCIENTOS ' + Decenas(decenas);
+		            case 4: return 'CUATROCIENTOS ' + Decenas(decenas);
+		            case 5: return 'QUINIENTOS ' + Decenas(decenas);
+		            case 6: return 'SEISCIENTOS ' + Decenas(decenas);
+		            case 7: return 'SETECIENTOS ' + Decenas(decenas);
+		            case 8: return 'OCHOCIENTOS ' + Decenas(decenas);
+		            case 9: return 'NOVECIENTOS ' + Decenas(decenas);
+		        }
+		
+		        return Decenas(decenas);
+		    }//Centenas()
+    function Seccion(num, divisor, strSingular, strPlural) {
+        let cientos = Math.floor(num / divisor)
+        let resto = num - (cientos * divisor)
+
+        let letras = '';
+
+        if (cientos > 0)
+            if (cientos > 1)
+                letras = Centenas(cientos) + ' ' + strPlural;
+            else
+                letras = strSingular;
+
+        if (resto > 0)
+            letras += '';
+
+        return letras;
+    }//Seccion()
+    function Miles(num) {
+        let divisor = 1000;
+        let cientos = Math.floor(num / divisor)
+        let resto = num - (cientos * divisor)
+
+        let strMiles = Seccion(num, divisor, 'UN MIL', 'MIL');
+        let strCentenas = Centenas(resto);
+
+        if(strMiles == '')
+            return strCentenas;
+
+        return strMiles + ' ' + strCentenas;
+    }//Miles()
+    function Millones(num) {
+        let divisor = 1000000;
+        let cientos = Math.floor(num / divisor)
+        let resto = num - (cientos * divisor)
+
+        let strMillones = Seccion(num, divisor, 'UN MILLON DE', 'MILLONES DE');
+        let strMiles = Miles(resto);
+
+        if(strMillones == '')
+            return strMiles;
+
+        return strMillones + ' ' + strMiles;
+    }//Millones()
+		function NumeroALetras(num, currency) {
+        currency = currency || {};
+        let data = {
+            numero: num,
+            enteros: Math.floor(num),
+            centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
+            letrasCentavos: '',
+            letrasMonedaPlural: currency.plural || '',//'PESOS', 'Dólares', 'Bolívares', 'etcs'
+            letrasMonedaSingular: currency.singular || '', //'PESO', 'Dólar', 'Bolivar', 'etc'
+            letrasMonedaCentavoPlural: currency.centPlural || '',
+            letrasMonedaCentavoSingular: currency.centSingular || ''
+
+        };
+
+        if (data.centavos > 0) {
+            data.letrasCentavos = 'CON ' + (function () {
+                    if (data.centavos == 1)
+                        return Millones(data.centavos) + ' ' + data.letrasMonedaCentavoSingular;
+                    else
+                        return Millones(data.centavos) + ' ' + data.letrasMonedaCentavoPlural;
+                })();
+        };
+
+        if(data.enteros == 0)
+            return 'CERO ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
+        if (data.enteros == 1)
+            return Millones(data.enteros) + ' ' + data.letrasMonedaSingular + ' ' + data.letrasCentavos;
+        else
+            return Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
+    };	
+		function formatDate(date) {
+	  	  date = new Date(date);
+			  var monthNames = [
+			    "ENERO", "FEBRERO", "MARZO",
+			    "ABRIL", "MAYO", "JUNIO", "JULIO",
+			    "AGOSTO", "SEPTIEMBRE", "OCTUBRE",
+			    "NOVIEMBRE", "DICIEMBRE"
+			  ];
+			  var day = date.getDate();
+			  var monthIndex = date.getMonth();
+			  var year = date.getFullYear();
+		
+			  return day + ' ' + 'DE' + ' '  + monthNames[monthIndex] + ' ' + ' DEL'  + ' ' + year;
+		}
+		function formatDia(date) {
+  	    	date = new Date(date);
+		  var monthNames = [
+		    "ENERO", "FEBRERO", "MARZO",
+		    "ABRIL", "MAYO", "JUNIO", "JULIO",
+		    "AGOSTO", "SEPTIEMBRE", "OCTUBRE",
+		    "NOVIEMBRE", "DICIEMBRE"
+		  ];
+		  //console.log(date,"date")
+		  var day = date.getDate();
+		  //console.log(day,"DIA")
+		  var monthIndex = date.getMonth();
+		  var year = date.getFullYear();
+	
+		  return day + ' ' + 'DE' + ' '  + monthNames[monthIndex] + ' ' + ' DEL'  + ' ' + year;
+		}
+		function formatDa(date) {
+  	    	date = new Date(date);
+		  var monthNames = [
+		    "ENERO", "FEBRERO", "MARZO",
+		    "ABRIL", "MAYO", "JUNIO", "JULIO",
+		    "AGOSTO", "SEPTIEMBRE", "OCTUBRE",
+		    "NOVIEMBRE", "DICIEMBRE"
+		  ];
+		  //console.log(date,"date")
+		  var day = date.getDate();
+		  //console.log(day,"DIA")
+		  var monthIndex = date.getMonth();
+		  var year = date.getFullYear();
+	
+		  return day + ' ' + 'DE' + ' '  + monthNames[monthIndex] + ' ' + ' DEL'  + ' ' + year;
+		}
+		
+		
+		const formatCurrency = require('format-currency');
+		
+			
+/*
+		if (avales == undefined) {
+			avales = cliente
+		}
+		
+		if (contrato.periodoPago == "Semanal") {
+			contrato.periodoPago = "SEMANAL"
+		}
+		if (contrato.periodoPago == "Quincenal") {
+			contrato.periodoPago = "QUINCENAL"
+		}
+		if (contrato.periodoPago == "Mensual") {
+			contrato.periodoPago = "MENSUAL"
+		}
+
+		if (contrato.seguro == undefined) {
+			contrato.seguro = 0
+		}
+*/
+		
+		//Distribuidor***********************************************************
+		var cliente = {};
+		var user = Meteor.users.findOne(distribuidor_id);
+		cliente.nombreCompleto = user.profile.nombreCompleto;
+		var nacionalidad = Nacionalidades.findOne(user.profile.nacionalidad_id);
+  	cliente.nacionalidad = nacionalidad.nombre;
+  	var colonia = Colonias.findOne(user.profile.colonia_id);
+  	cliente.colonia = colonia.nombre;
+  	cliente.calle = user.profile.calle;
+  	cliente.numero = user.profile.numero;
+  	cliente.codigoPostal = user.profile.codigoPostal;
+  	var ciudad = Ciudades.findOne(user.profile.ciudad_id);
+  	cliente.ciudad = ciudad.nombre;  	
+  	var estado = Estados.findOne(user.profile.estado_id);
+  	cliente.estado = estado.nombre;
+  	cliente.celular = user.profile.celular;
+  	cliente.rfc = user.profile.rfc;
+		cliente.correo = user.profile.correo;
+  	cliente.numeroDistribuidor = user.profile.numeroDistribuidor;
+  	//Distribuidor***********************************************************
+  	
+  	//Aval*******************************************************************
+  	var aval = {};
+  	console.log(user.profile.avales_ids[0]._id);
+  	var avalTemp = Avales.findOne({_id: user.profile.avales_ids[0]._id});
+  	aval.nombreCompleto = avalTemp.profile.nombreCompleto;
+		nacionalidad = Nacionalidades.findOne(avalTemp.profile.nacionalidad_id);
+  	aval.nacionalidad = nacionalidad.nombre
+  	colonia = Colonias.findOne(avalTemp.profile.colonia_id);
+  	aval.colonia = colonia.nombre;
+  	aval.calle = avalTemp.profile.calle;
+  	aval.numero = avalTemp.profile.numero;
+  	aval.codigoPostal = avalTemp.profile.codigoPostal;
+  	ciudad = Ciudades.findOne(avalTemp.profile.ciudad_id);
+  	aval.ciudad = ciudad.nombre;  	
+  	estado = Estados.findOne(avalTemp.profile.estado_id);
+  	aval.estado = estado.nombre;
+  	aval.celular = avalTemp.profile.celular;
+  	aval.rfc = avalTemp.profile.rfc;
+		aval.correo = avalTemp.profile.correo;
+  	//Aval*******************************************************************
+  	
+  	var montoCredito = formatCurrency(user.profile.limiteCredito);
+  	
+  	var valoresCS = (montoCredito).toString().split('.');
+		var centavosCS = valoresCS[1];
+		var letra = NumeroALetras(valoresCS[0].replace(',',''));
+  	var fecha = new Date();
+		var fechaLetra = formatDia(fecha);
+  	var vigencia = fecha.getMonth() + 11;
+  	var fechaVigencia = formatDia(vigencia);
+  	
+
+/*
+    var autorizacionProveedorSi = contrato.avisoPrivacidad;
+    var autorizacionProveedorNo = "";
+    if (autorizacionProveedorSi == 0) {
+    	autorizacionProveedorSi = "X"
+    }else{
+    	autorizacionProveedorNo = "X"
+    }
+    var autorizacionPublicidadSi = contrato.publicidad;
+    var autorizacionPublicidadNo = "";
+    if (autorizacionPublicidadSi == "0") {
+    	autorizacionPublicidadSi = "X"
+    }else{
+    	autorizacionPublicidadNo = "X"
+    }
+    //console.log(autorizacionProveedorSi,"contrato")
+    function sumarDias(fecha){
+			fecha.setDate(fecha.getDate() + 1);
+			return fecha;
+		}
+		var fechaFiniquitoVigencia = sumarDias(vigencia.fechaLimite)
+
+		var vigenciaMasUnDia = formatDate(vigenciaFecha);
+		  
+
+		var diaV = vigencia.fechaLimite.getDate()
+    var mesV = vigencia.fechaLimite.getMonth()+1
+    var anioV = vigencia.fechaLimite.getFullYear()
+    if (Number(diaV) < 10) {
+    	diaV = "0" + diaV;
+    }
+    if (Number(mesV) < 10) {
+    	mesV = "0" + mesV;
+    }
+    vigencia.fechaLimite = diaV+ "-" + mesV + "-" + anioV
+*/
+  		
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		//var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		
+		var content = fs
+		.readFileSync(produccion+"CONTRATODISTRIBUIDOR.docx", "binary");
+					
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+
+		doc.setData({ fecha											: fechaLetra,
+									cliente										: cliente,
+									letra 										: letra,
+									montoCredito							: montoCredito,
+									centavosCS								: centavosCS,
+									aval											: aval,
+									vigencia 									: fechaVigencia//,
+/*
+									autorizacionProveedorSi 	: autorizacionProveedorSi,
+									autorizacionProveedorNo 	: autorizacionProveedorNo,
+									autorizacionPublicidadSi 	: autorizacionPublicidadSi,
+									autorizacionPublicidadNo 	: autorizacionPublicidadNo,
+*/
+											
+		});
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+			
+	 	fs.writeFileSync(produccionSalida+"CONTRATODISTRIBUIDORSalida.docx",buf);
+	 	var bitmap = fs.readFileSync(produccionSalida+"CONTRATODISTRIBUIDORSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		
+   },
 	getListaCobranza: function (objeto) {
 	
 		//console.log(objeto,"planPagos")

@@ -325,7 +325,7 @@ Meteor.methods({
 			  	 console.log(c.saldoMultas);
 		  	}
 	  });	  
-	  console.log(ban);
+	  //console.log(ban);
 	  
 		return ban;
 	},

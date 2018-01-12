@@ -41,38 +41,42 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 	
 	rc.selectedRow = null;  // initialize our variable to null
   //console.log(rc.credito)
+  
+  rc.fechaLimite;
 
   this.subscribe('planPagos', () => {
 	  //determinar la fecha menor a la quincena mas pronta
 	  
 	  	var fecha = new Date();
 			var n = fecha.getDate();
-			
-			var fechaLimite;
-			if (n > 16)
+		
+			if (n >= 20)
 			{
-					fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1 ,1,0,0,0,0);		
+					rc.fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);		
 			}
-			else 
+			else if (n < 5) 
 			{
-					//if (n < 5)
-							fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
-/*
-					else if (n >= 20)
-					   	fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);								
-*/
+					rc.fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),1,0,0,0,0);
 			}
-	  
-			fechaLimite.setHours(23,59,59,999);
+			else if (n >= 5 && n < 20)		
+			{
+							rc.fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
+			}
 			
-			//console.log(fechaLimite);
-	  
-    return [{
-      cliente_id			: $stateParams.objeto_id,
-      credito_id			: { $in: rc.getCollectionReactively("creditos_id") },
-      importeRegular  : {$gt : 0},
-      fechaLimite			: {$lte: fechaLimite}
-    }];
+			
+			rc.fechaLimite.setHours(23,59,59,999);
+			//console.log(rc.fechaLimite);
+			//console.log(rc.getCollectionReactively("creditos_id").length);	
+			
+			if (rc.getCollectionReactively("creditos_id").length > 0)
+			{
+					return [{
+			      cliente_id			: $stateParams.objeto_id,
+			      credito_id			: { $in: rc.getCollectionReactively("creditos_id") },
+			      importeRegular  : {$gt : 0},
+			      fechaLimite			: {$lte: rc.fechaLimite}
+			    }];
+			} 
   });
 
   this.subscribe("tiposCredito", () => {
@@ -86,9 +90,11 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
   this.subscribe('creditos', () => {
     return [{ cliente_id: $stateParams.objeto_id, estatus : {$in: [2, 4]}}];
   });
+/*
   this.subscribe('pagos', () => {
     return [{ estatus: 1 }];
   });
+*/
 /*
   this.subscribe('ocupaciones', () => {
     return [{ estatus: true }];
@@ -110,9 +116,11 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
   });
 */
 
-  this.subscribe('personas', () => {
+  /*
+this.subscribe('personas', () => {
     return [{}];
   });
+*/
   this.subscribe('tiposIngreso', () => {
     return [{estatus: true}]
   });
@@ -127,17 +135,21 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
   });
 
   
-  this.subscribe('notasCreditoTop1', () => {
+  /*
+this.subscribe('notasCreditoTop1', () => {
     return [{
 					cliente_id: $stateParams.objeto_id, saldo : {$gt: 0}, estatus : 1
     }]
   });
+*/
 		
 
   this.helpers({
-    notasCredito : ()=>{
+    /*
+notasCredito : ()=>{
 	   	return  NotasCredito.find({cliente_id: $stateParams.objeto_id, saldo : {$gt: 0}, estatus : 1}).fetch();
     },
+*/
     objeto : () => {
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
 			
@@ -193,7 +205,8 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 					return cli;
 				}		
 		},
-		historialCreditos : () => {
+		/*
+historialCreditos : () => {
 			
 			var creditos = Creditos.find().fetch();
 			if(creditos != undefined){
@@ -212,13 +225,16 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 			return planes;
 
 		},
-		historial : () => {
+*/
+	/*
+	historial : () => {
 			arreglo = [];
 			var saldoPago = 0;
 			var saldoActual = 0; 
 			rc.saldo =0;	
 			var credito = rc.credito
 			rc.saldoMultas = 0;
+*/
 			//return PlanPagos.find({credito_id : this.getReactively("credito_id")}).fetch();
 
 /*
@@ -231,7 +247,8 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 			});
 */
 			
-			_.each(rc.planPagos, function(planPago, index){
+			/*
+_.each(rc.planPagos, function(planPago, index){
 				//planPago.ciudad = PlanPagos.findOne(planPago.credito_id);
 				//console.log("entro al segundo");
 				//console.log("credito",credito);
@@ -334,7 +351,8 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
       }
 			
 			return arreglo;
-		},
+*/
+		//},
     tiposIngreso: () => {
 	    
 	    var ti = TiposIngreso.find().fetch();
@@ -361,8 +379,11 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
     planPagosViejo: () => {
     	var colores = ['active', 'info', 'warning', 'success', 'danger'];
     	var asignados = [];
-			var pp = PlanPagos.find({importeRegular : {$gt : 0}}, { sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
-			//console.log(pp);
+   	
+			var pp = PlanPagos.find({importeRegular : {$gt : 0}, 
+															 fechaLimite		: {$lte: rc.fechaLimite} }, 
+															{ sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
+
       rc.subtotal = 0;
 			rc.cargosMoratorios = 0;
 			
@@ -384,7 +405,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 						var nfp = fechaPago.getDate();
 						var mesfp = fechaPago.getMonth();
 						
-						var comision = 0;
+						var comision = 15;
 						
 						if (mes == mesfp && n >= nfp)
 						{
@@ -410,11 +431,15 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 						}
 		        
 		        pago.bonificacion = parseFloat(((pago.capital + pago.interes) * (comision / 100))).toFixed(2);
-		        
+            
 		        var cre = Creditos.findOne({_id: pago.credito_id});
 		        pago.beneficiado =  cre.beneficiado;
 		        
-		        pago.saldo = Number(parseFloat(pago.importeRegular - pago.bonificacion).toFixed(2));
+		        pago.saldo 					= Number(parseFloat(pago.importeRegular).toFixed(2));
+		        
+		        pago.importepagado 	= Number(parseFloat(pago.importeRegular).toFixed(2));
+		        
+		        pago.pagoSeleccionado = true;
 		        
 		        if (pago.descripcion == "Recibo")
 		        		rc.subtotal +=  pago.importeRegular;
@@ -439,7 +464,9 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 						if (pago.pagoCapital !=  undefined)
 							 pago.capital = pago.capital -  pago.pagoCapital;	 	 
 							 
-							 
+						
+						rc.pago.totalPago += Number(parseFloat(pago.importeRegular).toFixed(2));
+						rc.pago.bonificacion += Number(parseFloat(pago.bonificacion).toFixed(2));
 		        				      								
 		      });
 		      
@@ -469,7 +496,8 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
         })
       }
 
-      if (creditos) {
+     /*
+ if (creditos) {
         _.each(creditos, function(credito) {
         	// credito[0].color = credito.folio
 
@@ -480,22 +508,29 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 
         })
       }
+*/
 
       return creditos;
     },
+/*
     pagos: () => {
       return Pagos.find().fetch()
     },
-    pagosReporte: () => {
+*/
+    /*
+pagosReporte: () => {
       _.each(rc.planPagosViejo, function(pp) {
         var pagos = pp.pagos
       });
 
       return Pagos.find().fetch()
     },
-    notas: () => {
+*/
+   /*
+ notas: () => {
       return Notas.find().fetch();
     },
+*/
     caja: () => {
 	  	var c = Cajas.findOne({usuario_id: Meteor.userId()});   
       if (c != undefined)
@@ -546,6 +581,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
     }
   }
 
+	//Este es la columna + -
   this.seleccionarPago = function(pago) {
     pago.pagoSeleccionado = !pago.pagoSeleccionado;
     pago.estatus = 0;
@@ -587,6 +623,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
     rc.pago.totalPago = Number(parseFloat(rc.pago.totalPago).toFixed(2));
   }
   
+  //Este es el input
   this.seleccionarMontoPago = function(pago) {
     rc.pago.totalPago = 0;
     rc.pago.bonificacion = 0;
@@ -657,11 +694,13 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 		  	return;
 	  }
 	  
-	  if (pago.pagar < pago.totalPago)
+	  /*
+if (pago.pagar < pago.totalPago)
 	  {
 		  	toastr.warning("No alcanza a pagar con el total ingresado");
 		  	return;
 	  }
+*/
 	  
 	  if (pago.totalPago == 0)
 	  {
@@ -669,10 +708,13 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 		  	return;
 	  }
 	  
+	  console.log(pago.totalPago);
+	  
 	  //Validar que sea completo el crédito a pagar    
 	  var tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id);
 	  if (tipoIngreso.nombre == "REFINANCIAMIENTO")
 	  {
+		  		
 		  		
 		  	//Validar si hay creditos Autorizados
 		  	rc.creditosAutorizados = Creditos.find({estatus : 2}).fetch();
@@ -757,31 +799,33 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 				else
 				{
 						
-						var fechaProximoPagoArray = [];
+						//var fechaProximoPagoArray = [];
 												
 						var seleccionadosId = [];
 				    _.each(rc.planPagosViejo, function(p) {
 				      if (p.pagoSeleccionado){
 								 if (p.descripcion == "Recibo") sePagaraRecibo = true;
 								 if (p.descripcion == "Cargo Moratorio") sePagaraCargo = true;
-					       seleccionadosId.push({ id: p._id, importe: p.importepagado })
+					       seleccionadosId.push({ id: p._id, importe: p.importepagado, bonificacion: Number(p.bonificacion) })
 				      }
 				      
-				      if (p.importepagado != p.importeRegular)				      				      
-				      	 fechaProximoPagoArray.push(p.fechaLimite);
+				      //if (p.importepagado != p.importeRegular)				      				      
+				      //	 fechaProximoPagoArray.push(p.fechaLimite);
 				    });
 				    
-				    fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
+				   // fechaProximoPago = new Date(Math.min.apply(null,fechaProximoPagoArray));
 						
-						if (fechaProximoPago == "Invalid Date")
-								fechaProximoPago = "";								
+						//if (fechaProximoPago == "Invalid Date")
+						//		fechaProximoPago = "";								
 						
 				}
 		    
+		    console.log(pago);
 
-				Meteor.call("pagoParcialCredito", seleccionadosId, 
+				Meteor.call("pagoParcialVale", 		seleccionadosId, 
 		    																	pago.pagar, 
-		    																	pago.totalPago, 
+		    																	pago.bonificacion,
+		    																	pago.totalPago,
 		    																	pago.tipoIngreso_id, 
 		    																	$stateParams.objeto_id, 
 		    																	rc.ocultarMultas, 
@@ -801,7 +845,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 		      rc.pago.totalito = 0
 		      rc.pago.fechaEntrega = pago.fechaEntrega
 		      rc.ocultarMultas = false;
-		      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
+		      var url = $state.href("anon.imprimirTicketVale", { pago_id: success }, { newTab: true });
 		      window.open(url, '_blank');
 		      
 		      rc.tipoIngresoSeleccionado = {};
@@ -919,7 +963,7 @@ if(pago.descripcion=="Cargo Moratorio")
 					fechaProximoPago = "";
 	    
 	    
-			//cons ole.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
+			//console.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
 	    Meteor.call("pagoParcialCredito", seleccionadosId, 
 	    																	rc.pagoR.pagar, 
 	    																	rc.pagoR.totalPago, 
@@ -947,7 +991,7 @@ if(pago.descripcion=="Cargo Moratorio")
 	      rc.pago.totalPago = 0;
 	      rc.pago.totalito = 0
 	      rc.pago.fechaEntrega = rc.pagoR.fechaEntrega
-	      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
+	      var url = $state.href("anon.imprimirTicketVale", { pago_id: success }, { newTab: true });
 	      window.open(url, '_blank');
 	      
 	    });
