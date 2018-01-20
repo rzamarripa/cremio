@@ -34,7 +34,7 @@
 								</div>
 								<div class="row">
 										<h1>{{dis.objeto.profile.nombre}} <span class="semi-bold">{{dis.objeto.profile.apellidoPaterno}} {{dis.objeto.profile.apellidoMaterno}}</span></h1>
-										<h5>{{dis.objeto.profile.numeroDistribuidor}} <a href="" ng-click="dis.imprimirContrato()" class="btn btn-info"><i class="fa fa-print"></i> Contrato </a></h5>
+										<h5>{{dis.objeto.profile.numeroCliente}} <a href="" ng-click="dis.imprimirContrato()" class="btn btn-info"><i class="fa fa-print"></i> Contrato </a></h5>
 										<h6>Limite Crédito: {{dis.objeto.profile.limiteCredito | currency}}</h6>
 										<h6>Saldo  Crédito: {{dis.objeto.profile.saldoCredito | currency}}</h6>
 								</div>		
@@ -275,7 +275,7 @@
 												    	</div>
 												    	<div class="col-sm-3">					    
 													    	<label>Número distribuidor</label>
-													    	<input name="numeroCliente" type="text" class="form-control" placeholder="Número de distribuidor" ng-model="dis.objeto.profile.numeroDistribuidor" disabled="">
+													    	<input name="numeroCliente" type="text" class="form-control" placeholder="Número de distribuidor" ng-model="dis.objeto.profile.numeroCliente" disabled="">
 												    	</div>
 												    </div>
 												    <div class="row">

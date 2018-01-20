@@ -636,8 +636,14 @@
 				
 				<div class="form-group" ng-if = "pagV.tipoIngresoSeleccionado.tipoCuenta == 'Banco'">
 						<label for="fecha">Fecha Deposito:</label>
-						<input name="fecha" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="pagV.pago.fechaDeposito"/>
+						<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="pagV.pago.fechaDeposito"/>
 				</div>
+				<div class="form-group" ng-if = "pvpp.tipoIngresoSeleccionado.tipoCuenta == 'Banco'">
+						<label>Referencia:</label>
+						<input name="referencia" type="text"  class="form-control"  ng-model="pagV.pago.referencia"/>
+				</div>
+				<br/>
+				
 				<a class="btn btn-primary pull-left" ng-click="pagV.guardarPago(pagV.pago,pagV.credito)">Hacer Cobro</a>&nbsp
 				<a class="btn btn-info pull-left" ng-click="pagV.calcularAbono()">Calcular</a>
 								

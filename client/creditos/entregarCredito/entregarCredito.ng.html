@@ -94,7 +94,7 @@
                     <div class="col-sm-3" ng-show="ecCtrl.imprecion">
 												<input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirContrato(ecCtrl.credito,ecCtrl.cliente);ecCtrl.generarPlanPagos(rc.credito)" value="Imprimir" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
               			</div>
-              			<div class="col-sm-3" ng-if="ecCtrl.credito.tipo == 'creditoP'">
+              			<div class="col-sm-3" >
 		                  <input type="submit" ng-click="ecCtrl.guardar(ecCtrl.objeto,form)" value="Entregar Crédito" class="btn btn-primary" valida-form formulario="form">
 		                </div>              			
             		</div>
@@ -105,7 +105,7 @@
           <div class="well">      
             <div class="row">
               <div class="col-sm-3">
-                <h1 ng-if="ecCtrl.credito.tipo == 'creditoP'">
+                <h1  >
                 Crédito Solicitado:
                 </h1>
               </div>

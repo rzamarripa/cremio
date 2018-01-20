@@ -108,15 +108,15 @@
 				<div class="row">
 					<div class="col-sm-4">					    
 						<label>Teléfono Alternativo</label>
-						<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="ava.objeto.profile.telefonoAlternativo" capitalize>
+						<input name="telefonoAlternativo" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="ava.objeto.profile.telefonoAlternativo" capitalize>
 					</div>	  
 					<div class="col-sm-4">					    
 						<label>Nombre</label>
-						<input name="otroTelefono" type="text" class="form-control" placeholder="Nombre" ng-model="ava.objeto.profile.duenoAlternativo" capitalize>
+						<input name="duenoAlternativo" type="text" class="form-control" placeholder="Nombre" ng-model="ava.objeto.profile.duenoAlternativo" capitalize>
 					</div>
 					<div class="col-sm-4">					    
 						<label>Parentesco</label>
-						<input name="otroTelefono" type="text" class="form-control" placeholder="Parentezco" ng-model="ava.objeto.profile.parentescoAlternativo" capitalize>
+						<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="ava.objeto.profile.parentescoAlternativo" capitalize>
 					</div>
 				</div>
 				<div class="row">
@@ -137,7 +137,7 @@
 								<option value="Femenino">Femenino</option>
 						</select>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-sm-4" valida>
 						<label for="estadocivil">Estado Civil *</label>					
 						<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-change="ava.seleccionarEstadoCivil(ava.objeto.profile.estadoCivil_id)" ng-model="ava.objeto.profile.estadoCivil_id" required>
 							<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in ava.estadosCiviles">
@@ -145,13 +145,13 @@
 							</option>
 						</select>
 					</div>
-					<div class="col-sm-4">					    
+					<div class="col-sm-4" valida>					    
 						<label>Fecha Nacimiento *</label>
 						<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="ava.objeto.profile.fechaNacimiento" required="">
 					</div>	
 				</div>
 				<div class="row">	
-					<div class="col-sm-4">
+					<div class="col-sm-4" valida>
 						<label for="nacionalidad">Nacionalidad</label>
 						<select name="nacionalidad" class="form-control select2" placeholder="Seleccione" ng-model="ava.objeto.profile.nacionalidad_id" required>
 							<option  value="{{nacionalidad._id}}" ng-repeat="nacionalidad in ava.nacionalidades">
@@ -170,7 +170,7 @@
 				</div>
 				<div class="row">
 					
-				  <div class="col-sm-4">					    
+				  <div class="col-sm-4" valida>					    
 						<label>Lugar de Nacimiento *</label>
 						<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="ava.objeto.profile.lugarNacimiento" capitalize required="" >
 					</div>

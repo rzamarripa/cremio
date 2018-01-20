@@ -110,7 +110,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 	      toastr.error('Error al actualizar los datos.');
 	      return;
 		  }
-		 console.log(objeto,"Sucursales")
+		
 		  
 			var idTemp = objeto._id;
 			delete objeto._id;		

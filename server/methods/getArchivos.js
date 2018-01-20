@@ -338,6 +338,7 @@ Meteor.methods({
     var future = require('fibers/future');
 		
 		var templateType = (tipo === 'pdf') ? '.docx' : (tipo === 'excel' ? '.xlsx' : '.docx');
+		
     if(Meteor.isDevelopment){
       var path = require('path');
       var publicPath = path.resolve('.').split('.meteor')[0];
@@ -715,7 +716,12 @@ var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		
-		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		//var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		
+		var unoconv = require('better-unoconv');
+    var future = require('fibers/future');
+		
+		var templateType = 'pdf';
 		
 		if(Meteor.isDevelopment){
       var path = require('path');
@@ -742,7 +748,8 @@ var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
 			return "";
 		}});
 		const formatCurrency = require('format-currency')
-
+		
+		var res = new future();
 
 		var fecha = new Date();
 		var f = fecha;
@@ -864,14 +871,34 @@ var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx",buf);		
+             		 
+    var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "reporteDiarioCobranzaSalida" + templateType; 
+             		 
+		//fs.writeFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx",buf);		
 				
 		//Pasar a base64
 		// read binary data
-    var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx");
+    /*
+var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
+*/
+		fs.writeFileSync(rutaOutput, buf);
+     
+		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+        if(!err){
+          fs.unlink(rutaOutput);
+          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "reporteDiarioCobranzaSalida" + '.pdf' });
+        }else{
+          res['return']({err: err});
+          console.log("Error al convertir pdf:", err);
+        }
+     });
+
+    return res.wait();
+		
+		
 		
   },
   ReporteCarteraVencida: function (objeto, tipo) {
@@ -2890,6 +2917,12 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
+		var unoconv = require('better-unoconv');
+    var future = require('fibers/future');
+		
+		
+		var templateType = 'pdf';
+		
 		if(Meteor.isDevelopment){
       var path = require('path');
       var publicPath = path.resolve('.').split('.meteor')[0];
@@ -2905,7 +2938,9 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
 		//var produccion = "/home/cremio/archivos/";
 		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 				 
-				var content = fs
+		var res = new future();
+		
+		var content = fs
     	   .readFileSync(produccion+"FormatoSol.docx", "binary");
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
@@ -2930,12 +2965,30 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
 		doc.render();
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccionSalida+"FormatuSolSalida.docx",buf);		
+             		 
+    var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "FormatuSolSalida" + templateType;         		 
+    
+		//fs.writeFileSync(produccionSalida+"FormatuSolSalida.docx",buf);		
 		// read binary data
-    var bitmap = fs.readFileSync(produccionSalida+"FormatuSolSalida.docx");
+   /*
+ var bitmap = fs.readFileSync(produccionSalida+"FormatuSolSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
+*/
+		fs.writeFileSync(rutaOutput, buf);
+     
+		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+        if(!err){
+          fs.unlink(rutaOutput);
+          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "FormatuSolSalida" + '.pdf' });
+        }else{
+          res['return']({err: err});
+          console.log("Error al convertir pdf:", err);
+        }
+     });
+
+    return res.wait();
 		
   }, 
   imprimirImagenDocumento: function (imagen) {

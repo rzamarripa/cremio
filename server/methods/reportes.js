@@ -176,11 +176,22 @@ Meteor.methods({
 					credito.numeroCliente = user.profile.numeroCliente;	
 					credito.nombreCompleto = user.profile.nombreCompleto;
 					
-					if (credito.garantias.length > 0 ) {
-						credito.estatusGarantia = "Si"
-					}else{
-						credito.estatusGarantia = "No"
+					if (credito.garantias != undefined)
+					{
+						if (credito.garantias.length > 0 ) {
+							credito.estatusGarantia = "Si"
+						}
+						else{
+							credito.estatusGarantia = "No"
+						}	
+						
 					}
+					else{
+							credito.estatusGarantia = "No"
+						}
+					
+					
+					
 					
 
 					var cajero = Meteor.users.findOne({"_id" : credito.usuario_id}, 
@@ -218,12 +229,18 @@ Meteor.methods({
 					credito.numeroCliente = user.profile.numeroCliente;	
 					credito.nombreCompleto = user.profile.nombreCompleto;
 					
-					if (credito.garantias.length > 0 ) {
-						credito.estatusGarantia = "Si"
-					}else{
-						credito.estatusGarantia = "No"
-					}
+					if (credito.garantias != undefined)
+					{
 					
+							if (credito.garantias.length > 0 ) {
+								credito.estatusGarantia = "Si"
+							}else{
+								credito.estatusGarantia = "No"
+							}
+					}
+					else{
+							credito.estatusGarantia = "No"
+						}		
 					
 			});
 			

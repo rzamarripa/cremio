@@ -16,7 +16,6 @@ Meteor.publish("buscarClientes",function(options){
 																											"profile.sexo"								: 1, 
 																											"profile.foto"								: 1,
 																											"profile.numeroCliente"				: 1,
-																											"profile.numeroDistribuidor"	: 1,
 																											roles													: 1 }}, options.options);	
 			}
 });
@@ -34,25 +33,22 @@ Meteor.publish("buscarRootClientesDistribuidores",function(options){
 																											"profile.nombreCompleto"			: 1, 
 																											"profile.sexo"								: 1, 
 																											"profile.foto"								: 1,
-																											"profile.numeroCliente"				: 1,
-																											"profile.numeroDistribuidor"	: 1 }}, options.options);
+																											"profile.numeroCliente"				: 1 }}, options.options);
 			}
 });
 Meteor.publish("buscarRootClientesDistribuidoresNumero",function(options){
 	if (options != undefined){
-			if(options.where.numeroCliente.length > 0 || options.where.numeroDistribuidor.length > 0){
+			if(options.where.numeroCliente.length > 0 ){
 				//console.log("entro",options)
 				
 					let selector = {
-				  	$or: [{"profile.numeroCliente": options.where.numeroCliente}, {"profile.numeroDistribuidor": options.where.numeroDistribuidor}]
+				  	$or: [{"profile.numeroCliente": options.where.numeroCliente}, {"profile.numeroCliente": options.where.numeroCliente}]
 					}
-	
 					
 					return Meteor.users.find(selector, { fields: {roles												: 1,
 																											"profile.nombreCompleto"			: 1, 
 																											"profile.sexo"								: 1, 
 																											"profile.foto"								: 1,
-																											"profile.numeroDistribuidor"	: 1,
 																											"profile.numeroCliente"				: 1 }}, options.options);
 				
 			}
@@ -80,7 +76,7 @@ Meteor.publish("distribuidores",function(options){
   return Meteor.users.find(options,{ fields: {roles	: 1,
 	  																					createdAt:1,
 																							"profile.nombreCompleto"			: 1, 
-																							"profile.numeroDistribuidor"	: 1,
+																							"profile.numeroCliente"				: 1,
 																							"profile.limiteCredito"				: 1,
 																							"profile.verificacionEstatus"	: 1,
 																							"profile.indicacion"					: 1,

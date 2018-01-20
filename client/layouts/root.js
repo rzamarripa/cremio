@@ -9,7 +9,9 @@ angular.module("creditoMio")
 	this.buscar.nombre = "";
 	this.buscar.numeroCliente = "";
 	this.buscando = false;
+	
 	rc.porNumero = false;
+	rc.porCliente = false;
 	
 	//this.clientesRoot = [];
 	this.clientes_ids = [];
@@ -87,14 +89,14 @@ angular.module("creditoMio")
 
 			}			
 			
+			
 			if(rc.getReactively("buscar.numeroCliente").length > 0 )
 			{
 				 rc.buscando = true;	
 				return [{
 			    options : { limit: 20 },
 			    where : { 
-						numeroCliente 			: rc.nc,
-						numeroDistribuidor 	: rc.nd
+						numeroCliente 			: (rc.porCliente ? rc.nd : rc.nc)
 					} 		   
 		    }];
 			}
@@ -120,8 +122,7 @@ angular.module("creditoMio")
 			if(rc.getReactively("buscar.numeroCliente").length > 0 )
 			{
 				
-				var clientes = Meteor.users.find({$or: [{"profile.numeroCliente": rc.nc},
-																								{"profile.numeroDistribuidor": rc.nd}]}).fetch();
+				var clientes = Meteor.users.find({$or: [{"profile.numeroCliente": (rc.porCliente ? rc.nd : rc.nc)}]}).fetch();
 				
 			}
 				
@@ -258,16 +259,22 @@ this.verMenu =()=>{
   });	
 
 	this.descargarFormato = function() 
-  {
+  {	
+	  loading(true);
     Meteor.call('formaSolicitud', function(error, response) {     
        if(error)
        {
         console.log('ERROR :', error);
+        loading(false);
         return;
        }
        else
        {
-		      function b64toBlob(b64Data, contentType, sliceSize) {
+	       		downloadFile(response);
+				 		loading(false);
+	       
+		      /*
+function b64toBlob(b64Data, contentType, sliceSize) {
 		          contentType = contentType || '';
 		          sliceSize = sliceSize || 512;
 		          var byteCharacters = atob(b64Data);
@@ -295,6 +302,9 @@ this.verMenu =()=>{
 		          window.URL.revokeObjectURL(url);
 		   
 		      }
+*/
+		      
+		    }  
     });
 
   };
@@ -308,6 +318,18 @@ this.verMenu =()=>{
   	rc.porNumero = true;
 
   };
+  
+  
+  this.cambiarCliente = function() 
+  {
+  	rc.porCliente = false;
+  };
+  this.cambiarDistribuidor = function() 
+  {
+  	rc.porCliente = true;
+
+  };
+  
 
 
 };

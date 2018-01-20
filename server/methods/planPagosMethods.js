@@ -573,7 +573,7 @@
 							fechaLimite					: pago.fechaLimite,
 							diaSemana						: mfecha.weekday(),
 							tipoPlan						: pago.tipoPlan,
-							tipoCredito					: pago.tipo,
+							tipoCredito					: "creditoP",
 							numeroPago					: pago.numeroPago,
 							importeRegular			: multas,
 							cliente_id					: pago.cliente_id,

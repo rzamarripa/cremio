@@ -320,7 +320,10 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 			{
 					rc.conVecino = 0;
 					rc.conSolicitanteAval = 0;
-					var numeroVerificaciones = 2;
+
+					var numeroVerificaciones;
+					
+					
 					
 					Meteor.call('getVerificacionesDistribuidor', rc.distribuidorSeleccionado, function(error, result) {
 						   if(error)
@@ -329,7 +332,14 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 							    return;
 						   }
 						   if(result)
-						   {	
+						   {		
+							   		var distribuidorRequiereVerificacionAval = Meteor.users.findOne(rc.distribuidorSeleccionado).profile.requiereVerificacionAval;
+							   		
+							   		if (distribuidorRequiereVerificacionAval == undefined || distribuidorRequiereVerificacionAval == false)
+											 numeroVerificaciones = 1;
+										else		 
+											numeroVerificaciones = 2;
+							   		
 							   		
 								 		_.each(result, function(v){
 		

@@ -439,6 +439,7 @@ angular.module("creditoMio")
       })
 
 			objeto.profile.estaVerificado = false;
+			objeto.profile.estatusCredito = 0;
 			objeto.profile.estatusVerificacion = 0;
       objeto.profile.estatus = true;
       objeto.profile.saldoCredito = objeto.profile.limiteCredito;

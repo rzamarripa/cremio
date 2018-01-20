@@ -174,6 +174,80 @@ angular.module("creditoMio")
 		});
 			
 	};
+	
+	this.creditosEntregadosFecha = function(){
+
+		var usuario = Meteor.user();
+				
+	  rc.fechaInicial.setHours(0,0,0,0);
+		rc.fechaFinal.setHours(23,59,59,999);
+		
+		rc.totalSolicitado = 0;
+    rc.totalPagar = 0;
+    rc.numeroCreditos = 0;
+    
+    rc.creditosEntregados = [];
+    
+		loading(true);
+		Meteor.call("getCreditosEntregados", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
+				if  (result)
+				{
+						rc.creditosEntregados = result;
+						
+						_.each(rc.creditosEntregados, function(credito){
+							
+							if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
+							rc.totalSolicitado += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+							if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
+							rc.totalPagar += Number(parseFloat(credito.adeudoInicial).toFixed(2));
+							
+							rc.numeroCreditos += 1;
+							
+							
+						});
+						loading(false);
+						$scope.$apply();
+				}
+		});
+		
+	};
+	
+	this.creditosLiquidadosFecha = function(){
+
+		var usuario = Meteor.user();
+				
+	  rc.fechaInicial.setHours(0,0,0,0);
+		rc.fechaFinal.setHours(23,59,59,999);
+		
+		rc.totalSolicitado = 0;
+    rc.totalPagar = 0;
+    rc.numeroCreditos = 0;    
+    
+    rc.creditosLiquidados = [];
+		
+		loading(true);
+		Meteor.call("getCreditosLiquidados", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
+				if  (result)
+				{
+						rc.creditosLiquidados = result;
+						
+						_.each(rc.creditosLiquidados, function(credito){
+							
+							if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
+							rc.totalSolicitado += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+							if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
+							rc.totalPagar += Number(parseFloat(credito.adeudoInicial).toFixed(2));
+							
+							rc.numeroCreditos += 1;
+							
+							
+						});
+						loading(false);
+						$scope.$apply();
+				}
+		});
+		
+	};
 
 	this.diarioBancos = function(){
 
@@ -270,81 +344,7 @@ angular.module("creditoMio")
 			});
 		
 	};
-	
-	this.creditosEntregadosFecha = function(){
-
-		var usuario = Meteor.user();
-				
-	  rc.fechaInicial.setHours(0,0,0,0);
-		rc.fechaFinal.setHours(23,59,59,999);
 		
-		rc.totalSolicitado = 0;
-    rc.totalPagar = 0;
-    rc.numeroCreditos = 0;
-    
-    rc.creditosEntregados = [];
-    
-		loading(true);
-		Meteor.call("getCreditosEntregados", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
-				if  (result)
-				{
-						rc.creditosEntregados = result;
-						
-						_.each(rc.creditosEntregados, function(credito){
-							
-							if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
-							rc.totalSolicitado += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
-							if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
-							rc.totalPagar += Number(parseFloat(credito.adeudoInicial).toFixed(2));
-							
-							rc.numeroCreditos += 1;
-							
-							
-						});
-						loading(false);
-						$scope.$apply();
-				}
-		});
-		
-	};
-	
-	this.creditosLiquidadosFecha = function(){
-
-		var usuario = Meteor.user();
-				
-	  rc.fechaInicial.setHours(0,0,0,0);
-		rc.fechaFinal.setHours(23,59,59,999);
-		
-		rc.totalSolicitado = 0;
-    rc.totalPagar = 0;
-    rc.numeroCreditos = 0;    
-    
-    rc.creditosLiquidados = [];
-		
-		loading(true);
-		Meteor.call("getCreditosLiquidados", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
-				if  (result)
-				{
-						rc.creditosLiquidados = result;
-						
-						_.each(rc.creditosLiquidados, function(credito){
-							
-							if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
-							rc.totalSolicitado += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
-							if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
-							rc.totalPagar += Number(parseFloat(credito.adeudoInicial).toFixed(2));
-							
-							rc.numeroCreditos += 1;
-							
-							
-						});
-						loading(false);
-						$scope.$apply();
-				}
-		});
-		
-	};
-	
 	this.carteraVencida = function(){
 
 		var usuario = Meteor.user();
@@ -677,8 +677,17 @@ this.guardarNotaCobranza=function(nota){
 		this.movimientoCuenta = false
 		this.diarioCreditos = true
 	}
+	
+	
+	
 	this.imprimirReporteCobranza = function(objeto){
-		//console.log(objeto)
+
+		
+		if (objeto.length == 0)
+		{
+				toastr.warning("No hay registros por imprimir");
+				return;
+		}
 		
 		var suma = 0
 		var sumaInter = 0
@@ -703,18 +712,23 @@ this.guardarNotaCobranza=function(nota){
 	     item.sumaIva = parseFloat(item.sumaIva.toFixed(2))
 	 	});
 
-
+	 		loading(true);	
 		   Meteor.call('ReporteCobranza', objeto,rc.fechaInicial,rc.fechaFinal, rc.arregloTiposIngresosobjetos ,function(error, response) {
 
 
 		   if(error)
 		   {
 		    console.log('ERROR :', error);
+		    loading(false);
 		    return;
 		   }
 		   else
 		   {
-			 				function b64toBlob(b64Data, contentType, sliceSize) {
+			   		downloadFile(response);	
+			   		loading(false);
+			   			
+			 				/*
+function b64toBlob(b64Data, contentType, sliceSize) {
 								  contentType = contentType || '';
 								  sliceSize = sliceSize || 512;
 								
@@ -748,14 +762,23 @@ this.guardarNotaCobranza=function(nota){
 							dlnk.href = url;
 							dlnk.click();		    
 						  window.URL.revokeObjectURL(url);
+*/
   
 		   }
 		});
 		
 	}
+	
+	
 	this.imprimirReporteCreditos = function(objeto){
-
-	    //console.log("objeto",objeto)
+						
+			if (objeto == undefined || objeto.length == 0)
+			{
+					toastr.warning("No hay registros por imprimir");
+					return;
+			}
+			
+	    
 	     var suma = 0
        var sumaSol = 0
 	    _.each(objeto,function(item){
@@ -820,7 +843,13 @@ this.guardarNotaCobranza=function(nota){
 		
 	}
 	this.imprimirReporteCreditosLiquidados = function(objeto){
-
+			
+			if (objeto.length == 0)
+			{
+					toastr.warning("No hay registros por imprimir");
+					return;
+			}
+			
 	    //console.log("objeto",objeto)
 	     var suma = 0
        var sumaSol = 0
@@ -886,7 +915,12 @@ this.guardarNotaCobranza=function(nota){
 		
 	}
 	this.imprimirReporteMovimiento = function(objeto){
-
+			
+			if (objeto.length == 0)
+			{
+					toastr.warning("No hay registros por imprimir");
+					return;
+			}
 	   
 	    _.each(objeto,function(item){
 	    	console.log("item")
@@ -948,7 +982,10 @@ this.guardarNotaCobranza=function(nota){
 		
 	};
 	this.imprimirReporteBancos = function(objeto){
-
+				
+			console.log(objeto)	
+				
+				
 	    //console.log("objeto",objeto)
 		   Meteor.call('ReportesBanco', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
 

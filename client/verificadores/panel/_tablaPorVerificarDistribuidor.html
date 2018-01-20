@@ -30,8 +30,14 @@
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
 						  <ul class="dropdown-menu text-left">
-						    <li><a ui-sref="root.verificacion({id : distribuidor._id, verificacion_id: '-1', tipo: 'V'})">Solicitante o Aval</a></li>
-						    <li><a ui-sref="root.verificacionVecino({id : distribuidor._id, verificacion_id: '-1', tipo: 'V'})">Vecino</a></li>
+						    <li><a ui-sref="root.verificacion({id : distribuidor._id, verificacion_id: '-1', tipo: 'V', persona:1})">Solicitante o Aval</a></li>
+						    <li><a ui-sref="root.verificacionVecino({id : distribuidor._id, verificacion_id: '-1', tipo: 'V', persona:1})">Vecino</a></li>
+						    <li ng-if = "distribuidor.profile.requiereVerificacionAval">
+						    		<a ui-sref="root.verificacion({id : distribuidor._id, verificacion_id: '-1', tipo: 'V', persona:2})">Aval</a>
+						    </li>
+						    <li ng-if = "distribuidor.profile.requiereVerificacionAval">
+						    		<a ui-sref="root.verificacionVecino({id : distribuidor._id, verificacion_id: '-1', tipo: 'V', persona:2})">Vecino Aval</a>
+						    </li>
 						  </ul>
 						</div>
 			    </div>				    

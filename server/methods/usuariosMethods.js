@@ -2,7 +2,8 @@
 
 Meteor.methods({
   createUsuario: function (usuario, rol, grupo) {
- 
+		
+
 		_.each(usuario.profile.documentos, function(documento){
 				delete documento.$$hashKey;
 				
@@ -63,7 +64,7 @@ Meteor.methods({
 	  		usuario.password = '123';
 	  		//console.log(usuario.username);
 	  		sucursal.folioDistribuidor = numero;
-	  		usuario.profile.numeroDistribuidor = usuario.username;
+	  		usuario.profile.numeroCliente = usuario.username;
 	  		
 	  		
 	  }
@@ -182,13 +183,13 @@ Meteor.methods({
 				var numero = parseInt(usuario.profile.numeroDistribuidor);
 								
 				if (numero < 10)
-					 usuario.profile.numeroDistribuidor = sucursal.clave + '-D000' + numero.toString();
+					 usuario.profile.numeroCliente = sucursal.clave + '-D000' + numero.toString();
 				else if (numero < 100)
-	  			 usuario.profile.numeroDistribuidor = sucursal.clave + '-D00' + numero.toString();
+	  			 usuario.profile.numeroCliente = sucursal.clave + '-D00' + numero.toString();
 	  		else if (numero < 1000)
-	  			 usuario.profile.numeroDistribuidor = sucursal.clave + '-D0' + numero.toString();	 
+	  			 usuario.profile.numeroCliente = sucursal.clave + '-D0' + numero.toString();	 
 	  		else
-	  			 usuario.profile.numeroDistribuidor = sucursal.clave + '-D' + numero.toString();
+	  			 usuario.profile.numeroCliente = sucursal.clave + '-D' + numero.toString();
 	  		
 	  }
 		
