@@ -361,6 +361,7 @@ angular.module("creditoMio")
   
   this.AsignaFecha = function(op)
   { 
+	  	
       this.selected_numero = 0;
       this.ban = false;
       
@@ -373,6 +374,7 @@ angular.module("creditoMio")
           rc.verRecibos = false;
           //console.log("FI:",FI);
           //console.log("FF:",FF);
+          console.log("por vencimiento");
           
       } 
       else if (op == 1) //Día
@@ -382,7 +384,7 @@ angular.module("creditoMio")
           this.fechaFinal.setHours(23,59,59,999);
           FI = this.fechaInicial;
           FF = this.fechaFinal;
-           rc.verRecibos = true;
+          rc.verRecibos = true;
           
           //console.log("FI:", FI);
           //console.log("FF:", FF);
@@ -752,17 +754,21 @@ angular.module("creditoMio")
       toastr.success('Guardado correctamente.');
   }
   
-
+	//CERTIFICACION JUDICIAL
   this.download = function(objeto) 
   {
-    //console.log("entro:", objeto);
-    objeto.credito.saldoActualizado = rc.historialCredito.saldo
-    objeto.credito.avales = rc.avales;
-    objeto.credito.pagosVencidos = rc.pagosVencidos;
-
-
-
-    Meteor.call('getcartaRecordatorio', objeto, function(error, response) {
+    
+			var cliente = {};
+			
+			cliente.nombreCompleto = objeto.cliente.profile.nombreCompleto;
+			cliente.calle					 = objeto.cliente.profile.calle;
+			cliente.numero				 = objeto.cliente.profile.numero;
+			cliente.codigoPostal	 = objeto.cliente.profile.codigoPostal;
+			
+			cliente.codigoPostal	 = objeto.cliente.profile.codigoPostal.toString();
+			cliente.colonia_id		 = objeto.cliente.profile.colonia_id;
+			
+    Meteor.call('getNotificacionJudicial', objeto.credito, cliente, function(error, response) {
        if(error)
        {
         console.log('ERROR :', error);
@@ -813,14 +819,19 @@ angular.module("creditoMio")
 
   this.downloadCartaUrgente = function(objeto) 
   {
-      
-    //console.log("entro:", objeto);
-    objeto.credito.saldoActualizado = rc.historialCredito.saldo
-    objeto.credito.avales = rc.avales;
-    objeto.credito.pagosVencidos = rc.pagosVencidos;
+      var cliente = {};
+    
+			cliente.nombreCompleto = objeto.cliente.profile.nombreCompleto;
+			cliente.calle					 = objeto.cliente.profile.calle;
+			cliente.numero				 = objeto.cliente.profile.numero;
+			cliente.codigoPostal	 = objeto.cliente.profile.codigoPostal;
+			
+			cliente.codigoPostal	 = objeto.cliente.profile.codigoPostal.toString();
+			cliente.colonia_id		 = objeto.cliente.profile.colonia_id;
 
 
-    Meteor.call('getcartaUrgente', objeto, function(error, response) {
+			loading(true);
+    Meteor.call('getcitatorio', objeto.credito, cliente, function(error, response) {
        if(error)
        {
         console.log('ERROR :', error);
@@ -857,7 +868,9 @@ angular.module("creditoMio")
               
               //console.log(url);
               var dlnk = document.getElementById('dwnldLnk');
-
+							
+							loading(false);
+							
               dlnk.download = "URGENTE.docx"; 
               dlnk.href = url;
               dlnk.click();       
@@ -869,14 +882,21 @@ angular.module("creditoMio")
     
   };
 
-  this.downloadCartaCertificado= function(objeto) 
+  this.downloadCartaCertificado = function(objeto) 
   {
       
-    console.log("entro:", objeto);
-    objeto.credito.saldoActualizado = rc.historialCredito.saldo
-    objeto.credito.avales = rc.avales;
+    //console.log("entro:", objeto);
+     var cliente = {};
+    
+			cliente.nombreCompleto = objeto.cliente.profile.nombreCompleto;
+			cliente.calle					 = objeto.cliente.profile.calle;
+			cliente.numero				 = objeto.cliente.profile.numero;
+			cliente.codigoPostal	 = objeto.cliente.profile.codigoPostal;
+			
+			cliente.codigoPostal	 = objeto.cliente.profile.codigoPostal.toString();
+			cliente.colonia_id		 = objeto.cliente.profile.colonia_id;
 
-    Meteor.call('getcartaCertificado', objeto, function(error, response) {
+    Meteor.call('getcartaCertificacionPatrimonial', objeto.credito, cliente, function(error, response) {
 
        if(error)
        {

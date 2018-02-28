@@ -18,6 +18,7 @@ angular.module("creditoMio")
 	rc.sumaInteres = 0;
 	rc.sumaIva = 0;
 	rc.sumaSeguro = 0;
+	rc.sumaCargoMoratorio = 0;
 	
 	rc.totalCobranza = 0;
 	rc.totalSolicitado= 0;
@@ -35,6 +36,8 @@ angular.module("creditoMio")
   
   
   rc.planPagos = [];   
+  rc.planPagoOriginal = [];
+  
   rc.ihistorialCrediticio = [];
  
   rc.cobranza_id = "";
@@ -58,6 +61,8 @@ angular.module("creditoMio")
   rc.arregloTiposIngresos = [];
   rc.arregloTiposIngresosobjetos = [];
   rc.arregloCarteraVencida = [];
+  
+		
 
 
   this.subscribe("tiposCredito", ()=>{
@@ -136,13 +141,11 @@ angular.module("creditoMio")
 		Meteor.call("getCobranzaDiaria", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id, function(error, result){
 				if  (result)
 				{
+						rc.planPagoOriginal = result;
 						rc.planPagos = result;						
 						
 						_.each(rc.planPagos, function(plan){
-							//console.log(plan);
-							//if (plan.tipoCuenta == "Consignia")
-							//{							
-								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
+ 								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
 								rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
 								if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
 								rc.sumaSeguro += Number(parseFloat(plan.pagoSeguro).toFixed(2));
@@ -150,6 +153,9 @@ angular.module("creditoMio")
 								rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
 								if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
 								rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
+								
+								if (plan.descripcion == "Cargo Moratorio")
+									 rc.sumaCargoMoratorio += Number(parseFloat(plan.totalPago).toFixed(2));	 
 								
 								rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
 								
@@ -159,10 +165,8 @@ angular.module("creditoMio")
 								else
 									rc.arregloTiposIngresos[plan.tipoIngreso] += Number(parseFloat(plan.totalPago).toFixed(2));
 								
-							//}
-								
+ 								
 						});
-						//rc.totalCobranza += Number(parseFloat(rc.sumaInteres + rc.sumaSeguro + rc.sumaIva + rc.sumaCapital).toFixed(2));
 										
 						for (var key in rc.arregloTiposIngresos) {
 						  rc.arregloTiposIngresosobjetos.push({tipoPago: key, total: rc.arregloTiposIngresos[key]})
@@ -514,6 +518,22 @@ this.selCredito=function(objeto)
 	};
 */
 	
+	this.filtrarTipoPago = function(tipo){
+ 		function formaPago(pp) {
+				
+		    return pp.tipoIngreso == tipo;
+		}
+		
+		rc.planPagos = rc.planPagoOriginal.filter(formaPago);
+ 		
+	}
+	
+	this.Total = function(){
+  		
+		rc.planPagos = rc.planPagoOriginal;
+ 		
+	}
+	
 	this.sumarSeleccionados = function()
 	{
 			rc.seleccionadoRecibos = 0;
@@ -692,25 +712,28 @@ this.guardarNotaCobranza=function(nota){
 		var suma = 0
 		var sumaInter = 0
 		var sumaIva = 0
-		_.each(objeto,function(item){
+	/*
+	_.each(objeto,function(item){
 			
 	    	// item.numerosPagos= item.credito.folio
 	    	// item.numeroCliente = item.numeroCliente
 
-	    	suma = rc.sumaCapital
-	    	sumaInter += rc.sumaInteres
-	    	sumaIva += rc.sumaCapital 
-	    	});
+	    	suma 				= rc.sumaCapital
+	    	sumaInter 	+= rc.sumaInteres
+	    	sumaIva 		+= rc.sumaCapital 
+	  });
    
 
-	    _.each(objeto,function(item){
-	     item.sumaCapital = suma 
-	     item.sumaInteres = sumaInter
-	     item.sumaIva = sumaIva  
+	  _.each(objeto,function(item){
+	     item.sumaCapital = suma ;
+	     item.sumaInteres = sumaInter;
+	     item.sumaIva 		= sumaIva ; 
 	     item.sumaCapital = parseFloat(item.sumaCapital.toFixed(2))
 	     item.sumaInteres = parseFloat(item.sumaInteres.toFixed(2))
-	     item.sumaIva = parseFloat(item.sumaIva.toFixed(2))
+	     item.sumaIva 		= parseFloat(item.sumaIva.toFixed(2))
+	     
 	 	});
+*/
 
 	 		loading(true);	
 		   Meteor.call('ReporteCobranza', objeto,rc.fechaInicial,rc.fechaFinal, rc.arregloTiposIngresosobjetos ,function(error, response) {

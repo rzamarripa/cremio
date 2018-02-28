@@ -172,6 +172,20 @@
 				</a>
 		</li>
 		
+		<li data-ui-sref-active="active" ng-show="currentUser.username == 'admin'">
+				<a ui-sref="root.importarClientes" tilte="Credito Mio">
+					<i class="fa fa-lg fa-fw fa-cloud-upload"></i>
+					<span class="menu-item-parent">Importar Clientes</span>
+				</a>
+		</li>
+		
+		<li data-ui-sref-active="active" ng-show="currentUser.username == 'admin'">
+				<a ui-sref="root.importarNotas" tilte="Credito Mio">
+					<i class="fa fa-lg fa-fw fa-cloud-upload"></i>
+					<span class="menu-item-parent">Importar Notas</span>
+				</a>
+		</li>
+		
 		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador' || currentUser.roles[0] == 'Supervisor'" >
 			<a ui-sref="root.clientesLista" tilte="Credito Mio">
 				<i class="fa fa-lg fa-fw fa-group"></i>

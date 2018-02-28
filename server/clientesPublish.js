@@ -16,6 +16,7 @@ Meteor.publish("buscarClientes",function(options){
 																											"profile.sexo"								: 1, 
 																											"profile.foto"								: 1,
 																											"profile.numeroCliente"				: 1,
+																											"profile.esAval"							: 1,
 																											roles													: 1 }}, options.options);	
 			}
 });
@@ -84,10 +85,21 @@ Meteor.publish("distribuidores",function(options){
 });
 
 
+Meteor.publish("clienteImportar",function(options){
+  return Meteor.users.find(options,{ fields: {roles	: 1,
+ 																							"profile.nombreCompleto"			: 1, 
+																							"profile.numeroCliente"				: 1 }});
+});
+
 Meteor.publish("cliente",function(options){
   return Meteor.users.find(options);
 });
 
+Meteor.publish("detalleClienteEncabezado",function(options){
+  return Meteor.users.find(options,{ fields: { "profile.documentos"			: 0, 
+ 																							}});
+});
+ 
 
 Meteor.publish("clientes",function(options){
   return Meteor.users.find(options);

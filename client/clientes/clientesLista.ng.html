@@ -50,6 +50,7 @@
                   <a ng-if="cliente.roles == 'Cliente'" href="/clientes/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
                   <a ng-if="cliente.roles == 'Distribuidor'" href="/distribuidores/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
                   <a href="/editarCliente/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Editar</a>
+                  <a href="javascript:void(0);" ng-if="cliente.profile.esAval == undefined || cliente.profile.esAval == false" ng-click="lcli.convertir('Aval', cliente)" class="btn btn-xs btn-white"><i class="fa fa-user"></i> Aval</a>
               </div>
           </div>
 

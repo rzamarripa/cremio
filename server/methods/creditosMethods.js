@@ -9,6 +9,7 @@ Meteor.methods({
 		var cliente = {};
 		cliente._id = c.cliente_id;
 		
+		//genera el Plan de Pagos
 		var planPagos = Meteor.call("generarPlanPagos", c, cliente);
 								
 		var saldoActual = 0;

@@ -152,54 +152,60 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 			//console.log(all,"all")
 			rc.total = all
 			//objeto.liquidar.toLocaleString()
-
+			
+			loading(true);
 		  Meteor.call('getCreditoReporte', objeto,credito,avales,all, function(error, response) {
 
-	   if(error)
-	   {
-	    console.log('ERROR :', error);
-	    return;
-	   }
-	   else
-	   {
-		 				function b64toBlob(b64Data, contentType, sliceSize) {
-							  contentType = contentType || '';
-							  sliceSize = sliceSize || 512;
+		   if(error)
+		   {
+		    console.log('ERROR :', error);
+		    return;
+		   }
+		   else
+		   {
+			 		downloadFile(response);
+			 		loading(false);
+	
+	/*
+			 				function b64toBlob(b64Data, contentType, sliceSize) {
+								  contentType = contentType || '';
+								  sliceSize = sliceSize || 512;
+								
+								  var byteCharacters = atob(b64Data);
+								  var byteArrays = [];
+								
+								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+								    var slice = byteCharacters.slice(offset, offset + sliceSize);
+								
+								    var byteNumbers = new Array(slice.length);
+								    for (var i = 0; i < slice.length; i++) {
+								      byteNumbers[i] = slice.charCodeAt(i);
+								    }
+								
+								    var byteArray = new Uint8Array(byteNumbers);
+								
+								    byteArrays.push(byteArray);
+								  }
+								    
+								  var blob = new Blob(byteArrays, {type: contentType});
+								  return blob;
+							}
 							
-							  var byteCharacters = atob(b64Data);
-							  var byteArrays = [];
-							
-							  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-							    var slice = byteCharacters.slice(offset, offset + sliceSize);
-							
-							    var byteNumbers = new Array(slice.length);
-							    for (var i = 0; i < slice.length; i++) {
-							      byteNumbers[i] = slice.charCodeAt(i);
-							    }
-							
-							    var byteArray = new Uint8Array(byteNumbers);
-							
-							    byteArrays.push(byteArray);
-							  }
-							    
-							  var blob = new Blob(byteArrays, {type: contentType});
-							  return blob;
-						}
-						
-						var blob = b64toBlob(response, "application/docx");
-					  var url = window.URL.createObjectURL(blob);
-					  
-					  //console.log(url);
-					  var dlnk = document.getElementById('dwnldLnk');
-
-				    dlnk.download = "ReporteCredito.docx"; 
-						dlnk.href = url;
-						dlnk.click();		    
-					  window.URL.revokeObjectURL(url);
-
-
-	   }
-		});
+							var blob = b64toBlob(response, "application/docx");
+						  var url = window.URL.createObjectURL(blob);
+						  
+						  //console.log(url);
+						  var dlnk = document.getElementById('dwnldLnk');
+	
+					    dlnk.download = "ReporteCredito.docx"; 
+							dlnk.href = url;
+							dlnk.click();		    
+						  window.URL.revokeObjectURL(url);
+	*/
+	
+	
+		   }
+			});
 
 	};
 		

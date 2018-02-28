@@ -118,7 +118,7 @@
 															</thead>
 															<tbody>
 			<!-- 													(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cd.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info' -->
-																<tr ng-repeat="pago in credito.planPagos">								
+																<tr ng-repeat="pago in credito.planPagos" ng-if="pago.importeRegular > 0">								
 																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
 																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
 																	<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
@@ -253,8 +253,8 @@
 															<tbody>
 																<tr ng-repeat="item in cd.objeto.profile.documentos">
 																	<td>{{item.nombre}}</td>
-																  <td><a  ng-click="cd.modalDoc(item.imagen)"> <i class="fa fa-eye"></a></td>
-																	<td><a ng-click="cd.imprimirDoc(item.imagen)"> <i class="fa fa-print"></i></a></td>
+																  <td><a href="#" ng-click="cd.modalDoc(item.pos)"> <i class="fa fa-eye"></a></td>
+																	<td><a href="#" ng-click="cd.imprimirDoc(item.pos)"> <i class="fa fa-print"></i></a></td>
 																</tr>	
 															</tbody>	
 														</table>	
@@ -376,7 +376,7 @@
 											    	</div>
 											    	<div class="col-sm-3" >					    
 												    	<label>CP </label>
-												    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="cd.objeto.profile.codigoPostal" disabled="">
+												    	<input name="cp" type="text" class="form-control" placeholder="Código Postal" ng-model="cd.objeto.profile.codigoPostal" disabled="">
 											    	</div>
 											    </div>
 											    <div class="row">
@@ -578,7 +578,7 @@
 											    	</div>	  
 											    	<div class="col-sm-2" >					    
 												    	<label>Número </label>
-												    	<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="cd.objeto.profile.empresa.numero" disabled="" >
+												    	<input name="numeroEmpresa" type="text" class="form-control" placeholder="Número" ng-model="cd.objeto.profile.empresa.numero" disabled="" >
 											    	</div>  				    	    
 											    	<div class="col-sm-6" >					    
 												    	<label>Colonia </label>
@@ -1228,7 +1228,7 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cd.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in cd.creditoSeleccionado.planPagos">								
+											<tr ng-class="(pago.estatus == 1) ? 'success' : (pago.fechaLimite < cd.fechaActual && pago.estatus == 0) ? 'warning' : (pago.estatus == 2) ? 'danger' : 'info'" ng-repeat="pago in cd.creditoSeleccionado.planPagos" ng-if = "pago.descripcion == 'Recibo'">								
 												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
 													{{$index + 1}}
 												</td>	
@@ -1257,10 +1257,10 @@
 												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.cargo | currency}}</td>
 												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular | currency}}</td>
 												<td>
-														<a ng-show="(pago.importeRegular > 0 || pago._id == undefined) && !pago.editar" ng-click="cd.modificar(pago)" class="btn txt-color-white bg-color-blueLight btn-sm pull-right" style="margin: 5px;">
+														<a ng-show="(pago.importeRegular > 0 || pago._id == undefined) && !pago.editar" ng-click="cd.modificar(pago)" class="btn txt-color-white bg-color-blueLight btn-sm pull-right" ng-if="pago.descripcion == 'Recibo'" style="margin: 5px;">
 															<i class="fa fa-pencil"></i>
 														</a>
-														<a ng-show="(pago.importeRegular > 0 || pago._id == undefined) && pago.editar" ng-click="cd.actualizar(pago)" class="btn txt-color-white bg-color-green btn-sm pull-right" style="margin: 5px;">
+														<a ng-show="(pago.importeRegular > 0 || pago._id == undefined) && pago.editar" ng-click="cd.actualizar(pago)" class="btn txt-color-white bg-color-green btn-sm pull-right" ng-if="pago.descripcion == 'Recibo'" style="margin: 5px;">
 															<i class="fa fa-check"></i>
 														</a>
 												</td>	

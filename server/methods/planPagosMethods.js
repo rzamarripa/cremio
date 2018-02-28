@@ -193,7 +193,7 @@
 						semanaPago					: undefined,
 						diaPago							: undefined,
 						pago								: 0,
-						estatus							: 0,
+						estatus							: 0,								//Estatus 0 es creado, 2 Pagado
 						multada							: 0,
 						multa_id						: undefined,
 						planPago_id					: undefined,
@@ -698,10 +698,7 @@
 		
 		_.each(pagos,function(p){
 			p.tipoIngreso_id = tipoIngresoId;
-			
-			// pago.tipoIngreso = TiposIngreso.findOne(p.tipoIngreso_id)
-			// pago.formaPagopago.tipoIngreso.nombre
-			
+						
 			if(p.estatus != 1)
 			{
 				var ttpago = 0;

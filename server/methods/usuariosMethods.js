@@ -152,7 +152,8 @@ Meteor.methods({
 		
 	  var user = Meteor.users.findOne({_id : usuario._id});		
 		user.profile = usuario.profile;
-		
+		/*
+
 		if (rol == "Cliente")
 		{
 				
@@ -193,6 +194,7 @@ Meteor.methods({
 	  		
 	  }
 		
+*/
 		
 		_.each(referenciasPersonales, function(referenciaPersonal){
 				
@@ -207,7 +209,7 @@ Meteor.methods({
 					    																					 estatus								: referenciaPersonal.estatus});
 						
 						var RP = ReferenciasPersonales.findOne(referenciaPersonal._id);
-						RP.clientes.push({cliente_id			: usuario_id,
+						RP.clientes.push({cliente_id			: usuario._id,
 															nombreCompleto	: user.profile.nombreCompleto,
 														  parentesco			: referenciaPersonal.parentesco, 
 														  tiempoConocerlo	: referenciaPersonal.tiempoConocerlo,
@@ -365,8 +367,11 @@ if (referenciaPersonal.buscarPersona_id)
 	},
 	getUsuario: function (usuario) {	
 	  var user = Meteor.users.findOne({"_id" : usuario}, {fields: {"profile.nombreCompleto":1, "profile.nombre":1, "profile.numeroCliente": 1, "profile.numeroDistribuidor": 1 }});
-	  
-		return user.profile;
+ 		return user.profile;
+	},
+	getClienteDistribuidor: function (id) {	
+	  var user = Meteor.users.findOne({"_id" : id} );
+ 		return user;
 	},
 	getAvalCompleto: function (usuario) {	
 	  var aval = Avales.findOne({"_id" : usuario._id});
@@ -479,6 +484,43 @@ if (referenciaPersonal.buscarPersona_id)
 		
 		return ban;
 		    
-  }
+  },
+  //Lo use para la importacion
+  getUsuarioNumeroCliente: function (numeroCliente) {	
+ 	  
+	  var user = Meteor.users.findOne({"profile.numeroCliente" : numeroCliente}, {fields: { "profile.nombreCompleto":1, "profile.nombre":1, "profile.numeroCliente": 1 }});
+	  
+		return user;
+	},
+	getDocumentosSinImagenCliente: function (_id) {	
+ 	  
+	  var user = Meteor.users.findOne({_id : _id}, {fields: { "profile.documentos":1 }});
+ 	  var documentos = [];
+ 
+ 	  var con = 0;
+	  _.each(user.profile.documentos, function(documento){
+ 
+ 				documentos.push({pos: con, nombre: documento.nombre});
+ 				con = con + 1;
+	  });
+ 	  
+ 		return documentos;
+	},
+	getImagenDocumentoCliente: function (_id, pos) {	
+  	  
+	  var user = Meteor.users.findOne({_id : _id}, {fields: { "profile.documentos":1 }});
+		var imagen = "";
+	  
+	  var con = 0;
+	  _.each(user.profile.documentos, function(documento){
+ 		  	if (pos == con){
+ 			  	imagen = documento.imagen;
+ 					//console.log(documento.pos);
+ 		   	}
+ 				con = con + 1;
+ 	  });
+	  
+ 		return imagen;
+	},
 	
 });

@@ -332,8 +332,11 @@ _.each(result,function (pago) {
 		}	
 		if (rc.cliente.profile.renta == true && this.avales.length == 0 && rc.cliente.roles != "Distribuidor")		
 		{
-				toastr.error("Error, el cliente es de renta favor de agregar un AVAL.");
-				return;
+ 				customConfirm('El Cliente es de renta, ¿Desea continuar con la solicitud?', function() {		    	
+		    		 rc.credentials = {};
+   				 	 $("#modalActivarFecha").modal();
+ 		    });
+  		  return;
 		}	
 		
 		var usuario = Meteor.users.findOne(Meteor.userId());
@@ -411,9 +414,7 @@ _.each(result,function (pago) {
 						beneficiado 							: rc.credito.beneficiado
 					};
 		
-					//console.log(credito,"mi credito")
-					
-					if (rc.cliente.roles == "Distribuidor") {
+ 					if (rc.cliente.roles == "Distribuidor") {
 			
 						rc.credito.tipo = "vale"
 						rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
@@ -993,8 +994,155 @@ _.each(result,function (pago) {
 	};
 	
 	
+	this.validaCredenciales = function(credenciales)
+	{
+			var usuario = Meteor.users.findOne(Meteor.userId());
+	    Meteor.call('validarCredenciales', credenciales, usuario.profile.sucursal_id , function(err, result) {
+	      if (result) {
+  
+	        
+	        console.log("VER:", result);
+	        
+	        var usuario = Meteor.users.findOne(Meteor.userId());
+					if (usuario.roles[0] == "Cajero" && (rc.credito.tasa < usuario.profile.tasaMinima || rc.credito.tasa > usuario.profile.tasaMaxima) && rc.cliente.roles != "Distribuidor")
+					{
+							toastr.warning('La tasa no es válida. debe ser entre ' + usuario.profile.tasaMinima + " y " +  usuario.profile.tasaMaxima);
+							return;	
+					}
+					
+					if (rc.cliente.roles == "Distribuidor") {
+						this.credito.periodoPago = "Quincenal"
+					}
+					
+					//loading(true);
+				  Meteor.call("getSucursal",rc.cliente.profile.sucursal_id, function(error,result){
+						if (result)
+						{
+								//console.log(result,"sucursal bebe");
+								rc.sucursalCredito = result
+								//////////////////////// EL METODO DEBE IR ASI PAPU
+			
+						  	if (rc.cliente.roles == "Distribuidor") {
+									rc.credito.tasa = rc.sucursalCredito.tasaVales;
+									rc.credito.tipo = "vale";
+									rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;
+									
+									var fechaPrimerAbono = new Date();
+									var n = fechaPrimerAbono.getDate();
+									if (n >= 5 && n < 20)
+									{
+											fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),1,0,0,0,0);		
+									}
+									else 
+									{
+											if (n < 5)
+													fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),16,0,0,0,0);
+											else if (n >= 20)
+											   	fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth() + 1,16,0,0,0,0);								
+									}
+									
+									rc.credito.primerAbono = fechaPrimerAbono;
+			
+								}else if (rc.cliente.roles == "Cliente") {
+			
+									rc.credito.tipo = "creditoP";
+									rc.credito.tasa = rc.credito.tasa;
+						
+								}
+				 
+					
+								var credito = {
+									cliente_id 								: rc.cliente._id,
+									tipoCredito_id 						: rc.credito.tipoCredito_id,
+									fechaSolicito 						: new Date(),
+									duracionMeses 						: Number(rc.credito.duracionMeses),
+									capitalSolicitado 				: Number(rc.credito.capitalSolicitado),
+									adeudoInicial 						: Number(rc.credito.capitalSolicitado),
+									saldoActual 							: Number(rc.credito.capitalSolicitado),
+									periodoPago 							: rc.credito.periodoPago,
+									fechaPrimerAbono 					: rc.credito.primerAbono,
+									multasPendientes 					: 0,
+									saldoMultas 							: 0.00,
+									saldoRecibo 							: 0.00,
+									estatus 									: 1,
+									requiereVerificacion			: rc.credito.requiereVerificacion,
+									requiereVerificacionAval	: rc.credito.requiereVerificacionAval,
+									sucursal_id 							: Meteor.user().profile.sucursal_id,
+									fechaVerificacion					: rc.credito.fechaVerificacion,
+									turno 										: rc.credito.turno,
+									tipoGarantia 							: rc.credito.tipoGarantia,
+									tasa											: rc.credito.tasa,
+									conSeguro 								: rc.credito.conSeguro,
+									seguro										: rc.credito.seguro,
+									tipo 											: rc.credito.tipo,
+									beneficiado 							: rc.credito.beneficiado
+								};
+					
+			 					if (rc.cliente.roles == "Distribuidor") {
+						
+									rc.credito.tipo = "vale"
+									rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+						
+									credito.estatus = 1;
+								}
+								else if (rc.cliente.roles == 'Cliente') {
+						
+									rc.credito.tipo = "creditoP";
+									
+									credito.avales = angular.copy(rc.avales);
+								
+									//Duda se guardan los dos???
+									
+									if (rc.credito.tipoGarantia == "mobiliaria")
+											credito.garantias = angular.copy(rc.garantias);
+									else
+											credito.garantias = angular.copy(rc.garantiasGeneral);
+										
+								}
+			
+							//Cambie el metodo	
+					
+								Meteor.apply('generarCreditoPeticion', [rc.cliente, credito], function(error, result){
+									if(result == "hecho"){
+										//$("#modalActivarFecha").modal('hide');
+										
+										$('#modalActivarFecha').modal('hide');
+										if ($('.modal-backdrop').is(':visible')) {
+										  $('body').removeClass('modal-open'); 
+										  $('.modal-backdrop').remove(); 
+										};
+										
+										toastr.success('Se ha guardado la solicitud correctamente');
+										rc.planPagos = [];
+										rc.avales = [];
+										if (rc.cliente.roles == "Distribuidor") {
+											$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
+										}
+										if (rc.cliente.roles == "Cliente") {
+											$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+										}
+										
+									}
+  									
+								});
+						}
+					
+					});
+	        //loading(false);
+	        
+	        
+	        
+	      }
+	      else if (result == false)
+	      {
+		      	console.log("FAL:", result);
+ 		      	toastr.warning("No concide con la clave de desbloqueo")
+	      }
+	    });  
+		 	
+	}
 	
-
+ 
 	
 
 };

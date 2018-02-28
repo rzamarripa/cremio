@@ -47,9 +47,9 @@
 					</div>
 					<div class="col-sm-3" >
 						<br/>
-						<img width="300px" ng-if="cli.pic == cli.fotillo"   ng-src="{{cli.pic}}" ng-class="{'img-thumbnail': !!cli.pic}" />
+						<img width="300px" ng-if="cli.pic == cli.fotillo" ng-src="{{cli.pic}}" ng-class="{'img-thumbnail': !!cli.pic}" />
 					</div>
-					<div class="col-sm-3" > 					    
+					<div class="col-sm-3" ng-show="cli.action" > 					    
 						<label>Numero Cliente (s) *</label>
 						<input name="numeroCliente" type="text" class="form-control" ng-model="cli.objeto.profile.numeroCliente" required >
 					</div>
@@ -58,21 +58,9 @@
 			<h4>Documentos</h4>
 			<div class="well">	    
 				<div class="row">
-					<div class="col-sm-4" >
-						<label>Archivo (máximo 512Kb)</label>
-						<input name="archivo" type="file" id="fileInput1">
-				  </div>
-					<div class="col-sm-4">
-						<label id="id_label_single">Seleccionar Documento</label>
-						<select class="js-example-basic-single js-states form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.objeto.profile.documento_id"
-						ng-change="cli.getClientes(cli.objeto.profile.documento_id)">
-							<option ng-repeat="documento in cli.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
-						</select>
-					</div>
-					<div class="col-sm-2"><br/>
-						<a href="" class="btn btn-primary" ng-click="cli.agregarDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="!cli.objeto._id">Agregar</a>
-						<a href="" class="btn btn-primary" ng-click="cli.actDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="cli.objeto._id">Agregar</a>
-					</div>
+ 					<div class="col-sm-2"><br/>
+						<a href="" class="btn btn-primary" ng-click="cli.agregarImagen()" >Agregar Documento</a>
+  					</div>
 				</div>
 				<br/>
 				<div class="row">
@@ -143,7 +131,7 @@
 					</div>
 					<div class="col-sm-4">					    
 						<label>Parentesco</label>
-						<input name="otroTelefono" type="text" class="form-control" placeholder="Parentezco" ng-model="cli.objeto.profile.parentescoAlternativo" capitalize>
+						<input name="otroTelefono" type="text" class="form-control" placeholder="Parentesco" ng-model="cli.objeto.profile.parentescoAlternativo" capitalize>
 					</div>
 				</div>
 				<div class="row">
@@ -232,7 +220,7 @@
 					</div>
 					<div class="col-sm-4" valida>					    
 						<label>CP *</label>
-						<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="cli.objeto.profile.codigoPostal" required="">
+						<input name="cp" type="text"  class="form-control" placeholder="Código Postal" ng-model="cli.objeto.profile.codigoPostal" required="">
 					</div>
 				</div>
 				<div class="row">
@@ -302,7 +290,7 @@
 				<div class="row">
 					<div class="col-sm-3">					    
 						<label>Tiempo Residencia</label>
-						<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="cli.objeto.profile.tiempoResdencia" capitalize>
+						<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="cli.objeto.profile.tiempoResidencia" capitalize>
 					</div>
 					<div class="col-sm-3">
 						  <label for="casa">Casa</label>
@@ -447,7 +435,7 @@
 					</div>
 					<div class="col-sm-4">					    
 						<label>Parentesco</label>
-						<input name="parentesco" type="text" class="form-control" placeholder="Parentezco" ng-model="cli.referenciaPersonal.parentesco" capitalize>
+						<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="cli.referenciaPersonal.parentesco" capitalize>
 					</div>
 					<div class="col-sm-4">					    
 						<label>Tiempo en Conocerlo</label>
@@ -748,6 +736,50 @@
 	</div>
 </div>
 
+<!-- Documentos -->
+<div id="modalDocumentoImagen" class="modal fade bs-ocupacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Agregar Documento</h4>
+			</div>
+			<div class="widget-body">
+				<form name="form3" novalidate>
+					<div class="well">	    
+						<div class="row">
+						 	<div class="col-sm-6" >
+									<label>Archivo (máximo 512Kb)</label>
+									<input name="archivo" type="file" id="fileInput1" >
+ 						  </div>
+ 							<div class="col-sm-4">
+								<label id="id_label_single">Seleccionar Documento</label>
+								<select class="form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.objeto.profile.documento_id"
+												ng-change="cli.getClientes(cli.objeto.profile.documento_id)">
+									<option ng-repeat="documento in cli.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
+								</select>
+							</div>
+  						</div>
+ 						<div class="row">
+	 						<div class="col-sm-12" >
+ 	 							 <div id="fileDisplayArea1"></div>
+ 	 						</div>
+ 						</div>	
+   						
+ 					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				<!-- <input type="submit" ng-click="cli.guardarOcupacion(cli.ocupacion, cli.objeto,form3)" value="Guardar" class="btn btn-primary" valida-form formulario="form3"> -->
+				<a href="" class="btn btn-primary" ng-click="cli.agregarDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="!cli.objeto._id">Guardar</a>
+				<a href="" class="btn btn-primary" ng-click="cli.actDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="cli.objeto._id">Guardar</a>
+		  </div>
+		</div>
+	</div>
+</div>
+ 
+ 
  
 <script>
 	$('#bootstrap-wizard-1').bootstrapWizard({

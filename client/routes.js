@@ -323,6 +323,22 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			 }]
 			}
 		})
+		.state('root.avalCliente', {
+			url: '/editarCliente/:objeto_id/:tipo',
+			templateUrl: 'client/clientes/clientesForm.ng.html',
+			controller: 'ClientesFormCtrl as cli',
+			resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}					 	
+				 });
+			 }]
+			}
+		})
 		.state('root.editarDistribuidores', {
 			url: '/editarDistribuidor/:objeto_id',
 			templateUrl: 'client/distribuidores/distribuidoresForm.ng.html',
@@ -417,7 +433,6 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
-	
 		.state('root.generadorPlan', {
 			url: '/generadorPlan/:objeto_id',
 			templateUrl: 'client/planPagos/generadorPlan/generadorPlan.html',
@@ -663,7 +678,6 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
-
 		.state('root.diarioCreditos', {
 			url: '/reportes/diarioCreditos',
 			templateUrl: 'client/reportes/_diarioCreditos.html',
@@ -1053,6 +1067,27 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.importarClientes', {
+			url: '/importarClientes',
+			templateUrl: 'client/importarClientes/importarClientes.ng.html',
+			controller: 'ImportarClientesCtrl as impC',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.importarNotas', {
+			url: '/importarNotas',
+			templateUrl: 'client/importarClientes/importarNotas.ng.html',
+			controller: 'ImportarNotasCtrl as impN',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		
 }]);
 
 function irArriba(){

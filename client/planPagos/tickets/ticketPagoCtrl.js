@@ -199,15 +199,17 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 			
 			
 			var valores = (rc.pago.totalPago).toString().split('.');
+/*
 			console.log(valores);
 			console.log(valores[0]);
 			console.log(valores[1]);
+*/
 			
 			rc.pago.centavos = valores[1];
 			
 			rc.pago.letra = NumeroALetras(valores[0]);
 			
-			console.log(rc.pago.letra);
+			//console.log(rc.pago.letra);
 			
 			Meteor.call('getCredito', rc.pago.credito_id ,function(err, res){
 				rc.credito = res;

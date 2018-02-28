@@ -67,7 +67,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		return [{}];
 	});
 	
-	this.subscribe('cliente', () => {
+	this.subscribe('detalleClienteEncabezado', () => {
 		return [{_id : $stateParams.objeto_id}];
 	});
 	this.subscribe('parametrizacion', () => {
@@ -797,6 +797,7 @@ if(this.getReactively("credito_id")){
 
 	
 	this.masInformacion = function(cliente){
+		
 		this.masInfo = !this.masInfo;
 		this.solicitudesCre = false;
 		this.creditoAc = false;
@@ -804,7 +805,10 @@ if(this.getReactively("credito_id")){
 		this.masInfoCredito = false;
 		this.creditoApro = false
 		this.creditosRechazados = false;
-
+		
+	
+		
+		
 	  Meteor.call('getEmpresaInfo',rc.objeto.profile.empresa_id, function(error, result) {           
         if (result)
         {
@@ -813,10 +817,20 @@ if(this.getReactively("credito_id")){
 					 Meteor.call('getClienteInformacion',cliente, function(error, result) {           
 			          if (result)
 			          {
-			          	rc.objeto = result;
+ 			          	rc.objeto = result;
 			    				$scope.$apply();      	
 								}
 					});
+					
+					Meteor.call('getDocumentosSinImagenCliente',rc.objeto._id, function(error, result) {           
+			        if (result)
+			        {
+ 				        rc.objeto.profile.documentos = [];
+			        	rc.objeto.profile.documentos = result;
+			        	$scope.$apply();
+			 				}
+					});
+					
 				}
 		});
 		
@@ -1097,61 +1111,77 @@ if(this.getReactively("credito_id")){
 
 	};
 
-	this.modalDoc= function(img)
-	{
-
-		var imagen = '<img class="img-responsive" src="'+img+'" style="margin:auto;">';
-		$('#imagenDiv').empty().append(imagen);
-		$("#modaldoc").modal('show');
-	};
+	this.modalDoc= function(pos)
+	{	
+			loading(true);
+			Meteor.call('getImagenDocumentoCliente',rc.objeto._id, pos, function(error, result) {           
+	        if (result)
+	        {
+		  				loading(false);      	
+							var imagen = '<img class="img-responsive" src="'+result+'" style="margin:auto;">';
+							$('#imagenDiv').empty().append(imagen);
+							$("#modaldoc").modal('show');        
+ 		   		}
+			});
+ 	};
 	
-	this.imprimirDoc= function(img)
+	this.imprimirDoc= function(pos)
 	{
-		 Meteor.call('imprimirImagenDocumento', img, function(error, response) {
-       if(error)
-       {
-        console.log('ERROR :', error);
-        return;
-       }
-       else
-       {
-              function b64toBlob(b64Data, contentType, sliceSize) {
-                  contentType = contentType || '';
-                  sliceSize = sliceSize || 512;
-                
-                  var byteCharacters = atob(b64Data);
-                  var byteArrays = [];
-                
-                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-                    var slice = byteCharacters.slice(offset, offset + sliceSize);
-                
-                    var byteNumbers = new Array(slice.length);
-                    for (var i = 0; i < slice.length; i++) {
-                      byteNumbers[i] = slice.charCodeAt(i);
-                    }
-                
-                    var byteArray = new Uint8Array(byteNumbers);
-                
-                    byteArrays.push(byteArray);
-                  }
-                    
-                  var blob = new Blob(byteArrays, {type: contentType});
-                  return blob;
-              }
-              
-              var blob = b64toBlob(response, "application/docx");
-              var url = window.URL.createObjectURL(blob);
-              
-              //console.log(url);
-              var dlnk = document.getElementById('dwnldLnk');
-
-              dlnk.download = "imagenDocumento.docx"; 
-              dlnk.href = url;
-              dlnk.click();       
-              window.URL.revokeObjectURL(url);
-  
-       }
-    });
+ 		 	Meteor.call('getImagenDocumentoCliente',rc.objeto._id, pos, function(error, result) {           
+	        if (result)
+	        {
+ 		        	loading(true);
+							Meteor.call('imprimirImagenDocumento', result, function(error, response) {
+					       if(error)
+					       {
+					        console.log('ERROR :', error);
+					        return;
+					       }
+					       else
+					       {
+						       		loading(false);
+					              function b64toBlob(b64Data, contentType, sliceSize) {
+					                  contentType = contentType || '';
+					                  sliceSize = sliceSize || 512;
+					                
+					                  var byteCharacters = atob(b64Data);
+					                  var byteArrays = [];
+					                
+					                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+					                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+					                
+					                    var byteNumbers = new Array(slice.length);
+					                    for (var i = 0; i < slice.length; i++) {
+					                      byteNumbers[i] = slice.charCodeAt(i);
+					                    }
+					                
+					                    var byteArray = new Uint8Array(byteNumbers);
+					                
+					                    byteArrays.push(byteArray);
+					                  }
+					                    
+					                  var blob = new Blob(byteArrays, {type: contentType});
+					                  return blob;
+					              }
+					              
+					              var blob = b64toBlob(response, "application/docx");
+					              var url = window.URL.createObjectURL(blob);
+					              
+					              //console.log(url);
+					              var dlnk = document.getElementById('dwnldLnk');
+					
+					              dlnk.download = "imagenDocumento.docx"; 
+					              dlnk.href = url;
+					              dlnk.click();       
+					              window.URL.revokeObjectURL(url);
+					  
+					       }
+					    });
+ 	 				}
+			});
+	 	
+	 	
+	 	
 		/*
 var html  = "<html><head>" +
         "</head>" +
@@ -1162,14 +1192,12 @@ var html  = "<html><head>" +
     win.document.write(html);
 */
 	};
-
-
+ 
 	this.cerrarModal= function() {
 		rc.openModal = false
 
 	};
-
-
+ 
   this.generarFicha= function(objeto) 
   {
 	   Meteor.call('getPeople',objeto._id,objeto.profile.referenciasPersonales_ids.referenciaPersonal_id, function(error, result){           					
@@ -1220,8 +1248,7 @@ var html  = "<html><head>" +
 
 						
 	}
-
-	
+ 	
 
 	function obtenerClaseEstatus(valor){
 		
@@ -1312,7 +1339,7 @@ if(estatus == 0){
 	this.guardarplanPagos= function()
 	{		
 			
-	    _.each(rc.creditoSeleccionado.planPagos,function(planPago){
+ 	    _.each(rc.creditoSeleccionado.planPagos,function(planPago){
 					
 					
 					if (planPago._id == undefined)
@@ -1410,6 +1437,8 @@ if(estatus == 0){
 							planPago.credito = {};
 							delete planPago.credito;
 							
+							delete planPago.$$hashKey;
+							
 							PlanPagos.update({_id:tempId}, {$set:planPago});		
 
 					}
@@ -1484,7 +1513,7 @@ if(estatus == 0){
 				cargo								: multas,
 				movimiento					: "Cargo Moratorio",
 				tipoCargoMoratorio	: 2,	//Manual,
-				tipoCredito					: objeto.tipo //Si es Vale o CP
+				tipoCredito					: "creditoP" //Si es Vale o CP
 			};
 			
 			var creditoSeleccionado = Creditos.findOne(objeto.credito_id);
@@ -1506,6 +1535,7 @@ if(estatus == 0){
 	
 	this.modificar= function(pago)
 	{		
+			console.log(pago);
 	    pago.editar = true;
 	};
 	this.actualizar= function(pago)
@@ -1515,14 +1545,21 @@ if(estatus == 0){
 	
 	this.sumarPago = function(pago)
 	{
+			console.log("entro a suman", pago);
 			
+			pago.importeRegular = pago.capital + pago.interes + pago.iva + pago.seguro;
+			pago.cargo 					= pago.capital + pago.interes + pago.iva + pago.seguro;
+			
+			/*
+				
 			_.each(rc.creditoSeleccionado.planPagos,function(planPago){
-					if(planPago.numeroPago == pago.numeroPago)
+					if(planPago._id == pago.numeroPago._id)
 					{
 							planPago.importeRegular = pago.capital + pago.interes + pago.iva + pago.seguro;
 							planPago.cargo = pago.capital + pago.interes + pago.iva + pago.seguro;
 					}		
 			});	
+*/
 	}
 	
 	this.cerrar = function()
@@ -1642,6 +1679,7 @@ if(estatus == 0){
 						if (result)
 						{
 								//console.log("Plan Pagos", result);
+								loading(true);
 								Meteor.call('contratos', contrato, contrato._id,rc.datosCliente,result, avales, function(error, response) {
 								   if(error)
 								   {
@@ -1650,7 +1688,7 @@ if(estatus == 0){
 								   }
 								   else
 								   {
-									   
+									   	loading(false);
 							 				function b64toBlob(b64Data, contentType, sliceSize) {
 												  contentType = contentType || '';
 												  sliceSize = sliceSize || 512;

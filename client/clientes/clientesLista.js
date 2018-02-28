@@ -48,4 +48,26 @@ angular.module("creditoMio")
 	  }
   };
   
+  
+  this.convertir = function(tipo, objeto) {
+	  
+	  if (tipo == "Aval")
+	  {
+	    	customConfirm('¿Estás seguro de convertir a Aval ?', function() {		    	
+		    		loading(true);
+		    		Meteor.call('setClienteAval', objeto._id, function(e,r){
+		          if (r)
+		          {
+			           	toastr.success('Guardado correctamente.');
+			           	loading(false);
+ 
+ 		          }
+		      });
+		    
+		    });
+		}   
+		
+		 	
+  }
+   
 };

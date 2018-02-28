@@ -325,6 +325,7 @@ if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagar
 			}
 	};
 	
+	//Aqui genera el crédito
 	this.generarCredito = function(){
 		
 		var credito = {
@@ -368,6 +369,7 @@ if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagar
 			$scope.$apply();
 		});
 	}
+	
 	
 	this.imprimirDocumento = function(credito){
 		credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
@@ -435,7 +437,7 @@ if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagar
 				});
 		}
 		
-				contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
+		 	contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
 								
 
 		  rc.planPagos = [];
@@ -507,7 +509,7 @@ if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagar
 					{
 							
 						rc.datosCliente = result.profile
-
+						loading(true);
 						Meteor.call('contratos', contrato, $stateParams.credito_id,rc.datosCliente,rc.planPagos,avales, function(error, response) {
 						  
 						   if(error)
@@ -517,7 +519,7 @@ if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagar
 						   }
 						   else
 						   {
-							   
+							   	loading(false);
 					 				function b64toBlob(b64Data, contentType, sliceSize) {
 										  contentType = contentType || '';
 										  sliceSize = sliceSize || 512;

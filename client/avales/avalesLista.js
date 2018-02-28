@@ -76,8 +76,8 @@ angular.module("creditoMio")
 					Meteor.call('getAvalCompleto', objeto, function(e,r){
 		          if (r)
 		          {
-			          		console.log(objeto);
-			          		console.log(r);
+			          		//console.log(objeto);
+			          		//console.log(r);
 			          		delete r.profile.creditos;
 			          		delete r.password;
 			          		r.createdAt = new Date();
@@ -94,6 +94,6 @@ angular.module("creditoMio")
 		    });
 		}    
 		
-	 }   	
+  }   	
   
 };

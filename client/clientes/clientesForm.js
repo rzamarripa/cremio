@@ -48,8 +48,9 @@ angular.module("creditoMio")
   
   var fotillo = ""
   //this.pic = {};
-  this.imagenes = []
-  this.documents = []
+  this.imagenes = [];
+  
+  rc.documents = [];
   
   this.estadoCivil = "";
   this.empresaSeleccionada = "";
@@ -129,16 +130,11 @@ angular.module("creditoMio")
   this.subscribe('documentos',()=>{
     return [{estatus: true}]
   });
+  
   this.subscribe('personas',()=>{
     return [{rol:"Cliente"}]
   });
-  
-/*
-  this.subscribe('configuraciones',()=>{
-    return [{}]
-  });
-*/
-  
+ 
   this.subscribe('estados',()=>{
 	  
     if (this.getReactively("objeto.profile.pais_id") != undefined)
@@ -164,6 +160,7 @@ angular.module("creditoMio")
     if (this.getReactively("objeto.profile.municipio_id") !=  undefined)
         return [{municipio_id: this.getReactively("objeto.profile.municipio_id"), estatus: true}];
   });
+  
   this.subscribe('ciudades',()=>{
 		if (this.getReactively("empresa.municipio_id") !=  undefined)
         return [{municipio_id: this.getReactively("empresa.municipio_id"), estatus: true}];
@@ -181,15 +178,72 @@ angular.module("creditoMio")
   
   //Condición del Parametro
 
-  if($stateParams.objeto_id != undefined){
-      rc.action = false;
+  if ($stateParams.objeto_id != undefined && $stateParams.tipo == undefined ){
+      
+       rc.action = false;
       rc.objeto_id = $stateParams.objeto_id
-      this.subscribe('cliente', () => {
+      /*
+this.subscribe('cliente', () => {
         return [{
           id : $stateParams.objeto_id
         }];
       });
+*/
+			loading(true);
+			Meteor.call('getClienteDistribuidor', rc.objeto_id, function(error, result){           
+            if (result)
+            {
+               	rc.objeto = result;
+			          rc.objeto.confirmpassword = "sinpassword";	
+								rc.objeto.password 				= "sinpassword"; 
+								
+								_.each(rc.objeto.profile.referenciasPersonales_ids,function(referenciaPersonal){
+	                    Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
+	                          if (result)
+	                          {
+		                          	//console.log(result);
+	                              rc.referenciasPersonales.push({_id 							: referenciaPersonal.referenciaPersonal_id,
+	                                                             nombre           : result.nombre,
+	                                                             apellidoPaterno  : result.apellidoPaterno,
+	                                                             apellidoMaterno  : result.apellidoMaterno,
+	                                                             direccion        : result.direccion,
+	                                                             telefono         : result.telefono,
+	                                                             celular         	: result.celular,
+	                                                             parentesco       : referenciaPersonal.parentesco,
+	                                                             tiempoConocerlo	: referenciaPersonal.tiempoConocerlo,
+	                                                             num              : referenciaPersonal.num,
+	                                                             nombreCompleto   : result.nombreCompleto,
+	                                                             cliente_id       : rc.objeto._id,
+	                                                             estatus          : referenciaPersonal.estatus
+	                              });
+	                              $scope.$apply();    
+	                          }
+	                    }); 
+	              });   
+								$scope.$apply();	
+ 									
+								rc.documents = rc.objeto.profile.documentos;
+								loading(false);
+            }
+      });
+ 
   }
+  else if ($stateParams.objeto_id != undefined && $stateParams.tipo == 'Aval' ){
+ 
+	  	rc.action = true;
+	  	var objeto = {};
+	  	objeto._id = $stateParams.objeto_id;	//es El aval
+      Meteor.call('getAvalCompleto', objeto , function(error, result){ 
+	      	if (result)
+	        {
+		        	rc.pic = result.profile.foto; 
+ 							rc.objeto = result;
+ 							$scope.$apply();	
+					}
+	    });  
+	  
+	
+	}  
 
    
   this.helpers({
@@ -255,14 +309,15 @@ angular.module("creditoMio")
       });
       return imagen
     },
-    objetoEditar : () => {
+    /*
+objetoEditar : () => {
 
       var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
       rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
-
+ 			
       if (objeto != undefined)
       {
-	      	
+	    		console.log(objeto.profile);  	
           this.referenciasPersonales = [];
           if ($stateParams.objeto_id != undefined)
           {
@@ -304,7 +359,9 @@ angular.module("creditoMio")
 					
           //return objeto;
       }  
+ 
     },
+     */
     referenciasPersonalesHelper : () => {
       var rp = ReferenciasPersonales.find({
         nombreCompleto: { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
@@ -444,27 +501,16 @@ angular.module("creditoMio")
     var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
     var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
     objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-    
-    
-    
-    if (rc.documents.length){
-      objeto.profile.documentos = rc.documents
-      objeto.profile.foto = rc.objeto.profile.foto
-      }
-      else{
-        objeto.profile.documentos = objeto.profile.documentos
-        objeto.profile.foto = rc.objeto.profile.foto
-        
-      }
+      
+    if (rc.documents != undefined && rc.documents.length > 0){
+       	objeto.profile.documentos = rc.documents;
+    }
+      
   
-      if (rc.pic != ""){
-        objeto.profile.foto = rc.pic
-      }
-      else{
-        objeto.profile.foto = rc.objeto.profile.foto
-      }
-
-  
+    if (rc.pic != ""){
+      objeto.profile.foto = rc.pic
+    }
+   
     delete objeto.profile.repeatPassword;
     
     
@@ -474,16 +520,13 @@ angular.module("creditoMio")
     
     loading(true);
     Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Cliente", this.cambiarContrasena, function(error,result){
-	    	//console.log(result);
-	    	if (result)
+				
+				if (result)
 	    	{
 		    		loading(false);
 		    		toastr.success('Actualizado correctamente.');
-				    //$('.collapse').collapse('hide');
-				    this.nuevo = true;
-				    form.$setPristine();
-				    form.$setUntouched();
-				    $state.go('root.clienteDetalle', { 'objeto_id':objeto._id});
+						this.nuevo = true;
+ 				    $state.go('root.clienteDetalle', { 'objeto_id':objeto._id});
 		    	
 	    	}	    
     });
@@ -708,12 +751,10 @@ angular.module("creditoMio")
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   this.borrarDoc = function($index)
   {
-	  //console.log($index);	
-	  //console.log(rc.documents);	
-    rc.documents.splice($index, 1);
-    //console.log(rc.documents);	
-  };
+     rc.documents.splice($index, 1);
   
+  };
+ 
   //busca un elemento en el arreglo
   function functiontofindIndexByKeyValue(arraytosearch, key, valuetosearch) {
       for (var i = 0; i < arraytosearch.length; i++) {
@@ -735,7 +776,9 @@ angular.module("creditoMio")
 	
   $(document).ready( function() {
 			
-
+			
+      var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+   
       var fileInput1 = document.getElementById('fileInput1');
       //var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
             //JavaScript para agregar la Foto
@@ -748,14 +791,17 @@ angular.module("creditoMio")
           if (file.size <= 2048000)
           {
             
-            var reader = new FileReader();
-            reader.onload = function(e) {
-            	rc.imagen = reader.result;
-              
-               
-                         	
-            	
-      	
+	            var reader = new FileReader();
+	            reader.onload = function(e) {
+	                 
+	            rc.imagen = reader.result;
+	            
+	      			var img = new Image();
+	 						img.src = rc.imagen;
+							img.width = 800;
+							img.height= 600;
+							
+							fileDisplayArea1.appendChild(img);
               
             }
             reader.readAsDataURL(file);     
@@ -768,7 +814,17 @@ angular.module("creditoMio")
         }
       });   
    });
-
+	 
+ 	 
+	this.agregarImagen = function()
+  { 	
+ 	  	var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+	  	while (fileDisplayArea1.firstChild) {
+			    fileDisplayArea1.removeChild(fileDisplayArea1.firstChild);
+			}
+	  	$("#modalDocumentoImagen").modal('show');
+ 	}  
+	 
   this.agregarDoc = function(doc,imagen)
   {
     //console.log("imagen",imagen)
@@ -780,23 +836,26 @@ angular.module("creditoMio")
       toastr.error("Ningun documento agregado");
 
     }else{
-      // rc.imagen = imagen
+     	 	// rc.imagen = imagen
     
-    rc.referencias = [];
-    Meteor.call('getDocs', doc, function(error,result){
-      if (result)
-        {
-	        //console.log("result",result)
-          //console.log("entra aqui");
-          //console.log("result",result);
-          rc.documents.push({imagen: imagen, nombre: result.nombre});
-          $scope.$apply();      
-        }
-
-    });
-    	//console.log(imagen,"programador estrella");
-     }  
-    }       
+		    rc.referencias = [];
+		    Meteor.call('getDocs', doc, function(error,result){
+		      if (result)
+		        {
+			        //console.log("result",result)
+		          //console.log("entra aqui");
+		          //console.log("result",result);
+		          rc.documents.push({imagen: imagen, nombre: result.nombre});
+		          $scope.$apply();      
+		        }
+		
+		    });
+ 
+      }  
+    }
+    
+    $("#modalDocumentoImagen").modal('hide');
+           
   };
 
   this.actDoc = function(doc,imagen)
@@ -814,6 +873,8 @@ angular.module("creditoMio")
         }
 
     });
+    
+    $("#modalDocumentoImagen").modal('hide');
     //console.log(imagen,"programador estrella");
   } 
 

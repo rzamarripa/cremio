@@ -355,10 +355,11 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		else
 				credito.garantias = angular.copy(this.garantiasGeneral);
 					
-				
+		loading(true);		
 		Meteor.apply('actualizarCredito', [this.cliente, credito, $stateParams.credito_id], function(error, result){
 			//console.log(result,error)
 			if(result == "hecho"){
+				loading(false);
 				toastr.success('Se actualizó correctamente la solicitud de crédito');
 				rc.planPagos = [];
 				this.avales = [];

@@ -311,10 +311,14 @@ function b64toBlob(b64Data, contentType, sliceSize) {
   
   this.cambiarNumero = function() 
   {
+	  this.buscar.nombre = "";
+		this.buscar.numeroCliente = "";
   	rc.porNumero = false;
   };
   this.cambiarNombre = function() 
   {
+  	this.buscar.nombre = "";
+		this.buscar.numeroCliente = "";
   	rc.porNumero = true;
 
   };
@@ -330,6 +334,6 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 
   };
   
-
+ 
 
 };

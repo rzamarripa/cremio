@@ -33,7 +33,8 @@
 			<h4>Documentos</h4>
 			<div class="well">	    
 				<div class="row">
-					<div class="col-sm-4" >
+					<!--
+<div class="col-sm-4" >
 						<label>Archivo (máximo 512Kb)</label>
 						<input name="archivo" type="file" id="fileInput1">
 				  </div>
@@ -44,9 +45,13 @@
 							<option ng-repeat="documento in ava.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
 						</select>
 					</div>
+-->
 					<div class="col-sm-2"><br/>
-						<a href="" class="btn btn-primary" ng-click="ava.agregarDoc(ava.objeto.profile.documento_id,ava.imagen)" ng-if="!ava.objeto._id">Agregar</a>
+						<a href="" class="btn btn-primary" ng-click="ava.agregarImagen()" >Agregar Documento</a>
+						<!--
+<a href="" class="btn btn-primary" ng-click="ava.agregarDoc(ava.objeto.profile.documento_id,ava.imagen)" ng-if="!ava.objeto._id">Agregar</a>
 						<a href="" class="btn btn-primary" ng-click="ava.actDoc(ava.objeto.profile.documento_id,ava.imagen)" ng-if="ava.objeto._id">Agregar</a>
+-->
 					</div>
 				</div>
 				<br/>
@@ -68,7 +73,7 @@
 									<td class="text-center">
 										<a href="" ng-click="ava.mostrarModal(objeto.imagen)">Ver Archivo</a>
 									</td>
-									<td><div class="text-center"><a href="" ng-click="ava.borrarDoc($index)"><i class="fa fa-trash"></i></a></div></td>
+									<td><div class="text-center"><a href="" ng-click="ava.borrarDoc($index+1)"><i class="fa fa-trash"></i></a></div></td>
 								</tr>
 								<tr ng-repeat="item in ava.objeto.profile.documentos" ng-if="ava.objeto._id">
 									<td>{{$index + 1}}</td>
@@ -76,7 +81,9 @@
 									<td class="text-center">
 										<a href="" ng-click="ava.mostrarModal(item.imagen)">Ver Archivo</a>
 									</td>
-									<td><div class="text-center"><a href="" ng-click="ava.borrarDoc($index)"><i class="fa fa-trash"></i></a></div></td>
+									<td><div class="text-center"><a href="" ng-click="ava.borrarDoc($index)" class="btn btn-primary"><i class="fa fa-trash"></i></a>
+									 <a target="_blank"  ng-click="ava.imprimirDoc(item.imagen)" class="btn btn-primary"><i class="fa fa-print" ></i></a></div>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -200,7 +207,7 @@
 					</div>
 					<div class="col-sm-4" valida>					    
 						<label>CP *</label>
-						<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="ava.objeto.profile.codigoPostal" required="">
+						<input name="cp" type="text" min="0" class="form-control" placeholder="Código Postal" ng-model="ava.objeto.profile.codigoPostal" required="">
 					</div>
 				</div>
 				<div class="row">
@@ -240,7 +247,7 @@
 								</button> 
 							</span>
 						</div>
-						<div class="ajax-dropdown" ng-show="ava.buscandoColonia" style="display: block; width: 100% !important;">
+						<div class="ajax-dropdown" ng-show="ava.buscandoColonia" style="display: block; width: 180% !important;">
 							<div class="ajax-notifications custom-scroll">
 								<div class="alert alert-transparent">
 									<div class="tab-pane fade active in" id="a2">
@@ -297,15 +304,15 @@
 				<div class="row">
 					<div class="col-sm-4" valida> 					    
 						<label>Ingresos Personales</label>
-						<input name="ingresosPersonales" type="number" class="form-control" placeholder="Ingresos Personales" ng-change="ava.calcularTotales()" ng-model="ava.objeto.profile.ingresosPersonales" value="0">
+						<input name="ingresosPersonales" type="number" class="form-control" placeholder="Ingresos Personales" ng-change="ava.calcularTotales()" ng-model="ava.objeto.profile.ingresosPersonales" value="0" required="">
 					</div>
 					<div class="col-sm-4" valida>					    
 						<label>Ingresos Cónyuge</label>
-						<input name="ingresosConyuge" type="number" class="form-control" placeholder="Ingresos Conyuge" ng-change="ava.calcularTotales()" ng-model="ava.objeto.profile.ingresosConyuge">
+						<input name="ingresosConyuge" type="number" class="form-control" placeholder="Ingresos Conyuge" ng-change="ava.calcularTotales()" ng-model="ava.objeto.profile.ingresosConyuge" required="">
 					</div>
 					<div class="col-sm-4">					    
 						<label>Otros Ingresos</label>
-						<input name="otrosIngresos" type="number" class="form-control" placeholder="Otros Ingresos" ng-change="ava.calcularTotales()" ng-model="ava.objeto.profile.otrosIngresos" >
+						<input name="otrosIngresos" type="number" class="form-control" placeholder="Otros Ingresos" ng-change="ava.calcularTotales()" ng-model="ava.objeto.profile.otrosIngresos" required="">
 					</div>
 				</div>
 				<div class="row">
@@ -315,11 +322,11 @@
 					</div>  				    	    
 					<div class="col-sm-4" valida> 					    
 						<label>Gastos Fijos</label>
-						<input name="gastosFijos" type="number" class="form-control" placeholder="Gastos Fijos" ng-change="ava.calcularTotales()" ng-model="ava.objeto.profile.gastosFijos">
+						<input name="gastosFijos" type="number" class="form-control" placeholder="Gastos Fijos" ng-change="ava.calcularTotales()" ng-model="ava.objeto.profile.gastosFijos" required="">
 					</div>
 					<div class="col-sm-4" valida>					    
 						<label>Gastos Eventuales</label>
-						<input name="gastosEventuales" type="number" class="form-control" placeholder="Gastos Eventuales" ng-change="ava.calcularTotales()" ng-model="ava.objeto.profile.gastosEventuales">
+						<input name="gastosEventuales" type="number" class="form-control" placeholder="Gastos Eventuales" ng-change="ava.calcularTotales()" ng-model="ava.objeto.profile.gastosEventuales" required="">
 					</div>
 				</div>
 				<div class="row">
@@ -369,11 +376,7 @@
 							<label>Ocupación</label>
 							<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="ava.objeto.profile.ocupacionConyuge" capitalize>
 						</div>	
-						<div class="col-sm-4">					    
-							<label>Dirección Trabajo</label>
-							<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion" ng-model="ava.objeto.profile.direccionTrabajoConyuge" capitalize>
-						</div>		   				    	    
-					</div>
+ 					</div>
 				</div>
 			</div>
 			<h4>Referencias Personales</h4>
@@ -417,7 +420,7 @@
 					</div>
 					<div class="col-sm-4">					    
 						<label>Parentesco</label>
-						<input name="parentesco" type="text" class="form-control" placeholder="Parentezco" ng-model="ava.referenciaPersonal.parentesco" capitalize>
+						<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="ava.referenciaPersonal.parentesco" capitalize>
 					</div>
 					<div class="col-sm-4">					    
 						<label>Tiempo en Conocerlo</label>
@@ -495,7 +498,7 @@
 				<div class="row">
 					<div class="col-sm-4" valida>					    
 						<label>Puesto *</label>
-						<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ava.objeto.profile.puesto" required="" capitalize>
+						<input name="puestoEmpresa" type="text" class="form-control" placeholder="Puesto" ng-model="ava.objeto.profile.puesto" required="" capitalize>
 					</div>
 					<div class="col-sm-4" valida>					    
 						<label>Departamento *</label>
@@ -638,88 +641,7 @@
 </div>
 </div>
 
-
-<!--
-<div id="modalEmp" class="modal fade bs-empresaVer-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
-  <div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Agregar Empresa</h4>
-			</div>
-			<div class="widget-body">
-				<form name="form2" novalidate>
-					<div class="well">	    
-						<div class="row">
-							<div class="col-sm-6" valida> 					    
-								<label>Nombre *</label>
-								<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="ava.empresa.nombre" required capitalize disabled="">
-							</div>
-							<div class="col-sm-6" valida>					    
-								<label>Razón Social *</label>
-								<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="ava.empresa.razonSocial" required capitalize disabled="">
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4" valida>					    
-								<label>Calle *</label>
-								<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="ava.empresa.calle" required="" capitalize disabled="">
-							</div>	  
-							<div class="col-sm-4" valida>					    
-								<label>Número *</label>
-								<input name="numeroEmpresa" type="number" class="form-control" placeholder="Número" ng-model="ava.empresa.numero" required="" disabled="" >
-							</div>  
-							<div class="col-sm-4" valida>					    
-								<label>Código Postal *</label>
-								<input name="codigopostal" type="text" class="form-control" placeholder="Código Postal" ng-model="ava.empresa.codigoPostal" required="" capitalize disabled="">
-							</div>				    	    
-						</div>
-						<div class="row">
-							<div class="col-sm-4" valida>
-								<label >Pais *</label>
-								<select name="dirPaisEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.pais_id" required ng-change="ava.cambiarPaisEmpresa()" disabled="">
-									<option  value="{{pais._id}}" ng-repeat="pais in ava.paises">{{pais.nombre}}</option>
-								</select>
-							</div>
-							<div class="col-sm-4" valida>
-								<label for="seccion_id">Estado *</label>
-								<select name="dirEstadoEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.estado_id" required ng-change="ava.cambiarEstadoEmpresa()" disabled="">
-									<option ng-repeat="estado in ava.estados" value="{{estado._id}}">{{estado.nombre}}</option>
-								</select>
-							</div>	
-							<div class="col-sm-4" valida>
-								<label >Municipio *</label>
-								<select name="dirMunicipioEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.municipio_id" required ng-change="ava.cambiarMunicipioEmpresa()" disabled="">
-									<option  value="{{municipio._id}}" ng-repeat="municipio in ava.municipios">{{municipio.nombre}}</option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4" valida>
-								<label for="seccion_id">Ciudad *</label>
-								<select name="dirCiudadEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.ciudad_id" required ng-change="ava.cambiarCiudadEmpresa()" disabled="">
-									<option ng-repeat="ciudad in ava.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
-								</select>
-							</div>	
-							<div class="col-sm-4" valida>
-								<label for="seccion_id">Colonia *</label>
-								<select name="dirColoniaEmpresa" class="form-control select2" placeholder="Seleccione" ng-model="ava.empresa.colonia_id" required ng-change="ava.cambiarColoniaEmpresa()" disabled="">
-									<option ng-repeat="colonia in ava.colonias" value="{{colonia._id}}">{{colonia.nombre}}</option>
-								</select>
-							</div>
-						</div>	 
-					</div>
-				</form>
-			</div>
-			<br>
-			<div class="modal-footer"s>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-<!-- 				<input type="submit" ng-click="ava.guardarEmpresa(ava.empresa, ava.objeto,form2)" value="Guardar" class="btn btn-primary" valida-form formulario="form2"> -->
-		  </div>
-		</div>
-	</div>
-</div>
-
+ 
 <div id="modalOcupacion" class="modal fade bs-ocupacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
@@ -800,6 +722,53 @@
 		</div>
 	</div>
 </div>
+
+<div id="modalDocumentoImagen" class="modal fade bs-ocupacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Agregar Documento</h4>
+			</div>
+			<div class="widget-body">
+				<form name="form3" novalidate>
+					<div class="well">	    
+						<div class="row">
+						 	<div class="col-sm-6" >
+									<label>Archivo (máximo 512Kb)</label>
+									<input name="archivo" type="file" id="fileInput1" >
+ 						  </div>
+ 
+ 							<div class="col-sm-4">
+								<label id="id_label_single">Seleccionar Documento</label>
+								<select class="form-control" id="id_label_single" placeholder="Seleccione" ng-model="ava.objeto.profile.documento_id"
+												ng-change="ava.getClientes(ava.objeto.profile.documento_id)">
+									<option ng-repeat="documento in ava.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
+								</select>
+							</div>
+							
+ 						</div>
+ 						<div class="row">
+	 						<div class="col-sm-12" >
+		 							
+ 	 							 <div id="fileDisplayArea1"></div>
+		 							
+	 						</div>
+ 						</div>	
+   						
+ 					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				<!-- <input type="submit" ng-click="ava.guardarOcupacion(ava.ocupacion, ava.objeto,form3)" value="Guardar" class="btn btn-primary" valida-form formulario="form3"> -->
+				<a href="" class="btn btn-primary" ng-click="ava.agregarDoc(ava.objeto.profile.documento_id,ava.imagen)" ng-if="!ava.objeto._id">Guardar</a>
+				<a href="" class="btn btn-primary" ng-click="ava.actDoc(ava.objeto.profile.documento_id,ava.imagen)" ng-if="ava.objeto._id">Guardar</a>
+		  </div>
+		</div>
+	</div>
+</div>
+
 
 <script>
 	$('#bootstrap-wizard-1').bootstrapWizard({
