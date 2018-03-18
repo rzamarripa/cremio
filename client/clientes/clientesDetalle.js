@@ -63,6 +63,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	rc.pago_id = "";
 	rc.pagos_ids = [];
 	
+	rc.editarNota = false;
+	
 	this.subscribe('cajas',()=>{
 		return [{}];
 	});
@@ -797,7 +799,7 @@ if(this.getReactively("credito_id")){
 
 	
 	this.masInformacion = function(cliente){
-		
+
 		this.masInfo = !this.masInfo;
 		this.solicitudesCre = false;
 		this.creditoAc = false;
@@ -806,32 +808,21 @@ if(this.getReactively("credito_id")){
 		this.creditoApro = false
 		this.creditosRechazados = false;
 		
-	
-		
-		
-	  Meteor.call('getEmpresaInfo',rc.objeto.profile.empresa_id, function(error, result) {           
+		Meteor.call('getClienteInformacion',cliente, function(error, result) {           
         if (result)
         {
-        	rc.empresaCliente = result;
-		       
-					 Meteor.call('getClienteInformacion',cliente, function(error, result) {           
-			          if (result)
-			          {
- 			          	rc.objeto = result;
-			    				$scope.$apply();      	
-								}
-					});
-					
-					Meteor.call('getDocumentosSinImagenCliente',rc.objeto._id, function(error, result) {           
-			        if (result)
-			        {
- 				        rc.objeto.profile.documentos = [];
-			        	rc.objeto.profile.documentos = result;
-			        	$scope.$apply();
-			 				}
-					});
-					
+          	rc.objeto = result;
+						$scope.$apply();      	
 				}
+		});
+		
+		Meteor.call('getDocumentosSinImagenCliente',rc.objeto._id, function(error, result) {           
+        if (result)
+        {
+		      rc.objeto.profile.documentos = [];
+        	rc.objeto.profile.documentos = result;
+        	$scope.$apply();
+ 				}
 		});
 		
 		rc.referenciasPersonales = [];
@@ -1009,12 +1000,11 @@ if(this.getReactively("credito_id")){
 	
 	this.cancelarCredito = function(motivo, form){
 			
-			
 			if(form.$invalid){
 		        toastr.error('Error al cancelar.');
 		        return;
 		  }
-			
+			console.log(rc.cancelacion)
 			var cre = Creditos.findOne({_id : rc.cancelacion._id});
 			Creditos.update({_id : cre._id}, { $set : {estatus : 6, motivo: motivo}});
 			toastr.success("El crédito se ha cancelado.")
@@ -1023,6 +1013,7 @@ if(this.getReactively("credito_id")){
 	
 	
 	this.cancelarSeleccion = function(aprobado){
+			 console.log(aprobado);	
 			 rc.cancelacion = aprobado;
 			 rc.motivo = "";
 	};
@@ -1535,7 +1526,7 @@ if(estatus == 0){
 	
 	this.modificar= function(pago)
 	{		
-			console.log(pago);
+			//console.log(pago);
 	    pago.editar = true;
 	};
 	this.actualizar= function(pago)
@@ -1832,10 +1823,12 @@ if(estatus == 0){
 	    var r = confirm("Selecciona una opción");
 	    if (r == true) {
 	        var objeto = Creditos.findOne({_id:id});
-				if(objeto.estatus == 3)
+				if (objeto.estatus == 3)
 					objeto.estatus = 1;
+				else if (objeto.estatus == 6) 
+					objeto.estatus = 0;
 				else
-					objeto.estatus = 3;
+					objeto.estatus = 3; 	
 				
 				Creditos.update({_id: id},{$set :  {estatus : objeto.estatus}});
 
@@ -1982,6 +1975,21 @@ if(estatus == 0){
 		});
 	    
 	};
+	
+	this.editarNotaModal= function(valor)
+	{
+    	rc.editarNota = valor;
+	};
+	
+	this.actualizarNota= function(objeto)	
+	{
+			//console.log(objeto);
+			
+			Notas.update({_id: objeto._id}, {$set: {descripcion : objeto.descripcion, fecha: new Date()}} )
+			rc.editarNota = false;
+			
+	};	
+
 
 /*
 	$(document).ready(function() {

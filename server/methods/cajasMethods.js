@@ -459,6 +459,25 @@ Meteor.methods({
     cliente.profile.colonia = Colonias.findOne(cliente.profile.colonia);
     return cliente
   },
+  datosClienteTicket: (usuario_id) => {
+    var cliente = Meteor.users.findOne({_id: usuario_id}, {fields: {"profile.nombreCompleto"	: 1,
+	    																															"profile.numeroCliente"		: 1,
+	    																															"profile.calle"						: 1,
+	    																															"profile.numero" 					: 1,
+	    																															"profile.colonia_id"			: 1,
+	    																															"profile.municipio_id"		: 1,
+	    																															"profile.estado_id"				: 1, } });
+    
+    
+    
+    
+    //cliente.profile.pais = Paises.findOne(cliente.profile.pais_id);
+    cliente.profile.estado = Estados.findOne(cliente.profile.estado_id);
+    cliente.profile.municipio = Municipios.findOne(cliente.profile.municipio_id);
+    cliente.profile.ciudad = Ciudades.findOne(cliente.profile.ciudad_id)
+    cliente.profile.colonia = Colonias.findOne(cliente.profile.colonia);
+    return cliente
+  },
   getResumen: (caja_id, fechaInicio, fechaFin) => {
     fechaInicio = new Date(fechaInicio);
     var filtroFechas = { $gte: fechaInicio };

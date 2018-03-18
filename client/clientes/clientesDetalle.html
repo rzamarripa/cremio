@@ -82,7 +82,7 @@
 								<h2>Créditos Activos</h2>
 								<ul class="nav nav-tabs pull-right" id="myTab">
 									<li class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in cd.creditos track by $index">
-										<a ng-click="cd.getAvales(credito);cd.trance(credito)" data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado}}</span></a>
+										<a ng-click="cd.getAvales(credito);cd.trance(credito)" data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado | currency}}</span></a>
 									</li>
 								</ul>
 							<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
@@ -561,8 +561,7 @@
 							        </a>
 							      </h4>
 							    </div>
-							 
-							      <div class="panel-body">
+							    <div class="panel-body">
 							        	<div class="row">
 											    	<div class="col-sm-6" > 					    
 												    	<label>Nombre</label>
@@ -582,7 +581,7 @@
 											    	</div>  				    	    
 											    	<div class="col-sm-6" >					    
 												    	<label>Colonia </label>
-												    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cd.empresaCliente.colonia" disabled="">
+												    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cd.objeto.profile.empresa.coloniaEmpresa" disabled="">
 											    	</div>
 											    </div>
 											    <div class="row">
@@ -616,19 +615,19 @@
 													<div class="row" >
 														<div class="col-sm-3" >
 																<label >Pais </label>
-																<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cd.empresaCliente.pais" disabled="">
+																<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cd.objeto.profile.empresa.paisEmpresa" disabled="">
 														</div>
 													  <div class="col-sm-3" >
 																<label for="seccion_id">Estado </label>
-																<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cd.empresaCliente.estado" disabled="">
+																<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cd.objeto.profile.empresa.estadoEmpresa" disabled="">
 														</div>	
 														<div class="col-sm-3" >
 																<label >Municipio </label>
-																<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cd.empresaCliente.municipio" disabled="">
+																<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cd.objeto.profile.empresa.municipioEmpresa" disabled="">
 														</div>
 														<div class="col-sm-3" >
 																<label for="seccion_id">Ciudad </label>
-																<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" value="{{cd.empresaCliente.ciudad}}" disabled="">
+																<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" value="{{cd.objeto.profile.empresa.ciudadEmpresa}}" disabled="">
 														</div>
 													</div>	
 							    </div>
@@ -842,7 +841,21 @@
 														</div>
 														
 														<div class="panel-footer no-padding">						
-															<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'">Editar Crédito</a>
+															<a  ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  
+																	class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" 
+																	role="button" 
+																	ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'">Editar Crédito
+															</a>
+															
+															<input class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" 
+																			 type="button" 
+																			 data-toggle="modal" 
+																			 data-id="123" 
+																			 data-target=".bs-cancelacion-modal-lg" 
+																			 value="Cancelar Crédito" 
+																			 ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" 
+																			 ng-click="cd.cancelarSeleccion(pendiente)" />
+															
 														</div>
 														
 													</div>
@@ -990,9 +1003,23 @@
 															</div>
 														</div>
 														<div class="panel-footer no-padding">						
-			<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar Crédito </a>
-															<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Crédito" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" ng-click="cd.cancelarSeleccion(aprobado)" />
-															<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'">Editar Crédito</a>
+																<a  ui-sref="root.entregarCredito({credito_id : aprobado._id})"  
+																		class="btn bg-color-blueDark txt-color-white btn-block" 
+																		role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar Crédito 
+																</a>
+																<input class="btn bg-color-blueDark txt-color-white btn-block" 
+																			 type="button" 
+																			 data-toggle="modal" 
+																			 data-id="123" 
+																			 data-target=".bs-cancelacion-modal-lg" 
+																			 value="Cancelar Crédito" 
+																			 ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" 
+																			 ng-click="cd.cancelarSeleccion(aprobado)" />
+																<a  ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  
+																		class="btn bg-color-blueDark txt-color-white btn-block" 
+																		role="button" 
+																		ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'">Editar Crédito
+																</a>
 														</div>
 													</div>
 												</div>
@@ -1040,7 +1067,7 @@
 																			<td class="text-center">{{credito.capitalSolicitado | currency}}</td>
 																			<td class="text-center">{{credito.fechaSolicito | date:'dd-MM-yyyy'}}</td>
 																			<td class="text-center">{{credito.motivo}}</td>
-																			<td class="text-center"><a href="" ng-click="cd.recuperarCredito(credito._id)" class="btn btn-success btn-sm" >Recuperar Credito</a></td>
+																			<td class="text-center"><a href="" ng-click="cd.recuperarCredito(credito._id)" class="btn btn-success btn-sm" >Recuperar Crédito</a></td>
 																		</tr>
 																	</tbody>
 															</table>
@@ -1079,7 +1106,9 @@
 						</div>
 						<div class="modal-body">
 							<h6>Información de la nota</h6>
-							<p>{{cd.notaCuenta1.descripcion}} </p> 
+<!-- 							<p>{{cd.notaCuenta1.descripcion}} </p>  -->
+							<p ng-if = "!cd.editarNota">{{cd.notaCuenta1.descripcion}}</p>
+						  <textarea type="text" rows="4" class="form-control" ng-model="cd.notaCuenta1.descripcion" ng-if = "cd.editarNota" ></textarea>
 							<p>Por: <strong>{{cd.usuario.profile.nombreCompleto}}</strong></p>
 							<p>Fecha: <strong>{{cd.notaCuenta1.fecha | date:'dd-MM-yyyy'}}, {{cd.notaCuenta1.hora}}</strong></p>
 						</div>
@@ -1091,7 +1120,10 @@
 								</div>
 								<div class="col-sm-12 "><br/>
 									<button type="button" ng-click="cd.contestarNota(cd.notaCuenta1._id)" class="btn btn-success" ng-show="cd.notaCuenta1.respuesta">Contestar</button>
-									<button type="button" ng-click="cd.quitarNota(cd.notaCuenta1._id)" class="btn btn-warning" data-dismiss="modal">Quitar</button>
+									<button type="button" ng-click="cd.quitarNota(cd.notaCuenta1._id)" class="btn btn-warning pull-left" data-dismiss="modal">Quitar</button>
+									<button type="button" class="btn btn-info" ng-click="cd.editarNotaModal(true)" ng-if = "!cd.editarNota">Editar</button>
+	    				    <button type="button" class="btn btn-danger" ng-click="cd.editarNotaModal(false)" ng-if = "cd.editarNota">Cancelar</button>
+	    				    <button type="button" class="btn btn-success" ng-click="cd.actualizarNota(cd.notaCuenta1)" ng-if = "cd.editarNota">Actualizar</button>
 									<button type="button" id="cerrarRespuesta" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 								</div>
 							</div>								 
@@ -1114,11 +1146,15 @@
 						</div>
 						<div class="modal-body">
 							<h6>Información de la nota</h6>
-						  <p>{{cd.notaPerfil.descripcion}}</p>
-						  Fecha: {{cd.notaPerfil.fecha | date:'dd-MM-yyyy'}}, {{cd.notaPerfil.hora}} <br />
+						  <p ng-if = "!cd.editarNota">{{cd.notaPerfil.descripcion}}</p>
+						  <textarea type="text" rows="4" class="form-control" ng-model="cd.notaPerfil.descripcion" ng-if = "cd.editarNota" ></textarea>
+						  <p>Fecha: {{cd.notaPerfil.fecha | date:'dd-MM-yyyy'}}, {{cd.notaPerfil.hora}} </p>
 						</div>
 						<div class="modal-footer">
-	    				    <button type="button" class="btn btn-warning" ng-click="cd.quitarNota(cd.notaPerfil._id)" data-dismiss="modal">Quitar</button>
+	    				    <button type="button" class="btn btn-warning pull-left" ng-click="cd.quitarNota(cd.notaPerfil._id)" data-dismiss="modal">Quitar</button>
+	    				    <button type="button" class="btn btn-info" ng-click="cd.editarNotaModal(true)" ng-if = "!cd.editarNota">Editar</button>
+	    				    <button type="button" class="btn btn-danger" ng-click="cd.editarNotaModal(false)" ng-if = "cd.editarNota">Cancelar</button>
+	    				    <button type="button" class="btn btn-success" ng-click="cd.actualizarNota(cd.notaPerfil)" ng-if = "cd.editarNota">Actualizar</button>
 	    				    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
      				 </div>
 					</div>

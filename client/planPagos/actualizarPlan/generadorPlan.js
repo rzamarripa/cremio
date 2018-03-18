@@ -1084,7 +1084,15 @@ this.generarPlanPagos = function(credito, form){
 			else 
 					rc.garantia.porcentajePrestamoMobiliria = 0;
   };
+	
+	$(document).ready(function() {
+		
+		//Quita el mouse wheels 
+		document.getElementById('capitalSolicitadoCreditoNuevo').onwheel = function(){ return false; }
+		document.getElementById('tasa').onwheel = function(){ return false; }
+		document.getElementById('meses').onwheel = function(){ return false; }
 
+	});
 	
 
 };

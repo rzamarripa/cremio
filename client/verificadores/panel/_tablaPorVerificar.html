@@ -3,6 +3,7 @@
 	<thead>
 		<tr>
 			<th class="text-center" width="5%">No.</th>
+			<th class="text-center" width="10%"><div class="text-center">No. Cliente</div></th>
 			<th ><div class="text-center">Nombre del Cliente</div></th>
 			<th ><div class="text-center">Aval</div></th>
 			<th ><div class="text-center">Capital Solicitado</div></th>
@@ -16,6 +17,7 @@
 	<tbody>
     <tr ng-repeat="credito in pver.creditos">
 	    <td class="text-center">{{$index + 1}}</td>
+	    <td>{{credito.numeroCliente}}</td>
 	    <td>{{credito.nombreCliente}}</td>
 	    <td>{{credito.avales_ids[0].nombreCompleto}}</td>
 	    <td class="text-right">{{credito.capitalSolicitado | currency}}</td>

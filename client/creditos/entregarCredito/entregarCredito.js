@@ -180,13 +180,6 @@ angular.module("creditoMio")
 	this.guardar = function (){
 			
 			
-			/*
-if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagare!=true || this.validar.tabla!=true)
-			{
-					toastr.error('Es obligatorio verificar los documentos.');
-					return
-			}
-*/
 			
 			//Validar que no sea Nota de Credito ni refinanciamiento
 			var ti = TiposIngreso.findOne(rc.tipoIngreso._id);

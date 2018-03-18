@@ -36,7 +36,7 @@
 					    	</div>
 					    	<div class="col-sm-4" valida  ng-if="ge.cliente.roles == 'Cliente'">
 							    <label>Tasa %*</label>
-						    	<input name="tasa" min="0" type="number" class="form-control" ng-model="ge.credito.tasa" required>
+						    	<input id="tasa" name="tasa" min="0" type="number" class="form-control" ng-model="ge.credito.tasa" required>
 						    </div>
 					    	<div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Periodo de pago *</label>
@@ -57,7 +57,7 @@
 					    <div class="row">
 						    <div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">					    
 						    	<label>Duración (Meses) *</label>
-						    	<input name="duracionMesesCreditoNuevo" min="1" max="12" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ge.credito.duracionMeses" required="">
+						    	<input id="meses" name="duracionMesesCreditoNuevo" min="1" max="12" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ge.credito.duracionMeses" required="">
 					    	</div>
 					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
 						    	<label>Duración (Meses) *</label>
@@ -72,7 +72,7 @@
 					    	</div>
 					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Capital Solicitado *</label>
-						    	<input name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ge.credito.capitalSolicitado" required="">
+						    	<input id="capitalSolicitadoCreditoNuevo" name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ge.credito.capitalSolicitado" required="">
 					    	</div>
 					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
 						    	<label>Capital Solicitado *</label>

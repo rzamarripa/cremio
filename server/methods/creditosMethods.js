@@ -294,6 +294,13 @@ Meteor.methods({
 		delete credito._id ;
 		Creditos.update({_id:creditoid},{$set:credito});
 		
+		//Actualizar planpagos a Estatus --> 0	
+		var planPagos = PlanPagos.find({credito_id: creditoid}).fetch();
+		_.each(planPagos, function(pp){				
+				PlanPagos.update({_id: pp._id}, {$set: {estatus : 0}});
+		});
+		
+		
 		//Actualizar el saldo al Distribuidor--------------
 		if (credito.tipo == "vale")
 		{

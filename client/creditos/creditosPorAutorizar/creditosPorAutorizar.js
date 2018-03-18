@@ -3,6 +3,8 @@ angular.module("creditoMio")
  function CreditosPorAutorizarCtrl($scope, $meteor, $reactive, $state, toastr){
  	
  	let rc = $reactive(this).attach($scope);
+  window.rc = rc;
+  
   this.action = true;
   this.nuevo = true;	 
   this.objeto = {}; 
@@ -14,7 +16,7 @@ angular.module("creditoMio")
 	
 	this.creditosPorAutorizar = [];
 	
-  window.rc = rc;
+  rc.valoracion = "";
   
   this.subscribe('clientes', () => {
 		return [{_id : { $in : this.getReactively("clientes_ids")}}];
@@ -185,6 +187,13 @@ angular.module("creditoMio")
 		
 		
 	};
+  
+  this.verValoracion = function(valoracion){
+			
+			rc.valoracion = valoracion;
+			$('#modalValoracion').modal();
+
+  }
   
   
 };

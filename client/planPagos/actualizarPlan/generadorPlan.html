@@ -27,7 +27,7 @@
 					    	</div>
 					    	<div class="col-sm-4" valida ng-if="ae.cliente.roles == 'Cliente'">
 							    <label>Tasa %*</label>
-						    	<input name="tasa" type="number" min="0" class="form-control" ng-model="ae.credito.tasa" required>
+						    	<input id="tasa" name="tasa" type="number" min="0" class="form-control" ng-model="ae.credito.tasa" required>
 						    </div>
 					    	<div class="col-sm-4" valida ng-if="ae.cliente.roles == 'Cliente'">
 						    	<label>Periodo de pago *</label>
@@ -48,7 +48,7 @@
 					    <div class="row">
 						    <div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Cliente'">					    
 						    	<label>Duración (Meses) *</label>
-						    	<input name="duracionMesesCreditoNuevo" type="number" min="0" max="12" class="form-control" placeholder="Duración en Meses" ng-model="ae.credito.duracionMeses" required="">
+						    	<input id="meses" name="duracionMesesCreditoNuevo" type="number" min="0" max="12" class="form-control" placeholder="Duración en Meses" ng-model="ae.credito.duracionMeses" required="">
 					    	</div>
 					    	<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Distribuidor'">
 						    	<label>Duración (Meses) *</label>
@@ -63,7 +63,7 @@
 					    	</div>
 					    	<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Cliente'">
 						    	<label>Capital Solicitado *</label>
-						    	<input name="capitalSolicitadoCreditoNuevo" type="number" min="0" class="form-control" placeholder="Capital Solicitado" ng-model="ae.credito.capitalSolicitado" required="">
+						    	<input id="capitalSolicitadoCreditoNuevo" name="capitalSolicitadoCreditoNuevo" type="number" min="0" class="form-control" placeholder="Capital Solicitado" ng-model="ae.credito.capitalSolicitado" required="">
 					    	</div>
 					    	<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Distribuidor'">
 						    	<label>Capital Solicitado *</label>

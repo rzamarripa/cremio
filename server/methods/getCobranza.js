@@ -6,9 +6,9 @@ Meteor.methods({
  			if (op == 0)
 					var planPagos = PlanPagos.find({fechaLimite: {$lte: fechaFinal}, tipoCredito: "creditoP", importeRegular: {$gt:0}, estatus: { $in: [0,2] }}).fetch();
 			else if (op == 1)
-					var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, descripcion: "Recibo", estatus:{$in: [0,2]}}).fetch();
+					var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, tipoCredito: "creditoP", descripcion: "Recibo", estatus:{$in: [0,2]}}).fetch();
 			else
-					var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, estatus: { $in: [0,2] }}).fetch();
+					var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, tipoCredito: "creditoP", estatus: { $in: [0,2] }}).fetch();
 			
 			
 			//console.log(planPagos);
@@ -30,8 +30,10 @@ Meteor.methods({
 							var c = Creditos.findOne({_id: planPago.credito_id});
 
 				 			//planPago.cliente = u.profile.nombreCompleto;
-				 			planPago.cliente = Meteor.users.findOne({_id: planPago.cliente_id});
-				 			planPago.nombreCompleto = Meteor.users.findOne({_id: planPago.cliente_id}).nombreCompleto;
+				 			planPago.cliente = Meteor.users.findOne({_id: planPago.cliente_id}, {fields: {"profile.documentos" : 0}});
+ 
+				 			planPago.nombreCompleto = planPago.cliente != undefined ? planPago.cliente.profile.nombreCompleto : "";				 					
+				 			
 				 			planPago.credito = Creditos.findOne({_id: planPago.credito_id});
 				 			
 				 			planPago.imprimir = false;
@@ -70,7 +72,7 @@ Meteor.methods({
 	getcobranzaNombre: function (nombre) {
 			
 			var arreglo = {};
-			
+
 			//Ir por los clientes
 			let selector = {
 	  	"profile.nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' },
@@ -306,7 +308,30 @@ Meteor.methods({
  	 			else
  	 				 persona.profile.empresa = "";	 
 				
-				
+				if (persona.profile.empresa.colonia_id != undefined) 
+						persona.profile.empresa.coloniaEmpresa = Colonias.findOne(persona.profile.empresa.colonia_id).nombre;
+				else
+						persona.profile.empresa.coloniaEmpresa = "";
+							
+				if (persona.profile.empresa.estado_id != undefined) 
+						persona.profile.empresa.estadoEmpresa = Estados.findOne(persona.profile.empresa.estado_id).nombre;
+				else
+						persona.profile.empresa.estadoEmpresa = "";
+						
+				if (persona.profile.empresa.municipio_id != undefined) 
+						persona.profile.empresa.municipioEmpresa = Municipios.findOne(persona.profile.empresa.municipio_id).nombre;
+				else
+						persona.profile.empresa.municipioEmpresa = "";
+						
+				if (persona.profile.empresa.ciudad_id != undefined) 
+						persona.profile.empresa.ciudadEmpresa = Ciudades.findOne(persona.profile.empresa.ciudad_id).nombre;
+				else
+						persona.profile.empresa.ciudadEmpresa = "";
+						
+				if (persona.profile.empresa.pais_id != undefined) 
+						persona.profile.empresa.paisEmpresa = Paises.findOne(persona.profile.empresa.pais_id).nombre;
+				else
+						persona.profile.empresa.paisEmpresa = "";	
 				
 			    
 				//persona.profile.estadoCivil = EstadoCivil.findOne(persona.profile.estadoCivil_id);

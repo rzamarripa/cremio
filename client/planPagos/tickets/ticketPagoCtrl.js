@@ -25,10 +25,10 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 	},
 	{
 		onReady: function () {
-			console.log($stateParams.pago_id);
+			//console.log($stateParams.pago_id);
 			
 			rc.pago = Pagos.findOne($stateParams.pago_id);
-			console.log(rc.pago);
+
 			rc.tipoIngreso = TiposIngreso.findOne(rc.pago.tipoIngreso_id);
 			rc.pago = rc.pago? rc.pago:{};
 			
@@ -37,8 +37,9 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 																																	return a["folioCredito"] - b["folioCredito"] || a["numeroPago"] - b["numeroPago"];
 																																});
 			
-			Meteor.call('datosCliente', rc.pago.usuario_id ,function(err, res){
+			Meteor.call('datosClienteTicket', rc.pago.usuario_id ,function(err, res){
 				rc.cliente = res;
+				//console.log(res)
 			});
 			
 			//console.log(rc.pago.totalPago);

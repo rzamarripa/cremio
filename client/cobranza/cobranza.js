@@ -374,7 +374,6 @@ angular.module("creditoMio")
           rc.verRecibos = false;
           //console.log("FI:",FI);
           //console.log("FF:",FF);
-          console.log("por vencimiento");
           
       } 
       else if (op == 1) //Día
@@ -573,9 +572,18 @@ angular.module("creditoMio")
   
   this.buscarNombre=function()
   {
+
+			if (rc.buscar.nombre == "")
+			{
+					toastr.warning("Proporcione un nombre");
+					return;
+			}
+			
+	  	loading(true);
       Meteor.call('getcobranzaNombre', rc.buscar.nombre, function(error, result) {
             if (result)
             {
+
                 rc.cobranza = result;
                 rc.totalRecibos = 0;
                 rc.totalMultas = 0;
@@ -587,6 +595,7 @@ angular.module("creditoMio")
 
                 });
                 $scope.$apply();
+                loading(false);
             }
       });
   };  
@@ -948,37 +957,56 @@ angular.module("creditoMio")
   {
     var toPrint = [];
 		
-		//console.log(objeto);
+		 //console.log(objeto);
 		
-		 if (objeto.length == 0)
+	  if (objeto.length == 0)
     {
-	    	toastr.warning("No ha seleccionado nada para imprimir");
+	    	toastr.warning("No hay nada para imprimir");
 	    	return;
     }
+    
+    var ban = false;
+    _.each(objeto, function(print){
+	    	
+	    	if (print.imprimir)
+	    	{ 
+	    		 ban = true;
+ 				}	 
+    });
+ 
+    if (ban == false)
+    {
+	     toastr.warning("Seleccione alguno para imprimir");
+	    	return;
+	    
+    }
+    
 		
     _.each(objeto,function(item, key){
       if (item.imprimir) {
-        item.cliente.profile.colonia = Colonias.findOne(item.cliente.profile.colonia_id)
-        item.colonia = item.cliente.profile.colonia.nombre
-        item.calle = item.cliente.profile.calle
-        item.cliente.profile.estado = Estados.findOne(item.cliente.profile.estado_id)
-        item.estado = item.cliente.profile.estado.nombre
-        item.cliente.profile.municipio = Municipios.findOne(item.cliente.profile.municipio_id)
-        item.municipio = item.cliente.profile.municipio.nombre
-        item.nombreCompleto = item.cliente.profile.nombreCompleto
-        item.numeroCliente = item.cliente.profile.folio
-        item.planPagoNumero = item.numeroPago
-        item.no = item.cliente.profile.numero
-        item.nombreCompleto = item.cliente.profile.nombreCompleto
-        item.telefono = item.cliente.profile.telefono
-        item.celular = item.cliente.profile.celular
-        item.telefonoOficina = item.cliente.profile.telefonoOficina
-        item.cantidadPagos = item.credito.numeroPagos
-        item.telefono = item.cliente.profile.particular
-        item.celular = item.cliente.profile.celular
-        item.telefonoOficina = item.cliente.profile.telefonoOficina
-        item.folioCredito = item.credito.folio
-        item.saldo = item.credito.saldoActual
+	      
+ 	      
+        item.cliente.profile.colonia 		= Colonias.findOne(item.cliente.profile.colonia_id)
+        item.colonia 								 		= item.cliente.profile.colonia == undefined ? "" : item.cliente.profile.colonia.nombre;
+        item.calle 									 		= item.cliente.profile.calle == undefined ? "" : item.cliente.profile.calle;
+        item.cliente.profile.estado  		= Estados.findOne(item.cliente.profile.estado_id)
+        item.estado 								 		= item.cliente.profile.estado.nombre == undefined ? "" : item.cliente.profile.estado.nombre;
+        item.cliente.profile.municipio 	= Municipios.findOne(item.cliente.profile.municipio_id)
+        item.municipio 									= item.cliente.profile.municipio  == undefined ? "" : item.cliente.profile.municipio.nombre;
+        item.nombreCompleto 					  = item.cliente.profile.nombreCompleto; 
+        item.numeroCliente 						  = item.cliente.profile.folio;
+        item.planPagoNumero 						= item.numeroPago;
+        item.no 												= item.cliente.profile.numero
+        item.nombreCompleto 						= item.cliente.profile.nombreCompleto
+        item.telefono 									= item.cliente.profile.telefono
+        item.celular 										= item.cliente.profile.celular
+        item.telefonoOficina 						= item.cliente.profile.telefonoOficina
+        item.cantidadPagos 							= item.credito.numeroPagos
+        item.telefono 									= item.cliente.profile.particular
+        item.celular  									= item.cliente.profile.celular
+        item.telefonoOficina 						= item.cliente.profile.telefonoOficina
+        item.folioCredito 							= item.credito.folio
+        item.saldo 											= item.credito.saldoActual
 
           
           if (objeto[key+1]  == undefined) {
@@ -1102,11 +1130,29 @@ angular.module("creditoMio")
 	    	toastr.warning("No ha seleccionado nada para imprimir");
 	    	return;
     }
-
+		
+		var ban = false;
+    _.each(lista, function(print){
+	    	
+	    	if (print.imprimir)
+	    	{ 
+	    		 ban = true;
+ 				}	 
+    });
+ 
+    if (ban == false)
+    {
+	     toastr.warning("Seleccione alguno para imprimir");
+	    	return;
+	    
+    }
+		
+		
 	  _.each(lista,function(item){
 	      if (item.imprimir) {
-	      item.folioCredito = item.credito.folio
-	      item.nombreCompleto = item.cliente.profile.nombreCompleto
+	      item.folioCredito	 	= item.credito.folio;
+	      item.nombreCompleto = item.cliente.profile.nombreCompleto;
+	      item.numeroCliente 	= item.cliente.profile.numeroCliente;
 	      toPrint.push(item);
 	    };
 

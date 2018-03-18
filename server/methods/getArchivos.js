@@ -16,8 +16,9 @@ Meteor.methods({
 			return referencia;
 	},
 	getPeople: function (idReferencia) {
-			var persona = Meteor.users.findOne(idReferencia);
-			
+			var persona = Meteor.users.findOne({_id: idReferencia}, {fields: {"profile.documentos" : 0}});
+				
+ 
 				_.each(persona, function(objeto){
 						objeto.nacionalidadCliente = Nacionalidades.findOne(objeto.nacionalidad_id);
 						objeto.coloniaCliente = Colonias.findOne(objeto.colonia_id);
@@ -40,17 +41,7 @@ Meteor.methods({
 							 objeto.coloniaEmpresa = Colonias.findOne(objeto.empresa.colonia_id);	 
 							 							 
 						}	 						
-					/*
-	
-						objeto.referencias = [];
-						_.each(objeto.referenciasPersonales_ids, function(item){
-							var referencias = ReferenciasPersonales.findOne(item.referenciaPersonal_id);
-							objeto.referencias.push(referencias);	
-						})
-*/
-
-
-				});
+	  		});
 
 				//console.log(persona,"termina")
 				
@@ -559,7 +550,7 @@ var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
 			}
 			return "";
 		}});
-		const formatCurrency = require('format-currency')
+		const formatCurrency = require('format-currency');
 		
 		var res = new future();
 
@@ -582,6 +573,21 @@ var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
 	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
 	    	moment(item.fechaInicial).format("DD-MM-YYYY")
 	      moment(item.fechaFinal).format("DD-MM-YYYY")
+	      
+	      if (item.tipoIngreso == 'EFECTIVO')
+	      	item.tipoIngreso = 'EFVO.';
+	      else if (item.tipoIngreso == 'Nota de Credito')		
+	      	item.tipoIngreso = 'NC.';
+	      else if (item.tipoIngreso == 'FICHA DE DEPOSITO')		
+	      	item.tipoIngreso = 'F DEP.';		
+	      else if (item.tipoIngreso == 'TRANSFERENCIA')		
+	      	item.tipoIngreso = 'TRANSF.';
+	      else if (item.tipoIngreso == 'TARJETA DE CREDITO/DEBITO')		
+	      	item.tipoIngreso = 'TC/D.';
+	      else if (item.tipoIngreso == 'REFINANCIAMIENTO')		
+	      	item.tipoIngreso = 'REF.';		
+	      else if (item.tipoIngreso == 'CHEQUE')		
+	      	item.tipoIngreso = 'CH.';			
 	      
 	      if (item.descripcion == "Recibo") 
 	      {
@@ -1546,12 +1552,12 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 			contrato.seguro = 0
 		}
 
-  	cliente.nacionalidad = cliente.nacionalidadCliente.nombre
-  	cliente.colonia = cliente.coloniaCliente.nombre
-  	cliente.estado = cliente.estadoCliente.nombre
-  	cliente.ocupacion = cliente.ocupacionCliente.nombre
-  	cliente.ciudad = cliente.ciudadCliente.nombre
-  	cliente.municipio = cliente.municipioCliente.nombre
+  	cliente.nacionalidad = cliente.nacionalidadCliente != undefined ?	cliente.nacionalidadCliente.nombre : "";
+  	cliente.colonia 		 = cliente.coloniaCliente != undefined ? cliente.coloniaCliente.nombre : "";
+  	cliente.estado 			 = cliente.estadoCliente != undefined ? cliente.estadoCliente.nombre : "";
+  	cliente.ocupacion 	 = cliente.ocupacionCliente != undefined ? cliente.ocupacionCliente.nombre : "";
+  	cliente.ciudad 			 = cliente.ciudadCliente != undefined ? cliente.ciudadCliente.nombre : "";
+  	cliente.municipio 	 = cliente.municipioCliente != undefined ? cliente.municipioCliente.nombre: "";
   	var all = planPagos[planPagos.length - 1]
   	var total = all.sumatoria
  		_.each(planPagos,function(pp){
@@ -1724,11 +1730,34 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 	
 		  return day + ' ' + 'DE' + ' '  + monthNames[monthIndex] + ' ' + ' DEL'  + ' ' + year;
 		}
+		function diaSemana(dia){
+				
+				var diaSemana = "";
 
+				switch(dia){
+						case 'Monday'		: diaSemana = 'LUNES';break;
+						case 'Tuesday'	: diaSemana = 'MARTES';break;
+						case 'Wednesday': diaSemana = 'MIERCOLES';break;
+						case 'Thursday'	: diaSemana = 'JUEVES';break;
+						case 'Friday'		: diaSemana = 'VIERNES';break;
+						case 'Saturday'	: diaSemana = 'SABADO';break;
+				}
+				
+				return diaSemana;		
+		}
+
+		
     var fechaVigencia = formatDate(vigenciaFecha);
     contrato.capitalSolicitado = formatCurrency(contrato.capitalSolicitado);
     contrato.adeudoInicial = formatCurrency(contrato.adeudoInicial);
 		
+		var diaPreferidoPago = "";
+		if (contrato.periodoPago == 'SEMANAL')
+		{
+				var nombreDia = moment(contrato.fechaPrimerAbono).format('dddd');	
+				diaPreferidoPago = diaSemana(nombreDia);
+		}
+
 		contrato.fechaPrimerAbono = formatDate(contrato.fechaPrimerAbono);
 		
 		contrato.centavosSeg = "00";
@@ -1823,21 +1852,22 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 					}
 					return "";
 				}});
-		
-				doc.setData({ items: 	   contrato,
-											fecha:     fechaLetra,
-											cliente: cliente,
-											contrato: contrato,
-											pp: planPagos,
-											letra : letra,
-											letraAI: letraAI,
-											centavosAI: centavosAI,
-											aval: avales,
-											tasaPor : tasaPor,
-											vigencia : fechaVigencia,
-											vigenciaMasUnDia : vigenciaMasUnDia,
-											autorizacionProveedorSi : autorizacionProveedorSi,
-											autorizacionProveedorNo : autorizacionProveedorNo,
+																							
+				doc.setData({ items										 : contrato,
+											fecha										 : fechaLetra,
+											cliente									 : cliente,
+											contrato								 : contrato,
+											pp											 : planPagos,
+											letra 									 : letra,
+											letraAI									 : letraAI,
+											centavosAI							 : centavosAI,
+											aval										 : avales,
+											tasaPor 								 : tasaPor,
+											vigencia 								 : fechaVigencia,
+											vigenciaMasUnDia 				 : vigenciaMasUnDia,
+											diaPreferidoPago				 : diaPreferidoPago,
+											autorizacionProveedorSi  : autorizacionProveedorSi,
+											autorizacionProveedorNo  : autorizacionProveedorNo,
 											autorizacionPublicidadSi : autorizacionPublicidadSi,
 											autorizacionPublicidadNo : autorizacionPublicidadNo,
 													
@@ -1914,6 +1944,7 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 											    tasaPor : tasaPor,
 											    vigencia : fechaVigencia,
 											    vigenciaMasUnDia : vigenciaMasUnDia,
+											    diaPreferidoPago				 : diaPreferidoPago,
 											    autorizacionProveedorSi : autorizacionProveedorSi,
 											    autorizacionProveedorNo : autorizacionProveedorNo,
 											    autorizacionPublicidadSi : autorizacionPublicidadSi,
@@ -1986,6 +2017,7 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 											tasaPor : tasaPor,
 											vigencia : fechaVigencia,
 											vigenciaMasUnDia : vigenciaMasUnDia,
+											diaPreferidoPago				 : diaPreferidoPago,
 											autorizacionProveedorSi : autorizacionProveedorSi,
 											autorizacionProveedorNo : autorizacionProveedorNo,
 											autorizacionPublicidadSi : autorizacionPublicidadSi,
@@ -2065,6 +2097,7 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 											tasaPor : tasaPor,
 											vigencia : fechaVigencia,
 											vigenciaMasUnDia : vigenciaMasUnDia,
+											diaPreferidoPago				 : diaPreferidoPago,
 											autorizacionProveedorSi : autorizacionProveedorSi,
 											autorizacionProveedorNo : autorizacionProveedorNo,
 											autorizacionPublicidadSi : autorizacionPublicidadSi,
@@ -2670,14 +2703,14 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
 					
 			});
 
-	 		cliente.ciudad 				= cliente.ciudadCliente.nombre;
-			cliente.sucursal 			= cliente.sucursales.nombreSucursal;
-			cliente.colonia 			= cliente.coloniaCliente.nombre;
-			cliente.municipio 		= cliente.municipioCliente.nombre;
-			cliente.estado 				= cliente.estadoCliente.nombre;
-			cliente.nacionalidad 	= cliente.nacionalidadCliente.nombre;
-			cliente.estadoCivil 	= cliente.estadoCivilCliente.nombre;
-			cliente.ocupacion 		= cliente.ocupacionCliente.nombre;
+	 		cliente.ciudad 				= cliente.ciudadCliente != undefined ? cliente.ciudadCliente.nombre : "";
+			cliente.sucursal 			= cliente.sucursales != undefined ? cliente.sucursales.nombreSucursal : "";
+			cliente.colonia 			= cliente.coloniaCliente != undefined ? cliente.coloniaCliente.nombre : "";
+			cliente.municipio 		= cliente.municipioCliente != undefined ? cliente.municipioCliente.nombre : "";
+			cliente.estado 				= cliente.estadoCliente != undefined ? cliente.estadoCliente.nombre : "";
+			cliente.nacionalidad 	= cliente.nacionalidadCliente != undefined ? cliente.nacionalidadCliente.nombre : "" ;
+			cliente.estadoCivil 	= cliente.estadoCivilCliente != undefined ? cliente.estadoCivilCliente.nombre : "";
+			cliente.ocupacion 		= cliente.ocupacionCliente != undefined ? cliente.ocupacionCliente.nombre : "";
 	    
 	    // 	 if (item.folio < 10) {
 	 	 	// 	item.folio = "0"+item.folio

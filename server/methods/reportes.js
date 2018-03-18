@@ -58,7 +58,7 @@ Meteor.methods({
 	},
 	getBancos:function(fechaInicial, fechaFinal, sucursal_id){
 			
-			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}).fetch();
+			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}, {sort: {fechaEntrega: 1}}).fetch();
 
 			var cobranza = [];
 			
@@ -164,9 +164,7 @@ Meteor.methods({
 	},
 	getCreditosEntregados:function(fechaInicial, fechaFinal, sucursal_id){
 			
-			
-								
-			var creditosEntregados = Creditos.find({sucursal_id: sucursal_id, fechaEntrega : { $gte : fechaInicial, $lte : fechaFinal}}).fetch();
+			var creditosEntregados = Creditos.find({sucursal_id: sucursal_id, fechaEntrega : { $gte : fechaInicial, $lte : fechaFinal}}, {sort: {fechaEntrega: 1}}).fetch();
 			
 			_.each(creditosEntregados, function(credito){
 					

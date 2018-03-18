@@ -193,7 +193,7 @@
 						semanaPago					: undefined,
 						diaPago							: undefined,
 						pago								: 0,
-						estatus							: 0,								//Estatus 0 es creado, 2 Pagado
+						estatus							: 3,								//Estatus 0 es creado, 1 Pagado, 2-pago parcial, 3.sinEntregar
 						multada							: 0,
 						multa_id						: undefined,
 						planPago_id					: undefined,
@@ -320,7 +320,7 @@
 						semanaPago					: undefined,
 						diaPago							: undefined,
 						pago								: 0,
-						estatus							: 0,
+						estatus							: 3,
 						multada							: 0,
 						multa_id						: undefined,
 						planPago_id					: undefined,
@@ -395,7 +395,7 @@
 		return plan;
 	},
 	actualizarMultas: function(){
-		Meteor.call("generarMultas");
+		//Meteor.call("generarMultas");
 		var ahora = new Date();
 		ahora = new Date (ahora.getFullYear(),ahora.getMonth(),ahora.getDate());
 		var mfecha = moment(ahora);
@@ -409,6 +409,7 @@
 													]
 											},
 											{
+												tipoCredito			: "creditoP",
 												importeRegular : {$gte : 0 },	
 												descripcion : "Cargo Moratorio"
 											},

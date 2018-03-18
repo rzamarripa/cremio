@@ -4,95 +4,96 @@
 			<div class="row text-center">
 				<div class="col-sm-4 col-sm-offset-4">
 				<span id="logo"> <img src="img/logoCreditoMioBN.png" alt="SmartAdmin" style="margin-top: -15px;width: 170px;height: 100px;"> </span>
-					<strong> <h2>Credito Mio</h2> </strong>
-					<strong> <h2>Corte</h2> </strong>
-					<strong>-----------APERTURA DE VENTANILLA----------------</strong>
-					<table class="table">
+					<strong> <h2>Crédito Mio</h2> </strong>
+					<strong> <h3>Corte</h3> </strong>
+					<p style="text-align: center"><strong>-----------APERTURA DE VENTANILLA-----------</strong></p>
+					<table style="width: 100%">
 						<tr ng-repeat="(key, resu) in cjc.aperturaVentanilla">
-							<td>
+							<td style="text-align: left; width: 60%;">
 								{{key}}
 							</td>
-							<td>
+							<td style="text-align: right; width: 40%;">
 								{{resu | currency}}
 							</td>
 						</tr>
 						<tr>
-							<td>
+							<td style="text-align: left; width: 50%;">
 								<strong>TOTAL: </strong>
 							</td>
-							<td>
+							<td style="text-align: right; width: 50%;">
 								<strong>{{cjc.totalAperura | currency}}</strong>
 							</td>
 						</tr>
 					</table>
-					<strong>-----------INGRESOS POR FORMA DE PAGO------------</strong>
-					<table class="table">
+					<p style="text-align: center"><strong>--------INGRESOS POR FORMA DE PAGO--------</strong></p>
+					<table style="width: 100%">
 						<tr ng-repeat="(key, resu) in cjc.ingresosAgrupados">
-							<td>
+							<td style="text-align: left; width: 50%;">
 								{{key}}
 							</td>
-							<td>
+							<td style="text-align: right; width: 50%;">
 								{{resu | currency}}
 							</td>
 						</tr>
 						<tr>
-							<td>
+							<td style="text-align: left; width: 50%;">
 								<strong>TOTAL: </strong>
 							</td>
-							<td>
+							<td style="text-align: right; width: 50%;">
 								<strong>{{cjc.totalIngresos | currency}}</strong>
 							</td>
 						</tr>
 					</table>
-					<strong>-----------------ENTREGA DE CREDITOS-----------------</strong>
-					<table class="table">
+					<p style="text-align: center"><strong>-------------ENTREGA DE CRÉDITOS--------------</strong></p>
+					<table style="width: 100%">
 						<tr>
-							<td>
+							<td style="text-align: left; width: 60%;">
 								CREDITOS ENTREGADOS:
 							</td>
-							<td align="right">
+							<td style="text-align: right; width: 40%;">
 								{{cjc.creditosEntregados}}
 							</td>
 						</tr>
 						<tr ng-repeat="(key, ag) in cjc.creditosAgrupados">
-							<td>
+							<td style="text-align: left; width: 50%;">
 								{{key}}
 							</td>
-							<td>
+							<td style="text-align: right; width: 50%;">
 								{{ag | currency}}
 							</td>
 						</tr>
 						<tr>
-							<td>
+							<td style="text-align: left; width: 50%;">
 								<strong>TOTAL: </strong>
 							</td>
-							<td>
+							<td style="text-align: right; width: 50%;">
 								<strong>{{cjc.totalCreditos | currency}}</strong>
 							</td>
 						</tr>
 					</table>
-					<strong>----------TRANSF. DE FONDOS A VENTANILLA----------</strong>
-					<table class="table">
+					<p style="text-align: center"><strong>-------TRANSF. DE FONDOS A VENTANILLA--------</strong></p>
+					<table style="width: 100%">
 						<tr>
-							<td>
+							<td style="text-align: left; width: 50%;">
 								<strong>MONEDA NACIONAL: </strong>
 							</td>
-							<td>
+							<td style="text-align: right; width: 50%;">
 								<strong>{{cjc.totalTransAVentanilla | currency}}</strong>
 							</td>
 						</tr>
 					</table>
-					<strong>---------RETIRO DE FONDOS DE VENTANILLA---------</strong>
-					<table class="table">
+					<p style="text-align: center"><strong>-------RETIRO DE FONDOS DE VENTANILLA-------</strong></p>
+					<table style="width: 100%">
 						<tr>
-							<td>
+							<td style="text-align: left; width: 50%;">
 								<strong>MONEDA NACIONAL: </strong>
 							</td>
-							<td>
+							<td style="text-align: right; width: 50%;">
 								<strong>{{cjc.totalTransDeVentanilla | currency}}</strong>
 							</td>
 						</tr>
 					</table>
+					<br>
 					<div class="row">
 						<div class="col-sm-12">
 							<span class="pull-left">(=)EFECTIVO EN CAJA:</span> 

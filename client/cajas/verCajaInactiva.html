@@ -41,6 +41,7 @@
               <tr>
                 <th width="3%">Folio</th>
                 <th width="7%">Fecha</th>
+                <th width="7%">Hora</th>
                 <th width="8%">N. Cliente</th>
                 <th width="15%">Cliente</th>
                 <th width="15%">Movimiento</th>
@@ -58,6 +59,7 @@
               <tr ng-repeat="mov in vci.cajaInactiva.movimientosCaja" class={{mov.clase}}>
                 <td align="center">{{mov.pago != undefined ? mov.pago.folioPago : mov.credito.folio }}</td>
                 <td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
+                <td>{{mov.createdAt | date:'H:mm:ss'}}</td>
                 <td>{{mov.numeroCliente}}</td>
 	              <td>{{mov.nombreCliente}}</td>
                 <td>{{mov.origen}}</td>

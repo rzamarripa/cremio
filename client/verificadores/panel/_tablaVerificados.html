@@ -14,6 +14,7 @@
 	<thead>
 		<tr>
 			<th class="text-center" width="5%">No.</th>
+			<th class="text-center" width="10%"><div class="text-center">No. Cliente</div></th>
 			<th ><div class="text-center">Nombre</div></th>
 			<th ><div class="text-center">Verificado</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
@@ -25,6 +26,7 @@
 	<tbody>
     <tr ng-repeat="verificacion in pver.verificacionesHechas">
 	    <td class="text-center">{{$index + 1}}</td>
+	    <td>{{verificacion.numeroCliente}}</td>
 	    <td>{{verificacion.nombreCliente}}</td>
 	     <td>{{verificacion.verificado}}</td>
 	    <td class="text-center">{{verificacion.fechaVerificacion | date:"dd-MM-yyyy" }} </td>

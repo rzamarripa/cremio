@@ -161,6 +161,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 							   {	
 									 		cliente = result;
 											credito.nombreCliente = cliente.nombreCompleto;
+											credito.numeroCliente = cliente.numeroCliente;
 											$scope.$apply();
 								 }
 							});							
@@ -214,6 +215,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 					   {	
 							 		cliente = result;
 									v.nombreCliente = cliente.nombreCompleto;
+									v.numeroCliente = cliente.numeroCliente;
 									$scope.$apply();
 						 }
 					});

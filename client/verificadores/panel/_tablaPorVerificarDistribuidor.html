@@ -3,7 +3,8 @@
 	<thead>
 		<tr>
 			<th class="text-center" width="5%">No.</th>
-			<th ><div class="text-center">Nombre del Distribidor</div></th>
+			<th class="text-center" width="10%"><div class="text-center">No. Dist.</div></th>
+			<th ><div class="text-center">Nombre del Distribuidor</div></th>
 			<th ><div class="text-center">Aval</div></th>
 			<th ><div class="text-center">Límite Solicitado</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Solicitud</div></th>
@@ -16,6 +17,7 @@
 	<tbody>
     <tr ng-repeat="distribuidor in pver.distribuidores">
 	    <td class="text-center">{{$index + 1}}</td>
+	    <td>{{distribuidor.profile.numeroCliente}}</td>
 	    <td>{{distribuidor.profile.nombreCompleto}}</td>
 	    <td>{{distribuidor.profile.avales_ids[0].nombre}} {{distribuidor.profile.avales_ids[0].apellidoPaterno}} {{distribuidor.profile.avales_ids[0].apellidoMaterno}}</td>
 	    <td class="text-right">{{distribuidor.profile.limiteCredito | currency}}</td>

@@ -1,11 +1,9 @@
 
 <div class="container">
-
 	<div class="widget-body no-padding">
-		<div class="padding-10">
+		<div class="padding-12">
 			<div class="row text-center">
 				<div class="col-sm-4 col-sm-offset-4">
-
 					<span id="logo"> <img src="img/logoCreditoMioBN.png" alt="SmartAdmin" style="margin-top: -18px;width: 200px;height: 110px;"> </span>
 					<address style="font-size: larger">
 						RUBIDIA MARTINEZ ALCARAZ<br>
@@ -14,7 +12,7 @@
 						MAAR-661007-BF5<br>
 						(667) 717-21-21<br>
 					</address>
-					<strong style="font-size: larger">----------------RECIBO DE PAGO---------------</strong>
+					<strong style="font-size: larger">----------RECIBO DE PAGO----------</strong>
 					<div class="row" style="font-size: larger">
 						<div class="col-sm-12">
 							<span class="pull-left">RECIBIMOS DE <strong>{{tkpctrl.cliente.profile.nombreCompleto}}</strong> (CLIENTE No. {{tkpctrl.cliente.profile.numeroCliente}}) CON DOMICILIO EN: CALLE {{tkpctrl.cliente.profile.calle}} NO. {{tkpctrl.cliente.profile.numero}} {{tkpctrl.cliente.profile.colonia.nombre}}. {{tkpctrl.cliente.profile.municipio.nombre}}, {{tkpctrl.cliente.profile.estado.nombre}}.
@@ -31,69 +29,69 @@
 						</div>	
 					</div>
 					<strong style="font-size: larger">---------DETALLE DEL PAGO/ABONO---------</strong>
-					<table class="table" style="font-size: small">
+					<table style="font-size: medium; width: 100%">
 						<tbody>
 							<tr>
-								<th align="center">CREDITO</th>
-								<th align="center">RECIBO</th>
-								<th align="center">ABONO</th>
-								<th align="center">CONCEPTO</th>					
+								<th style="text-align: center;width: 20%">Crédito</th>
+								<th style="text-align: center;width: 20%">Recibo</th>
+								<th style="text-align: center;width: 20%">Abono</th>
+								<th style="text-align: center;width: 40%">Cocepto</th>					
 							</tr>
-							<tr ng-repeat="pago in tkpctrl.pago.planPagos" style="padding: 0; margin: 0">
-								<td align="center">{{pago.folioCredito}}</td>
-								<td align="center">{{pago.numeroPago}} / {{pago.numeroPagos}}</td>
-								<td align="center">{{pago.totalPago | currency:""}}</td>
-								<td align="center">{{pago.descripcion}}</td>					
+							<tr ng-repeat="pago in tkpctrl.pago.planPagos">
+								<td style="text-align: center;width: 20%">{{pago.folioCredito}}</td>
+								<td style="text-align: center;width: 20%">{{pago.numeroPago}} / {{pago.numeroPagos}}</td>
+								<td style="text-align: right;width: 20%">{{pago.totalPago | currency}}</td>
+								<td style="text-align: center;width: 40%">{{pago.descripcion}}</td>					
 							</tr>
 						</tbody>
 					</table>
 
-					<table class="table" style="font-size: small">
+					<table style="font-size: medium; width: 100%;">
 						<tr>
-							<td align="left">
+							<td style="text-align: left; width: 70%">
 								<strong>TOTAL: </strong>
 							</td>
-							<td style="text-align: right">
-								<strong>{{tkpctrl.pago.totalPago | currency}}</strong>
+							<td style="text-align: right; width: 30%">
+									{{tkpctrl.pago.totalPago | currency}}
 							</td>
 						</tr>
 						<tr>
-							<td align="left">
+							<td style="text-align: left; width: 70%">
 								<strong>PAGÓ: </strong>
 							</td>
-							<td style="text-align: right"> 
+							<td style="text-align: right; width: 30%"> 
 								{{tkpctrl.pago.pago | currency}}
 							</td>
 						</tr>
 						<tr>
-							<td align="left">
+							<td style="text-align: left; width: 70%">
 								<strong>CAMBIO: </strong>
 							</td>
-							<td style="text-align: right">
+							<td style="text-align: right; width: 30%">
 								{{tkpctrl.pago.cambio | currency}}
 							</td>
 						</tr>
 					</table>
-					<table style="font-size: larger">
+					<table style="font-size: medium; width: 100%;">
 						<tr>
-							<td class="col-sm-3" style="text-align: left">SALDO ANTERIOR: </td>
-							<td class="col-sm-3" style="text-align: right">{{tkpctrl.pago.saldoAnterior | currency}}</td>							
+							<td style="text-align: left; width: 70%;">SALDO ANTERIOR: </td>
+							<td style="text-align: right; width: 30%;">{{tkpctrl.pago.saldoAnterior | currency}}</td>							
 						</tr>
 						<tr>
-							<td class="col-sm-3" style="text-align: left">SALDO ACTUAL: </td>
-							<td class="col-sm-3" style="text-align: right">{{tkpctrl.pago.saldoActual | currency}}</td>							
+							<td style="text-align: left; width: 70%;">SALDO ACTUAL: </td>
+							<td style="text-align: right; width: 30%;">{{tkpctrl.pago.saldoActual | currency}}</td>							
 						</tr>
 						<tr>
-							<td class="col-sm-3" style="text-align: left">C. MORATORIOS: </td>
-							<td class="col-sm-3" style="text-align: right">{{tkpctrl.pago.saldoCargoMoratorio | currency}}</td>							
+							<td style="text-align: left; width: 70%;">C. MORATORIOS: </td>
+							<td style="text-align: right; width: 30%;">{{tkpctrl.pago.saldoCargoMoratorio | currency}}</td>							
 						</tr>
 						<tr>
-							<td class="col-sm-3" style="text-align: left">PRÓXIMO PAGO: </td>
-							<td class="col-sm-3" style="text-align: right">{{tkpctrl.pago.proximoPago | date:"dd-MM-yyyy"}}</td>							
+							<td style="text-align: left; width: 70%;">PRÓXIMO PAGO: </td>
+							<td style="text-align: right; width: 30%;">{{tkpctrl.pago.proximoPago | date:"dd-MM-yyyy"}}</td>							
 						</tr>
 						<tr>
-							<td class="col-sm-3" style="text-align: left">FORMA PAGO: </td>
-							<td class="col-sm-3" style="text-align: right">{{tkpctrl.tipoIngreso.nombre}}</td>							
+							<td style="text-align: left; width: 70%;">FORMA PAGO: </td>
+							<td style="text-align: right; width: 30%;">{{tkpctrl.tipoIngreso.nombre}}</td>							
 						</tr>						
 					</table>	
 <!--
