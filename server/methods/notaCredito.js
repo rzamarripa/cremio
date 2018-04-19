@@ -1,8 +1,9 @@
 Meteor.methods({
 	crearNotaDeCredito : function(user_id,nota) {
 		var user=Meteor.user();
-		if(user.roles[0] != "Gerente")
+		if(user.roles[0] != "Gerente" && user.roles[0] != "Supervisor")
 			throw new Meteor.Error(403, 'Error 403: Permiso denegado', 'Permiso denegado');
+		
 		var nuser = Meteor.users.findOne(user_id);
 		if(!nuser || nota.monto < 1)
 			throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');

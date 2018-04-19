@@ -477,47 +477,53 @@ angular.module("creditoMio")
   };
   
   this.actualizarForm = function(objeto,form){
+    
     if(form.$invalid){
       toastr.error('Error al actualizar los datos.');
       return;
     }
-   // console.log("objeto",objeto)
+        
     var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
     var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
     var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
     objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-    objeto.profile.avales_ids =  angular.copy(rc.objeto.profile.avales_ids);
-        
-    if (rc.documents.length){
-      objeto.profile.documentos = rc.documents
-      objeto.profile.foto = rc.objeto.profile.foto
-      }
-      else{
-        objeto.profile.documentos = objeto.profile.documentos
-        objeto.profile.foto = rc.objeto.profile.foto
-      }
-      if (rc.pic != ""){
-        objeto.profile.foto = rc.pic
-      }
-      else{
-        objeto.profile.foto = rc.objeto.profile.foto
-      } 
-    delete objeto.profile.repeatPassword;
-    Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Distribuidor", this.cambiarContrasena);
-    toastr.success('Actualizado correctamente.');
-    //$('.collapse').collapse('hide');
-    this.nuevo = true;
-    form.$setPristine();
-    form.$setUntouched();
-    if (rc.objeto.roles == "Distribuidor") {
-      $state.go('root.distribuidoresDetalle', { 'objeto_id':objeto._id});
-       
-
-    }else{
-      $state.go('root.clienteDetalle', { 'objeto_id':objeto._id});
-
+      
+    if (rc.documents != undefined && rc.documents.length > 0){
+       	objeto.profile.documentos = rc.documents;
     }
-    console.log(objeto)
+      
+  
+    if (rc.pic != ""){
+      objeto.profile.foto = rc.pic
+    }
+   
+    delete objeto.profile.repeatPassword;
+    
+    
+    _.each(objeto.profile.documentos, function(d){	    
+	    delete d.$$hashKey;
+    });
+    
+    _.each(objeto.profile.avales_ids, function(a){	    
+	    delete a.$$hashKey;
+    });
+    
+    _.each(objeto.profile.referenciasPersonales_ids, function(rp){	    
+	    delete rp.$$hashKey;
+    });
+        
+    loading(true);
+    Meteor.call('updateUsuario', objeto, this.referenciasPersonales, "Distribuidor", this.cambiarContrasena, function(error,result){
+				
+				if (result)
+	    	{
+		    		loading(false);
+		    		toastr.success('Actualizado correctamente.');
+						this.nuevo = true;
+ 				    $state.go('root.clienteDetalle', { 'objeto_id':objeto._id});
+		    	
+	    	}	    
+    });
    
 
   };
@@ -793,10 +799,19 @@ angular.module("creditoMio")
         }
       });   
       });
-
+	
+	this.agregarImagen = function()
+  { 	
+ 	  	var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+	  	while (fileDisplayArea1.firstChild) {
+			    fileDisplayArea1.removeChild(fileDisplayArea1.firstChild);
+			}
+	  	$("#modalDocumentoImagen").modal('show');
+ 	}
+	
   this.agregarDoc = function(doc,imagen)
   {
-    //console.log("imagen",imagen)
+
     if (imagen == false) {
        toastr.error("Ninguna imagen agregada");
 
@@ -805,43 +820,39 @@ angular.module("creditoMio")
       toastr.error("Ningun documento agregado");
 
     }else{
-      // rc.imagen = imagen
+     	 	// rc.imagen = imagen
     
-    rc.referencias = [];
-    Meteor.call('getDocs', doc, function(error,result){
-      if (result)
-        {
-	        //console.log("result",result)
-          //console.log("entra aqui");
-          //console.log("result",result);
-          rc.documents.push({imagen: imagen, nombre: result.nombre});
-          $scope.$apply();      
-        }
-
-    });
-    	//console.log(imagen,"programador estrella");
-     }  
-    }       
+		    rc.referencias = [];
+		    Meteor.call('getDocs', doc, function(error,result){
+		      if (result)
+		        {
+		          rc.documents.push({imagen: imagen, nombre: result.nombre});
+		          $scope.$apply();      
+		        }
+		
+		    });
+ 
+      }  
+    }
+    
+    $("#modalDocumentoImagen").modal('hide');
+           
   };
 
   this.actDoc = function(doc,imagen)
   {
-    //console.log("imagen",imagen)
-    // rc.imagen = imagen
     Meteor.call('getDocs', doc, function(error,result){
       if (result)
         {
-	        //console.log("result",result)
-          //console.log("entra aqui");
-          //console.log("result",result);
           rc.objeto.profile.documentos.push({imagen: imagen, nombre: result.nombre});
           $scope.$apply();      
         }
 
     });
+    
+    $("#modalDocumentoImagen").modal('hide');
     //console.log(imagen,"programador estrella");
-  } 
-
+  }
 
   this.getDocumentos= function(documento_id)
   {

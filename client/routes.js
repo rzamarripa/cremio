@@ -489,7 +489,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "Gerente" ||	user.roles[0] == "Verificador"){
+						if(user.roles[0] == "Gerente" ||	user.roles[0] == "Supervisor"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 

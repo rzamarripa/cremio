@@ -27,7 +27,16 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 						          	nc.numeroCliente = result.numeroCliente;
 						          	$scope.$apply();
 					          }
-			    			}); 	
+			    			});
+			    			
+			    			Meteor.call('getUsuario', nc.createdBy, function(error, result) {           
+					          if (result)
+					          {
+						          	nc.usuario = result.nombre;
+						          	$scope.$apply();
+					          }
+			    			});
+			    			 	
 				  	});
 		  	}
 		  return ncs;
@@ -44,7 +53,16 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 						          	nc.numeroCliente = result.numeroCliente;
 						          	$scope.$apply();
 					          }
-			    			}); 	
+			    			});
+			    			
+			    			Meteor.call('getUsuario', nc.createdBy, function(error, result) {           
+					          if (result)
+					          {
+						          	nc.usuario = result.nombre;
+						          	$scope.$apply();
+					          }
+			    			});
+			    			 	
 				  	});
 		  	}		  
 		  return ncs;
@@ -62,6 +80,15 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 						          	$scope.$apply();
 					          }
 			    			}); 	
+			    			
+			    			Meteor.call('getUsuario', nc.createdBy, function(error, result) {           
+					          if (result)
+					          {
+						          	nc.usuario = result.nombre;
+						          	$scope.$apply();
+					          }
+			    			});
+			    			
 				  	});
 		  	}		  
 		  return ncs;

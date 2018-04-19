@@ -58,7 +58,7 @@
 			{
 					semanaQuincena = 2;
 			}
-			else if (diaMes > 2 && diaMes <= 16)
+			else if (diaMes >= 2 && diaMes <= 16)
 			{
 		 	 	 		mfecha = mfecha.date(16);	 
 		 	 	 		semanaQuincena	= 2;
@@ -175,7 +175,7 @@
 				}	 
 		
 				for (var i = 0; i < totalPagos; i++) {					
-					
+					//console.log(fechaLimite);
 					var pago = {
 						semana							: fechaLimite.isoWeek(),
 						fechaLimite					: new Date(new Date(fechaLimite.toDate().getTime()).setHours(23,59,59)),
@@ -258,6 +258,7 @@
 					_.each(plan, function(pago){
 					pago.total = val
 				});
+				
 			
 		}
 		else if (tipoCredito.tipoInteres == "Saldos Insolutos")
@@ -1566,5 +1567,16 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 	getPagosDistribuidor: function(distribuidor_id){
 			return Pagos.find({usuario_id: distribuidor_id}, {sort:{fechaPago:-1}}).fetch();
 	},
+	cancelarPlanPago : function(credito_id){
+    	
+    	var planPagos = PlanPagos.find({credito_id: credito_id}).fetch();
+    	
+    	_.each(planPagos, function(pp){
+	    		PlanPagos.update(pp._id, {$set: {estatus: 3}});	
+    	})
+			
+			return true;	
+				
+	},	
 
 }); 

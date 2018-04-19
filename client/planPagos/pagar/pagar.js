@@ -165,7 +165,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 					return cli;
 				}		
 		},
-		historialCreditos : () => {
+		/*
+historialCreditos : () => {
 			
 			var creditos = Creditos.find().fetch();
 			if(creditos != undefined){
@@ -176,7 +177,9 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 			
 			
 		},
-		planPagosHistorial  : () => {
+*/
+		/*
+planPagosHistorial  : () => {
 			
 			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
 			//rc.creditos_id = _.pluck(planes, "cliente_id");
@@ -184,7 +187,9 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 			return planes;
 
 		},
-		historial : () => {
+*/
+		/*
+historial : () => {
 			arreglo = [];
 			var saldoPago = 0;
 			var saldoActual = 0; 
@@ -192,16 +197,6 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 			var credito = rc.credito
 			rc.saldoMultas = 0;
 			//return PlanPagos.find({credito_id : this.getReactively("credito_id")}).fetch();
-
-/*
-			_.each(rc.getReactively("planPagos"), function(planPago){
-				
-				if(planPago.descripcion == "Recibo")
-					rc.saldo += planPago.cargo;
-				if(planPago.descripcion == "Cargo Moratorio")
-					rc.saldoMultas += planPago.importeRegular;
-			});
-*/
 			
 			_.each(rc.planPagos, function(planPago, index){
 				//planPago.ciudad = PlanPagos.findOne(planPago.credito_id);
@@ -307,6 +302,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 			
 			return arreglo;
 		},
+*/
     tiposIngreso: () => {
 	    
 	    var ti = TiposIngreso.find().fetch();
@@ -431,6 +427,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
       }
     },
   });
+  
+  
   this.getFolio = function(credito_id) {
     var credito = Creditos.findOne(credito_id);
     return credito ? credito.folio : "";

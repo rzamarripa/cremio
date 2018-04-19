@@ -103,12 +103,22 @@
 													<div class="well">
 														<!-- Beficiario -->
 														<div class="row">
+<!--
 															<div class="col-sm-4">
 																<label>Beneficiario </label>
 																<select name="beneficiario" class="form-control select2" placeholder="Seleccione" ng-model="dis.seleccionCredito_id">
 																	<option ng-repeat="ben in dis.beneficiarios" value="{{ben.credito_id}}">{{ben.beneficiario}}</option>
 																</select>
 															</div>
+-->										
+															<div class="col-sm-3">
+																<br >
+																<label class="checkbox-inline">
+																	  <input name="mostrarTodos" type="checkbox" class="checkbox style-0" ng-model = "dis.mostrarPP" ng-click = "dis.mostrarTodos(dis.mostrarPP)">
+																	  <span> Mostrar Todos</span>
+																</label>
+															</div>
+																
 															<div class="col-sm-3">
 																<label>Saldo</label>
 																<br />
@@ -128,11 +138,11 @@
 																		<thead class="thead">
 																			<tr>
 																				<th class="text-center" width="5%">No.</th>
-																				<th class="text-center" width="20%">Movimiento</th>
-																				<th class="text-center" width="20%">Fecha de Pago</th>
+																				<th class="text-center" width="20%">Beneficiado</th>
+																				<th class="text-center" width="10%">Fecha de Pago</th>
 																				<th class="text-center" width="10%">N. Pago</th>
 																				<th class="text-center" width="10%">Capital</th>
-																				<th class="text-center" width="10%">Interes</th>
+																				<th class="text-center" width="10%">Interés</th>
 																				<th class="text-center" width="5%">IVA</th>
 																				<th class="text-center" width="10%">Seguro</th>
 																				<th class="text-center" width="15%">Pago</th>
@@ -140,9 +150,9 @@
 																			</tr>
 																		</thead>
 																		<tbody>
-																			<tr ng-repeat="pago in dis.credito.planPagos">								
+																			<tr ng-repeat="pago in dis.planPagos">								
 																				<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
-																				<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.movimiento}}</td>
+																				<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-left'">{{pago.beneficiado}}</td>
 																				<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 																				<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
 																				<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.capital - pago.pagoCapital | currency}}</td>
@@ -944,8 +954,7 @@
 									
 													<div class="widget-body">
 														<!-- content -->
-														
-						
+																				
 														<div class="row ">
 															<br/>
 															<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="aprobado in dis.creditosAprobados">
@@ -968,7 +977,7 @@
 																	<div class="panel-footer no-padding">						
 						<a ui-sref="root.entregarVale({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar Vale </a>
 																		<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Vale" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(aprobado)" />
-																		<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar Vale</a>
+																		<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-show ="aprobado.folio == undefined ">Editar Vale</a>
 																	</div>
 																</div>
 															</div>
@@ -1043,54 +1052,44 @@
 		<br/>
 	</div>
 </div>
- <!-- /////////////////////////MODAL NOTA CUENTA ////////////////////////// -->
-<div class="container">
-		<div class="modal fade" id="myModal"	data-backdrop="static" role="dialog">
+<!-- /////////////////////////MODAL NOTA CUENTA ////////////////////////// -->
+<div class="modal fade" id="myModal"	data-backdrop="static" role="dialog">
 				<div class="modal-dialog">
 			<!-- Modal content-->
 					<div class="modal-content">
 						<div class="modal-header">
 							<h4 class="modal-title">Responder Nota</h4>
+							Título: <strong>{{dis.notaCuenta1.titulo}}</strong>
 						</div>
 						<div class="modal-body">
-							<h6>Información de la nota</h6><br/>
-								<p>Por: <strong>{{dis.usuario.profile.nombreCompleto}}</strong></p>
-								<p>Fecha: <strong>{{dis.notaCuenta1.fecha | date:'dd-MM-yyyy'}}, {{dis.notaCuenta1.hora}}</strong></p>
+							<h6>Información de la nota</h6>
+<!-- 							<p>{{dis.notaCuenta1.descripcion}} </p>  -->
+							<p ng-if = "!dis.editarNota">{{dis.notaCuenta1.descripcion}}</p>
+						  <textarea type="text" rows="4" class="form-control" ng-model="dis.notaCuenta1.descripcion" ng-if = "dis.editarNota" ></textarea>
+							<p>Por: <strong>{{dis.usuario.profile.nombreCompleto}}</strong></p>
+							<p>Fecha: <strong>{{dis.notaCuenta1.fecha | date:'dd-MM-yyyy'}}, {{dis.notaCuenta1.hora}}</strong></p>
 						</div>
 						<div class="modal-footer">
-								<div class="row">
-								<div class="col-sm-12">
-								<div class="col-sm-12">
-								 	<h6 class="pull-left" ><strong>{{dis.notaCuenta1.titulo}}</strong></h6><br/><br/>
-								</div>
-								<div class="col-sm-12"> 
-									<p class="pull-left">{{dis.notaCuenta1.descripcion}} </p>
-								</div>
+							<div class="row">
 								<div class="col-sm-12" ng-if="dis.notaCuenta1.respuesta == true">
 									<label class="pull-left">Respuesta:</label>
-									<textarea type="text" class="form-control"	ng-model="dis.notaCuenta1.respuestaNota" >
+									<textarea type="text" class="form-control" ng-model="dis.notaCuenta1.respuestaNota" >
 								</div>
 								<div class="col-sm-12 "><br/>
-									<a	class="btn btn-success" ng-click="dis.contestarNota(dis.notaCuenta1._id)"
-									ng-show="dis.notaCuenta1.respuesta">Contestar</a>
-									<button type="button" ng-click="dis.quitarNota(dis.notaCuenta1._id)" class="btn btn-default" data-dismiss="modal" ng-show="!dis.notaCuenta1.respuesta">Quitar</button>
-									<button type="button" id="cerrarRespuesta" class="btn btn-default" data-dismiss="modal"
-									  ng-show="dis.btnCerrarRespuesta">Cerrar</button>
-									 <button type="button" class="btn btn-default" data-dismiss="modal"
-									  ng-show="!dis.notaCuenta1.respuesta">Cerrar</button>
-									  
+									<button type="button" ng-click="dis.contestarNota(dis.notaCuenta1._id)" class="btn btn-success" ng-show="dis.notaCuenta1.respuesta">Contestar</button>
+									<button type="button" ng-click="dis.quitarNota(dis.notaCuenta1._id)" class="btn btn-warning pull-left" data-dismiss="modal">Quitar</button>
+									<button type="button" class="btn btn-info" ng-click="dis.editarNotaModal(true)" ng-if = "!dis.editarNota">Editar</button>
+	    				    <button type="button" class="btn btn-danger" ng-click="dis.editarNotaModal(false)" ng-if = "dis.editarNota">Cancelar</button>
+	    				    <button type="button" class="btn btn-success" ng-click="dis.actualizarNota(dis.notaCuenta1)" ng-if = "dis.editarNota">Actualizar</button>
+									<button type="button" id="cerrarRespuesta" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 								</div>
-					</div>								 
+							</div>								 
+						</div>
 					</div>
-			
-					
-					</div>
-					
 				</div>
-			</div>
+		
 		</div>
-</div>
-<!--		 //////////////////////////////////////////////////////////// -->
+<!--		 /////////////////Nota para el Cliente////////////////////// -->
 <div class="container">
 				<!-- Modal -->
 			<div class="modal fade" id="notaPerfil"	data-backdrop="static" role="dialog">
@@ -1098,20 +1097,21 @@
 			<!-- Modal content-->
 					<div class="modal-content">
 						<div class="modal-header">
-					
-							<h4 class="modal-title">Nota para cliente</h4>
+							<h4 class="modal-title">Nota para el Cliente</h4>
+							Título: <strong>{{dis.notaPerfil.titulo}}</strong>
 						</div>
 						<div class="modal-body">
-						<p>Fecha: <strong>{{dis.notaPerfil.fecha | date:'dd-MM-yyyy'}}, {{dis.notaPerfil.hora}}</strong></p><br/>
-						</div>
-						<div class="modal-body">
-							<h6>Información de la nota</h6><br/>
-						<div >{{dis.notaPerfil.descripcion}}</div>
+							<h6>Información de la nota</h6>
+						  <p ng-if = "!dis.editarNota">{{dis.notaPerfil.descripcion}}</p>
+						  <textarea type="text" rows="4" class="form-control" ng-model="dis.notaPerfil.descripcion" ng-if = "dis.editarNota" ></textarea>
+						  <p>Fecha: {{dis.notaPerfil.fecha | date:'dd-MM-yyyy'}}, {{dis.notaPerfil.hora}} </p>
 						</div>
 						<div class="modal-footer">
-	    				    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-	    				     <button type="button" ng-click="dis.quitarNota(dis.notaPerfil._id)" class="btn btn-default" data-dismiss="modal">Quitar</button>
-	        
+	    				    <button type="button" class="btn btn-warning pull-left" ng-click="dis.quitarNota(dis.notaPerfil._id)" data-dismiss="modal">Quitar</button>
+	    				    <button type="button" class="btn btn-info" ng-click="dis.editarNotaModal(true)" ng-if = "!dis.editarNota">Editar</button>
+	    				    <button type="button" class="btn btn-danger" ng-click="dis.editarNotaModal(false)" ng-if = "dis.editarNota">Cancelar</button>
+	    				    <button type="button" class="btn btn-success" ng-click="dis.actualizarNota(dis.notaPerfil)" ng-if = "dis.editarNota">Actualizar</button>
+	    				    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
      				 </div>
 					</div>
 				</div>
@@ -1155,9 +1155,9 @@
 	<!-- Modal content-->
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Escribir Nota para el cliente</h4>
+					<h4 class="modal-title">Escribir Nota</h4>
 				</div>
-				<div class="modal-footer">
+				<div class="modal-body">
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="col-sm-12">
@@ -1172,14 +1172,12 @@
 										<textarea type="text" class="form-control"	ng-model="dis.nota.descripcion" >
 									</div>
 									<label style="visibility: hidden;"  id="cuentaNota" class="checkbox-inline"><input  type="checkbox"   ng-click=" dis.cambioEstatusRespuesta()"  > Requiere respuesta</label>
-									<div class="col-sm-12 "><br/>
-										<a	class="btn btn-success" ng-click="dis.guardarNota(dis.nota)">Guardar</a>
-									</div>
 							</div>								 
 						</div>
 			  </div>
 			  <div class="modal-footer">
-				    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				  	<a	class="btn btn-success" ng-click="dis.guardarNota(dis.nota)">Guardar</a>
+				    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 				</div>
 			</div>
 		</div>
@@ -1282,15 +1280,15 @@
     <div class="modal-content">
 	    	<div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="myModalLabel">Crear Cargos sMoratorios</h4>
+		        <h4 class="modal-title" id="myModalLabel">Crear Cargos Moratorios</h4>
 		    </div>
 				<div class="widget-body">
 							<form name="form2" novalidate>
 									<div class="well">	    
 								    <div class="row">
 								    		<div class="col-sm-4" valida>
-													<label >Credito</label>
-														<select name="recibo" class="form-control select2" placeholder="Seleccione" ng-model="dis.recibo.credito_id" ng-change="dis.getRecibos(dis.recibo.credito_id)" required>
+													<label >Num Vale</label>
+														<select name="numRecibo" class="form-control select2" placeholder="Seleccione" ng-model="dis.recibo.credito_id" ng-change="dis.getRecibos(dis.recibo.credito_id)" required>
 															<option  value="{{credito._id}}" ng-repeat="credito in dis.historialCreditos" >{{credito.folio}}</option>
 														</select>
 											  </div>
@@ -1320,6 +1318,7 @@
 <!--		 //////////////////////////////////////////////////////////// -->
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a> 
 <!-- Modal para Validar Beneficiado Vales -->
+
 <div id="modalvalidaBeneficiario" class="modal fade bs-cargos-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">

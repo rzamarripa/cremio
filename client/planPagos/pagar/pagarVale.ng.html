@@ -543,11 +543,23 @@
 						    <option value="Recibo">Recibo</option>
 						</select>
 		  	</div>
-		  	<div class="col-sm-2">					    
-		    	<label>Ocultar Multas</label>
-		    	<input name="ocultarMultas" type="checkbox" class="form-control" ng-click="pagV.ocultar()" ng-model="pagV.ocultarMultas">
-	    	</div>
-		  	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+
+	    	<div class="col-sm-2">
+					<br >
+					<label class="checkbox-inline">
+						  <input name="ocultarMultas" type="checkbox" class="checkbox style-0" ng-model = "pagV.ocultarMultas" ng-click = "pagV.ocultar()">
+						  <span> Ocultar Multas</span>
+					</label>
+				</div>
+	    		    	
+	    	<div class="col-sm-2">
+					<br >
+					<label class="checkbox-inline">
+						  <input name="mostrarTodos" type="checkbox" class="checkbox style-0" ng-model = "pagV.mostrarPP" ng-click = "pagV.mostrarTodos(pagV.mostrarPP)">
+						  <span> Mostrar Todos</span>
+					</label>
+				</div>
+		  	<div class="col-xs-6 col-sm-5 col-md-5 col-lg-6">
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 								<h5 style="text-align: center"> Subtotal <span class="txt-color-green" style="text-align: right">{{pagV.subtotal | currency}}</span></h5>
@@ -566,7 +578,7 @@
 				<table class="table table-bordered table-condensed font-xs">
 					<thead class="thead">
 						<tr>
-							<!-- <th class="text-center" width="3%"></th> -->
+							<th class="text-center" width="3%"></th>
 							<!-- <th class="text-center" width="3%">No.</th> -->
 							<th class="text-center" width="3%">Folio</th>
 							<th class="text-center" width="15%">Beneficiado</th>
@@ -585,7 +597,7 @@
 					<tbody>
 						<tr ng-class="pago.color" ng-repeat="pago in pagV.planPagosViejo | orderBy: pagV.funcionOrdenar()" ng-if="pago.verCargo">
 
-							<!-- <td ><a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td> -->
+							<td ><a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
 
 							<!-- <td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	 -->
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
@@ -638,14 +650,14 @@
 						<label for="fecha">Fecha Deposito:</label>
 						<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="pagV.pago.fechaDeposito"/>
 				</div>
-				<div class="form-group" ng-if = "pvpp.tipoIngresoSeleccionado.tipoCuenta == 'Banco'">
+				<div class="form-group" ng-if = "pagV.tipoIngresoSeleccionado.tipoCuenta == 'Banco'">
 						<label>Referencia:</label>
 						<input name="referencia" type="text"  class="form-control"  ng-model="pagV.pago.referencia"/>
 				</div>
 				<br/>
 				
 				<a class="btn btn-primary pull-left" ng-click="pagV.guardarPago(pagV.pago,pagV.credito)">Hacer Cobro</a>&nbsp
-				<a class="btn btn-info pull-left" ng-click="pagV.calcularAbono()">Calcular</a>
+				<!-- <a class="btn btn-info pull-left" ng-click="pagV.calcularAbono()">Calcular</a> -->
 								
 			</div>
 		</div>

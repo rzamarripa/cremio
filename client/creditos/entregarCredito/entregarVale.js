@@ -16,6 +16,8 @@ angular.module("creditoMio")
 	rc.cliente._id = "" ;
 	rc.datosCliente = ""
 	
+	rc.estatusFecha ;
+	
 	this.subscribe('tiposIngreso',()=>{
 		return [{
 			estatus : true
@@ -103,7 +105,14 @@ angular.module("creditoMio")
 
 			if (c != undefined)
 			{		
-
+					
+					var usuario = Meteor.users.findOne(Meteor.userId());
+		
+					if (usuario.roles[0] == "Cajero")
+							rc.estatusFecha = true;
+					else	
+							rc.estatusFecha = false;
+					
 					rc.cliente._id = c.cliente_id;
 					if (c.folio)
 						  this.verDiaPago = false;
@@ -620,4 +629,33 @@ this.fechaPago = function(diaSeleccionado, periodoPago)
 		};
 	
 	/////FINAL///
+	
+	
+	this.mostrarModalActivarFecha = function()
+	{
+			rc.credentials = {};
+			$("#modalActivarFecha").modal();
+	}
+	
+	
+	this.validaCredenciales = function(credenciales)
+	{
+			var usuario = Meteor.users.findOne(Meteor.userId());
+	    Meteor.call('validarCredenciales', credenciales, usuario.profile.sucursal_id , function(err, result) {
+	      if (result) {
+		      
+		      console.log("VER:", result);
+	        rc.estatusFecha = false;
+	        $scope.$apply();
+	        $("#modalActivarFecha").modal('hide');
+	      }
+	      else if (result == false)
+	      {
+		      	console.log("FAL:", result);
+		      	toastr.warning("No concide con la clave de desbloqueo")
+	      }
+	    });  
+			
+	}
+	
 };

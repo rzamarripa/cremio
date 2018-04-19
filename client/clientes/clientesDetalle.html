@@ -15,7 +15,7 @@
 										<a ng-click="cd.CreditoSolicitar(cd.objeto._id)"  class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px;; margin-right: 18px">
 											<i class="fa fa-plus"></i> N. Solicitud
 										</a>&nbsp;
-										<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px;">
+										<a	ui-sref="root.generarNotaCredito({objeto_id : cd.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || (currentUser.roles[0] == 'Supervisor' && currentUser.profile.notaCredito == true)" style="margin: 5px;">
 											<i class="fa fa-plus"></i> N. Nota de Crédito
 										</a>&nbsp;
 										<a ng-click="cd.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' " style="margin: 5px;">
@@ -62,7 +62,7 @@
 		</li>
 		<li class="pull-right">
 			<a href="#notasCredito" ng-click="cd.notasCreditos()" data-toggle="tab">
-			<span class="badge bg-color-blue txt-color-white pull-right">{{cd.notasCredito.length}}</span>Notas Créditos</a>
+			<span class="badge bg-color-blue txt-color-white pull-right">{{cd.notasCreditoSaldo.length}}</span>Notas Créditos</a>
 		</li>
 		<li class="pull-right">
 			<a href="#aprobados" ng-click="cd.creAprobados()" data-toggle="tab"><span class="badge bg-color-green txt-color-white pull-right">{{cd.creditosAprobados.length}}</span>Créditos Aprobados</a>
@@ -109,7 +109,7 @@
 																	<th class="text-center" width="20%">Fecha de Pago</th>
 																	<th class="text-center" width="10%">N. Pago</th>
 																	<th class="text-center" width="10%">Capital</th>
-																	<th class="text-center" width="10%">Interes</th>
+																	<th class="text-center" width="10%">Interés</th>
 																	<th class="text-center" width="5%">IVA</th>
 																	<th class="text-center" width="10%">Seguro</th>
 																	<th class="text-center" width="15%">Pago</th>
@@ -645,11 +645,14 @@
 								<thead class="thead">
 									<tr>
 										<th class="text-center" width="7%">Crédito No.</th>
+										<th class="text-center" width="10%">Tipo</th>
+										<th class="text-center" width="7%">Tasa</th>
+										<th class="text-center" width="5%">Aval</th>
 										<th class="text-center" width="15%">Fecha Solicitud</th>
 										<th class="text-center" width="15%">Fecha Entrega</th>
-										<th class="text-center" width="15%">Capital Solicitado</th>
-										<th class="text-center" width="15%">Adeudo Inicial</th>
-										<th class="text-center" width="20%">Saldo Actual</th>
+										<th class="text-center" width="10%">Capital Solicitado</th>
+										<th class="text-center" width="10%">Adeudo Inicial</th>
+										<th class="text-center" width="10%">Saldo Actual</th>
 										<th class="text-center" width="10%">Acciones</th>
 										<th ng-show="cd.openModal"></th>
 									</tr>
@@ -658,11 +661,14 @@
 									<tr ng-repeat="credito in cd.historialCreditos">
 											
 										<td class="text-center">{{credito.folio}}</td>	
+										<td class="text-left">{{credito.tipoCredito}}</td>	
+										<td class="text-center">{{credito.tasa}}%</td>
+										<td class="text-center">{{credito.tieneAval}}</td>	
 										<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
 										<td class="text-center">{{credito.fechaEntrega |  date:"dd-MM-yyyy" }}</td>
 										<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
-										<td >{{credito.adeudoInicial | currency}}</td>
-										<td >{{credito.saldoActual | currency}}</td>
+										<td class="text-right">{{credito.adeudoInicial | currency}}</td>
+										<td class="text-right">{{credito.saldoActual | currency}}</td>
 										<td>
 											<div class="text-center">
 													<button type="button" class="btn btn-link" ng-click="cd.verPagos(credito)">Ver Pagos</button>
@@ -903,8 +909,6 @@
 																			<th class="text-center" width="5%">Importe</th>
 																			<th class="text-center" width="5%">Saldo</th>
 																			<th class="text-center" width="5%">Estatus</th>
-																			
-																			
 																			<!-- 	<th class="text-center" width="20%">Acciones</th> -->
 																		</tr>
 																	</thead>
@@ -1018,7 +1022,10 @@
 																<a  ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  
 																		class="btn bg-color-blueDark txt-color-white btn-block" 
 																		role="button" 
-																		ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'">Editar Crédito
+																		ng-if="currentUser.roles[0] == 'Gerente' || 
+																					 currentUser.roles[0] == 'Cajero' || 
+																					 currentUser.roles[0] == 'Supervisor'"
+																		ng-show ="aprobado.folio == undefined ">Editar Crédito
 																</a>
 														</div>
 													</div>
@@ -1094,8 +1101,7 @@
 				<br/>
 	</div>
 </div>
- <!-- /////////////////////////MODAL NOTA CUENTA ////////////////////////// -->
-<!-- <div class="container"> -->
+<!-- /////////////////////////MODAL NOTA CUENTA ////////////////////////// -->
 <div class="modal fade" id="myModal"	data-backdrop="static" role="dialog">
 				<div class="modal-dialog">
 			<!-- Modal content-->
@@ -1132,7 +1138,6 @@
 				</div>
 		
 		</div>
-<!-- </div> -->
 <!--		 /////////////////Nota para el Cliente////////////////////// -->
 <div class="container">
 				<!-- Modal -->
@@ -1324,15 +1329,15 @@
     <div class="modal-content">
 	    	<div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="myModalLabel">Crear Cargos sMoratorios</h4>
+		        <h4 class="modal-title" id="myModalLabel">Crear Cargos Moratorios</h4>
 		    </div>
 				<div class="modal-body">
 							<form name="form2" novalidate>
 									<div class="well">	    
 								    <div class="row">
 								    		<div class="col-sm-4" valida>
-													<label >Credito</label>
-														<select name="recibo" class="form-control select2" placeholder="Seleccione" ng-model="cd.recibo.credito_id" ng-change="cd.getRecibos(cd.recibo.credito_id)" required>
+													<label >Crédito</label>
+														<select name="numRecibo" class="form-control select2" placeholder="Seleccione" ng-model="cd.recibo.credito_id" ng-change="cd.getRecibos(cd.recibo.credito_id)" required>
 															<option  value="{{credito._id}}" ng-repeat="credito in cd.historialCreditos" >{{credito.folio}}</option>
 														</select>
 											  </div>
@@ -1358,6 +1363,7 @@
      </div>
      
   </div>
+
 </div>
 <!--		 //////////////////////////////////////////////////////////// -->
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a> 

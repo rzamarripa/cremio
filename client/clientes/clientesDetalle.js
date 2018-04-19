@@ -248,6 +248,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			var notas = NotasCredito.find({},{sort:{fecha:1}});
 			return notas;
 		},
+		notasCreditoSaldo : () =>{
+			var notas = NotasCredito.find({estatus: 1, saldo : {$gt: 0}},{sort:{fecha:1}});
+			return notas;
+		},
 		/*
 		notaPerfil: () => {
 			//var nota = Notas.find({perfil : "perfil",estatus:true}).fetch()
@@ -301,7 +305,6 @@ notaCuenta1: () => {
 							_.each(notas, function(nota){
 								
 								if (nota.tipo == "Cuenta") {
-										//$("#notaPerfil").modal("hide");
 										rc.notaCuenta1 = nota;
 										$("#myModal").modal(); 
 									}
@@ -309,116 +312,11 @@ notaCuenta1: () => {
 									{
 										//Esta abre la nota de Cliente
 										rc.notaPerfil = nota;
-										
 										$("#notaPerfil").modal();
 									}
 							});
 					}
-							
-					/*
-_.each(rc.getReactively("notaPerfil"), function(nota){
-
-						if (cli._id == rc.notaPerfil.cliente_id) {
-		
-							if (rc.notaPerfil.tipo == "Cuenta") {
-		
-								$("#notaPerfil").modal("hide");
-		
-							}
-							else
-							{
-								//console.log("modal abrir")
-								//Esta abre la nota de Cliente
-								$("#notaPerfil").modal();
-							}
-						}
-					});		
-*/
-					
-					//console.log("Cliente:", cli);
-					/*
-var empresa = Empresas.findOne(cli.profile.empresa_id);
-
-					if (empresa != undefined)
-					{
-						var pais = Paises.findOne(empresa.pais_id);
-						
-			      if (pais != undefined) empresa.pais = pais.nombre;
-			      var edo = Estados.findOne(empresa.estado_id);
-			      if (edo != undefined) empresa.estado = edo.nombre;
-			      var mun = Municipios.findOne(empresa.municipio_id);
-			      if (mun != undefined) empresa.municipio = mun.nombre;
-			      var ciu = Ciudades.findOne(empresa.ciudad_id);
-			      if (ciu != undefined) empresa.ciudad = ciu.nombre;
-			      var col = Colonias.findOne(empresa.colonia_id);
-			      if (col != undefined) empresa.colonia = col.nombre;
-	
-						cli.profile.empresa = empresa;				
-					}	
-*/
-					/*
-rc.referenciasPersonales = [];
-					
-					//console.log(cli.profile.referenciasPersonales_ids);
-		      _.each(cli.profile.referenciasPersonales_ids,function(referenciaPersonal){
-			      		//console.log("RP ARRay:",referenciaPersonal);
-		            Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
-		                  if (result)
-		                  {
-			                  //console.log("RP:",result);
-		                  	if (result.apellidoMaterno == null) {
-		                  		result.apellidoMaterno = ""
-		                  	}
-		                      //Recorrer las relaciones 
-		                      
-		                      rc.referenciasPersonales.push({//buscarPersona_id : referenciaPersonal.referenciaPersonal_id,
-		                                                     nombre           : result.nombre,
-		                                                     apellidoPaterno  : result.apellidoPaterno,
-		                                                     apellidoMaterno  : result.apellidoMaterno,
-		                                                     parentesco       : referenciaPersonal.parentesco,
-		                                                     direccion        : result.direccion,
-		                                                     telefono         : result.telefono,
-		                                                     tiempo           : referenciaPersonal.tiempoConocerlo,
-		                                                     num              : referenciaPersonal.num,
-		                                                     nombreCompleto		:	result.nombreCompleto
-		                                                     //cliente          : result.cliente,
-		                                                     //cliente_id       : result.cliente_id,
-		                                                     //tipoPersona      : result.tipoPersona,
-		                                                     //estatus          : result.estatus
-		                      });
-													if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-											    		$scope.$apply();
-													}
-		                  }
-		            }); 
-		      });
-*/
-					/*
-	this.ocupacion_id = cli.profile.ocupacion_id;
-				
-					var ec = EstadoCivil.findOne(cli.profile.estadoCivil_id);
-					if (ec != undefined)
-							this.estadoCivilSeleccionado = 	ec.nombre;
-*/
-					/*
-	
-					
-					_.each(cli, function(objeto){
-
-						objeto.documento = Documentos.findOne(objeto.documento_id);
-						objeto.pais = Paises.findOne(objeto.pais_id);
-						objeto.estado = Estados.findOne(objeto.estado_id);
-						objeto.municipio = Municipios.findOne(objeto.municipio_id);
-						objeto.ciudad = Ciudades.findOne(objeto.ciudad_id);
-						objeto.colonia = Colonias.findOne(objeto.colonia_id);
-						objeto.ocupacion = Ocupaciones.findOne(objeto.ocupacion_id);
-						objeto.nacionalidad = Nacionalidades.findOne(objeto.nacionalidad_id);
-						objeto.estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id);
-						
-					});
-*/
-					
-					
+												
 			}
 			
 			return cli;	
@@ -502,6 +400,7 @@ rc.referenciasPersonales = [];
 
 
 			});
+			
 			return planPagos
 		},
 	
@@ -681,6 +580,17 @@ if(this.getReactively("credito_id")){
 		historialCreditos : () => {
 			var creditos = Creditos.find({estatus: {$in: [4,5]}}, {sort : {fechaSolicito: -1}}).fetch();
 			if(creditos != undefined){
+				
+				_.each(creditos, function(c){
+						c.tipoCredito = TiposCredito.findOne(c.tipoCredito_id).nombre;
+						
+						if (c.avales_ids.length > 0)
+								c.tieneAval = "Si";
+						else
+								c.tieneAval = "No";		
+						
+				});
+				
 				rc.creditos_id = _.pluck(creditos, "_id");
 			}	
 			return creditos;
@@ -947,7 +857,7 @@ if(this.getReactively("credito_id")){
 		
 	}
 
-/*
+	/*
 	this.imprimirDocumento = function(aprobado){
 			Meteor.call('imprimirDocumentos', aprobado, function(error, response) {
 				   if(error)
@@ -997,7 +907,6 @@ if(this.getReactively("credito_id")){
 	};	
 */
 
-	
 	this.cancelarCredito = function(motivo, form){
 			
 			if(form.$invalid){

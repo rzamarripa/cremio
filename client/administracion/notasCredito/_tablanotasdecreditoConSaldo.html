@@ -3,14 +3,15 @@
 		<thead class="thead">
 			<tr>
 				<th class="text-center" width="5%">No.</th>
-				<th class="text-center" width="5%">No. Cliente</th>
-				<th class="text-center" width="15%">Cliente</th>
+				<th class="text-center" width="10%">No. Cliente</th>
+				<th class="text-center" width="20%">Cliente</th>
 				<th class="text-center" width="10%">Tipo de Nota de Crédito</th>
 				<th class="text-center" width="15%">Causa</th>
 				<th class="text-center" width="5%">Creada</th>
 				<th class="text-center" width="5%">Fecha</th>
 				<th class="text-center" width="5%">Importe</th>
 				<th class="text-center" width="5%">Saldo</th>
+				<th class="text-center" width="10%">Usuario</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -24,6 +25,7 @@
 				<td style="text-align: center">{{nota.vigencia | date:'dd/MM/yyyy'}}</td>
 				<td style="text-align: right">{{nota.importe | currency}}</td>
 				<td style="text-align: right">{{nota.saldo | currency}}</td>
+				<td>{{nota.usuario}}</td>
 			</tr>
 		</tbody>
 </table>	

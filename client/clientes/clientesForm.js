@@ -752,7 +752,6 @@ objetoEditar : () => {
   this.borrarDoc = function($index)
   {
      rc.documents.splice($index, 1);
-  
   };
  
   //busca un elemento en el arreglo
@@ -818,6 +817,9 @@ objetoEditar : () => {
  	 
 	this.agregarImagen = function()
   { 	
+	  
+	  	//Validar 
+	  
  	  	var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
 	  	while (fileDisplayArea1.firstChild) {
 			    fileDisplayArea1.removeChild(fileDisplayArea1.firstChild);
@@ -827,7 +829,7 @@ objetoEditar : () => {
 	 
   this.agregarDoc = function(doc,imagen)
   {
-    //console.log("imagen",imagen)
+
     if (imagen == false) {
        toastr.error("Ninguna imagen agregada");
 
@@ -842,9 +844,6 @@ objetoEditar : () => {
 		    Meteor.call('getDocs', doc, function(error,result){
 		      if (result)
 		        {
-			        //console.log("result",result)
-		          //console.log("entra aqui");
-		          //console.log("result",result);
 		          rc.documents.push({imagen: imagen, nombre: result.nombre});
 		          $scope.$apply();      
 		        }
@@ -860,14 +859,10 @@ objetoEditar : () => {
 
   this.actDoc = function(doc,imagen)
   {
-    //console.log("imagen",imagen)
-    // rc.imagen = imagen
+	  
     Meteor.call('getDocs', doc, function(error,result){
       if (result)
         {
-	        //console.log("result",result)
-          //console.log("entra aqui");
-          //console.log("result",result);
           rc.objeto.profile.documentos.push({imagen: imagen, nombre: result.nombre});
           $scope.$apply();      
         }

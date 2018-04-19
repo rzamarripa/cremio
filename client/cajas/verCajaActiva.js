@@ -342,11 +342,16 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 		      	return;	
       	}
       	
-      	
+
       	//Para que no se pueda voler a cancelar
 				MovimientosCajas.update(pago.movimientoCaja_id, {$set: {estatus:2}});
-	    	Creditos.update(pago.credito._id,{$set:{estatus:2}});
+	    	Creditos.update(pago.credito._id,{$set:{estatus:6, motivo: "Se Canceló la Entrega..."}});//Quizas se valla a cancelarlo
 	    	
+	    	Meteor.call('cancelarPlanPago', pago.credito._id, function(error,result){
+		      if (result)
+		        {   
+		        }
+		    });
 				
 				var movimiento_id = MovimientosCajas.insert({
 	        tipoMovimiento	: "Cancelación",
@@ -371,6 +376,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 				delete rc.caja._id;
 				Cajas.update(tempId, {$set:rc.caja});
 
+
 		      		  
 			})
 	    
@@ -383,8 +389,6 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 	  console.log("Cajas:", rc.cajas);
 	  console.log("Cuentas:", rc.cuentas);
 */
-
-		
 	  
     rc.detalleOrigenDestino = _.findWhere(rc.cajas, {_id: _id}) || _.findWhere(rc.cuentas, {_id: _id});
     

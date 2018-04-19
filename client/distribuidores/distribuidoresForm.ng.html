@@ -57,6 +57,7 @@
 			</div>
 			<h4>Documentos</h4>
 			<div class="well">	    
+<!--
 				<div class="row">
 					<div class="col-sm-4" >
 						<label>Archivo (máximo 512Kb)</label>
@@ -74,6 +75,12 @@
 						<a href="" class="btn btn-primary" ng-click="dis.actDoc(dis.objeto.profile.documento_id,dis.imagen)" ng-if="dis.objeto._id">Agregar</a>
 					</div>
 				</div>
+-->			
+				<div class="row">
+ 					<div class="col-sm-2"><br/>
+						<a href="" class="btn btn-primary" ng-click="dis.agregarImagen()" >Agregar Documento</a>
+  					</div>
+				</div>	
 				<br/>
 				<div class="row">
 					<div class="col-sm-12">
@@ -721,8 +728,8 @@
 						<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="dis.objeto.profile.jefeInmediato" capitalize>
 					</div>
 					<div class="col-sm-4">					    
-						<label>Télefono del Jefe</label>
-						<input name="telefonoJefe" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="dis.objeto.profile.telefonoJefe" capitalize>
+						<label>Teléfono del Jefe</label>
+						<input name="telefonoJefe" type="text" class="form-control" placeholder="Teléfono del Jefe" ng-model="dis.objeto.profile.telefonoJefe" capitalize>
 					</div>
 				</div>
 				<br>
@@ -754,12 +761,12 @@
 		    	</div>
 			
 		</div>
-		<div class="row">
-					<div class="col-sm-12">
-						<input type="submit" ng-click="dis.guardar(dis.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="dis.action" valida-form formulario="form">
-						<!-- <input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form"> -->
-					</div>
-				</div>
+			<div class="row">
+						<div class="col-sm-12">
+							<input type="submit" ng-click="dis.guardar(dis.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="dis.action" valida-form formulario="form">
+							<!-- <input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form"> -->
+						</div>
+			</div>
 			
 		</div>
 		</form>
@@ -962,6 +969,7 @@
 	</div>
 </div>
 
+<!-- Aval -->
 <div id="modalAval" class="modal fade bs-modalAvales-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -971,52 +979,52 @@
 				<div class="widget-body">
 							<form name="form2" novalidate>
 									<div class="well">	    
-								     <div class="row">
-							 <div class="col-sm-3">
-						    	<img style="max-width:170px;" src="{{dis.aval.foto}}" >
-						    </div>
-					    	<div class="col-sm-6"> 					    
-						    	<label>Nombre</label>
-						    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="dis.aval.nombreCompleto" disabled="true">
-					    	</div>
-					    	
-					       </div>
-					    <div class="row">	
-						    <div class="col-sm-4">					    
-						    	<label>Calle</label>
-						    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.calle" disabled="true">
-					    	</div>
-					    	<div class="col-sm-2">					    
-						    	<label>Número</label>
-						    	<input name="numero" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.numero" disabled="true">
-					    	</div>
-					    	<div class="col-sm-2">					    
-						    	<label>Código Postal</label>
-						    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="dis.aval.codigoPostal" disabled="true">
-					    	</div>
-						    <div class="col-sm-4"> 					    
-						    	<label>Estado Civil</label>
-						    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="dis.aval.estadoCivil" disabled="true">
-					    	</div>
-					    </div>
-					    <div class="row">		
-						    <div class="col-sm-3"> 					    
-						    	<label>Ocupación</label>
-						    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="dis.aval.ocupacion" disabled="true">
-					    	</div>
-					    	<div class="col-sm-3">					    
-						    	<label>Empresa</label>
-						    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="dis.aval.empresa" disabled="true">
-					    	</div>
-					    	<div class="col-sm-3">					    
-						    	<label>Puesto</label>
-						    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="dis.aval.puesto" disabled="true">
-					    	</div>					    	
-					    	<div class="col-sm-3">					    
-						    	<label>Tiempo Laborando</label>
-						    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="dis.aval.tiempoLaborando" disabled="true">
-					    	</div>
-									</div>
+								      <div class="row">
+											  <div class="col-sm-3">
+										    	<img style="max-width:170px;" src="{{dis.aval.foto}}" >
+										    </div>
+									    	<div class="col-sm-6"> 					    
+										    	<label>Nombre</label>
+										    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="dis.aval.nombreCompleto" disabled="true">
+									    	</div>
+									    </div>
+									    <div class="row">	
+										    <div class="col-sm-4">					    
+										    	<label>Calle</label>
+										    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.calle" disabled="true">
+									    	</div>
+									    	<div class="col-sm-2">					    
+										    	<label>Número</label>
+										    	<input name="numero" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.numero" disabled="true">
+									    	</div>
+									    	<div class="col-sm-2">					    
+										    	<label>Código Postal</label>
+										    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="dis.aval.codigoPostal" disabled="true">
+									    	</div>
+										    <div class="col-sm-4"> 					    
+										    	<label>Estado Civil</label>
+										    	<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="dis.aval.estadoCivil" disabled="true">
+									    	</div>
+									    </div>
+									    <div class="row">		
+										    <div class="col-sm-3"> 					    
+										    	<label>Ocupación</label>
+										    	<input name="ocupacion" type="text" class="form-control" placeholder="Ocupación" ng-model="dis.aval.ocupacion" disabled="true">
+									    	</div>
+									    	<div class="col-sm-3">					    
+										    	<label>Empresa</label>
+										    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="dis.aval.empresa" disabled="true">
+									    	</div>
+									    	<div class="col-sm-3">					    
+										    	<label>Puesto</label>
+										    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="dis.aval.puesto" disabled="true">
+									    	</div>					    	
+									    	<div class="col-sm-3">					    
+										    	<label>Tiempo Laborando</label>
+										    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="dis.aval.tiempoLaborando" disabled="true">
+									    	</div>
+											</div>
+									</div>    
 							</form>
 	      </div>	
 	      <div class="modal-footer">
@@ -1027,7 +1035,48 @@
   </div>
 </div>
 
-
+<!-- Documentos -->
+<div id="modalDocumentoImagen" class="modal fade bs-ocupacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Agregar Documento</h4>
+			</div>
+			<div class="widget-body">
+				<form name="form3" novalidate>
+					<div class="well">	    
+						<div class="row">
+						 	<div class="col-sm-6" >
+									<label>Archivo (máximo 512Kb)</label>
+									<input name="archivo" type="file" id="fileInput1" >
+ 						  </div>
+ 							<div class="col-sm-4">
+								<label id="id_label_single">Seleccionar Documento</label>
+								<select class="form-control" id="id_label_single" placeholder="Seleccione" ng-model="dis.objeto.profile.documento_id"
+												ng-change="dis.getClientes(dis.objeto.profile.documento_id)">
+									<option ng-repeat="documento in dis.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
+								</select>
+							</div>
+  						</div>
+ 						<div class="row">
+	 						<div class="col-sm-12" >
+ 	 							 <div id="fileDisplayArea1"></div>
+ 	 						</div>
+ 						</div>	
+   						
+ 					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				<!-- <input type="submit" ng-click="dis.guardarOcupacion(dis.ocupacion, dis.objeto,form3)" value="Guardar" class="btn btn-primary" valida-form formulario="form3"> -->
+				<a href="" class="btn btn-primary" ng-click="dis.agregarDoc(dis.objeto.profile.documento_id,dis.imagen)" ng-if="!dis.objeto._id">Guardar</a>
+				<a href="" class="btn btn-primary" ng-click="dis.actDoc(dis.objeto.profile.documento_id,dis.imagen)" ng-if="dis.objeto._id">Guardar</a>
+		  </div>
+		</div>
+	</div>
+</div>
 
 <script>
 	$('#bootstrap-wizard-1').bootstrapWizard({

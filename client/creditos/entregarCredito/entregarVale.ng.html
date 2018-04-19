@@ -18,12 +18,18 @@
           <div class="row ">
             <div class="col-sm-3" valida>
               <label>Primer abono</label>
-              <input type="date" format="dd-MM-yyyy" class="form-control" ng-model="ecCtrl.objeto.primerAbono" name="fechaPrimerAbono" disabled="true"/>
+              <input type="date" format="dd-MM-yyyy" class="form-control" ng-model="ecCtrl.objeto.primerAbono" name="fechaPrimerAbono" ng-disabled="ecCtrl.estatusFecha"/>
             </div>
             <div class="col-sm-3">            
 								<br>
                 <button ng-if="ecCtrl.credito.tipo == 'vale'" class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Vale</button>          
             </div>  
+            
+            <div class="col-sm-2">            
+								<br>
+								<button class="btn btn-info" ng-click="ecCtrl.mostrarModalActivarFecha()">Activar Fecha</button>
+            </div>
+            
           </div>         
           <div class="row" ng-if="ecCtrl.credito.avales_ids.length > 0">
 							<div class="col-sm-6">          	
@@ -153,6 +159,43 @@
 
 
 <!--     //////////////////////////////////////////////////////////// -->
+
+<!--     //////////////////////////////////////////////////////////// -->
+
+<div id="modalActivarFecha" class="modal fade bd-example-modal-sm">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Datos Usuario</h4>
+		    </div>
+				<div class="modal-body">
+							<form name="form2" novalidate>
+									<div class="well">	    
+								    <div class="row" style="text-align: center">
+								    		<div class=".col-xs-6 .col-md-4" style="text-align: center" valida>			
+							            <label>Nombre de Usuario</label>
+							            <input type="text" class="form-control" name="username" ng-model="ecCtrl.credentials.username">
+												</div>
+								    </div>
+								    <div class="row" style="text-align: center">		
+							          <div class=".col-xs-6 .col-md-4" valida>
+							            <label >Clave de desbloqueo</label>
+						              <input type="password" class="form-control" name="password" ng-model="ecCtrl.credentials.password">
+							          </div>
+								    </div>
+									</div>
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		      	<a	class="btn btn-success" ng-click="ecCtrl.validaCredenciales(ecCtrl.credentials)">Aceptar</a>
+		        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+     
+  </div>
+</div>
+
 
 <a id='dwnldLnk' href="#" download='documentos.docx' style="display:none;" hidden="true"></a>   
     

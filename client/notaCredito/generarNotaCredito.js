@@ -64,8 +64,8 @@ function GenerarNotaCredito($scope, $meteor, $reactive, $state, toastr, $statePa
 				rc.objeto = {}; 
 				$('.collapse').collapse('hide');
 				rc.nuevo = true;
-				form.$setPristine();
-				form.$setUntouched();
+				//form.$setPristine();
+				//form.$setUntouched();
 				$state.go("root.clienteDetalle",{objeto_id : $stateParams.objeto_id});
 			});	
 		

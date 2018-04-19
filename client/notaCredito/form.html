@@ -8,7 +8,9 @@
 								<div class="row">
 									<div class="col-sm-6">
 										<h1>{{gnc.objeto.profile.nombre}} <span class="semi-bold">{{gnc.objeto.profile.apellidoPaterno}} {{gnc.objeto.profile.apellidoMaterno}}</span>
-										<small> (Cliente)</small></h1>
+											<small ng-if="gnc.objeto.roles[0] == 'Cliente'"> (Cliente)</small>
+											<small ng-if="gnc.objeto.roles[0] == 'Distribuidor'"> (Distribuidor)</small>
+										</h1>
 									</div>
 									<div class="col-sm-6">
 										<a ui-sref="root.clienteDetalle({objeto_id: gnc.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>

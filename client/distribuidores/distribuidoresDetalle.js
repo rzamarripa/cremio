@@ -51,6 +51,11 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 	
 	rc.estatusCaja = "";
 	
+	rc.notaPerfil = {};
+	rc.notaCuenta1 = {};
+	
+	rc.banderaContestar = false;
+	
 	rc.BeneficiadosDeudas = [];
 	
 	rc.beneficiarios 	= [];
@@ -86,7 +91,11 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		}];
 	});
 	this.subscribe('notas',()=>{
-		return [{cliente_id:this.getReactively("cliente_id")}]
+		//return [{cliente_id: this.getReactively("cliente_id")}]
+		return [{cliente_id	: $stateParams.objeto_id,
+						estatus 		: true,
+						tipo				: {$in : ["Cliente", "Cuenta"]} 	
+		}]
 	});
 
 	this.subscribe('tiposNotasCredito',()=>{
@@ -118,14 +127,8 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			estatus : true
 		}]
 	});
-	// this.subscribe('referenciasPersonales',()=>{
-	// 	return [{
-			
-	// 	}]
-	// });
-
-
-			
+	
+		
 	this.helpers({
 /*
 		ciudades : () => {
@@ -220,7 +223,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			return creditos;
 		},
 		creditosCancelados : () =>{
-			return Creditos.find({estatus:3});
+			return Creditos.find({estatus:{$in: [3,6]}});
 		},
 		creditosPendientes : () =>{
 			var creditos = Creditos.find({estatus:{$in:[0,1]}}, {sort:{fechaSolicito:1}}).fetch();
@@ -243,7 +246,8 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			return notas
 
 		},
-		notaPerfil: () => {
+		/*
+notaPerfil: () => {
 			var nota = Notas.find({perfil : "perfil",estatus:true}).fetch()
 
 			_.each(rc.getReactively("notasCredito"), function(nota){
@@ -270,11 +274,15 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			
 			
 		},
+*/
 		
 		objeto : () => {
+			
 			var cli = Meteor.users.findOne({_id : $stateParams.objeto_id});
 			
-			_.each(rc.getReactively("notaPerfil"), function(nota){
+			
+		/*
+	_.each(rc.getReactively("notaPerfil"), function(nota){
 				//console.log(rc.notaPerfil.cliente_id,"nota a l avga")
 				if (cli._id == rc.notaPerfil.cliente_id) {
 					//console.log("entro aqui compilla")
@@ -288,12 +296,38 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 					}
 				}
 			});
+*/
 
 
 			if (cli != undefined)
 			{
 					
-					var empresa = Empresas.findOne(cli.profile.empresa_id);
+					var notas = Notas.find({cliente_id	: $stateParams.objeto_id,
+																	estatus 		: true,
+																	tipo				: {$in : ["Cliente", "Cuenta"]}}).fetch();
+					
+					//console.log(notas);
+					if (rc.banderaContestar == false)
+					{
+							_.each(notas, function(nota){
+								
+								if (nota.tipo == "Cuenta") {
+										//$("#notaPerfil").modal("hide");
+										rc.notaCuenta1 = nota;
+										$("#myModal").modal(); 
+									}
+									else if (nota.tipo == "Cliente")
+									{
+										//Esta abre la nota de Cliente
+										rc.notaPerfil = nota;
+										
+										$("#notaPerfil").modal();
+									}
+							});
+					}
+					
+					/*
+var empresa = Empresas.findOne(cli.profile.empresa_id);
 					if (empresa != undefined)
 					{
 						var pais = Paises.findOne(empresa.pais_id);
@@ -340,12 +374,14 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		                  }
 		            }); 
 		      });
+*/
 
-					
+				return cli;		
 					
 			}
-			
-			_.each(cli, function(objeto){
+
+			/*
+_.each(cli, function(objeto){
 
 				 rc.referencias = [];
 				 //rc.empresas = [];
@@ -389,12 +425,50 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 						this.estadoCivilSeleccionado = 	ec.nombre;
 
 				return cli;
-			}		
+			}	
+*/	
 		},	
 		planPagos : () => {
-			var planPagos = PlanPagos.find({},{sort : {numeroPago : 1, descripcion:-1}}).fetch();
+			
+			
+			var fecha = new Date();
+			var n = fecha.getDate();
+			var fechaLimite = "";
+		
+			if (n >= 20)
+			{
+					fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);		
+			}
+			else if (n < 5) 
+			{
+					fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),1,0,0,0,0);
+			}
+			else if (n >= 5 && n < 20)		
+			{
+					fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
+			}
+			
+			fechaLimite.setHours(23,59,59,999);
+			
+			var planPagos = PlanPagos.find({fechaLimite: { $lte: fechaLimite }, importeRegular: {$gt: 0}},{sort : {fechaLimite : 1}}).fetch();
+			
+			//fechaEntrega : { $gte : fechaInicial, $lte : fechaFinal}
 			
 			rc.saldo = 0;
+			
+			_.each(planPagos, function(pp){				
+					var credito = Creditos.findOne(pp.credito_id);
+					
+					pp.beneficiado = credito.beneficiado;
+					pp.numeroPagos = credito.numeroPagos;
+					
+					rc.saldo += pp.importeRegular;
+					
+			});
+			
+			
+			/*
+rc.saldo = 0;
 			rc.cargosMoratorios = 0;
 			
 			if(rc.getReactively("creditos") && rc.creditos.length > 0 && planPagos.length > 0){	
@@ -408,6 +482,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 					credito.sumaCargoMoratorios = 0;
 					credito.sumaPendientesCargoM = 0;
 					credito.tieneCargoMoratorio = false;
+					planPagos.beneficiado = credito.beneficiado;
 					
 					credito.pagos = 0;
 					
@@ -462,6 +537,8 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			
 			rc.saldo 						= Number(parseFloat(rc.saldo).toFixed(2));
 			rc.cargosMoratorios	= Number(parseFloat(rc.cargosMoratorios).toFixed(2));
+*/
+			
 			
 			
 			_.each(rc.empresas, function(empresa){
@@ -474,6 +551,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 
 			});
+			
 			return planPagos
 		},
 	
@@ -601,6 +679,21 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			//console.log("el ARREGLO del helper historial",arreglo)
 			return arreglo;
 		},
+		historialCreditos : () => {
+			var creditos = Creditos.find({estatus: {$in: [4,5]}}, {sort : {fechaSolicito: -1}}).fetch();
+			if(creditos != undefined){
+				
+				/*
+_.each(creditos, function(c){
+						c.tipoCredito = TiposCredito.findOne(c.tipoCredito_id).nombre;
+						
+				});
+*/
+				
+				rc.creditos_id = _.pluck(creditos, "_id");
+			}	
+			return creditos;
+		},
 
 		cajero: () => {
 			var c = Meteor.users.findOne({roles: "Cajero"});
@@ -633,7 +726,8 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
   		return imagen
 		},
 		
-		credito : () => {
+		/*
+credito : () => {
 				var creditos = Creditos.find({estatus: {$in: [4,5]}}).fetch();
 				if(creditos != undefined){
 					rc.creditos_id = _.pluck(creditos, "_id");
@@ -643,6 +737,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 		 return rc.credito;	
 		},
+*/
 		
 	/*
 	pago : () => {
@@ -673,7 +768,6 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
   };
 
-
 	//console.log("nota ",rc.notaCuenta1)
 	this.actualizar = function(cliente,form){
 
@@ -693,14 +787,10 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		var apMaterno = cliente.profile.apMaterno != undefined ? cliente.profile.apMaterno : "";
 		cliente.profile.nombreCompleto = nombre + apPaterno + apMaterno;
 		delete cliente.profile.repeatPassword;
-		Meteor.call('updateUsuario', rc.cliente, "cliente");
+		Meteor.call('updateUsuario', rc.cliente, "Distribuidor");
 		toastr.success('Actualizado correctamente.');
-		$('.collapse').collapse('hide');
 		this.nuevo = true;
-		form.$setPristine();
-		form.$setUntouched();
 		$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
-		//$state.go('root.clientes');
 	};
 	
 	this.tomarFoto = function () {
@@ -971,16 +1061,16 @@ _.each(rc.pagos, function(pago){
 	};
 
 	this.guardarNota = function(objeto){
-		console.log(objeto,"nota")
+		//console.log(objeto,"nota")
 		objeto.perfil = "perfil"
 		objeto.cliente_id = rc.objeto._id
 		objeto.nombreCliente = rc.objeto.profile.nombreCompleto
 		//objeto.respuesta = true;
-		objeto.usuario = rc.objeto.profile.nombreCompleto
+		objeto.usuario_id = Meteor.userId();
 		objeto.respuesta =  this.respuestaNotaCLiente	
 		objeto.fecha = new Date()
-	    objeto.hora = moment(objeto.fecha).format("hh:mm:ss a")
-		objeto.estatus = true;
+	  objeto.hora = moment(objeto.fecha).format("hh:mm:ss a")
+		objeto.estatus = true; //Significa esta Activa
 		Notas.insert(objeto);
 		toastr.success('Nota guardada.');
 		rc.nota = {};
@@ -2000,7 +2090,48 @@ var html  = "<html><head>" +
 	
 	};
 	
-	
+	this.mostrarTodos = function(valor)
+	{
+			
+			if (valor){
+					rc.planPagos = PlanPagos.find({importeRegular: {$gt: 0}},{sort : {fechaLimite : 1}}).fetch();
+			}
+			else{
+					var fecha = new Date();
+					var n = fecha.getDate();
+					var fechaLimite = "";
+				
+					if (n >= 20)
+					{
+							fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);		
+					}
+					else if (n < 5) 
+					{
+							fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),1,0,0,0,0);
+					}
+					else if (n >= 5 && n < 20)		
+					{
+							fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
+					}
+					
+					fechaLimite.setHours(23,59,59,999);
+					
+					rc.planPagos = PlanPagos.find({fechaLimite: { $lte: fechaLimite }, importeRegular: {$gt: 0}},{sort : {fechaLimite : 1}}).fetch();
+					
+			}
+			
+			rc.saldo = 0;
+			_.each(rc.planPagos, function(pp){				
+					var credito = Creditos.findOne(pp.credito_id);
+					
+					pp.beneficiado = credito.beneficiado;
+					pp.numeroPagos = credito.numeroPagos;
+					
+					rc.saldo += pp.importeRegular;
+					
+			});
+
+	};	 
 	
 	
 }

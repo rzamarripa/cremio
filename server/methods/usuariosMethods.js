@@ -152,6 +152,7 @@ Meteor.methods({
 		
 	  var user = Meteor.users.findOne({_id : usuario._id});		
 		user.profile = usuario.profile;
+		
 		/*
 
 		if (rol == "Cliente")

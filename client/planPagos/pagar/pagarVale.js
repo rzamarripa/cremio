@@ -29,6 +29,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
   this.masInfoCredito = true;
   rc.openModal = false
   rc.foliosCreditos = [];
+	rc.planPagosViejo = [];
 	
 	this.valorOrdenar = "Fecha";
 	
@@ -45,7 +46,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 	rc.selectedRow = null;  // initialize our variable to null
   //console.log(rc.credito)
   
-  rc.fechaLimite;
+  rc.fechaLimite = "" ;
 
   this.subscribe('planPagos', () => {
 	  //determinar la fecha menor a la quincena mas pronta
@@ -384,14 +385,18 @@ _.each(rc.planPagos, function(planPago, index){
     planPagosViejo: () => {
     	var colores = ['active', 'info', 'warning', 'success', 'danger'];
     	var asignados = [];
-   	
+			/*
+
 			var pp = PlanPagos.find({importeRegular : {$gt : 0}
-															/* , fechaLimite		: {$lte: rc.fechaLimite} */ }, 
+															/// , fechaLimite		: {$lte: rc.fechaLimite}  
+															}, 
 															{ sort: { fechaLimite: 1, numeroPago: 1, descripcion: -1 } }).fetch();
 			
+*/
 			
 			var fecha = new Date();
 			var n = fecha.getDate();
+			//var fechaLimite = "";
 		
 			if (n >= 20)
 			{
@@ -403,10 +408,12 @@ _.each(rc.planPagos, function(planPago, index){
 			}
 			else if (n >= 5 && n < 20)		
 			{
-							rc.fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
+					rc.fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
 			}
 			
 			rc.fechaLimite.setHours(23,59,59,999);
+			
+			var pp = PlanPagos.find({fechaLimite: { $lte: rc.fechaLimite }, importeRegular: {$gt: 0}},{sort : {fechaLimite : 1}}).fetch();
 															
       rc.subtotal = 0;
 			rc.cargosMoratorios = 0;
@@ -633,6 +640,9 @@ pagosReporte: () => {
 				}		
     });
     rc.pago.totalPago = Number(parseFloat(rc.pago.totalPago).toFixed(2));
+    
+    rc.pago.aPagar =  Number(parseFloat(rc.pago.totalPago - rc.pago.bonificacion).toFixed(2));
+    
   }
   
   //Este es el input
@@ -928,8 +938,10 @@ if (pago.pagar < pago.totalPago)
           if (pago.pagoSeleccionado == true && pago.verCargo == false)
           {
           		pago.pagoSeleccionado = false;
+/*
 							console.log("false:", pago.importepagado);  	
 							console.log("false:", rc.pago.totalPago);  	
+*/
           		rc.pago.totalPago = rc.pago.totalPago - Number(parseFloat(pago.importepagado).toFixed(2));
 							pago.importepagado	= 0;
           }
@@ -1420,7 +1432,126 @@ if (pago.descripcion == "Recibo")
 	  
   };
   
-  
+  this.mostrarTodos = function(valor)
+	{
+			
+			if (valor){
+					rc.planPagosViejo = PlanPagos.find({importeRegular: {$gt: 0}},{sort : {fechaLimite : 1}}).fetch();
+			}
+			else
+			{
+					
+					
+					var fecha = new Date();
+					var n = fecha.getDate();
+					var fechaLimite = "";
+				
+					if (n >= 20)
+					{
+							fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);		
+					}
+					else if (n < 5) 
+					{
+							fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),1,0,0,0,0);
+					}
+					else if (n >= 5 && n < 20)		
+					{
+							fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
+					}
+					
+					fechaLimite.setHours(23,59,59,999);
+					
+					rc.planPagosViejo = PlanPagos.find({fechaLimite: { $lte: fechaLimite }, importeRegular: {$gt: 0}},{sort : {fechaLimite : 1}}).fetch();
+					
+			}
+			
+			var colores = ['active', 'info', 'warning', 'success', 'danger'];
+			var asignados = [];
+			
+			rc.pago.totalPago = 0;
+			rc.pago.bonificacion = 0;
+			
+			rc.subtotal = 0;
+			rc.cargosMoratorios = 0;
+			rc.numeroPagosSeleccionados = 0;
+			
+			_.each(rc.planPagosViejo, function(pago){				
+					//var credito = Creditos.findOne(pp.credito_id);
+					
+					pago.credito = Creditos.findOne(pago.credito_id);
+					
+					pago.color = colores[0];
+	        //var credito = Creditos.findOne({_id:pago.credito_id});
+	        pago.verCargo = true;
+	        
+	        var comision = calculaBonificacion(pago.fechaLimite);
+	        
+	        //console.log("Com:", comision);
+	        
+	        pago.bonificacion = parseFloat(((pago.capital + pago.interes) * (comision / 100))).toFixed(2);
+	        var cre = Creditos.findOne({_id: pago.credito_id});
+	        pago.beneficiado =  cre.beneficiado;
+	        
+	        pago.saldo 					= Number(parseFloat(pago.importeRegular).toFixed(2));
+	        
+	        
+	        
+					if (pago.fechaLimite < rc.fechaLimite)		        
+					{
+							pago.importepagado 	= Number(parseFloat(pago.importeRegular).toFixed(2));
+							pago.pagoSeleccionado = true;	
+							
+							rc.pago.totalPago += Number(parseFloat(pago.importeRegular).toFixed(2));
+							rc.pago.bonificacion += Number(parseFloat(pago.bonificacion).toFixed(2));
+							
+							rc.numeroPagosSeleccionados += 1;
+							
+					}
+					else
+					{
+							pago.importepagado 	= 0;
+							pago.pagoSeleccionado = false;	
+						
+					}
+	        
+	        
+	        if (pago.descripcion == "Recibo")
+	        		rc.subtotal +=  pago.importeRegular;
+	        else if (pago.descripcion == "Cargo Moratorio")
+	        {
+	        		rc.cargosMoratorios +=  pago.importeRegular;
+	        		//console.log("Entro: CM", pago)
+	        }
+	        pago.folio = pago.credito.folio;
+	        
+	        //console.log(pago.folio);
+	        
+	        if (pago.pagoSeguro !=  undefined)
+						 pago.seguro = pago.seguro -  pago.pagoSeguro;
+					
+					if (pago.pagoIva !=  undefined)
+						 pago.iva = pago.iva -  pago.pagoIva;
+						 
+					if (pago.pagoInteres !=  undefined)
+						 pago.interes = pago.interes -  pago.pagoInteres;
+						 
+					if (pago.pagoCapital !=  undefined)
+						 pago.capital = pago.capital -  pago.pagoCapital;	 
+					
+					
+					pago.beneficiado = pago.credito.beneficiado;
+					pago.numeroPagos = pago.credito.numeroPagos;
+					pago.verCargo = true;
+					
+
+
+			});
+			
+			rc.pago.aPagar =  Number(parseFloat(rc.pago.totalPago - rc.pago.bonificacion).toFixed(2));
+
+			
+
+	};	
   
   function calculaBonificacion(fechaLimite){
 	  	
