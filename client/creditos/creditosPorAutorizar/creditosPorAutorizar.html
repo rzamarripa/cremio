@@ -36,7 +36,7 @@
 		                </td>
                     <td class="text-center">{{credito.capitalSolicitado | currency}}</td>
                     <td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
-                    <td>{{credito.avales_ids[0].nombreCompleto}}</td>
+                    <td>{{credito.avales_ids[0].nombre}} {{credito.avales_ids[0].apellidoPaterno}}</td>
                     <td class="text-left" style="padding: 0px">
 	                    		<ul style="padding-left: 15px">
     												<li ng-repeat="v in credito.verificaciones">

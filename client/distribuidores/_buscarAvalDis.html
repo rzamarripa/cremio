@@ -15,8 +15,8 @@
 				<div class="user well" title="{{persona._id}}" ng-repeat="persona in dis.avalesHelper" style="width: 100%">
 					<div class="row">
 						<div class="col-sm-12">
-							<a href="javascript:void(0);"> {{persona.profile.nombreCompleto}}</a> 
-							<a href="javascript:void(0);" ng-click="dis.AgregarAval(persona); dis.buscando = false"> Agregar</a>
+							<a href="javascript:void(0);" ng-click="dis.AgregarAval(persona); dis.buscando = false"> {{persona.profile.nombreCompleto}}</a> 
+<!-- 							<a href="javascript:void(0);" ng-click="dis.AgregarAval(persona); dis.buscando = false"> Agregar</a> -->
 						<!-- 	<div class="btn-group btn-xs btn-group-justified">
 								<a href="javascript:void(0);" class="btn btn-default" ng-repeat="relacion in persona.profile.creditos">{{relacion.parentesco}} - {{relacion.tiempoConocerlo}} - <span ng-class = "relacion.estatus==0?'text-success':'text-danger'"><i ng-if="relacion.estatus==0" class="fa fa-check"></i><i ng-if="relacion.estatus!=0" class="fa fa-times"></span></a>
 							</div>		 -->

@@ -5,13 +5,16 @@ angular.module("creditoMio")
  	window.rc = rc;
  	rc.total = 0;
  	rc.$stateParams = $stateParams;
+ 	rc.fecha = new Date();
+ 	
  	this.subscribe('movimientosCaja', () => {
     return [{}]
   });
  	Meteor.apply('getCorte', [$stateParams.corte_id], function(err, result){
- 		rc = _.extend(rc, result);
- 		console.log(result);
- 	 	$scope.$apply();
+ 		if (result){
+				rc = _.extend(rc, result);
+				$scope.$apply(); 
+	 	}
  	});
  	
  		

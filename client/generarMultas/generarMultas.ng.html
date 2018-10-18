@@ -1,0 +1,44 @@
+<h2>Generar Multas</h2>
+<div class="row">
+	<div class="col-sm-12">
+			<form name="form" class="form-horizontal" role="form">
+		  	<div class="well">	    
+			    <div class="row">
+						<div class="col-sm-3">
+							<input type="submit" ng-click="genM.generaMultas(form)" value="Generar Multas" class="btn btn-primary" valida-form formulario="form">
+						</div>
+						<div class="col-sm-3">
+							<input type="submit" ng-click="genM.actualizarMultas(form)" value="Actualizar Multas" class="btn btn-primary" valida-form formulario="form">
+						</div>
+						<div class="col-sm-3">
+							<input type="submit" ng-click="genM.restarMultas(form)" value="Restar Multas" class="btn btn-primary" valida-form formulario="form">
+						</div>
+						<div class="col-sm-3">
+							<input type="submit" ng-click="genM.deprecarNC(form)" value="Deprecar NC" class="btn btn-primary" valida-form formulario="form">
+						</div>
+					</div>
+		  	</div>  
+		  </form>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+				<th width="5%"><div class="text-center">No.</div></th>
+					<th width="40%"><div class="text-center">Inicio</div></th>
+					<th width="40%"><div class="text-center">Fin</div></th>
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="objeto in genM.arreglo">
+		     <td>{{$index + 1}}</td>
+			    <td>{{objeto.inicio | date : "dd/MM/yyyy"}}</td> 
+			    <td>{{objeto.fin | date : "dd/MM/yyyy"}}</td> 
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>		

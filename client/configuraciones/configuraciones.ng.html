@@ -1,0 +1,129 @@
+<form name="form" class="form-horizontal" role="form" novalidate>
+    <h4>Configuraciones</h4>
+    <div class="well">
+        <div class="row">
+						<div class="col-sm-2" valida>
+							<label>Seguro Distribuidoras</label>
+								<input name="seguro" class="form-control" type="number" ng-model="conf.objeto.seguro" ng-disabled="conf.action" required>
+						</div>
+						<div class="col-sm-2" valida>
+							<label>Límite Crédito Vale</label>
+								<input name="limiteVale" class="form-control" type="number" ng-model="conf.objeto.limiteVale" ng-disabled="conf.action" required>
+						</div>
+        </div>
+        <br>
+				<h4>Configuración Tasa para Vales</h4>
+				<div class="row">
+						<div class="col-sm-2" valida>
+							<label>Cantidad</label>
+							<input name="cantidad" min="0" class="form-control" type="number" ng-model="conf.renglonTasa.cantidad" ng-disabled="conf.action">								
+						</div>
+				</div>		
+				<div class="row">
+						<div class="col-sm-2" >
+							<label>6</label>
+							<input name="seis" min="0" class="form-control" type="number" ng-model="conf.renglonTasa.seis" ng-disabled="conf.action">								
+						</div>
+						<div class="col-sm-2" >
+							<label>8</label>
+							<input name="ocho" min="0" class="form-control" type="number" ng-model="conf.renglonTasa.ocho" ng-disabled="conf.action">								
+						</div>
+						<div class="col-sm-2" >
+							<label>10</label>
+							<input name="diez" min="0" class="form-control" type="number" ng-model="conf.renglonTasa.diez" ng-disabled="conf.action">								
+						</div>
+						<div class="col-sm-2">
+							<label>12</label>
+							<input name="doce" min="0" class="form-control" type="number" ng-model="conf.renglonTasa.doce" ng-disabled="conf.action">								
+						</div>
+						<div class="col-sm-2">
+							<label>14</label>
+							<input name="catorce" min="0" class="form-control" type="number" ng-model="conf.renglonTasa.catorce" ng-disabled="conf.action">								
+						</div>
+						<div class="col-sm-2">
+							<label>16</label>
+							<input name="dieciseis" min="0" class="form-control" type="number" ng-model="conf.renglonTasa.dieciseis" ng-disabled="conf.action">								
+						</div>
+						<div class="col-sm-2">
+							<br>	
+							<input type="button" ng-click="conf.agregar(conf.renglonTasa)" class="btn btn-primary" value="Agregar" ng-disabled="conf.action" ng-if="conf.actionArreglo">
+							<input type="button" ng-click="conf.actualizarArreglo(conf.renglonTasa)" class="btn btn-primary" value="Actualizar" ng-if="!conf.actionArreglo">								
+						</div>
+				</div>	
+				<h4>Valores Tasas</h4>
+        <div class="row">
+      			<table class="table table-bordered table-condensed">
+        				<thead>
+	        				<tr>
+		        				<th  style="text-align: center" width="10%">Cantidad</th>
+		        				<th  style="text-align: center" width="5%">6</th>
+		        				<th  style="text-align: center" width="5%">8</th>
+		        				<th  style="text-align: center" width="5%">10</th>
+		        				<th  style="text-align: center" width="5%">12</th>
+		        				<th  style="text-align: center" width="5%">14</th>
+		        				<th  style="text-align: center" width="5%">16</th>
+		        				<th  style="text-align: center" width="5%">Acción</th>
+	        				</tr>		
+        				</thead>
+        				<tbody>
+	        				<tr ng-repeat="obj in conf.arregloTasa">
+		        				<td style="text-align: center">{{obj.cantidad}}</td>
+		        				<td style="text-align: center">{{obj.seis}}</td>
+		        				<td style="text-align: center">{{obj.ocho}}</td>
+		        				<td style="text-align: center">{{obj.diez}}</td>
+		        				<td style="text-align: center">{{obj.doce}}</td>
+		        				<td style="text-align: center">{{obj.catorce}}</td>
+		        				<td style="text-align: center">{{obj.dieciseis}}</td>
+		        				<td style="text-align: center">
+			        					<input type="button" ng-click="conf.editarArreglo(obj)" class="btn btn-xs btn-warning" value="editar" ng-disabled="conf.action">
+		        				</td>	
+	        				</tr>
+        				</tbody>	
+      			</table>
+        </div>
+        
+        <h4>Valores con Iva incluido</h4>
+        <div class="row">
+      			<table class="table table-bordered table-condensed">
+        				<thead>
+	        				<tr>
+		        				<th style="text-align: center" width="10%">Cantidad</th>
+		        				<th style="text-align: center" width="5%">6</th>
+		        				<th style="text-align: center" width="5%">8</th>
+		        				<th style="text-align: center" width="5%">10</th>
+		        				<th style="text-align: center" width="5%">12</th>
+		        				<th style="text-align: center" width="5%">14</th>
+		        				<th style="text-align: center" width="5%">16</th>
+	        				</tr>		
+        				</thead>
+        				<tbody>
+	        				<tr ng-repeat="obj in conf.arregloTasa">
+		        				<td style="text-align: center">{{obj.cantidad}}</td>
+		        				<td style="text-align: center">{{(((obj.cantidad * (obj.seis / 100) * 1.16 )* 3 ) + obj.cantidad ) / 6 | currency }}</td>
+		        				<td style="text-align: center">{{(((obj.cantidad * (obj.ocho / 100) * 1.16 )* 4 ) + obj.cantidad ) / 8 | currency}}</td>
+		        				<td style="text-align: center">{{(((obj.cantidad * (obj.diez / 100) * 1.16 )* 5 ) + obj.cantidad ) / 10 | currency}}</td>
+		        				<td style="text-align: center">{{(((obj.cantidad * (obj.doce / 100) * 1.16 )* 6 ) + obj.cantidad ) / 12 | currency}}</td>
+		        				<td style="text-align: center">{{(((obj.cantidad * (obj.catorce / 100) * 1.16 )* 7 ) + obj.cantidad ) / 14 | currency}}</td>
+		        				<td style="text-align: center">{{(((obj.cantidad * (obj.dieciseis / 100) * 1.16 )* 8 ) + obj.cantidad ) / 16 | currency}}</td>
+	        				</tr>
+        				</tbody>	
+      			</table>
+        </div>
+        
+    </div>    
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="well">
+				
+          <div class="row">
+              <div class="col-sm-12">
+                  <input type="submit" ng-click="conf.editar()" value="Editar" class="btn btn-primary" ng-show="conf.action">
+                  <input type="submit" ng-click="conf.actualizar(conf.objeto,form)" value="Actualizar" class="btn btn-success" ng-show="!conf.action" valida-form formulario="form">
+                  <input type="submit" ng-click="conf.cancelar()" value="Cancelar" class="btn btn-danger" ng-show="!conf.action">
+                  
+              </div>
+          </div>
+      </div>
+		</div>  
+	</div>
+</form>

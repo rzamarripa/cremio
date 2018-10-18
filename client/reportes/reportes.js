@@ -21,10 +21,15 @@ angular.module("creditoMio")
 	rc.sumaCargoMoratorio = 0;
 	
 	rc.totalCobranza = 0;
-	rc.totalSolicitado= 0;
-	rc.totalPagar = 0;
 	
-	rc.numeroCreditos = 0;
+	rc.totalSolicitadoVales 		= 0;
+	rc.totalPagarVales 					= 0;
+	rc.totalSolicitadoCreditos	= 0;
+	rc.totalPagarCreditos			 	= 0;
+	
+	rc.numeroCreditos 					= 0;
+	rc.numeroVales 							= 0;
+	
   
   var FI, FF;
   rc.cliente = {};
@@ -78,11 +83,6 @@ angular.module("creditoMio")
 		return [{fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lte : rc.getReactively("fechaFinal")}}];
 	});
 	
-/*
-	this.subscribe('clientes', () => {
-		return [{}];
-	});
-*/
 	this.subscribe('pagos', () => {
 		return [{estatus:1},{ fechaPago:  { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}];
 	});
@@ -99,11 +99,7 @@ angular.module("creditoMio")
   this.subscribe('tiposIngreso', () => {
     return [{}]
   });
-/*
-  this.subscribe('allCajeros', () => {
-    return [{}]
-  });
-*/
+
   this.subscribe('cuentas', () => {
     return [{}]
   });
@@ -186,9 +182,13 @@ angular.module("creditoMio")
 	  rc.fechaInicial.setHours(0,0,0,0);
 		rc.fechaFinal.setHours(23,59,59,999);
 		
-		rc.totalSolicitado = 0;
-    rc.totalPagar = 0;
-    rc.numeroCreditos = 0;
+		rc.totalSolicitadoVales 		= 0;
+		rc.totalPagarVales 					= 0;
+		rc.totalSolicitadoCreditos	= 0;
+		rc.totalPagarCreditos			 	= 0;
+		
+		rc.numeroCreditos 					= 0;
+		rc.numeroVales 							= 0;
     
     rc.creditosEntregados = [];
     
@@ -200,13 +200,24 @@ angular.module("creditoMio")
 						
 						_.each(rc.creditosEntregados, function(credito){
 							
-							if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
-							rc.totalSolicitado += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
-							if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
-							rc.totalPagar += Number(parseFloat(credito.adeudoInicial).toFixed(2));
-							
-							rc.numeroCreditos += 1;
-							
+							if (credito.tipo == "creditoP"){
+									rc.numeroCreditos += 1;
+									
+									if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
+									rc.totalSolicitadoCreditos += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+									if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
+									rc.totalPagarCreditos += Number(parseFloat(credito.adeudoInicial).toFixed(2));
+								
+							}
+							else if (credito.tipo == "vale"){
+									rc.numeroVales += 1;
+									
+									if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
+									rc.totalSolicitadoVales += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+									if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
+									rc.totalPagarVales += Number(parseFloat(credito.adeudoInicial).toFixed(2));
+									
+							}
 							
 						});
 						loading(false);
@@ -223,9 +234,13 @@ angular.module("creditoMio")
 	  rc.fechaInicial.setHours(0,0,0,0);
 		rc.fechaFinal.setHours(23,59,59,999);
 		
-		rc.totalSolicitado = 0;
-    rc.totalPagar = 0;
-    rc.numeroCreditos = 0;    
+		rc.totalSolicitadoVales 		= 0;
+		rc.totalPagarVales 					= 0;
+		rc.totalSolicitadoCreditos	= 0;
+		rc.totalPagarCreditos			 	= 0;
+		
+		rc.numeroCreditos 					= 0;
+		rc.numeroVales 							= 0;   
     
     rc.creditosLiquidados = [];
 		
@@ -237,12 +252,24 @@ angular.module("creditoMio")
 						
 						_.each(rc.creditosLiquidados, function(credito){
 							
-							if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
-							rc.totalSolicitado += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
-							if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
-							rc.totalPagar += Number(parseFloat(credito.adeudoInicial).toFixed(2));
-							
-							rc.numeroCreditos += 1;
+							if (credito.tipo == "creditoP"){
+									rc.numeroCreditos += 1;
+									
+									if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
+									rc.totalSolicitadoCreditos += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+									if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
+									rc.totalPagarCreditos += Number(parseFloat(credito.adeudoInicial).toFixed(2));
+								
+							}
+							else if (credito.tipo == "vale"){
+									rc.numeroVales += 1;
+									
+									if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
+									rc.totalSolicitadoVales += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+									if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
+									rc.totalPagarVales += Number(parseFloat(credito.adeudoInicial).toFixed(2));
+									
+							}
 							
 							
 						});
@@ -274,7 +301,7 @@ angular.module("creditoMio")
 					if  (result)
 					{
 							rc.planPagos = result;
-							//console.log(result,"poncho duarte")
+							//console.log(result)
 							
 							_.each(rc.planPagos, function(plan){
 								
@@ -735,8 +762,8 @@ this.guardarNotaCobranza=function(nota){
 	 	});
 */
 
-	 		loading(true);	
-		   Meteor.call('ReporteCobranza', objeto,rc.fechaInicial,rc.fechaFinal, rc.arregloTiposIngresosobjetos ,function(error, response) {
+	 	loading(true);	
+		Meteor.call('ReporteCobranza', objeto,rc.fechaInicial,rc.fechaFinal, rc.arregloTiposIngresosobjetos ,function(error, response) {
 
 
 		   if(error)
@@ -792,147 +819,57 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 		
 	}
 	
-	
 	this.imprimirReporteCreditos = function(objeto){
 						
-			if (objeto == undefined || objeto.length == 0)
-			{
-					toastr.warning("No hay registros por imprimir");
-					return;
-			}
-			
-	    
-	     var suma = 0
-       var sumaSol = 0
-	    _.each(objeto,function(item){
-	    	console.log("item",item)
-			var fecha = ""
-	    	//item.fechaEntrega = moment(item.fechaEntrega).format("DD-MM-YYYY")
-	    	suma += item.capitalSolicitado
-	    	sumaSol += item.adeudoInicial
-	   
-	    });
+		if (objeto == undefined || objeto.length == 0)
+		{
+				toastr.warning("No hay registros por imprimir");
+				return;
+		}
+        		   
+		loading(true);	
+		Meteor.call('ReporteCreditos', objeto, rc.fechaInicial, rc.fechaFinal, rc.totalSolicitadoVales, rc.totalPagarVales, rc.totalSolicitadoCreditos, rc.totalPagarCreditos, rc.numeroCreditos, rc.numeroVales ,function(error, response) {
 
-	     _.each(objeto,function(item){
-	     item.sumaCapital = suma 
-	     item.sumaAPagar = sumaSol
-	  	});
-	    
-		   Meteor.call('ReporteCreditos', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
 
 		   if(error)
 		   {
 		    console.log('ERROR :', error);
+		    toastr.warning("Error al imprimir el reporte");
+		    loading(false);
 		    return;
 		   }
 		   else
 		   {
-		 				function b64toBlob(b64Data, contentType, sliceSize) {
-							  contentType = contentType || '';
-							  sliceSize = sliceSize || 512;
-							
-							  var byteCharacters = atob(b64Data);
-							  var byteArrays = [];
-							
-							  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-							    var slice = byteCharacters.slice(offset, offset + sliceSize);
-							
-							    var byteNumbers = new Array(slice.length);
-							    for (var i = 0; i < slice.length; i++) {
-							      byteNumbers[i] = slice.charCodeAt(i);
-							    }
-							
-							    var byteArray = new Uint8Array(byteNumbers);
-							
-							    byteArrays.push(byteArray);
-							  }
-							    
-							  var blob = new Blob(byteArrays, {type: contentType});
-							  return blob;
-						}
-						
-						var blob = b64toBlob(response, "application/docx");
-					  var url = window.URL.createObjectURL(blob);
-					  
-					  //console.log(url);
-					  var dlnk = document.getElementById('dwnldLnk');
-
-				    dlnk.download = "ReporteDiarioCreditos.docx"; 
-						dlnk.href = url;
-						dlnk.click();		    
-					  window.URL.revokeObjectURL(url);
+			   		downloadFile(response);	
+			   		loading(false);
 		   }
 		});
+		   
 		
 	}
 	this.imprimirReporteCreditosLiquidados = function(objeto){
 			
-			if (objeto.length == 0)
-			{
-					toastr.warning("No hay registros por imprimir");
-					return;
-			}
+		if (objeto.length == 0)
+		{
+				toastr.warning("No hay registros por imprimir");
+				return;
+		}
 			
-	    //console.log("objeto",objeto)
-	     var suma = 0
-       var sumaSol = 0
-	    _.each(objeto,function(item){
-	    	console.log("item",item)
-			var fecha = ""
-	    	//item.fechaEntrega = moment(item.fechaEntrega).format("DD-MM-YYYY")
-	    	suma += item.capitalSolicitado
-	    	sumaSol += item.adeudoInicial
-	   
-	    });
+	   	    		  
+		loading(true);	
+		Meteor.call('ReporteCreditosLiquidados', objeto, rc.fechaInicial, rc.fechaFinal, rc.totalSolicitadoVales, rc.totalPagarVales, rc.totalSolicitadoCreditos, rc.totalPagarCreditos, rc.numeroCreditos, rc.numeroVales ,function(error, response) {
 
-	     _.each(objeto,function(item){
-	     item.sumaCapital = suma 
-	     item.sumaAPagar = sumaSol
-	  	});
-	    
-		   Meteor.call('ReporteCreditosLiquidados', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
 
 		   if(error)
 		   {
 		    console.log('ERROR :', error);
+		    loading(false);
 		    return;
 		   }
 		   else
 		   {
-		 				function b64toBlob(b64Data, contentType, sliceSize) {
-							  contentType = contentType || '';
-							  sliceSize = sliceSize || 512;
-							
-							  var byteCharacters = atob(b64Data);
-							  var byteArrays = [];
-							
-							  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-							    var slice = byteCharacters.slice(offset, offset + sliceSize);
-							
-							    var byteNumbers = new Array(slice.length);
-							    for (var i = 0; i < slice.length; i++) {
-							      byteNumbers[i] = slice.charCodeAt(i);
-							    }
-							
-							    var byteArray = new Uint8Array(byteNumbers);
-							
-							    byteArrays.push(byteArray);
-							  }
-							    
-							  var blob = new Blob(byteArrays, {type: contentType});
-							  return blob;
-						}
-						
-						var blob = b64toBlob(response, "application/docx");
-					  var url = window.URL.createObjectURL(blob);
-					  
-					  //console.log(url);
-					  var dlnk = document.getElementById('dwnldLnk');
-
-				    dlnk.download = "ReporteDiarioCreditos.docx"; 
-						dlnk.href = url;
-						dlnk.click();		    
-					  window.URL.revokeObjectURL(url);
+			   		downloadFile(response);	
+			   		loading(false);
 		   }
 		});
 		

@@ -75,7 +75,7 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 			seguro								: this.credito.seguro,
 		};
 
-		Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
+		Meteor.call("generarPlanPagos",_credito, rc.cliente ,function(error,result){
 		
 			if(error){
 				console.log(error);
@@ -103,8 +103,6 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 					total -= Number(parseFloat(pago.importeRegular).toFixed(2));
 					
 					total = Number(parseFloat(total).toFixed(2));
-					
-					console.log(total,"liquidar")
 								
 					$scope.$apply();
 				});
@@ -113,11 +111,8 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 				
 		})
 
-		
 		return rc.planPagos;
 	}
-	
-		
 
 /*
   this.borrarBotonImprimir= function()

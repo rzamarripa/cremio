@@ -180,6 +180,7 @@ angular.module("creditoMio")
 	this.guardar = function (){
 			
 			
+			$( "#entregar" ).prop( "disabled", true );
 			
 			//Validar que no sea Nota de Credito ni refinanciamiento
 			var ti = TiposIngreso.findOne(rc.tipoIngreso._id);
@@ -187,24 +188,28 @@ angular.module("creditoMio")
 			if (ti.nombre == "Nota de Credito" || ti.nombre == "REFINANCIAMIENTO")
 			{
 					toastr.error('Error No se puede entregar un crédito con esta forma de pago.');
+					$( "#entregar" ).prop( "disabled", false );
 					return;
 			}
 			
 			if (rc.credito.esRefinanciado == undefined)
 			{
+				
 					if(form.$invalid || rc.suma != rc.credito.capitalSolicitado){
 						toastr.error('Error verifique la cantidad a entregar.');
+						$( "#entregar" ).prop( "disabled", false );
 						return;
 					}	
 			}
 			else if (rc.credito.esRefinanciado == true)
 			{
-					if(form.$invalid || rc.suma != (rc.credito.capitalSolicitado - rc.credito.refinanciar)){
+					if(form.$invalid || rc.suma != Number(parseFloat(rc.credito.capitalSolicitado - rc.credito.refinanciar).toFixed(2)) ){
 						toastr.error('Error verifique la cantidad a entregar.');
+						$( "#entregar" ).prop( "disabled", false );
 						return;
 					}
 			}
-			
+
 			//Validar que tenga dinero en el tipo de Ingreso	
 			var validarSaldoCaja = rc.caja.cuenta[rc.tipoIngreso._id];
 			if (validarSaldoCaja.saldo < rc.suma)
@@ -212,6 +217,7 @@ angular.module("creditoMio")
 					toastr.error('Error no tienes saldo en el Fondo asociado a ese tipo de ingreso.');
 					rc.objeto.caja[rc.tipoIngreso._id].saldo = 0;
 					rc.suma = 0;
+					$( "#entregar" ).prop( "disabled", false );
 					return;
 			}			
 			
@@ -222,6 +228,7 @@ angular.module("creditoMio")
 					if (!result)
 					{
 							toastr.error('El cliente tiene Cargos Moratorios Activos no es posible Entregarle el crédito.');
+							$( "#entregar" ).prop( "disabled", false );
 							return;		
 					}
 					else if (result)
@@ -250,6 +257,7 @@ angular.module("creditoMio")
 								rc.objeto = {}; 
 								$('.collapse').collapse('hide');
 								rc.nuevo = true;
+								$( "#entregar" ).prop( "disabled", false );
 							});	
 
 						
@@ -321,6 +329,8 @@ angular.module("creditoMio")
 	//Aqui genera el crédito
 	this.generarCredito = function(){
 		
+		$( "#generar" ).prop( "disabled", true );
+		
 		var credito = {
 
 			tipoCredito_id 			: this.credito.tipoCredito_id,
@@ -358,7 +368,10 @@ angular.module("creditoMio")
 			if(result == "hecho"){
 				this.avales = [];
 				this.verDiaPago = false;
+				$( "#generar" ).prop( "disabled", false );
 			}
+			if (error)
+				$( "#generar" ).prop( "disabled", false );
 			$scope.$apply();
 		});
 	}
@@ -656,16 +669,13 @@ angular.module("creditoMio")
 			return rc.planPagos;
 		
 		};
-	
-	
-	
+		
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	this.mostrarModalActivarFecha = function()
 	{
 			rc.credentials = {};
 			$("#modalActivarFecha").modal();
 	}
-	
 	
 	this.validaCredenciales = function(credenciales)
 	{
@@ -689,10 +699,7 @@ angular.module("creditoMio")
 			
 	}
 	
-	
-	
-	
-	
+		
 	/////FINAL///
 };
 

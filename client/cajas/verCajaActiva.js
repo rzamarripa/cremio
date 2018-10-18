@@ -18,8 +18,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
   this.totalResumen = 0;
   this.nuevoTraspaso = { tipo: 'desde_cuenta' }
   
-  
-  
+    
   this.subscribe('cajas', () => {
     return [{ }]
   });
@@ -42,11 +41,13 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
       sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
     }];
   });
+  
   this.subscribe('pagos', () => {
     return [{ _id: { $in: this.getReactively('pagos_id') } }]
   });
+  
   this.subscribe('movimientosCaja', () => {
-    return [{caja_id: this.getReactively('caja._id'), createdAt: {$gte: this.getReactively('caja.ultimaApertura')} }]
+    return [{caja_id: this.getReactively('caja._id'), createdAt: {$gte: this.getReactively('caja.ultimaApertura')}}]
   });
   
   
@@ -104,6 +105,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
     },
     movimientosCaja: () => {
       var ret = [];
+
       if (rc.getReactively('caja._id')) {
         var movimientos = MovimientosCajas.find({
         $or: [
@@ -112,21 +114,37 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
           { tipoMovimiento: 'Retiro' },
           { tipoMovimiento: 'Cancelación'}
         ]
-      },).fetch();
+      }, {sort: {createdAt: -1} }).fetch();
       	
         var cj = Cajas.findOne(rc.caja._id);
         var pagos_id = [];
         _.each(movimientos, function(mov) {
 
           var d = {};
+          if (mov.origen == "Pago de Sistema") {
+	          	
+	          	pagos_id.push(mov.origen_id);
+	          	var p = Pagos.findOne(mov.origen_id);
+	          	if(p != undefined)
+	          	{
+		          		d.nombreCliente = p.usuario_id;
+		          }	
+	          	d.numeroCliente = "S/N";
+          }
+          
           if (mov.origen == "Pago de Cliente" || mov.origen == "Pago de Distribuidor" || mov.origen == "Cancelación de pago") {
+            	
             	pagos_id.push(mov.origen_id);
 							var p = Pagos.findOne(mov.origen_id);
 							if (p != undefined)
 							{
 								Meteor.apply('getUsuario', [p.usuario_id], function(err, result) {
 						      if (err) {
-						        toastr.warning('Error al consultar los datos');
+						        //toastr.warning('Error al consultar los datos');
+						        
+						        d.nombreCliente = p.usuario_id;
+						        d.numeroCliente = "S/N";
+						        
 						      } else {
 						        var u = result;
 						        d.numeroCliente = u.numeroCliente != undefined ? u.numeroCliente : u.numeroDistribuidor;
@@ -136,7 +154,10 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 						    });
 							}
 							if (mov.origen == "Cancelación de pago")
-							   d.clase = "bg-color-pinkDark";
+							{
+									d.clase = "bg-color-pinkDark";
+							}
+							   
           }
           
           var credito = {};
@@ -219,6 +240,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
         });
         rc.pagos_id = pagos_id;
       }
+			
 
       return ret
     },
@@ -274,16 +296,50 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 		      	toastr.warning("El movimiento ya está Cancelado");
 		      	return;
 	      }
+
+				Meteor.call ("cancelarPago", pago, rc.caja,function(error,result){
+								if(error){
+									console.log(error);
+									toastr.error('Error al cancelar pago.');
+									return
+									
+								}
+								/*
+if (result)
+								{
+										//Restar de la cuenta en la que se hizo el dinero:
+										_.each(rc.caja.cuenta, function(caja, tipoIngreso_id){
+												if (tipoIngreso_id == pago.tipoIngreso_id)
+													rc.caja.cuenta[tipoIngreso_id].saldo = Number(parseFloat(rc.caja.cuenta[tipoIngreso_id].saldo - pago.totalPago).toFixed(2));				
+										});
+										var tempId = rc.caja._id;
+										delete rc.caja._id;
+										Cajas.update(tempId, {$set:rc.caja});		
+										
+								}
+*/
+								
+				});
+					
+
+				/*
+var sumaRecibos 						= 0;
+				var sumaCargosMoratorios	 	= 0;
 				
 				_.each(pago.planPagos, function(plan) {			
 						//Poner pago Cancelado para que no sume
+						
+						console.log(plan)	
 						_.each(plan.pagos, function(pago){
 								if (pago.pago_id == pago._id)
 									 pago.estatus = 2; //Estatus Cancelado;
-	
+								 
 						});
 						
-						PlanPagos.update(plan.planPago_id, { $set: { estatus				: 0}, 
+						var pp = PlanPagos.findOne(plan.planPago_id);
+						console.log(pp);
+						
+						PlanPagos.update(plan.planPago_id, { $set: { estatus				: 0 }, 
 																								 $inc: { importeRegular : plan.totalPago, 
 																												 pagoInteres 		: -plan.pagoInteres,
 																												 pagoIva 				: -plan.pagoIva,
@@ -292,7 +348,11 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 																											 }
 		        });
 						
+						//Sumar los pagos para devolverlo a saldoActual y saldoMultas
+
 	      });
+	      
+	      //Revisar si el crédito esta liquidado para regresarlo a Activo----- y devolverle la lana cancelada
 	      
 	      //Para que no se pueda voler a cancelar
 	      MovimientosCajas.update(pago.movimientoCaja_id, {$set: {estatus:2}});
@@ -311,6 +371,8 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 	        estatus					: 1
 	      });
 	      Pagos.update(pago._id, { $set: { estatus: 0, cancelacion_movimientoCaja_id: movimiento_id } });
+	
+	*/
 	
 	
 				//Restar de la cuenta en la que se hizo el dinero:
@@ -375,7 +437,6 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 				var tempId = rc.caja._id;
 				delete rc.caja._id;
 				Cajas.update(tempId, {$set:rc.caja});
-
 
 		      		  
 			})
@@ -467,8 +528,10 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
         //$scope.$apply();
         rc.nuevoTraspaso = { tipo: 'desde_cuenta' };
         rc.detalleOrigenDestino = undefined;
+/*
         form.$setPristine();
         form.$setUntouched();
+*/
         
         var url = $state.href("anon.imprimirTicketTraspaso", { pago_id: result }, { newTab: true });
 		    window.open(url, '_blank');

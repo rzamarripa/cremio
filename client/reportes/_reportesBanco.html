@@ -52,7 +52,7 @@
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-					    <!-- <th width="5%"><div class="text-center">No.</div></th> -->
+					  <th width="5%"><div class="text-center">No.</div></th>
 						<th width="15%"> <div class="text-center">Nombre</div></th>
 						<th width="10%"><div class="text-center">Numero del cliente</div></th>
 						<th width="10%"><div class="text-center">Fecha del deposito</div></th>
@@ -71,13 +71,12 @@
 				</thead>
 				<tbody>
 			    <tr ng-repeat="objeto in re.planPagos | filter:buscar" ng-show="objeto.mostrar">
-			    	<!-- <td><div class="text-center">{{$index + 1}}</div></td> -->
+			    	<td><div class="text-center">{{$index + 1}}</div></td>
 				    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
 				    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
 				    <td><div class="text-center">{{objeto.fechaDeposito | date:"dd-MM-yyyy"}}</div></td>
-				     <td><div class="text-center">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</div></td>
+				    <td><div class="text-center">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</div></td>
 				    <td><div class="text-center">{{objeto.totalPago | currency}}</div></td>
-				   
 				    <td><div class="pull-right">{{objeto.cajero}}</div></td>
 				    <td><div class="pull-right">{{objeto.pagoInteres | currency}}</div></td>
 				    <td><div class="pull-right">{{objeto.pagoCapital | currency}}</div></td> 	

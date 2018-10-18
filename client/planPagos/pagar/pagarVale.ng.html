@@ -581,7 +581,7 @@
 							<th class="text-center" width="3%"></th>
 							<!-- <th class="text-center" width="3%">No.</th> -->
 							<th class="text-center" width="3%">Folio</th>
-							<th class="text-center" width="15%">Beneficiado</th>
+							<th class="text-center" width="15%">Beneficiario</th>
 							<th class="text-center" width="5%">Movimiento</th>
 							<th class="text-center" width="20%">Fecha de Pago</th>
 							<th class="text-center" width="5%">Recibo</th>
@@ -601,7 +601,7 @@
 
 							<!-- <td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	 -->
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.beneficiado }}</td>
+							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.beneficiario.nombreCompleto}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.movimiento }}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pagV.getnumeroPagos(pago.credito_id)}}</td>
@@ -611,7 +611,7 @@
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.bonificacion  | currency}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
-							<td ><input style="width: 80px" min="0" type="number" ng-change="pagV.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1" disabled="true"></td>
+							<td ><input style="width: 80px" min="0" type="number" ng-change="pagV.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
 						</tr>
 					</tbody>
 				</table>	
@@ -622,15 +622,23 @@
 					<tbody>
 						<tr>
 							<td>Total</td>
-							<td>{{pagV.pago.totalPago | currency }}	</td>
+							<td style="text-align: right">{{pagV.pago.totalPago | currency }}	</td>
 						</tr>
 						<tr>
 							<td>Bonificación</td>
-							<td>{{pagV.pago.bonificacion | currency }}	</td>
+							<td style="text-align: right">{{pagV.pago.bonificacion | currency }}	</td>
 						</tr>	
 						<tr>
+							<td>Cargos Moratorios</td>
+							<td style="text-align: right">{{pagV.pago.cargosMoratorios | currency }}	</td>
+						</tr>
+						<tr>
+							<td>Seguro</td>
+							<td style="text-align: right">{{pagV.pago.seguro | currency }}	</td>
+						</tr>
+						<tr>
 							<td>A pagar</td>
-							<td>{{pagV.pago.aPagar  | currency }}	</td>
+							<td style="text-align: right">{{pagV.pago.aPagar  | currency }}	</td>
 						</tr>	
 					</tbody>
 				</table>
@@ -643,7 +651,7 @@
 				<caption>Paga con: </caption> 
 				<input id="cobro" min="0" type="number" class="form-control" placeholder="Pagar" ng-model="pagV.pago.pagar" required="true">
 				<br/>
-				<h4>Cambio: {{pagV.pago.pagar - (pagV.pago.totalPago - pagV.pago.bonificacion)  | currency }}</h4>
+				<h4>Cambio: {{pagV.pago.pagar - pagV.pago.aPagar  | currency }}</h4>
 				<br/>
 				
 				<div class="form-group" ng-if = "pagV.tipoIngresoSeleccionado.tipoCuenta == 'Banco'">

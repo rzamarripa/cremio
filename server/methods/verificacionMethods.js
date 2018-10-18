@@ -11,7 +11,8 @@ Meteor.methods({
 	},
 	
 	finalizarVerificacionDistribuidor: function (id, objeto) {	
-	 	Meteor.users.update({_id: id}, {$set: {"profile.estaVerificado"	: true, 
+	 	Meteor.users.update({_id: id}, {$set: {"profile.estaVerificado"				: true, 
+		 																			 "profile.estatusCredito"				: 0,
 																					 "profile.verificacionEstatus" 	: objeto.evaluacion, 
 																					 "profile.indicacion"						: objeto.indicacion}});	
 	},

@@ -1,0 +1,90 @@
+
+<div class="container">
+	<div class="widget-body no-padding">
+		<div class="padding-12">
+			<div class="row text-center">
+				<div class="col-sm-4 col-sm-offset-4">
+					<span id="logo"> <img src="img/LogoBigVale.jpg" alt="SmartAdmin" style="margin-top: -13px;margin-left:-50px;width: 250px;height: 110px;"> </span>
+					<address style="font-size: larger">
+						RUBIDIA MARTINEZ ALCARAZ<br>
+						BLVD. EMILIANO ZAPATA 3125 LOCAL 12BC<br>
+						COLONIA LOMAS DEL BOULEVARD<br>
+						MAAR-661007-BF5<br>
+						(667) 717-21-21<br>
+					</address>
+					<strong>----------------------------------------------------------------</strong>
+					<div class="row">
+						<div class="col-sm-12" style="text-align: left">
+							<span>Cliente: {{tktEV.beneficiario.nombreCompleto}}</span>
+							<br>
+							<span>Folio Vale: {{tktEV.credito.folio}}</span>
+							<br>
+							<span>Monto Préstamo: {{tktEV.credito.capitalSolicitado | currency}}</span>
+							<br>
+							<span>Plazo: {{tktEV.credito.numeroPagos}} QUINCENAS</span>
+							<br>
+							<span>Fecha: {{tktEV.credito.fechaEntrega | date: 'dd/MM/yyyy'}} {{tktEV.credito.fechaEntrega | date:'H:mm:ss'}} Hrs.</span>
+						</div>
+					</div>	
+					<strong>----------------------------------------------------------------</strong>
+					<table style="width: 100%">
+						<tbody>
+							<tr>
+								<th style="text-align: center;width: 30%">Abono</th>
+								<th style="text-align: center;width: 40%">Fecha Venc.</th>
+								<th style="text-align: center;width: 30%">Monto</th>
+							</tr>
+							<tr ng-repeat="pago in tktEV.planPagos">
+								<td style="text-align: center;width: 20%">{{pago.numeroPago}}</td>
+								<td style="text-align: center;width: 40%">{{pago.fechaLimite | date: 'dd/MM/yyyy'}}</td>
+								<td style="text-align: right;width: 30%">{{pago.importeRegular | currency}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<br>
+					<div class="row">
+						<div class="col-sm-12" style="text-align: justify">
+							<span>EL IMPORTE DEL CRÉDITO SERÁ CUBIERTO POR {{tktEV.credito.numeroPagos}} PAGOS QUINCENALES DE {{tktEV.pago.importeRegular | currency}}</span>
+							<span>INCLUYE SEGURO DE {{tktEV.pago.seguro | currency}} EN CADA ABONO</span>
+						</div>
+					</div>
+					
+					<br>
+					<div class="row">
+						<div class="col-sm-12" style="text-align: justify">
+							<span>Realizar el pago a: {{tktEV.distribuidor.profile.nombreCompleto}}</span>
+						</div>
+						<br><br><br>
+						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
+					</div>						
+					<br><br><br>
+					<div class="row">
+						<div class="col-sm-12" style="text-align: left">
+							<span>Recibí: </span>
+						</div>
+						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
+					</div>
+					<div class="row">
+						<div class="col-sm-12" style="text-align: center">
+							<span>{{tktEV.beneficiario.nombreCompleto}}</span>
+						</div>
+					</div>
+					<br><br><br>
+					<div class="row">
+						<div class="col-sm-12" style="text-align: left">
+							<span>Entregó: </span>
+						</div>
+						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
+					</div>
+					<div class="row">
+						<div class="col-sm-12" style="text-align: center">
+							<span>{{tktEV.cajero.profile.nombre}}</span>
+						</div>
+					</div>					
+					<br>
+					<div style="font-size: larger"><a class="btn btn-primary" id="printpagebutton" ng-click="tktEV.borrarBotonImprimir()">Imprimir</a></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

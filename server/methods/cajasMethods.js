@@ -68,7 +68,7 @@ Meteor.methods({
 
     var user = Meteor.user();
 
-    if (user.roles[0] != "Gerente")
+    if (user.roles[0] != "Gerente" && user.roles[0] != "Supervisor")
       throw new Meteor.Error(403, 'Error 403: Permiso denegado', 'Permiso denegado');
     var cta = Cuentas.findOne(destino_id);
     var cuenta = undefined
@@ -156,8 +156,8 @@ Meteor.methods({
     var destino = Cajas.findOne(destino_id);
 
     var user = Meteor.user();
-
-    if (user.roles[0] != "Gerente")
+		
+    if (user.roles[0] != "Gerente" && user.roles[0] != "Supervisor")
       throw new Meteor.Error(403, 'Error 403: Permiso denegado', 'Permiso denegado');
     if (!destino || !origen || !origen.cuenta || !origen.cuenta[cuenta] || origen.cuenta[cuenta].saldo < cantidad || cantidad <= 0)
       throw new Meteor.Error(403, 'Error 500: Error', 'Datos no validos');
@@ -338,6 +338,7 @@ Meteor.methods({
       var cuentaid = cuenta._id;
       delete cuenta._id
       Cuentas.update({ _id: cuentaid }, { $set: cuenta });
+      
       var movimiento = {
         tipoMovimiento: "DEPOSITO",
         origen: "Corte de Caja",
@@ -424,7 +425,7 @@ Meteor.methods({
         { createdAt: { $gte: fechaInicio, $lte: fechaFin } },
         // {origen: {$ne: 'Apertura de Caja'}}
       ]
-    }).fetch();
+    }, {sort: {createdAt: -1} }).fetch();
     _.each(res.movimientosCaja, function(mov) {
       mov.cuenta = TiposIngreso.findOne(mov.cuenta_id);
       //mov.tipoIngreso = TiposIngreso.findOne(mov.cuenta.tipoIngreso_id);
@@ -446,6 +447,21 @@ Meteor.methods({
           mov.seguro += plan.pagoSeguro;
         });
       }
+    });
+    
+    res.traspasos = Traspasos.find({ $or: [ { origen_id: caja_id }, { destino_id: caja_id } ], createdAt: { $gte: fechaInicio, $lte: fechaFin } }).fetch();
+    
+    _.each(res.traspasos, function(traspaso){
+	    	if (traspaso.tipo == "CuentaCaja") {
+          traspaso.origen = Cuentas.findOne(traspaso.origen_id);
+          traspaso.destino = Cajas.findOne(traspaso.destino_id);
+        } else if (traspaso.tipo == "CajaCaja") {
+          traspaso.origen = Cajas.findOne(traspaso.origen_id);
+          traspaso.destino = Cajas.findOne(traspaso.destino_id);
+        } else {
+          traspaso.origen = Cajas.findOne(traspaso.origen_id);
+          traspaso.destino = Cuentas.findOne(traspaso.destino_id);
+        }
     });
 
     return res
@@ -578,6 +594,8 @@ Meteor.methods({
   },
   getCorte: (corte_id) => {
 		
+		//console.log(corte_id);
+		
 		var corte = CortesCaja.findOne({_id: corte_id});
 		
 		var aperturaVentanilla = {}
@@ -608,15 +626,22 @@ Meteor.methods({
 				 //Ingresos por forma de pago			
 				if (movs.tipoMovimiento == 'Saldo Inicial')
 				{
+						//console.log(movs.cuenta_id);
 						movs.tipoIngreso = TiposIngreso.findOne(movs.cuenta_id);
+						//console.log(movs.tipoIngreso);
 						var c = Cuentas.findOne({tipoIngreso_id: movs.cuenta_id});
-			    	if(c.tipoCuenta == 'Consignia'){
-			        totalAperura += movs.monto;				    		
-			    	}						
-			    	if (aperturaVentanilla[movs.tipoIngreso.nombre] == undefined) {
-			          aperturaVentanilla[movs.tipoIngreso.nombre] = 0;
+						if (c != undefined)
+						{
+								//console.log(c);
+					    	if(c.tipoCuenta == 'Consignia'){
+					        totalAperura += movs.monto;				    		
+					    	}						
+					    	if (aperturaVentanilla[movs.tipoIngreso.nombre] == undefined) {
+					          aperturaVentanilla[movs.tipoIngreso.nombre] = 0;
+					      }
+					      aperturaVentanilla[movs.tipoIngreso.nombre] += movs.monto;
+			      
 			      }
-			      aperturaVentanilla[movs.tipoIngreso.nombre] += movs.monto;
 				}
 				 //Ingresos por forma de pago			
 				else if (movs.tipoMovimiento == 'Pago' || movs.origen == 'Cancelación de pago')
@@ -673,9 +698,12 @@ Meteor.methods({
     _.each(corte.cuenta, function(cuenta, key){
     		cuenta.tipoIngreso = TiposIngreso.findOne(key);
 				var c = Cuentas.findOne({tipoIngreso_id: cuenta.tipoIngreso._id});
-	    	if(c.tipoCuenta == 'Consignia'){
-	    		totalEnCaja = cuenta.montoCaputado;
-	    	}
+				if (c != undefined)
+				{
+		    	if(c.tipoCuenta == 'Consignia'){
+		    		totalEnCaja = cuenta.montoCaputado;
+		    	}
+		    }	
     });
     
     return 	{
@@ -692,6 +720,120 @@ Meteor.methods({
 							cajero,
 							caja
 						};
+  },
+  cancelarPago: (pago, caja) => {
+			
+			
+			//Faltaria ver si es neceario cambiarle el estatus al planPagos de MovimientoCuenta.pagos.planPagos?????
+						
+			_.each(pago.planPagos, function(plan) {			
+					//Poner pago Cancelado para que no sume
+					
+					_.each(plan.pagos, function(pago){
+							if (pago.pago_id == pago._id)
+								  pago.estatus = 3; //Estatus Cancelado;					 
+					});
+					//console.log("Plan Cobranza: ", plan);
+					
+					//Buscar el plan de pagos y cancelar el pago dentro del arreglo de pagos
+					var planPago = PlanPagos.findOne(plan.planPago_id);		//Se encontro
+					
+					_.each(planPago.pagos, function(ppPagos){
+							if (pago._id == ppPagos.pago_id)
+							{
+									ppPagos.estatus = 3; //Estatus Cancelado;
+									
+									//Buscar el credito
+									var credito = Creditos.findOne(pago.credito_id);
+									//console.log("Cre:", credito);
+									if (ppPagos.movimiento == 'Recibo' )
+									{
+											var recibos = credito.saldoActual + ppPagos.totalPago;
+											recibos = Number(parseFloat(recibos).toFixed(2));
+											//console.log("R:", recibos)
+											
+											if (credito.estatus == 5)
+												 credito.estatus = 4;
+											
+											Creditos.update({_id: planPago.credito_id},{$set : {saldoActual : recibos, estatus: credito.estatus } } );	 	
+											
+									}
+									else if (ppPagos.movimiento == 'Cargo Moratorio')
+									{
+											var multas = credito.saldoMultas + ppPagos.totalPago;
+											multas = Number(parseFloat(multas).toFixed(2));
+											//console.log("M:", multas)
+											
+											if (credito.estatus == 5)
+												 credito.estatus = 4;
+											
+											Creditos.update({_id: planPago.credito_id},{$set : {saldoMultas : multas, estatus: credito.estatus } } )	 	
+											
+									}
+							}
+							
+					});
+
+										
+					PlanPagos.update(plan.planPago_id, { $set: { pagos: planPago.pagos }, 
+																							 $inc: { importeRegular : plan.totalPago, 
+																											 pagoInteres 		: -plan.pagoInteres,
+																											 pagoIva 				: -plan.pagoIva,
+																											 pagoSeguro 		: -plan.pagoSeguro, 
+																											 pagoCapital		: -plan.pagoCapital
+																										 }
+	        });	
+	        
+	        
+
+	        //Verificar como quedará el estatus 0 o 2
+					planPago = PlanPagos.findOne(plan.planPago_id);		//Se encontro
+										
+					if (planPago.pagoCapital == 0 && planPago.pagoInteres == 0 && planPago.pagoIva == 0 && planPago.pagoSeguro == 0 )
+					{
+							PlanPagos.update({_id: plan.planPago_id}, { $set: { estatus: 0 } });	
+					}		
+					else
+					{
+							PlanPagos.update({_id: plan.planPago_id}, { $set: { estatus: 2 } });		
+					}
+
+      });
+      
+      //Revisar si el crédito esta liquidado para regresarlo a Activo----- y devolverle la lana cancelada
+      
+      //Para que no se pueda volver a cancelar
+      MovimientosCajas.update(pago.movimientoCaja_id, {$set: {estatus:2}});
+      
+      var movimiento_id = MovimientosCajas.insert({
+        tipoMovimiento	: "Cancelación",
+        origen					: "Cancelación de pago",
+        origen_id				: pago._id,
+        monto						: pago.totalPago *-1,
+        cuenta_id				: pago.tipoIngreso_id,
+        caja_id					: pago.caja_id,
+        sucursal_id			: pago.sucursalPago_id,
+        createdAt				: new Date(),
+        createdBy				: Meteor.userId(),
+        updated					: false,
+        estatus					: 1
+      });
+      
+      Pagos.update(pago._id, { $set: { estatus: 0, cancelacion_movimientoCaja_id: movimiento_id } });
+
+
+			/*
+//Restar de la cuenta en la que se hizo el dinero:
+			_.each(caja.cuenta, function(caja, tipoIngreso_id){
+					if (tipoIngreso_id == pago.tipoIngreso_id)
+						 caja.cuenta[tipoIngreso_id].saldo = Number(parseFloat(caja.cuenta[tipoIngreso_id].saldo - pago.totalPago).toFixed(2));				
+			});
+			var tempId = caja._id;
+			delete caja._id;
+			Cajas.update(tempId, {$set:caja});	
+*/
+			
+			
   },
     
 });

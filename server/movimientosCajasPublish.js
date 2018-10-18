@@ -21,5 +21,5 @@ Meteor.publish("cajaMovimientosTurno",function(params){
 });
 
 Meteor.publish("movimientosCaja",function(params){
-  	return MovimientosCajas.find(params);
+  	return MovimientosCajas.find(params, {sort: {createdAt: -1} });
 });

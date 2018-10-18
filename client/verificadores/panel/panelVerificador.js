@@ -135,7 +135,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	
 	this.subscribe('verificaciones',()=>{
 		  var FI = new Date(rc.getReactively("fechaInicial"));
-		  FI.setHours(23,0,0,0);	
+		  FI.setHours(23,59,59,999);	
 			
 			return [{ sucursal_id				: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
 								//usuarioVerifico 	: Meteor.user() != undefined ? Meteor.userId():"", 
@@ -188,7 +188,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 		}, 	
 		verificacionesHechas :() =>{
 			var ver = Verificaciones.find({}).fetch();
-			
+			console.log(ver);
 			_.each(ver, function(v){
 				
 				if (v.tipoVerificacion == 'solicitante o aval' && v.verificacionPersona == 1)

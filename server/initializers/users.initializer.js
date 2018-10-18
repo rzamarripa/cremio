@@ -13,24 +13,30 @@ Meteor.startup(function () {
       })
   }
   if (Configuraciones.find().count() === 0) {
-    Configuraciones.insert({folioCliente: 1});
+    Configuraciones.insert({seguro: 20});
   }
       
   var multas = function () {
-      //console.log('multas!');
-      Meteor.call("actualizarMultas");
+	  	
+	  	var objeto = {};
+	  	
+	  	objeto.inicio = new Date();
+
+			Meteor.call("actualizarMultas");
+      Meteor.call("actualizarMultasVales");
+      Meteor.call("generarMultasVales");
       Meteor.call("generarMultas");
+      
       Meteor.call("deprecarNotasDeCredito");
+      objeto.fin = new Date();
+      BitacoraCron.insert(objeto);
   }
-
-
+	
   var cron = new Meteor.Cron( {
     events:{
       "0 1 * * *"  : multas
     }
     //el primer valor es a que minuto se ejecuta
   });
-
-  
 
 });

@@ -55,7 +55,7 @@ angular.module("creditoMio")
   this.estadoCivil = "";
   this.empresaSeleccionada = "";
 
-  this.estadoCivilSeleccionado = {};
+  rc.estadoCivilSeleccionado = {};
   
   rc.colonia = {};
   rc.coloniaEmpresa = {};
@@ -180,15 +180,9 @@ angular.module("creditoMio")
 
   if ($stateParams.objeto_id != undefined && $stateParams.tipo == undefined ){
       
-       rc.action = false;
-      rc.objeto_id = $stateParams.objeto_id
-      /*
-this.subscribe('cliente', () => {
-        return [{
-          id : $stateParams.objeto_id
-        }];
-      });
-*/
+      rc.action = false;
+      rc.objeto_id = $stateParams.objeto_id;
+   
 			loading(true);
 			Meteor.call('getClienteDistribuidor', rc.objeto_id, function(error, result){           
             if (result)
@@ -196,6 +190,12 @@ this.subscribe('cliente', () => {
                	rc.objeto = result;
 			          rc.objeto.confirmpassword = "sinpassword";	
 								rc.objeto.password 				= "sinpassword"; 
+								
+								
+								var estadoCivilSeleccionado = EstadoCivil.findOne(rc.objeto.profile.estadoCivil_id);
+								
+								if (estadoCivilSeleccionado)
+										rc.estadoCivilSeleccionado = estadoCivilSeleccionado;
 								
 								_.each(rc.objeto.profile.referenciasPersonales_ids,function(referenciaPersonal){
 	                    Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
@@ -295,12 +295,7 @@ this.subscribe('cliente', () => {
     documentos : () => {
       return Documentos.find();
     },
-/*
-    configuraciones : () => {
-      var config = Configuraciones.find().fetch();
-      return config[config.length - 1]
-    },
-*/
+
     imagenesDocs : () => {
       var imagen = rc.imagenes;
       _.each(rc.getReactively("imagenes"),function(imagen){
@@ -453,8 +448,8 @@ objetoEditar : () => {
   {
       
       if(form.$invalid){
-            toastr.error('Error al guardar los datos.');
-            return;
+          toastr.error('Error al guardar los datos.');
+          return;
       }
       
       if (this.action)
@@ -462,6 +457,7 @@ objetoEditar : () => {
 	      	objeto.password = Math.random().toString(36).substring(2,7);		
 
       }	
+      
       objeto.profile.estatus = true;
       objeto.profile.documentos = rc.documents;
       objeto.profile.foto = rc.pic;
@@ -473,22 +469,35 @@ objetoEditar : () => {
       var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
       var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-			loading(true);
-      Meteor.call('createUsuario', objeto, "Cliente", function(e,r){
-          if (r)
+      
+      //Valdiar si existe el nombreCompleto
+      
+       Meteor.call('validarCliente', objeto.profile.nombreCompleto, function(err,res){
+          if (res)
           {
-	          	loading(false);
-              toastr.success('Guardado correctamente.');
-              this.usuario = {};
-              $('.collapse').collapse('hide');
-              this.nuevo = true;
-              form.$setPristine();
-              form.$setUntouched();
-              $state.go('root.clienteDetalle', { 'objeto_id':r});
+              toastr.error('El nombre del Cliente ya existe.');
+              return;
+          }
+          else (!res)
+          {
+	          	loading(true);
+				      Meteor.call('createUsuario', objeto, "Cliente", function(e,r){
+				          if (r)
+				          {
+					          	loading(false);
+				              toastr.success('Guardado correctamente.');
+				              this.usuario = {};
+				              $('.collapse').collapse('hide');
+				              this.nuevo = true;
+				              form.$setPristine();
+				              form.$setUntouched();
+				              $state.go('root.clienteDetalle', { 'objeto_id':r});
+				          }
+				      });
+	          	
           }
       });
-      
-    
+          
   };
   
   this.actualizarForm = function(objeto,form){
@@ -633,6 +642,7 @@ objetoEditar : () => {
  
   
   this.AgregarReferencia = function(a){
+	  
     this.referenciaPersonal.nombre = a.nombre;
     this.referenciaPersonal.apellidoPaterno = a.apellidoPaterno;
     this.referenciaPersonal.apellidoMaterno = a.apellidoMaterno;
@@ -765,7 +775,7 @@ objetoEditar : () => {
       return null;
   };
     
-    //Obtener el mayor
+  //Obtener el mayor
   function functiontoOrginiceNum(arraytosearch, key) {
     var mayor = 0;
       for (var i = 0; i < arraytosearch.length; i++) {
@@ -815,8 +825,7 @@ objetoEditar : () => {
    });
 	 
  	 
-	this.agregarImagen = function()
-  { 	
+	this.agregarImagen = function(){ 	
 	  
 	  	//Validar 
 	  

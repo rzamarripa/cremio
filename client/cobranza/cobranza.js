@@ -11,7 +11,7 @@ angular.module("creditoMio")
   this.fechaFinal.setHours(23,59,59,999);
   
   rc.buscar = {};
-  rc.buscar.nombre = "";
+  rc.buscar.nombreCompleto = "";
   rc.credito_id = "";
   rc.cliente_id = "";
   rc.historial = [];
@@ -118,7 +118,7 @@ angular.module("creditoMio")
     },
     notas : () => {
 	    
-	    var not = Notas.find().fetch();
+	    var not = Notas.find({},{sort: {fecha: -1}}).fetch();
 	    
 	    _.each(not, function(nota){
 		    	 Meteor.call('getUsuario', nota.usuario_id, function(error, result) {           
@@ -163,59 +163,65 @@ angular.module("creditoMio")
     },
     planPagosViejo : () => {
     
-      pagos = PlanPagos.find({},{sort : {numeroPago : 1,descripcion:-1}}).fetch();
+      pagos = PlanPagos.find({},{sort : { numeroPago	: 1, 
+																				  fechaLimite	: 1, 
+																				  descripcion	: -1}}).fetch();
 
       _.each(pagos, function(pay){
 
          pay.credito = Creditos.findOne(pay.credito_id);
-     });
+			});
 
-       return pagos
+      return pagos
     },
     historialDelCredito : () => {
       
       arreglo = [];
 			
-			var saldoPago = 0;
+			var saldoPago 	= 0;
 			var saldoActual = 0; 
-			rc.saldo = 0;	
-			var credito = rc.credito
-			rc.saldoMultas = 0;
+			rc.saldo 				= 0;	
+			rc.saldoGeneral = 0;
+			var credito 		= rc.credito
+			rc.saldoMultas 	= 0;
 			
 			rc.abonosRecibos 					= 0;
 			rc.abonosCargorMoratorios = 0;
 
 			_.each(rc.getReactively("planPagosViejo"), function(planPago){	
-				if(planPago.descripcion == "Recibo")
+				if (planPago.descripcion == "Recibo")
 					rc.saldo += Number(parseFloat(planPago.cargo).toFixed(2));
-				if(planPago.descripcion == "Cargo Moratorio")
-					rc.saldoMultas += Number(parseFloat(planPago.importeRegular).toFixed(2));
+				
+				if (planPago.descripcion == "Cargo Moratorio")
+					rc.saldoMultas 	+= Number(planPago.importeRegular + planPago.pago);	
+					
 			});
 			
-			rc.saldo 				= Number(parseFloat(rc.saldo).toFixed(2));
-			rc.saldoMultas 	= Number(parseFloat(rc.saldoMultas).toFixed(2));
 			rc.pagos_ids = [];
 			
 			_.each(rc.getReactively("planPagosViejo"), function(planPago, index){
-					
-				if (planPago.descripcion=="Cargo Moratorio")
-				{
-						rc.saldo += planPago.cargo
-				}		
-				
+									
 				var sa = 0;
+				var cargoCM 	= 0;
 			  if (planPago.descripcion == 'Recibo')
+			  {
 						sa = Number(parseFloat( planPago.cargo - (planPago.pagoInteres + planPago.pagoIva + planPago.pagoCapital +	planPago.pagoSeguro) ).toFixed(2)); 
+						planPago.fechaLimite.setHours(0,0,0,0);
+				}		
 			  else if (planPago.descripcion == 'Cargo Moratorio')
-			 			sa = Number(parseFloat(planPago.cargo - planPago.pago).toFixed(2));
-
+			  {
+				  	sa = Number(parseFloat(planPago.importeRegular).toFixed(2));
+				  	planPago.fechaLimite.setHours(1,0,0,0);
+				  	cargoCM = Number(planPago.importeRegular + planPago.pago);
+			  }
+			 			
 				arreglo.push({saldo							: rc.saldo,
 											numeroPago  			: planPago.numeroPago,
 											cantidad 					: rc.credito.numeroPagos,
 											fechaSolicito 		: rc.credito.fechaSolicito,
 											fecha 						: planPago.fechaLimite,
 											pago  						: 0, 
-											cargo 						: planPago.cargo,
+											cargo 						: planPago.descripcion == "Recibo"? planPago.importeRegular: cargoCM,
 											movimiento 				: planPago.movimiento,
 											planPago_id 			: planPago._id,
 											credito_id 				: planPago.credito_id,
@@ -229,6 +235,7 @@ angular.module("creditoMio")
 				if (planPago.pagos.length > 0)
 				{
 					_.each(planPago.pagos,function (pago) {
+						if (pago.estatus != 3)
 							rc.pagos_ids.push(pago.pago_id);
 					});
 					
@@ -236,6 +243,8 @@ angular.module("creditoMio")
 					
 					_.each(planPago.pagos,function (pago) {
 						
+						if (pago.estatus != 3)
+						{
 							//Ir por la Forma de Pago
 							var formaPago = "";
 							var pag = Pagos.findOne(pago.pago_id);
@@ -255,7 +264,6 @@ angular.module("creditoMio")
 									rc.abonosCargorMoratorios += pago.totalPago;
 							}	
 							
-							rc.saldo -= pago.totalPago
 							arreglo.push({saldo							: rc.saldo,
 														numeroPago 				: planPago.numeroPago,
 														cantidad 					: credito.numeroPagos,
@@ -263,21 +271,38 @@ angular.module("creditoMio")
 														fecha 						: pago.fechaPago,
 														pago  						: pago.totalPago, 
 														cargo 						: 0,
-														movimiento 				: planPago.descripcion == "Cargo Moratorio"? "Abono de Cargo Moratorio": "Abono",
+														movimiento 				: planPago.descripcion == "Cargo Moratorio"? "Abono a CM": "Abono",
 														planPago_id 			: planPago._id,
 														credito_id 				: planPago.credito_id,
-														descripcion 			: planPago.descripcion == "Cargo Moratorio"? "Abono de Cargo Moratorio": "Abono",
+														descripcion 			: planPago.descripcion == "Cargo Moratorio"? "Abono a CM": "Abono",
 														importe 					: planPago.importeRegular,
 														pagos 						: planPago.pagos,
 														notaCredito				: formaPago == 'Nota de Credito' ? pago.totalPago : 0,
 														saldoActualizado	: 0
 					  	});
+					  }	
 					})
 				}
-				
-				
 					
 			});
+			
+			rc.saldoGeneral 	= (rc.saldo + rc.saldoMultas ) - ( rc.abonosRecibos + rc.abonosCargorMoratorios );
+			
+			arreglo.sort(function(a,b){		
+				return a.numeroPago - b.numeroPago || new Date(a.fecha) - new Date(b.fecha) ;
+			});
+			
+			_.each(arreglo, function(item, index){
+					if (index > 0)
+					{
+							if (item.descripcion == "Cargo Moratorio")
+									rc.saldo += Number(parseFloat(item.cargo).toFixed(2));
+							else if  (item.movimiento == "Abono" || item.movimiento == "Abono a CM")
+									rc.saldo -= Number(parseFloat(item.pago).toFixed(2));
+					}
+					item.saldo = rc.saldo;
+			});
+			
       return arreglo;
     },
 
@@ -290,11 +315,7 @@ angular.module("creditoMio")
     historialCredito : () => {
       var creditos = [];
       rc.clientes_id = _.pluck(rc.cobranza,"cliente._id")
-      
-        
-    
-        return creditos
-      
+      return creditos;      
     },
     cobranza :() =>{
 		  
@@ -306,11 +327,10 @@ angular.module("creditoMio")
 	    FF = this.fechaFinal;
 	    rc.verRecibos = true;
 	    
+	    loading(true);
 	    Meteor.call('getCobranza', FI, FF, 1, Meteor.user().profile.sucursal_id, function(error, result) {           
 	          if (result)
 	          {
-	              //console.log("Cobranza:",result);
-	              
 	              rc.cobranza = result;
 	              rc.totalRecibos = 0;
 	              rc.totalMultas = 0;
@@ -320,8 +340,8 @@ angular.module("creditoMio")
 	                  else if (c.descripcion == "Cargo Moratorio")    
 	                     rc.totalMultas = rc.totalMultas + c.importeRegular;
 	              });
-                //console.log(result,"resullltt")
-	              
+
+	              loading(false);
 	              $scope.$apply();
 	          }
 	        
@@ -1086,7 +1106,6 @@ angular.module("creditoMio")
     
   };
 
-
   this.verPagos= function(credito) {
 
     //console.log(credito,"el credito ")
@@ -1102,7 +1121,6 @@ angular.module("creditoMio")
     rc.mostrarModal = false
 
   };
-  
   
   this.funcionOrdenar = function() {
     
@@ -1226,108 +1244,9 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 
   this.imprimirHistorial= function(objeto,cliente,credito) 
   {
-		//console.log("Cliente:", cliente);
-		
-    /*
-var sumaCargos = 0
-    var sumaAbonos = 0
-    var popo = 0
-    objeto.objetoFinal = objeto[objeto.length - 1];
-      _.each(objeto,function(item){
-
-        if (item.movimiento == "Cargo Moratorio") {
-          sumaCargos += item.importe
-          sumaAbonos += item.pago
-
-        }
-        if (item.movimiento == "Abono") {
-          sumaAbonos += item.pago
-
-        }
-      
-        // suma += item.capitalSolicitado
-        // sumaSol += item.adeudoInicial
-        popo = objeto.objetoFinal.saldo
-        item.ultimoSaldo =  popo
-     
-      });
-
-       _.each(objeto,function(item){
-       item.sumaCargos = sumaCargos
-       item.sumaAbonos = sumaAbonos
-        
-    });
-    _.each(objeto,function(item){
-	    //console.log(item,"item")
-      cliente.cliente = cliente.profile.nombreCompleto
-      cliente.clienteSucursal = Sucursales.findOne(cliente.profile.sucursal_id)
-      cliente.sucursal = cliente.clienteSucursal.nombre
-      cliente.fechaCreacion = cliente.profile.fechaCreacion
-      cliente.sexo = cliente.profile.sexo
-      //cliente.clienteNacionalidad = Nacionalidades.findOne(cliente.profile.nacionalidad_id)
-      cliente.nacionalidad = cliente.profile.nacionalidadCliente.nombre
-      //cliente.estadoCivilCliente = EstadoCivil.findOne(cliente.profile.estadoCivil_id)
-      cliente.estadoCivil = cliente.profile.estadoCivilCliente.nombre
-      cliente.fechaNa = cliente.profile.fechaNacimiento
-      cliente.lugarNacimiento = cliente.profile.lugarNacimiento
-      if (cliente.profile.lugarNacimiento) {
-        cliente.lugarNacimiento = cliente.profile.lugarNacimiento
-      }
-      //cliente.ocupacionCliente = Ocupaciones.findOne(cliente.profile.ocupacion_id)
-      cliente.ocupacion = cliente.profile.ocupacionCliente.nombre
-      item.foto = cliente.profile.foto
-      cliente.foto = cliente.profile.foto
-      
-
-    });
-    console.log(objeto,"objeto")
-    console.log(credito,"credito")
-  
-  
- 
-    var toPrint = [];
-*/
-    
-    cliente = rc.cliente.profile;
-    //console.log("toshtta japon",cliente)
-
-    var sumaCargos = 0;
-    var sumaAbonos = 0;
-    var sumaAbonosCM = 0;
-     
-    var popo = 0
-    objeto.objetoFinal = objeto[objeto.length - 1];
-    
-    _.each(objeto,function(item){
-
-        if (item.movimiento == "Cargo Moratorio") {
-          sumaCargos += item.importe
-          sumaAbonos += item.pago
-
-        }
-        if (item.movimiento == "Abono") {
-          sumaAbonos += item.pago
-
-        }
-        
-        if (item.movimiento == "Abono de Cargo Moratorio"){
-	        sumaAbonosCM += item.pago;
-        }
-      
-        popo = objeto.objetoFinal.saldo
-        item.ultimoSaldo =  popo
-     
-      });
-
-      _.each(objeto,function(item){
-       item.sumaCargos = sumaCargos
-       item.sumaAbonos = sumaAbonos
-       item.sumaAbonosCM = sumaAbonosCM; 
-			});
-
-			
+    	cliente = rc.cliente.profile;			
 			loading(true);
-			Meteor.call('imprimirHistorial', objeto, cliente, credito, 'pdf', function(error, response) {
+			Meteor.call('imprimirHistorial', objeto, cliente, credito, 'pdf', rc.saldoMultas, rc.abonosRecibos, rc.abonosCargorMoratorios, rc.saldoGeneral, function(error, response) {
 	
 				   if(error)
 				   {
@@ -1342,48 +1261,6 @@ var sumaCargos = 0
 					 		loading(false);
 					 }
 			});
-			
-			/*
-Meteor.call('imprimirHistorial', objeto, cliente,credito, function(error, response) {     
-       if(error)
-       {
-        console.log('ERROR :', error);
-        return;
-       }
-       else
-       {
-			 		function b64toBlob(b64Data, contentType, sliceSize) {
-          contentType = contentType || '';
-          sliceSize = sliceSize || 512;
-          var byteCharacters = atob(b64Data);
-          var byteArrays = [];
-          for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-            var slice = byteCharacters.slice(offset, offset + sliceSize);
-            var byteNumbers = new Array(slice.length);
-            for (var i = 0; i < slice.length; i++) {
-              byteNumbers[i] = slice.charCodeAt(i);
-            }
-            var byteArray = new Uint8Array(byteNumbers);
-            byteArrays.push(byteArray);
-          }
-          var blob = new Blob(byteArrays, {type: contentType});
-          return blob;
-          }
-          var blob = b64toBlob(response, "application/docx");
-          var url = window.URL.createObjectURL(blob);
-          var dlnk = document.getElementById('dwnldLnk');
-
-          dlnk.download = "HISTORIALCREDITICIO.docx"; 
-          dlnk.href = url;
-          dlnk.click();       
-          window.URL.revokeObjectURL(url);
-				}
-    });
-*/
-    
-    
-    
-    
   };  
 
   this.checkValue1= function() 

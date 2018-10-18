@@ -1,0 +1,30 @@
+<div class="input-group"> 
+	<input type="text" class="form-control" ng-model="ae.buscar.nombreBeneficiario" capitalize>
+	<span class="input-group-btn">
+		<button class="btn btn-default" type="button" style="height: 34px;">
+			<i class="fa fa-search"></i>
+		</button> 
+	</span>
+</div>
+<div class="ajax-dropdown" ng-show="ae.buscando" style="display: block; width: 100% !important;">
+	<div class="ajax-notifications custom-scroll">		
+		<div class="alert alert-transparent">
+			<div class="tab-pane fade active in" id="a2">
+				
+				<div class="user well" title="{{beneficiario.nombreCompleto}}" ng-repeat="beneficiario in ae.beneficiarios" style="width: 100%">
+					<div class="row">
+						<div class="col-sm-12">
+							<a href="javascript:void(0);" ng-click="ae.AgregarBeneficiario(beneficiario);ae.buscando = false"> {{beneficiario.nombreCompleto}}</a> 
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<span> 
+		<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="ae.buscando = false; ae.buscar.nombre = ''">
+			<i class="fa fa-times"></i>
+		</button> 
+	</span>
+	
+</div>

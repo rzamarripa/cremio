@@ -140,19 +140,17 @@ angular.module("creditoMio")
 					return;
 			}
 			
-
-			
 			//Arreglar 
+			
+			//var cuentasTemp = [];
 			
 			_.each(objeto.cuenta, function(cuenta){
 
-				console.log(cuenta);
+				//console.log(cuenta);
 				cuenta.saldo = 0;
 				
 				cuenta.cuenta = Cuentas.findOne(cuenta.cuenta_id);
 				cuenta.tipoIngreso = TiposIngreso.findOne(cuenta.cuenta.tipoIngreso_id);
-					
-				
 				
 			});
 			
@@ -162,7 +160,10 @@ angular.module("creditoMio")
 					toastr.warning('El cajero seleccionado ya tine una ventanilla abierta');
 					return;
 			}
-
+			
+			//console.log(objeto.cuenta);
+			
+/*
 			
 			Meteor.call ("actualizarCaja",objeto,function(error,result){
 		
@@ -171,13 +172,17 @@ angular.module("creditoMio")
 					toastr.error('Error al guardar los datos.: ', error.details);
 					return
 				}
-				toastr.success('Actualizado correctamente.');
-				rc.objeto = {}; 
-				$('.collapse').collapse('hide');
-				rc.nuevo = true;
-				form.$setPristine();
-				form.$setUntouched();
+				else if(result)
+				{
+					toastr.success('Actualizado correctamente.');
+					rc.objeto = {}; 
+					$('.collapse').collapse('hide');
+					rc.nuevo = true;
+					form.$setPristine();
+					form.$setUntouched();
+				}
 			});
+*/
 
 	};
 

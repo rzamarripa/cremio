@@ -1,0 +1,59 @@
+<form name="form" class="form-horizontal" role="form">
+	<div  class="well">
+		<h3>Pagos reflejados en el sistema de escritorio</h3>
+		<div class="row">
+			<div class="col-sm-2" valida>
+				<label>Total a pagar: </label> 
+				<input name="totalPagos" id="totalPago" min="0" type="number" class="form-control" ng-model="pags.pago.totalPago" required>
+			</div>
+		</div>
+		<div class="row">	
+			<div class="col-sm-6" valida>	
+				<label>Descripción: </label> 
+				<input name="descripcion" type="text" class="form-control" placeholder="Descripción" ng-model="pags.pago.descripcion" required>
+			</div>
+		</div>
+		<div class="row">	
+			<div class="col-sm-3" valida>
+				<label>Forma de Pago: </label> 
+				<select name="TipoIngreso" class="form-control select2" placeholder="Seleccione" ng-model="pags.pago.tipoIngreso_id" ng-change = "pags.seleccionTipoIngreso(pags.pago.tipoIngreso_id)" required>
+					<option ng-repeat="tipo in pags.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">	
+			<div class="col-sm-3" ng-if = "pags.tipoIngresoSeleccionado.tipoCuenta == 'Banco'" valida>	
+					<label>Fecha Deposito:</label>
+					<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="pags.pago.fechaDeposito" required>
+			</div>
+		</div>
+		<div class="row">		
+			<div class="col-sm-3" ng-if = "pags.tipoIngresoSeleccionado.tipoCuenta == 'Banco'" valida>	
+					<label>Referencia:</label>
+					<input name="referencia" type="text"  class="form-control"  ng-model="pags.pago.referencia" required="">
+			</div>
+		</div>
+		
+		<div class="row">	
+			<div class="col-sm-2" valida>
+				<label>Paga con: </label> 
+				<input name="cobros" id="cobro" min="0" type="number" class="form-control" ng-model="pags.pago.pagar" required>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-sm-3">
+				<h4>Cambio: {{pags.pago.pagar - pags.pago.totalPago | currency }}</h4>
+			</div>
+		</div>
+		<br>
+		<div class="row">	
+			<div class="col-sm-3">
+				<input type="submit" ng-click="pags.guardarPago(pags.pago)" value="Hacer Cobro" class="btn btn-primary"  valida-form formulario="form">
+			</div>
+		</div>
+	</div>												
+</form>
+
+
+

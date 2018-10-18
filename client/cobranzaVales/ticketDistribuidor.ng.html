@@ -1,0 +1,77 @@
+
+<div class="container">
+	<div class="widget-body no-padding">
+		<div class="padding-12">
+			<div class="row text-center">
+				<div class="col-sm-4 col-sm-offset-4" ng-repeat = "objeto in tktD.planPagos">
+					<span id="logo"> <img src="img/LogoBigVale.jpg" alt="SmartAdmin" style="margin-top: -13px;margin-left:-50px;width: 250px;height: 110px; text-align: center;"> </span>	
+					<br><br>
+					<address style="font-size: medium; text-align: center">
+						<stnong>VALES DE CRÉDITO</stnong>
+					</address>
+					<div class="row">
+						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
+						<div class="col-sm-6" style="text-align: left">
+							<span><strong>Folio: </strong>{{objeto.folio}}</span>
+						</div>
+						<div class="col-sm-6" style="text-align: right">
+							<span><strong>Fecha: </strong>{{tktD.fecha | date:"dd-MM-yyyy"}}</span>
+						</div>						
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-sm-12" style="text-align: left">
+							<strong>Distribuidor: </strong> {{objeto.distribuidor}}
+						</div>
+						<div class="col-sm-12" style="text-align: left">
+							<strong>Beneficiario: </strong> {{objeto.beneficiario}}
+						</div>
+					</div>					
+					<br>
+					<div class="row" style="text-align: center">
+						<strong>	
+							<div class="col-sm-3">
+								Vencimiento
+							</div>
+							<div class="col-sm-3">
+								No. Pago
+							</div>
+							<div class="col-sm-3">
+								Importe
+							</div>
+							<div class="col-sm-3">
+								N. Saldo
+							</div>
+						</strong>		
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-sm-3" style="text-align: center; font-size: small" >
+							{{objeto.fechaLimite | date:"dd-MM-yyyy"}}
+						</div>
+						<div class="col-sm-3" style="text-align: center">
+							{{objeto.numeroPago}}
+						</div>
+						<div class="col-sm-3" style="text-align: right">
+							{{objeto.importeRegular | currency}}
+						</div>
+						<div class="col-sm-3" style="text-align: right">
+							{{objeto.saldoActual | currency}}
+						</div>
+					</div>
+					<br>
+					<address style="font-size: x-small; text-align: center">
+						Blvd. Emiliano No. 3125 Loc. 12 BC Col. Lomas de Boulevard Tel. (667) 717-2121
+					</address>	
+					
+					<div class="row">
+						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
+					</div>	
+				</div>	
+				<div class="col-sm-4 col-sm-offset-4">	
+					<div style="font-size: larger"><a class="btn btn-primary" id="printpagebutton" ng-click="tktP.borrarBotonImprimir()">Imprimir</a></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

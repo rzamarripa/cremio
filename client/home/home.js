@@ -6,7 +6,6 @@ angular.module("creditoMio")
  	
  	rc.estaCerrada = false;
  	rc.cuentas = [];
- 	
  	rc.cajas = [];
  	
  	this.caja_id = "";
@@ -20,8 +19,14 @@ angular.module("creditoMio")
  	if (Meteor.user().roles == "Gerente")
  	{	
 		 	let cajasS = this.subscribe('cajas',()=>{
-				return [{ estatus : true }]
+				return [{ estadoCaja: 'Abierta' }]
 			}); 
+			
+			//Quite el filtro
+			let fondos = this.subscribe('cuenta',()=>{
+				return [{}]
+			});
+						
 			this.subscribe('cajero',()=>{
 				return [{ "profile.sucursal_id"	: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
 									"profile.estatus" 		: true,
@@ -37,10 +42,18 @@ angular.module("creditoMio")
 				cajeros : () => {
 					if(Meteor.user()){
 					  var usuarios = Meteor.users.find({roles : ["Cajero"]}).fetch();
+					  
 					  var cajerosCM = [];
 					  _.each(usuarios, function(usuario){
-							  cajerosCM.push(usuario);
+						  	
+						  	var estaEnCaja = Cajas.findOne({usuario_id: usuario._id});
+								//console.log(estaEnCaja);
+								if (estaEnCaja != undefined )								
+								{
+							  	 cajerosCM.push(usuario);
+							  }	 
 					  });
+					  
 					  rc.cajeros_id = _.pluck(cajerosCM, "_id");
 					  
 					  return cajerosCM;
@@ -51,18 +64,29 @@ angular.module("creditoMio")
 				catidadCobranzaDiaria :() =>{								
 					var arreglo = [];
 		
-				  if(pagosS.ready()){
+					
+				  if(pagosS.ready() && fondos.ready()){
 						
 					  _.each(this.cajeros, function(cajero){
 		
 						  var suma = 0;
-						   var pago = Pagos.find({usuarioCobro_id: cajero._id,
+						  var pago = Pagos.find({usuarioCobro_id: cajero._id,
 							   											fechaPago: {$gte: rc.getReactively("fechaInicial"),$lt: rc.getReactively("fechaFinal")}}).fetch();
-		
-						   _.each(pago, function(p){
-							   	suma += Number(parseFloat(p.totalPago).toFixed(2));
-						   })
-						   arreglo.push(suma);
+							
+								 												
+						  _.each(pago, function(p){
+							  	
+							  	var tipoFondo = Cuentas.findOne({tipoIngreso_id: p.tipoIngreso_id});
+							  	
+							  	if (tipoFondo.tipoCuenta == 'Consignia' || tipoFondo.tipoCuenta == 'Banco')
+							  	{
+								  		suma += Number(parseFloat(p.totalPago).toFixed(2));
+											suma = Number(parseFloat(suma).toFixed(2));								  			
+							  	}
+ 	
+						  })
+						  arreglo.push(suma);
+						   
 					  });
 		
 				  }
@@ -76,11 +100,14 @@ angular.module("creditoMio")
 					
 					if (cajeros != undefined)
 					{
-							_.each(cajeros, function(cajero){
-							  var nombre = cajero.profile.nombre + " " + cajero.profile.apellidoPaterno + " " + cajero.profile.apellidoMaterno;
-							  cajerosNombre.push(nombre);
+						  _.each(cajeros, function(cajero){
+							  	var estaEnCaja = Cajas.findOne({usuario_id: cajero._id});
+									if (estaEnCaja != undefined )								
+									{
+										var nombre = cajero.profile.nombre + " " + cajero.profile.apellidoPaterno + " " + cajero.profile.apellidoMaterno;	
+										cajerosNombre.push(nombre);
+								  }	 
 						  });	
-						
 					}		
 			
 				  return cajerosNombre;
@@ -98,7 +125,7 @@ angular.module("creditoMio")
 					
 					$('#container').highcharts( {
 					    chart: { type: 'column' },
-					    title: { text: 'Cobranza Diaria' },
+					    title: { text: 'Cobranza Diaria de Efectivo y Bancos' },
 					    subtitle: {
 				        text: 'Fecha: ' + moment(rc.getReactively("fechaInicial")).format('LL')
 					    },
@@ -139,7 +166,7 @@ angular.module("creditoMio")
 				return [{ usuario_id: Meteor.userId()}]
 			}); 
 			this.subscribe('tiposIngreso',()=>{
-				return [{}]
+				return [{estatus: true}]
 			});
 			
 			

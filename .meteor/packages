@@ -46,6 +46,6 @@ meteorhacks:aggregate
 angularui:ui-calendar
 planettraining:jquery-fullcalendar
 shell-server
-mrt:cron
 mrt:nprogress
 huaming:js-xlsx
+mrt:cron

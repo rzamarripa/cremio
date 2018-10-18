@@ -1,0 +1,314 @@
+<h2>Prospectos</h2>
+<div class="row">
+	<div class="col-sm-12">
+		<a class="btn btn-{{pros.nuevo == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
+			href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ng-click="pros.Nuevo()">
+		   {{pros.nuevo == true ? 'Nuevo' : 'Cancelar'}}
+		</a>
+		<div class="collapse" id="collapseExample">
+			<form name="form" class="form-horizontal" role="form">
+		  		<div class="well">
+							<div class="row">										
+					    	<div class="col-sm-4" valida> 					    
+						    	<label>Nombre (s) *</label>
+						    	<input name="nombreBeneficiario" type="text" class="form-control" placeholder="Nombre" ng-model="pros.objeto.nombre" required="" capitalize>
+					    	</div>
+					    	<div class="col-sm-4" valida> 					    
+						    	<label>Apellido Paterno *</label>
+						    	<input name="apellidoPaternoBeneficiario" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="pros.objeto.apellidoPaterno" required="" capitalize>
+					    	</div>
+					    	<div class="col-sm-4"> 					    
+						    	<label>Apellido Materno</label>
+						    	<input name="apellidoMaternoBeneficiario" type="text" class="form-control" placeholder="Apellido Materno" ng-model="pros.objeto.apellidoMaterno" capitalize>
+					    	</div>
+							</div>
+							<div class="row">										
+								<div class="col-sm-3" valida>					    
+									<label>Fecha Nacimiento *</label>
+									<input name="fechaNacimientoBeneficiario" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="pros.objeto.fechaNacimiento" required="">
+								</div>
+								
+					    	<div class="col-sm-6" valida>
+						    	<label>Domicilio *</label>
+						    	<input name="domicilioBeneficiario" type="text" class="form-control" placeholder="Domicilio" ng-model="pros.objeto.domicilio" required="" capitalize>
+					    	</div>
+					    	<div class="col-sm-3" valida>
+						    	<label>Numero *</label>
+						    	<input name="numeroBeneficiario" type="text" class="form-control" placeholder="Número" ng-model="pros.objeto.numero" required="" capitalize>
+					    	</div>
+							</div>
+							
+							<div class="row">	
+								<div class="col-sm-4" valida>
+						    	<label>Colonia *</label>
+						    	<input name="coloniaBeneficiario" type="text" class="form-control" placeholder="Colonia" ng-model="pros.objeto.colonia" required="" capitalize>
+					    	</div>							    	
+					    	<div class="col-sm-3" valida>
+									<label >Estado Civil *</label>
+									<select name="estadoCivilBeneficiario" ng-model="pros.objeto.estadoCivil" data-placeholder="Seleccione" class="form-control" required >
+											<option value="DIVORCIADO(A)">DIVORCIADO(A)</option>
+											<option value="SOLTERO(A)">SOLTERO(A)</option>
+											<option value="VIUDO(A)">VIUDO(A)</option>
+											<option value="CASADO(A)">CASADO(A)</option>
+											<option value="UNIÓN LIBRE">UNIÓN LIBRE</option>
+									</select>
+								</div>
+								
+								<div class="col-sm-2" valida>
+						    	<label>Código Postal *</label>
+						    	<input name="codigoPostalBeneficiario" type="text" class="form-control" placeholder="Código Postal" ng-model="pros.objeto.codigoPostal" required="" capitalize>
+					    	</div>
+					    	
+					    	<div class="col-sm-3" valida>
+									<label >Residencia *</label>
+									<select name="residenciaBeneficiario" ng-model="pros.objeto.residencia" data-placeholder="Seleccione" class="form-control" required >
+											<option value="PROPIA">PROPIA</option>
+											<option value="OTRAS">OTRAS</option>
+											<option value="RENTADA">RENTADA</option>
+									</select>
+								</div>
+							</div>
+							<div class="row">	
+								<div class="col-sm-3" valida>
+						    	<label>Ciudad *</label>
+						    	<input name="ciudadBeneficiario" type="text" class="form-control" placeholder="Ciudad" ng-model="pros.objeto.ciudad" required="" capitalize>
+					    	</div>
+					    	
+					    	<div class="col-sm-3" valida>
+						    	<label>Estado *</label>
+						    	<input name="estadoBeneficiario" type="text" class="form-control" placeholder="Estado" ng-model="pros.objeto.estado" required="" capitalize>
+					    	</div>
+					    	
+					    	<div class="col-sm-2" valida>
+						    	<label>Tel. Particular *</label>
+						    	<input name="telefonoBeneficiario" type="text" class="form-control" placeholder="Particular" ng-model="pros.objeto.telefonoParticular" required="" capitalize>
+					    	</div>
+					    	
+					    	<div class="col-sm-2" valida>
+						    	<label>Celular *</label>
+						    	<input name="celularBeneficiario" type="text" class="form-control" placeholder="Celular" ng-model="pros.objeto.celular" required="" capitalize>
+					    	</div>
+					    	
+					    	<div class="col-sm-2" valida>
+						    	<label>Dep Económicos *</label>
+						    	<input name="dependientesBeneficiario" type="text" class="form-control" placeholder="Dependientes" ng-model="pros.objeto.dependientesEconomicos" required="" capitalize>
+					    	</div>
+							</div>
+							
+							<div class="row" ng-if = "pros.objeto.estadoCivil == 'CASADO(A)' || pros.objeto.estadoCivil == 'UNIÓN LIBRE'">										
+								<div class="col-sm-9" valida>					    
+									<label>Nombre Cónyuge</label>
+									<input name="nombreConyugeBeneficiario" type="text" class="form-control" placeholder="Cónyuge" ng-model="pros.objeto.nombreConyuge" required="" capitalize>
+								</div>
+								
+					    	<div class="col-sm-3" valida>					    
+									<label>Fecha Nacimiento *</label>
+									<input name="fechaNacimientoConyugeBeneficiario" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="pros.objeto.fechaNacimientoConyuge" required="">
+								</div>
+					    
+							</div>
+							
+		       </div>
+		       <h3>Datos Laborales</h3>
+		       <div class="well">
+							<div class="row">	
+								<div class="col-sm-6" valida>					    
+									<label>Empresa donde Trabaja *</label>
+									<input name="empresaTrabajaBeneficiario" type="text" class="form-control" placeholder="Empresa Trabaja" ng-model="pros.objeto.empresaTrabaja" required="" capitalize>
+								</div>
+								<div class="col-sm-3" valida>					    
+									<label>Puesto *</label>
+									<input name="puestoBeneficiario" type="text" class="form-control" placeholder="Puesto" ng-model="pros.objeto.puesto" required="" capitalize>
+								</div>
+								<div class="col-sm-3">					    
+									<label>Fecha Ingreso</label>
+									<input name="fechaIngresoConyugeBeneficiario" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="pros.objeto.fechaIngresoConyuge" required="">
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-3" valida>					    
+									<label>Sueldo Mensual *</label>
+									<input name="sueldoBeneficiario" type="number" class="form-control" ng-model="pros.objeto.sueldoMensual" required="">
+								</div>
+								<div class="col-sm-6" valida>
+						    	<label>Domicilio *</label>
+						    	<input name="domicilioTrabajoBeneficiario" type="text" class="form-control" placeholder="Domicilio" ng-model="pros.objeto.domicilioTrabajo" required="" capitalize>
+					    	</div>
+								<div class="col-sm-3">					    
+									<label>Número</label>
+									<input name="numeroTrabajoBeneficiario" type="text" class="form-control" placeholder="Número" ng-model="pros.objeto.numeroTrabajo" required="" capitalize>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4" valida>
+						    	<label>Colonia *</label>
+						    	<input name="coloniaTrabajoBeneficiario" type="text" class="form-control" placeholder="Colonia" ng-model="pros.objeto.coloniaTrabajo" required="" capitalize>
+					    	</div>
+					    	<div class="col-sm-2" valida>
+						    	<label>Código Postal *</label>
+						    	<input name="codigoPostalTrabajoBeneficiario" type="text" class="form-control" placeholder="Código Postal" ng-model="pros.objeto.codigoPostalTrabajo" required="" capitalize>
+					    	</div>
+					    	
+					    	<div class="col-sm-3" valida>
+						    	<label>Ciudad *</label>
+						    	<input name="ciudaTrabajodBeneficiario" type="text" class="form-control" placeholder="Ciudad" ng-model="pros.objeto.ciudadTrabajo" required="" capitalize>
+					    	</div>
+					    	
+					    	<div class="col-sm-3" valida>
+						    	<label>Estado *</label>
+						    	<input name="estadoTrabajoBeneficiario" type="text" class="form-control" placeholder="Estado" ng-model="pros.objeto.estadoTrabajo" required="" capitalize>
+					    	</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-3" valida>
+						    	<label>Telefono *</label>
+						    	<input name="telefonoTrabajoBeneficiario" type="text" class="form-control" placeholder="Estado" ng-model="pros.objeto.telefonoTrabajo" required="" capitalize>
+					    	</div>	
+							</div>
+							
+		       </div>
+		       
+		       <h3>Referencias</h3>
+		       <div class="well">
+			        <h4>Referencia 1</h4>
+							<div class="row">	
+								<div class="col-sm-4" valida>					    
+									<label>Nombre *</label>
+									<input name="nombreReferencia1" type="text" class="form-control" placeholder="nombre" ng-model="pros.objeto.nombreReferencia1" required="" capitalize>
+								</div>
+								<div class="col-sm-4" valida>					    
+									<label>Apellido Paterno *</label>
+									<input name="apellidoPaternoReferencia1" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="pros.objeto.apellidoPaternoReferencia1" required="" capitalize>
+								</div>
+								<div class="col-sm-4" valida>					    
+									<label>Apellido Materno</label>
+									<input name="apellidoMaternoReferencia1" type="text" class="form-control" placeholder="Apellido Materno" ng-model="pros.objeto.apellidoMaternoReferencia1" capitalize>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4" valida>					    
+									<label>Relación *</label>
+									<input name="relacionReferencia1" type="text" class="form-control" placeholder="Relación" ng-model="pros.objeto.relacionReferencia1" required="" capitalize>
+								</div>
+								<div class="col-sm-4" valida>
+						    	<label>Tiempo Conocerlo *</label>
+						    	<input name="tiempoConocerloReferencia1" type="text" class="form-control" placeholder="Tiempo Conocerlo" ng-model="pros.objeto.tiempoConocerloReferencia1" required="" capitalize>
+					    	</div>
+								<div class="col-sm-4">					    
+									<label>Teléfono *</label>
+									<input name="telefonoReferencia1" type="text" class="form-control" placeholder="Teléfono" ng-model="pros.objeto.telefonoReferencia1" required="" capitalize>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12" valida>
+						    	<label>Direccion *</label>
+						    	<input name="direccionReferencia1" type="text" class="form-control" placeholder="Estado" ng-model="pros.objeto.direccionReferencia1" required="" capitalize>
+					    	</div>	
+							</div>
+							<h4>Referencia 2</h4>
+							<div class="row">	
+								<div class="col-sm-4" valida>					    
+									<label>Nombre *</label>
+									<input name="nombreReferencia2" type="text" class="form-control" placeholder="Nombre" ng-model="pros.objeto.nombreReferencia2" required="" capitalize>
+								</div>
+								<div class="col-sm-4" valida>					    
+									<label>Apellido Paterno *</label>
+									<input name="apellidoPaternoReferencia2" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="pros.objeto.apellidoPaternoReferencia2" required="" capitalize>
+								</div>
+								<div class="col-sm-4" valida>					    
+									<label>Apellido Materno</label>
+									<input name="apellidoMaternoReferencia2" type="text" class="form-control" placeholder="Apellido Materno" ng-model="pros.objeto.apellidoMaternoReferencia2" capitalize>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4" valida>					    
+									<label>Relación *</label>
+									<input name="relacionReferencia2" type="text" class="form-control" placeholder="Relación" ng-model="pros.objeto.relacionReferencia2" required="" capitalize>
+								</div>
+								<div class="col-sm-4" valida>
+						    	<label>Tiempo Conocerlo *</label>
+						    	<input name="tiempoConocerloReferencia2" type="text" class="form-control" placeholder="Tiempo Conocerlo" ng-model="pros.objeto.tiempoConocerloReferencia2" required="" capitalize>
+					    	</div>
+								<div class="col-sm-4">					    
+									<label>Teléfono *</label>
+									<input name="telefonoReferencia2" type="text" class="form-control" placeholder="Teléfono" ng-model="pros.objeto.telefonoReferencia2" required="" capitalize>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12" valida>
+						    	<label>Direccion *</label>
+						    	<input name="direccionReferencia2" type="text" class="form-control" placeholder="Estado" ng-model="pros.objeto.direccionReferencia2" required="" capitalize>
+					    	</div>	
+							</div>
+		       </div>			
+		       
+		       <div class="well">
+			      	<div class="row">
+								<div class="col-sm-12">
+									<input type="submit" ng-click="pros.guardar(pros.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="pros.action" valida-form formulario="form">
+									<input type="submit" ng-click="pros.actualizar(pros.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!pros.action" valida-form formulario="form">	
+								</div>
+							</div>
+		       </div>    
+		  </form>
+		</div>
+	</div>
+</div>
+<br>
+<!-- List -->
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-condensed table-bordered">
+			<thead>
+				<tr>
+				<th width="5%"><div class="text-center">No.</div></th>
+					<th width="40%"><div class="text-center">Nombre</div></th>
+					<th width="30%"><div class="text-center">Motivo</div></th>
+					<th width="10%">
+						<div class="text-center">
+							Estatus
+						</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">
+							Acciones
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="objeto in pros.arreglo">
+		    <td>{{$index + 1}}</td>
+			    <td>{{objeto.nombreCompleto}}</td>
+			    <td>{{objeto.motivo}}</td>
+			    <td>
+				    <div class="text-center">
+				    	<span ng-if="objeto.estatus == 1" class="label label-warning">
+							  Por Confirmar
+							</span>
+							<span ng-if="objeto.estatus == 2" class="label label-success">
+							  Aceptado
+							</span>
+							<span ng-if="objeto.estatus == 3" class="label label-danger">
+							  Rechazado
+							</span>
+				    </div>
+			    </td>
+			    <td>
+				    <div class="text-center">
+					    <div class="btn-group">
+							  <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							  </button>
+							  <ul class="dropdown-menu text-left">
+							    <li><a href="#" ng-click="pros.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+							  </ul>
+							</div>
+				    </div>				    
+			    </td>
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>

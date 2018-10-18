@@ -1,0 +1,406 @@
+<div class="row">
+	<div class="col-sm-12">
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingOne">
+			      <h4 class="panel-title">
+			        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#href1" aria-expanded="false" aria-controls="href1">
+			          Información del Cliente
+			        </a>
+			      </h4>
+			    </div>
+			      <div class="panel-body">    
+						    <div class="row">
+						    <div class="col-sm-3">
+						    		<img style="max-width:200px;" src="{{cobv.cliente.profile.foto}}" >
+						    	</div>
+						    	<div class="col-sm-3" > 					    
+							    	<label>Nombre (s)</label>
+							    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cobv.cliente.profile.nombre" disabled="">
+						    	</div>
+						    	<div class="col-sm-3" >					    
+							    	<label>Apellido Paterno</label>
+							    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="cobv.cliente.profile.apellidoPaterno" disabled="">
+						    	</div>
+						    	<div class="col-sm-3">					    
+							    	<label>Apellido Materno</label>
+							    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="cobv.cliente.profile.apellidoMaterno" disabled="">
+						    	</div>	    				    	    
+						    	<div class="col-sm-3">					    
+							    	<label>Número distribuidor</label>
+							    	<input name="numeroCliente" type="text" class="form-control" placeholder="Número de Cliente" ng-model="cobv.cliente.profile.numeroCliente" disabled="">
+						    	</div>
+						    </div>
+						    <div class="row">
+							    
+						    </div>  
+			      </div>
+			   
+			  </div>
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingTwo">
+			      <h4 class="panel-title">
+			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href2" aria-expanded="false" aria-controls="href2">
+			          Información de contacto
+			        </a>
+			      </h4>
+			    </div>
+			      <div class="panel-body">
+			        	<div class="row">
+							    	<div class="col-sm-4" valida> 					    
+								    	<label>Particular</label>
+								    	<input name="telefonoParticular" type="text" class="form-control" placeholder="Teléfono Particular" ng-model="cobv.cliente.profile.particular" disabled="">
+							    	</div>
+							    	<div class="col-sm-4" valida> 					    
+								    	<label>Teléfono Oficina</label>
+								    	<input name="telefonoOficina" type="text" class="form-control" placeholder="Teléfono" ng-model="cobv.cliente.profile.telefonoOficina" disabled="">
+							    	</div>
+							    	<div class="col-sm-4" valida>					    
+								    	<label>Celular</label>
+								    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="cobv.cliente.profile.celular" disabled="">
+							    	</div>
+							    </div>
+							    <div class="row">
+								    <div class="col-sm-3">					    
+								    	<label>Teléfono Alternativo</label>
+								    	<input name="telefonoalternativo" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="cobv.cliente.profile.telefonoAlternativo" disabled="">
+							    	</div>	  
+							    	<div class="col-sm-3">					    
+								    	<label>Dueño</label>
+								    	<input name="duenio" type="text" class="form-control" placeholder="Dueño" ng-model="cobv.cliente.profile.duenoAlternativo" disabled="">
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Parentesco</label>
+								    	<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="cobv.cliente.profile.parentescoAlternativo" disabled="">
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Correo</label>
+								    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="cobv.cliente.profile.correo" disabled="">
+							    	</div>  
+							  </div>
+			      
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+			    <div class="panel-heading" role="tab" id="headingThree">
+			      <h4 class="panel-title">
+			        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href3" aria-expanded="false" aria-controls="href3">
+			          Particulares
+			        </a>
+			      </h4>
+			    </div>
+			  
+			      <div class="panel-body">
+			        	<div class="row">
+									<div class="col-sm-3">
+										<label for="estadocivil">Sexo</label>
+										<input name="Sexo" type="text" class="form-control" placeholder="Sexo" ng-model="cobv.cliente.profile.sexo" disabled="">
+									</div>
+						    	<div class="col-sm-3">
+										<label for="estadocivil">Estado Civil </label>
+										<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="cobv.cliente.profile.estadoCivilCliente.nombre" disabled="">
+									</div>
+										
+						    	<div class="col-sm-3">					    
+							    	<label>Fecha Nacimiento </label>
+							    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="cobv.cliente.profile.fechaNacimiento" disabled="">
+						    	</div>	
+									
+									<div class="col-sm-3">
+										<label for="nacionalidad">Nacionalidad</label>
+										<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="cobv.cliente.profile.nacionalidadCliente.nombre" disabled="">
+									</div>			
+						    </div>
+						    <div class="row">
+							    <div class="col-sm-3">
+										<label for="ocupacion">Ocupación </label>
+										<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="cobv.cliente.profile.ocupacionCliente.nombre" disabled="">
+									</div>		
+						    	<div class="col-sm-3">					    
+							    	<label>CURP</label>
+							    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="cobv.cliente.profile.curp" disabled>
+						    	</div>
+						      <div class="col-sm-3">					    
+							    	<label>Lugar de Nacimiento</label>
+							    	<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="cobv.cliente.profile.lugarNacimiento" disabled>
+						    	</div>	
+						    </div>		
+			      </div>
+			    
+			  </div>
+			  <div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingFour">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href4" aria-expanded="false" aria-controls="href4">
+				          Dirección
+				        </a>
+				      </h4>
+				    </div>
+				   
+				      <div class="panel-body">
+				        	<div class="row">
+									    <div class="col-sm-6" >					    
+									    	<label>Calle </label>
+									    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="cobv.cliente.profile.calle" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Número </label>
+									    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="cobv.cliente.profile.numero" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>CP </label>
+									    	<input name="cp" type="text" class="form-control" placeholder="Código Postal" ng-model="cobv.cliente.profile.codigoPostal" disabled="">
+								    	</div>
+								    </div>
+								    <div class="row">
+									    <div class="col-sm-3" >
+													<label >Pais </label>
+													<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="cobv.cliente.profile.paisCliente.nombre" disabled>
+											</div>
+										  <div class="col-sm-3" >
+													<label for="seccion_id">Estado </label>
+													<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="cobv.cliente.profile.estadoCliente.nombre" disabled>
+											</div>	
+											<div class="col-sm-3" >
+													<label >Municipio </label>
+													<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="cobv.cliente.profile.municipioCliente.nombre" disabled>
+											</div>
+											<div class="col-sm-3" >
+													<label for="seccion_id">Ciudad </label>
+													<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="cobv.cliente.profile.ciudadCliente.nombre" disabled>
+											</div>	
+								    </div>
+								    <div class="row">
+									    <div class="col-sm-3" >
+													<label for="seccion_id">Colonia </label>
+													<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="cobv.cliente.profile.coloniaCliente.nombre" disabled>
+											</div>
+											<div class="col-sm-3">					    
+									    	<label>Tiempo Residencia</label>
+									    	<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="cobv.cliente.profile.tiempoResdencia" disabled>
+								    	</div>
+								    	<div class="col-sm-2">					    
+									    	<label>Renta</label>
+									    	<input name="rentaMes" type="checkbox" class="form-control" ng-model="cobv.cliente.profile.renta" disabled>
+								    	</div>
+								    	<div class="col-sm-3" ng-if="cobv.cliente.profile.renta">					    
+									    	<label>Renta Mes </label>
+									    	<input name="tiempo" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="cobv.cliente.profile.rentaMes" disabled>
+								    	</div>
+											<div class="col-sm-12">					    
+									    	<label>Señas Particulares</label>
+									    	<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="cobv.cliente.profile.senasParticulares" disabled>
+								    	</div>
+								    </div>	
+				      </div>
+				    
+				</div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingFive">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href5" aria-expanded="false" aria-controls="href5">
+				          Ingresos Mensuales
+				        </a>
+				      </h4>
+				    </div>
+				  
+				      <div class="panel-body">
+				        	<div class="row">
+							    	<div class="col-sm-3" > 					    
+								    	<label>Ingresos Personales</label>
+								    	<input name="ingresosPersonales" type="text" class="form-control" placeholder="Ingresos Personales" ng-model="cobv.cliente.profile.ingresosPersonales" disabled>
+							    	</div>
+							    	<div class="col-sm-3" >					    
+								    	<label>Ingresos Cónyuge</label>
+								    	<input name="ingresosConyuge" type="text" class="form-control" placeholder="Ingresos Conyuge" ng-model="cobv.cliente.profile.ingresosConyuge" disabled>
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Otros Ingresos</label>
+								    	<input name="otrosIngresos" type="text" class="form-control" placeholder="Otros Ingresos" ng-model="cobv.cliente.profile.otrosIngresos" disabled>
+							    	</div>	  
+							    	<div class="col-sm-3">					    
+								    	<label>Total Ingresos</label>
+								    	<input name="totalIngresos" type="text" class="form-control" placeholder="Total Ingresos" ng-model="cobv.cliente.profile.totalIngresos" disabled>
+							    	</div>  				    	    
+							    </div>
+							    <div class="row">
+							    	<div class="col-sm-3" > 					    
+								    	<label>Gastos Fijos</label>
+								    	<input name="gastosFijos" type="text" class="form-control" placeholder="Gastos Fijos" ng-model="cobv.cliente.profile.gastosFijos" disabled>
+							    	</div>
+							    	<div class="col-sm-3" >					    
+								    	<label>Gastos Eventuales</label>
+								    	<input name="gastosEventuales" type="text" class="form-control" placeholder="Gastos Eventuales" ng-model="cobv.cliente.profile.gastosEventuales" disabled>
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Total Gastos</label>
+								    	<input name="totalGastos" type="text" class="form-control" placeholder="Total Gastos" ng-model="cobv.cliente.profile.totalGastos" disabled>
+							    	</div>	  
+							    	<div class="col-sm-3">					    
+								    	<label>Resultado Neto</label>
+								    	<input name="resultadoNeto" type="text" class="form-control" placeholder="Resultado Neto" ng-model="cobv.cliente.profile.resultadoNeto" disabled>
+							    	</div>  				    	    
+							    </div>
+				      </div>
+				    
+				</div>
+				<div class="panel panel-default" ng-if="cobv.cliente.profile.estadoCivilCliente.nombre == 'CASADO (A)'">
+				    <div class="panel-heading" role="tab" id="headingSix">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href6" aria-expanded="false" aria-controls="href6">
+				          Información del Cónyuge
+				        </a>
+				      </h4>
+				    </div>
+				    
+				      <div class="panel-body">
+				        	<div class="col-sm-3" valida> 					    
+							    	<label>Nombre *</label>
+							    	<input name="nombreConyuge" type="text" class="form-control" placeholder="nombreConyuge" ng-model="cobv.cliente.profile.nombreConyuge" required="" disabled>
+						    	</div>
+						    	<div class="col-sm-3" valida>					    
+							    	<label>Dirección *</label>
+							    	<input name="direccionConyuge" type="text" class="form-control" placeholder="Dirección Conyuge" ng-model="cobv.cliente.profile.direccionConyuge" disabled>
+						    	</div>
+						    	<div class="col-sm-3" valida>					    
+							    	<label>Dirección del trabajo *</label>
+							    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Dirección Trabajo" ng-model="cobv.cliente.profile.direccionConyugeTrabajo" disabled>
+						    	</div>
+						    	<div class="col-sm-3" valida>					    
+							    	<label>Puesto *</label>
+							    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cobv.cliente.profile.puestoConyuge" disabled>
+						    	</div>
+						    	<div class="col-sm-3" valida>					    
+							    	<label>Teléfono Particular *</label>
+							    	<input name="telefonoConyuge" type="text" class="form-control" placeholder="Teléfono Particular" ng-model="cobv.cliente.profile.telefonoConyuge" disabled>
+						    	</div>
+						    	<div class="col-sm-3">					    
+							    	<label>Teléfono del trabajo</label>
+							    	<input name="telefonoConyugeTrabajo" type="text" class="form-control" placeholder="Teléfono trabajo" ng-model="cobv.cliente.profile.telefonoConyugeTrabajo" disabled>
+						    	</div>
+						    	<div class="col-sm-3">					    
+							    	<label>Ocupación</label>
+							    	<input name="ocupacionConyuge" type="text" class="form-control" placeholder="Ocupación" ng-model="cobv.cliente.profile.ocupacionConyuge" disabled>
+						    	</div>	
+						    	<div class="col-sm-3">					    
+							    	<label>Dirección Trabajo</label>
+							    	<input name="direccionTrabajoConyuge" type="text" class="form-control" placeholder="Direccion trabajo" ng-model="cobv.cliente.profile.direccionTrabajoConyuge" disabled>
+						    	</div>		   				    	    
+						    </div>
+					    </div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingSeven">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href7" aria-expanded="false" aria-controls="href7">
+				          Referencias Personales
+				        </a>
+				      </h4>
+				    </div>
+				    
+				      <div class="panel-body">
+				        	<div class="row">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th width="5%">Número</th>
+													<th width="20%">Nombre</th>
+													<th width="5%">Parentesco</th>
+													<th width="10%">Tiempo</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="p in cobv.cliente.profile.referenciasPersonales_ids">
+													<td>{{p.num}}</td>
+													<td>{{p.nombreCompleto}}</td>
+													<td>{{p.parentesco}}</td>
+													<td>{{p.tiempoConocerlo}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+				      </div>
+				    
+				</div>
+				<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingEight">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href8" aria-expanded="false" aria-controls="href8">
+				          Empresa
+				        </a>
+				      </h4>
+				    </div>
+				      <div class="panel-body">
+				        	<div class="row">
+								    	<div class="col-sm-6" > 					    
+									    	<label>Nombre</label>
+									    	<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="cobv.cliente.profile.empresa.nombre" disabled>
+								    	</div>
+								    	<div class="col-sm-6" >					    
+									    	<label>Razón Social</label>
+									    	<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="cobv.cliente.profile.empresa.razonSocial" disabled>
+								    	</div>
+								    	<div class="col-sm-4" >					    
+									    	<label>Calle</label>
+									    	<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="cobv.cliente.profile.empresa.calle" disabled="" >
+								    	</div>	  
+								    	<div class="col-sm-2" >					    
+									    	<label>Número </label>
+									    	<input name="numeroEmpresa" type="text" class="form-control" placeholder="Número" ng-model="cobv.cliente.profile.empresa.numero" disabled="" >
+								    	</div>  				    	    
+								    	<div class="col-sm-6" >					    
+									    	<label>Colonia </label>
+									    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="cobv.cliente.profile.coloniaEmpresa.nombre" disabled="">
+								    	</div>
+								    </div>
+								    <div class="row">
+									    <div class="col-sm-3" >					    
+									    	<label>Teléfono </label>
+									    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="cobv.cliente.profile.telefonoEmpresa" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Código Postal </label>
+									    	<input name="codigopostal" type="text" class="form-control" placeholder="Código Postal" ng-model="cobv.cliente.profile.empresa.codigoPostal" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Tiempo Laborando </label>
+									    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="cobv.cliente.profile.tiempoLaborando" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Puesto </label>
+									    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="cobv.cliente.profile.puesto" disabled="">
+								    	</div>
+								    </div>  
+								    <div class="row">
+								    	<div class="col-sm-3" >					    
+									    	<label>Departamento </label>
+									    	<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="cobv.cliente.profile.departamento" disabled="">
+								    	</div>
+								    	<div class="col-sm-3" >					    
+									    	<label>Jefe Inmediato </label>
+									    	<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cobv.cliente.profile.jefeInmediato" disabled="">
+								    	</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-3" >
+													<label >Pais </label>
+													<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="cobv.cliente.profile.paisEmpresa.nombre" disabled="">
+											</div>
+										  <div class="col-sm-3" >
+													<label for="seccion_id">Estado </label>
+													<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="cobv.cliente.profile.estadoEmpresa.nombre" disabled="">
+											</div>	
+											<div class="col-sm-3" >
+													<label >Municipio </label>
+													<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="cobv.cliente.profile.municipioEmpresa.nombre" disabled="">
+											</div>
+											<div class="col-sm-3" >
+													<label for="seccion_id">Ciudad </label>
+													<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" ng-model="cobv.cliente.profile.ciudadEmpresa.nombre" disabled="">
+											</div>	
+							    </div>
+				      </div>
+				   
+				</div>
+			</div>
+	</div>
+</div>

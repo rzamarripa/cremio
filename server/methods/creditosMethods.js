@@ -20,18 +20,42 @@ Meteor.methods({
 		c.saldoActual 	= Number(parseFloat(saldoActual).toFixed(2));
 		c.adeudoInicial = Number(parseFloat(saldoActual).toFixed(2));
 		
-		var sucursal = Sucursales.findOne({_id : c.sucursal_id});
-		
-		if (sucursal.folioCredito != undefined)				
-				sucursal.folioCredito = sucursal.folioCredito + 1;
-		else	
+		var sucursal = {};
+		//Folios-----------------------------------------------------
+		if (credito.tipo == "creditoP")
 		{
-				sucursal.folioCredito = 0;
-				sucursal.folioCredito = sucursal.folioCredito + 1;
+				sucursal = Sucursales.findOne({_id : c.sucursal_id});
+		
+				if (sucursal.folioCredito != undefined)				
+						sucursal.folioCredito = sucursal.folioCredito + 1;
+				else	
+				{
+						sucursal.folioCredito = 0;
+						sucursal.folioCredito = sucursal.folioCredito + 1;
+				}
+							
+				c.folio = sucursal.folioCredito;
+				Sucursales.update({_id : sucursal._id}, { $set : { folioCredito : sucursal.folioCredito}});	
+			
 		}
-					
-		c.folio = sucursal.folioCredito;
-		Sucursales.update({_id : sucursal._id}, { $set : { folioCredito : sucursal.folioCredito}});
+		else
+		{
+				//c.folio = credito.folio;
+				
+				sucursal = Sucursales.findOne({_id : c.sucursal_id});
+		
+				if (sucursal.folioVale != undefined)				
+						sucursal.folioVale = sucursal.folioVale + 1;
+				else	
+				{
+						sucursal.folioVale = 0;
+						sucursal.folioVale = sucursal.folioVale + 1;
+				}
+							
+				c.folio = sucursal.folioVale;
+				Sucursales.update({_id : sucursal._id}, { $set : { folioVale : sucursal.folioVale}});
+				
+		}
 				
 		var idTemp = c._id;
 		delete c._id;		
@@ -49,11 +73,11 @@ Meteor.methods({
 			PlanPagos.insert(pago);
 		});
 
-		Meteor.call("generarMultas");	//Duda
+		//Meteor.call("generarMultas");	//Duda
 		return "hecho";
 	},
-	generarCreditoPeticion : function(cliente, credito){
-
+	generarCreditoPeticion : function(credito){
+				
 		if(credito.requiereVerificacion == true){
 			credito.estatus = 0;
 		}else if(credito.requiereVerificacion == false){
@@ -79,7 +103,7 @@ Meteor.methods({
 		
 		_.each(credito.avales_ids, function(aval){
 				var a = Avales.findOne(aval.aval_id);
-				var cliente = Meteor.users.findOne(credito.cliente_id);
+				var cliente = Meteor.users.findOne(credito.cliente_id).profile.nombreCompleto;
 				
 				a.profile.creditos = [];
 				a.profile.creditos.push({credito_id				: credito_id,
@@ -94,16 +118,22 @@ Meteor.methods({
 
 		return "hecho";
 	},
-	actualizarCredito : function(cliente, credito, idCredito ) {
+	actualizarCredito : function(credito, idCredito ) {
 		
-		if (credito.estatus == 1)
-				if(credito.requiereVerificacion == true)
-					credito.estatus = 0;
-					
-		if (credito.estatus == 0)
-				if(credito.requiereVerificacion == false)
-					credito.estatus = 1;
-					
+		
+		//var cliente = Meteor.users.findOne(credito.cliente_id).profile.nombreCompleto;
+		//console.log(cliente);
+		
+		if (credito.tipo == 'creditoP')
+		{		
+				if (credito.estatus == 1)
+						if(credito.requiereVerificacion == true)
+							credito.estatus = 0;
+							
+				if (credito.estatus == 0)
+						if(credito.requiereVerificacion == false)
+							credito.estatus = 1;
+		}			
 		
 		var sucursal = Sucursales.findOne({_id : credito.sucursal_id});
 		//var cre = Creditos.findOne(idCredito);
@@ -130,7 +160,7 @@ Meteor.methods({
 				conSeguro 								: credito.conSeguro,
 				seguro										: credito.seguro,
 				tipo 											: credito.tipo,
-				beneficiado 							: credito.beneficiado
+				beneficiario_id 					: credito.beneficiario_id
 		};
 		
 		
@@ -149,7 +179,8 @@ Meteor.methods({
 						
 
 						var a = Avales.findOne(aval._id);
-						var cliente = Meteor.users.findOne(credito.cliente_id);
+						//var cliente = Meteor.users.findOne(credito.cliente_id);
+						var cliente = Meteor.users.findOne(credito.cliente_id).profile.nombreCompleto;
 
 						a.profile.creditos.push({credito_id				: idCredito, 
 																		 folio						: credito.folio,
@@ -172,7 +203,8 @@ Meteor.methods({
 										aval_ids.estatus = "G";
 										
 										var a = Avales.findOne(aval.aval_id);
-										var cliente = Meteor.users.findOne(credito.cliente_id);
+										//var cliente = Meteor.users.findOne(credito.cliente_id);
+										var cliente = Meteor.users.findOne(credito.cliente_id).profile.nombreCompleto;
 
 										_.each(a.profile.creditos, function(credito){
 												if (credito.credito_id == idCredito)
@@ -230,18 +262,12 @@ Meteor.methods({
 				//console.log("Es vale");
 				var cliente = Meteor.users.findOne(credito.cliente_id);
 				var suma = 0;
-				
 				_.each(montos.caja,(monto,index)=>{
 						if (Number(monto.saldo) > 0)
 								suma += Number(parseFloat(monto.saldo).toFixed(2));
-				});	
-				
-				
+				});									
 				if (cliente.saldoCredito < suma)
 						throw new Meteor.Error(500, 'Error', 'El Distribuidor no tiene Saldo');
-				
-				
-				
 		}
 	
 		credito.entrega = {movimientosCaja:[],movimientosCuentas:[]};		
@@ -251,7 +277,6 @@ Meteor.methods({
 				origen = "Entrega de Vale";
 		else
 				origen = "Entrega de Credito";		
-		
 		
 		_.each(montos.caja,(monto,index)=>{
 			
@@ -301,7 +326,7 @@ Meteor.methods({
 		});
 		
 		
-		//Actualizar el saldo al Distribuidor--------------
+		//Actualizar el saldo al Distribuidor Y Beneficiario--------------
 		if (credito.tipo == "vale")
 		{
 				var saldo = 0;
@@ -311,7 +336,19 @@ Meteor.methods({
 				saldo -= Number(parseFloat(credito.capitalSolicitado).toFixed(2));
 				
 				Meteor.users.update({_id: cliente._id}, {$set: {"profile.saldoCredito": saldo}});
-			
+				
+				saldoBeneficiario				
+				var saldoBeneficiario 		= 0;
+				var saldoBeneficiarioVale = 0;
+				
+				var beneficiario 					= Beneficiarios.findOne(credito.beneficiario_id);		
+				saldoBeneficiario 				= beneficiario.saldoActual;
+				saldoBeneficiarioVale 		= beneficiario.saldoActualVales;
+				
+				saldoBeneficiario 				+= Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+				saldoBeneficiarioVale 		+= Number(parseFloat(credito.adeudoInicial).toFixed(2));
+				
+			  Beneficiarios.update({_id: credito.beneficiario_id}, {$set: {saldoActual : saldoBeneficiario, saldoActualVales: saldoBeneficiarioVale}});			
 		}
 		
 		
@@ -382,4 +419,25 @@ Meteor.methods({
 		
 		return true;
 	},	
+	
+	getRespaldosCliente: function (tipo, cliente_id) {	
+		
+		var respaldos = [];
+		
+	  var creditos = Creditos.find({"cliente_id" : cliente_id}).fetch();
+	  //console.log(creditos);
+	  
+	  _.each(creditos, function(credito){
+		  
+		  	if (credito.tipoGarantia == tipo && credito.garantias.length > 0)
+		  	{
+			  		_.each(credito.garantias, function(garantia){
+				  			respaldos.push(garantia);
+			  		});	
+		  	}		  	
+	  });
+	  
+		return respaldos;
+	},
+	
 });

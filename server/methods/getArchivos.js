@@ -17,8 +17,7 @@ Meteor.methods({
 	},
 	getPeople: function (idReferencia) {
 			var persona = Meteor.users.findOne({_id: idReferencia}, {fields: {"profile.documentos" : 0}});
-				
- 
+
 				_.each(persona, function(objeto){
 						objeto.nacionalidadCliente = Nacionalidades.findOne(objeto.nacionalidad_id);
 						objeto.coloniaCliente = Colonias.findOne(objeto.colonia_id);
@@ -141,6 +140,215 @@ Meteor.methods({
 				return "";
 		}});
 
+		
+		var fecha = new Date();
+		var hora = moment(fecha).format("hh:mm:ss a");
+
+		fecha.setHours(0,0,0,0);
+	  var fechaEmision = new Date()
+
+    var f = String(objeto.foto);
+		objeto.foto = f.replace('data:image/jpeg;base64,', '');
+
+		var bitmap = new Buffer(objeto.foto, 'base64');
+		
+		fs.writeFileSync(produccionSalida + objeto.nombreCompleto + ".jpeg", bitmap);
+		objeto.foto = produccionSalida + objeto.nombreCompleto + ".jpeg";
+			
+			
+		objeto.referencias = [];	
+		_.each(objeto.referenciasPersonales_ids, function(rp){
+				
+				var referencia = {};
+				
+				var ref = ReferenciasPersonales.findOne(rp.referenciaPersonal_id);
+				
+				referencia.nombreCompleto = ref.nombreCompleto;	
+				referencia.direccion = ref.direccion;	
+				referencia.telefono = ref.telefono;	
+				referencia.tiempo = rp.tiempoConocerlo;	
+				
+				
+				objeto.referencias.push(referencia);
+				
+		});	
+		
+		//objeto.referenciasPersonales_ids.referencia .find(objeto.referenciasPersonales_ids.r		
+		
+		objeto.edad										= moment().diff(objeto.fechaNacimiento, 'years',false);
+		
+		objeto.fechaCreacion 					= moment(objeto.fechaCreacion).format("DD-MM-YYYY")
+		objeto.fechaNacimiento 				= moment(objeto.fechaNacimiento).format("DD-MM-YYYY")
+		objeto.fechaEmision 					= fechaEmision
+		objeto.fechaEmision						= moment(objeto.fechaEmision).format("DD-MM-YYYY")
+
+	  objeto.pais 									= objeto.paisCliente.nombre; 
+		objeto.ciudad 								= objeto.ciudadCliente  == undefined ? "" : objeto.ciudadCliente.nombre;
+		objeto.sucursal 							= objeto.sucursales.nombreSucursal == undefined ? "" : objeto.sucursales.nombreSucursal;
+		objeto.colonia 								= objeto.coloniaCliente  == undefined ? "" : objeto.coloniaCliente.nombre;
+		objeto.municipio 							= objeto.municipioCliente == undefined ? "" : objeto.municipioCliente.nombre;
+		objeto.estado 								= objeto.estadoCliente == undefined ? "" : objeto.estadoCliente.nombre;
+		objeto.nacionalidad 					= objeto.nacionalidadCliente == undefined ? "" : objeto.nacionalidadCliente.nombre;
+		objeto.estadoCivil 						= objeto.estadoCivilCliente == undefined ? "" : objeto.estadoCivilCliente.nombre;
+		objeto.ocupacion 							= objeto.ocupacionCliente == undefined ? "" : objeto.ocupacionCliente.nombre;
+		objeto.cp 										= objeto.codigoPostal; 
+		objeto.telefonoMovilContacto 	= objeto.celular;
+		objeto.telefonoContacto 			= objeto.particular;
+		objeto.empresaC 							= Empresas.findOne(objeto.empresa_id);
+		
+		var estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id);
+		
+		if (estadoCivil != undefined && estadoCivil.nombre != "CASADO (A)")
+		{
+				objeto.nombreConyuge 					= "";
+				objeto.telefonoConyugeTrabajo = "";
+				objeto.puestoConyuge 					= "";
+				objeto.celularConyuge 				= "";
+				objeto.direccionEmpresa 			= "";
+		}
+		
+		if (objeto.empresaC != undefined)
+		{
+				objeto.empresaC.municipio 		= Municipios.findOne(objeto.empresaC.municipio_id);
+				objeto.municipioEmpresa 			= objeto.empresaC.municipio == undefined ? "" : objeto.empresaC.municipio.nombre;
+				objeto.empresaC.municipio 		= Municipios.findOne(objeto.empresaC.municipio_id);
+				objeto.municipioEmpresa 			= objeto.empresaC.municipio == undefined ? "" : objeto.empresaC.municipio.nombre;
+				objeto.empresaC.estado 				= Estados.findOne(objeto.empresaC.estado_id);
+				objeto.estadoEmpresa 					= objeto.empresaC.estado == undefined ? "" : objeto.empresaC.estado.nombre;
+				objeto.empresaC.colonia 			= Colonias.findOne(objeto.empresaC.colonia_id);
+				objeto.coloniaEmpresa 				= objeto.empresaC.colonia == undefined ? "" : objeto.empresaC.colonia.nombre;
+				objeto.empresaC.pais 					= Paises.findOne(objeto.empresaC.pais_id);
+				objeto.paisEmpresa 						= objeto.empresaC.pais == undefined ? "" : objeto.empresaC.pais.nombre;
+				objeto.numeroEmpresa 					= objeto.empresaC.no
+				objeto.empresa 								= objeto.empresaC.nombre
+				objeto.calleEmpresa 					= objeto.empresaC.calle
+				objeto.cpEmpresa							= objeto.empresaC.codigoPostal;
+				objeto.numeroEmpresa 					= objeto.empresaC.numero	
+ 		}
+ 		else
+ 		{
+ 
+				objeto.municipioEmpresa 			= "";
+ 				objeto.municipioEmpresa 			= "";
+ 				objeto.estadoEmpresa 					= "";
+ 				objeto.coloniaEmpresa 				= "";
+ 				objeto.paisEmpresa 						= "";
+				objeto.numeroEmpresa 					= "";
+				objeto.empresa 								= "";
+				objeto.calleEmpresa 					= "";
+				objeto.cpEmpresa							= "";
+				objeto.numeroEmpresa 					= "";
+  	}
+		
+		
+		
+		objeto.ingresosPersonales 	= formatCurrency(objeto.ingresosPersonales);
+		objeto.ingresosConyuge		 	= formatCurrency(objeto.ingresosConyuge);
+		objeto.otrosIngresos				= formatCurrency(objeto.otrosIngresos);
+		objeto.gastosFijos 					= formatCurrency(objeto.gastosFijos);
+		objeto.gastosEventuales 		= formatCurrency(objeto.gastosEventuales);
+		
+		doc.setData({	item					: objeto,
+									foto					: objeto.foto,
+									referencias		: referencia,
+									fechaEmision 	: objeto.fechaEmision,
+									referencias		: objeto.referencias,
+									hora					: hora,
+								});								
+		doc.render(); 
+		var buf = doc.getZip().generate({type:"nodebuffer"});
+ 
+		/*
+		fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);		
+				
+		//Pasar a base64
+		// read binary data
+    var bitmap = fs.readFileSync(produccion+"FICHASOCIOSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+		*/
+		
+    var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "FICHASOCIOOut" + templateType;
+    //var rutaOutputpdf = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "FICHASOCIOOut.pdf" ;
+     
+    fs.writeFileSync(rutaOutput, buf);
+     
+		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+        if(!err){
+          fs.unlink(rutaOutput);
+          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "FICHASOCIOOut" + '.pdf' });
+        }else{
+          res['return']({err: err});
+          console.log("Error al convertir pdf:", err);
+        }
+     });
+
+    return res.wait();
+				
+  },
+  getFichaDistribuidor: function (objeto,referencia, tipo) {
+  	//console.log(objeto.referencias,"FICHA")
+  	if (objeto.numeroDistribuidor) {
+  		objeto.numeroCliente = objeto.numeroDistribuidor
+  	}
+		
+		
+		const formatCurrency = require('format-currency');
+		var fs = require('fs');
+    var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var ImageModule = require('docxtemplater-image-module');
+		
+		var unoconv = require('better-unoconv');
+    var future = require('fibers/future');
+		
+		var templateType = (tipo === 'pdf') ? '.docx' : (tipo === 'excel' ? '.xlsx' : '.docx');
+		
+    if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/" + "FICHADISTRIBUIDOR" + templateType;
+      var produccionFoto = publicPath + "public/fotos/" + "FICHADISTRIBUIDOR";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "plantillas/" + "FICHADISTRIBUIDOR" + templateType;
+      var produccionFoto = publicPath + "fotos/" + "FICHADISTRIBUIDOR";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+		
+
+		var opts = {}
+			opts.centered = false;
+			opts.getImage=function(tagValue, tagName) {
+					var binaryData =  fs.readFileSync(tagValue,'binary');
+					return binaryData;
+		}
+		
+		opts.getSize=function(img,tagValue, tagName) {
+		    return [180,160];
+		}
+		
+		var imageModule=new ImageModule(opts);
+
+		var content = fs.readFileSync(produccion, "binary");
+
+		var res = new future();
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.attachModule(imageModule)
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+				if (!part.module) {
+				return "";
+				}
+				if (part.module === "rawxml") {
+				return "";
+				}
+				return "";
+		}});
+
 
 		
 		var fecha = new Date();
@@ -157,7 +365,26 @@ Meteor.methods({
 		fs.writeFileSync(produccionSalida + objeto.nombreCompleto + ".jpeg", bitmap);
 		objeto.foto = produccionSalida + objeto.nombreCompleto + ".jpeg";
 			
+			
+		objeto.referencias = [];	
+		_.each(objeto.referenciasPersonales_ids, function(rp){
+				
+				var referencia = {};
+				
+				var ref = ReferenciasPersonales.findOne(rp.referenciaPersonal_id);
+				
+				referencia.nombreCompleto = ref.nombreCompleto;	
+				referencia.direccion = ref.direccion;	
+				referencia.telefono = ref.telefono;	
+				referencia.tiempo = rp.tiempoConocerlo;	
+				
+				
+				objeto.referencias.push(referencia);
+				
+		});	
+		
 		//objeto.referenciasPersonales_ids.referencia .find(objeto.referenciasPersonales_ids.r		
+		objeto.edad										= moment().diff(objeto.fechaNacimiento, 'years',false);
 		
 		objeto.fechaCreacion =moment(objeto.fechaCreacion).format("DD-MM-YYYY")
 		objeto.fechaNacimiento =moment(objeto.fechaNacimiento).format("DD-MM-YYYY")
@@ -224,23 +451,13 @@ Meteor.methods({
 									foto					: objeto.foto,
 									referencias		: referencia,
 									fechaEmision 	: objeto.fechaEmision,
+									referencias		: objeto.referencias,
 									hora					: hora,
 								});								
 		doc.render(); 
 		var buf = doc.getZip().generate({type:"nodebuffer"});
- 
-		/*
-		fs.writeFileSync(produccion+"FICHASOCIOSalida.docx",buf);		
-				
-		//Pasar a base64
-		// read binary data
-    var bitmap = fs.readFileSync(produccion+"FICHASOCIOSalida.docx");
-    
-    // convert binary data to base64 encoded string
-    return new Buffer(bitmap).toString('base64');
-		*/
-		
-    var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "FICHASOCIOOut" + templateType;
+ 		
+    var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "FICHADISTRIBUIDOROut" + templateType;
     //var rutaOutputpdf = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "FICHASOCIOOut.pdf" ;
      
     fs.writeFileSync(rutaOutput, buf);
@@ -248,7 +465,7 @@ Meteor.methods({
 		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
         if(!err){
           fs.unlink(rutaOutput);
-          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "FICHASOCIOOut" + '.pdf' });
+          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "FICHADISTRIBUIDOROut" + '.pdf' });
         }else{
           res['return']({err: err});
           console.log("Error al convertir pdf:", err);
@@ -512,646 +729,7 @@ var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
     
 		
   },
-  ReporteCobranza: function (objeto,inicial,final,tiposIngreso) {
-	
-		//console.log(objeto,"creditos ")
-		var fs = require('fs');
-    	var Docxtemplater = require('docxtemplater');
-		var JSZip = require('jszip');
-		
-		//var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		
-		var unoconv = require('better-unoconv');
-    var future = require('fibers/future');
-		
-		var templateType = 'pdf';
-		
-		if(Meteor.isDevelopment){
-      var path = require('path');
-      var publicPath = path.resolve('.').split('.meteor')[0];
-      var produccion = publicPath + "public/plantillas/";
-      var produccionSalida = publicPath + "public/generados/";
-    }else{						 
-      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
-      var produccion = publicPath + "/plantillas/";
-      var produccionSalida = "/home/cremio/archivos/";
-    }
-						 
-		var content = fs
-    	   .readFileSync(produccion+"reporteDiarioCobranza.docx", "binary");
-		var zip = new JSZip(content);
-		var doc=new Docxtemplater()
-								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			return "";
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
-		const formatCurrency = require('format-currency');
-		
-		var res = new future();
-
-		var fecha = new Date();
-		var f = fecha;
-		var fechaInicial = inicial;
-		var fechaFinal = final;
-
-    
-	  var suma = 0;
-		var sumaInter = 0;
-		var sumaIva = 0;
-		var sumaSeguro = 0;
-		var sumaCargosM = 0;
-		totalcobranza = 0;
-		
-		
-	    _.each(objeto,function(item){
-	    	
-	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
-	    	moment(item.fechaInicial).format("DD-MM-YYYY")
-	      moment(item.fechaFinal).format("DD-MM-YYYY")
-	      
-	      if (item.tipoIngreso == 'EFECTIVO')
-	      	item.tipoIngreso = 'EFVO.';
-	      else if (item.tipoIngreso == 'Nota de Credito')		
-	      	item.tipoIngreso = 'NC.';
-	      else if (item.tipoIngreso == 'FICHA DE DEPOSITO')		
-	      	item.tipoIngreso = 'F DEP.';		
-	      else if (item.tipoIngreso == 'TRANSFERENCIA')		
-	      	item.tipoIngreso = 'TRANSF.';
-	      else if (item.tipoIngreso == 'TARJETA DE CREDITO/DEBITO')		
-	      	item.tipoIngreso = 'TC/D.';
-	      else if (item.tipoIngreso == 'REFINANCIAMIENTO')		
-	      	item.tipoIngreso = 'REF.';		
-	      else if (item.tipoIngreso == 'CHEQUE')		
-	      	item.tipoIngreso = 'CH.';			
-	      
-	      if (item.descripcion == "Recibo") 
-	      {
-	      	item.movimiento = "R";
-	      }
-	      else
-	      {
-	      	item.movimiento = "C";
-	      	sumaCargosM += item.totalPago;
-
-	      }
-
-	       suma 				 += item.pagoCapital;
-	       sumaInter 		 += item.pagoInteres;
-	       sumaIva 			 += item.pagoIva;
-	       sumaSeguro 	 += item.pagoSeguro;
-	       
-	       totalcobranza += parseFloat(item.totalPago);
-	       
-
-	        item.cargo = parseFloat(item.totalPago.toFixed(2))
-	        item.cargo = formatCurrency(item.cargo)
-	        item.interes = parseFloat(item.pagoInteres.toFixed(2))
-	        item.interes = formatCurrency(item.interes)
-	        item.iva = parseFloat(item.pagoIva.toFixed(2))
-	        item.iva = formatCurrency(item.iva)
-	        item.seguro = parseFloat(item.pagoSeguro.toFixed(2))
-	        item.seguro = formatCurrency(item.seguro)
-	        item.pago = parseFloat(item.pagoCapital.toFixed(2))
-	        item.pago = formatCurrency(item.pago)
-	        if (item.folio < 10) {
-	 	 		item.folio = "0"+item.folio
-	 	 	}
-	 	 	if (item.numeroPago < 10) {
-	 	 		item.numeroPago = "0"+item.numeroPago
-	 	 	}
-	 	 	if (item.numeroPagos < 10) {
-	 	 		item.numeroPagos = "0"+item.numeroPagos
-	 	 	}
-	    });
-	    
-
- 		    var dia = fecha.getDate()
- 		    var mes = fecha.getMonth()+1
- 		    var anio = fecha.getFullYear()
- 		    if (Number(dia) < 10) {
- 		    	dia = "0" + dia;
- 		    }
- 		    if (Number(mes) < 10) {
- 		    	mes = "0" + mes;
- 		    }
- 		    fecha = dia+ "-" + mes + "-" + anio;
-
- 		    var dia2 = fechaInicial.getDate()
- 		    var mes2 = fechaInicial.getMonth()+1
- 		    var anio2 = fechaInicial.getFullYear()
- 		    if (Number(dia2) < 10) {
- 		    	dia2 = "0" + dia2;
- 		    }
- 		    if (Number(mes2) < 10) {
- 		    	mes2 = "0" + mes2;
- 		    }
- 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2;
-
- 		    var dia3 = fechaFinal.getDate()
- 		    var mes3 = fechaFinal.getMonth()+1
- 		    var anio3 = fechaFinal.getFullYear()
- 		    if (Number(dia3) < 10) {
- 		    	dia3 = "0" + dia3;
- 		    }
- 		    if (Number(mes3) < 10) {
- 		    	mes3 = "0" + mes3;
- 		    }
- 		    fechaFinal = dia3 + "-" + mes3 + "-" + anio3;
- 		    
- 		    parseFloat(suma.toFixed(2))
- 		    suma = formatCurrency(suma)
- 		    parseFloat(sumaInter.toFixed(2))
- 		    sumaInter = formatCurrency(sumaInter)
- 		    parseFloat(sumaIva.toFixed(2))
- 		    sumaIva = formatCurrency(sumaIva)
- 		    parseFloat(sumaSeguro.toFixed(2))
- 		    sumaSeguro = formatCurrency(sumaSeguro)
- 		    parseFloat(sumaCargosM.toFixed(2))
- 		    sumaCargosM = formatCurrency(sumaCargosM)
- 		    parseFloat(totalcobranza.toFixed(2))
- 		    totalcobranza = formatCurrency(totalcobranza)
- 				
- 				//Tipos de Ingreso
- 				_.each(tiposIngreso, function(ti){
-	 				ti.total = formatCurrency(ti.total)
- 				});
- 				
- 				var hora = moment(new Date()).format("hh:mm:ss a");
-		
-	      doc.setData({				
-    	            items					: objeto,
-									fecha					: fecha,
-									hora					: hora,
-									inicial				: fechaInicial,
-									final					: fechaFinal,
-									sumaCapital		: suma,
-									sumaIntereses	: sumaInter,
-									sumaIva				: sumaIva,
-									totalSeguro		: sumaSeguro,
-									totalCobranza	: totalcobranza,
-									totalCargosM	: sumaCargosM,
-									tiposIngreso	:	tiposIngreso
-	
-			  });
-								
-		doc.render();
- 
-		var buf = doc.getZip()
-             		 .generate({type:"nodebuffer"});
-             		 
-    var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "reporteDiarioCobranzaSalida" + templateType; 
-             		 
-		//fs.writeFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx",buf);		
-				
-		//Pasar a base64
-		// read binary data
-    /*
-var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx");
-    
-    // convert binary data to base64 encoded string
-    return new Buffer(bitmap).toString('base64');
-*/
-		fs.writeFileSync(rutaOutput, buf);
-     
-		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
-        if(!err){
-          fs.unlink(rutaOutput);
-          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "reporteDiarioCobranzaSalida" + '.pdf' });
-        }else{
-          res['return']({err: err});
-          console.log("Error al convertir pdf:", err);
-        }
-     });
-
-    return res.wait();
-		
-		
-		
-  },
-  ReporteCarteraVencida: function (objeto, tipo) {
-	
-		var fs = require('fs');
-    var Docxtemplater = require('docxtemplater');
-		var JSZip = require('jszip');
-		
-		var unoconv = require('better-unoconv');
-    var future = require('fibers/future');
-		
-		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		
-		var templateType = (tipo === 'pdf') ? '.docx' : (tipo === 'excel' ? '.xlsx' : '.docx');
-		if(Meteor.isDevelopment){
-      var path = require('path');
-      var publicPath = path.resolve('.').split('.meteor')[0];
-      var produccion = publicPath + "public/plantillas/";
-      var produccionSalida = publicPath + "public/generados/";
-    }else{						 
-      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
-      var produccion = publicPath + "/plantillas/";
-      var produccionSalida = "/home/cremio/archivos/";
-    }
-						 
-		var content = fs
-    	   .readFileSync(produccion+"ReporteCarteraVencida.docx", "binary");
-		var zip = new JSZip(content);
-		var res = new future();
-		var doc=new Docxtemplater()
-								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			return "";
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
-		const formatCurrency = require('format-currency');
-
-
-		var fecha = new Date();
-		var hora = moment(fecha).format("hh:mm:ss a");
-   
-		var numeroClientes	= 0;
-		var sumaTotal	= 0;
-		var sumaSaldo = 0;
-		var sumaCargosMoratorios = 0;
-		var sumaPorVencer = 0;
-		var sumaTotalVencido = 0;
-		var suma7Dias = 0;
-		var suma14Dias = 0;
-		var suma21Dias = 0;
-		var suma28Dias = 0;
-		var sumaMas28Dias = 0;
-		
-		
-	  _.each(objeto,function(cliente){
-		  	
-		
-				numeroClientes 				+= 1;
-		  	sumaTotal 						+= Number(parseFloat(cliente.total).toFixed(2));
-				sumaSaldo 						+= Number(parseFloat(cliente.saldo).toFixed(2));
-	  		sumaCargosMoratorios 	+= Number(parseFloat(cliente.saldoCargosMoratorios).toFixed(2));
-	  		sumaPorVencer 				+= Number(parseFloat(cliente.porVencer).toFixed(2));
-	  		sumaTotalVencido 			+= Number(parseFloat(cliente.totalVencido).toFixed(2));
-	  		suma7Dias 						+= Number(parseFloat(cliente.sieteDias).toFixed(2));	  		
-				suma14Dias 						+= Number(parseFloat(cliente.siete14Dias).toFixed(2));
-				suma21Dias 						+= Number(parseFloat(cliente.catorce21Dias).toFixed(2));
-				suma28Dias 						+= Number(parseFloat(cliente.ventiuno28Dias).toFixed(2));
-				sumaMas28Dias 				+= Number(parseFloat(cliente.mas28Dias).toFixed(2));
-
-	  		cliente.total = formatCurrency(cliente.total);
-	  		cliente.saldo = formatCurrency(cliente.saldo);
-	  		cliente.saldoCargosMoratorios = formatCurrency(cliente.saldoCargosMoratorios);
-	  		cliente.porVencer = formatCurrency(cliente.porVencer);
-	  		cliente.totalVencido = formatCurrency(cliente.totalVencido);
-	  		cliente.sieteDias = formatCurrency(cliente.sieteDias);	  		
-				cliente.siete14Dias = formatCurrency(cliente.siete14Dias);
-				cliente.catorce21Dias = formatCurrency(cliente.catorce21Dias);
-				cliente.ventiuno28Dias = formatCurrency(cliente.ventiuno28Dias);
-				cliente.mas28Dias = formatCurrency(cliente.mas28Dias);
-	  	
-	  });
-	   
-		sumaTotal 						= formatCurrency(sumaTotal);
-		sumaSaldo 						= formatCurrency(sumaSaldo);
-		sumaCargosMoratorios 	= formatCurrency(sumaCargosMoratorios);
-		sumaPorVencer 				= formatCurrency(sumaPorVencer);
-		sumaTotalVencido 			= formatCurrency(sumaTotalVencido);
-		suma7Dias 						= formatCurrency(suma7Dias);	  		
-		suma14Dias 						= formatCurrency(suma14Dias);
-		suma21Dias 						= formatCurrency(suma21Dias);
-		suma28Dias 						= formatCurrency(suma28Dias);
-		sumaMas28Dias 				= formatCurrency(sumaMas28Dias);
-
-
-    var dia = fecha.getDate()
-    var mes = fecha.getMonth()+1
-    var anio = fecha.getFullYear()
-    if (Number(dia) < 10) {
-    	dia = "0" + dia;
-    }
-    if (Number(mes) < 10) {
-    	mes = "0" + mes;
-    }
-    fecha = dia+ "-" + mes + "-" + anio;
-		
-	  doc.setData({				
-	            items									:	objeto,
-							fecha									: fecha,
-							hora									:	hora,
-							sumaTotal							: sumaTotal,
-							sumaSaldo							: sumaSaldo,
-							sumaCargosMoratorios 	: sumaCargosMoratorios,
-							sumaPorVencer					: sumaPorVencer,
-							sumaTotalVencido			: sumaTotalVencido,
-							suma7Dias							: suma7Dias,
-							suma14Dias						: suma14Dias,
-							suma21Dias						: suma21Dias,
-							suma28Dias						: suma28Dias,
-							sumaMas28Dias					: sumaMas28Dias,
-							numeroClientes				: numeroClientes
-	  });
-					
-		doc.render();
- 
-		var buf = doc.getZip()
-             		 .generate({type:"nodebuffer"});
-		//fs.writeFileSync(produccionSalida+"ReporteCarteraVencidaSalida.docx",buf);		
-		
-		
-		var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "ReporteCarteraVencidaOut" + objeto.nombreCompleto + templateType;
-    //var rutaOutputpdf = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "FICHASOCIOOut.pdf" ;
-     
-    fs.writeFileSync(rutaOutput, buf);
-    
-		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
-        if(!err){
-          fs.unlink(rutaOutput);
-          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "ReporteCarteraVencidaOut" + '.pdf' });
-        }else{
-          res['return']({err: err});
-          console.log("Error al convertir pdf:", err);
-        }
-     });
-
-    return res.wait();
-
-		
-				
-		//Pasar a base64
-		// read binary data
-   /*  var bitmap = fs.readFileSync(produccionSalida+"ReporteCarteraVencidaSalida.docx"); */
-    
-    // convert binary data to base64 encoded string
-    //return new Buffer(bitmap).toString('base64');
-    
-    
-    
-    
-		
-  },
-  ReporteCreditos: function (objeto,inicial,final) {
-	
-		//console.log(objeto,"fwfe ")
-		var fs = require('fs');
-    	var Docxtemplater = require('docxtemplater');
-		var JSZip = require('jszip');
-		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		
-		
-		if(Meteor.isDevelopment){
-      var path = require('path');
-      var publicPath = path.resolve('.').split('.meteor')[0];
-      var produccion = publicPath + "public/plantillas/";
-      var produccionSalida = publicPath + "public/generados/";
-    }else{						 
-      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
-      var produccion = publicPath + "/plantillas/";
-      var produccionSalida = "/home/cremio/archivos/";
-    }
-    
-		//var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-				 
-				var content = fs
-    	   .readFileSync(produccion+"ReporteDiarioCreditos.docx", "binary");
-		var zip = new JSZip(content);
-		var doc=new Docxtemplater()
-								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			return "";
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
-			const formatCurrency = require('format-currency')
-			var fecha = new Date();
-			var f = fecha;
-			var fechaInicial = inicial
-			var fechaFinal = final
-	   
-      var suma = 0
-      var sumaSol = 0
-	    _.each(objeto,function(item){
-	    	item.fechaEntrega = moment(item.fechaEntrega).format("DD-MM-YYYY")
-	    	suma = item.sumaCapital
-	    	sumaSol = item.sumaAPagar
-	    	item.numeroCliente = item.numeroCliente + "";
-	    	item.adeudoInicial = parseFloat(item.adeudoInicial.toFixed(2))
-	    	item.adeudoInicial = formatCurrency(item.adeudoInicial)
-	    	item.saldoActual = parseFloat(item.saldoActual.toFixed(2))
-	    	item.saldoActual = formatCurrency(item.saldoActual)
-	    	item.capitalSolicitado = parseFloat(item.capitalSolicitado.toFixed(2))
-	    	item.capitalSolicitado = formatCurrency(item.capitalSolicitado)
-	    	 if (item.folio < 10) {
-	 	 		item.folio = "0"+item.folio
-	 	 	}
-	 	 	if (item.numeroPagos < 10) {
-	 	 		item.numeroPagos = "0"+item.numeroPagos
-	 	 	}
-
-	    });	       
-	 		    
- 		    var dia = fecha.getDate()
- 		    var mes = fecha.getMonth()+1
- 		    var anio = fecha.getFullYear()
- 		    if (Number(dia) < 10) {
- 		    	dia = "0" + dia;
- 		    }
- 		    if (Number(mes) < 10) {
- 		    	mes = "0" + mes;
- 		    }
- 		    fecha = dia+ "-" + mes + "-" + anio
-
- 		    var dia2 = fechaInicial.getDate()
- 		    var mes2 = fechaInicial.getMonth()+1
- 		    var anio2 = fechaInicial.getFullYear()
- 		    if (Number(dia2) < 10) {
- 		    	dia2 = "0" + dia2;
- 		    }
- 		    if (Number(mes2) < 10) {
- 		    	mes2 = "0" + mes2;
- 		    }
- 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
-
- 		    var dia3 = fechaFinal.getDate()
- 		    var mes3 = fechaFinal.getMonth()+1
- 		    var anio3 = fechaFinal.getFullYear()
- 		    if (Number(dia3) < 10) {
- 		    	dia3 = "0" + dia3;
- 		    }
- 		    if (Number(mes3) < 10) {
- 		    	mes3 = "0" + mes3;
- 		    }
- 		    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
- 		    parseFloat(sumaSol.toFixed(2))
- 		    sumaSol = formatCurrency(sumaSol)
- 		    parseFloat(suma.toFixed(2))
- 		    suma = formatCurrency(suma)
-
-		
-		doc.setData({				
-						items: 		 objeto,
-						fecha:     fecha,
-						inicial:    fechaInicial,
-						final:      fechaFinal,
-						sumaCapital : suma,
-						sumaAPagar: sumaSol,
-													
-				
-				  });
-								
-		doc.render();
- 
-		var buf = doc.getZip()
-             		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccionSalida+"ReporteDiarioCreditosSalida.docx",buf);		
-				
-		//Pasar a base64
-		// read binary data
-    var bitmap = fs.readFileSync(produccionSalida+"ReporteDiarioCreditosSalida.docx");
-    
-    // convert binary data to base64 encoded string
-    return new Buffer(bitmap).toString('base64');
-		
-  },
-  ReporteCreditosLiquidados: function (objeto,inicial,final) {
-	
-		//console.log(objeto,"fwfe ")
-		var fs = require('fs');
-    	var Docxtemplater = require('docxtemplater');
-		var JSZip = require('jszip');
-		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		
-		
-		if(Meteor.isDevelopment){
-      var path = require('path');
-      var publicPath = path.resolve('.').split('.meteor')[0];
-      var produccion = publicPath + "public/plantillas/";
-      var produccionSalida = publicPath + "public/generados/";
-    }else{						 
-      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
-      var produccion = publicPath + "/plantillas/";
-      var produccionSalida = "/home/cremio/archivos/";
-    }
-    
-		//var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-				 
-				var content = fs
-    	   .readFileSync(produccion+"ReporteDiarioCreditosLiquidados.docx", "binary");
-		var zip = new JSZip(content);
-		var doc=new Docxtemplater()
-								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			return "";
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
-		const formatCurrency = require('format-currency')
-			var fecha = new Date();
-			var f = fecha;
-			var fechaInicial = inicial
-			var fechaFinal = final
-	    //fecha = fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear();//+', Hora:'+fecha.getUTCHours()+':'+fecha.getMinutes()+':'+fecha.getSeconds();
-	     // fInicial = fechaInicial.getDate()+'-'+(fechaInicial.getMonth()+1)+'-'+fechaInicial.getFullYear(); 
-	     // fFinal = fechaFinal.getDate()+'-'+(fechaFinal.getMonth()+1)+'-'+fechaFinal.getFullYear(); 
-	   
-          var suma = 0
-          var sumaSol = 0
-	    _.each(objeto,function(item){
-	    	item.fechaEntrega = moment(item.fechaEntrega).format("DD-MM-YYYY")
-	    	suma = item.sumaCapital
-	    	sumaSol = item.sumaAPagar
-	    	item.numeroCliente = item.numeroCliente + "";
-	    	item.adeudoInicial = parseFloat(item.adeudoInicial.toFixed(2))
-	    	item.adeudoInicial = formatCurrency(item.adeudoInicial)
-	    	item.saldoActual = parseFloat(item.saldoActual.toFixed(2))
-	    	item.saldoActual = formatCurrency(item.saldoActual)
-	    	item.capitalSolicitado = parseFloat(item.capitalSolicitado.toFixed(2))
-	    	item.capitalSolicitado = formatCurrency(item.capitalSolicitado)
-	    	 if (item.folio < 10) {
-	 	 		item.folio = "0"+item.folio
-	 	 	}
-	 	 	if (item.numeroPagos < 10) {
-	 	 		item.numeroPagos = "0"+item.numeroPagos
-	 	 	}
-
-	    });	       
-	 		    
- 		    var dia = fecha.getDate()
- 		    var mes = fecha.getMonth()+1
- 		    var anio = fecha.getFullYear()
- 		    if (Number(dia) < 10) {
- 		    	dia = "0" + dia;
- 		    }
- 		    if (Number(mes) < 10) {
- 		    	mes = "0" + mes;
- 		    }
- 		    fecha = dia+ "-" + mes + "-" + anio
-
- 		    var dia2 = fechaInicial.getDate()
- 		    var mes2 = fechaInicial.getMonth()+1
- 		    var anio2 = fechaInicial.getFullYear()
- 		    if (Number(dia2) < 10) {
- 		    	dia2 = "0" + dia2;
- 		    }
- 		    if (Number(mes2) < 10) {
- 		    	mes2 = "0" + mes2;
- 		    }
- 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
-
- 		    var dia3 = fechaFinal.getDate()
- 		    var mes3 = fechaFinal.getMonth()+1
- 		    var anio3 = fechaFinal.getFullYear()
- 		    if (Number(dia3) < 10) {
- 		    	dia3 = "0" + dia3;
- 		    }
- 		    if (Number(mes3) < 10) {
- 		    	mes3 = "0" + mes3;
- 		    }
- 		    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
- 		    parseFloat(sumaSol.toFixed(2))
- 		    sumaSol = formatCurrency(sumaSol)
- 		    parseFloat(suma.toFixed(2))
- 		    suma = formatCurrency(suma)
-
-		
-		doc.setData({				
-						items: 		 objeto,
-						fecha:     fecha,
-						inicial:    fechaInicial,
-						final:      fechaFinal,
-						sumaCapital : suma,
-						sumaAPagar: sumaSol,
-													
-				
-				  });
-								
-		doc.render();
- 
-		var buf = doc.getZip()
-             		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccionSalida+"ReporteDiarioCreditosLiquidadosSalida.docx",buf);		
-				
-		//Pasar a base64
-		// read binary data
-    var bitmap = fs.readFileSync(produccionSalida+"ReporteDiarioCreditosLiquidadosSalida.docx");
-    
-    // convert binary data to base64 encoded string
-    return new Buffer(bitmap).toString('base64');
-		
-  },
+  
   ReporteMovimientoCuenta: function (objeto,inicial,final) {
 	
 		//console.log(objeto,"creditos ")
@@ -1533,9 +1111,11 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
     };	
 		
 		const formatCurrency = require('format-currency');
-			
+		
+		var tieneAval = true;	
 		if (avales == undefined || avales.length == 0) {
-			avales = cliente
+			 avales = cliente;
+			 tieneAval = false;
 		}
 		
 		if (contrato.periodoPago == "Semanal") {
@@ -1558,9 +1138,25 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
   	cliente.ocupacion 	 = cliente.ocupacionCliente != undefined ? cliente.ocupacionCliente.nombre : "";
   	cliente.ciudad 			 = cliente.ciudadCliente != undefined ? cliente.ciudadCliente.nombre : "";
   	cliente.municipio 	 = cliente.municipioCliente != undefined ? cliente.municipioCliente.nombre: "";
-  	var all = planPagos[planPagos.length - 1]
-  	var total = all.sumatoria
+  	
+  	var all = planPagos[planPagos.length - 1];
+  	
+  	var total = 0;
+  	//var total = all.sumatoria;
+		_.each(planPagos,function(pp){
+		 	total += parseFloat(pp.importeRegular.toFixed(2))
+		});
+		
+		total = Number(parseFloat(total).toFixed(2));
+  	
  		_.each(planPagos,function(pp){
+	 		
+	 		pp.liquidar = total
+	 		pp.liquidar = parseFloat(pp.liquidar.toFixed(2))
+	 	  pp.liquidar = formatCurrency(pp.liquidar)
+	 	  
+	 	  total -= Number(parseFloat(pp.importeRegular).toFixed(2));
+	 			 		
 		 	pp.importeRegular = parseFloat(pp.importeRegular.toFixed(2))
 		 	pp.importeRegular = formatCurrency(pp.importeRegular)
 		 	
@@ -1573,18 +1169,23 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 		 	pp.interes = parseFloat(pp.interes.toFixed(2))
 		 	pp.interes = formatCurrency(pp.interes)
 		 	
-		 	if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
+		 	pp.capital = parseFloat(pp.capital.toFixed(2))
+		 	pp.capital = formatCurrency(pp.capital)
+		 	
+		 	/*
+if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 		 		pp.sumatoria = formatCurrency(pp.sumatoria)
 		 	if (pp.total) {pp.total = parseFloat(pp.total.toFixed(2))}
 		 		pp.total = formatCurrency(pp.total)
 		 	if (pp.capital) {pp.capital = parseFloat(pp.capital.toFixed(2))}
 		 		pp.capital = formatCurrency(pp.capital)
-				pp.liquidar = total
-		 		total -= (parseFloat(pp.importeRegular).toFixed(2));
-		 		pp.liquidar = parseFloat(pp.liquidar.toFixed(2))
-		 	  pp.liquidar = formatCurrency(pp.liquidar)
-		 	  pp.fechaLimitePago = pp.fechaLimite
-		 	  pp.fechaLimitePago =  moment(pp.fechaLimitePago).format("DD-MM-YYYY")	
+			
+*/
+	 		
+	 		
+	 	  
+	 	  pp.fechaLimitePago = pp.fechaLimite
+	 	  pp.fechaLimitePago =  moment(pp.fechaLimitePago).format("DD-MM-YYYY")	
 		});
 
  		_.each(contrato.garantias,function(item){
@@ -1797,13 +1398,13 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
     }else{
     	autorizacionPublicidadNo = "X"
     }
-    //console.log(autorizacionProveedorSi,"contrato")
+
     function sumarDias(fecha){
 			fecha.setDate(fecha.getDate() + 1);
 			return fecha;
 		}
 		var fechaFiniquitoVigencia = sumarDias(vigencia.fechaLimite)
-		//console.log(fechaFiniquitoVigencia,"nandaaa")
+
 		var vigenciaMasUnDia = formatDate(vigenciaFecha);
 		  
 
@@ -1981,16 +1582,33 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 				var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 				
 				if (contrato.tipoInteres.tipoInteres == "Simple") {
-					var content = fs
-							.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
+					if (tieneAval)
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
+					else
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOHIPOTECARIOSINAVAL.docx", "binary");
+					
 				}
 				if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-					var content = fs
-							.readFileSync(produccion+"CONTRATOHIPOTECARIOCOMPUESTO.docx", "binary");
+					
+					if (tieneAval)
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOHIPOTECARIOCOMPUESTO.docx", "binary");
+					else
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOHIPOTECARIOCOMPUESTOSINAVAL.docx", "binary");
+					
 				}
 				if (contrato.tipoInteres.tipoInteres == "saldos Insolutos") {
-					var content = fs
-							.readFileSync(produccion+"CONTRATOHIPOTECARIOSSI.docx", "binary");
+					
+					if (tieneAval)
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOHIPOTECARIOSSI.docx", "binary");
+					else
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOHIPOTECARIOSSISINAVAL.docx", "binary");
+					
 				}
 						
 		    	   
@@ -2058,19 +1676,32 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 				var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 				
 				if (contrato.tipoInteres.tipoInteres == "Simple") {
-					//console.log("entra SIMPLE")
-					var content = fs				
-							.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.docx", "binary");
+
+					if (tieneAval)
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIA.docx", "binary");
+					else
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASINAVAL.docx", "binary");				
+									
 				}
 				if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-					//console.log("entra saldos")
-					var content = fs				
-							.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASSI.docx", "binary");
+					
+					if (tieneAval)
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASSI.docx", "binary");
+					else
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIASSISINAVAL.docx", "binary");
 				}
 				if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-					//console.log("entra COMPUESTO")
-					var content = fs				
-							.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIACOMPUESTO.docx", "binary");
+					
+					if (tieneAval)
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIACOMPUESTO.docx", "binary");
+					else
+							var content = fs				
+									.readFileSync(produccion+"CONTRATOGARANTIAPRENDARIACOMPUESTOSINAVAL.docx", "binary");
 				}
 		    	   
 				var zip = new JSZip(content);
@@ -2601,9 +2232,8 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
     
 		
   }, 
-	imprimirHistorial: function (objeto,cliente,credito,tipo) {
+	imprimirHistorial: function (objeto,cliente,credito,tipo, saldoMultas, abonosRecibos, abonosCargorMoratorios, saldo) {
 	
-		
 		var fs = require('fs');
     var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -2626,8 +2256,8 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
     }
 		
 		var opts = {}
-			opts.centered = false;
-			opts.getImage=function(tagValue, tagName) {
+		opts.centered = false;
+		opts.getImage=function(tagValue, tagName) {
 					var binaryData =  fs.readFileSync(tagValue,'binary');
 					return binaryData;
 		}
@@ -2644,89 +2274,97 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
 		var doc=new Docxtemplater()
 						.attachModule(imageModule)
 						.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			return "";
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
-
+							if (!part.module) {
+							return "";
+							}
+							if (part.module === "rawxml") {
+							return "";
+							}
+							return "";
+						}});
+		
 		const formatCurrency = require('format-currency')
 		var pic = String(cliente.foto);
 		cliente.foto = pic.replace('data:image/jpeg;base64,', '');
 		var bitmap = new Buffer(cliente.foto, 'base64');
-		fs.writeFileSync(produccionSalida+".jpeg", bitmap);
-		cliente.foto = produccionSalida+".jpeg";
-		
+		fs.writeFileSync(produccionSalida  + cliente.numeroCliente + ".jpeg", bitmap);
+		cliente.foto = produccionSalida + cliente.numeroCliente + ".jpeg";
 		var fecha = new Date();
 		var f = fecha;
 	    
-       objeto.fechaLimite =moment(objeto.fechaLimite).format("DD-MM-YYYY")
-       cliente.fechaCreacion =moment(cliente.fechaCreacion).format("DD-MM-YYYY")
-       cliente.fechaNacimiento =moment(cliente.fechaNacimiento).format("DD-MM-YYYY")
-       credito.fechaEntrega =moment(credito.fechaEntrega).format("DD-MM-YYYY")
-       credito.adeudoInicial = parseFloat(credito.adeudoInicial.toFixed(2))
-       credito.adeudoInicial = formatCurrency(credito.adeudoInicial)
-       credito.saldoActual = parseFloat(credito.saldoActual.toFixed(2))
-       credito.saldoActual = formatCurrency(credito.saldoActual)
-       credito.saldoMultas = parseFloat(credito.saldoMultas.toFixed(2))
-       credito.saldoMultas = formatCurrency(credito.saldoMultas)
-       credito.capitalSolicitado = parseFloat(credito.capitalSolicitado.toFixed(2))
-       credito.capitalSolicitado = formatCurrency(credito.capitalSolicitado)
-       if (credito.numeroPagos < 10) {
-	 	 		credito.numeroPagos = "0"+credito.numeroPagos
-	 	 	}
+    objeto.fechaLimite 			 = moment(objeto.fechaLimite).format("DD-MM-YYYY")
+    cliente.fechaCreacion 		 = moment(cliente.fechaCreacion).format("DD-MM-YYYY")
+    cliente.fechaNacimiento 	 = moment(cliente.fechaNacimiento).format("DD-MM-YYYY")
+    
+    credito.fechaEntrega 		 = moment(credito.fechaEntrega).format("DD-MM-YYYY")
+    //credito.saldoActual 			 = parseFloat(credito.saldoActual.toFixed(2))
+    //credito.saldoActual 			 = formatCurrency(credito.saldoActual)
+    credito.saldoMultas 			 = parseFloat(credito.saldoMultas.toFixed(2))
+    credito.saldoMultas 			 = formatCurrency(credito.saldoMultas)
+    credito.capitalSolicitado = parseFloat(credito.capitalSolicitado.toFixed(2))
+    credito.capitalSolicitado = formatCurrency(credito.capitalSolicitado)
+     
+    if (credito.numeroPagos < 10) {
+ 	 		credito.numeroPagos = "0"+credito.numeroPagos
+ 	 	}
 
-      var totalCargos = 0;
-      var totalAbonos = 0;
-      
-      //console.log(objeto)
-      _.each(objeto,function(item){
-		      item.fechaSolicito = moment(item.fechaSolicito).format("DD-MM-YYYY")
-		      item.saldo = parseFloat(item.saldo.toFixed(2))
-		      item.saldo = formatCurrency(item.saldo)
-		      item.cargo = parseFloat(item.cargo.toFixed(2))
-		      item.cargo = formatCurrency(item.cargo)
-		      totalAbonos = parseFloat(item.sumaAbonos.toFixed(2))
-		      totalAbonos = formatCurrency(totalAbonos)
-		      totalCargos = parseFloat(item.sumaCargos.toFixed(2))
-		      totalCargos = formatCurrency(totalCargos)
-		      totalSaldo =  parseFloat(item.ultimoSaldo.toFixed(2))
-		      totalSaldo = formatCurrency(totalSaldo)
-		      
-		      item.totalCargosMoratorios = parseFloat(item.sumaAbonosCM).toFixed(2);
-		      totalCargosMoratorios = formatCurrency(item.totalCargosMoratorios )
-					
-					item.notaCredito = formatCurrency(item.notaCredito);
-					
-			});
+    var totalCargos = 0;
+    var totalAbonos = 0;
+    
+    //console.log(objeto)
+    _.each(objeto,function(item){
+	      item.fecha = moment(item.fecha).format("DD-MM-YYYY")
+	      item.saldo = parseFloat(item.saldo.toFixed(2))
+	      item.saldo = formatCurrency(item.saldo)
+	      item.saldoActualizado = parseFloat(item.saldoActualizado.toFixed(2))
+	      item.saldoActualizado = formatCurrency(item.saldoActualizado)
+	      item.cargo = parseFloat(item.cargo.toFixed(2))
+	      item.cargo = formatCurrency(item.cargo)
+	      item.pago = parseFloat(item.pago.toFixed(2))
+	      item.pago = formatCurrency(item.pago)
+				item.notaCredito = formatCurrency(item.notaCredito);				
+		});
+		
+		//Totales
+		/*
+console.log(credito.adeudoInicial);
+		console.log(saldoMultas);
+		console.log(abonosRecibos);
+		console.log(abonosCargorMoratorios);
+		console.log(saldo);
+*/
+		credito.adeudoInicial 		= parseFloat(credito.adeudoInicial.toFixed(2));
+		credito.totalSaldo 				= parseFloat(credito.adeudoInicial - abonosRecibos).toFixed(2);
+		credito.saldoMultas 			= parseFloat(saldoMultas - abonosCargorMoratorios).toFixed(2);
+		
+		credito.totalSaldo 				= formatCurrency(credito.totalSaldo);
+		credito.saldoMultas 			= formatCurrency(credito.saldoMultas);
+    credito.adeudoInicial 		= formatCurrency(credito.adeudoInicial)
+    totalCargos 							= formatCurrency(saldoMultas)
+		totalAbonos 							= formatCurrency(abonosRecibos);
+		totalCargosMoratorios 		= formatCurrency(abonosCargorMoratorios);
+		totalSaldo 								= formatCurrency(saldo);
+		
 
-	 		cliente.ciudad 				= cliente.ciudadCliente != undefined ? cliente.ciudadCliente.nombre : "";
-			cliente.sucursal 			= cliente.sucursales != undefined ? cliente.sucursales.nombreSucursal : "";
-			cliente.colonia 			= cliente.coloniaCliente != undefined ? cliente.coloniaCliente.nombre : "";
-			cliente.municipio 		= cliente.municipioCliente != undefined ? cliente.municipioCliente.nombre : "";
-			cliente.estado 				= cliente.estadoCliente != undefined ? cliente.estadoCliente.nombre : "";
-			cliente.nacionalidad 	= cliente.nacionalidadCliente != undefined ? cliente.nacionalidadCliente.nombre : "" ;
-			cliente.estadoCivil 	= cliente.estadoCivilCliente != undefined ? cliente.estadoCivilCliente.nombre : "";
-			cliente.ocupacion 		= cliente.ocupacionCliente != undefined ? cliente.ocupacionCliente.nombre : "";
-	    
-	    // 	 if (item.folio < 10) {
-	 	 	// 	item.folio = "0"+item.folio
-	 	 	// }
-	 	 	
-	 		    
- 		   var dia = fecha.getDate()
- 		    var mes = fecha.getMonth()+1
- 		    var anio = fecha.getFullYear()
- 		    if (Number(dia) < 10) {
- 		    	dia = "0" + dia;
- 		    }
- 		    if (Number(mes) < 10) {
- 		    	mes = "0" + mes;
- 		    }
- 		    fecha = dia+ "-" + mes + "-" + anio
+ 		cliente.ciudad 				= cliente.ciudadCliente != undefined ? cliente.ciudadCliente.nombre : "";
+		cliente.sucursal 			= cliente.sucursales != undefined ? cliente.sucursales.nombreSucursal : "";
+		cliente.colonia 			= cliente.coloniaCliente != undefined ? cliente.coloniaCliente.nombre : "";
+		cliente.municipio 		= cliente.municipioCliente != undefined ? cliente.municipioCliente.nombre : "";
+		cliente.estado 				= cliente.estadoCliente != undefined ? cliente.estadoCliente.nombre : "";
+		cliente.nacionalidad 	= cliente.nacionalidadCliente != undefined ? cliente.nacionalidadCliente.nombre : "" ;
+		cliente.estadoCivil 	= cliente.estadoCivilCliente != undefined ? cliente.estadoCivilCliente.nombre : "";
+		cliente.ocupacion 		= cliente.ocupacionCliente != undefined ? cliente.ocupacionCliente.nombre : "";
+	    	 		    
+   	var dia = fecha.getDate()
+    var mes = fecha.getMonth()+1
+    var anio = fecha.getFullYear()
+    if (Number(dia) < 10) {
+    	dia = "0" + dia;
+    }
+    if (Number(mes) < 10) {
+    	mes = "0" + mes;
+    }
+    fecha = dia+ "-" + mes + "-" + anio
 		
 		doc.setData({				
 						items									: objeto,
@@ -2771,8 +2409,173 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
     return res.wait();
 		
 		
+  },
+	imprimirHistorialVales: function (objeto,cliente,credito,tipo, saldoMultas, abonosRecibos, abonosCargorMoratorios, saldo) {
+	
+		var fs = require('fs');
+    var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var ImageModule = require('docxtemplater-image-module');
+		
+		var unoconv = require('better-unoconv');
+    var future = require('fibers/future');
+		
+		var templateType = (tipo === 'pdf') ? '.docx' : (tipo === 'excel' ? '.xlsx' : '.docx');
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+		
+		var opts = {}
+		opts.centered = false;
+		opts.getImage=function(tagValue, tagName) {
+					var binaryData =  fs.readFileSync(tagValue,'binary');
+					return binaryData;
+		}
+		
+		opts.getSize=function(img,tagValue, tagName) {
+		    return [180,160];
+		}
+
+		var imageModule=new ImageModule(opts);
+				 
+		var content = fs
+    	   .readFileSync(produccion+"HISTORIALCREDITICIOVALES.docx", "binary");
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+						.attachModule(imageModule)
+						.loadZip(zip).setOptions({nullGetter: function(part) {
+							if (!part.module) {
+							return "";
+							}
+							if (part.module === "rawxml") {
+							return "";
+							}
+							return "";
+						}});
+		
+		const formatCurrency = require('format-currency')
+		var pic = String(cliente.foto);
+		cliente.foto = pic.replace('data:image/jpeg;base64,', '');
+		var bitmap = new Buffer(cliente.foto, 'base64');
+		fs.writeFileSync(produccionSalida  + cliente.numeroCliente + ".jpeg", bitmap);
+		cliente.foto = produccionSalida + cliente.numeroCliente + ".jpeg";
+		var fecha = new Date();
+		var f = fecha;
+	    
+    objeto.fechaLimite 			 	= moment(objeto.fechaLimite).format("DD-MM-YYYY")
+    cliente.fechaCreacion 		= moment(cliente.fechaCreacion).format("DD-MM-YYYY")
+    cliente.fechaNacimiento 	= moment(cliente.fechaNacimiento).format("DD-MM-YYYY")
+    credito.fechaEntrega 		 	= moment(credito.fechaEntrega).format("DD-MM-YYYY")
+    credito.saldoMultas 			= parseFloat(credito.saldoMultas.toFixed(2))
+    credito.saldoMultas 			= formatCurrency(credito.saldoMultas)
+    credito.capitalSolicitado = parseFloat(credito.capitalSolicitado.toFixed(2))
+    credito.capitalSolicitado = formatCurrency(credito.capitalSolicitado)
+     
+    if (credito.numeroPagos < 10) {
+ 	 		credito.numeroPagos = "0"+credito.numeroPagos
+ 	 	}
+
+    var totalCargos = 0;
+    var totalAbonos = 0;
+
+    _.each(objeto,function(item){
+	      item.fecha = moment(item.fecha).format("DD-MM-YYYY")
+	      item.saldo = parseFloat(item.saldo.toFixed(2))
+	      item.saldo = formatCurrency(item.saldo)
+	      item.saldoActualizado = parseFloat(item.saldoActualizado.toFixed(2))
+	      item.saldoActualizado = formatCurrency(item.saldoActualizado)
+	      item.cargo = parseFloat(item.cargo.toFixed(2))
+	      item.cargo = formatCurrency(item.cargo)
+	      item.pago = parseFloat(item.pago.toFixed(2))
+	      item.pago = formatCurrency(item.pago)
+				item.notaCredito = formatCurrency(item.notaCredito);				
+		});
+		//Totales
+		credito.adeudoInicial 		= parseFloat(credito.adeudoInicial.toFixed(2));
+		credito.totalSaldo 				= parseFloat(credito.adeudoInicial - abonosRecibos).toFixed(2);
+		credito.saldoMultas 			= parseFloat(saldoMultas - abonosCargorMoratorios).toFixed(2);
+		credito.beneficiario			= Beneficiarios.findOne(credito.beneficiario_id).nombreCompleto;
+		credito.totalSaldo 				= formatCurrency(credito.totalSaldo);
+		credito.saldoMultas 			= formatCurrency(credito.saldoMultas);
+    credito.adeudoInicial 		= formatCurrency(credito.adeudoInicial)
+    totalCargos 							= formatCurrency(saldoMultas)
+		totalAbonos 							= formatCurrency(abonosRecibos);
+		totalCargosMoratorios 		= formatCurrency(abonosCargorMoratorios);
+		totalSaldo 								= formatCurrency(saldo);
+		
+ 		cliente.ciudad 				= cliente.ciudadCliente != undefined ? cliente.ciudadCliente.nombre : "";
+		cliente.sucursal 			= cliente.sucursales != undefined ? cliente.sucursales.nombreSucursal : "";
+		cliente.colonia 			= cliente.coloniaCliente != undefined ? cliente.coloniaCliente.nombre : "";
+		cliente.municipio 		= cliente.municipioCliente != undefined ? cliente.municipioCliente.nombre : "";
+		cliente.estado 				= cliente.estadoCliente != undefined ? cliente.estadoCliente.nombre : "";
+		cliente.nacionalidad 	= cliente.nacionalidadCliente != undefined ? cliente.nacionalidadCliente.nombre : "" ;
+		cliente.estadoCivil 	= cliente.estadoCivilCliente != undefined ? cliente.estadoCivilCliente.nombre : "";
+		cliente.ocupacion 		= cliente.ocupacionCliente != undefined ? cliente.ocupacionCliente.nombre : "";
+	    	 		    
+   	var dia = fecha.getDate()
+    var mes = fecha.getMonth()+1
+    var anio = fecha.getFullYear()
+    if (Number(dia) < 10) {
+    	dia = "0" + dia;
+    }
+    if (Number(mes) < 10) {
+    	mes = "0" + mes;
+    }
+    fecha = dia+ "-" + mes + "-" + anio
+		
+		doc.setData({				
+						items									: objeto,
+						sucursal							: cliente.sucursal,
+						beneficiario					: credito.beneficiario,
+						fechaCreacion					: cliente.fechaCreacion,
+						nombreCompleto				: cliente.nombreCompleto,
+						numeroCliente					: cliente.numeroCliente,
+						sexo									: cliente.sexo,
+						lugarNacimiento				: cliente.lugarNacimiento,
+						nacionalidad					: cliente.nacionalidad,
+						ocupacion							: cliente.ocupacion,
+						fechaNacimiento				: cliente.fechaNacimiento,
+						foto									: cliente.foto,
+						credito								: credito,
+						adeudoInicial 				: credito.adeudoInicial,
+						fechaEmision					: fecha,
+						saldoMultas 					: credito.saldoMultas,
+						totalCargos 					: totalCargos,
+						totalAbonos 					: totalAbonos,
+						totalSaldo 						: totalSaldo,
+						totalCargosMoratorios	: totalCargosMoratorios
+				  });
+		var res = new future();			
+		doc.render();
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+    
+    var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "HISTORIALCREDITICIOSOUT" + objeto.nombreCompleto + templateType;
+     
+    fs.writeFileSync(rutaOutput, buf);
+          		 
+		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+      if(!err){
+        fs.unlink(rutaOutput);
+        res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "HISTORIALCREDITICIOOUT" + '.pdf' });
+      }else{
+        res['return']({err: err});
+        console.log("Error al convertir pdf:", err);
+      }
+    });
+		
+    return res.wait();
+		
   }, 
-  formaSolicitud: function () {
+  formaSolicitud: function (op) {
 		
 		var fs = require('fs');
     var Docxtemplater = require('docxtemplater');
@@ -2796,7 +2599,7 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
     }
 
  		var res = new future();
-    var rutaOutput =  produccion + "FormatoSol.pdf";
+    var rutaOutput =  produccion + (op == 1 ? "FormatoSol.pdf" : "FormatoSolVales.pdf");
     var bitmap = fs.readFileSync(rutaOutput);
     res['return']({ uri: 'data:application/pdf;base64,' + bitmap.toString('base64'), nombre: "FormatoSol" + '.pdf' });
     return res.wait();

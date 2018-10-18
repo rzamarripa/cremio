@@ -2,8 +2,8 @@
 	<div class="widget-body no-padding">
 		<div class="padding-10">
 			<div class="row text-center">
-				<div class="col-sm-4 col-sm-offset-4">
-				<span id="logo"> <img src="img/logoCreditoMioBN.png" alt="SmartAdmin" style="margin-top: -18px;width: 170px;height: 100px;"> </span>
+				<div class="col-sm-4 col-sm-offset-4" style="font-size: small">
+					<span id="logo"> <img src="img/logoCreditoMioBN.png" alt="SmartAdmin" style="margin-top: -18px;width: 170px;height: 100px;"> </span>
 					<p style="text-align: center"><strong>---INGRESOS POR FORMA DE PAGO---</strong></p>
 					<table style="width: 100%">
 						<tr ng-repeat="(key, resu) in cj.ingresosAgrupados">
@@ -75,8 +75,8 @@
 					<br>
 					<div class="row">
 						<div class="col-sm-12">
-							<span class="pull-left">(=)EFECTIVO EN CAJA:</span> 
-							<span class="pull-right">{{cj.totalEnCaja | currency}}</span>
+							<strong><span class="pull-left">(=)EFECTIVO EN CAJA:</span> </trong>
+							<strong><span class="pull-right">{{cj.totalEnCaja | currency}}</span></strong>
 						</div>
 					</div>
 					
@@ -90,9 +90,18 @@
 						MAAR-661007-BF5<br>
 						(667) 717-21-21<br>
 					</address>
+					<div class="row">
+						<div class="col-sm-6 pull-left">Fecha : {{ cj.fecha | date:'dd-MM-yyyy'}}</div>
+						<div class="col-sm-6 pull-right">Hora : {{ cj.fecha | date:'H:mm:ss'}}</div>
+					</div>
 					<div><a class="btn btn-primary" id="printpagebutton" ng-click="cj.borrarBotonImprimir()">Imprimir</a></div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<style type="text/css" media="print">
+	@page{
+   margin: 0;
+	}
+</style>

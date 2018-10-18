@@ -43,7 +43,8 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
   this.subscribe('planPagos', () => {
     return [{
       cliente_id: $stateParams.objeto_id,
-      credito_id: { $in: rc.getCollectionReactively("creditos_id") }
+      credito_id: { $in: rc.getCollectionReactively("creditos_id") },
+      importeRegular : {$gt : 0}
     }];
   });
 
@@ -59,7 +60,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
     return [{ cliente_id: $stateParams.objeto_id, estatus : {$in: [2, 4]}}];
   });
   this.subscribe('pagos', () => {
-    return [{ estatus: 1 }];
+    return [{ estatus: true }];
   });
 /*
   this.subscribe('ocupaciones', () => {
@@ -556,8 +557,6 @@ historial : () => {
 
   this.guardarPago = function(pago, credito) {
 		
-		
-		
 		if (rc.caja.estadoCaja == "Cerrada")
 		{
 				toastr.error("La caja esta cerrada, favor de reportar con el Gerente");
@@ -577,7 +576,7 @@ historial : () => {
 		  	return;
 	  }
 	  
-	  if (pago.pagar < pago.totalPago)
+	  if (Number(parseFloat(pago.pagar).toFixed(2)) < Number(parseFloat(pago.totalPago).toFixed(2)))
 	  {
 		  	toastr.warning("No alcanza a pagar con el total ingresado");
 		  	return;
@@ -725,7 +724,8 @@ historial : () => {
 		    																	rc.cargosMoratorios, 
 		    																	rc.total, 
 		    																	fechaProximoPago,
-		    																	pago.fechaDeposito, function(error, success) {
+		    																	pago.fechaDeposito, 
+		    																	0,function(error, success) {
 		      if (!success) {
 			      
 		        toastr.error('Error al guardar.', success);
@@ -739,16 +739,10 @@ historial : () => {
 		      rc.pago.fechaEntrega = pago.fechaEntrega
 		      rc.ocultarMultas = false;
 		      var url = $state.href("anon.imprimirTicket", { pago_id: success }, { newTab: true });
-		      window.open(url, '_blank');
-		      
+		      window.open(url, '_blank');     
 		      rc.tipoIngresoSeleccionado = {};
-
 		    });
-
-		  
-	  }
-		
-		
+	  }		
   };
 
   this.creditosAprobados = function(){
@@ -836,6 +830,7 @@ if(pago.descripcion=="Cargo Moratorio")
 			var fechaProximoPago = "";			
 			rc.creditoRefinanciar.refinanciar = Number(parseFloat(rc.pagoR.totalPago).toFixed(2));
 			
+			
 			var fechaProximoPagoArray = [];
 			var seleccionadosId = [];
 	    _.each(rc.planPagosViejo, function(p) {
@@ -855,6 +850,8 @@ if(pago.descripcion=="Cargo Moratorio")
 			if (fechaProximoPago == "Invalid Date")
 					fechaProximoPago = "";
 	    
+	    //Cantidad a refinanciar
+	    var cantidadEntregar = Number(parseFloat(rc.creditoRefinanciar.capitalSolicitado - rc.creditoRefinanciar.refinanciar).toFixed(2));
 	    
 			//cons ole.log(seleccionadosId, pago.pagar, pago.totalPago, pago.tipoIngreso_id)
 	    Meteor.call("pagoParcialCredito", seleccionadosId, 
@@ -867,7 +864,8 @@ if(pago.descripcion=="Cargo Moratorio")
 	    																	rc.cargosMoratorios, 
 	    																	rc.total, 
 	    																	fechaProximoPago, 
-	    																	undefined, function(error, success) {
+	    																	undefined,
+	    																	cantidadEntregar, function(error, success) {
 	      if (!success) {
 	        toastr.error('Error al guardar.');
 	        return;

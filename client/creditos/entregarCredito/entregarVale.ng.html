@@ -2,7 +2,8 @@
 <div class="row">
 	<div class="col-sm-12">
 			<div class="col-sm-6">
-          <h2>Entregar Vale</h2>
+          <h2>Entregar Vale a: {{ecCtrl.credito.beneficiario.nombreCompleto}}</h2> 
+          <h2>Distribuidor : {{ecCtrl.credito.distribuidor.profile.nombreCompleto}}</h2>
 			</div>
 			<div class="col-sm-6">
 					<a style="margin: 5px;" ng-if="ecCtrl.credito.tipo == 'vale'" ui-sref="root.distribuidoresDetalle({objeto_id : ecCtrl.credito.cliente_id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
@@ -20,7 +21,7 @@
               <label>Primer abono</label>
               <input type="date" format="dd-MM-yyyy" class="form-control" ng-model="ecCtrl.objeto.primerAbono" name="fechaPrimerAbono" ng-disabled="ecCtrl.estatusFecha"/>
             </div>
-            <div class="col-sm-3">            
+            <div class="col-sm-2">            
 								<br>
                 <button ng-if="ecCtrl.credito.tipo == 'vale'" class="btn btn-success" ng-click="ecCtrl.generarCredito()">Generar Vale</button>          
             </div>  
@@ -29,6 +30,13 @@
 								<br>
 								<button class="btn btn-info" ng-click="ecCtrl.mostrarModalActivarFecha()">Activar Fecha</button>
             </div>
+            
+<!--
+            <div class="col-sm-2">
+				    	<label>Folio *</label>
+				    	<input name="folioVale" type="number" class="form-control" ng-model="ecCtrl.folioVale" >					    	
+			    	</div>
+-->
             
           </div>         
           <div class="row" ng-if="ecCtrl.credito.avales_ids.length > 0">
@@ -50,39 +58,6 @@
 									</select>
 									<input name="tipo._id" type="number" class="form-control" placeholder="Monto" ng-model="ecCtrl.objeto.caja[ecCtrl.tipoIngreso._id].saldo" ng-change="ecCtrl.calcular()"  required>
                 </div>
-<!--
-							<div class="col-sm-8">
-                <div class="row">
-                    <div class="col-sm-6 checkbox" >
-		                  <label>
-			                  <input type="checkbox"  ng-model="ecCtrl.validar.contrato" name="contrato" required> Contrato de Préstamo y Garantía Prendaria.*
-			                </label>
-										</div>
-		                <div class="col-sm-6 checkbox" >
-			                <label>
-			                  <input type="checkbox" ng-model="ecCtrl.validar.ficha" name="ficha" required> Ficha de Información del Cliente.*
-			                </label>
-		                </div>
-              </div>
-              <div class="row ">
-                <div class="col-sm-6 checkbox" >
-                  <label>
-                  <input type="checkbox"  ng-model="ecCtrl.validar.pagare" name="págare" required> Pagare.*
-                </label>
-                </div>
-                <div class="col-sm-6 checkbox" >
-	                <label>
-	                  <input type="checkbox"  ng-model="ecCtrl.validar.tabla" name="tabla" required> Tabla de Amortización.*
-	                </label>
-                </div>
-              </div>
-               <div class="row "> 
-                    <div class="col-sm-4" ng-show="ecCtrl.imprecion"><br/>   
-												<input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirContrato(ecCtrl.credito,ecCtrl.cliente)" value="Imprimir" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
-              </div>
-            </div>
-              </div>
--->
               </div>
           </div>
           <div class="well">      
@@ -144,12 +119,17 @@
             <br/>
             <br/>
             <div class="row">
-                <div class="col-sm-12" ng-if="ecCtrl.credito.cliente_id == 'creditoP'">
-                  <input type="submit" ng-click="ecCtrl.guardar(ecCtrl.objeto,form)" value="Entregar Crédito" class="btn btn-primary" valida-form formulario="form">
+                <div class="col-sm-2" ng-if="ecCtrl.credito.tipo == 'vale'" >
+                  <input id="entregar" type="submit" ng-click="ecCtrl.guardar(ecCtrl.objeto,form)" value="Entregar Vale" class="btn btn-primary" valida-form formulario="form">
                 </div>
-                <div class="col-sm-12" ng-if="ecCtrl.credito.tipo == 'vale'" >
-                  <input type="submit" ng-click="ecCtrl.guardar(ecCtrl.objeto,form)" value="Entregar Vale" class="btn btn-primary" valida-form formulario="form">
-                </div>
+<!--
+                <div class="col-sm-2" ng-show="ecCtrl.imprecion">
+										<input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirContrato(ecCtrl.credito,ecCtrl.cliente);ecCtrl.generarPlanPagos(rc.credito)" value="Imprimir Contrato" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
+          			</div>
+-->
+          			<div class="col-sm-2" ng-show="ecCtrl.imprecion">
+										<input class="btn btn-success" type="button" ng-click="ecCtrl.imprimirPagare(ecCtrl.credito,ecCtrl.cliente);" value="Imprimir Pagare" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"  />
+          			</div>
             </div>
           </div>  
         </form>

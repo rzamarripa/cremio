@@ -6,17 +6,21 @@
 		</h1>
 	</div>
 	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
-						<ul id="sparks" class="">
-							<li class="sparks-info">
-								<h5> Total Recibos <span class="txt-color-green" style="text-align: right">{{cob.totalRecibos | currency}}</span></h5>
-							<li class="sparks-info">
-								<h5> Total C. Moratorio <span class="txt-color-red" style="text-align: right">{{cob.totalMultas | currency}}</span></h5>
-							<li class="sparks-info">
-								<h5> Recibos Seleccionados <span class="txt-color-green" style="text-align: right">{{cob.seleccionadoRecibos | currency}}</span></h5>
-							<li class="sparks-info">
-								<h5> Cargos Seleccionados <span class="txt-color-red" style="text-align: right">{{cob.seleccionadoMultas | currency}}</span></h5>
-						</ul>
-		</div>
+				<ul id="sparks" class="">
+					<li class="sparks-info">
+						<h5> Total Recibos <span class="txt-color-green" style="text-align: right">{{cob.totalRecibos | currency}}</span></h5>
+					</li>
+					<li class="sparks-info">
+						<h5> Total C. Moratorio <span class="txt-color-red" style="text-align: right">{{cob.totalMultas | currency}}</span></h5>
+					</li>	
+					<li class="sparks-info">
+						<h5> Recibos Seleccionados <span class="txt-color-green" style="text-align: right">{{cob.seleccionadoRecibos | currency}}</span></h5>
+					</li>	
+					<li class="sparks-info">
+						<h5> Cargos Seleccionados <span class="txt-color-red" style="text-align: right">{{cob.seleccionadoMultas | currency}}</span></h5>
+					</li>	
+				</ul>
+	</div>
 </div>
 <br>
 <div class="well">
@@ -52,16 +56,13 @@
 			<div class="input-group input-group-md">
 		      <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
 		      <div class="icon-addon addon-md">
-		          <input type="text" placeholder="..." class="form-control" ng-model="cob.buscar.nombre" capitalize>
+		          <input type="text" placeholder="..." class="form-control" ng-model="cob.buscar.nombreCompleto" capitalize>
 		          <label for="email" class="glyphicon glyphicon-search" rel="tooltip" title="" data-original-title="email"></label>
 		      </div>
-		      <span class="input-group-btn">
-		          <button class="btn btn-default" ng-click="cob.buscarNombre()" type="button">Buscar</button>
-		      </span>
 		  </div>
 		</div>
 		<div class="col-sm-4">
-			<a class="btn btn-default pull-right" ng-show="cob.verRecibos" ng-click="cob.imprimirRecibos(cob.cobranza)" style="width: 130px">Imprimir Recibos</a>&nbsp;
+			<a class="btn btn-default pull-right"  ng-click="cob.imprimirRecibos(cob.cobranza)" style="width: 130px">Imprimir Recibos</a>&nbsp;
 			<a class="btn btn-default pull-right"  ng-click="cob.imprimirListas(cob.cobranza)" style="width: 130px">Imprimir Lista</a>
 		</div>	
 	</div>
@@ -86,7 +87,7 @@
 				</tr>
 			</thead>
 			<tbody>
-		    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in cob.cobranza | orderBy: cob.funcionOrdenar()" ng-class="objeto.classPago">
+		    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in cob.cobranza | orderBy: cob.funcionOrdenar() | filter: cob.buscar" ng-class="objeto.classPago">
 			    <td style="margin: 0px; border: 0px; padding: 0px">
 				    <input type="checkbox" class="form-control" 
 				    											 ng-model="objeto.imprimir" 

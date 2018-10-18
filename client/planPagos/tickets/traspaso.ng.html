@@ -7,14 +7,8 @@
 				<div class="col-sm-4 col-sm-offset-4">
 
 					<span id="logo"> <img src="img/logoCreditoMioBN.png" alt="SmartAdmin" style="margin-top: -18px;width: 200px;height: 110px;"> </span>
-					<address style="font-size: larger">
-						RUBIDIA MARTINEZ ALCARAZ<br>
-						BLVD. EMILIANO ZAPATA 3125 LOCAL 12BC<br>
-						COLONIA LOMAS DEL BOULEVARD<br>
-						MAAR-661007-BF5<br>
-						(667) 717-21-21<br>
-					</address>
-					<strong style="font-size: larger; text-align: center">{{tktctrl.traspaso.tipoTraspaso}}</strong>	
+					<br>
+					<strong style="font-size: small; text-align: center">{{tktctrl.traspaso.tipoTraspaso}}</strong>	
 					<table class="table" style="font-size: small">
 						<tr>
 							<td align="left">
@@ -57,27 +51,26 @@
 							</td>
 						</tr>
 					</table>	
-					
 					<div class="row" style="text-align: left">
 						<div class="col-sm-12">
-							<span class="pull-left" style="font-size: larger">IMPORTE:<strong> {{tktctrl.traspaso.importe | currency}}</strong></span>
+							<span class="pull-left" style="font-size: small">IMPORTE:<strong> {{tktctrl.traspaso.importe | currency}}</strong></span>
 							<br>
-							<span class="pull-left" style="font-size: larger">SON: {{tktctrl.traspaso.letra}} PESOS {{tktctrl.traspaso.centavos}}/100 M.N.</span>
+							<span class="pull-left" style="font-size: small">SON: {{tktctrl.traspaso.letra}} PESOS {{tktctrl.traspaso.centavos}}/100 M.N.</span>
 						</div>	
 					</div>
 
-					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;font-size: larger">
+					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;font-size: small">
 					
-					<div class="row" style="font-size: larger">
+					<div class="row" style="font-size: small">
 						<div  class="col-sm-6 pull-left">VENTANILLA: {{tktctrl.caja.nombre}}</div>
 						<div class="col-sm-6 pull-right">TURNO: 0000</div>
 					</div>
-					<div class="row" style="font-size: larger">
+					<div class="row" style="font-size: small">
 						<div class="col-sm-6 pull-left">{{ tktctrl.pago.fechaPago | date:'H:mm:ss'}}</div>
 						<div class="col-sm-6 pull-right">{{ tktctrl.pago.fechaPago | date:'dd-MM-yyyy'}}</div>
 					</div>
 					<br>
-						<div style="font-size: larger"><a class="btn btn-primary" id="printpagebutton" ng-click="tktctrl.borrarBotonImprimir()">Imprimir</a></div>
+						<div style="font-size: small"><a class="btn btn-primary" id="printpagebutton" ng-click="tktctrl.borrarBotonImprimir()">Imprimir</a></div>
 				</div>
 			</div>
 		</div>

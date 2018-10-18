@@ -13,7 +13,7 @@
 				</h2>
 			</div>
 			<a style="margin: 5px;" ng-if="ge.cliente.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
-			<a style="margin: 5px;" ng-show="ge.cliente.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;		
+			<a style="margin: 5px;" ng-show="ge.cliente.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
 			<div class="row">				
 				<div class="col-sm-12">
 					<form name="form" class="form-horizontal" role="form" novalidate>
@@ -21,9 +21,11 @@
 					  	<div class="row">
 					  		<div class="col-sm-12">
 					  			<div class="alert alert-info">
-					  			 <p><i class="fa-fw fa fa-info"></i> Para 
-						  			 <strong ng-if="ge.cliente.roles[0] == 'Cliente'">crear un nuevo crédito</strong><strong ng-if="ge.cliente.roles[0] == 'Distribuidor'">crear un nuevo vale</strong>
-						  			  es importante que pongamos la información correcta. <strong>(Revisar bien los datos.)</strong></p>
+					  			  <p><i class="fa-fw fa fa-info"></i> Para 
+						  			 <strong ng-if="ge.cliente.roles[0] == 'Cliente'">crear un nuevo crédito</strong>
+						  			 <strong ng-if="ge.cliente.roles[0] == 'Distribuidor'">crear un nuevo vale</strong>
+						  			  es importante que pongamos la información correcta. <strong>(Revisar bien los datos.)
+						  			</p>
 					  			</div>
 					  		</div>
 					  	</div>
@@ -49,11 +51,37 @@
 					    </div>
 					    
 					    <div class="row" ng-if="ge.cliente.roles[0] == 'Distribuidor'">
-						    	<div class="col-sm-6" valida>
-								    <label>Nombre del Beneficiado</label>
-							    	<input name="beneficiado" type="text" class="form-control" ng-model="ge.credito.beneficiado" required capitalize>
-							    </div>	
+						    	<div class="col-sm-6">
+												<div ng-include=" 'client/planPagos/generadorPlan/_buscarBeneficiario.html' "></div>
+							    </div>
+							    <div class="col-sm-2" ng-if = "currentUser.roles[0] != 'Distribuidor'">					
+								    <a ng-click="ge.mostrarModalBeneficiario(1)" class="btn txt-color-white bg-color-teal btn-sm" >
+											<i class="fa fa-plus"></i> Beneficiario
+										</a>
+							    </div>
+							    <div class="col-sm-2" ng-if = "currentUser.roles[0] != 'Distribuidor'">					
+								    <a ng-click="ge.mostrarModalBeneficiario(2)" class="btn txt-color-white bg-color-teal btn-sm" ng-show = "ge.beneficiario.nombreCompleto != undefined" >
+											<i class="fa fa-pencil"></i> Editar
+										</a>
+							    </div>
+							    
 					    </div>
+					    
+					    <div class="row" ng-if="ge.cliente.roles[0] == 'Distribuidor'">					    	
+						    	<div class="col-sm-6">
+							    	<label>Nombre del Beneficiado</label>
+							    	<input name="beneficiado" type="text" class="form-control" ng-model="ge.beneficiario.nombreCompleto" disabled="true">					    	
+						    	</div>
+						    	<!--
+
+						    	<div class="col-sm-3">
+							    	<label>Saldo</label>
+							    	<input name="saldo" type="text" class="form-control" ng-model="ge.beneficiario.saldo" disabled="true">					    	
+						    	</div>
+						    	
+-->
+					    </div>  
+					    
 					    <div class="row">
 						    <div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">					    
 						    	<label>Duración (Meses) *</label>
@@ -77,6 +105,7 @@
 					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
 						    	<label>Capital Solicitado *</label>
 						    	<select name="capitalSolicitadoCreditoNuevo" class="form-control" ng-model="ge.credito.capitalSolicitado" placeholder="Capital Solicitado" required="">
+							    	<option value="1000">1000</option>
 							    	<option value="1500">1500</option>
 							    	<option value="2000">2000</option>
 							    	<option value="2500">2500</option>
@@ -92,13 +121,14 @@
 					    	</div>
 					    	<div class="col-sm-3">					    
 						    	<label>Con Seguro</label>
-						    	<input name="conSeguro" type="checkbox" min="0" class="form-control" ng-model="ge.credito.conSeguro">
+						    	<input name="conSeguro" type="checkbox" min="0" class="form-control" ng-model="ge.credito.conSeguro" ng-disabled = "currentUser.roles[0] == 'Distribuidor'">
 					    	</div>	
-					    	<div class="col-sm-3" ng-if="ge.credito.conSeguro" valida>
+					    	<div class="col-sm-3" ng-if = "ge.credito.conSeguro" valida>
 							    <label>Importe seguro *</label>
-						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ge.credito.seguro"  required>
+						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ge.credito.seguro" ng-disabled = "currentUser.roles[0] == 'Distribuidor'" required >
 						    </div>		
 					    </div>
+					    
 					    <div class="row" ng-if="ge.cliente.roles == 'Cliente'">
 								<div class="col-sm-2">					    
 						    	<label>Requiere Verificación</label>
@@ -284,9 +314,15 @@
 																    	<option value="mobiliaria">Mobiliaria</option>
 															    	</select>
 														    </div>
+														    <div class="col-sm-4" ng-if = "ge.credito.tipoGarantia != undefined">
+															    	<br> 
+															    	<a href="#" class="btn btn-primary" ng-click="ge.mostrarRespaldos(ge.credito.tipoGarantia)"><i class="fa fa-copy"></i> Copiar Respaldos</a>
+														    </div>  
+														    
+														    
 															</div>
 															
-															<div  ng-if="ge.credito.tipoGarantia == 'mobiliaria'">
+															<div ng-if="ge.credito.tipoGarantia == 'mobiliaria'">
 																<br>
 																<h4>Comisiones</h4>
 																<div class="row">
@@ -590,6 +626,7 @@
      
   </div>
 </div>
+
 <div id="modalGarantia" class="modal fade bs-modalGarantia-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -713,5 +750,320 @@
   </div>
 </div>
 
+<div id="modalCopiarRespaldos" class="modal fade bs-modalCopiarRespaldos-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Copiar Garantias</h4>
+		    </div>
+				<div class="modal-body">
+							<form name="form2" novalidate>
+									<div class="well">	    
+								    <div class="row">
+												<table class="table" ng-if="ge.credito.tipoGarantia == 'mobiliaria'">
+														<thead>
+															<tr>
+																<th>Descripción</th>
+																<th>Caracteristicas</th>
+																<th>Avalúo</th>
+																<th></th>
+															</tr>	
+														</thead>	
+														<tbody>
+															<tr ng-repeat="objeto in ge.respaldos">
+																<td>{{objeto.descripcion}}</td>
+																<td>{{objeto.caracteristicas}}</td>
+																<td>{{objeto.avaluoMobiliaria}}</td>	
+																<td><a href="#" class="btn btn-default" ng-click="ge.copiarGarantia(ge.credito.tipoGarantia, objeto)"><i class="fa fa-plus"></i></a></td>
+															</tr>	
+														</tbody>
+												</table>	
+												
+												<table class="table" ng-if="ge.credito.tipoGarantia == 'general'">
+														<thead>
+															<tr>
+																<th>Sup. de terreno y construcción </th>
+																<th>Ubicación</th>
+																<th>Medidas, colindancias, clave catastral</th>
+																<th>Avalúo</th>
+																<th></th>
+															</tr>	
+														</thead>	
+														<tbody>
+															<tr ng-repeat="objeto in ge.respaldos">
+																<td>{{objeto.terrenoYconstruccion}}</td>
+																<td>{{objeto.ubicacion}}</td>
+																<td>{{objeto.medidasColindancias}}</td>
+																<td>{{objeto.avaluoGeneral}}</td>	
+																<td><a href="#" class="btn btn-default" ng-click="ge.copiarGarantia(ge.credito.tipoGarantia, objeto)"><i class="fa fa-plus"></i></a></td>
+															</tr>	
+														</tbody>
+												</table>
+								    </div>
+									</div>
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+     
+  </div>
+</div>
+
+<div id="modalBeneficiario" class="modal fade bs-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		       <h3> Beneficiario </h3>
+		    </div>
+				<div class="widget-body">
+							<form name="form2" novalidate>
+									<div class="well">
+										<div class="row">										
+								    	<div class="col-sm-4" valida> 					    
+									    	<label>Nombre (s) *</label>
+									    	<input name="nombreBeneficiario" type="text" class="form-control" placeholder="Nombre" ng-model="ge.beneficiario.nombre" required="" capitalize>
+								    	</div>
+								    	<div class="col-sm-4" valida> 					    
+									    	<label>Apellido Paterno *</label>
+									    	<input name="apellidoPaternoBeneficiario" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ge.beneficiario.apellidoPaterno" required="" capitalize>
+								    	</div>
+								    	<div class="col-sm-4"> 					    
+									    	<label>Apellido Materno</label>
+									    	<input name="apellidoMaternoBeneficiario" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ge.beneficiario.apellidoMaterno" capitalize>
+								    	</div>
+										</div>
+										<div class="row">										
+											<div class="col-sm-3" valida>					    
+												<label>Fecha Nacimiento *</label>
+												<input name="fechaNacimientoBeneficiario" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="ge.beneficiario.fechaNacimiento" required="">
+											</div>
+											
+								    	<div class="col-sm-6" valida>
+									    	<label>Domicilio *</label>
+									    	<input name="domicilioBeneficiario" type="text" class="form-control" placeholder="Domicilio" ng-model="ge.beneficiario.domicilio" required="" capitalize>
+								    	</div>
+								    	<div class="col-sm-3" valida>
+									    	<label>Numero *</label>
+									    	<input name="numeroBeneficiario" type="text" class="form-control" placeholder="Número" ng-model="ge.beneficiario.numero" required="" capitalize>
+								    	</div>
+										</div>
+										
+										<div class="row">	
+											<div class="col-sm-4" valida>
+									    	<label>Colonia *</label>
+									    	<input name="coloniaBeneficiario" type="text" class="form-control" placeholder="Colonia" ng-model="ge.beneficiario.colonia" required="" capitalize>
+								    	</div>							    	
+								    	<div class="col-sm-3" valida>
+												<label >Estado Civil *</label>
+												<select name="estadoCivilBeneficiario" ng-model="ge.beneficiario.estadoCivil" data-placeholder="Seleccione" class="form-control" required >
+														<option value="DIVORCIADO(A)">DIVORCIADO(A)</option>
+														<option value="SOLTERO(A)">SOLTERO(A)</option>
+														<option value="VIUDO(A)">VIUDO(A)</option>
+														<option value="CASADO(A)">CASADO(A)</option>
+														<option value="UNIÓN LIBRE">UNIÓN LIBRE</option>
+												</select>
+											</div>
+											
+											<div class="col-sm-2" valida>
+									    	<label>Código Postal *</label>
+									    	<input name="codigoPostalBeneficiario" type="text" class="form-control" placeholder="Código Postal" ng-model="ge.beneficiario.codigoPostal" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-3" valida>
+												<label >Residencia *</label>
+												<select name="residenciaBeneficiario" ng-model="ge.beneficiario.residencia" data-placeholder="Seleccione" class="form-control" required >
+														<option value="PROPIA">PROPIA</option>
+														<option value="OTRAS">OTRAS</option>
+														<option value="RENTADA">RENTADA</option>
+												</select>
+											</div>
+										</div>
+										<div class="row">	
+											<div class="col-sm-3" valida>
+									    	<label>Ciudad *</label>
+									    	<input name="ciudadBeneficiario" type="text" class="form-control" placeholder="Ciudad" ng-model="ge.beneficiario.ciudad" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-3" valida>
+									    	<label>Estado *</label>
+									    	<input name="estadoBeneficiario" type="text" class="form-control" placeholder="Estado" ng-model="ge.beneficiario.estado" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-2" valida>
+									    	<label>Tel. Particular *</label>
+									    	<input name="telefonoBeneficiario" type="text" class="form-control" placeholder="Particular" ng-model="ge.beneficiario.telefonoParticular" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-2" valida>
+									    	<label>Celular *</label>
+									    	<input name="celularBeneficiario" type="text" class="form-control" placeholder="Celular" ng-model="ge.beneficiario.celular" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-2" valida>
+									    	<label>Dep Económicos *</label>
+									    	<input name="dependientesBeneficiario" type="text" class="form-control" placeholder="Dependientes" ng-model="ge.beneficiario.dependientesEconomicos" required="" capitalize>
+								    	</div>
+										</div>
+										
+										<div class="row" ng-if = "ge.beneficiario.estadoCivil == 'CASADO(A)' || ge.beneficiario.estadoCivil == 'UNIÓN LIBRE'">										
+											<div class="col-sm-9" valida>					    
+												<label>Nombre Cónyuge</label>
+												<input name="nombreConyugeBeneficiario" type="text" class="form-control" placeholder="Cónyuge" ng-model="ge.beneficiario.nombreConyuge" required="" capitalize>
+											</div>
+											
+								    	<div class="col-sm-3" valida>					    
+												<label>Fecha Nacimiento *</label>
+												<input name="fechaNacimientoConyugeBeneficiario" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="ge.beneficiario.fechaNacimientoConyuge" required="">
+											</div>
+								    
+										</div>
+										
+					       </div>
+					       <h3>Datos Laborales</h3>
+					       <div class="well">
+										<div class="row">	
+											<div class="col-sm-6" valida>					    
+												<label>Empresa donde Trabaja *</label>
+												<input name="empresaTrabajaBeneficiario" type="text" class="form-control" placeholder="Empresa Trabaja" ng-model="ge.beneficiario.empresaTrabaja" required="" capitalize>
+											</div>
+											<div class="col-sm-3" valida>					    
+												<label>Puesto *</label>
+												<input name="puestoBeneficiario" type="text" class="form-control" placeholder="Puesto" ng-model="ge.beneficiario.puesto" required="" capitalize>
+											</div>
+											<div class="col-sm-3">					    
+												<label>Fecha Ingreso</label>
+												<input name="fechaIngresoConyugeBeneficiario" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="ge.beneficiario.fechaIngresoConyuge" required="">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-3" valida>					    
+												<label>Sueldo Mensual *</label>
+												<input name="sueldoBeneficiario" type="number" class="form-control" ng-model="ge.beneficiario.sueldoMensual" required="">
+											</div>
+											<div class="col-sm-6" valida>
+									    	<label>Domicilio *</label>
+									    	<input name="domicilioTrabajoBeneficiario" type="text" class="form-control" placeholder="Domicilio" ng-model="ge.beneficiario.domicilioTrabajo" required="" capitalize>
+								    	</div>
+											<div class="col-sm-3">					    
+												<label>Número</label>
+												<input name="numeroTrabajoBeneficiario" type="text" class="form-control" placeholder="Número" ng-model="ge.beneficiario.numeroTrabajo" required="" capitalize>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4" valida>
+									    	<label>Colonia *</label>
+									    	<input name="coloniaTrabajoBeneficiario" type="text" class="form-control" placeholder="Colonia" ng-model="ge.beneficiario.coloniaTrabajo" required="" capitalize>
+								    	</div>
+								    	<div class="col-sm-2" valida>
+									    	<label>Código Postal *</label>
+									    	<input name="codigoPostalTrabajoBeneficiario" type="text" class="form-control" placeholder="Código Postal" ng-model="ge.beneficiario.codigoPostalTrabajo" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-3" valida>
+									    	<label>Ciudad *</label>
+									    	<input name="ciudaTrabajodBeneficiario" type="text" class="form-control" placeholder="Ciudad" ng-model="ge.beneficiario.ciudadTrabajo" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-3" valida>
+									    	<label>Estado *</label>
+									    	<input name="estadoTrabajoBeneficiario" type="text" class="form-control" placeholder="Estado" ng-model="ge.beneficiario.estadoTrabajo" required="" capitalize>
+								    	</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-3" valida>
+									    	<label>Telefono *</label>
+									    	<input name="telefonoTrabajoBeneficiario" type="text" class="form-control" placeholder="Estado" ng-model="ge.beneficiario.telefonoTrabajo" required="" capitalize>
+								    	</div>	
+										</div>
+										
+					       </div>
+					       
+					       <h3>Referencias</h3>
+					       <div class="well">
+						        <h4>Referencia 1</h4>
+										<div class="row">	
+											<div class="col-sm-4" valida>					    
+												<label>Nombre *</label>
+												<input name="nombreReferencia1" type="text" class="form-control" placeholder="nombre" ng-model="ge.beneficiario.nombreReferencia1" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>					    
+												<label>Apellido Paterno *</label>
+												<input name="apellidoPaternoReferencia1" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ge.beneficiario.apellidoPaternoReferencia1" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>					    
+												<label>Apellido Materno</label>
+												<input name="apellidoMaternoReferencia1" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ge.beneficiario.apellidoMaternoReferencia1" capitalize>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4" valida>					    
+												<label>Relación *</label>
+												<input name="relacionReferencia1" type="text" class="form-control" placeholder="Relación" ng-model="ge.beneficiario.relacionReferencia1" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>
+									    	<label>Tiempo Conocerlo *</label>
+									    	<input name="tiempoConocerloReferencia1" type="text" class="form-control" placeholder="Tiempo Conocerlo" ng-model="ge.beneficiario.tiempoConocerloReferencia1" required="" capitalize>
+								    	</div>
+											<div class="col-sm-4">					    
+												<label>Teléfono *</label>
+												<input name="telefonoReferencia1" type="text" class="form-control" placeholder="Teléfono" ng-model="ge.beneficiario.telefonoReferencia1" required="" capitalize>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12" valida>
+									    	<label>Direccion *</label>
+									    	<input name="direccionReferencia1" type="text" class="form-control" placeholder="Estado" ng-model="ge.beneficiario.direccionReferencia1" required="" capitalize>
+								    	</div>	
+										</div>
+										<h4>Referencia 2</h4>
+										<div class="row">	
+											<div class="col-sm-4" valida>					    
+												<label>Nombre *</label>
+												<input name="nombreReferencia2" type="text" class="form-control" placeholder="Nombre" ng-model="ge.beneficiario.nombreReferencia2" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>					    
+												<label>Apellido Paterno *</label>
+												<input name="apellidoPaternoReferencia2" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ge.beneficiario.apellidoPaternoReferencia2" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>					    
+												<label>Apellido Materno</label>
+												<input name="apellidoMaternoReferencia2" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ge.beneficiario.apellidoMaternoReferencia2" capitalize>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4" valida>					    
+												<label>Relación *</label>
+												<input name="relacionReferencia2" type="text" class="form-control" placeholder="Relación" ng-model="ge.beneficiario.relacionReferencia2" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>
+									    	<label>Tiempo Conocerlo *</label>
+									    	<input name="tiempoConocerloReferencia2" type="text" class="form-control" placeholder="Tiempo Conocerlo" ng-model="ge.beneficiario.tiempoConocerloReferencia2" required="" capitalize>
+								    	</div>
+											<div class="col-sm-4">					    
+												<label>Teléfono *</label>
+												<input name="telefonoReferencia2" type="text" class="form-control" placeholder="Teléfono" ng-model="ge.beneficiario.telefonoReferencia2" required="" capitalize>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12" valida>
+									    	<label>Direccion *</label>
+									    	<input name="direccionReferencia2" type="text" class="form-control" placeholder="Estado" ng-model="ge.beneficiario.direccionReferencia2" required="" capitalize>
+								    	</div>	
+										</div>
+					       </div>			
+					       
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		      	<a	class="btn btn-success" ng-click="ge.guardarBeneficiario(ge.beneficiario, form2)" valida-form formulario="form2" ng-show="!ge.editarBeneficiario">Guardar</a>
+		      	<a	class="btn btn-success" ng-click="ge.actualizarBeneficiario(ge.beneficiario, form2)" valida-form formulario="form2" ng-show="ge.editarBeneficiario">Actualizar</a>
+		        <button type="button" class="btn btn-default" ng-click="ge.cancelarAval()" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+  </div>
+</div>
 
 

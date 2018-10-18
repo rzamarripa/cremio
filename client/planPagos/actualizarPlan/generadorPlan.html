@@ -39,12 +39,35 @@
 					    	</div>									    	
 					    </div>
 					    <div class="row" ng-if="ae.cliente.roles[0] == 'Distribuidor'">
-						    	<div class="col-sm-6" valida>
-								    <label>Nombre del Beneficiado</label>
-							    	<input name="beneficiado" type="text" class="form-control" ng-model="ae.credito.beneficiado" required capitalize>
-							    </div>	
-						    
+						    	<div class="col-sm-6">
+												<div ng-include=" 'client/planPagos/actualizarPlan/_buscarBeneficiario.html' "></div>
+							    </div>
+							    <div class="col-sm-2">					
+								    <a ng-click="ae.mostrarModalBeneficiario(1)" class="btn txt-color-white bg-color-teal btn-sm" >
+											<i class="fa fa-plus"></i> Beneficiario
+										</a>
+							    </div>
+							    <div class="col-sm-2">					
+								    <a ng-click="ae.mostrarModalBeneficiario(2)" class="btn txt-color-white bg-color-teal btn-sm" ng-show = "ae.beneficiario.nombreCompleto != undefined">
+											<i class="fa fa-pencil"></i> Editar
+										</a>
+							    </div>
 					    </div>
+					    
+					    <div class="row" ng-if="ae.cliente.roles[0] == 'Distribuidor'">					    	
+						    	<div class="col-sm-6">
+							    	<label>Nombre del Beneficiado</label>
+							    	<input name="beneficiado" type="text" class="form-control" ng-model="ae.beneficiario.nombreCompleto" disabled="true">					    	
+						    	</div>
+						    	
+<!--
+						    	<div class="col-sm-3">
+							    	<label>Saldo</label>
+							    	<input name="saldo" type="text" class="form-control" ng-model="ae.beneficiario.saldo" disabled="true">					    	
+						    	</div>
+-->
+					    </div>
+					    
 					    <div class="row">
 						    <div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Cliente'">					    
 						    	<label>Duración (Meses) *</label>
@@ -68,6 +91,7 @@
 					    	<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Distribuidor'">
 						    	<label>Capital Solicitado *</label>
 						    	<select name="capitalSolicitadoCreditoNuevo" class="form-control" ng-model="ae.credito.capitalSolicitado" placeholder="Capital Solicitado" required="">
+							    	<option value="1000">1000</option>
 							    	<option value="1500">1500</option>
 							    	<option value="2000">2000</option>
 							    	<option value="2500">2500</option>
@@ -85,9 +109,9 @@
 						    	<label>Con Seguro</label>
 						    	<input name="conSeguro" type="checkbox" class="form-control" ng-model="ae.credito.conSeguro">
 					    	</div>	
-					    	<div class="col-sm-3" ng-if="ae.credito.conSeguro" valida>
-							    <label>Importe seguro semanal *</label>
-						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ae.credito.seguro"  required>
+					    	<div class="col-sm-3" ng-if = "ae.credito.conSeguro"  valida>
+							    <label>Importe seguro *</label>
+						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ae.credito.seguro" required>
 						    </div>		
 					    </div>
 					    <div class="row" ng-if="ae.cliente.roles[0] == 'Cliente'">
@@ -275,6 +299,10 @@
 																    	<option value="mobiliaria">Mobiliaria</option>
 															    	</select>
 														    </div>
+														    <div class="col-sm-4" ng-if = "ae.credito.tipoGarantia != undefined">
+															    	<br> 
+															    	<a href="#" class="btn btn-primary" ng-click="ae.mostrarRespaldos(ae.credito.tipoGarantia)"><i class="fa fa-copy"></i> Copiar Respaldos</a>
+														    </div> 
 															</div>
 															
 															<div  ng-if="ae.credito.tipoGarantia == 'mobiliaria'">
@@ -459,7 +487,7 @@
 												
 						<div class="row">
 							<div class="col-sm-3">
-								<button class="btn btn-success" ng-click="ae.actualizarCredito()" valida-form formulario="formNuevoCredito">Actualizar Solicitud de Crédito</button>
+								<button class="btn btn-success" ng-click="ae.actualizarCredito(formNuevoCredito)" valida-form formulario="formNuevoCredito">Actualizar Solicitud de Crédito</button>
 							</div>
 							<div class="col-sm-3">
 								<button class="btn btn-info" ng-click="ae.generarPlanPagos(ae.credito, formNuevoCredito)" valida-form formulario="formNuevoCredito">Calcular Plan de Pagos</button>
@@ -519,14 +547,15 @@
 				<div class="widget-body">
 							<form name="form2" novalidate>
 									<div class="well">	    
-								     <div class="row">
-								<div class="col-sm-3">
-						    	<img style="max-width:170px;" src="{{ae.aval.foto}}" >
-						    </div>
-					    	<div class="col-sm-6"> 					    
-						    	<label>Nombre</label>
-						    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ae.aval.nombreCompleto" disabled="true">
-					    	</div>
+								    <div class="row">
+											<div class="col-sm-3">
+								    		<img style="max-width:170px;" src="{{ae.aval.foto}}" >
+											</div>	
+										</div>
+							    	<div class="col-sm-6"> 					    
+								    	<label>Nombre</label>
+								    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ae.aval.nombreCompleto" disabled="true">
+							    	</div>
 					    	
 					       </div>
 					    <div class="row">	
@@ -536,7 +565,7 @@
 					    	</div>
 					    	<div class="col-sm-2">					    
 						    	<label>Número</label>
-						    	<input name="numero" type="text" class="form-control" placeholder="Calle" ng-model="ae.aval.calle" disabled="true">
+						    	<input name="numero" type="text" class="form-control" placeholder="Calle" ng-model="ae.aval.numero" disabled="true">
 					    	</div>
 					    	<div class="col-sm-2">					    
 						    	<label>Código Postal</label>
@@ -694,5 +723,355 @@
 		     </div>
      </div>
      
+  </div>
+</div>
+
+<div id="modalActivarFecha" class="modal fade bd-example-modal-sm">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Datos Usuario</h4>
+		    </div>
+				<div class="modal-body">
+							<form name="form2" novalidate>
+									<div class="well">	    
+								    <div class="row" style="text-align: center">
+								    		<div class=".col-xs-6 .col-md-4" style="text-align: center" valida>			
+							            <label>Nombre de Usuario</label>
+							            <input type="text" class="form-control" name="username" ng-model="ae.credentials.username">
+												</div>
+								    </div>
+								    <div class="row" style="text-align: center">		
+							          <div class=".col-xs-6 .col-md-4" valida>
+							            <label >Clave de desbloqueo</label>
+						              <input type="password" class="form-control" name="password" ng-model="ae.credentials.password">
+							          </div>
+								    </div>
+									</div>
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		      	<a	class="btn btn-success" ng-click="ae.validaCredenciales(ae.credentials)">Aceptar</a>
+		        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+     
+  </div>
+</div>
+
+<div id="modalCopiarRespaldos" class="modal fade bs-modalCopiarRespaldos-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Copiar Garantias</h4>
+		    </div>
+				<div class="modal-body">
+							<form name="form2" novalidate>
+									<div class="well">	    
+								    <div class="row">
+												<table class="table" ng-if="ae.credito.tipoGarantia == 'mobiliaria'">
+														<thead>
+															<tr>
+																<th>Descripción</th>
+																<th>Caracteristicas</th>
+																<th>Avalúo</th>
+																<th></th>
+															</tr>	
+														</thead>	
+														<tbody>
+															<tr ng-repeat="objeto in ae.respaldos">
+																<td>{{objeto.descripcion}}</td>
+																<td>{{objeto.caracteristicas}}</td>
+																<td>{{objeto.avaluoMobiliaria}}</td>	
+																<td><a href="#" class="btn btn-default" ng-click="ae.copiarGarantia(ae.credito.tipoGarantia, objeto)"><i class="fa fa-plus"></i></a></td>
+															</tr>	
+														</tbody>
+												</table>	
+												
+												<table class="table" ng-if="ae.credito.tipoGarantia == 'general'">
+														<thead>
+															<tr>
+																<th>Sup. de terreno y construcción </th>
+																<th>Ubicación</th>
+																<th>Medidas, colindancias, clave catastral</th>
+																<th>Avalúo</th>
+																<th></th>
+															</tr>	
+														</thead>	
+														<tbody>
+															<tr ng-repeat="objeto in ae.respaldos">
+																<td>{{objeto.terrenoYconstruccion}}</td>
+																<td>{{objeto.ubicacion}}</td>
+																<td>{{objeto.medidasColindancias}}</td>
+																<td>{{objeto.avaluoGeneral}}</td>	
+																<td><a href="#" class="btn btn-default" ng-click="ae.copiarGarantia(ae.credito.tipoGarantia, objeto)"><i class="fa fa-plus"></i></a></td>
+															</tr>	
+														</tbody>
+												</table>
+								    </div>
+									</div>
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+     
+  </div>
+</div>
+
+<div id="modalBeneficiario" class="modal fade bs-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		       <h3> Beneficiario </h3>
+		    </div>
+				<div class="widget-body">
+							<form name="form2" novalidate>
+									<div class="well">
+										<div class="row">										
+								    	<div class="col-sm-4" valida> 					    
+									    	<label>Nombre (s) *</label>
+									    	<input name="nombreBeneficiario" type="text" class="form-control" placeholder="Nombre" ng-model="ae.beneficiario.nombre" required="" capitalize>
+								    	</div>
+								    	<div class="col-sm-4" valida> 					    
+									    	<label>Apellido Paterno *</label>
+									    	<input name="apellidoPaternoBeneficiario" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ae.beneficiario.apellidoPaterno" required="" capitalize>
+								    	</div>
+								    	<div class="col-sm-4"> 					    
+									    	<label>Apellido Materno</label>
+									    	<input name="apellidoMaternoBeneficiario" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ae.beneficiario.apellidoMaterno" capitalize>
+								    	</div>
+										</div>
+										<div class="row">										
+											<div class="col-sm-3" valida>					    
+												<label>Fecha Nacimiento *</label>
+												<input name="fechaNacimientoBeneficiario" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="ae.beneficiario.fechaNacimiento" required="">
+											</div>
+											
+								    	<div class="col-sm-6" valida>
+									    	<label>Domicilio *</label>
+									    	<input name="domicilioBeneficiario" type="text" class="form-control" placeholder="Domicilio" ng-model="ae.beneficiario.domicilio" required="" capitalize>
+								    	</div>
+								    	<div class="col-sm-3" valida>
+									    	<label>Numero *</label>
+									    	<input name="numeroBeneficiario" type="text" class="form-control" placeholder="Número" ng-model="ae.beneficiario.numero" required="" capitalize>
+								    	</div>
+										</div>
+										
+										<div class="row">	
+											<div class="col-sm-4" valida>
+									    	<label>Colonia *</label>
+									    	<input name="coloniaBeneficiario" type="text" class="form-control" placeholder="Colonia" ng-model="ae.beneficiario.colonia" required="" capitalize>
+								    	</div>							    	
+								    	<div class="col-sm-3" valida>
+												<label >Estado Civil *</label>
+												<select name="estadoCivilBeneficiario" ng-model="ae.beneficiario.estadoCivil" data-placeholder="Seleccione" class="form-control" required >
+														<option value="DIVORCIADO(A)">DIVORCIADO(A)</option>
+														<option value="SOLTERO(A)">SOLTERO(A)</option>
+														<option value="VIUDO(A)">VIUDO(A)</option>
+														<option value="CASADO(A)">CASADO(A)</option>
+														<option value="UNIÓN LIBRE">UNIÓN LIBRE</option>
+												</select>
+											</div>
+											
+											<div class="col-sm-2" valida>
+									    	<label>Código Postal *</label>
+									    	<input name="codigoPostalBeneficiario" type="text" class="form-control" placeholder="Código Postal" ng-model="ae.beneficiario.codigoPostal" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-3" valida>
+												<label >Residencia *</label>
+												<select name="residenciaBeneficiario" ng-model="ae.beneficiario.residencia" data-placeholder="Seleccione" class="form-control" required >
+														<option value="PROPIA">PROPIA</option>
+														<option value="OTRAS">OTRAS</option>
+														<option value="RENTADA">RENTADA</option>
+												</select>
+											</div>
+										</div>
+										<div class="row">	
+											<div class="col-sm-3" valida>
+									    	<label>Ciudad *</label>
+									    	<input name="ciudadBeneficiario" type="text" class="form-control" placeholder="Ciudad" ng-model="ae.beneficiario.ciudad" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-3" valida>
+									    	<label>Estado *</label>
+									    	<input name="estadoBeneficiario" type="text" class="form-control" placeholder="Estado" ng-model="ae.beneficiario.estado" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-2" valida>
+									    	<label>Tel. Particular *</label>
+									    	<input name="telefonoBeneficiario" type="text" class="form-control" placeholder="Particular" ng-model="ae.beneficiario.telefonoParticular" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-2" valida>
+									    	<label>Celular *</label>
+									    	<input name="celularBeneficiario" type="text" class="form-control" placeholder="Celular" ng-model="ae.beneficiario.celular" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-2" valida>
+									    	<label>Dep Económicos *</label>
+									    	<input name="dependientesBeneficiario" type="text" class="form-control" placeholder="Dependientes" ng-model="ae.beneficiario.dependientesEconomicos" required="" capitalize>
+								    	</div>
+										</div>
+										
+										<div class="row" ng-if = "ae.beneficiario.estadoCivil == 'CASADO(A)' || ae.beneficiario.estadoCivil == 'UNIÓN LIBRE'">										
+											<div class="col-sm-9" valida>					    
+												<label>Nombre Cónyuge</label>
+												<input name="nombreConyugeBeneficiario" type="text" class="form-control" placeholder="Cónyuge" ng-model="ae.beneficiario.nombreConyuge" required="" capitalize>
+											</div>
+											
+								    	<div class="col-sm-3" valida>					    
+												<label>Fecha Nacimiento *</label>
+												<input name="fechaNacimientoConyugeBeneficiario" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="ae.beneficiario.fechaNacimientoConyuge" required="">
+											</div>
+								    
+										</div>
+										
+					       </div>
+					       <h3>Datos Laborales</h3>
+					       <div class="well">
+										<div class="row">	
+											<div class="col-sm-6" valida>					    
+												<label>Empresa donde Trabaja *</label>
+												<input name="empresaTrabajaBeneficiario" type="text" class="form-control" placeholder="Empresa Trabaja" ng-model="ae.beneficiario.empresaTrabaja" required="" capitalize>
+											</div>
+											<div class="col-sm-3" valida>					    
+												<label>Puesto *</label>
+												<input name="puestoBeneficiario" type="text" class="form-control" placeholder="Puesto" ng-model="ae.beneficiario.puesto" required="" capitalize>
+											</div>
+											<div class="col-sm-3">					    
+												<label>Fecha Ingreso</label>
+												<input name="fechaIngresoConyugeBeneficiario" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="ae.beneficiario.fechaIngresoConyuge" required="">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-3" valida>					    
+												<label>Sueldo Mensual *</label>
+												<input name="sueldoBeneficiario" type="number" class="form-control" ng-model="ae.beneficiario.sueldoMensual" required="">
+											</div>
+											<div class="col-sm-6" valida>
+									    	<label>Domicilio *</label>
+									    	<input name="domicilioTrabajoBeneficiario" type="text" class="form-control" placeholder="Domicilio" ng-model="ae.beneficiario.domicilioTrabajo" required="" capitalize>
+								    	</div>
+											<div class="col-sm-3">					    
+												<label>Número</label>
+												<input name="numeroTrabajoBeneficiario" type="text" class="form-control" placeholder="Número" ng-model="ae.beneficiario.numeroTrabajo" required="" capitalize>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4" valida>
+									    	<label>Colonia *</label>
+									    	<input name="coloniaTrabajoBeneficiario" type="text" class="form-control" placeholder="Colonia" ng-model="ae.beneficiario.coloniaTrabajo" required="" capitalize>
+								    	</div>
+								    	<div class="col-sm-2" valida>
+									    	<label>Código Postal *</label>
+									    	<input name="codigoPostalTrabajoBeneficiario" type="text" class="form-control" placeholder="Código Postal" ng-model="ae.beneficiario.codigoPostalTrabajo" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-3" valida>
+									    	<label>Ciudad *</label>
+									    	<input name="ciudaTrabajodBeneficiario" type="text" class="form-control" placeholder="Ciudad" ng-model="ae.beneficiario.ciudadTrabajo" required="" capitalize>
+								    	</div>
+								    	
+								    	<div class="col-sm-3" valida>
+									    	<label>Estado *</label>
+									    	<input name="estadoTrabajoBeneficiario" type="text" class="form-control" placeholder="Estado" ng-model="ae.beneficiario.estadoTrabajo" required="" capitalize>
+								    	</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-3" valida>
+									    	<label>Telefono *</label>
+									    	<input name="telefonoTrabajoBeneficiario" type="text" class="form-control" placeholder="Estado" ng-model="ae.beneficiario.telefonoTrabajo" required="" capitalize>
+								    	</div>	
+										</div>
+										
+					       </div>			
+					       
+					       <h3>Referencias</h3>
+					       <div class="well">
+						        <h4>Referencia 1</h4>
+										<div class="row">	
+											<div class="col-sm-4" valida>					    
+												<label>Nombre *</label>
+												<input name="nombreReferencia1" type="text" class="form-control" placeholder="Empresa Trabaja" ng-model="ae.beneficiario.nombreReferencia1" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>					    
+												<label>Apellido Paterno *</label>
+												<input name="apellidoPaternoReferencia1" type="text" class="form-control" placeholder="Empresa Trabaja" ng-model="ae.beneficiario.apellidoPaternoReferencia1" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>					    
+												<label>Apellido Materno</label>
+												<input name="apellidoMaternoReferencia1" type="text" class="form-control" placeholder="Empresa Trabaja" ng-model="ae.beneficiario.apellidoMaternoReferencia1" capitalize>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4" valida>					    
+												<label>Relación *</label>
+												<input name="relacionReferencia1" type="number" class="form-control" ng-model="ae.beneficiario.relacionReferencia1" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>
+									    	<label>Tiempo Conocerlo *</label>
+									    	<input name="tiempoConocerloReferencia1" type="text" class="form-control" placeholder="Domicilio" ng-model="ae.beneficiario.tiempoConocerloReferencia1" required="" capitalize>
+								    	</div>
+											<div class="col-sm-4">					    
+												<label>Telefono *</label>
+												<input name="telefonoReferencia1" type="text" class="form-control" placeholder="Número" ng-model="ae.beneficiario.telefonoReferencia1" required="" capitalize>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12" valida>
+									    	<label>Direccion *</label>
+									    	<input name="direccionReferencia1" type="text" class="form-control" placeholder="Estado" ng-model="ae.beneficiario.direccionReferencia1" required="" capitalize>
+								    	</div>	
+										</div>
+										<h4>Referencia 2</h4>
+										<div class="row">	
+											<div class="col-sm-4" valida>					    
+												<label>Nombre *</label>
+												<input name="nombreReferencia2" type="text" class="form-control" placeholder="Empresa Trabaja" ng-model="ae.beneficiario.nombreReferencia2" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>					    
+												<label>Apellido Paterno *</label>
+												<input name="apellidoPaternoReferencia2" type="text" class="form-control" placeholder="Empresa Trabaja" ng-model="ae.beneficiario.apellidoPaternoReferencia2" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>					    
+												<label>Apellido Materno</label>
+												<input name="apellidoMaternoReferencia2" type="text" class="form-control" placeholder="Empresa Trabaja" ng-model="ae.beneficiario.apellidoMaternoReferencia2" capitalize>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4" valida>					    
+												<label>Relación *</label>
+												<input name="relacionReferencia2" type="number" class="form-control" ng-model="ae.beneficiario.relacionReferencia2" required="" capitalize>
+											</div>
+											<div class="col-sm-4" valida>
+									    	<label>Tiempo Conocerlo *</label>
+									    	<input name="tiempoConocerloReferencia2" type="text" class="form-control" placeholder="Domicilio" ng-model="ae.beneficiario.tiempoConocerloReferencia2" required="" capitalize>
+								    	</div>
+											<div class="col-sm-4">					    
+												<label>Telefono *</label>
+												<input name="telefonoReferencia2" type="text" class="form-control" placeholder="Número" ng-model="ae.beneficiario.telefonoReferencia2" required="" capitalize>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12" valida>
+									    	<label>Direccion *</label>
+									    	<input name="direccionReferencia2" type="text" class="form-control" placeholder="Estado" ng-model="ae.beneficiario.direccionReferencia2" required="" capitalize>
+								    	</div>	
+										</div>
+					       </div>
+					       
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		      	<a	class="btn btn-success" ng-click="ae.guardarBeneficiario(ae.beneficiario, form2)" valida-form formulario="form2" ng-show="!ae.editarBeneficiario">Guardar</a>
+		      	<a	class="btn btn-success" ng-click="ae.actualizarBeneficiario(ae.beneficiario, form2)" valida-form formulario="form2" ng-show="ae.editarBeneficiario">Actualizar</a>
+		        <button type="button" class="btn btn-default" ng-click="ae.cancelarAval()" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
   </div>
 </div>

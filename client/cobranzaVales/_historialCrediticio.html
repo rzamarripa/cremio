@@ -1,0 +1,38 @@
+<div class="row"><br/>
+	<div class="col-sm-12">	
+		<table class="table table-striped table-bordered table-condensed font-xs">
+			<thead class="thead">
+				<tr>
+					<th class="text-center" width="10%">Folio Pago</th>	
+					<th class="text-center" width="15%">Fecha Pago</th>
+					<th class="text-center" width="15%">Importe</th>
+					<th class="text-center" width="15%">Bonificación</th>
+					<th class="text-center" width="15%">Total</th>
+					<th class="text-center" width="20%">Pagado</th>
+					<th class="text-center" width="10%">Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="pago in cobv.pagos">
+						
+					<td class="text-center">{{pago.folioPago}}</td>	
+					<td class="text-center">{{pago.fechaPago | date:"dd-MM-yyyy"}}</td>
+					<td class="text-right">{{pago.liquidacion | currency}}</td>
+					<td class="text-right">{{pago.bonificacion | currency}}</td>
+					<td class="text-right">{{pago.totalPago | currency}}</td>
+					<td class="text-right">{{pago.pago | currency}}</td>
+					<td> <a href="#" ng-click = "cobv.verPagos(pago)">Ver Pago</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+ 

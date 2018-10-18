@@ -1,0 +1,93 @@
+
+<div class="container">
+	<div class="widget-body no-padding">
+		<div class="padding-12">
+			<div class="row text-center">
+				<div class="col-sm-4 col-sm-offset-4">
+					<span id="logo"> <img src="img/LogoBigVale.jpg" alt="SmartAdmin" style="margin-top: -13px;margin-left:-50px;width: 250px;height: 110px;"> </span>
+					<address style="font-size: larger">
+						RUBIDIA MARTINEZ ALCARAZ<br>
+						BLVD. EMILIANO ZAPATA 3125 LOCAL 12BC<br>
+						COLONIA LOMAS DEL BOULEVARD<br>
+						MAAR-661007-BF5<br>
+						(667) 717-21-21<br>
+					</address>
+					<strong>----------------------------------------------------------------</strong>
+					<div class="row">
+						<div class="col-sm-12">
+							<span>PAGARÉ	-----> BUENO POR {{tktP.credito.capitalSolicitado | currency}}</span>
+							<p style="text-align: justify">
+								POR EL PRESENTE PAGARÉ RECONOZCO DEBER Y ME OBLIGO INCONDICIONALMENTE A PAGAR A LA ORDEN DE RUBIDIA MARTÍNEZ ALCARAZ, LA CANTIDAD DE  ({{tktP.credito.adeudoInicial | currency}}) {{tktP.letra}} PESOS {{tktP.centavos}}/100 MONEDA NACIONAL, VALOR RECIBIDO A MI ENTERA SATISFACCIÓN, LO CUAL SE HARÁ EN EL DOMICILIO UBICADO EN BOULEVARD EMILIANO ZAPATA NO. 3125, LOCAL 12-BC, COLONIA LOMAS DEL BOULEVARD C.P. 80110, CULIACÁN, SINALOA O EN CUALQUIER OTRO LUGAR EN QUE SE ME REQUIERA, <br>	
+--- EL IMPORTE DE DINERO TRANSMITIDO GENERARÁ A PARTIR DE ESTA FECHA Y HASTA SU TOTAL LIQUIDACIÓN, INTERESES QUE SE CALCULARÁN BAJO LAS SIGUIENTES BASES: 	<br>
+--- A).- UN INTERÉS ORDINARIO FIJO SOBRE EL IMPORTE TOTAL QUE AMPARA EL PRESENTE PAGARÉ, QUE SE CALCULARÁ APLICANDO UNA TASA MENSUAL DEL 12% (DOCE POR CIENTO) SOBRE EL IMPORTE TOTAL DEL MUTUO OTORGADO.	<br>
+--- B).- EN CASO DE MORA, DE IGUAL FORMA SE OBLIGA A CUBRIR UN INTERÉS FIJO, QUE SE CALCULARÁ APLICANDO UNA TASA DIARIA EQUIVALENTE AL 1.00% (UNO POR CIENTO) SOBRE EL MONTO DEL CREDITO VENCIDO NO PAGADO.	<br>
+--- LOS INTERESES GENERADOS CAUSARÁN EL IMPUESTO SOBRE AL VALOR AGREGADO (IVA).	<br>
+<!-- --- EL VALOR QUE AMPARA EL PAGARÉ LO CUBRIRÉ A MÁS TARDAR EL DÍA <strong>{{tktP.vigenciaFecha}}</strong>. SIN NECESIDAD DE REQUERIMIENTO O COBRO PREVIO:  (TRES MESES PLAZO MÁXIMO)<br> -->
+--- EL VALOR QUE AMPARA EL PAGARÉ LO CUBRIRÉ EN LAS SIGUIENTES FECHAS, IMPORTES Y CONCEPTOS SIN NECESIDAD DE REQUERIMIENTO O COBRO PREVIO:
+						</p>
+						<table style="font-size: smaller; width: 100%" border="1">
+							<thead>
+								<tr>
+									<th style="text-align: center">No. Pago</th>
+									<th style="text-align: center">Fecha</th>
+									<th style="text-align: center">Capital</th>
+									<th style="text-align: center">Interes</th>
+									<th style="text-align: center">Iva</th>
+									<th style="text-align: center">Seguro</th>
+									<th style="text-align: center">Total</th>
+								</tr>	
+							</thead>	
+							<tbody>
+								<tr ng-repeat="pago in tktP.planPagos">
+									<td>{{pago.numeroPago}}</td>
+									<td>{{pago.fechaLimite | date: 'dd/MM/yyyy'}}</td>
+									<td>{{pago.capital | currency}}</td>
+									<td>{{pago.interes | currency}}</td>
+									<td>{{pago.iva | currency}}</td>
+									<td>{{pago.seguro | currency}}</td>
+									<td>{{pago.importeRegular | currency}}</td>
+								</tr>
+							</tbody>	
+						</table>
+						<p style="text-align: justify">
+--- SI EL DÍA DE PAGO ES INHÁBIL, EL PAGO SE REALIZARÁ EL DÍA HÁBIL INMEDIATO POSTERIOR. QUEDO DE ACUERDO EN QUE DE HACER PAGOS PARCIALES ESTOS SE APLICARÁN EN EL SIGUIENTE ORDEN: INTERESES MORATORIOS, INTERESES ORDINARIOS MENSUALES, IVA SOBRE INTERESES, CAPITAL VENCIDO SOBRE LA PARCIALIDAD MÁS ANTIGUA Y CAPITAL NO VENCIDO. TODO PAGO DEBERÁ SE HECHO EN EFECTIVO. SI LLEGARÁ A RECIBIRSE OTRA FORMA DE PAGO SE ENTENDERÁ QUE TODO DOCUMENTO, CHEQUE O TÍTULO DE CRÉDITO ENTREGADO COMO PAGO SE ENTENDERÁ RECIBIDO SALVO BUEN COBRO.	<br>
+---- PARA CUALQUIER EVENTO QUE PUDIERA PRESENTARSE EN RELACIÓN CON EL PRESENTE PAGARÉ, ME SOMETO EXPRESAMENTE A LAS LEYES Y TRIBUNALES COMPETENTES DE LA CIUDAD DE CULIACÁN, SINALOA, MÉXICO POR LO QUE RENUNCIO AL FUERO QUE POR RAZON DE MI DOMICILIO PRESENTE O FUTURO PUDIERA CORRESPONDERME. 	
+							</p>	
+						</div>
+					</div>		
+					<div class="row">
+						<div class="col-sm-12" style="text-align: left">			
+							<span>DEBO Y PAGARÉ</span>
+							<br>
+							<span>CULIACÁN, SINALOA A {{tktP.fechaLetra}}. </span>
+							<br>
+							<span>DEUDOR: </span>
+							<br>
+							<span>NOMBRE: {{tktP.beneficiario.nombreCompleto}}</span>
+							<br>
+							<span>DIRECCIÓN: {{tktP.beneficiario.domicilio}} {{tktP.beneficiario.colonia}}</span>
+							<br>
+							<span>POBLACIÓN: {{tktP.beneficiario.ciudad}}</span>
+							<br>
+							<span>Fecha: {{tktP.fecha | date: 'dd/MM/yyyy'}} {{tktP.fecha | date:'H:mm:ss'}} Hrs.</span>
+						</div>
+					</div>	
+					<br>
+					<div class="row">
+						<div class="col-sm-12" style="text-align: left">
+							<span>Recibí: </span>
+						</div>
+						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
+					</div>
+					<div class="row">
+						<div class="col-sm-12" style="text-align: center">
+							<span>{{tktP.beneficiario.nombreCompleto}}</span>
+						</div>
+					</div>
+					<br>
+					<div style="font-size: larger"><a class="btn btn-primary" id="printpagebutton" ng-click="tktP.borrarBotonImprimir()">Imprimir</a></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

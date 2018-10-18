@@ -132,6 +132,25 @@ angular.module("creditoMio")
 							else if (n >= 20)
 							   	rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);								
 					}
+					
+					
+					Meteor.call('getBeneficiario', c.beneficiario_id, function(error, result) {           
+				          if (result)
+				          {
+				          		c.beneficiario = result;
+				          		$scope.$apply();
+									}
+				  });
+				  
+				  Meteor.call('getUsuarioId', c.cliente_id, function(error, result) {           
+				          if (result)
+				          {
+				          		c.distribuidor = result;
+				          		$scope.$apply();
+									}
+				  });
+					
+					
 			}	
 		
 			return c
@@ -158,7 +177,9 @@ angular.module("creditoMio")
 	}
 
 	this.guardar = function (){
-						
+			
+			$( "#entregar" ).prop( "disabled", true );
+			
 			/*
 if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagare!=true || this.validar.tabla!=true)
 			{
@@ -176,11 +197,14 @@ if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagar
 					toastr.error('Error No se puede entregar un crédito con esta forma de pago.');
 					return;
 			}
+*/			
 			
-			if (rc.credito.esRefinanciado == undefined)
+			/*
+if (rc.credito.esRefinanciado == undefined)
 			{
 					if(form.$invalid || rc.suma != rc.credito.capitalSolicitado){
 						toastr.error('Error verifique la cantidad a entregar.');
+						$( "#entregar" ).prop( "disabled", false );
 						return;
 					}	
 			}
@@ -188,56 +212,107 @@ if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagar
 			{
 					if(form.$invalid || rc.suma != (rc.credito.capitalSolicitado - rc.credito.refinanciar)){
 						toastr.error('Error verifique la cantidad a entregar.');
+						$( "#entregar" ).prop( "disabled", false );
 						return;
 					}
 			}
 */
+
+
 			
 			//Validar que tenga dinero en el tipo de Ingreso	
 			var validarSaldoCaja = rc.caja.cuenta[rc.tipoIngreso._id];
+			
 			if (validarSaldoCaja.saldo < rc.suma)
 			{
 					toastr.error('Error no tienes saldo en el Fondo asociado a ese tipo de ingreso.');
 					rc.objeto.caja[rc.tipoIngreso._id].saldo = 0;
 					rc.suma = 0;
+					$( "#entregar" ).prop( "disabled", false );
 					return;
 			}			
 			
+			
+			//Validar que el beneficiario no revase el limite de credito
+			//validaLimiteSaldoBeneficiario
+			Meteor.call ("validaLimiteSaldoBeneficiarioDistribuidor",rc.credito,function(error,result){
+					if (!result.beneficiario)
+					{
+							toastr.error('El Beneficiario rebasa el límite de crédito.');
+							$( "#entregar" ).prop( "disabled", false );
+							return;		
+					}
+					else if (!result.distribuidor)
+					{
+							toastr.error('El Distribuidor rebasa el límite de crédito.');
+							$( "#entregar" ).prop( "disabled", false );
+							return;		
+					}
+					if (result)
+					{
+						 
+						  Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id, rc.tipoIngreso._id,function(error,result){
+								if(error){
+									console.log(error);
+									toastr.error('Error al guardar los datos.');
+									return
+								}
+								
+								//Imprimir el ticket
+								var url = $state.href("anon.ticketEntregaVale", { credito_id: rc.credito._id }, { newTab: true });
+								window.open(url, '_blank');
+								
+								
+								toastr.success('Operacion Realizada.');
+								$state.go("root.distribuidoresDetalle",{objeto_id : rc.credito.cliente_id});
+								rc.objeto = {}; 
+				
+								$( "#entregar" ).prop( "disabled", false );
+								rc.nuevo = true;
+							});
+						
+					}
+					
+			});		
+
+			/*
 			//Validar que no tenga Cargos Moratorios
-			//console.log(rc.credito.cliente_id);
-			Meteor.call ("validarCreditosSaldoEnMultas",rc.credito.cliente_id,function(error,result){
+Meteor.call ("validarCreditosSaldoEnMultas",rc.credito.cliente_id,function(error,result){
 					//console.log("Resultado:", result);
 					if (!result)
 					{
 							toastr.error('El cliente tiene Cargos Moratorios Activos no es posible Entregarle el vale.');
+							$( "#entregar" ).prop( "disabled", false );
 							return;		
 					}
 					else if (result)
 					{
 							//ELIMINAR AQUELLOS QUE NO TIENEN SALDO 0 EN rc.objeto
 							
-							
-							
-												
 							Meteor.call ("entregarCredito",rc.objeto,$stateParams.credito_id, rc.tipoIngreso._id,function(error,result){
 								if(error){
 									console.log(error);
 									toastr.error('Error al guardar los datos.');
 									return
 								}
+								
+								//Imprimir el ticket
+								var url = $state.href("anon.ticketEntregaVale", { credito_id: rc.credito._id }, { newTab: true });
+								window.open(url, '_blank');
+								
+								
 								toastr.success('Operacion Realizada.');
 								$state.go("root.distribuidoresDetalle",{objeto_id : rc.credito.cliente_id});
-
-								
 								rc.objeto = {}; 
-								$('.collapse').collapse('hide');
+
+								$( "#entregar" ).prop( "disabled", false );
 								rc.nuevo = true;
 							});	
-
 						
 					}
 					
 			});
+*/
 			
 
 	}
@@ -305,6 +380,15 @@ this.fechaPago = function(diaSeleccionado, periodoPago)
 	
 	this.generarCredito = function(){
 		
+		
+		/*
+if (rc.folioVale == undefined || rc.folioVale == "")
+		{
+				toastr.warning("Debe proporcionar un numero de Folio");
+				return;
+		}
+*/
+		
 		var credito = {
 
 			tipoCredito_id 			: this.credito.tipoCredito_id,
@@ -327,7 +411,8 @@ this.fechaPago = function(diaSeleccionado, periodoPago)
 			tasa								: this.credito.tasa,
 			conSeguro 					: this.credito.conSeguro,
 			seguro							: this.credito.seguro,
-			tipo								:	this.credito.tipo
+			tipo								:	this.credito.tipo,
+			folio								: rc.folioVale
 		};
 				
 		//console.log(this.credito);
@@ -625,6 +710,14 @@ this.fechaPago = function(diaSeleccionado, periodoPago)
 	  		 });
 
 			return rc.planPagos;
+		
+		};
+	
+	this.imprimirPagare = function(contrato,cliente){
+		
+			//Imprimir Pagare
+			var url = $state.href("anon.ticketPagare", { credito_id: $stateParams.credito_id }, { newTab: true });
+			window.open(url, '_blank');
 		
 		};
 	

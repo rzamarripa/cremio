@@ -86,6 +86,7 @@ angular.module("creditoMio")
 			var distribuidores = Meteor.users.find({roles: ["Distribuidor"]}).fetch();
 			if (distribuidores)
 			{
+				console.log(distribuidores)	;
 				_.each(distribuidores, function(distribuidor){
 						var autorizar = {};
 						autorizar.verificaciones = [];
@@ -98,7 +99,7 @@ angular.module("creditoMio")
 					 	autorizar.avales_ids 					= distribuidor.profile.avales_ids;
 					 	autorizar.indicacion 					= distribuidor.profile.indicacion;
 					 	autorizar.tipo								= "Distribuidor"
-						
+						console.log(autorizar.avales_ids)
 						Meteor.call('getVerificacionesDistribuidor', distribuidor._id, function(error, result) {
 						   if(error)
 						   {

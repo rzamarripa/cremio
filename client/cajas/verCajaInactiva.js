@@ -5,10 +5,10 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 	let rc = $reactive(this).attach($scope);
   window.rc = rc;
   
-  this.caja_id 	= $stateParams.caja_id;
-  rc.corte_id = $stateParams.corteCaja_id;
+  if ($stateParams.caja_id)
+  	 this.caja_id 	= $stateParams.caja_id;
   
-  //console.log(rc.corte_id);
+  rc.corte_id = $stateParams.corteCaja_id;
   
   this.caja = { _id: 0 };
   
@@ -17,12 +17,9 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
   this.fechaInicio = "";
   this.fechaFin = "";
   this.totalResumen = 0;
-  //this.nuevoTraspaso = { tipo: 'desde_cuenta' }
-  
-  console.log(this.getReactively('pagos_id'));
   
   this.subscribe('cajas', () => {
-    return [{ _id: $stateParams.caja_id }]
+    return [{ }]
   });
   this.subscribe('tiposIngreso', () => {
     return [{}]
@@ -34,17 +31,25 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
   this.subscribe('cuentas', () => {
     return [{}]
   });
- 
+	
+/*
+	this.subscribe('traspasos', () => {
+    return [{
+      $or: [
+        { origen_id: this.getReactively('caja._id') },
+        { destino_id: this.getReactively('caja._id') }
+      ],
+      createdAt: {$gte: this.getReactively('caja.ultimaApertura')},
+      sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
+    }];
+  });
+*/
+
  
   this.subscribe('cortesCaja', () => {
     return [{_id: $stateParams.corteCaja_id}]
   });
   
-/*
-	this.subscribe('pagos', () => {
-    	 return [{ _id: { $in: this.getReactively('pagos_id') } }]
-  });
-*/
   this.subscribe('movimientosCaja', () => {
     return [{_id: $stateParams.movimientosCaja_id}]
   });
@@ -76,7 +81,7 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 					        var todos_id = _.pluck(rc.cajaInactiva.movimientosCaja, "origen_id"); 
 					        rc.pagos_id = _.uniq(todos_id);
 					        
-						      console.log("Carga:", Pagos.find().count());						        	
+						      //console.log("Carga:", Pagos.find().count());						        	
 
 					        
 					        _.each(rc.cajaInactiva.movimientosCaja, function(mov) {						        	
@@ -222,7 +227,7 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
           { tipoMovimiento: 'Retiro' },
           { tipoMovimiento: 'Cancelación'}
         ]
-      },).fetch();
+      }, {sort: {createdAt: -1} }).fetch();
       	
       	//console.log("MoV:", movimientos);
       	
@@ -231,6 +236,17 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
         _.each(movimientos, function(mov) {
 	        //console.log(mov);
           var d = {};
+          
+          if (mov.origen == "Pago de Sistema") {
+	          	
+	          	pagos_id.push(mov.origen_id);
+	          	var p = Pagos.findOne(mov.origen_id);
+	          	if(p != undefined)
+	          	{
+		          		d.nombreCliente = p.usuario_id;
+		          }	
+	          	d.numeroCliente = "S/N";
+          }
           
           //console.log(mov.origen);
           if (mov.origen == "Pago de Cliente" || mov.origen == "Pago de Distribuidor" || mov.origen == "Cancelación de pago") {
@@ -322,8 +338,7 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 			
       return ret
     },
-    /*
-traspasos: () => {
+    traspasos: () => {
       var traspasos = Traspasos.find({}, { order: { createdAt: -1 } }).fetch();
       _.each(traspasos, function(traspaso) {
         if (traspaso.tipo == "CuentaCaja") {
@@ -339,7 +354,6 @@ traspasos: () => {
       });
       return traspasos
     }
-*/
   });
    
 	this.getCajero = (objeto) => {

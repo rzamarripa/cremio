@@ -1,35 +1,38 @@
 
 <div class="container">
 	<div class="widget-body no-padding">
-		<div class="padding-12">
+		<div class="padding-10">
 			<div class="row text-center">
 				<div class="col-sm-4 col-sm-offset-4">
-					<span id="logo"> <img src="img/logoCreditoMioBN.png" alt="SmartAdmin" style="margin-top: -18px;width: 200px;height: 110px;"> </span>
-					<address style="font-size: larger">
+					<div>
+						<img src="img/logoCreditoMioBN.png" width="150" alt="recibo icon">
+					</div>
+					<address>
 						RUBIDIA MARTINEZ ALCARAZ<br>
 						BLVD. EMILIANO ZAPATA 3125 LOCAL 12BC<br>
 						COLONIA LOMAS DEL BOULEVARD<br>
 						MAAR-661007-BF5<br>
-						(667) 717-21-21<br>
+						(667) 717-21-21
 					</address>
-					<strong style="font-size: larger">----------RECIBO DE PAGO----------</strong>
-					<div class="row" style="font-size: larger">
+					<strong>-----------------RECIBO DE PAGO-----------------</strong>
+					<div class="row">
 						<div class="col-sm-12">
-							<span class="pull-left">RECIBIMOS DE <strong>{{tkpctrl.cliente.profile.nombreCompleto}}</strong> (CLIENTE No. {{tkpctrl.cliente.profile.numeroCliente}}) CON DOMICILIO EN: CALLE {{tkpctrl.cliente.profile.calle}} NO. {{tkpctrl.cliente.profile.numero}} {{tkpctrl.cliente.profile.colonia.nombre}}. {{tkpctrl.cliente.profile.municipio.nombre}}, {{tkpctrl.cliente.profile.estado.nombre}}.
-							</span>
+							<p style="font-size: small; text-align: justify">RECIBIMOS DE <strong>{{tkpctrl.cliente.profile.nombreCompleto}}</strong> (CLIENTE No. {{tkpctrl.cliente.profile.numeroCliente}}) CON DOMICILIO EN: CALLE {{tkpctrl.cliente.profile.calle}} NO. {{tkpctrl.cliente.profile.numero}} {{tkpctrl.cliente.profile.colonia.nombre}}. {{tkpctrl.cliente.profile.municipio.nombre}}, {{tkpctrl.cliente.profile.estado.nombre}}.
+							</p>
 						</div>
 					</div>	
 					<div class="row">
 						<div class="col-sm-12">
-							<span class="pull-left" style="font-size: larger">LA CANTIDAD DE:<strong> {{tkpctrl.pago.totalPago | currency}}</strong></span>
-							<br>
-							<span class="pull-left" style="font-size: larger">SON: {{tkpctrl.pago.letra}} PESOS {{tkpctrl.pago.centavos}}/100 M.N.</span>
-							<br/>
-							<span class="pull-left" style="font-size: larger"> POR CONCEPTO DE ABONO A SU CUENTA</span>
+							<p style="text-align: left">
+								LA CANTIDAD DE:<strong> {{tkpctrl.pago.totalPago | currency}}</strong>
+							</p>	
+							<p style="text-align: justify">
+								SON: {{tkpctrl.pago.letra}} PESOS {{tkpctrl.pago.centavos}}/100 M.N. POR CONCEPTO DE ABONO A SU CUENTA
+							</p>	
 						</div>	
 					</div>
-					<strong style="font-size: larger">---------DETALLE DEL PAGO/ABONO---------</strong>
-					<table style="font-size: medium; width: 100%">
+					<strong>------DETALLE DEL PAGO/ABONO------</strong>
+					<table style="font-size: smaller;width: 100%">
 						<tbody>
 							<tr>
 								<th style="text-align: center;width: 20%">Crédito</th>
@@ -46,7 +49,7 @@
 						</tbody>
 					</table>
 
-					<table style="font-size: medium; width: 100%;">
+					<table style="font-size: smaller;width: 100%;">
 						<tr>
 							<td style="text-align: left; width: 70%">
 								<strong>TOTAL: </strong>
@@ -72,10 +75,14 @@
 							</td>
 						</tr>
 					</table>
-					<table style="font-size: medium; width: 100%;">
+					<table style="font-size: smaller;width: 100%;">
 						<tr>
 							<td style="text-align: left; width: 70%;">SALDO ANTERIOR: </td>
 							<td style="text-align: right; width: 30%;">{{tkpctrl.pago.saldoAnterior | currency}}</td>							
+						</tr>
+						<tr ng-if = "tkpctrl.tipoIngreso.nombre == 'REFINANCIAMIENTO'">
+							<td style="text-align: left; width: 70%;">CANTIDAD A ENTREGAR: </td>
+							<td style="text-align: right; width: 30%;">{{tkpctrl.pago.cantidadEntregar | currency}}</td>							
 						</tr>
 						<tr>
 							<td style="text-align: left; width: 70%;">SALDO ACTUAL: </td>
@@ -94,32 +101,19 @@
 							<td style="text-align: right; width: 30%;">{{tkpctrl.tipoIngreso.nombre}}</td>							
 						</tr>						
 					</table>	
-<!--
 					<div class="row">
-													
-						<div style="text-align: left" class="col-sm-10">SALDO ANTERIOR: {{tkpctrl.pago.saldoAnterior | currency}}</div><br>
-						<div style="text-align: left" class="col-sm-10">SALDO ACTUAL  : {{tkpctrl.pago.saldoActual | currency}}</div><br>
-						<div style="text-align: left" class="col-sm-10">C. MORATORIOS : {{tkpctrl.pago.saldoCargoMoratorio | currency}}</div><br>
-						<div style="text-align: left" class="col-sm-10">LIQUIDACIÓN   : {{tkpctrl.pago.liquidacion | currency}}</div><br>
-						<div style="text-align: left" class="col-sm-10">PRÓXIMO PAGO  : {{tkpctrl.pago.proximoPago | date:"dd-MM-yyyy"}} </div><br>
-						<div style="text-align: left" class="col-sm-10">FORMA PAGO    : {{tkpctrl.tipoIngreso.nombre}}</div>
-					</div>
--->
-					<div class="row" style="font-size: larger">
 						<div class="col-sm-12">
-							ATENDIO:<br>
-						{{tkpctrl.cajero.profile.nombre}}	
+							ATENDIO: {{tkpctrl.cajero.profile.nombre}}	
 						</div>
-					</div>	
-					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;font-size: larger">
-					<strong style="font-size: larger"><center>FIRMA DEL CAJERO Y SELLO DE LA CAJA</center></strong>
-					<div class="row" style="font-size: larger">
-						<div  class="col-sm-6 pull-left">VENTANILLA: {{tkpctrl.caja.nombre}}</div>
-						<div class="col-sm-6 pull-right">TURNO: 0000</div>
 					</div>
-					<div class="row" style="font-size: larger">
-						<div class="col-sm-6 pull-left">{{ tkpctrl.pago.fechaPago | date:'H:mm:ss'}}</div>
-						<div class="col-sm-6 pull-right">{{ tkpctrl.pago.fechaPago | date:'dd-MM-yyyy'}}</div>
+					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
+					<strong style="font-size: smaller"><center>FIRMA DEL CAJERO Y SELLO DE LA CAJA</center></strong>
+					<div class="row" style="font-size: small; text-align: center">
+						<div  class="col-sm-6 pull-left">VENTANILLA: {{tkpctrl.caja.nombre}}</div>
+					</div>
+					<div class="row" style="font-size: small">
+						<div class="col-sm-6 pull-left">Fecha : {{ tkpctrl.pago.fechaPago | date:'dd-MM-yyyy'}}</div>
+						<div class="col-sm-6 pull-right">Hora : {{ tkpctrl.pago.fechaPago | date:'H:mm:ss'}}</div>
 					</div>
 					<br>
 						<div style="font-size: larger"><a class="btn btn-primary" id="printpagebutton" ng-click="tkpctrl.borrarBotonImprimir()">Imprimir</a></div>
@@ -128,3 +122,9 @@
 		</div>
 	</div>
 </div>
+
+<style type="text/css" media="print">
+	@page{
+   margin: 0;
+	}
+</style>

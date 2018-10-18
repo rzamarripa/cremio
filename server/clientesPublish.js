@@ -27,7 +27,8 @@ Meteor.publish("buscarRootClientesDistribuidores",function(options){
 			if(options.where.nombreCompleto.length > 0){
 				let selector = {
 			  	"profile.nombreCompleto": { '$regex' : '.*' + options.where.nombreCompleto || '' + '.*', '$options' : 'i' },
-			  	roles : {$in : ["Cliente", "Distribuidor"]}
+			  	//roles : {$in : ["Cliente", "Distribuidor"]}
+			  	roles : options.where.rol
 				}
 					
 				return Meteor.users.find(selector, { fields: {roles													: 1,

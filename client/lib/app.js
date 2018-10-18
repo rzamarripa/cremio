@@ -1,4 +1,4 @@
-angular.module('creditoMio',
+app =  angular.module('creditoMio',
   [
     'angular-meteor',    
     'ngAnimate',
@@ -14,3 +14,6 @@ angular.module('creditoMio',
   ]
 );
 
+$("html").attr({lang:"es"});
+
+NProgress.configure({ easing: 'ease', speed: 600 });

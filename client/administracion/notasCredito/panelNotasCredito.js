@@ -16,7 +16,7 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 				
   this.helpers({
 	  notasCreditoConSaldo : () => {
-		  	var ncs =  NotasCredito.find({estatus: 1, saldo : {$gt: 0}}).fetch();		 
+		  	var ncs =  NotasCredito.find({estatus: 1, saldo : {$gt: 0}}, {sort: {createdAt : -1}}).fetch();		 
 		  	if (ncs != undefined)
 		  	{
 				  	_.each(ncs, function(nc){
@@ -42,7 +42,7 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 		  return ncs;
 	  },
 	  notasCreditoCaducadas : () => {
-		  	var ncs =  NotasCredito.find({estatus: 2 }).fetch();		 
+		  	var ncs =  NotasCredito.find({estatus: 2 }, {sort: {createdAt : -1}}).fetch();		 
 		  	if (ncs != undefined)
 		  	{
 				  	_.each(ncs, function(nc){
@@ -68,7 +68,7 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
 		  return ncs;
 	  },
 	  notasCreditoAplicadas : () => {
-		  var ncs = NotasCredito.find({estatus: 3 , saldo : 0}).fetch();		 
+		  var ncs = NotasCredito.find({estatus: 3 , saldo : 0}, {sort: {createdAt : -1}}).fetch();		 
 		  	if (ncs != undefined)
 		  	{
 				  	_.each(ncs, function(nc){

@@ -31,17 +31,21 @@ angular.module("creditoMio")
 			return [{_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""}]
 	});	
 	
-
+	
+	
 	this.subscribe('buscarRootClientesDistribuidores', () => {
 		
 		if(rc.getReactively("buscar.nombre").length > 4){
 			
+			var rol = rc.porCliente == true ? 'Distribuidor' : 'Cliente';	
+						
 			rc.clientesRoot = [];
 			rc.buscando = true;			
 			return [{
 		    options : { limit: 20 },
 		    where : { 
-					nombreCompleto : rc.getReactively('buscar.nombre')
+					nombreCompleto : rc.getReactively('buscar.nombre'),
+					rol						 : rol
 				} 		   
 	    }];
 		}
@@ -258,10 +262,11 @@ this.verMenu =()=>{
     }    
   });	
 
-	this.descargarFormato = function() 
+	this.descargarFormato = function(op) 
   {	
+	  	  
 	  loading(true);
-    Meteor.call('formaSolicitud', function(error, response) {     
+    Meteor.call('formaSolicitud',op, function(error, response) {     
        if(error)
        {
         console.log('ERROR :', error);

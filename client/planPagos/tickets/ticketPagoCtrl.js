@@ -37,6 +37,16 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 																																	return a["folioCredito"] - b["folioCredito"] || a["numeroPago"] - b["numeroPago"];
 																																});
 			
+			_.each(rc.pago.planPagos, function(pago){
+					
+					if (pago.descripcion == "Cargo Moratorio")
+							rc.pago.saldoCargoMoratorio -= Number(parseFloat(pago.totalPago).toFixed(2));
+					
+					
+			});
+			
+			rc.pago.saldoCargoMoratorio = Number(parseFloat(rc.pago.saldoCargoMoratorio).toFixed(2));
+			
 			Meteor.call('datosClienteTicket', rc.pago.usuario_id ,function(err, res){
 				rc.cliente = res;
 				//console.log(res)

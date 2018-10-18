@@ -2,22 +2,18 @@
 
 Meteor.methods({
   createUsuario: function (usuario, rol, grupo) {
-		
 
 		_.each(usuario.profile.documentos, function(documento){
-				delete documento.$$hashKey;
-				
+				delete documento.$$hashKey;				
 		});
 		
 	  var sucursal;
 	  if (rol == "Cliente")
 		{
-				
 				sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
-				var numero = parseInt(usuario.profile.numeroCliente);
+				//var numero = parseInt(usuario.profile.numeroCliente);
 				
 				//se desactivo para que ellos empiecena capturar el numero-----------------
-				/*
 				if (sucursal.folioCliente != undefined)				
 				 	  numero = sucursal.folioCliente + 1;
 				else	
@@ -25,7 +21,7 @@ Meteor.methods({
 						sucursal.folioCliente = 0;
 						numero = sucursal.folioCliente + 1;
 				}
-				*/
+				
 				
 				if (numero < 10)
 					 usuario.username = sucursal.clave + '-C000' + numero.toString();
@@ -75,10 +71,8 @@ Meteor.methods({
 			password: usuario.password,			
 			profile: usuario.profile
 		});
-
 		
-		Roles.addUsersToRoles(usuario_id, rol, grupo);
-		
+		Roles.addUsersToRoles(usuario_id, rol, grupo);		
 
 		if (rol == "Cliente" || rol == "Distribuidor")
 		{
@@ -131,6 +125,14 @@ Meteor.methods({
 		Meteor.users.update({_id: usuario_id},{$set:user})
 		
 		return user._id;
+	},
+  validarCliente: function (nombreCompleto) {	
+	  var user = Meteor.users.find({"profile.nombreCompleto" : nombreCompleto, roles: ["Cliente"]} ).fetch();
+	  
+	  if (user.length > 0)
+	  	 return true;
+	  	 
+ 		return false;
 	},
 	userIsInRole: function(usuario, rol, grupo, vista){
 		if (!Roles.userIsInRole(usuario, rol, grupo)) {
@@ -367,11 +369,18 @@ if (referenciaPersonal.buscarPersona_id)
 		
 	},
 	getUsuario: function (usuario) {	
-	  var user = Meteor.users.findOne({"_id" : usuario}, {fields: {"profile.nombreCompleto":1, "profile.nombre":1, "profile.numeroCliente": 1, "profile.numeroDistribuidor": 1 }});
- 		return user.profile;
+
+		if (usuario != undefined)
+		{
+				var user = Meteor.users.findOne({"_id" : usuario}, {fields: {"profile.nombreCompleto":1, "profile.nombre":1, "profile.numeroCliente": 1}});
+				if (user != undefined)
+					 return user.profile;	
+		}
+		
 	},
 	getClienteDistribuidor: function (id) {	
 	  var user = Meteor.users.findOne({"_id" : id} );
+	  
  		return user;
 	},
 	getAvalCompleto: function (usuario) {	
@@ -384,15 +393,18 @@ if (referenciaPersonal.buscarPersona_id)
 	  	  
 	  var ocupacion = Ocupaciones.findOne(a.profile.ocupacion_id);
 	  a.profile.ocupacion = "";
-	  a.profile.ocupacion = ocupacion.nombre;
+	  if (ocupacion != undefined)
+	 	   a.profile.ocupacion = ocupacion.nombre;
 	  	  
 	  var estadoCivil = EstadoCivil.findOne(a.profile.estadoCivil_id);
 	  a.profile.estadoCivil = "";
-	  a.profile.estadoCivil = estadoCivil.nombre;
+	  if (estadoCivil != undefined)
+	  	 a.profile.estadoCivil = estadoCivil.nombre;
 	  
 	  var empresa = Empresas.findOne(a.profile.empresa_id);
 	  a.profile.empresa = {};
-	  a.profile.empresa = empresa;
+	  if (empresa != undefined)
+		  a.profile.empresa = empresa;
 	  
 		return a.profile;
 	},
@@ -452,19 +464,42 @@ if (referenciaPersonal.buscarPersona_id)
 				
 		});
 		
+		var buscarDistribuidores = Meteor.users.find({ "profile.nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }, roles : ["Distribuidor"]}, 
+				  																			{ fields: {"profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, roles: 1 }}, 
+																								{ sort : {"profile.nombreCompleto" : 1 }}, {"profile.nombreCompleto":1, "profile.referenciasPersonales_ids":1}).fetch();
 		
-		var buscarValesBeneficiados = Creditos.find({ "beneficiado": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }, estatus: 4}, 
-																										{ sort : {"beneficiado" : 1 }}).fetch();
+																																								
 		
-		
-		
-		_.each(buscarValesBeneficiados, function(vale){
+		_.each(buscarDistribuidores, function(cliente){				
 				
-				personas.push({ _id						: vale._id,
-												nombre				: vale.beneficiado,
-												tipo					: "Vale",
-												deuda					: vale.saldoActual, 
-												creditos			: vale
+				var creditos = Creditos.find({$and: [ {cliente_id: cliente._id, saldoActual: {$gt:0}, estatus:4}]}).fetch();
+				
+				var deuda = 0;
+				_.each(creditos, function(credito){
+						deuda += Number(parseFloat(credito.saldoActual).toFixed(2));
+				})
+				
+				personas.push({ _id						: cliente._id,
+												nombre				: cliente.profile.nombreCompleto,
+												tipo					: "Distribuidor",
+												deuda					: deuda, 
+												creditos			: creditos
+											});
+				
+		});
+		
+		
+		var buscarValesBeneficiados = Beneficiarios.find({ "nombreCompleto": { '$regex' : '.*' + nombre || '' + '.*', '$options' : 'i' }}, 
+																										{ sort : {"nombreCompleto" : 1 }}).fetch();
+				
+		
+		_.each(buscarValesBeneficiados, function(beneficiario){
+				
+				personas.push({ _id						: beneficiario._id,
+												nombre				: beneficiario.nombreCompleto,
+												tipo					: "Beneficiario",
+												deuda					: beneficiario.saldoActualVales, 
+												creditos			: []
 											});
 				
 		});
@@ -490,6 +525,12 @@ if (referenciaPersonal.buscarPersona_id)
   getUsuarioNumeroCliente: function (numeroCliente) {	
  	  
 	  var user = Meteor.users.findOne({"profile.numeroCliente" : numeroCliente}, {fields: { "profile.nombreCompleto":1, "profile.nombre":1, "profile.numeroCliente": 1 }});
+	  
+		return user;
+	},
+	getUsuarioId: function (id) {	
+ 	  
+	  var user = Meteor.users.findOne({_id : id}, {fields: { "profile.nombreCompleto":1, "profile.nombre":1, "profile.numeroCliente": 1 }});
 	  
 		return user;
 	},
@@ -523,5 +564,60 @@ if (referenciaPersonal.buscarPersona_id)
 	  
  		return imagen;
 	},
+	
+	setDocumentosCliente: function (cliente_id, documento_id, imagen) {	
+		
+		 var documento = {};
+		 
+		 documento.cliente_id 		= cliente_id;
+		 documento.documento_id		= documento_id;
+		 documento.imagen	 				= imagen;
+		 documento.fechaCreacion 	= new Date();
+		 
+		 DocumentosClientes.insert(documento)
+		 
+		 
+		 //Devolver los documentos que tenga
+		 var documentos = DocumentosClientes.find({cliente_id: cliente_id}, {fields: { "imagen": 0 }}).fetch(); 
+		 _.each(documentos, function(documento){
+			 	var doc = Documentos.findOne(documento.documento_id);
+			 	documento.nombre = doc.nombre;
+		 });
+		 return documentos;
+	},
+	
+	getDocumentosClientes: function (cliente_id) {	
+				 
+		 var documentos = DocumentosClientes.find({cliente_id: cliente_id}, {fields: { "imagen": 0 }}).fetch();
+		 
+		 _.each(documentos, function(documento){
+			 	var doc = Documentos.findOne(documento.documento_id);
+			 	documento.nombre = doc.nombre;
+		 });
+		 
+		 return documentos;
+
+	},
+	
+	borrarDocumentoCliente: function (cliente_id, id) {	
+		
+		DocumentosClientes.remove({_id: id});			 
+		 
+		var documentos = DocumentosClientes.find({cliente_id: cliente_id}, {fields: { "imagen": 0 }}).fetch();
+		 
+		 _.each(documentos, function(documento){
+			 	var doc = Documentos.findOne(documento.documento_id);
+			 	documento.nombre = doc.nombre;
+		 });
+		 
+		 return documentos;
+
+	},
+
+	getDocumentoCliente: function (id) {		
+		var doc = DocumentosClientes.findOne({_id: id});
+		return doc.imagen;
+	},
+	
 	
 });

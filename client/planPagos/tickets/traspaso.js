@@ -29,7 +29,7 @@ function TicketTraspasoCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			
 			if (rc.traspaso.tipo == "CuentaCaja")
 			{
-					rc.traspaso.tipoTraspaso = "TRANSFERENCIA DE FONDO A VENTANILLA";
+					rc.traspaso.tipoTraspaso = "TRANSPASO DE FONDO A VENTANILLA";
 					Meteor.call('getUsuario', rc.traspaso.elaboro_id ,function(err, res){
 						rc.traspaso.elaboro = res.nombreCompleto;
 					});
@@ -63,7 +63,7 @@ function TicketTraspasoCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			}
 			else if (rc.traspaso.tipo == "CajaCuenta")
 			{
-					rc.traspaso.tipoTraspaso = "TRANSFERENCIA DE VENTANILLA A FONDO";
+					rc.traspaso.tipoTraspaso = "RETIRO DE VENTANILLA A FONDO";
 					
 					Meteor.call('getUsuario', rc.traspaso.elaboro_id ,function(err, res){
 						rc.traspaso.elaboro = res.nombreCompleto;
@@ -100,7 +100,7 @@ function TicketTraspasoCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			}
 			else if (rc.traspaso.tipo == "CajaCaja")
 			{
-					rc.traspaso.tipoTraspaso = "TRANSFERENCIA DE VENTANILLA A VENTANILLA";
+					rc.traspaso.tipoTraspaso = "TRANSPASO DE VENTANILLA A VENTANILLA";
 					
 					Meteor.call('getUsuario', rc.traspaso.createdBy ,function(err, res){
 						rc.traspaso.elaboro = res.nombreCompleto;
@@ -109,8 +109,7 @@ function TicketTraspasoCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 					Meteor.call('getUsuario', rc.traspaso.recibio_id ,function(err, res){
 						rc.traspaso.recibio = res.nombreCompleto;
 					});
-*/
-					
+*/					
 					rc.subscribe('cajas',()=>{
 						return[{
 							_id : rc.traspaso.origen_id ? rc.traspaso.origen_id : ""

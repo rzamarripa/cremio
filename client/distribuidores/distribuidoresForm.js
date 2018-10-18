@@ -53,12 +53,16 @@ angular.module("creditoMio")
   
   this.estadoCivil = "";
   this.empresaSeleccionada = "";
+  
+  this.documento_id = "";
 
   this.estadoCivilSeleccionado = {};
   
   rc.colonia = {};
   rc.coloniaEmpresa = {};
-    rc.aval = {};
+  rc.aval = {};
+  
+  rc.oldLimiteCredito = 0;
   // this.buscar = {};
   // this.buscar.nombre = "";
 
@@ -145,6 +149,7 @@ angular.module("creditoMio")
   this.subscribe('documentos',()=>{
     return [{estatus: true}]
   });
+  
   this.subscribe('personas',()=>{
     return [{rol:"Cliente"}]
   });
@@ -200,13 +205,61 @@ angular.module("creditoMio")
   if($stateParams.objeto_id != undefined){
       rc.action = false;
       rc.objeto_id = $stateParams.objeto_id
-      this.subscribe('cliente', () => {
-        return [{
-          id : $stateParams.objeto_id
-        }];
+			loading(true);
+			Meteor.call('getClienteDistribuidor', rc.objeto_id, function(error, result){           
+            if (result)
+            {
+               	rc.objeto = result;
+			          rc.objeto.confirmpassword = "sinpassword";	
+								rc.objeto.password 				= "sinpassword"; 
+								
+								rc.oldLimiteCredito				= rc.objeto.profile.limiteCredito;
+								rc.oldSaldoCredito				= rc.objeto.profile.saldoCredito;
+								
+								var estadoCivilSeleccionado = EstadoCivil.findOne(rc.objeto.profile.estadoCivil_id);
+								
+								if (estadoCivilSeleccionado)
+										rc.estadoCivilSeleccionado = estadoCivilSeleccionado;
+								
+								_.each(rc.objeto.profile.referenciasPersonales_ids,function(referenciaPersonal){
+	                    Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
+	                          if (result)
+	                          {
+		                          	//console.log(result);
+	                              rc.referenciasPersonales.push({_id 							: referenciaPersonal.referenciaPersonal_id,
+	                                                             nombre           : result.nombre,
+	                                                             apellidoPaterno  : result.apellidoPaterno,
+	                                                             apellidoMaterno  : result.apellidoMaterno,
+	                                                             direccion        : result.direccion,
+	                                                             telefono         : result.telefono,
+	                                                             celular         	: result.celular,
+	                                                             parentesco       : referenciaPersonal.parentesco,
+	                                                             tiempoConocerlo	: referenciaPersonal.tiempoConocerlo,
+	                                                             num              : referenciaPersonal.num,
+	                                                             nombreCompleto   : result.nombreCompleto,
+	                                                             cliente_id       : rc.objeto._id,
+	                                                             estatus          : referenciaPersonal.estatus
+	                              });
+	                              $scope.$apply();    
+	                          }
+	                    }); 
+	              });   
+								//$scope.$apply();	
+ 								
+ 								//getdocumentos
+	              Meteor.call('getDocumentosClientes', rc.objeto_id, function(error,result){
+						      if (result)
+						        {
+						          //ir por los documentos
+						          rc.documents = result;
+						          $scope.$apply();      
+						        }
+						    });	
+								//rc.documents = rc.objeto.profile.documentos;
+								loading(false);
+            }
       });
   }
-
    
   this.helpers({
     estadosCiviles : () => {
@@ -263,12 +316,6 @@ angular.module("creditoMio")
       }, { sort : {"nombreCompleto" : 1 }}).fetch();
       return aval;
     },
-/*
-    configuraciones : () => {
-      var config = Configuraciones.find().fetch();
-      return config[config.length - 1]
-    },
-*/
     imagenesDocs : () => {
       var imagen = rc.imagenes
       _.each(rc.getReactively("imagenes"),function(imagen){
@@ -277,7 +324,8 @@ angular.module("creditoMio")
       });
       return imagen
     },
-    objetoEditar : () => {
+    /*
+objetoEditar : () => {
 
       var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
       rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
@@ -285,15 +333,15 @@ angular.module("creditoMio")
       if (objeto != undefined)
       {
 	      	
-	      	
           this.referenciasPersonales = [];
           if ($stateParams.objeto_id != undefined)
           {
+	          
               _.each(objeto.profile.referenciasPersonales_ids,function(referenciaPersonal){
                     Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
                           if (result)
                           {
-	                          	//console.log(result);
+
                               rc.referenciasPersonales.push({_id 							: referenciaPersonal.referenciaPersonal_id,
                                                              nombre           : result.nombre,
                                                              apellidoPaterno  : result.apellidoPaterno,
@@ -312,7 +360,17 @@ angular.module("creditoMio")
                           }
                     }); 
               });     
-          	   
+              
+              
+              //getdocumentos
+              Meteor.call('getDocumentosClientes', rc.objeto_id, function(error,result){
+					      if (result)
+					        {
+					          //ir por los documentos
+					          rc.documents = result;
+					          $scope.$apply();      
+					        }
+					    });
           }
 
           rc.objeto = objeto;
@@ -322,6 +380,7 @@ angular.module("creditoMio")
           //return objeto;
       }  
     },
+*/
     referenciasPersonalesHelper : () => {
       var rp = ReferenciasPersonales.find({
         nombreCompleto: { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' }
@@ -443,7 +502,9 @@ angular.module("creditoMio")
 			objeto.profile.estatusVerificacion = 0;
       objeto.profile.estatus = true;
       objeto.profile.saldoCredito = objeto.profile.limiteCredito;
-      objeto.profile.documentos = rc.documents;
+
+      //objeto.profile.documentos = rc.documents;
+      
       objeto.profile.foto = rc.pic;
       objeto.profile.usuarioInserto = Meteor.userId();
       objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
@@ -487,18 +548,30 @@ angular.module("creditoMio")
     var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
     var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
     objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-      
-    if (rc.documents != undefined && rc.documents.length > 0){
-       	objeto.profile.documentos = rc.documents;
+    
+    var incrementoDecremento = Number(objeto.profile.limiteCredito - rc.oldLimiteCredito).toFixed(2);
+    objeto.profile.saldoCredito	= Number(rc.oldSaldoCredito);
+    
+    if (incrementoDecremento > 0)
+    {
+	    	objeto.profile.saldoCredito += Number(incrementoDecremento);
+    }
+    else
+    {
+	    	objeto.profile.saldoCredito += Number(incrementoDecremento);
+    }
+    
+    if (objeto.profile.saldoCredito < 0)
+    {
+	    	toastr.error('No se puede actualizar menor al deuda actual de su crédito.');
+				return;		    		
     }
       
-  
     if (rc.pic != ""){
       objeto.profile.foto = rc.pic
     }
    
     delete objeto.profile.repeatPassword;
-    
     
     _.each(objeto.profile.documentos, function(d){	    
 	    delete d.$$hashKey;
@@ -520,12 +593,11 @@ angular.module("creditoMio")
 		    		loading(false);
 		    		toastr.success('Actualizado correctamente.');
 						this.nuevo = true;
- 				    $state.go('root.clienteDetalle', { 'objeto_id':objeto._id});
+ 				    $state.go('root.distribuidoresDetalle', { 'objeto_id':objeto._id});
 		    	
 	    	}	    
     });
-   
-
+  
   };
   
   this.guardarEmpresa = function(empresa, objeto,form)
@@ -621,13 +693,8 @@ angular.module("creditoMio")
                 }
               });
   };
-    
- /*
-*/
-  
-  
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- 
+      
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
   
   this.AgregarReferencia = function(a){
     this.referenciaPersonal.nombre = a.nombre;
@@ -744,13 +811,8 @@ angular.module("creditoMio")
       $("#modalreferenciaPersonal").modal('hide');
   };
   
-
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  this.borrarDoc = function($index)
-  {
-    rc.documents.splice($index, 1);
-    };
-  
+    
   //busca un elemento en el arreglo
   function functiontofindIndexByKeyValue(arraytosearch, key, valuetosearch) {
       for (var i = 0; i < arraytosearch.length; i++) {
@@ -771,7 +833,10 @@ angular.module("creditoMio")
   };
 
   $(document).ready( function() {
-      //$(".Mselect2").select2();
+			
+			
+      var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+   
       var fileInput1 = document.getElementById('fileInput1');
       //var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
             //JavaScript para agregar la Foto
@@ -781,27 +846,36 @@ angular.module("creditoMio")
   
         if (file.type.match(imageType)) {
           
-          if (file.size <= 512000)
+          if (file.size <= 2048000)
           {
             
-            var reader = new FileReader();
-            reader.onload = function(e) {
-              rc.imagen = reader.result;
-              //console.log(reader.result);
+	            var reader = new FileReader();
+	            reader.onload = function(e) {
+	                 
+	            rc.imagen = reader.result;
+	            
+	      			var img = new Image();
+	 						img.src = rc.imagen;
+							img.width = 800;
+							img.height= 600;
+							
+							fileDisplayArea1.appendChild(img);
+              
             }
             reader.readAsDataURL(file);     
           }else {
-            toastr.error("Error la Imagen supera los 512 KB");
+            toastr.error("Error la Imagen supera los 2 MB");
             return;
           }
         } else {
           //fileDisplayArea1.innerHTML = "File not supported!";
         }
       });   
-      });
+   });
 	
 	this.agregarImagen = function()
   { 	
+	  
  	  	var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
 	  	while (fileDisplayArea1.firstChild) {
 			    fileDisplayArea1.removeChild(fileDisplayArea1.firstChild);
@@ -815,44 +889,23 @@ angular.module("creditoMio")
     if (imagen == false) {
        toastr.error("Ninguna imagen agregada");
 
-    }else{
-    if (doc == undefined) {
-      toastr.error("Ningun documento agregado");
-
-    }else{
-     	 	// rc.imagen = imagen
-    
-		    rc.referencias = [];
-		    Meteor.call('getDocs', doc, function(error,result){
+    }
+		else{
+				loading(true);
+		    Meteor.call('setDocumentosCliente', rc.objeto_id, this.documento_id, imagen, function(error,result){
 		      if (result)
 		        {
-		          rc.documents.push({imagen: imagen, nombre: result.nombre});
+		          //ir por los documentos
+		          rc.documents = result;
 		          $scope.$apply();      
+		          loading(false);
 		        }
-		
 		    });
- 
-      }  
-    }
+    }  
     
     $("#modalDocumentoImagen").modal('hide');
            
   };
-
-  this.actDoc = function(doc,imagen)
-  {
-    Meteor.call('getDocs', doc, function(error,result){
-      if (result)
-        {
-          rc.objeto.profile.documentos.push({imagen: imagen, nombre: result.nombre});
-          $scope.$apply();      
-        }
-
-    });
-    
-    $("#modalDocumentoImagen").modal('hide');
-    //console.log(imagen,"programador estrella");
-  }
 
   this.getDocumentos= function(documento_id)
   {
@@ -862,12 +915,87 @@ angular.module("creditoMio")
     //rc.nota.unidad = Unidades.findOne(rc.nota.unidad_id);
   };
 
-  this.mostrarModal= function(img)
+  this.mostrarModal = function(id)
   {
-    var imagen = '<img class="img-responsive" src="'+img+'" style="margin:auto;">';
-    $('#imagenDiv').empty().append(imagen);
-    $("#myModal").modal('show');
+	  	Meteor.call('getDocumentoCliente', id, function(error,result){
+	      if (result)
+	        {
+	          var imagen = '<img class="img-responsive" src="'+result+'" style="margin:auto;">';
+				    $('#imagenDiv').empty().append(imagen);
+				    $("#myModal").modal('show');
+	        }
+	    });  
+    
   };
+  
+  this.borrarDoc = function(id)
+  {
+	  customConfirm('¿Estás seguro Eliminar el documento?', function() {
+	  
+    	Meteor.call('borrarDocumentoCliente', rc.objeto_id, id, function(error,result){
+	      if (result)
+	        {
+	          rc.documents = result;
+	          $scope.$apply();      
+	        }
+	    });    
+	    
+	  });  
+  };
+  
+  this.imprimirDoc = function(id) {
+
+			Meteor.call('getDocumentoCliente', id, function(error,result){
+	      if (result)
+        {
+						Meteor.call('imprimirImagenDocumento', result, function(error, response) {
+				       if(error)
+				       {
+				        console.log('ERROR :', error);
+				        return;
+				       }
+				       else
+				       {
+				              function b64toBlob(b64Data, contentType, sliceSize) {
+				                  contentType = contentType || '';
+				                  sliceSize = sliceSize || 512;
+				                
+				                  var byteCharacters = atob(b64Data);
+				                  var byteArrays = [];
+				                
+				                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+				                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+				                
+				                    var byteNumbers = new Array(slice.length);
+				                    for (var i = 0; i < slice.length; i++) {
+				                      byteNumbers[i] = slice.charCodeAt(i);
+				                    }
+				                
+				                    var byteArray = new Uint8Array(byteNumbers);
+				                
+				                    byteArrays.push(byteArray);
+				                  }
+				                    
+				                  var blob = new Blob(byteArrays, {type: contentType});
+				                  return blob;
+				              }
+				              
+				              var blob = b64toBlob(response, "application/docx");
+				              var url = window.URL.createObjectURL(blob);
+				              
+				              //console.log(url);
+				              var dlnk = document.getElementById('dwnldLnk');
+				
+				              dlnk.download = "imagenDocumento.docx"; 
+				              dlnk.href = url;
+				              dlnk.click();       
+				              window.URL.revokeObjectURL(url);
+				  
+				       }
+						});
+        }
+	    });  
+  }
 
   this.seleccionEstadoCivil = function(estadoCivil)
   {
@@ -936,55 +1064,6 @@ angular.module("creditoMio")
     	rc.empresa = Empresas.findOne(empresa_id);
 			this.nuevoEmpresa = false;
   };
-
-  this.imprimirDoc = function(imagen) {
-    console.log(imagen)
-      Meteor.call('imprimirImagenDocumento', imagen, function(error, response) {
-       if(error)
-       {
-        console.log('ERROR :', error);
-        return;
-       }
-       else
-       {
-              function b64toBlob(b64Data, contentType, sliceSize) {
-                  contentType = contentType || '';
-                  sliceSize = sliceSize || 512;
-                
-                  var byteCharacters = atob(b64Data);
-                  var byteArrays = [];
-                
-                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-                    var slice = byteCharacters.slice(offset, offset + sliceSize);
-                
-                    var byteNumbers = new Array(slice.length);
-                    for (var i = 0; i < slice.length; i++) {
-                      byteNumbers[i] = slice.charCodeAt(i);
-                    }
-                
-                    var byteArray = new Uint8Array(byteNumbers);
-                
-                    byteArrays.push(byteArray);
-                  }
-                    
-                  var blob = new Blob(byteArrays, {type: contentType});
-                  return blob;
-              }
-              
-              var blob = b64toBlob(response, "application/docx");
-              var url = window.URL.createObjectURL(blob);
-              
-              //console.log(url);
-              var dlnk = document.getElementById('dwnldLnk');
-
-              dlnk.download = "imagenDocumento.docx"; 
-              dlnk.href = url;
-              dlnk.click();       
-              window.URL.revokeObjectURL(url);
-  
-       }
-    });
-  }
 
   this.insertarAval = function()
   {
@@ -1112,8 +1191,5 @@ angular.module("creditoMio")
     this.num = a.num;
     this.actionAval = false;
   };
-  
-  
-
   
 };
