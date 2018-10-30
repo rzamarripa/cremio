@@ -100,11 +100,11 @@
 					    	</div>
 					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Capital Solicitado *</label>
-						    	<input id="capitalSolicitadoCreditoNuevo" name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" placeholder="Capital Solicitado" ng-model="ge.credito.capitalSolicitado" required="">
+						    	<input id="capitalSolicitado" name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" ng-model="ge.credito.capitalSolicitado" required="">
 					    	</div>
 					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
 						    	<label>Capital Solicitado *</label>
-						    	<select name="capitalSolicitadoCreditoNuevo" class="form-control" ng-model="ge.credito.capitalSolicitado" placeholder="Capital Solicitado" required="">
+						    	<select name="capitalSolicitadoCreditoNuevoV" class="form-control" ng-model="ge.credito.capitalSolicitado" placeholder="Capital Solicitado" required="">
 							    	<option value="1000">1000</option>
 							    	<option value="1500">1500</option>
 							    	<option value="2000">2000</option>
@@ -497,9 +497,7 @@
 												</p>
 											</div>
 										</div>
-				
 									</div>
-				
 						</div>	
 						
 						<div class="row">
@@ -743,6 +741,7 @@
 	      </div>	
 	      <div class="modal-footer">
 		      	<a	class="btn btn-success" ng-click="ge.validaCredenciales(ge.credentials)">Aceptar</a>
+<!-- 		      	<button type="button" ng-click="ge.validaCredenciales(ge.credentials)" class="btn btn-primary">Aceptar</button> -->
 		        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 		     </div>
      </div>

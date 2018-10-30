@@ -60,6 +60,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	rc.banderaContestar = false;
 	
+	rc.edad	= 0;
+	
 	rc.pago_id = "";
 	rc.pagos_ids = [];
 	
@@ -206,6 +208,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 			if (cli != undefined)
 			{
+					
+					rc.edad	= moment().diff(cli.profile.fechaNacimiento, 'years',false);
 								
 					var estadoCivilSeleccionado = EstadoCivil.findOne(cli.profile.estadoCivil_id);
 					
@@ -222,6 +226,13 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 								
 								if (nota.tipo == "Cuenta") {
 										rc.notaCuenta1 = nota;
+										
+										Meteor.call('getUsuario', nota.usuario_id,
+									     	function(err, result) {
+									      if(result){
+													nota.nombreCompleto = result.nombreCompleto;
+									      }
+								    });	
 										$("#myModal").modal(); 
 									}
 									else if (nota.tipo == "Cliente")
@@ -359,12 +370,13 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		historial : () => {
 			arreglo = [];
 			
-			var saldoPago 	= 0;
-			var saldoActual = 0; 
-			rc.saldo 				= 0;
-			rc.saldoGeneral = 0;
-			var credito 		= rc.credito
-			rc.saldoMultas 	= 0;
+			var saldoPago 			= 0;
+			var saldoActual 		= 0; 
+			rc.saldo 						= 0;
+			rc.saldoGeneral 		= 0;
+			rc.sumaNotaCredito 	= 0;
+			var credito 				= rc.credito
+			rc.saldoMultas 			= 0;
 
 			rc.abonosRecibos 					= 0;
 			rc.abonosCargorMoratorios = 0;
@@ -444,7 +456,10 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 							{
 									rc.abonosCargorMoratorios += pago.totalPago;
 							}
-															
+							
+							if (formaPago == 'Nota de Credito')
+									rc.sumaNotaCredito 	+= pago.totalPago;
+												
 							arreglo.push({saldo							: rc.saldo,
 														numeroPago 				: planPago.numeroPago,
 														cantidad 					: credito.numeroPagos,
@@ -1590,10 +1605,10 @@ if(estatus == 0){
 
 	this.imprimirHistorial= function(objeto,cliente,credito, saldoMultas, abonosRecibos, abonosCargorMoratorios, saldoGeneral) 
   {
-	    cliente = rc.datosCliente
+	    cliente = rc.datosCliente;
 	    objeto.objetoFinal = objeto[objeto.length - 1];
 			loading(true);
-			Meteor.call('imprimirHistorial', objeto, cliente, credito, 'pdf', rc.saldoMultas, rc.abonosRecibos, rc.abonosCargorMoratorios, rc.saldoGeneral, function(error, response) {
+			Meteor.call('imprimirHistorial', objeto, cliente, credito, 'pdf', rc.saldoMultas, rc.abonosRecibos, rc.abonosCargorMoratorios, rc.saldoGeneral, rc.sumaNotaCredito, function(error, response) {
 	
 				   if(error)
 				   {

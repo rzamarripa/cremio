@@ -379,14 +379,34 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		
 				_.each(configuracion.arregloTasa, function(elemento){
 						
-						if (rc.credito.duracionMeses == elemento.mes){
-								rc.credito.tasa = elemento.tasa;												
-						}	
+						if (rc.credito.capitalSolicitado == elemento.cantidad){
+								
+								switch(rc.credito.duracionMeses){
+									case "3": rc.credito.tasa = elemento.seis; break;
+									case "4": rc.credito.tasa = elemento.ocho; break;
+									case "5": rc.credito.tasa = elemento.diez; break;
+									case "6": rc.credito.tasa = elemento.doce; break;
+									case "7": rc.credito.tasa = elemento.catorce; break;
+									case "8": rc.credito.tasa = elemento.dieciseis; break;
+								}										
+						}		
 						
 				});
 				
+				if (rc.credito.tasa == 0)
+				{
+						toastr.warning("No se puede hacer un vale con tasa 0");
+						return;
+				}
+				
 				rc.credito.tipo = "vale";
-				rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;
+				
+				_.each(rc.tiposCredito, function(tc){
+						if (tc.tipoInteres == "Simple")
+								rc.credito.tipoCredito_id = tc._id;
+				});
+				
+				//rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;
 				
 				var fechaPrimerAbono = new Date();
 				var n = fechaPrimerAbono.getDate();
@@ -1113,13 +1133,32 @@ this.actualizarCredito = function(){
 		
 						_.each(configuracion.arregloTasa, function(elemento){
 								
-								if (rc.credito.duracionMeses == elemento.mes){
-										rc.credito.tasa = elemento.tasa;												
+								if (rc.credito.capitalSolicitado == elemento.cantidad){
+								
+										switch(rc.credito.duracionMeses){
+											case "3": rc.credito.tasa = elemento.seis; break;
+											case "4": rc.credito.tasa = elemento.ocho; break;
+											case "5": rc.credito.tasa = elemento.diez; break;
+											case "6": rc.credito.tasa = elemento.doce; break;
+											case "7": rc.credito.tasa = elemento.catorce; break;
+											case "8": rc.credito.tasa = elemento.dieciseis; break;
+										}										
 								}	
 								
 						});
-
-						rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;	//Ojo corregir
+						
+						if (rc.credito.tasa == 0)
+						{
+								toastr.warning("No se puede hacer un vale con tasa 0");
+								return;
+						}
+							
+						//rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;	//Ojo corregir
+						
+						_.each(rc.tiposCredito, function(tc){
+								if (tc.tipoInteres == "Simple")
+										rc.credito.tipoCredito_id = tc._id;
+						});
 						
 						var n = fechaPrimerAbono.getDate();
 						if (n >= 5 && n < 20)

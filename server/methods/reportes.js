@@ -5,9 +5,20 @@ Meteor.methods({
 			
 			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}).fetch();
 			
-			var cobranza = [];
+			var resultado = {};
 			
+			resultado.cobranza 					= [];
+			resultado.seguroDistribuidor = 0;
+			resultado.bonificaciones		= 0;
+						
 			_.each(cobranzaDiaria, function(cd){
+				
+					if (cd.seguro != undefined)
+							resultado.seguroDistribuidor += Number(parseFloat(cd.seguro).toFixed(2));
+					
+					if (cd.bonificacion != undefined)		
+							resultado.bonificaciones += Number(parseFloat(cd.bonificacion).toFixed(2));
+				
 					_.each(cd.planPagos, function(plan){
 						
 						if (plan.folioCredito != 0)
@@ -20,13 +31,14 @@ Meteor.methods({
 								
 								plan.folio = credito.folio;
 								plan.numeroPago = pp.numeroPago;
+								plan.tipoCredito	= pp.tipoCredito;
 								plan.numeroPagos = credito.numeroPagos;
 								plan.tipoIngreso = tipoIngreso.nombre;
 								if (cuenta != undefined)
 									 plan.tipoCuenta = cuenta.tipoCuenta;
 								
-								if (pp.movimiento == "Cargo Moratorio")
-									 plan.pagoCapital	= plan.totalPago;
+								//if (pp.movimiento == "Cargo Moratorio")
+								//	 plan.pagoCapital	= plan.totalPago;
 								
 								var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
 		  																{fields: {"profile.nombreCompleto": 1,
@@ -43,7 +55,9 @@ Meteor.methods({
 								plan.numeroCliente = user.profile.numeroCliente;	
 								plan.nombreCompleto = user.profile.nombre  + ' ' + user.profile.apellidoPaterno;
 								
-								cobranza.push(plan);
+								
+								
+								resultado.cobranza.push(plan);
 							
 						}
 						else
@@ -67,14 +81,14 @@ Meteor.methods({
 								plan.numeroCliente = "S/N";	
 								plan.nombreCompleto = cd.usuario_id;
 								
-								cobranza.push(plan);	
+								resultado.cobranza.push(plan);	
 							
 						}
 					})
 					
 			});
-						
-			return cobranza;
+									
+			return resultado;
 			
 	},
 	getBancos:function(fechaInicial, fechaFinal, sucursal_id){
@@ -539,7 +553,6 @@ Meteor.methods({
 			return pagos;
 	},	
 	
-	
 	ReporteCobranza: function (objeto,inicial,final,tiposIngreso) {
 	
 		//console.log(objeto,"creditos ")
@@ -588,12 +601,13 @@ Meteor.methods({
 		var fechaFinal = final;
 
     
-	  var suma = 0;
-		var sumaInter = 0;
-		var sumaIva = 0;
-		var sumaSeguro = 0;
-		var sumaCargosM = 0;
-		totalcobranza = 0;
+	  var suma 										= 0;
+		var sumaInter 							= 0;
+		var sumaIva 								= 0;
+		var sumaSeguro 							= 0;
+		var sumaSeguroDistribuidor 	= 0;
+		var sumaCargosM 						= 0;
+		totalcobranza 							= 0;
 		
 		
 	    _.each(objeto,function(item){
@@ -621,19 +635,20 @@ Meteor.methods({
 	      {
 	      	item.movimiento = "R";
 	      }
-	      else
+	      else if (item.descripcion == "Cargo Moratorio")
 	      {
-	      	item.movimiento = "C";
+	      	item.movimiento = "CM";
 	      	sumaCargosM += item.totalPago;
-
 	      }
 
 	       suma 				 += item.pagoCapital;
 	       sumaInter 		 += item.pagoInteres;
 	       sumaIva 			 += item.pagoIva;
 	       sumaSeguro 	 += item.pagoSeguro;
-	       
-	       totalcobranza += parseFloat(item.totalPago);
+	       	       
+
+	       if (item.tipoIngreso != 'NC.')
+		       	totalcobranza += parseFloat(item.totalPago);
 	       
 
 	        item.cargo = parseFloat(item.totalPago.toFixed(2))
@@ -647,7 +662,7 @@ Meteor.methods({
 	        item.pago = parseFloat(item.pagoCapital.toFixed(2))
 	        item.pago = formatCurrency(item.pago)
 	        if (item.folio < 10) {
-	 	 		item.folio = "0"+item.folio
+						 item.folio = "0"+item.folio
 	 	 	}
 	 	 	if (item.numeroPago < 10) {
 	 	 		item.numeroPago = "0"+item.numeroPago
@@ -1250,19 +1265,35 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
       return arr
     };
 
+		
+		
     params.datos = objParse(params.datos);
     params.datos.fechaReporte = moment().format('DD-MM-YYYY');  
     var templateType = (params.type === 'pdf') ? '.docx' : (params.type === 'excel' ? '.xlsx' : '.docx');
-    if(Meteor.isDevelopment){
+    /*
+if(Meteor.isDevelopment){
       var path = require('path');
       var publicPath = path.resolve('.').split('.meteor')[0];
       var templateRoute = publicPath + "public/plantillas/" + params.templateNombre + templateType;
     }else{
-      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/plantillas/';
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/plantillas/generados/';      
       var templateRoute = publicPath +  params.templateNombre + templateType;
     }
+*/
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/" + params.templateNombre + templateType;
+      //var produccionFoto = publicPath + "public/fotos/" + "FICHASOCIO";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "plantillas/" + params.templateNombre + templateType;
+      //var produccionFoto = publicPath + "fotos/" + "FICHASOCIO";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
 
-    var content = fs.readFileSync(templateRoute, "binary");
+    var content = fs.readFileSync(produccion, "binary");
     var res = new future();
     var zip = new JSZip(content);
     var doc = new Docxtemplater().loadZip(zip).setOptions({
@@ -1281,7 +1312,7 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
     doc.render();
     var buf = doc.getZip().generate({ type: "nodebuffer" });
     if (params.type == 'pdf') {
-      var rutaOutput = publicPath + (Meteor.isDevelopment ? ".outputs/" : "generados/") + params.reportNombre + moment().format('x') + templateType;
+      var rutaOutput = (Meteor.isDevelopment ? publicPath +  ".outputs/" : produccionSalida) + params.reportNombre + moment().format('x') + templateType;
       fs.writeFileSync(rutaOutput, buf);
       unoconv.convert(rutaOutput, 'pdf', function(err, result) {
         if(!err){

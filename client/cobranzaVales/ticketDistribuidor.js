@@ -58,10 +58,6 @@ function TicketDistribuidorCtrl($scope, $meteor, $reactive,  $state, $stateParam
 	}
 	
 	
-	
-	
-	
-	
 /*
 		
 	this.subscribe('creditos',()=>{

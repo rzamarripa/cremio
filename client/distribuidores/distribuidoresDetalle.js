@@ -73,6 +73,8 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 	rc.cargosMoratorios = 0;
 	rc.bonificacion = 0;
 	
+	rc.edad	= 0;
+	
 	rc.mostrarPP = false;
 	
 	rc.distribuidor_id = "";
@@ -327,6 +329,8 @@ notaPerfil: () => {
 			if (cli != undefined)
 			{
 					
+					rc.edad	= moment().diff(cli.profile.fechaNacimiento, 'years',false);
+					
 					var notas = Notas.find({cliente_id	: rc.distribuidor_id,
 																	estatus 		: true,
 																	tipo				: {$in : ["Cliente", "Cuenta"]}}).fetch();
@@ -346,6 +350,12 @@ notaPerfil: () => {
 								if (nota.tipo == "Cuenta") {
 										//$("#notaPerfil").modal("hide");
 										rc.notaCuenta1 = nota;
+										Meteor.call('getUsuario', nota.usuario_id,
+									     	function(err, result) {
+									      if(result){
+													nota.nombreCompleto = result.nombreCompleto;
+									      }
+								    });	
 										$("#myModal").modal(); 
 									}
 									else if (nota.tipo == "Cliente")
@@ -553,35 +563,37 @@ var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}, {sort
 			_.each(rc.getReactively("planPagosHistorial"), function(planPago){	
 				if(planPago.descripcion == "Recibo")
 					rc.saldo += Number(parseFloat(planPago.cargo).toFixed(2));
-				if(planPago.descripcion == "Cargo Moratorio")
-					rc.saldoMultas += Number(parseFloat(planPago.importeRegular).toFixed(2));
+				
+				if (planPago.descripcion == "Cargo Moratorio")
+					rc.saldoMultas 	+= Number(planPago.importeRegular + planPago.pago);	
+					
 			});
-			
-			rc.saldo 				= Number(parseFloat(rc.saldo).toFixed(2));
-			rc.saldoMultas 	= Number(parseFloat(rc.saldoMultas).toFixed(2));
+
 			rc.pagos_ids = [];
 			
 			_.each(rc.getReactively("planPagosHistorial"), function(planPago, index){
-				
-					
-				if (planPago.descripcion=="Cargo Moratorio")
+									
+				var sa 			 	= 0;
+				var cargoCM 	= 0;
+				if (planPago.descripcion == 'Recibo')
 				{
-						rc.saldo += planPago.cargo
-				}		
-					
-				 var sa = 0;
-				 if (planPago.descripcion == 'Recibo')
-							sa = Number(parseFloat( planPago.cargo - (planPago.pagoInteres + planPago.pagoIva + planPago.pagoCapital +	planPago.pagoSeguro) ).toFixed(2)); 
-				 else if (planPago.descripcion == 'Cargo Moratorio')
-				 			sa = Number(parseFloat(planPago.cargo - planPago.pago).toFixed(2));
-
+					 sa = Number(parseFloat( planPago.cargo - (planPago.pagoInteres + planPago.pagoIva + planPago.pagoCapital +	planPago.pagoSeguro) ).toFixed(2)); 
+					 planPago.fechaLimite.setHours(0,0,0,0);
+				}
+				else if (planPago.descripcion == 'Cargo Moratorio')
+				{
+					 	sa = Number(parseFloat(planPago.importeRegular).toFixed(2));
+					 	planPago.fechaLimite.setHours(1,0,0,0);
+					 	cargoCM = Number(planPago.importeRegular + planPago.pago);
+				}
+	
 				arreglo.push({saldo							: rc.saldo,
 											numeroPago  			: planPago.numeroPago,
 											cantidad 					: rc.credito.numeroPagos,
 											fechaSolicito 		: rc.credito.fechaSolicito,
 											fecha 						: planPago.fechaLimite,
 											pago  						: 0, 
-											cargo 						: planPago.cargo,
+											cargo 						: planPago.descripcion == "Recibo"? planPago.cargo: cargoCM,
 											movimiento 				: planPago.movimiento,
 											planPago_id 			: planPago._id,
 											credito_id 				: planPago.credito_id,
@@ -595,16 +607,17 @@ var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}, {sort
 			  		
 				if (planPago.pagos.length > 0)
 				{
-
+						
 					_.each(planPago.pagos,function (pago) {
-							rc.pagos_ids.push(pago.pago_id);
+						 if (pago.estatus != 3)
+								rc.pagos_ids.push(pago.pago_id);
 					});	
-					
 					
 					_.each(planPago.pagos,function (pago) {
 						
 							//Ir por la Forma de Pago
-							
+						if (pago.estatus != 3)
+						{	
 							var formaPago = "";
 							var pag = Pagos.findOne(pago.pago_id);
 							if (pag != undefined)
@@ -615,11 +628,17 @@ var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}, {sort
 							}
 							
 							if (planPago.descripcion == 'Recibo')
-								rc.abonosRecibos += pago.totalPago;
+							{
+									rc.abonosRecibos += pago.totalPago;
+							}
 							else if (planPago.descripcion == "Cargo Moratorio")	
-								rc.abonosCargorMoratorios += pago.totalPago;
+							{
+									rc.abonosCargorMoratorios += pago.totalPago;
+							}
 							
-							rc.saldo -= pago.totalPago
+							if (formaPago == 'Nota de Credito')
+									rc.sumaNotaCredito 	+= pago.totalPago;
+												
 							arreglo.push({saldo							: rc.saldo,
 														numeroPago 				: planPago.numeroPago,
 														cantidad 					: credito.numeroPagos,
@@ -627,89 +646,47 @@ var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}, {sort
 														fecha 						: pago.fechaPago,
 														pago  						: pago.totalPago, 
 														cargo 						: 0,
-														movimiento 				: planPago.descripcion == "Cargo Moratorio"? "Abono de Cargo Moratorio": "Abono",
+														movimiento 				: planPago.descripcion == "Cargo Moratorio"? "Abono a CM": "Abono",
 														planPago_id 			: planPago._id,
 														credito_id 				: planPago.credito_id,
-														descripcion 			: planPago.descripcion == "Cargo Moratorio"? "Abono de Cargo Moratorio": "Abono",
+														descripcion 			: planPago.descripcion == "Cargo Moratorio"? "Abono A CM": "Abono",
 														importe 					: planPago.importeRegular,
 														pagos 						: planPago.pagos,
 														notaCredito				: formaPago == 'Nota de Credito' ? pago.totalPago : 0,
 														saldoActualizado	: 0
 					  	});
+					  }	
 					})
 					
-					
 				}
-				
-				
 					
 			});
 		
-		
-			/*
-if(this.getReactively("credito_id")){
-        var filtrado = [];
-        var flags = {
-          abonoKey: undefined,
-          multaKey:undefined
-        };
-        _.each(arreglo, function(pago,key){
-          if(pago.descripcion == "Cargo Moratorio"){
-            flags.multaKey = key;
-          }
-          if(pago.descripcion == "Recibo"){
-            flags.abonoKey = key;
-          }
-          if(pago.descripcion == "Abono de Multa"){
-            //console.log(flags);
-            //console.log(arreglo[flags.multaKey].saldoActualizado);
-            if(arreglo[flags.multaKey].saldoActualizado){
-              arreglo[flags.multaKey].saldoActualizado -= pago.pago;
-            }else{
-              arreglo[flags.multaKey].saldoActualizado = arreglo[flags.multaKey].cargo - pago.pago;
-            }
-          }
-          if(pago.descripcion == "Abono"){
-            if(arreglo[flags.abonoKey].saldoActualizado){
-              arreglo[flags.abonoKey].saldoActualizado -= pago.pago;
-            }else{
-              arreglo[flags.abonoKey].saldoActualizado = arreglo[flags.abonoKey].cargo - pago.pago;
-            }
-          }
-          if(pago.credito_id == rc.credito_id){
-            filtrado.push(pago);
-          }
-          if(pago.numeroPago % 2 == 0)
-            {
-              
-              pago.tipoPar = "par"
-            }
-            else
-            {
-              pago.tipoPar = "impar"
-            }
-
-        })
-
-        //console.log(filtrado,"filtrado")
-        return filtrado;
-      }
-*/
-			//console.log("el ARREGLO del helper historial",arreglo)
 			
+			rc.saldoGeneral 	= (rc.saldo + rc.saldoMultas ) - ( rc.abonosRecibos + rc.abonosCargorMoratorios );
+							
+			arreglo.sort(function(a,b){		
+				return a.numeroPago - b.numeroPago || new Date(a.fecha) - new Date(b.fecha) ;
+			});
+
+			_.each(arreglo, function(item, index){
+					if (index > 0)
+					{
+							if (item.descripcion == "Cargo Moratorio")
+									rc.saldo += Number(parseFloat(item.cargo).toFixed(2));
+							else if  (item.movimiento == "Abono" || item.movimiento == "Abono A CM")
+									rc.saldo -= Number(parseFloat(item.pago).toFixed(2));
+					}
+					item.saldo = rc.saldo;
+			});
+		
+		
 			return arreglo;
 		},
 		historialCreditos : () => {
 			var creditos = Creditos.find({estatus: {$in: [4,5]}}, {sort : {fechaSolicito: -1}}).fetch();
 			if(creditos != undefined){
-				
-				/*
-_.each(creditos, function(c){
-						c.tipoCredito = TiposCredito.findOne(c.tipoCredito_id).nombre;
-						
-				});
-*/
-				
+								
 				rc.creditos_id = _.pluck(creditos, "_id");
 			}	
 			return creditos;
@@ -744,32 +721,6 @@ _.each(creditos, function(c){
 
   		return imagen
 		},
-		/*
-credito : () => {
-				var creditos = Creditos.find({estatus: {$in: [4,5]}}).fetch();
-				if(creditos != undefined){
-					rc.creditos_id = _.pluck(creditos, "_id");
-				}			
-			 if (rc.getReactively("seleccionCredito_id") != undefined)
-					 rc.credito = _.find(rc.creditos, function (c) { return c._id == rc.getReactively("seleccionCredito_id"); })	 	
-
-		 return rc.credito;	
-		},
-*/
-		
-	/*
-	pago : () => {
-					
-			var pago;
-				
-			if (rc.getReactively("fechaPago_id") != undefined)
-				 pago = _.find(rc.pagos, function (p) { return p._id == rc.getReactively("fechaPago_id"); })	 	
-			
-			 console.log("Pago:", pago);
-			 
-			return pago; 
-		},
-*/
 				
 	});
 
@@ -786,7 +737,6 @@ credito : () => {
 
   };
 
-	//console.log("nota ",rc.notaCuenta1)
 	this.actualizar = function(cliente,form){
 
 		//console.log(cliente);
@@ -816,39 +766,7 @@ credito : () => {
 			rc.cliente.profile.fotografia = data;
 		});
 	};
-	
-	/*
-this.tieneFoto = function(sexo, foto){
-		if(foto === undefined){
-			if(sexo === "Masculino")
-				return "img/badmenprofile.png";
-			else if(sexo === "Femenino"){
-				return "img/badgirlprofile.png";
-			}else{
-				return "img/badprofile.png";
-			}
-		}else{
-			return foto;
-		}
-	}
-	
-	this.tieneFoto = function(foto, sexo){
 		
-	  if(foto === undefined){
-		  if(sexo === "Masculino")
-			  return "img/badmenprofile.png";
-			else if(sexo === "Femenino"){
-				return "img/badgirlprofile.png";
-			}else{
-				return "img/badprofile.png";
-			}
-	  }else{
-		  return foto;
-	  }
-  };
-*/
-
-	
 	this.masInformacion = function(cliente){
 			this.masInfo 						= !this.masInfo;
 			this.solicitudesCre 		= false;
@@ -988,56 +906,6 @@ this.tieneFoto = function(sexo, foto){
 
 	};
 	
-/*
-	this.imprimirDocumento = function(aprobado){
-			Meteor.call('imprimirDocumentos', aprobado, function(error, response) {
-				   if(error)
-				   {
-					    console.log('ERROR :', error);
-					    return;
-				   }
-				   else
-				   {
-					   
-			 				function b64toBlob(b64Data, contentType, sliceSize) {
-								  contentType = contentType || '';
-								  sliceSize = sliceSize || 512;
-								
-								  var byteCharacters = atob(b64Data);
-								  var byteArrays = [];
-								
-								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-								    var byteNumbers = new Array(slice.length);
-								    for (var i = 0; i < slice.length; i++) {
-								      byteNumbers[i] = slice.charCodeAt(i);
-								    }
-								
-								    var byteArray = new Uint8Array(byteNumbers);
-								
-								    byteArrays.push(byteArray);
-								  }
-								    
-								  var blob = new Blob(byteArrays, {type: contentType});
-								  return blob;
-							}
-							
-							var blob = b64toBlob(response, "application/docx");
-						  var url = window.URL.createObjectURL(blob);
-						  
-						  //console.log(url);
-						  var dlnk = document.getElementById('dwnldLnk');
-					    dlnk.download = "Documentos.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
-		  
-				   }
-				});	
-	};	
-*/
-	
 	this.cancelarCredito = function(motivo, form){
 			
 			if(form.$invalid){
@@ -1051,17 +919,52 @@ this.tieneFoto = function(sexo, foto){
 			$("#cancelaCredito").modal('hide');
 	};
 	
-	
 	this.cancelarSeleccion = function(aprobado){
 			 rc.cancelacion = aprobado;
 			 rc.motivo = "";
 	};
-	
 
 	this.mostrarNotaCliente = function(){
-		$("#modalCliente").modal();
-		rc.nota = {};
-		document.getElementById("cuentaNota").style.visibility = "hidden";
+		
+			var user = Meteor.users.findOne(rc.distribuidor_id);
+			if (user.profile.estatusCredito == undefined || user.profile.estatusCredito == 0)
+			{
+					toastr.warning("No se ha autorizado al distribuidor...");
+					return;
+				
+			}
+			else if (user.profile.estatusCredito == 2)
+			{
+					toastr.error("Se rechazó al distribuidor...");
+					return;
+			}
+			else
+			{
+					$("#modalCliente").modal();
+					rc.nota = {};
+					document.getElementById("cuentaNota").style.visibility = "hidden";							
+			}
+		
+	};
+	
+	this.mostrarNotaCredito = function(id){
+		
+			var user = Meteor.users.findOne(rc.distribuidor_id);
+			if (user.profile.estatusCredito == undefined || user.profile.estatusCredito == 0)
+			{
+					toastr.warning("No se ha autorizado al distribuidor...");
+					return;
+				
+			}
+			else if (user.profile.estatusCredito == 2)
+			{
+					toastr.error("Se rechazó al distribuidor...");
+					return;
+			}
+			else
+			{
+					$state.go("root.generarNotaCredito",{objeto_id : rc.distribuidor_id});
+			}
 		
 	};
 
@@ -1088,21 +991,6 @@ this.tieneFoto = function(sexo, foto){
 		rc.pagoPlanPago = pago.planPagos;
 		
 		$("#modalPagos").modal();
-					
-		/*
-rc.credito = credito;
-		rc.credito_id = credito._id;
-		$("#modalpagos").modal();
-		credito.pagos = Pagos.find({credito_id: rc.getReactively("credito_id")}).fetch()
-		rc.pagos = credito.pagos
-		rc.openModal = true
-		////console.log(rc.pagos,"pagos")
-		//console.log(rc.historial,"historial act")
-			_.each(rc.getReactively("historial"),function (pago) {
-
-			});
-*/
-
 	};
 	
 	this.modalDoc = function(id)
@@ -1436,9 +1324,26 @@ rc.credito = credito;
 	
 	this.crearCargoMoratorio = function()
 	{
-			rc.recibo._id= "";		
-			rc.recibo.importe = 0.00;
-			$("#modalCargosMoratorios").modal('show');
+			var user = Meteor.users.findOne(rc.distribuidor_id);
+			if (user.profile.estatusCredito == undefined || user.profile.estatusCredito == 0)
+			{
+					toastr.warning("No se ha autorizado al distribuidor...");
+					return;
+				
+			}
+			else if (user.profile.estatusCredito == 2)
+			{
+					toastr.error("Se rechazó al distribuidor...");
+					return;
+			}
+			else
+			{
+					rc.recibo._id= "";		
+					rc.recibo.importe = 0.00;
+					$("#modalCargosMoratorios").modal('show');						
+			}
+			
+			
 	};
 	
 	this.guardarCargoMoratorio = function(objeto)
@@ -1615,171 +1520,6 @@ rc.credito = credito;
 					console.log("avales",rc.avalesCliente)
 
 			});
-		};
-
-	this.imprimirContratos = function(contrato,cliente,avales){
-	 	toastr.error('No existe contrato aun.');
-	 // 	avales = rc.avalesCliente
-
-	
-		// 		contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
-	 //  		    Meteor.call('getPeople',cliente,contrato._id, function(error, result){           					
-		// 			if (result)
-		// 			{
-		// 					rc.datosCliente = result.profile
-									
-		// 		console.log(rc.datosCliente,"el clientaso")				
-		// 		//console.log("contrato",contrato)
-		// 		console.log("avalesssss",rc.avalesCliente)
-		// 		Meteor.call('contratos', contrato, contrato._id,rc.datosCliente,contrato.planPagos,avales, function(error, response) {
-				  
-		// 		   if(error)
-		// 		   {
-		// 			    console.log('ERROR :', error);
-		// 			    return;
-		// 		   }
-		// 		   else
-		// 		   {
-					   
-		// 	 				function b64toBlob(b64Data, contentType, sliceSize) {
-		// 						  contentType = contentType || '';
-		// 						  sliceSize = sliceSize || 512;
-								
-		// 						  var byteCharacters = atob(b64Data);
-		// 						  var byteArrays = [];
-								
-		// 						  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-		// 						    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-		// 						    var byteNumbers = new Array(slice.length);
-		// 						    for (var i = 0; i < slice.length; i++) {
-		// 						      byteNumbers[i] = slice.charCodeAt(i);
-		// 						    }
-								
-		// 						    var byteArray = new Uint8Array(byteNumbers);
-								
-		// 						    byteArrays.push(byteArray);
-		// 						  }
-								    
-		// 						  var blob = new Blob(byteArrays, {type: contentType});
-		// 						  return blob;
-		// 					}
-							
-		// 					var blob = b64toBlob(response, "application/docx");
-		// 				  var url = window.URL.createObjectURL(blob);
-						  
-		// 				  //console.log(url);
-		// 				//  CONTRATO SIMPLE ////////////////////////////////////////////////////
-		// 				  if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
-		// 				  console.log("INTERES","INTERES:",contrato.tipoInteres.tipoInteres)
-		// 				   if (contrato.tipoInteres.tipoInteres == "Simple") {
-		// 				  var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOINTERES.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 					}
-		// 				  if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-		// 				  var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOINTERESSSI.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 					}
-		// 					if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-		// 				  var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOINTERESCOMPUESTO.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 					}
-		// 				}
-		// 				////////////////////////////////////////////////////////////////////////////////////////////////////
-		// 				///////CONTRATO SOLIDARIO//////////////////////////////////////////
-
-		// 				if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
-		// 					 console.log("OBLIGADO SOLIDARIO","INTERES:",contrato.tipoInteres.tipoInteres);
-		// 					 if (contrato.tipoInteres.tipoInteres == "Simple") {
-		// 					var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 				  }
-		// 				   if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-		// 					var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOOBLIGADOSOLIDARIOCOMPUESTO.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 				  }
-		// 				   if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-		// 					var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOOBLIGADOSOLIDARIOSSI.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 				  }
-
-		// 				}
-		// 					if (contrato.garantias && contrato.tipoGarantia == "general") {
-		// 						console.log("HIPOTECARIO","INTERES:",contrato.tipoInteres.tipoInteres)
-		// 						if (contrato.tipoInteres.tipoInteres == "Simple") {
-		// 					var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOHIPOTECARIO.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 				}
-		// 					if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-		// 					var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOHIPOTECARIOSSI.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 				}
-		// 					if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-		// 					var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOHIPOTECARIOCOMPUESTO.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 				}
-
-		// 				}
-		// 					if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
-		// 						console.log("PRENDARIA","INTERES:",contrato.tipoInteres.tipoInteres)
-		// 						if (contrato.tipoInteres.tipoInteres == "Simple") {
-		// 					var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOGARANTIAPRENDARIA.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 					}
-		// 						if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-		// 					var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOGARANTIAPRENDARIACOMPUESTO.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 					}
-		// 						if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
-		// 					var dlnk = document.getElementById('dwnldLnk');
-		// 			    dlnk.download = "CONTRATOGARANTIAPRENDARIASSI.docx"; 
-		// 					dlnk.href = url;
-		// 					dlnk.click();		    
-		// 				  window.URL.revokeObjectURL(url);
-		// 					}
-		// 				}
-		// 								}//else
-		// 			});//meteorcontratos
-
-		// 	}//if
-		// 	//$scope.$apply();	
-		// });
-
-// $scope.$apply();
-
 		};
 
 	this.recuperarCredito= function(id){
@@ -2029,7 +1769,7 @@ var fecha = new Date();
 	
   }
   
-  this.imprimirContrato= function()
+  this.imprimirContrato = function()
 	{
 		 
 		 loading(true);
@@ -2080,6 +1820,48 @@ var fecha = new Date();
     loading(false);
 	
 	};
+	
+	this.imprimirTablaAmortizacion = function()
+	{
+		 
+		 var datos = {};
+		 
+		 loading(true);
+			Meteor.call('report', {
+	      templateNombre: "TablaAmortizacionBigBale",
+	      reportNombre: "TablaAmortizacionBigBaleOut",
+	      type: 'pdf',  
+	      datos: datos,
+		    }, function(err, file) {
+		      if(!err){
+		        downloadFile(file);		        
+		      }else{
+		        toastr.warning("Error al generar el reporte");
+		      }
+		  });	
+		 
+		 loading(false);
+	
+	};
+	
+	this.imprimirHistorial = function(objeto,cliente,credito) 
+  {
+    cliente = rc.cliente.profile;			
+		loading(true);
+		Meteor.call('imprimirHistorialVales', objeto, cliente, credito, 'pdf', rc.saldoMultas, rc.abonosRecibos, rc.abonosCargorMoratorios, rc.saldoGeneral, rc.sumaNotaCredito,  function(error, response) {
+			   if(error)
+			   {
+			    console.log('ERROR :', error);
+			    loading(false);
+			    return;
+			   }
+			   else
+			   {
+				 		downloadFile(response);
+				 		loading(false);
+				 }
+		});
+  };
 	
 	this.mostrarTodos = function(valor)
 	{
@@ -2166,24 +1948,25 @@ var fecha = new Date();
 			
 			arreglo = [];
 			
-			var saldoPago = 0;
-			var saldoActual = 0; 
-			rc.saldo = 0;	
-			var credito = rc.credito
-			rc.saldoMultas = 0;
+			var saldoPago 			= 0;
+			var saldoActual 		= 0; 
+			rc.saldo 						= 0;	
+			rc.saldoGeneral 		= 0;
+			rc.sumaNotaCredito 	= 0;
+			var credito 				= rc.credito
+			rc.saldoMultas 			= 0;
 
 			rc.abonosRecibos 					= 0;
 			rc.abonosCargorMoratorios = 0;
-
+			
 			_.each(planes, function(planPago){	
 				if(planPago.descripcion == "Recibo")
 					rc.saldo += Number(parseFloat(planPago.cargo).toFixed(2));
 				if(planPago.descripcion == "Cargo Moratorio")
-					rc.saldoMultas += Number(parseFloat(planPago.importeRegular).toFixed(2));
-					
+					//rc.saldoMultas += Number(parseFloat(planPago.importeRegular).toFixed(2));
+					rc.saldoMultas 	+= Number(planPago.importeRegular + planPago.pago);	
 					
 				planPago.cantidad = credito.numerosPagos;
-				
 			});
 			
 			rc.saldo 				= Number(parseFloat(rc.saldo).toFixed(2));
@@ -2192,17 +1975,19 @@ var fecha = new Date();
 			
 			_.each(planes, function(planPago, index){
 				
-					
-				if (planPago.descripcion=="Cargo Moratorio")
-				{
-						rc.saldo += planPago.cargo
+				var sa 				= 0;
+				var cargoCM 	= 0;
+			  if (planPago.descripcion == 'Recibo')
+			  {
+						sa = Number(parseFloat( planPago.cargo - (planPago.pagoInteres + planPago.pagoIva + planPago.pagoCapital +	planPago.pagoSeguro) ).toFixed(2)); 
+						planPago.fechaLimite.setHours(0,0,0,0);
 				}		
-					
-				 var sa = 0;
-				 if (planPago.descripcion == 'Recibo')
-							sa = Number(parseFloat( planPago.cargo - (planPago.pagoInteres + planPago.pagoIva + planPago.pagoCapital +	planPago.pagoSeguro) ).toFixed(2)); 
-				 else if (planPago.descripcion == 'Cargo Moratorio')
-				 			sa = Number(parseFloat(planPago.cargo - planPago.pago).toFixed(2));
+			  else if (planPago.descripcion == 'Cargo Moratorio')
+			  {
+				  	sa = Number(parseFloat(planPago.importeRegular).toFixed(2));
+				  	planPago.fechaLimite.setHours(1,0,0,0);
+				  	cargoCM = Number(planPago.importeRegular + planPago.pago);
+			  }
 
 				arreglo.push({saldo							: rc.saldo,
 											numeroPago  			: planPago.numeroPago,
@@ -2210,7 +1995,7 @@ var fecha = new Date();
 											fechaSolicito 		: rc.credito.fechaSolicito,
 											fecha 						: planPago.fechaLimite,
 											pago  						: 0, 
-											cargo 						: planPago.cargo,
+											cargo 						: planPago.descripcion == "Recibo"? planPago.importeRegular: cargoCM,
 											movimiento 				: planPago.movimiento,
 											planPago_id 			: planPago._id,
 											credito_id 				: planPago.credito_id,
@@ -2233,7 +2018,6 @@ var fecha = new Date();
 					_.each(planPago.pagos,function (pago) {
 						
 							//Ir por la Forma de Pago
-							
 							var formaPago = "";
 							var pag = Pagos.findOne(pago.pago_id);
 							if (pag != undefined)
@@ -2247,8 +2031,10 @@ var fecha = new Date();
 								rc.abonosRecibos += pago.totalPago;
 							else if (planPago.descripcion == "Cargo Moratorio")	
 								rc.abonosCargorMoratorios += pago.totalPago;
+								
+							if (formaPago == 'Nota de Credito')
+									rc.sumaNotaCredito 	+= pago.totalPago;	
 							
-							rc.saldo -= pago.totalPago
 							arreglo.push({saldo							: rc.saldo,
 														numeroPago 				: planPago.numeroPago,
 														cantidad 					: credito.numeroPagos,
@@ -2256,25 +2042,35 @@ var fecha = new Date();
 														fecha 						: pago.fechaPago,
 														pago  						: pago.totalPago, 
 														cargo 						: 0,
-														movimiento 				: planPago.descripcion == "Cargo Moratorio"? "Abono de Cargo Moratorio": "Abono",
+														movimiento 				: planPago.descripcion == "Cargo Moratorio"? "Abono a CM": "Abono",
 														planPago_id 			: planPago._id,
 														credito_id 				: planPago.credito_id,
-														descripcion 			: planPago.descripcion == "Cargo Moratorio"? "Abono de Cargo Moratorio": "Abono",
+														descripcion 			: planPago.descripcion == "Cargo Moratorio"? "Abono a CM": "Abono",
 														importe 					: planPago.importeRegular,
 														pagos 						: planPago.pagos,
 														notaCredito				: formaPago == 'Nota de Credito' ? pago.totalPago : 0,
 														saldoActualizado	: 0
 					  	});
 					})
-					
-					
 				}
-				
-				
-					
 			});
 			
-			console.log("Areglo:", arreglo);
+			rc.saldoGeneral 	= (rc.saldo + rc.saldoMultas ) - ( rc.abonosRecibos + rc.abonosCargorMoratorios );
+
+			arreglo.sort(function(a,b){		
+				return a.numeroPago - b.numeroPago || new Date(a.fecha) - new Date(b.fecha) ;
+			});
+			
+			_.each(arreglo, function(item, index){
+					if (index > 0)
+					{
+							if (item.descripcion == "Cargo Moratorio")
+									rc.saldo += Number(parseFloat(item.cargo).toFixed(2));
+							else if  (item.movimiento == "Abono" || item.movimiento == "Abono a CM")
+									rc.saldo -= Number(parseFloat(item.pago).toFixed(2));
+					}
+					item.saldo = rc.saldo;
+			});
 			
 			rc.historial = arreglo;
 			

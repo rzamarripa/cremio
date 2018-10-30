@@ -1,0 +1,145 @@
+<h2>Gerentes</h2>
+<div class="row">
+	<div class="col-sm-12">
+		<a class="btn btn-{{ger.nuevo == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
+			href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ng-click="ger.Nuevo()">
+		  {{ger.nuevo == true ? 'Nuevo' : 'Cancelar'}}
+		</a>
+		<div class="collapse" id="collapseExample">
+			<form name="form" class="form-horizontal" role="form" novalidate>
+				
+				<div class="well">
+				
+					<div class="row">
+					    <div class="col-sm-12">
+							    <div class="row">
+								    <div class="col-sm-3" valida>					    
+								    	<label>Nombre *</label>
+								    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="ger.objeto.profile.nombre" required capitalize>
+							    	</div>
+							    	<div class="col-sm-3" valida>
+								    	<label>Apellido Paterno *</label>
+								    	<input name="apPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ger.objeto.profile.apPaterno" required capitalize>
+							    	</div>
+							    	<div class="col-sm-3">					    
+								    	<label>Apellido Materno</label>
+								    	<input name="apMaterno"  type="text" class="form-control" placeholder="Apellido Materno" ng-model="ger.objeto.profile.apMaterno" capitalize>
+							    	</div>
+							    	<div class="col-sm-3" valida>
+									    <label for="sexo">Sexo *</label>
+									    <select name="sexo" ng-model="ger.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" required>
+										    <option value="Masculino">Masculino</option>
+										    <option value="Femenino">Femenino</option>
+											</select>
+							    	</div>
+							    </div>
+							    <div class="row">	
+							    	<div class="col-sm-3" valida>					    
+								    	<label>Usuario *</label>
+								    	<input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="ger.objeto.username" required>
+							    	</div>
+							    	<div class="col-sm-3" valida>					    										
+								    	<label>Contraseña *</label>																	
+								    	<input name="password" type="password" class="form-control" placeholder="Contraseña" ng-model="ger.objeto.password" required ng-disabled="ger.cambiarContrasena">
+							    	</div>
+							    	<div class="col-sm-3" valida>					    										
+								    	<label>Confirmar Contraseña *</label>																	
+								    	<input name="confirmarpassword" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="ger.objeto.confirmarpassword" required ng-disabled="ger.cambiarContrasena">
+							    	</div>
+							    	<div class="col-sm-3">			
+											<br>		    
+											<button type="button" class="btn btn-primary" ng-click="ger.cambiarPassword()" ng-show="!ger.action">Cambiar Contraseña</button>
+										</div>
+							    </div>
+							    <div class="row">
+								    <div class="col-sm-3" valida>					    										
+								    	<label>Contraseña Desbloqueo *</label>																	
+								    	<input name="passwordDesbloqueo" type="password" class="form-control" placeholder="Contraseña Desbloqueo" ng-model="ger.objeto.profile.passwordDesbloqueo" required>
+							    	</div>
+							    </div>	
+					    </div>
+					  </div>
+				
+				</div>
+		    <div class="row">
+					<div class="col-sm-12">
+						<input type="submit" ng-click="ger.guardar(ger.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="ger.action" valida-form formulario="form">
+						<input type="submit" ng-click="ger.actualizar(ger.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!ger.action" valida-form formulario="form">				
+					</div>
+				</div>	  
+			</form>
+		</div>
+ 	</div>
+</div>
+<br/>
+<!-- List -->
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="5%"><div class="text-center">Número</div></th>
+					<th width="20%"><div class="text-center">Nombre</div></th>	
+					<th width="20%"><div class="text-center">Usuario</div></th>	
+					<th width="20%"><div class="text-center">Sucursal</div></th>	
+				    <th width="10%">
+						<div class="text-center">
+							Estatus
+						</div>
+					</th>
+					<th width="8%">
+						<div class="text-center">
+							Acciones
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--{{getDeptoAcademicoById(objeto.deptoAcademico_id).descripcionCorta}-->
+		    <tr ng-repeat="objeto in ger.arreglo">
+			    <td>{{$index + 1}}</td>
+			    <td>{{objeto.profile.nombreCompleto}}</td>
+			    <td>{{objeto.username}}</td>
+			    <td>{{ger.getSucursal(objeto.profile.sucursal_id)}}</td>
+			    <td> 
+				    <div class="text-center">
+				    	<span ng-if="objeto.profile.estatus" class="label label-success">
+							  Activo
+							</span>
+							<span ng-if="!objeto.profile.estatus" class="label label-danger">
+							  Inactivo
+							</span>
+				    </div>
+			    </td>			   			   
+			    <td class="col-sm-1">
+				    <div class="text-center">
+					    <div class="btn-group">
+							  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							  </button>
+							  <ul class="dropdown-menu dropdown-menu-right text-left">
+							    <li><a href="#" ng-click="ger.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+							    <li><a href="#" ng-click="ger.cambiarEstatus(objeto._id)"><i class="fa fa-trash"></i> 
+								    		<span ng-if="objeto.profile.estatus">
+											  	Desactivar
+												</span>
+											  <span ng-if="!objeto.profile.estatus">
+											   	Activar
+												</span>
+							    		</a>
+							    </li>
+							  </ul>
+							</div>
+				    </div>				    
+			    </td>
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+
+
+

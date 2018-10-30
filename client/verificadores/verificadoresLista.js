@@ -37,6 +37,26 @@ angular.module("creditoMio")
 		},
 	});
 	
+	this.cambiarEstatus = function(id)
+	{
+			var objeto = Meteor.users.findOne({_id:id});
+			if(objeto.profile.estatus == true)
+				objeto.profile.estatus = false;
+			else
+				objeto.profile.estatus = true;
+			
+			Meteor.call('cambiaEstatusUsuario', id, objeto.profile.estatus, function(error, response) {
+	
+				   if(error)
+				   {
+				    console.log('ERROR :', error);
+				    return;
+				   }
+
+			});		
+			
+  };	  
+	
 	this.tieneFoto = function(sexo, foto){
 	  if(foto === undefined){
 		  if(sexo === "Masculino")

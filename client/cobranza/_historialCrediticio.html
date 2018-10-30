@@ -24,7 +24,7 @@
 					<td >{{credito.saldoActual | currency}}</td>
 					<td>
 						<div class="text-center">
-								<button type="button" class="btn btn-link" ng-click="cob.verPagos(credito)">Ver Pagos</button>
+								<button type="button" class="btn btn-xs btn-link" ng-click="cob.verPagos(credito)">Ver Pagos</button>
 						</div>						
 					</td>
 					<!-- Pagos cliente -->
@@ -102,6 +102,14 @@
 															</td>
 															<td style="text-align: right">
 																{{cob.abonosCargorMoratorios | currency}}
+															</td>
+														</tr>
+														<tr>
+															<td>	
+																Nota de Créditos 
+															</td>
+															<td style="text-align: right">
+																{{cob.sumaNotaCredito | currency}}
 															</td>
 														</tr>
 														<tr>

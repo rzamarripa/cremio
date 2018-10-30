@@ -21,7 +21,7 @@
 </div>
 <br/>
   <div class="col-sm-12">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-condensed">
       <thead>
         <tr>
         <th width="5%"><div class="text-center">No.</div></th>
@@ -60,14 +60,14 @@
           <td>
             <div class="text-center">
               <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <span class="caret"></span>
                   <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right text-left">
                   <li><a href="#" ui-sref="root.editarVerificador({objeto_id : objeto._id})" ><i class="fa fa-pencil"></i> Editar</a></li>
                   <li><a href="#" ng-click="lver.cambiarEstatus(objeto._id)">
-                    <i class="fa fa-{{objeto.estatus ? 'trash' : 'check' }}"></i> {{objeto.estatus ? "Desactivar" : "Activar" }}</a>
+                    <i class="fa fa-{{objeto.estatus ? 'trash' : 'check' }}"></i> {{objeto.profile.estatus ? "Desactivar" : "Activar" }}</a>
                   </li>
                 </ul>
               </div>

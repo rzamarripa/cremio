@@ -16,6 +16,7 @@ angular.module("creditoMio")
 	rc.cliente._id = "" ;
 	rc.datosCliente = "";
 	
+	rc.tipoIngreso = {};
 	rc.estatusFecha ;
 		
 	this.subscribe('tiposIngreso',()=>{
@@ -182,9 +183,15 @@ angular.module("creditoMio")
 			
 			$( "#entregar" ).prop( "disabled", true );
 			
+			
+			if (rc.tipoIngreso._id == undefined){
+					toastr.error('Seleccione una forma de pago');
+					$( "#entregar" ).prop( "disabled", false );
+					return;
+			}
+			
 			//Validar que no sea Nota de Credito ni refinanciamiento
 			var ti = TiposIngreso.findOne(rc.tipoIngreso._id);
-
 			if (ti.nombre == "Nota de Credito" || ti.nombre == "REFINANCIAMIENTO")
 			{
 					toastr.error('Error No se puede entregar un crédito con esta forma de pago.');
@@ -194,7 +201,6 @@ angular.module("creditoMio")
 			
 			if (rc.credito.esRefinanciado == undefined)
 			{
-				
 					if(form.$invalid || rc.suma != rc.credito.capitalSolicitado){
 						toastr.error('Error verifique la cantidad a entregar.');
 						$( "#entregar" ).prop( "disabled", false );

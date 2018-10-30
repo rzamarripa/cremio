@@ -38,7 +38,8 @@
 			    	</div>
 -->
             
-          </div>         
+          </div>        
+           
           <div class="row" ng-if="ecCtrl.credito.avales_ids.length > 0">
 							<div class="col-sm-6">          	
 								<label>AVAL:</label>
@@ -46,6 +47,20 @@
 							</div>
           </div> 
       </div>
+      
+      <div class="well">      
+          <div class="row ">
+            <div class="col-sm-3">
+              <label>Cantidad:</label><br>
+							<h4>{{ecCtrl.credito.capitalSolicitado | currency}}</h4>
+            </div>
+            <div class="col-sm-3">
+              <label>Plazo:</label><br>
+							<h4>{{ecCtrl.credito.duracionMeses}} Meses</h4>
+            </div>
+          </div>
+      </div>     
+      
     </div>
     <div ng-show = "!ecCtrl.verDiaPago">
         <form name="form" class="form-horizontal" role="form">

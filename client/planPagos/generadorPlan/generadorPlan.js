@@ -231,14 +231,31 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 				var configuracion = Configuraciones.findOne();
 				
 				_.each(configuracion.arregloTasa, function(elemento){
-						
-						if (rc.credito.duracionMeses == elemento.mes){
-								rc.credito.tasa = elemento.tasa;												
+
+						if (rc.credito.capitalSolicitado == elemento.cantidad){
+								
+								switch(rc.credito.duracionMeses){
+									case "3": rc.credito.tasa = elemento.seis; break;
+									case "4": rc.credito.tasa = elemento.ocho; break;
+									case "5": rc.credito.tasa = elemento.diez; break;
+									case "6": rc.credito.tasa = elemento.doce; break;
+									case "7": rc.credito.tasa = elemento.catorce; break;
+									case "8": rc.credito.tasa = elemento.dieciseis; break;
+								}										
 						}	
 						
 				});
 				
-				rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;	//Ojo corregir
+				if (rc.credito.tasa == 0)
+				{
+						toastr.warning("No se puede hacer un vale con tasa 0");
+						return;
+				}
+				
+				_.each(rc.tiposCredito, function(tc){
+						if (tc.tipoInteres == "Simple")
+								rc.credito.tipoCredito_id = tc._id;
+				});
 				
 				var n = fechaPrimerAbono.getDate();
 				if (n >= 5 && n < 20)
@@ -341,7 +358,7 @@ _.each(result,function (pago) {
 		}	
 		if (rc.cliente.profile.renta == true && this.avales.length == 0 && rc.cliente.roles != "Distribuidor")		
 		{
- 				customConfirm('El Cliente es de renta, ¿Desea continuar con la solicitud?', function() {		    	
+ 				customConfirm('El Cliente es de renta, O sin Avales, ¿Desea continuar con la solicitud?', function() {		    	
 		    		 rc.credentials = {};
    				 	 $("#modalActivarFecha").modal();
  		    });
@@ -368,21 +385,39 @@ _.each(result,function (pago) {
 		}
 
 		loading(true);
-
   	if (rc.cliente.roles == "Distribuidor") {
 	  	
 			var configuracion = Configuraciones.findOne();
 	
 			_.each(configuracion.arregloTasa, function(elemento){
 					
-					if (rc.credito.duracionMeses == elemento.mes){
-							rc.credito.tasa = elemento.tasa;												
+					if (rc.credito.capitalSolicitado == elemento.cantidad){
+								
+							switch(rc.credito.duracionMeses){
+								case "3": rc.credito.tasa = elemento.seis; break;
+								case "4": rc.credito.tasa = elemento.ocho; break;
+								case "5": rc.credito.tasa = elemento.diez; break;
+								case "6": rc.credito.tasa = elemento.doce; break;
+								case "7": rc.credito.tasa = elemento.catorce; break;
+								case "8": rc.credito.tasa = elemento.dieciseis; break;
+							}										
 					}	
-					
 			});
 			
 			rc.credito.tipo = "vale";
-			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;
+			
+			if (rc.credito.tasa == 0)
+			{
+					toastr.warning("No se puede hacer un vale con tasa 0");
+					return;
+			}
+			
+			_.each(rc.tiposCredito, function(tc){
+						if (tc.tipoInteres == "Simple")
+								rc.credito.tipoCredito_id = tc._id;
+			});
+			
+			//rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;
 			
 			var fechaPrimerAbono = new Date();
 			var n = fechaPrimerAbono.getDate();
@@ -1045,7 +1080,164 @@ _.each(result,function (pago) {
 	    Meteor.call('validarCredenciales', credenciales, usuario.profile.sucursal_id , function(err, result) {
 	      if (result) {
 	        
-	        var usuario = Meteor.users.findOne(Meteor.userId());
+	        	//var usuario = Meteor.users.findOne(Meteor.userId());
+						if (usuario.roles[0] == "Cajero" && (rc.credito.tasa < usuario.profile.tasaMinima || rc.credito.tasa > usuario.profile.tasaMaxima) && rc.cliente.roles != "Distribuidor")
+						{
+								toastr.warning('La tasa no es válida. debe ser entre ' + usuario.profile.tasaMinima + " y " +  usuario.profile.tasaMaxima);
+								return;	
+						}
+						
+						if (rc.cliente.roles == "Distribuidor") {
+							this.credito.periodoPago = "Quincenal";
+							
+							if (rc.beneficiario == undefined || rc.beneficiario.nombreCompleto == undefined)
+							{
+									toastr.error("Seleccione un beneficiario.");
+									return;					
+							}
+							
+						}
+				
+						loading(true);
+				  	if (rc.cliente.roles == "Distribuidor") {
+					  	
+							var configuracion = Configuraciones.findOne();
+					
+							_.each(configuracion.arregloTasa, function(elemento){
+									
+									if (rc.credito.capitalSolicitado == elemento.cantidad){
+												
+											switch(rc.credito.duracionMeses){
+												case "3": rc.credito.tasa = elemento.seis; break;
+												case "4": rc.credito.tasa = elemento.ocho; break;
+												case "5": rc.credito.tasa = elemento.diez; break;
+												case "6": rc.credito.tasa = elemento.doce; break;
+												case "7": rc.credito.tasa = elemento.catorce; break;
+												case "8": rc.credito.tasa = elemento.dieciseis; break;
+											}										
+									}	
+							});
+							
+							rc.credito.tipo = "vale";
+							
+							if (rc.credito.tasa == 0)
+							{
+									toastr.warning("No se puede hacer un vale con tasa 0");
+									return;
+							}
+							
+							_.each(rc.tiposCredito, function(tc){
+										if (tc.tipoInteres == "Simple")
+												rc.credito.tipoCredito_id = tc._id;
+							});
+							
+							//rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;
+							
+							var fechaPrimerAbono = new Date();
+							var n = fechaPrimerAbono.getDate();
+							if (n >= 5 && n < 20)
+							{
+									fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),1,0,0,0,0);		
+							}
+							else 
+							{
+									if (n < 5)
+											fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),16,0,0,0,0);
+									else if (n >= 20)
+									   	fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth() + 1,16,0,0,0,0);								
+							}
+							
+							rc.credito.primerAbono = fechaPrimerAbono;
+				
+						}
+				  	else if (rc.cliente.roles == "Cliente") {
+				
+							rc.credito.tipo = "creditoP";
+							rc.credito.tasa = rc.credito.tasa;
+				
+						}
+				
+						var credito = {
+							cliente_id 								: rc.cliente._id,
+							tipoCredito_id 						: rc.credito.tipoCredito_id,
+							fechaSolicito 						: new Date(),
+							duracionMeses 						: Number(rc.credito.duracionMeses),
+							capitalSolicitado 				: Number(rc.credito.capitalSolicitado),
+							adeudoInicial 						: Number(rc.credito.capitalSolicitado),
+							saldoActual 							: Number(rc.credito.capitalSolicitado),
+							periodoPago 							: rc.credito.periodoPago,
+							fechaPrimerAbono 					: rc.credito.primerAbono,
+							multasPendientes 					: 0,
+							saldoMultas 							: 0.00,
+							saldoRecibo 							: 0.00,
+							estatus 									: 1,
+							requiereVerificacion			: rc.credito.requiereVerificacion,
+							requiereVerificacionAval	: rc.credito.requiereVerificacionAval,
+							sucursal_id 							: Meteor.user().profile.sucursal_id,
+							fechaVerificacion					: rc.credito.fechaVerificacion,
+							turno 										: rc.credito.turno,
+							tipoGarantia 							: rc.credito.tipoGarantia,
+							tasa											: rc.credito.tasa,
+							conSeguro 								: rc.credito.conSeguro,
+							seguro										: rc.credito.seguro,
+							tipo 											: rc.credito.tipo,
+							beneficiario_id 					: rc.beneficiario._id
+						};
+				
+						if (rc.cliente.roles == "Distribuidor") {
+				
+							rc.credito.tipo = "vale"
+							rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+				
+							credito.estatus = 1;
+						}
+						else if (rc.cliente.roles == 'Cliente') {
+				
+							rc.credito.tipo = "creditoP";
+							
+							credito.avales = angular.copy(rc.avales);
+						
+							//Duda se guardan los dos???
+							
+							if (rc.credito.tipoGarantia == "mobiliaria")
+									credito.garantias = angular.copy(rc.garantias);
+							else
+									credito.garantias = angular.copy(rc.garantiasGeneral);
+								
+						}
+				
+						//Cambie el metodo	
+						
+						Meteor.apply('generarCreditoPeticion', [credito], function(error, result){
+							if(result == "hecho"){
+								
+								$('#modalActivarFecha').modal('hide');
+								if ($('.modal-backdrop').is(':visible')) {
+								  $('body').removeClass('modal-open'); 
+								  $('.modal-backdrop').remove(); 
+								};
+								
+								toastr.success('Se ha guardado la solicitud correctamente');
+								rc.planPagos = [];
+								rc.avales = [];
+								if (rc.cliente.roles == "Distribuidor") {
+									$state.go("root.distribuidoresDetalle",{objeto_id : rc.cliente._id});
+								}
+								if (rc.cliente.roles == "Cliente") {
+									$state.go("root.clienteDetalle",{objeto_id : rc.cliente._id});
+								}
+								
+							}
+							$scope.$apply();
+							/////////////////AQUI
+							
+							loading(false);
+				
+				});
+	        	
+	        	
+	        /*
+var usuario = Meteor.users.findOne(Meteor.userId());
 					if (usuario.roles[0] == "Cajero" && (rc.credito.tasa < usuario.profile.tasaMinima || rc.credito.tasa > usuario.profile.tasaMaxima) && rc.cliente.roles != "Distribuidor")
 					{
 							toastr.warning('La tasa no es válida. debe ser entre ' + usuario.profile.tasaMinima + " y " +  usuario.profile.tasaMaxima);
@@ -1092,7 +1284,8 @@ _.each(result,function (pago) {
 						
 						rc.credito.primerAbono = fechaPrimerAbono;
 
-					}else if (rc.cliente.roles == "Cliente") {
+					}
+			  	else if (rc.cliente.roles == "Cliente") {
 
 						rc.credito.tipo = "creditoP";
 						rc.credito.tasa = rc.credito.tasa;
@@ -1172,6 +1365,7 @@ _.each(result,function (pago) {
 						}
 							
 					});
+*/
 	        //loading(false);
 	        
 	      }
@@ -1266,13 +1460,22 @@ _.each(result,function (pago) {
 		rc.beneficiario = objeto;
 	};
 	
-	
 	$(document).ready(function() {
 		
 		//Quita el mouse wheels 
-		document.getElementById('capitalSolicitadoCreditoNuevo').onwheel = function(){ return false; }
-		document.getElementById('tasa').onwheel = function(){ return false; }
-		document.getElementById('meses').onwheel = function(){ return false; }
+		try
+		{
+				var cs = document.getElementById('capitalSolicitado').onwheel = function(){ return false; }
+				//console.log(cs);
+				document.getElementById('tasa').onwheel = function(){ return false; }
+				document.getElementById('meses').onwheel = function(){ return false; }	
+		}
+		catch(error)
+		{
+				console.log(error);
+				
+		}
+
 
 	});
  

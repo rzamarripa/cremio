@@ -17,6 +17,7 @@ angular.module("creditoMio")
 	rc.datosCliente = ""
 	
 	rc.estatusFecha ;
+	rc.tipoIngreso = {};
 	
 	this.subscribe('tiposIngreso',()=>{
 		return [{
@@ -188,19 +189,21 @@ if(this.validar.contrato!=true || this.validar.ficha!=true || this.validar.pagar
 			}
 */
 			
+			if (rc.tipoIngreso._id == undefined){
+				toastr.error('Seleccione una forma de pago');
+				$( "#entregar" ).prop( "disabled", false );
+				return;
+			}
+			
 			//Validar que no sea Nota de Credito ni refinanciamiento
-			//var ti = TiposIngreso.findOne(rc.tipoIngreso._id);
-/*
-
+			var ti = TiposIngreso.findOne(rc.tipoIngreso._id);
 			if (ti.nombre == "Nota de Credito" || ti.nombre == "REFINANCIAMIENTO")
 			{
 					toastr.error('Error No se puede entregar un crédito con esta forma de pago.');
 					return;
-			}
-*/			
+			}			
 			
-			/*
-if (rc.credito.esRefinanciado == undefined)
+			if (rc.credito.esRefinanciado == undefined)
 			{
 					if(form.$invalid || rc.suma != rc.credito.capitalSolicitado){
 						toastr.error('Error verifique la cantidad a entregar.');
@@ -216,7 +219,6 @@ if (rc.credito.esRefinanciado == undefined)
 						return;
 					}
 			}
-*/
 
 
 			
@@ -230,7 +232,7 @@ if (rc.credito.esRefinanciado == undefined)
 					rc.suma = 0;
 					$( "#entregar" ).prop( "disabled", false );
 					return;
-			}			
+			}	
 			
 			
 			//Validar que el beneficiario no revase el limite de credito
@@ -261,7 +263,6 @@ if (rc.credito.esRefinanciado == undefined)
 								//Imprimir el ticket
 								var url = $state.href("anon.ticketEntregaVale", { credito_id: rc.credito._id }, { newTab: true });
 								window.open(url, '_blank');
-								
 								
 								toastr.success('Operacion Realizada.');
 								$state.go("root.distribuidoresDetalle",{objeto_id : rc.credito.cliente_id});

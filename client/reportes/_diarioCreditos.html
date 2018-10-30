@@ -5,27 +5,25 @@
 				Reporte de Créditos y Vales Entregados
 		</h1>
 	</div>
-	<div class="col-xs-14 col-sm-6 col-md-6 col-lg-6">
+</div>
+<div class="row">	
+	<div class="col-xs-14 col-sm-6 col-md-6 col-lg-12">
 			<ul id="sparks" class="">
 				<li class="sparks-info">
-					<h5>Solicitado Vales<span class="txt-color-red" style="text-align: right">{{re.totalSolicitadoVales | currency}}</span></h5>
+					<h5>Total Solicitado <span class="txt-color-black" style="text-align: right">{{re.totalSolicitadoCreditos + re.totalSolicitadoVales | currency}}</span></h5>
 				</li>	
 			  </li>
 			  <li class="sparks-info">
-					<h5>A Pagar Vales <span class="txt-color-green" style="text-align: right">{{re.totalPagarVales | currency}}</span></h5>
-				</li>
-				<li class="sparks-info">
-					<h5>Solicitado Créditos<span class="txt-color-red" style="text-align: right">{{re.totalSolicitadoCreditos | currency}}</span></h5>
-				</li>	
-			  </li>
-			  <li class="sparks-info">
-					<h5>A Pagar Creditos <span class="txt-color-green" style="text-align: right">{{re.totalPagarCreditos | currency}}</span></h5>
+					<h5>Total a Pagar <span class="txt-color-black" style="text-align: right">{{re.totalPagarCreditos + re.totalPagarVales | currency}}</span></h5>
 				</li>
 			  <li class="sparks-info">
-			    	<h5>Num. Créditos <span class="txt-color-red" style="text-align: center;">{{re.numeroCreditos }}</span></h5>
+			    	<h5>Num. Créditos <span class="txt-color-black" style="text-align: center;">{{re.numeroCreditos }}</span></h5>
 			  </li>
 			  <li class="sparks-info">
-			    	<h5>Num. Vales <span class="txt-color-red" style="text-align: center;">{{re.numeroVales }}</span></h5>
+			    	<h5>Num. Vales <span class="txt-color-black" style="text-align: center;">{{re.numeroVales }}</span></h5>
+			  </li>
+			  <li class="sparks-info">
+			    	<h5>Total <span class="txt-color-black" style="text-align: center;">{{re.numeroVales + re.numeroCreditos}}</span></h5>
 			  </li>
 			</ul>
 	</div>
@@ -50,6 +48,74 @@
 			<input type="button" class="btn btn-primary" ng-click="re.imprimirReporteCreditos(re.creditosEntregados)" value="Imprimir" />
 		</div>	
 	</div>	
+	<div class="row">
+		
+		<div class="col-sm-3">
+	      <div class="panel panel-info">
+	          <div class="panel-heading">
+	              <div class="row">
+	                  <div class="col-xs-3">
+	                      <i class="fa fa-dollar fa-3x"></i>
+	                  </div>
+	                  <div class="col-xs-9 text-right">
+	                      <div class="huge">{{re.totalSolicitadoCreditos | currency}}</div>
+	                      <div>Solicitado Créditos</div>
+	                  </div>
+	              </div>
+	          </div>
+	      </div>
+	  </div>
+	  
+	  <div class="col-sm-3">
+	      <div class="panel panel-success">
+	          <div class="panel-heading">
+	              <div class="row">
+	                  <div class="col-xs-3">
+	                      <i class="fa fa-dollar fa-3x"></i>
+	                  </div>
+	                  <div class="col-xs-9 text-right">
+	                      <div class="huge">{{re.totalPagarCreditos | currency}}</div>
+	                      <div>A Pagar Créditos</div>
+	                  </div>
+	              </div>
+	          </div>
+	      </div>
+	  </div>
+		
+		<div class="col-sm-3">
+	      <div class="panel panel-info">
+	          <div class="panel-heading">
+	              <div class="row">
+	                  <div class="col-xs-3">
+	                      <i class="fa fa-dollar fa-3x"></i>
+	                  </div>
+	                  <div class="col-xs-9 text-right">
+	                      <div class="huge">{{re.totalSolicitadoVales | currency}}</div>
+	                      <div>Solicitado Vales</div>
+	                  </div>
+	              </div>
+	          </div>
+	      </div>
+	  </div>
+	  
+	  <div class="col-sm-3">
+		      <div class="panel panel-success">
+		          <div class="panel-heading">
+		              <div class="row">
+		                  <div class="col-xs-3">
+		                      <i class="fa fa-dollar fa-3x"></i>
+		                  </div>
+		                  <div class="col-xs-9 text-right">
+		                      <div class="huge">{{re.totalPagarVales | currency}}</div>
+		                      <div>A Pagar Vales</div>
+		                  </div>
+		              </div>
+		          </div>
+		      </div>
+		  </div>
+		</div>
+	</div>  
+
 </div>
 <div class="row">
 	<div class="col-sm-12" >

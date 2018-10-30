@@ -1,23 +1,31 @@
 angular
   .module('creditoMio')
-  .controller('SucursalesCtrl', SucursalesCtrl);
+  .controller('GerentesCtrl', GerentesCtrl);
  
-function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams) {
+function GerentesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams) {
 	
 	let rc = $reactive(this).attach($scope);
 	this.parametros = $stateParams;
 	rc.action = true;  
   rc.nuevo = true;
 	
+	this.cambiarContrasena = true;
 	
 	this.subscribe('sucursales', function(){
 		return [{}]
+	});
+	
+	this.subscribe('clientes',()=>{
+		return [{ roles : ["Gerente"] }]
 	});
 
 	
   this.helpers({
 	  sucursales : () => {
 		  return Sucursales.find();
+	  },
+	  arreglo : () => {
+		  return Meteor.users.find({roles : ["Gerente"]});
 	  },
   });
  
@@ -97,7 +105,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 	
 	this.editar = function(id)
 	{
-			this.objeto = Sucursales.findOne({_id:id});
+			this.objeto = Meteor.users.findOne({_id:id});
 	    this.action = false;
 	    $('.collapse').collapse('show');
 	    rc.nuevo = false;
@@ -162,13 +170,32 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 
 	this.cambiarEstatus = function(id)
 	{
-			var objeto = Sucursales.findOne({_id:id});
-			if(objeto.estatus == true)
-				objeto.estatus = false;
-			else
-				objeto.estatus = true;
+			var objeto = Meteor.users.findOne({_id:id});
 			
-			Secciones.update({_id:id}, {$set : {estatus : objeto.estatus}});	
+			if(objeto.profile.estatus == true)
+				objeto.profile.estatus = false;
+			else
+				objeto.profile.estatus = true;
+			
+			Meteor.call('cambiaEstatusUsuario', id, objeto.profile.estatus, function(error, response) {
+	
+				   if(error)
+				   {
+				    console.log('ERROR :', error);
+				    return;
+				   }
+			});		
 	};
+	
+	this.getSucursal = function(id)
+	{
+			objeto = Sucursales.findOne({_id:id});	    
+	    return objeto.nombreSucursal
+	};
+	
+	this.cambiarPassword = function()
+  {
+      this.cambiarContrasena = !this.cambiarContrasena; 
+  }
 		
 }

@@ -126,6 +126,12 @@ Meteor.methods({
 		
 		return user._id;
 	},
+  cambiaEstatusUsuario: function (id, estatus) {
+
+		Meteor.users.update({_id: id},{$set :  {"profile.estatus" : estatus}});
+
+		return true;
+	},
   validarCliente: function (nombreCompleto) {	
 	  var user = Meteor.users.find({"profile.nombreCompleto" : nombreCompleto, roles: ["Cliente"]} ).fetch();
 	  

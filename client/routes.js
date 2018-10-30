@@ -55,7 +55,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				'logout': ['$meteor', '$state', 'toastr', function ($meteor, $state, toastr) {
 					return $meteor.logout().then(
 						function () {
-							toastr.success("Vuelva pronto.");
+							//toastr.success("Vuelva pronto.");
 							$state.go('anon.login');
 						},
 						function (error) {
@@ -290,6 +290,16 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			url: '/sucursales',
 			templateUrl: 'client/sucursales/sucursales.ng.html',
 			controller: 'SucursalesCtrl as suc',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.gerentes', {
+			url: '/gerentes',
+			templateUrl: 'client/gerentes/gerentes.ng.html',
+			controller: 'GerentesCtrl as ger',
 			resolve: {
 				"currentUser": ["$meteor", function($meteor){
 					return $meteor.requireUser();

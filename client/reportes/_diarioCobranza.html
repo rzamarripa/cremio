@@ -5,25 +5,33 @@
 				Reporte Diario de Cobranza
 		</h1>
 	</div>
-	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
-		<ul id="sparks" class="">
+</div>
+<div class="row">	
+	<div class="col-sm-12">
+		<ul id="sparks">
 			<li class="sparks-info">
-				<h5>Total Capital <span class="txt-color-green" style="text-align: right">{{re.sumaCapital | currency}}</span></h5>
+				<h5>Capital <span class="txt-color-green" style="text-align: left">{{re.sumaCapital | currency}}</span></h5>
 			</li>	
 			<li class="sparks-info">
-				<h5>Total Intereses <span class="txt-color-red" style="text-align: right">{{re.sumaInteres | currency}}</span></h5>
+				<h5>Intereses <span class="txt-color-red" style="text-align: left">{{re.sumaInteres | currency}}</span></h5>
 			</li>
 			<li class="sparks-info">
-				<h5>Total IVA <span class="txt-color-blue" style="text-align: right">{{re.sumaIva | currency}}</span></h5>
+				<h5>IVA <span class="txt-color-blue" style="text-align: left">{{re.sumaIva | currency}}</span></h5>
 			</li>
 			<li class="sparks-info">
-				<h5>Total Seguro <span class="txt-color-yellow" style="text-align: right">{{re.sumaSeguro | currency}}</span></h5>	
+				<h5>Seguro <span class="txt-color-yellow" style="text-align: left">{{re.sumaSeguro | currency}}</span></h5>	
 			</li>
 			<li class="sparks-info">
-				<h5>Total Cargo M. <span class="txt-color-purple" style="text-align: right">{{re.sumaCargoMoratorio | currency}}</span></h5>	
+				<h5>Seguro Distribuidor <span class="txt-color-yellow" style="text-align: left">{{re.sumaSeguroDistribuidor | currency}}</span></h5>	
 			</li>
 			<li class="sparks-info">
-				<h5>Total Cobranza <span class="txt-color-gray" style="text-align: right">{{re.totalCobranza | currency}}</span></h5>
+				<h5>Bonificaciones <span class="txt-color-green" style="text-align: left">{{re.sumaBonificaciones | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Cargos Moratorios <span class="txt-color-purple" style="text-align: left">{{re.sumaCargoMoratorio | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Total Cobranza <span class="txt-color-gray" style="text-align: left">{{re.totalCobranza + re.sumaSeguroDistribuidor | currency}}</span></h5>
 			</li>	
 		</ul>
 	</div>
@@ -47,22 +55,55 @@
 			<input type="button" class="btn btn-primary" ng-click="re.diarioCobranza()" value="Buscar" />
 			<input type="button" class="btn btn-primary" ng-click="re.imprimirReporteCobranza(re.planPagos)" value="Imprimir" />
 		</div>	
-		<div class="col-sm-4">
-			<table class="table">
-				<tbody>
-					<tr ng-repeat = "tipo in re.arregloTiposIngresosobjetos">
-						<td style="font-size: small"><a href="" ng-click = "re.filtrarTipoPago(tipo.tipoPago)">{{tipo.tipoPago}}</a></td>
-						<td style="font-size: small; text-align: right">{{tipo.total | currency}}</td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td style="font-size: small"><a href="" ng-click = "re.Total()">TOTAL</a></td>
-						<td style="font-size: small; text-align: right">{{re.totalCobranza | currency}}</td>
-					</tr>	
-				</tfoot>	
-			</table>
-		</div>	
+	</div>
+	<div class="row">
+			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-3">
+	      <div class="panel panel-info">
+	          <div class="panel-heading">
+	              <div class="row">
+	                  <div class="col-xs-3">
+	                      <i class="fa fa-dollar fa-3x"></i>
+	                  </div>
+	                  <div class="col-xs-9 text-right">
+	                      <div class="huge">{{re.sumaCreditos | currency}}</div>
+	                      <div>Créditos</div>
+	                  </div>
+	              </div>
+	          </div>
+	      </div>
+			</div>      
+
+			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-3"> 
+		      <div class="panel panel-success">
+		          <div class="panel-heading">
+		              <div class="row">
+		                  <div class="col-xs-3">
+		                      <i class="fa fa-dollar fa-3x"></i>
+		                  </div>
+		                  <div class="col-xs-9 text-right">
+		                      <div class="huge">{{re.sumaVales | currency}}</div>
+		                      <div>Vales</div>
+		                  </div>
+		              </div>
+		          </div>
+		      </div>
+		  </div>
+			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-6">
+				<table class="table">
+					<tbody>
+						<tr ng-repeat = "tipo in re.arregloTiposIngresosobjetos">
+							<td style="font-size: small"><a href="" ng-click = "re.filtrarTipoPago(tipo.tipoPago)">{{tipo.tipoPago}}</a></td>
+							<td style="font-size: small; text-align: right">{{tipo.total | currency}}</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td style="font-size: small"><a href="" ng-click = "re.Total()">TOTAL</a></td>
+							<td style="font-size: small; text-align: right">{{re.totalCobranza | currency}}</td>
+						</tr>	
+					</tfoot>	
+				</table>
+			</div>	
 	</div>
 </div>
 <div class="well">

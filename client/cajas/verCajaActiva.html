@@ -86,7 +86,7 @@
 										    <li ng-if="mov.origen == 'Pago de Cliente' || mov.origen == 'Pago de Distribuidor'">
 										    		<a ui-sref="anon.imprimirTicket({pago_id:mov.pago._id})" target="_blank"><i class="fa fa-file-text-o"></i> Ticket</a>
 										    </li>
-										    <li ng-if="currentUser.roles[0] == 'Gerente' && (mov.origen == 'Pago de Cliente' || mov.origen == 'Pago de Distribuidor' || mov.origen == 'Entrega de Credito' || mov.origen == 'Pago de Sistema')">
+										    <li ng-if="currentUser.roles[0] == 'Gerente' && (mov.origen == 'Pago de Cliente' || mov.origen == 'Pago de Distribuidor' || mov.origen == 'Entrega de Credito' || mov.origen == 'Entrega de Vale' || mov.origen == 'Pago de Sistema')">
 										    		<a href="#" ng-click="mov.origen =='Pago de Cliente' || mov.origen == 'Pago de Distribuidor' || mov.origen == 'Pago de Sistema' ?vca.cancelarPago(mov.pago,1):vca.cancelarPago(mov,2)"><i class="fa fa-trash"></i> Cancelar</a>
 										    </li>
 										    

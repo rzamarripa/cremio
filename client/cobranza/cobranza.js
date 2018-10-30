@@ -178,12 +178,13 @@ angular.module("creditoMio")
       
       arreglo = [];
 			
-			var saldoPago 	= 0;
-			var saldoActual = 0; 
-			rc.saldo 				= 0;	
-			rc.saldoGeneral = 0;
-			var credito 		= rc.credito
-			rc.saldoMultas 	= 0;
+			var saldoPago 			= 0;
+			var saldoActual 		= 0; 
+			rc.saldo 						= 0;
+			rc.saldoGeneral 		= 0;
+			rc.sumaNotaCredito 	= 0;
+			var credito 				= rc.credito
+			rc.saldoMultas 			= 0;
 			
 			rc.abonosRecibos 					= 0;
 			rc.abonosCargorMoratorios = 0;
@@ -263,6 +264,8 @@ angular.module("creditoMio")
 							{
 									rc.abonosCargorMoratorios += pago.totalPago;
 							}	
+							if (formaPago == 'Nota de Credito')
+									rc.sumaNotaCredito 	+= pago.totalPago;
 							
 							arreglo.push({saldo							: rc.saldo,
 														numeroPago 				: planPago.numeroPago,
@@ -1246,7 +1249,7 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
   {
     	cliente = rc.cliente.profile;			
 			loading(true);
-			Meteor.call('imprimirHistorial', objeto, cliente, credito, 'pdf', rc.saldoMultas, rc.abonosRecibos, rc.abonosCargorMoratorios, rc.saldoGeneral, function(error, response) {
+			Meteor.call('imprimirHistorial', objeto, cliente, credito, 'pdf', rc.saldoMultas, rc.abonosRecibos, rc.abonosCargorMoratorios, rc.saldoGeneral, rc.sumaNotaCredito, function(error, response) {
 	
 				   if(error)
 				   {

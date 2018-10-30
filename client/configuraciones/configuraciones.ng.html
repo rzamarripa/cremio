@@ -99,7 +99,8 @@
         				<tbody>
 	        				<tr ng-repeat="obj in conf.arregloTasa">
 		        				<td style="text-align: center">{{obj.cantidad}}</td>
-		        				<td style="text-align: center">{{(((obj.cantidad * (obj.seis / 100) * 1.16 )* 3 ) + obj.cantidad ) / 6 | currency }}</td>
+		        				<td style="text-align: center" ng-if = "obj.seis != 0" >{{(((obj.cantidad * (obj.seis / 100) * 1.16 )* 3 ) + obj.cantidad ) / 6 | currency }}</td>
+		        				<td style="text-align: center" ng-if = "obj.seis == 0"> 0 </td>
 		        				<td style="text-align: center">{{(((obj.cantidad * (obj.ocho / 100) * 1.16 )* 4 ) + obj.cantidad ) / 8 | currency}}</td>
 		        				<td style="text-align: center">{{(((obj.cantidad * (obj.diez / 100) * 1.16 )* 5 ) + obj.cantidad ) / 10 | currency}}</td>
 		        				<td style="text-align: center">{{(((obj.cantidad * (obj.doce / 100) * 1.16 )* 6 ) + obj.cantidad ) / 12 | currency}}</td>

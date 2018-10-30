@@ -585,7 +585,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 		  	return;
 	  }
 	  
-	  if (Number(parseFloat(pago.pagar).toFixed(2)) < Number(parseFloat(pago.totalPago).toFixed(2)))
+	  if (Number(parseFloat(pago.pagar).toFixed(2)) < Number(parseFloat(pago.aPagar).toFixed(2)))
 	  {
 		  	toastr.warning("No alcanza a pagar con el total ingresado");
 		  	return;

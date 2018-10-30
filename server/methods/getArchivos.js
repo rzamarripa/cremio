@@ -581,7 +581,6 @@ var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
     return res.wait();
 		
   },
-
   getCreditoReporte: function (objeto,credito,avales,total) {
     	//console.log(total,"total")
 	
@@ -2232,7 +2231,7 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
     
 		
   }, 
-	imprimirHistorial: function (objeto,cliente,credito,tipo, saldoMultas, abonosRecibos, abonosCargorMoratorios, saldo) {
+	imprimirHistorial: function (objeto,cliente,credito,tipo, saldoMultas, abonosRecibos, abonosCargorMoratorios, saldo, sumaNotaCredito) {
 	
 		var fs = require('fs');
     var Docxtemplater = require('docxtemplater');
@@ -2344,6 +2343,7 @@ console.log(credito.adeudoInicial);
 		totalAbonos 							= formatCurrency(abonosRecibos);
 		totalCargosMoratorios 		= formatCurrency(abonosCargorMoratorios);
 		totalSaldo 								= formatCurrency(saldo);
+		totalNotaCredito					= formatCurrency(sumaNotaCredito);
 		
 
  		cliente.ciudad 				= cliente.ciudadCliente != undefined ? cliente.ciudadCliente.nombre : "";
@@ -2385,7 +2385,8 @@ console.log(credito.adeudoInicial);
 						totalCargos 					: totalCargos,
 						totalAbonos 					: totalAbonos,
 						totalSaldo 						: totalSaldo,
-						totalCargosMoratorios	: totalCargosMoratorios
+						totalCargosMoratorios	: totalCargosMoratorios,
+						totalNotaCredito			: totalNotaCredito	
 				  });
 		var res = new future();			
 		doc.render();

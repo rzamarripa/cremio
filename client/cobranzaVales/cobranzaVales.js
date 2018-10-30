@@ -613,8 +613,7 @@ planPagosViejo : () => {
 	};
   
   this.verHistorial = function(pago) {
-			
-			
+
 			rc.credito = Creditos.findOne({folio: pago.folioCredito});
 			//console.log(rc.credito);
 			
@@ -627,21 +626,18 @@ planPagosViejo : () => {
 	       if (result)
 	       {
 	           	
-	           	console.log(rc.credito);
-	           	//rc.credito = credito;
-							rc.credito_id = rc.credito._id;
-							
+							rc.credito_id = rc.credito._id;							
 							var planes = result;
-							
-							//console.log("Planes:", planes);
+
 							arreglo = [];
 							
-							var saldoPago 	= 0;
-							var saldoActual = 0; 
-							rc.saldo 				= 0;	
-							rc.saldoGeneral = 0;
-							var credito 		= rc.credito
-							rc.saldoMultas 	= 0;
+							var saldoPago 			= 0;
+							var saldoActual 		= 0; 
+							rc.saldo 						= 0;	
+							rc.saldoGeneral 		= 0;
+							rc.sumaNotaCredito 	= 0;
+							var credito 				= rc.credito
+							rc.saldoMultas 			= 0;
 				
 							rc.abonosRecibos 					= 0;
 							rc.abonosCargorMoratorios = 0;
@@ -650,19 +646,14 @@ planPagosViejo : () => {
 								if(planPago.descripcion == "Recibo")
 									rc.saldo += Number(parseFloat(planPago.cargo).toFixed(2));
 								if(planPago.descripcion == "Cargo Moratorio")
-									rc.saldoMultas += Number(parseFloat(planPago.importeRegular).toFixed(2));
+									rc.saldoMultas 	+= Number(planPago.importeRegular + planPago.pago);	
 								planPago.cantidad = credito.numerosPagos;								
 							});
 							
 							rc.pagos_ids = [];
 							
 							_.each(planes, function(planPago, index){
-									
-								if (planPago.descripcion == "Cargo Moratorio")
-								{
-										rc.saldoMultas 	+= Number(parseFloat(planPago.cargo).toFixed(2));
-								}			
-									
+																		
 								var sa = 0;
 								var cargoCM 	= 0;
 							  if (planPago.descripcion == 'Recibo')
@@ -683,7 +674,7 @@ planPagosViejo : () => {
 															fechaSolicito 		: rc.credito.fechaSolicito,
 															fecha 						: planPago.fechaLimite,
 															pago  						: 0, 
-															cargo 						: planPago.descripcion == "Recibo"? planPago.importeRegular: cargoCM,
+															cargo 						: planPago.descripcion == "Recibo"? planPago.cargo: cargoCM,
 															movimiento 				: planPago.movimiento,
 															planPago_id 			: planPago._id,
 															credito_id 				: planPago.credito_id,
@@ -702,11 +693,9 @@ planPagosViejo : () => {
 											rc.pagos_ids.push(pago.pago_id);
 									});	
 									
-									
 									_.each(planPago.pagos,function (pago) {
 										
 											//Ir por la Forma de Pago
-											
 											var formaPago = "";
 											var pag = Pagos.findOne(pago.pago_id);
 											if (pag != undefined)
@@ -721,7 +710,9 @@ planPagosViejo : () => {
 											else if (planPago.descripcion == "Cargo Moratorio")	
 												rc.abonosCargorMoratorios += pago.totalPago;
 											
-											rc.saldo -= pago.totalPago
+											if (formaPago == 'Nota de Credito')
+												rc.sumaNotaCredito 	+= pago.totalPago;	
+
 											arreglo.push({saldo							: rc.saldo,
 																		numeroPago 				: planPago.numeroPago,
 																		cantidad 					: credito.numeroPagos,
@@ -739,17 +730,10 @@ planPagosViejo : () => {
 																		saldoActualizado	: 0
 									  	});
 									})
-									
-									
 								}
-								
-								
-									
 							});
 							
 							rc.saldoGeneral 	= (rc.saldo + rc.saldoMultas ) - ( rc.abonosRecibos + rc.abonosCargorMoratorios );
-							
-							rc.saldo 				= (rc.credito.adeudoInicial + rc.saldoMultas ) - ( rc.abonosRecibos + rc.abonosCargorMoratorios );
 							
 							arreglo.sort(function(a,b){		
 								return a.numeroPago - b.numeroPago || new Date(a.fecha) - new Date(b.fecha) ;
@@ -1439,7 +1423,7 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
   {
     cliente = rc.cliente.profile;			
 		loading(true);
-		Meteor.call('imprimirHistorialVales', objeto, cliente, credito, 'pdf', rc.saldoMultas, rc.abonosRecibos, rc.abonosCargorMoratorios, rc.saldoGeneral, function(error, response) {
+		Meteor.call('imprimirHistorialVales', objeto, cliente, credito, 'pdf', rc.saldoMultas, rc.abonosRecibos, rc.abonosCargorMoratorios, rc.saldoGeneral, rc.sumaNotaCredito, function(error, response) {
 			   if(error)
 			   {
 			    console.log('ERROR :', error);

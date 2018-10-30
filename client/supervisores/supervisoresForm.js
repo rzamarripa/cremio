@@ -184,10 +184,6 @@ angular.module("creditoMio")
 			form.$setPristine();
 			form.$setUntouched();
 			$state.go('root.supervisoresLista');
-			
-			
-			
-			
 		
 	};
 	this.tomarFoto = function(objeto){

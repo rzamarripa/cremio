@@ -18,7 +18,12 @@ angular.module("creditoMio")
 	rc.sumaInteres = 0;
 	rc.sumaIva = 0;
 	rc.sumaSeguro = 0;
+	rc.sumaSeguroDistribuidor = 0;
+	rc.sumaBonificaciones = 0;
 	rc.sumaCargoMoratorio = 0;
+	
+	rc.sumaCreditos = 0;
+	rc.sumaVales 		= 0;
 	
 	rc.totalCobranza = 0;
 	
@@ -74,7 +79,6 @@ angular.module("creditoMio")
 		return [{}]
 	});
 
-
   this.subscribe('movimientosCaja', () => {
      return [{ createdAt:  { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}]
   });
@@ -128,6 +132,8 @@ angular.module("creditoMio")
     rc.sumaSeguro = 0;
     
     rc.totalCobranza = 0;
+    rc.sumaCreditos = 0;
+		rc.sumaVales 		= 0;
     
     rc.planPagos = [];
     rc.arregloTiposIngresos = [];
@@ -137,8 +143,12 @@ angular.module("creditoMio")
 		Meteor.call("getCobranzaDiaria", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id, function(error, result){
 				if  (result)
 				{
-						rc.planPagoOriginal = result;
-						rc.planPagos = result;						
+
+						rc.planPagoOriginal 			= result.cobranza;
+						rc.planPagos 							= result.cobranza;		
+						
+						rc.sumaSeguroDistribuidor = result.seguroDistribuidor;
+						rc.sumaBonificaciones 		= result.bonificaciones;				
 						
 						_.each(rc.planPagos, function(plan){
  								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
@@ -153,8 +163,16 @@ angular.module("creditoMio")
 								if (plan.descripcion == "Cargo Moratorio")
 									 rc.sumaCargoMoratorio += Number(parseFloat(plan.totalPago).toFixed(2));	 
 								
-								rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
+								//console.log(plan)
+								if (plan.tipoIngreso != 'Nota de Credito')
+										rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
 								
+								if (plan.tipoCredito == "creditoP")
+										rc.sumaCreditos += Number(parseFloat(plan.totalPago).toFixed(2));		
+								else if (plan.tipoCredito == "vale"){
+										rc.sumaVales += Number(parseFloat(plan.totalPago).toFixed(2));
+										plan.descripcion = "Vale";
+								}
 							
 								if (rc.arregloTiposIngresos[plan.tipoIngreso] == undefined)
 										rc.arregloTiposIngresos[plan.tipoIngreso] = Number(parseFloat(plan.totalPago).toFixed(2));

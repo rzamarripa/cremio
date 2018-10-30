@@ -1563,7 +1563,7 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 				}	
 				else
 				{
-					console.log("parcial",p._id,p.descripcion, p.importeRegular)
+					//console.log("parcial",p._id,p.descripcion, p.importeRegular)
 					
 				  residuos.pagoSeguro 	= Number((parseFloat(p.seguro).toFixed(2) - parseFloat(p.pagoSeguro).toFixed(2)).toFixed(2));
 				  residuos.pagoInteres  = Number((parseFloat(p.interes).toFixed(2) -parseFloat(p.pagoInteres).toFixed(2)).toFixed(2));
@@ -1994,6 +1994,7 @@ if(((p.interes - p.pagoInteres) + (p.iva - p.pagoIva)) > abono){
 			});			
 			return pagos;
 	},
+	
 	cancelarPlanPago : function(credito_id){
     	
     	var planPagos = PlanPagos.find({credito_id: credito_id}).fetch();

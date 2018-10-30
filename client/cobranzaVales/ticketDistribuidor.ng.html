@@ -28,48 +28,38 @@
 						</div>
 					</div>					
 					<br>
-					<div class="row" style="text-align: center">
-						<strong>	
-							<div class="col-sm-3">
-								Vencimiento
-							</div>
-							<div class="col-sm-3">
-								No. Pago
-							</div>
-							<div class="col-sm-3">
-								Importe
-							</div>
-							<div class="col-sm-3">
-								N. Saldo
-							</div>
-						</strong>		
-					</div>
-					<br>
 					<div class="row">
-						<div class="col-sm-3" style="text-align: center; font-size: small" >
-							{{objeto.fechaLimite | date:"dd-MM-yyyy"}}
-						</div>
-						<div class="col-sm-3" style="text-align: center">
-							{{objeto.numeroPago}}
-						</div>
-						<div class="col-sm-3" style="text-align: right">
-							{{objeto.importeRegular | currency}}
-						</div>
-						<div class="col-sm-3" style="text-align: right">
-							{{objeto.saldoActual | currency}}
-						</div>
+						<table style="width: 100%">
+							<thead>
+								<tr>
+									<th style="text-align: center">Vencimiento</th>
+									<th style="text-align: center">No. Pago</th>
+									<th style="text-align: center">Importe</th>
+									<th style="text-align: center">N. Saldo</th>
+								</tr>	
+							</thead>	
+							<tbody>
+									<tr>
+									<td>{{objeto.fechaLimite | date:"dd-MM-yyyy"}}</td>
+									<td>{{objeto.numeroPago}}</td>
+									<td>{{objeto.importeRegular | currency}}</td>
+									<td>{{objeto.saldoActual | currency}}</td>
+								</tr>	
+							</tbody>	
+						</table>
+
 					</div>
 					<br>
 					<address style="font-size: x-small; text-align: center">
-						Blvd. Emiliano No. 3125 Loc. 12 BC Col. Lomas de Boulevard Tel. (667) 717-2121
+						Blvd. Emiliano Zapata No. 3125 Loc. 12 BC Col. Lomas de Boulevard <br>
+						Tel. (667) 717-2121
 					</address>	
-					
 					<div class="row">
 						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
 					</div>	
 				</div>	
 				<div class="col-sm-4 col-sm-offset-4">	
-					<div style="font-size: larger"><a class="btn btn-primary" id="printpagebutton" ng-click="tktP.borrarBotonImprimir()">Imprimir</a></div>
+					<div style="font-size: larger"><a class="btn btn-primary" id="printpagebutton" ng-click="tktD.borrarBotonImprimir()">Imprimir</a></div>
 				</div>
 			</div>
 		</div>

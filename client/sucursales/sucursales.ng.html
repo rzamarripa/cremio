@@ -1,4 +1,4 @@
-<h2>{{suc.objeto.nombreSucursal}} - <small>Sucursales</small></h2>
+<h2>Sucursales</h2>
 <div class="row">
 	<div class="col-sm-12">
 		<a class="btn btn-{{suc.nuevo == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
@@ -31,8 +31,7 @@
 								    	</div>
 								    	<div class="col-sm-3" valida>
 										    <label for="sexo">Sexo *</label>
-										    <select name="sexo" ng-model="suc.objeto.sexo" data-placeholder="Seleccione" class="form-control" required capitalize>
-											    <option value=""></option>
+										    <select name="sexo" ng-model="suc.objeto.sexo" data-placeholder="Seleccione" class="form-control" required>
 											    <option value="Masculino">Masculino</option>
 											    <option value="Femenino">Femenino</option>
 												</select>
@@ -113,13 +112,32 @@
 								    	<label>Horario sabado salida </label>	
 								    	<input name="horaSalidaSabado" type="time" class="form-control" ng-model="suc.objeto.horaSalidaSabado" required>																
 							    	</div>
-<!--
-							    	<div class="col-sm-2" valida>					    										
-								    	<label>Tasa vales</label>	
-								    	<input name="tasaVales" type="number" class="form-control" placeholder=" %" ng-model="suc.objeto.tasaVales" required>																
-							    	</div>			    	
--->
-							    </div>				
+							    </div>
+							    
+							    <div class="row">
+					          <div class="col-sm-2" valida>
+						          <label>Folio Cliente *</label>	
+						          	<input name="folioCliente" type="number" class="form-control" ng-model="suc.objeto.folioCliente" required>
+										</div>	
+										<div class="col-sm-2" valida>
+							    		<label>Folio Distribuidor *</label>	
+					          	<input name="folioDistribuidor" type="number" class="form-control" ng-model="suc.objeto.folioDistribuidor" required>
+							    	</div>
+							    	<div class="col-sm-2" valida>						    	
+								    	<label>Folio Crédito *</label>	
+					          	<input name="folioCredito" type="number" class="form-control" ng-model="suc.objeto.folioCredito" required>
+							    	</div>
+							    	<div class="col-sm-2" valida>
+							    		<label>Folio Vale *</label>	
+					          	<input name="folioVale" type="number" class="form-control" ng-model="suc.objeto.folioVale" required>
+							    	</div>
+							    	<div class="col-sm-2" valida>
+							    		<label>Folio Pago *</label>	
+					          	<input name="folioPago" type="number" class="form-control" ng-model="suc.objeto.folioPago" required>
+							    	</div>
+							    	
+							    </div>
+							    				
 							    <!--
 							    <div class="row">
 								    <div class="col-sm-3">

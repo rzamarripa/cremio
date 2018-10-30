@@ -188,7 +188,7 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 						      }
 						  });	
 
-						  if (mov.origen == "Cancelación de Ent. de Crédito")
+						  if (mov.origen == "Cancelación de Ent. de Crédito" || mov.origen == "Cancelación de Ent. de Vale")
 							   d.clase = "bg-color-pinkDark";
 							d.credito_id				= mov.origen_id;
 							d.movimientoCaja_id = mov._id; 
@@ -388,7 +388,8 @@ var sumaRecibos 						= 0;
 	  }
 	  else
 	  {
-		  customConfirm('¿Estás seguro de cancelar la entrega de crédito ?', function() {
+	
+		  customConfirm('¿Estás seguro de cancelar la ' + pago.origen + ' ?', function() {
       					
       					
       	if (pago.estatus == 2)
@@ -408,16 +409,27 @@ var sumaRecibos 						= 0;
       	//Para que no se pueda voler a cancelar
 				MovimientosCajas.update(pago.movimientoCaja_id, {$set: {estatus:2}});
 	    	Creditos.update(pago.credito._id,{$set:{estatus:6, motivo: "Se Canceló la Entrega..."}});//Quizas se valla a cancelarlo
-	    	
+	    		    	
 	    	Meteor.call('cancelarPlanPago', pago.credito._id, function(error,result){
 		      if (result)
 		        {   
 		        }
 		    });
+		    
+		    //Devolver el capital al Distribuidor y el Beneficiario ya que se cancelo el crédito
+		    
+		    
+				
+				//Condicion de Entrega de Credito o Vale
+				var origen = "";
+				if (pago.origen == "Entrega de Vale")
+					 origen = "Ent. de Vale";
+				else
+					 origen = "Ent. de Crédito";	 
 				
 				var movimiento_id = MovimientosCajas.insert({
 	        tipoMovimiento	: "Cancelación",
-	        origen					: "Cancelación de Ent. de Crédito",
+	        origen					: "Cancelación de " + origen,
 	        origen_id				: pago.credito._id,
 	        monto						: pago.monto *-1,
 	        cuenta_id				: pago.tipoIngreso._id,
