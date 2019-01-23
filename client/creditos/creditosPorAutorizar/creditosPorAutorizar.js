@@ -19,15 +19,18 @@ angular.module("creditoMio")
   rc.valoracion = "";
   
   this.subscribe('clientes', () => {
-		return [{_id : { $in : this.getReactively("clientes_ids")}}];
+		return [{ "profile.sucursal_id" :	 Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+							_id : { $in : this.getReactively("clientes_ids")}}];
 	})
 	
 	this.subscribe('distribuidores', () => {
-		return [{"profile.estaVerificado" : true, "profile.estatusCredito": 0}];
+		return [{ "profile.sucursal_id" :	 Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+							"profile.estaVerificado" : true, "profile.estatusCredito": 0}];
 	})
   
   this.subscribe('creditos', () => {
-		return [{ estatus : 1 }]
+		return [{ sucursal_id :	 Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+							estatus : 1 }]
   });
     
   this.helpers({

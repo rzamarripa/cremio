@@ -40,6 +40,7 @@ angular.module("creditoMio")
 			objeto.saldo 		= 0;
 			
 			objeto.distribuidor_id = Meteor.userId();
+			objeto.sucursal_id		 = Meteor.user().profile.sucursal_id;
 			
 			var nombre = objeto.nombre != undefined ? objeto.nombre + " " : "";
       var apPaterno = objeto.apellidoPaterno != undefined ? objeto.apellidoPaterno + " " : "";

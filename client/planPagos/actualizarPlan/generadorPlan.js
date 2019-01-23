@@ -461,7 +461,12 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			if (rc.cliente.roles == "Distribuidor") {
 	
 				rc.credito.tipo = "vale"
-				rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+				//rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+				
+				_.each(rc.tiposCredito, function(tc){
+						if (tc.tipoInteres == "Simple")
+								rc.credito.tipoCredito_id = tc._id;
+				});
 	
 				credito.estatus = 1;
 			}
@@ -1411,7 +1416,7 @@ this.generarPlanPagos = function(credito, form){
       var apMaterno = objeto.apellidoMaterno != undefined ? objeto.apellidoMaterno : "";
       objeto.nombreCompleto = nombre + apPaterno + apMaterno;
       
-      var id = Beneficiarios.insert(objeto);
+      rc.beneficiario._id = Beneficiarios.insert(objeto);
 			
 			
 			

@@ -5,6 +5,8 @@
 				Reportes de Bancos
 		</h1>
 	</div>
+</div>	
+<!--
 	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 		<ul id="sparks" class="">
 			<li class="sparks-info">
@@ -24,7 +26,38 @@
 			</li>	
 		</ul>
 	</div>
+-->
+<div class="row">	
+	<div class="col-sm-12">
+		<ul id="sparks">
+			<li class="sparks-info">
+				<h5>Capital <span class="txt-color-green" style="text-align: left">{{re.sumaCapital | currency}}</span></h5>
+			</li>	
+			<li class="sparks-info">
+				<h5>Intereses <span class="txt-color-red" style="text-align: left">{{re.sumaInteres | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5>IVA <span class="txt-color-blue" style="text-align: left">{{re.sumaIva | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5>Seguro <span class="txt-color-yellow" style="text-align: left">{{re.sumaSeguro | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Seguro Distribuidor <span class="txt-color-yellow" style="text-align: left">{{re.sumaSeguroDistribuidor | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Bonificaciones <span class="txt-color-green" style="text-align: left">{{re.sumaBonificaciones | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Cargos Moratorios <span class="txt-color-purple" style="text-align: left">{{re.sumaCargoMoratorio | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Total Cobranza <span class="txt-color-gray" style="text-align: left">{{re.totalCobranza + re.sumaSeguroDistribuidor | currency}}</span></h5>
+			</li>	
+		</ul>
+	</div>
 </div>
+
 <div class="well">
 	<div class="row">
 		<div class="col-sm-3">
@@ -42,49 +75,82 @@
 		<div class="col-sm-3">
 			<br>
 			<input type="button" class="btn btn-primary" ng-click="re.diarioBancos()" value="Buscar" />
-				<a href="" class="btn btn-primary pull-right" ng-click="re.imprimirReporteBancos(re.planPagos)" >Imprimir Tabla</a>
+			<input type="button" class="btn btn-primary" ng-click="re.imprimirReporteBancos(re.planPagos)" value="Imprimir" />
 		</div>	
 	</div>	
 </div>
+
+<div class="row">
+	
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-3">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-dollar fa-3x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="huge">{{re.sumaCreditos | currency}}</div>
+                    <div>Créditos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+	</div>      
+
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-3"> 
+      <div class="panel panel-success">
+          <div class="panel-heading">
+              <div class="row">
+                  <div class="col-xs-3">
+                      <i class="fa fa-dollar fa-3x"></i>
+                  </div>
+                  <div class="col-xs-9 text-right">
+                      <div class="huge">{{re.sumaVales | currency}}</div>
+                      <div>Vales</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+		
+</div>	
 
 <div class="row">
 	<div class="col-sm-12" >
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-					  <th width="5%"><div class="text-center">No.</div></th>
-						<th width="15%"> <div class="text-center">Nombre</div></th>
-						<th width="10%"><div class="text-center">Numero del cliente</div></th>
+					  <th style="text-align: center; width: 3%"><div class="text-center">No.</div></th>
+						<th width="10%"><div class="text-center">Cte/Dis.</div></th>
+						<th width="15%"><div class="text-center">Nombre</div></th>
 						<th width="10%"><div class="text-center">Fecha del deposito</div></th>
-						<th><div class="text-center">Aplicación del deposito</div></th>
-						<th><div class="text-center">Importe del deposito</div></th>
-						<th><div class="text-center">Ventanilla que aplico el deposito</div></th>
-						<th><div class="text-center">Interes</div></th>
-						<th><div class="text-center">Capital</div></th>
-						<th><div class="text-center">IVA</div></th>
-						<th><div class="text-center">Seguro</div></th>
-						<th><div class="text-center">Acumulado por dia</div></th>
-
-						<!-- <th><div class="text-center">Acumulado</div></th>
-						<th><div class="text-center">Checar</div></th> -->
+						<th width="10%"><div class="text-center">Fecha de Aplicación</div></th>
+						<th width="10%"><div class="text-center">Interes</div></th>
+						<th width="10%"><div class="text-center">Capital</div></th>
+						<th width="10%"><div class="text-center">IVA</div></th>
+						<th width="10%"><div class="text-center">Seguro</div></th>
+						<th width="10%"><div class="text-center">Mov</div></th>
+						<th width="10%"><div class="text-center">Importe</div></th>
+						<th width="10%"><div class="text-center">Cajero</div></th>
+						<th width="10%"><div class="text-center">Tipo Ingreso</div></th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody style="font-size: smaller">
 			    <tr ng-repeat="objeto in re.planPagos | filter:buscar" ng-show="objeto.mostrar">
-			    	<td><div class="text-center">{{$index + 1}}</div></td>
-				    <td><div class="text-center">{{objeto.nombreCompleto}}</div></td>
+			    	<td><div class="text-center">{{$index + 1}}</div></td>				    
 				    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
+				    <td><div class="text-left">{{objeto.nombreCompleto}}</div></td>
 				    <td><div class="text-center">{{objeto.fechaDeposito | date:"dd-MM-yyyy"}}</div></td>
 				    <td><div class="text-center">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</div></td>
-				    <td><div class="text-center">{{objeto.totalPago | currency}}</div></td>
-				    <td><div class="pull-right">{{objeto.cajero}}</div></td>
-				    <td><div class="pull-right">{{objeto.pagoInteres | currency}}</div></td>
-				    <td><div class="pull-right">{{objeto.pagoCapital | currency}}</div></td> 	
-				    <td><div class="pull-right">{{objeto.pagoIva | currency}}</div></td> 	
-				     <td><div class="pull-right">{{objeto.pagoSeguro | currency}}</div></td>	
-				    <td><div class="pull-right">{{objeto.totalPago | currency}}</div></td>
-				    <!-- <td><div class="pull-right">{{objeto.acumulado}}</div></td> -->
-				   			
+				    <td><div class="text-right">{{objeto.pagoInteres | currency}}</div></td>
+				    <td><div class="text-right">{{objeto.pagoCapital | currency}}</div></td> 	
+				    <td><div class="text-right">{{objeto.pagoIva | currency}}</div></td> 	
+				    <td><div class="text-right">{{objeto.pagoSeguro | currency}}</div></td>
+				    <td><div class="text-center">{{objeto.descripcion}}</div></td>
+				    <td><div class="text-right">{{objeto.totalPago | currency}}</div></td>
+				    <td><div class="text-left">{{objeto.cajero}}</div></td>
+				    <td><div class="text-left">{{objeto.tipoIngreso}}</div></td>
 			    </tr>
 				</tbody>
 			</table>

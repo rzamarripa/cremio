@@ -20,6 +20,7 @@
 				</div>
 				<br/>
 				<div class="row">
+<!--
 				  <div class="col-sm-1">
 						<label for="talla">Foto</label>
 						<button class="btn btn-primary" ng-model="ava.objeto.foto" ng-click="ava.tomarFoto()"><i class="fa fa-camera"></i></button>
@@ -27,6 +28,14 @@
 					<div class="col-sm-3" >
 						<br/>
 						<img width="300px" ng-if="ava.pic == ava.fotillo"   ng-src="{{ava.pic}}" ng-class="{'img-thumbnail': !!ava.pic}" />
+					</div>
+-->
+					<div class="col-sm-4">
+						<label>Foto</label>
+						<input name="foto" type="file" id="foto">																
+					</div>
+					<div class="col-sm-4">
+						<img ng-src="{{ava.objeto.profile.foto}}" style="width: 200px; height: 180px;" ng-class="{'img-thumbnail': !!ava.pic}" />
 					</div>
 				</div>  
 			</div>
@@ -67,22 +76,14 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="objeto in ava.documents" ng-if="!ava.objeto._id">
-									<td>{{$index + 1}}</td>
-									<td>{{objeto.nombre}}</td>
-									<td class="text-center">
-										<a href="" ng-click="ava.mostrarModal(objeto.imagen)">Ver Archivo</a>
-									</td>
-									<td><div class="text-center"><a href="" ng-click="ava.borrarDoc($index+1)"><i class="fa fa-trash"></i></a></div></td>
-								</tr>
-								<tr ng-repeat="item in ava.objeto.profile.documentos" ng-if="ava.objeto._id">
+								<tr ng-repeat="item in ava.documents">
 									<td>{{$index + 1}}</td>
 									<td>{{item.nombre}}</td>
 									<td class="text-center">
-										<a href="" ng-click="ava.mostrarModal(item.imagen)">Ver Archivo</a>
+										<a href="" ng-click="ava.mostrarModal(item._id)">Ver Archivo</a>
 									</td>
-									<td><div class="text-center"><a href="" ng-click="ava.borrarDoc($index)" class="btn btn-primary"><i class="fa fa-trash"></i></a>
-									 <a target="_blank"  ng-click="ava.imprimirDoc(item.imagen)" class="btn btn-primary"><i class="fa fa-print" ></i></a></div>
+									<td><div class="text-center"><a href="" ng-click="ava.borrarDoc(item._id)" class="btn btn-xs btn-primary"><i class="fa fa-trash"></i></a>
+									 <a target="_blank"  ng-click="ava.imprimirDoc(item._id)" class="btn btn-xs btn-primary"><i class="fa fa-print" ></i></a></div>
 									</td>
 								</tr>
 							</tbody>
@@ -741,7 +742,7 @@
  
  							<div class="col-sm-4">
 								<label id="id_label_single">Seleccionar Documento</label>
-								<select class="form-control" id="id_label_single" placeholder="Seleccione" ng-model="ava.objeto.profile.documento_id"
+								<select class="form-control" id="id_label_single" placeholder="Seleccione" ng-model="ava.documento_id"
 												ng-change="ava.getClientes(ava.objeto.profile.documento_id)">
 									<option ng-repeat="documento in ava.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
 								</select>
@@ -761,9 +762,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<!-- <input type="submit" ng-click="ava.guardarOcupacion(ava.ocupacion, ava.objeto,form3)" value="Guardar" class="btn btn-primary" valida-form formulario="form3"> -->
-				<a href="" class="btn btn-primary" ng-click="ava.agregarDoc(ava.objeto.profile.documento_id,ava.imagen)" ng-if="!ava.objeto._id">Guardar</a>
-				<a href="" class="btn btn-primary" ng-click="ava.actDoc(ava.objeto.profile.documento_id,ava.imagen)" ng-if="ava.objeto._id">Guardar</a>
+				<a href="" class="btn btn-primary" ng-click="ava.agregarDoc(ava.documento_id, ava.imagen)">Guardar</a>
 		  </div>
 		</div>
 	</div>

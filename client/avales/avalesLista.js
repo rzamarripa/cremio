@@ -96,4 +96,27 @@ angular.module("creditoMio")
 		
   }   	
   
+  this.generarFicha = function(objeto) 
+  {
+
+			loading(true);
+			//rc.datosCliente = result.profile;
+			
+			Meteor.call('getFichaAval', objeto._id, 'pdf', function(error, response) {
+
+				   if(error)
+				   {
+				    console.log('ERROR :', error);
+				    loading(false);
+				    return;
+				   }
+				   else
+				   {
+					   	//console.log(response);
+					 		downloadFile(response);
+					 		loading(false);
+					 }
+			});
+	}; 
+  
 };

@@ -22,6 +22,8 @@ angular.module("creditoMio")
   rc.otrafoto = ""
   rc.folio = "";
   rc.imagen = "";
+  rc.estatusClase = "";
+  
   $(".js-example-basic-single").select2();
     
   
@@ -245,6 +247,11 @@ angular.module("creditoMio")
 	                    }); 
 	              });   
 								//$scope.$apply();	
+								
+								if (rc.objeto.profile.estatus)
+										rc.estatusClase = "success";
+								else
+										rc.estatusClase = "danger";		
  								
  								//getdocumentos
 	              Meteor.call('getDocumentosClientes', rc.objeto_id, function(error,result){
@@ -567,9 +574,11 @@ objetoEditar : () => {
 				return;		    		
     }
       
-    if (rc.pic != ""){
+   /*
+ if (rc.pic != ""){
       objeto.profile.foto = rc.pic
     }
+*/
    
     delete objeto.profile.repeatPassword;
     
@@ -832,14 +841,26 @@ objetoEditar : () => {
       }
   };
 
+	this.AlmacenaImagen = function(imagen)
+	{			
+			rc.objeto.profile.foto = imagen;
+			toastr.success("Foto Cargada...");
+	}
+
   $(document).ready( function() {
 			
+			const imageFileToBase64 = require('image-file-to-base64-exif');
+			
+			const maxWidth = 200;
+			const maxHeight = 180;
+			const quality = 0.8;
 			
       var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
-   
       var fileInput1 = document.getElementById('fileInput1');
-      //var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
-            //JavaScript para agregar la Foto
+      
+      var foto = document.getElementById('foto');
+      
+      //JavaScript para agregar la Foto
       fileInput1.addEventListener('change', function(e) {
         var file = fileInput1.files[0];
         var imageType = /image.*/;
@@ -870,7 +891,32 @@ objetoEditar : () => {
         } else {
           //fileDisplayArea1.innerHTML = "File not supported!";
         }
-      });   
+      });  
+      
+      foto.addEventListener('change', function(e) {
+				var file = foto.files[0];
+				var imageType = /image.*/;
+	
+				if (file.type.match(imageType)) {
+										
+						var reader = new FileReader();
+		
+						reader.onload = function(e) {
+							
+							imageFileToBase64(foto.files[0], maxWidth, maxHeight, quality)
+									.then(addThumbnail)							
+						}
+						reader.readAsDataURL(file);			
+				} else {
+					fotoArea.innerHTML = "Archivo no sportado!";
+				}
+			});
+			
+			
+      function addThumbnail (base64) {
+			    	rc.AlmacenaImagen(base64);
+			}
+      
    });
 	
 	this.agregarImagen = function()
@@ -924,8 +970,7 @@ objetoEditar : () => {
 				    $('#imagenDiv').empty().append(imagen);
 				    $("#myModal").modal('show');
 	        }
-	    });  
-    
+	    });      
   };
   
   this.borrarDoc = function(id)
@@ -1190,6 +1235,12 @@ objetoEditar : () => {
     
     this.num = a.num;
     this.actionAval = false;
+  };
+  
+  this.cambiarEstatus = function(estatus)
+  {
+    	rc.objeto.profile.estatus = !estatus;
+    	rc.objeto.profile.estatus == true ? rc.estatusClase = "success" : rc.estatusClase = "danger";
   };
   
 };

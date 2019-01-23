@@ -472,7 +472,12 @@ _.each(result,function (pago) {
 		if (rc.cliente.roles == "Distribuidor") {
 
 			rc.credito.tipo = "vale"
-			rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+			//rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
+			
+			_.each(rc.tiposCredito, function(tc){
+						if (tc.tipoInteres == "Simple")
+								rc.credito.tipoCredito_id = tc._id;
+			});
 
 			credito.estatus = 1;
 		}
@@ -1380,20 +1385,16 @@ var usuario = Meteor.users.findOne(Meteor.userId());
 	
 	this.mostrarRespaldos = function(tipo)
 	{
-				
 								
-				Meteor.call('getRespaldosCliente', tipo, $stateParams.objeto_id, function(error, result){           					
-					if (result)
-					{
-							rc.respaldos = result;
-							console.log(result)
-							$scope.$apply();
-	            $("#modalCopiarRespaldos").modal('show');
-	            
-	
-				  }
-			  });
-				
+			Meteor.call('getRespaldosCliente', tipo, $stateParams.objeto_id, function(error, result){           					
+				if (result)
+				{
+						rc.respaldos = result;
+						console.log(result)
+						$scope.$apply();
+            $("#modalCopiarRespaldos").modal('show');
+			  }
+		  });
 			
 	};
 	
@@ -1417,7 +1418,6 @@ var usuario = Meteor.users.findOne(Meteor.userId());
 		        return;
 		  }
 			
-			
 			objeto.estatus 	= true;
 			objeto.saldo 		= 0;
 			
@@ -1429,7 +1429,7 @@ var usuario = Meteor.users.findOne(Meteor.userId());
       objeto.saldoActualVales	= 0;	//Saldo con Capital, Intereses, IVA y Seguro
       objeto.saldoActual			= 0;  //Saldo solo Capital
       
-      var id = Beneficiarios.insert(objeto);
+      rc.beneficiario._id = Beneficiarios.insert(objeto);
 			
 			
 			$("#modalBeneficiario").modal('hide');

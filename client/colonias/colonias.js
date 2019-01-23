@@ -32,7 +32,7 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  colonias : () => {
-		  return Colonias.find();
+		  return Colonias.find({},{sort: {nombre: 1}});
 	  },
 	  paises : () => {
 		  return Paises.find();

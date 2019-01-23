@@ -45,20 +45,22 @@
 	          <table class="table table-condensed table-bordered">
 	            <thead>
 	              <tr>
-	                <th width="3%">Folio</th>
-	                <th width="7%">Fecha</th>
-	                <th width="5%">Hora</th>
-	                <th width="8%">N. Cliente</th>
-	                <th width="15%">Cliente</th>
-	                <th width="10%">Movimiento</th>
-	                <th width="5%">Capital</th>
-	                <th width="5%">C. Mor.</th>
-	                <th width="5%">Intereses</th>
-	                <th width="5%">Seguro</th>
-	                <th width="5%">Iva</th>
-	                <th width="5%">Monto</th>
-	                <th width="10%">F. Pago</th>
-	                <th width="5%">Acción</th>
+	                <th style="text-align: center;" width="3%">Folio</th>
+	                <th style="text-align: center;" width="7%">Fecha</th>
+	                <th style="text-align: center;" width="5%">Hora</th>
+	                <th style="text-align: center;" width="8%"># C-D</th>
+	                <th style="text-align: center;" width="15%">Nombre</th>
+	                <th style="text-align: center;" width="8%">Mov.</th>
+	                <th style="text-align: center;" width="5%">Capital</th>
+	                <th style="text-align: center;" width="5%">C. M.</th>
+	                <th style="text-align: center;" width="5%">Int.</th>
+	                <th style="text-align: center;" width="4%">Seguro</th>
+	                <th style="text-align: center;" width="4%">Iva</th>
+	                <th style="text-align: center;" width="7%">S. Dist.</th>
+	                <th style="text-align: center;" width="4%">Bon.</th>
+	                <th style="text-align: center;" width="5%">Monto</th>
+	                <th style="text-align: center;" width="5%">F. Pago</th>
+	                <th style="text-align: center;" width="1%"></th>
 	              </tr>
 	            </thead>
 	            <tbody style="font-size: x-small">
@@ -74,6 +76,8 @@
 	                <td align="right">{{mov.intereses | currency}}</td>
 	                <td align="right">{{mov.seguro | currency}}</td>
 	                <td align="right">{{mov.iva | currency}}</td>
+	                <td align="right">{{mov.seguroDis | currency}}</td>
+	                <td align="right">{{mov.bonificacion | currency}}</td>
 	                <td align="right">{{mov.monto | currency}}</td>
 	                <td align="center">{{mov.tipoIngreso.nombre}}</td>
 	                <td>
@@ -83,8 +87,11 @@
 										    <span class="sr-only">Toggle Dropdown</span>
 										  </button>
 	                    <ul class="dropdown-menu dropdown-menu-right text-left">
-										    <li ng-if="mov.origen == 'Pago de Cliente' || mov.origen == 'Pago de Distribuidor'">
+										    <li ng-if="mov.origen == 'Pago de Cliente'">
 										    		<a ui-sref="anon.imprimirTicket({pago_id:mov.pago._id})" target="_blank"><i class="fa fa-file-text-o"></i> Ticket</a>
+										    </li>
+										    <li ng-if="mov.origen == 'Pago de Distribuidor'">
+										    		<a ui-sref="anon.imprimirTicketVale({pago_id:mov.pago._id})" target="_blank"><i class="fa fa-file-text-o"></i> Ticket</a>
 										    </li>
 										    <li ng-if="currentUser.roles[0] == 'Gerente' && (mov.origen == 'Pago de Cliente' || mov.origen == 'Pago de Distribuidor' || mov.origen == 'Entrega de Credito' || mov.origen == 'Entrega de Vale' || mov.origen == 'Pago de Sistema')">
 										    		<a href="#" ng-click="mov.origen =='Pago de Cliente' || mov.origen == 'Pago de Distribuidor' || mov.origen == 'Pago de Sistema' ?vca.cancelarPago(mov.pago,1):vca.cancelarPago(mov,2)"><i class="fa fa-trash"></i> Cancelar</a>

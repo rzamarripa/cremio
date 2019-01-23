@@ -22,4 +22,28 @@ Meteor.methods({
         salida = moment(sucursal.horaSalida).year(anio).month(0).day(1);
         return !actual.isBefore(entrada) && actual.isBefore(salida)
 	},
+	
+	//Quitar
+	copiarDocumentos: function () {
+			
+			Meteor.users.find({}).forEach(function(u){
+		    if (u.profile != undefined && u.profile.documentos != undefined && u.profile.documentos.length > 0)
+		    {
+		       for (i = 0 ; i < u.profile.documentos.length ; i++){
+		           var documento = Documentos.findOne({nombre: u.profile.documentos[i].nombre});
+		           var documento_id = documento._id;
+		           
+		           var objeto = {};
+		           objeto.cliente_id    = u._id;
+		           objeto.documento_id  = documento_id;
+		           objeto.imagen        = u.profile.documentos[i].imagen;
+		           objeto.fechaCreacion = new Date();
+		           DocumentosClientes.insert(objeto);
+		       }
+		    }
+		});
+
+			
+	},
+		
 })

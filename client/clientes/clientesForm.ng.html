@@ -41,20 +41,19 @@
 				</div>
 				<br/>
 				<div class="row">
+<!--
 				  <div class="col-sm-1">
 						<label for="talla">Foto</label>
 						<button class="btn btn-primary" ng-model="cli.objeto.foto" ng-click="cli.tomarFoto()"><i class="fa fa-camera"></i></button>
 					</div>
-					<div class="col-sm-3" >
-						<br/>
-						<img width="300px" ng-if="cli.pic == cli.fotillo" ng-src="{{cli.pic}}" ng-class="{'img-thumbnail': !!cli.pic}" />
+-->				
+					<div class="col-sm-4">
+						<label>Foto</label>
+						<input name="foto" type="file" id="foto">																
 					</div>
-<!--
-					<div class="col-sm-3" ng-show="cli.action" > 					    
-						<label>Numero Cliente (s) *</label>
-						<input name="numeroCliente" type="text" class="form-control" ng-model="cli.objeto.profile.numeroCliente"  >
-					</div>
--->
+					<div class="col-sm-4">
+						<img ng-src="{{cli.objeto.profile.foto}}" style="width: 200px; height: 180px;" ng-class="{'img-thumbnail': !!cli.pic}" />
+					</div>		
 				</div>  
 			</div>
 			<h4>Documentos</h4>
@@ -77,22 +76,14 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="objeto in cli.documents" ng-if="!cli.objeto._id">
-									<td>{{$index + 1}}</td>
-									<td>{{objeto.nombre}}</td>
-									<td class="text-center">
-										<a href="" ng-click="cli.mostrarModal(objeto.imagen)">Ver Archivo</a>
-									</td>
-									<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index+1)"><i class="fa fa-trash"></i></a></div></td>
-								</tr>
-								<tr ng-repeat="item in cli.objeto.profile.documentos" ng-if="cli.objeto._id">
+								<tr ng-repeat="item in cli.documents">
 									<td>{{$index + 1}}</td>
 									<td>{{item.nombre}}</td>
 									<td class="text-center">
-										<a href="" ng-click="cli.mostrarModal(item.imagen)">Ver Archivo</a>
+										<a href="" ng-click="cli.mostrarModal(item._id)">Ver Archivo</a>
 									</td>
-									<td><div class="text-center"><a href="" ng-click="cli.borrarDoc($index)" class="btn btn-primary"><i class="fa fa-trash"></i></a>
-									 <a target="_blank"  ng-click="cli.imprimirDoc(item.imagen)" class="btn btn-primary"><i class="fa fa-print" ></i></a></div>
+									<td><div class="text-center"><a href="" ng-click="cli.borrarDoc(item._id)" class="btn btn-xs btn-primary"><i class="fa fa-trash"></i></a>
+									 <a target="_blank"  ng-click="cli.imprimirDoc(item._id)" class="btn btn-xs btn-primary"><i class="fa fa-print" ></i></a></div>
 									</td>
 								</tr>
 							</tbody>
@@ -751,12 +742,12 @@
 					<div class="well">	    
 						<div class="row">
 						 	<div class="col-sm-6" >
-									<label>Archivo (máximo 512Kb)</label>
+									<label>Archivo</label>
 									<input name="archivo" type="file" id="fileInput1" >
  						  </div>
  							<div class="col-sm-4">
 								<label id="id_label_single">Seleccionar Documento</label>
-								<select class="form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.objeto.profile.documento_id"
+								<select class="form-control" id="id_label_single" placeholder="Seleccione" ng-model="cli.documento_id"
 												ng-change="cli.getClientes(cli.objeto.profile.documento_id)">
 									<option ng-repeat="documento in cli.documentos" value="{{documento._id}}">{{documento.nombre}}</option>
 								</select>
@@ -766,16 +757,14 @@
 	 						<div class="col-sm-12" >
  	 							 <div id="fileDisplayArea1"></div>
  	 						</div>
- 						</div>	
-   						
+ 						</div>
  					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<!-- <input type="submit" ng-click="cli.guardarOcupacion(cli.ocupacion, cli.objeto,form3)" value="Guardar" class="btn btn-primary" -form formulario="form3"> -->
-				<a href="" class="btn btn-primary" ng-click="cli.agregarDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="!cli.objeto._id">Guardar</a>
-				<a href="" class="btn btn-primary" ng-click="cli.actDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="cli.objeto._id">Guardar</a>
+				<a href="" class="btn btn-primary" ng-click="cli.agregarDoc(cli.documento_id, cli.imagen)">Guardar</a>
+				<!-- <a href="" class="btn btn-primary" ng-click="cli.actDoc(cli.objeto.profile.documento_id,cli.imagen)" ng-if="cli.objeto._id">Guardar</a> -->
 		  </div>
 		</div>
 	</div>

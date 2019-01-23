@@ -5,8 +5,15 @@ angular.module("creditoMio")
  	let rc = $reactive(this).attach($scope);
  	
  	rc.estaCerrada = false;
- 	rc.cuentas = [];
- 	rc.cajas = [];
+ 	rc.cuentas 				= [];
+ 	rc.cajas 					= [];
+ 	rc.cajeros 				= [];
+ 	rc.cajerosNombres	= [];
+ 	
+ 	//rc.sucursal = {};
+ 	rc.sucursal_id 		= "";
+ 	
+ 	
  	
  	this.caja_id = "";
  	this.cajero_id = "";
@@ -15,11 +22,29 @@ angular.module("creditoMio")
   this.fechaInicial.setHours(0,0,0,0);
   this.fechaFinal = new Date();
   this.fechaFinal.setHours(23,59,59,999);
- 	
+  
+	if (Meteor.user().username != "admin")  
+	{
+		//console.log("suc")	
+		rc.sucursal_id 		= Meteor.user().profile.sucursal_id;
+	  Meteor.call("getSucursal", Meteor.user().profile.sucursal_id,  function(error,result){
+	     	if (result){
+	      		rc.sucursal = result;
+	      }
+	      else
+	      {
+					
+	      }
+		});
+	}	
+   	
  	if (Meteor.user().roles == "Gerente")
  	{	
+	 		//console.log("Aqui", new Date())
 		 	let cajasS = this.subscribe('cajas',()=>{
-				return [{ estadoCaja: 'Abierta' }]
+			 	
+				return [{ sucursal_id :	 Meteor.user() != undefined ? rc.getReactively("sucursal_id") : "", 
+									estadoCaja	: 'Abierta' }]
 			}); 
 			
 			//Quite el filtro
@@ -27,21 +52,37 @@ angular.module("creditoMio")
 				return [{}]
 			});
 						
-			this.subscribe('cajero',()=>{
-				return [{ "profile.sucursal_id"	: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+			this.subscribe('allCajeros',()=>{
+				//console.log("Cabmio", rc.getReactively("sucursal_id"))
+				return [{ "profile.sucursal_id"	: Meteor.user() != undefined ? rc.getReactively("sucursal_id") : "",
 									"profile.estatus" 		: true,
 									roles : ["Cajero"]}]
 			}); 
 			let pagosS = this.subscribe('pagos',()=>{
-				return [{ sucursalPago_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", 
-									fechaPago : { $gte : rc.getReactively("fechaInicial"), $lte : rc.getReactively("fechaFinal")}, 
-									estatus: 1
+				return [{ sucursalPago_id : Meteor.user() != undefined ? rc.getReactively("sucursal_id") : "", 
+									fechaPago 			: { $gte : rc.getReactively("fechaInicial"), $lte : rc.getReactively("fechaFinal")}, 
+									estatus					: 1
 							 }]
 			});
+			
 			this.helpers({
+				sucursal : () => {			
+					if (Meteor.user().username != "admin")
+					{	 
+						var s = Sucursales.findOne({_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""});
+						if (s != undefined){
+								rc.sucursal 		= s;
+								rc.sucursal_id 	= s._id;
+						}
+						return rc.sucursal;
+					}	
+				},
 				cajeros : () => {
-					if(Meteor.user()){
-					  var usuarios = Meteor.users.find({roles : ["Cajero"]}).fetch();
+					if(Meteor.user() && cajasS.ready())
+				  {
+					  var usuarios = Meteor.users.find({"profile.sucursal_id"	: Meteor.user() != undefined ? rc.getReactively("sucursal_id") : "",
+																							"profile.estatus" 		: true,
+																							roles : ["Cajero"]}).fetch();
 					  
 					  var cajerosCM = [];
 					  _.each(usuarios, function(usuario){
@@ -58,9 +99,7 @@ angular.module("creditoMio")
 					  
 					  return cajerosCM;
 				  }
-					
-				},	
-		
+				},
 				catidadCobranzaDiaria :() =>{								
 					var arreglo = [];
 		
@@ -70,8 +109,8 @@ angular.module("creditoMio")
 					  _.each(this.cajeros, function(cajero){
 		
 						  var suma = 0;
-						  var pago = Pagos.find({usuarioCobro_id: cajero._id,
-							   											fechaPago: {$gte: rc.getReactively("fechaInicial"),$lt: rc.getReactively("fechaFinal")}}).fetch();
+						  var pago = Pagos.find({ usuarioCobro_id: cajero._id,
+							   										 fechaPago: {$gte: rc.getReactively("fechaInicial"),$lt: rc.getReactively("fechaFinal")}}).fetch();
 							
 								 												
 						  _.each(pago, function(p){
@@ -95,22 +134,25 @@ angular.module("creditoMio")
 				},
 				cajerosNombres : () => {
 				  
-				  var cajerosNombre = [];
-					var cajeros = Meteor.users.find({roles : ["Cajero"]}).fetch();
+				  if (cajasS.ready())
+				  {				  
+						  var cajerosNombre = [];
+							var cajeros = Meteor.users.find({roles : ["Cajero"]}).fetch();
+							
+							if (cajeros != undefined)
+							{
+								  _.each(cajeros, function(cajero){
+									  	var estaEnCaja = Cajas.findOne({usuario_id: cajero._id});
+											if (estaEnCaja != undefined )								
+											{
+												var nombre = cajero.profile.nombre + " " + cajero.profile.apellidoPaterno + " " + cajero.profile.apellidoMaterno;	
+												cajerosNombre.push(nombre);
+										  }	 
+								  });	
+							}		
 					
-					if (cajeros != undefined)
-					{
-						  _.each(cajeros, function(cajero){
-							  	var estaEnCaja = Cajas.findOne({usuario_id: cajero._id});
-									if (estaEnCaja != undefined )								
-									{
-										var nombre = cajero.profile.nombre + " " + cajero.profile.apellidoPaterno + " " + cajero.profile.apellidoMaterno;	
-										cajerosNombre.push(nombre);
-								  }	 
-						  });	
-					}		
-			
-				  return cajerosNombre;
+						  return cajerosNombre;
+				  }
 			  },
 				graficaCajeros : () => {
 				  
@@ -160,6 +202,7 @@ angular.module("creditoMio")
 			  }
 			});
  	}
+ 	
  	else if (Meteor.user().roles == "Cajero")
  	{
 	 		let cajasS = this.subscribe('cajas',()=>{
@@ -199,6 +242,27 @@ angular.module("creditoMio")
 	 				
 	}
  	
- 	
- 	
+ 	this.abrirModal = function()
+  {
+	  	$("#modalSucursal").modal('show');	
+	  	rc.sucursales = Sucursales.find({}).fetch();
+	  	rc.sucursal_id = Meteor.user().profile.sucursal_id;
+	}
+  
+ 	this.asignar = function(form)
+  {
+	  	if (form.$invalid){
+				toastr.error('seleccione los datos.');
+				return;
+			}		
+	  	Meteor.call('updateSucursal', Meteor.userId(), rc.sucursal_id, this.cambiarContrasena);
+	  	//console.log(Meteor.user())
+	  	rc.sucursal 		= Sucursales.findOne(Meteor.user().profile.sucursal_id);
+			//rc.sucursal_id 	= Meteor.user().profile.sucursal_id;
+	  	$("#modalSucursal").modal('hide');
+	  	//$state.go('root.home');	
+	  	
+	  	console.log(Meteor.users.find().fetch())
+;	}
+ 	 	
 };

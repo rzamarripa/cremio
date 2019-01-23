@@ -5,13 +5,15 @@ angular.module("creditoMio")
  	let rc = $reactive(this).attach($scope);
   window.rc = rc;
   
-
+	rc.buscar = {};
+	rc.buscar.nombreBeneficiado = ""; 
 	this.objetoRechazar = "";
 	this.motivo = "";
 
 	
   this.subscribe('prospectos', () => {
-		return [{estatus : 1 }];
+		return [{	sucursal_id :	 Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+							estatus : 1 }];
 	})
 	  
     
@@ -36,10 +38,10 @@ angular.module("creditoMio")
 	});
 	
 	
-	this.mostrarModalValidaBeneficiario = function()
+	this.mostrarModalValidaBeneficiario = function(nombre)
 	{			
-			//console.log(credito);
-			
+
+			rc.buscar.nombreBeneficiado	= nombre;
 			rc.BeneficiadosDeudas = [];
 			$("#modalvalidaBeneficiario").modal();
 			

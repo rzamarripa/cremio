@@ -54,7 +54,7 @@
 							<td style="text-align: left; width: 70%">
 								<strong>TOTAL: </strong>
 							</td>
-							<td style="text-align: right; width: 30%">
+							<td style="text-align: right; width: 30%; padding-right: 10px" >
 									{{tkpctrl.pago.totalPago | currency}}
 							</td>
 						</tr>
@@ -62,7 +62,7 @@
 							<td style="text-align: left; width: 70%">
 								<strong>PAGÓ: </strong>
 							</td>
-							<td style="text-align: right; width: 30%"> 
+							<td style="text-align: right; width: 30%; padding-right: 10px"> 
 								{{tkpctrl.pago.pago | currency}}
 							</td>
 						</tr>
@@ -70,7 +70,7 @@
 							<td style="text-align: left; width: 70%">
 								<strong>CAMBIO: </strong>
 							</td>
-							<td style="text-align: right; width: 30%">
+							<td style="text-align: right; width: 30%; padding-right: 10px">
 								{{tkpctrl.pago.cambio | currency}}
 							</td>
 						</tr>
@@ -78,27 +78,27 @@
 					<table style="font-size: smaller;width: 100%;">
 						<tr>
 							<td style="text-align: left; width: 70%;">SALDO ANTERIOR: </td>
-							<td style="text-align: right; width: 30%;">{{tkpctrl.pago.saldoAnterior | currency}}</td>							
+							<td style="text-align: right; width: 30%; padding-right: 10px">{{tkpctrl.pago.saldoAnterior | currency}}</td>							
 						</tr>
 						<tr ng-if = "tkpctrl.tipoIngreso.nombre == 'REFINANCIAMIENTO'">
 							<td style="text-align: left; width: 70%;">CANTIDAD A ENTREGAR: </td>
-							<td style="text-align: right; width: 30%;">{{tkpctrl.pago.cantidadEntregar | currency}}</td>							
+							<td style="text-align: right; width: 30%; padding-right: 10px">{{tkpctrl.pago.cantidadEntregar | currency}}</td>							
 						</tr>
 						<tr>
 							<td style="text-align: left; width: 70%;">SALDO ACTUAL: </td>
-							<td style="text-align: right; width: 30%;">{{tkpctrl.pago.saldoActual | currency}}</td>							
+							<td style="text-align: right; width: 30%; padding-right: 10px">{{tkpctrl.pago.saldoActual | currency}}</td>							
 						</tr>
 						<tr>
 							<td style="text-align: left; width: 70%;">C. MORATORIOS: </td>
-							<td style="text-align: right; width: 30%;">{{tkpctrl.pago.saldoCargoMoratorio | currency}}</td>							
+							<td style="text-align: right; width: 30%; padding-right: 10px">{{tkpctrl.pago.saldoCargoMoratorio | currency}}</td>							
 						</tr>
 						<tr>
 							<td style="text-align: left; width: 70%;">PRÓXIMO PAGO: </td>
-							<td style="text-align: right; width: 30%;">{{tkpctrl.pago.proximoPago | date:"dd-MM-yyyy"}}</td>							
+							<td style="text-align: right; width: 30%; padding-right: 10px">{{tkpctrl.pago.proximoPago | date:"dd-MM-yyyy"}}</td>							
 						</tr>
 						<tr>
 							<td style="text-align: left; width: 70%;">FORMA PAGO: </td>
-							<td style="text-align: right; width: 30%;">{{tkpctrl.tipoIngreso.nombre}}</td>							
+							<td style="text-align: right; width: 30%; padding-right: 10px">{{tkpctrl.tipoIngreso.nombre}}</td>							
 						</tr>						
 					</table>	
 					<div class="row">
@@ -116,7 +116,7 @@
 						<div class="col-sm-6 pull-right">Hora : {{ tkpctrl.pago.fechaPago | date:'H:mm:ss'}}</div>
 					</div>
 					<br>
-						<div style="font-size: larger"><a class="btn btn-primary" id="printpagebutton" ng-click="tkpctrl.borrarBotonImprimir()">Imprimir</a></div>
+					<div style="font-size: larger"><a class="btn btn-primary" id="printpagebutton" ng-click="tkpctrl.borrarBotonImprimir()">Imprimir</a></div>
 				</div>
 			</div>
 		</div>

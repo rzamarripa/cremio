@@ -461,7 +461,6 @@ angular.module("creditoMio")
           //console.log("FF:", FF);
       }
       
-      
       //Meteor.call("actualizarMultas",function(err, res){console.log("Fue por multas:",res)});
       loading(true);
       Meteor.call('getCobranza', FI, FF, op, Meteor.user().profile.sucursal_id, function(error, result) {           
@@ -498,7 +497,7 @@ angular.module("creditoMio")
 
             objeto.cliente = result;
 						
-						//console.log("Objeto:", objeto);
+						console.log("Objeto:", objeto);
 						
 			      rc.cliente_id = objeto.cliente._id
 			
@@ -692,8 +691,6 @@ angular.module("creditoMio")
 		     toastr.error('Faltan Datos.');
 		     return;
 		  }
-			
-			//console.log(nota);			
 			nota.estatus = true;
 			nota.fecha = new Date()
 			nota.hora = moment(nota.fecha).format("hh:mm:ss a")

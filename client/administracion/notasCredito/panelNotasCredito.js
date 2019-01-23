@@ -11,7 +11,7 @@ function PanelNotasCreditoCtrl($scope, $meteor, $reactive,  $state, $stateParams
   rc.fecha.setHours(0,0,0,0);
 	
 	this.subscribe('notasCredito',()=>{
-			return [{}]
+			return [{sucursal_id: Meteor.user().profile.sucursal_id}]
 	});
 				
   this.helpers({

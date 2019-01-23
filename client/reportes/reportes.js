@@ -71,8 +71,6 @@ angular.module("creditoMio")
   rc.arregloTiposIngresos = [];
   rc.arregloTiposIngresosobjetos = [];
   rc.arregloCarteraVencida = [];
-  
-		
 
 
   this.subscribe("tiposCredito", ()=>{
@@ -126,65 +124,94 @@ angular.module("creditoMio")
 	  rc.fechaInicial.setHours(0,0,0,0);
 		rc.fechaFinal.setHours(23,59,59,999);
 		
-		rc.sumaCapital = 0;
-    rc.sumaInteres = 0;
-    rc.sumaIva = 0;
-    rc.sumaSeguro = 0;
+		rc.sumaCapital 				= 0;
+    rc.sumaInteres 				= 0;
+    rc.sumaIva 						= 0;
+    rc.sumaSeguro 				= 0;
     
-    rc.totalCobranza = 0;
-    rc.sumaCreditos = 0;
-		rc.sumaVales 		= 0;
+    rc.totalCobranza 			= 0;
+    rc.sumaCreditos 			= 0;
+		rc.sumaVales 					= 0;
+		rc.sumaCargoMoratorio = 0;
     
-    rc.planPagos = [];
-    rc.arregloTiposIngresos = [];
-    rc.arregloTiposIngresosobjetos = [];
+    rc.planPagos 										= [];
+    rc.arregloTiposIngresos 				= [];
+    rc.arregloTiposIngresosobjetos 	= [];
+    rc.arregloSeguroDistribuidor 		= [];
 		
 		loading(true);		
 		Meteor.call("getCobranzaDiaria", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id, function(error, result){
 				if  (result)
 				{
 
-						rc.planPagoOriginal 			= result.cobranza;
-						rc.planPagos 							= result.cobranza;		
+						rc.planPagoOriginal 					= result.cobranza;
+						rc.planPagos 									= result.cobranza;		
+						rc.arregloSeguroDistribuidor	= result.seguroDistribuidorCobranza;
 						
-						rc.sumaSeguroDistribuidor = result.seguroDistribuidor;
-						rc.sumaBonificaciones 		= result.bonificaciones;				
+						rc.sumaSeguroDistribuidor 		= result.seguroDistribuidor;
+						rc.sumaBonificaciones 				= result.bonificaciones;			
 						
 						_.each(rc.planPagos, function(plan){
- 								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
-								rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
-								if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
-								rc.sumaSeguro += Number(parseFloat(plan.pagoSeguro).toFixed(2));
-								if (plan.pagoIva == undefined) plan.pagoIva = 0;
-								rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
-								if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
-								rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
-								
-								if (plan.descripcion == "Cargo Moratorio")
-									 rc.sumaCargoMoratorio += Number(parseFloat(plan.totalPago).toFixed(2));	 
-								
-								//console.log(plan)
-								if (plan.tipoIngreso != 'Nota de Credito')
-										rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
-								
-								if (plan.tipoCredito == "creditoP")
-										rc.sumaCreditos += Number(parseFloat(plan.totalPago).toFixed(2));		
-								else if (plan.tipoCredito == "vale"){
-										rc.sumaVales += Number(parseFloat(plan.totalPago).toFixed(2));
-										plan.descripcion = "Vale";
-								}
 							
+ 								if (plan.tipoIngreso != 'Nota de Credito')
+ 								{
+ 								
+		 								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
+										rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
+										if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
+										rc.sumaSeguro += Number(parseFloat(plan.pagoSeguro).toFixed(2));
+										if (plan.pagoIva == undefined) plan.pagoIva = 0;
+										rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
+										if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
+										rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
+										
+										if (plan.bonificacion == undefined)
+												plan.bonificacion = 0;
+										
+										plan.totalPago = Number(parseFloat(plan.totalPago - plan.bonificacion)).toFixed(2); 
+										
+										
+										if (plan.descripcion == "Cargo Moratorio")
+												rc.sumaCargoMoratorio += Number(parseFloat(plan.totalPago).toFixed(2));
+		
+										//if (plan.tipoIngreso != 'Nota de Credito')
+										rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
+										
+										if (plan.tipoCredito == "creditoP" && plan.tipoIngreso != 'Nota de Credito')
+												rc.sumaCreditos += Number(parseFloat(plan.totalPago).toFixed(2));		
+										else if (plan.tipoCredito == "vale" && plan.tipoIngreso != 'Nota de Credito' ){
+												rc.sumaVales += Number(parseFloat(plan.totalPago).toFixed(2));
+										}
+										
+										if (plan.descripcion == "Cargo Moratorio" && plan.tipoCredito == "vale")
+												plan.descripcion = "C. Moratorio";
+										else
+												plan.descripcion = "Vale";		
+																								
+										
+								}		
+								
 								if (rc.arregloTiposIngresos[plan.tipoIngreso] == undefined)
 										rc.arregloTiposIngresos[plan.tipoIngreso] = Number(parseFloat(plan.totalPago).toFixed(2));
 								else
 									rc.arregloTiposIngresos[plan.tipoIngreso] += Number(parseFloat(plan.totalPago).toFixed(2));
-								
  								
+						});
+						
+						_.each(rc.arregloSeguroDistribuidor, function(seguro){
+							
+											if (rc.arregloTiposIngresos[seguro.tipoIngreso] == undefined)
+												rc.arregloTiposIngresos[seguro.tipoIngreso] = Number(parseFloat(seguro.seguro).toFixed(2));
+											else
+												rc.arregloTiposIngresos[seguro.tipoIngreso] += Number(parseFloat(seguro.seguro).toFixed(2));
+
 						});
 										
 						for (var key in rc.arregloTiposIngresos) {
 						  rc.arregloTiposIngresosobjetos.push({tipoPago: key, total: rc.arregloTiposIngresos[key]})
 						}
+
+						console.log(rc.arregloSeguroDistribuidor);
 						
 						loading(false);
 						$scope.$apply();
@@ -310,7 +337,10 @@ angular.module("creditoMio")
 	    rc.sumaIva = 0;
 	    rc.sumaSeguro = 0;
 	    
-	    rc.totalCobranza = 0;
+	    rc.totalCobranza 			= 0;
+	    rc.sumaCreditos 			= 0;
+			rc.sumaVales 					= 0;
+			rc.sumaCargoMoratorio = 0;
 	    
 	    rc.planPagos = [];
 			
@@ -318,7 +348,9 @@ angular.module("creditoMio")
 			Meteor.call("getBancos", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
 					if  (result)
 					{
-							rc.planPagos = result;
+							rc.planPagos 							= result.cobranza;
+							rc.sumaSeguroDistribuidor = result.seguroDistribuidor;
+							rc.sumaBonificaciones 		= result.bonificaciones;
 							//console.log(result)
 							
 							_.each(rc.planPagos, function(plan){
@@ -334,11 +366,31 @@ angular.module("creditoMio")
 									if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
 									rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
 									
-									rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
+									if (plan.bonificacion == undefined)
+										plan.bonificacion = 0;
+								
+									plan.totalPago = Number(parseFloat(plan.totalPago - plan.bonificacion)).toFixed(2); 
+									
+									
+									if (plan.descripcion == "Cargo Moratorio")
+											rc.sumaCargoMoratorio += Number(parseFloat(plan.totalPago).toFixed(2));
+	
+									/*
+if (plan.tipoIngreso != 'Nota de Credito')
+											rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
+*/
+									
+									if (plan.tipoCredito == "creditoP")
+											rc.sumaCreditos += Number(parseFloat(plan.totalPago).toFixed(2));		
+									else if (plan.tipoCredito == "vale"){
+											rc.sumaVales += Number(parseFloat(plan.totalPago).toFixed(2));
+											plan.descripcion = "Vale";
+									}
 								}
 
 									
 							});
+							console.log(rc.sumaVales);
 							loading(false);
 							$scope.$apply();
 					}
@@ -743,8 +795,7 @@ this.guardarNotaCobranza=function(nota){
 		this.diarioCreditos = true
 	}
 	
-	
-	
+		
 	this.imprimirReporteCobranza = function(objeto){
 
 		
@@ -854,7 +905,7 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 		    console.log('ERROR :', error);
 		    toastr.warning("Error al imprimir el reporte");
 		    loading(false);
-		    return;
+		    return;a
 		   }
 		   else
 		   {
@@ -961,9 +1012,9 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 	};
 	this.imprimirReporteBancos = function(objeto){
 				
-			console.log(objeto)	
+			//console.log(objeto)	
 				
-				
+			 loading(true);
 	    //console.log("objeto",objeto)
 		   Meteor.call('ReportesBanco', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
 
@@ -974,7 +1025,10 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 		   }
 		   else
 		   {
-		 				function b64toBlob(b64Data, contentType, sliceSize) {
+			   		downloadFile(response);	
+			   		loading(false);
+		 				/*
+function b64toBlob(b64Data, contentType, sliceSize) {
 							  contentType = contentType || '';
 							  sliceSize = sliceSize || 512;							
 							  var byteCharacters = atob(b64Data);
@@ -1001,6 +1055,7 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 						dlnk.href = url;
 						dlnk.click();		    
 					  window.URL.revokeObjectURL(url);
+*/
 		   }
 		});
 	};

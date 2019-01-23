@@ -66,7 +66,7 @@ Meteor.methods({
 		nuser.profile.notasCredito.saldo = Number(parseFloat(nuser.profile.notasCredito.saldo).toFixed(2));
 */
 		
-		Meteor.users.update({_id:user_id},{$set:{'profile':nuser.profile}})
+		Meteor.users.update({_id:user_id},{$set:{'profile': nuser.profile }})
 
 		var notas =  NotasCredito.find({cliente_id : user_id, saldo : {$gt: 0},estatus : 1}, {limit: 1},{sort:{createdAt:-1}}).fetch();
 

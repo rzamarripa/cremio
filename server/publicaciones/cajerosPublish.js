@@ -13,8 +13,8 @@ Meteor.publish("cajero",function(params){
   return Meteor.users.find(params);
 });
 
-Meteor.publish("allCajeros",function(){
-	return Meteor.users.find({roles : ["Cajero"]});
+Meteor.publish("allCajeros",function(params){
+	return Meteor.users.find(params);
 })
 
 Meteor.publish("cajeroId",function(options){

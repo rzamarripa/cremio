@@ -11,7 +11,7 @@ angular.module("creditoMio")
 
 	
   this.subscribe('creditos', () => {
-		return [{tipo: 'vale', estatus : 1 }];
+		return [{sucursal_id: Meteor.user().profile.sucursal_id ,tipo: 'vale', estatus : 1 }];
 	})
 	  
     

@@ -514,31 +514,58 @@ Meteor.methods({
         totalIngresos += mov.monto;
       });
     };
+    
+    //console.log(ingresosAgrupados);
+    
     //Entrega de Creditos
-    var creditosAgrupados = {};
-    var totalCreditos = 0;
-    var creditosEntregados = 0;
-    var movs = MovimientosCajas.find({ caja_id: caja_id, $or:[ {tipoMovimiento: 'Retiro'}, {origen: 'Cancelación de Ent. de Crédito'}], createdAt: filtroFechas }).fetch();
+    var creditosAgrupados 	= {};
+    var valesAgrupados 			= {};
+    
+    var totalCreditos 			= 0;
+    var creditosEntregados 	= 0;
+    
+    var totalVales 					= 0;
+    var valesEntregados 		= 0;
+    
+    var movs = MovimientosCajas.find({ caja_id: caja_id, $or:[ {tipoMovimiento: 'Retiro'}, {origen: 'Cancelación de Ent. de Crédito'}, {origen: 'Cancelación de Ent. de Vale'}], createdAt: filtroFechas }).fetch();
     //var cuentas = Cuentas.find({estatus: 1}).fetch();
-
+		
     if (movs.length) {
       _.each(movs, function(mov) {
         mov.tipoIngreso = TiposIngreso.findOne(mov.cuenta_id);
         if (creditosAgrupados[mov.tipoIngreso.nombre] == undefined) {
-          creditosAgrupados[mov.tipoIngreso.nombre] = 0;
+           creditosAgrupados[mov.tipoIngreso.nombre] = 0;
         }
-        creditosAgrupados[mov.tipoIngreso.nombre] += (mov.monto*-1);
-        totalCreditos += mov.monto;
         
+        if (valesAgrupados[mov.tipoIngreso.nombre] == undefined) {
+           valesAgrupados[mov.tipoIngreso.nombre] = 0;
+        }
+        
+        if (mov.origen == 'Entrega de Crédito' || mov.origen == 'Entrega de Credito')
+        {
+	        	creditosAgrupados[mov.tipoIngreso.nombre] += (mov.monto*-1);
+	        	totalCreditos += mov.monto;
+        }	
+        else if (mov.origen == 'Entrega de Vale')
+        {
+	        	valesAgrupados[mov.tipoIngreso.nombre] += (mov.monto*-1);
+	        	totalVales += mov.monto;
+        }
+        				        
         if (mov.origen == 'Cancelación de Ent. de Crédito')
-		        	 creditosEntregados--;
-		        else	
-		        	 creditosEntregados++;
+		        creditosEntregados--;
+		    else if (mov.origen == 'Cancelación de Ent. de Vale')	
+        	  valesEntregados--;    
+        else if (mov.origen == 'Entrega de Crédito'  || mov.origen == 'Entrega de Credito')	
+        	  creditosEntregados++;
+    	  else if (mov.origen == 'Entrega de Vale')	
+    	  		valesEntregados++;
         
-        //creditosEntregados++;
       });
     };
-    totalCreditos = totalCreditos*-1;
+    totalCreditos = totalCreditos * -1;
+    totalVales = totalVales	* -1;
+    
     //Tranferencias a ventanilla
     var transAVentanillaAgrupados = {};
     var totalTransAVentanilla = 0;
@@ -568,9 +595,7 @@ Meteor.methods({
     //Efectivo en Caja
     var caja = Cajas.findOne(caja_id);
     var cajero = Meteor.users.findOne({_id: caja.usuario_id}, {fields: {"profile.nombre":1}});
-    
-    
-    
+     
     var totalEnCaja = 0;
     _.each(caja.cuenta, function(cuenta, key){
     	cuenta.tipoIngreso = TiposIngreso.findOne(key);
@@ -579,12 +604,30 @@ Meteor.methods({
     		totalEnCaja = cuenta.saldo;
     	}
     });
+    
+   /*
+ ingresosAgrupados.sort(function (a, b) {
+		  if (a.nombreCompleto > b.nombreCompleto) {
+		    return 1;
+		  }
+		  if (a.nombreCompleto < b.nombreCompleto) {
+		    return -1;
+		  }
+		  // a must be equal to b
+		  return 0;
+		});
+*/
+
+    
     return 	{
 	    				ingresosAgrupados				: ingresosAgrupados,
 	    				totalIngresos						: totalIngresos,
 	    				creditosAgrupados				: creditosAgrupados,
+	    				valesAgrupados					: valesAgrupados,
 							totalCreditos						: totalCreditos,
 							creditosEntregados			: creditosEntregados,
+							totalVales							: totalVales,
+							valesEntregados					: valesEntregados,
 							totalTransAVentanilla		: totalTransAVentanilla,
 							totalTransDeVentanilla	: totalTransDeVentanilla,
 							totalEnCaja,
@@ -607,6 +650,10 @@ Meteor.methods({
     var creditosAgrupados = {};
     var totalCreditos = 0;
     var creditosEntregados = 0;
+    
+    var valesAgrupados = {};
+    var totalVales = 0;
+    var valesEntregados = 0;
 		
 		var transAVentanillaAgrupados = {};
     var totalTransAVentanilla = 0;
@@ -615,8 +662,7 @@ Meteor.methods({
     var totalTransDeVentanilla = 0;
 		
 		var totalEnCaja = 0;
-   
-    
+		    
 		_.each(corte.movimientosCaja, function(mcaja, id){
 				
 				var movs = MovimientosCajas.findOne({ _id: mcaja});
@@ -653,7 +699,7 @@ Meteor.methods({
 		        ingresosAgrupados[movs.tipoIngreso.nombre] += movs.monto;
 		        totalIngresos += movs.monto;
 				}
-				else if(movs.tipoMovimiento == 'Retiro' || movs.origen == 'Cancelación de Ent. de Crédito')
+				else if(movs.tipoMovimiento == 'Retiro' || movs.origen == 'Cancelación de Ent. de Crédito' || movs.origen == 'Cancelación de Ent. de Vale')
 				{
 					  
 					  //console.log(movs);
@@ -661,13 +707,39 @@ Meteor.methods({
 		        if (creditosAgrupados[movs.tipoIngreso.nombre] == undefined) {
 		          creditosAgrupados[movs.tipoIngreso.nombre] = 0;
 		        }
-		        creditosAgrupados[movs.tipoIngreso.nombre] += (movs.monto*-1);
+		        
+		        if (valesAgrupados[movs.tipoIngreso.nombre] == undefined) {
+		           valesAgrupados[movs.tipoIngreso.nombre] = 0;
+		        }
+		        
+		        if (movs.origen == 'Entrega de Crédito' || movs.origen == 'Entrega de Credito')
+		        {
+			        	creditosAgrupados[movs.tipoIngreso.nombre] += (movs.monto*-1);
+			        	totalCreditos += movs.monto;
+		        }	
+		        else if (movs.origen == 'Entrega de Vale')
+		        {
+			        	valesAgrupados[movs.tipoIngreso.nombre] += (movs.monto*-1);
+			        	totalVales += movs.monto;
+		        }
+		        				        
+		        if (movs.origen == 'Cancelación de Ent. de Crédito' || movs.origen == 'Entrega de Credito')
+				        creditosEntregados--;
+				    else if (movs.origen == 'Cancelación de Ent. de Vale')	
+		        	  valesEntregados--;    
+		        else if (movs.origen == 'Entrega de Crédito')	
+		        	  creditosEntregados++;
+		    	  else if (movs.origen == 'Entrega de Vale')	
+		    	  		valesEntregados++;
+		        
+		      /*
+  creditosAgrupados[movs.tipoIngreso.nombre] += (movs.monto*-1);
 		        totalCreditos += movs.monto;
 		        if (movs.origen == 'Cancelación de Ent. de Crédito')
 		        	 creditosEntregados--;
 		        else	
 		        	 creditosEntregados++;	 
-		        
+*/
 		        
 				}
 				else if(movs.tipoMovimiento == 'Ingreso Por Traspaso')
@@ -689,7 +761,8 @@ Meteor.methods({
 				
 		})
 		
-		totalCreditos = totalCreditos*-1;
+		totalCreditos = totalCreditos * -1;
+		totalVales = totalVales	* -1;
 		
     //Efectivo en Caja
     var caja = Cajas.findOne(corte.caja_id);
@@ -711,8 +784,11 @@ Meteor.methods({
 	    				aperturaVentanilla			: aperturaVentanilla,
 	    				totalIngresos						: totalIngresos,
 	    				creditosAgrupados				: creditosAgrupados,
+							valesAgrupados					: valesAgrupados,
 							totalCreditos						: totalCreditos,
 							creditosEntregados			: creditosEntregados,
+							totalVales							: totalVales,
+							valesEntregados					: valesEntregados,
 							totalTransAVentanilla		: totalTransAVentanilla,
 							totalTransDeVentanilla	: totalTransDeVentanilla,
 							totalAperura						:	totalAperura,
@@ -721,119 +797,5 @@ Meteor.methods({
 							caja
 						};
   },
-  cancelarPago: (pago, caja) => {
-			
-			
-			//Faltaria ver si es neceario cambiarle el estatus al planPagos de MovimientoCuenta.pagos.planPagos?????
-						
-			_.each(pago.planPagos, function(plan) {			
-					//Poner pago Cancelado para que no sume
-					
-					_.each(plan.pagos, function(pago){
-							if (pago.pago_id == pago._id)
-								  pago.estatus = 3; //Estatus Cancelado;					 
-					});
-					//console.log("Plan Cobranza: ", plan);
-					
-					//Buscar el plan de pagos y cancelar el pago dentro del arreglo de pagos
-					var planPago = PlanPagos.findOne(plan.planPago_id);		//Se encontro
-					
-					_.each(planPago.pagos, function(ppPagos){
-							if (pago._id == ppPagos.pago_id)
-							{
-									ppPagos.estatus = 3; //Estatus Cancelado;
-									
-									//Buscar el credito
-									var credito = Creditos.findOne(pago.credito_id);
-									//console.log("Cre:", credito);
-									if (ppPagos.movimiento == 'Recibo' )
-									{
-											var recibos = credito.saldoActual + ppPagos.totalPago;
-											recibos = Number(parseFloat(recibos).toFixed(2));
-											//console.log("R:", recibos)
-											
-											if (credito.estatus == 5)
-												 credito.estatus = 4;
-											
-											Creditos.update({_id: planPago.credito_id},{$set : {saldoActual : recibos, estatus: credito.estatus } } );	 	
-											
-									}
-									else if (ppPagos.movimiento == 'Cargo Moratorio')
-									{
-											var multas = credito.saldoMultas + ppPagos.totalPago;
-											multas = Number(parseFloat(multas).toFixed(2));
-											//console.log("M:", multas)
-											
-											if (credito.estatus == 5)
-												 credito.estatus = 4;
-											
-											Creditos.update({_id: planPago.credito_id},{$set : {saldoMultas : multas, estatus: credito.estatus } } )	 	
-											
-									}
-							}
-							
-					});
-
-										
-					PlanPagos.update(plan.planPago_id, { $set: { pagos: planPago.pagos }, 
-																							 $inc: { importeRegular : plan.totalPago, 
-																											 pagoInteres 		: -plan.pagoInteres,
-																											 pagoIva 				: -plan.pagoIva,
-																											 pagoSeguro 		: -plan.pagoSeguro, 
-																											 pagoCapital		: -plan.pagoCapital
-																										 }
-	        });	
-	        
-	        
-
-	        //Verificar como quedará el estatus 0 o 2
-					planPago = PlanPagos.findOne(plan.planPago_id);		//Se encontro
-										
-					if (planPago.pagoCapital == 0 && planPago.pagoInteres == 0 && planPago.pagoIva == 0 && planPago.pagoSeguro == 0 )
-					{
-							PlanPagos.update({_id: plan.planPago_id}, { $set: { estatus: 0 } });	
-					}		
-					else
-					{
-							PlanPagos.update({_id: plan.planPago_id}, { $set: { estatus: 2 } });		
-					}
-
-      });
-      
-      //Revisar si el crédito esta liquidado para regresarlo a Activo----- y devolverle la lana cancelada
-      
-      //Para que no se pueda volver a cancelar
-      MovimientosCajas.update(pago.movimientoCaja_id, {$set: {estatus:2}});
-      
-      var movimiento_id = MovimientosCajas.insert({
-        tipoMovimiento	: "Cancelación",
-        origen					: "Cancelación de pago",
-        origen_id				: pago._id,
-        monto						: pago.totalPago *-1,
-        cuenta_id				: pago.tipoIngreso_id,
-        caja_id					: pago.caja_id,
-        sucursal_id			: pago.sucursalPago_id,
-        createdAt				: new Date(),
-        createdBy				: Meteor.userId(),
-        updated					: false,
-        estatus					: 1
-      });
-      
-      Pagos.update(pago._id, { $set: { estatus: 0, cancelacion_movimientoCaja_id: movimiento_id } });
-
-
-			/*
-//Restar de la cuenta en la que se hizo el dinero:
-			_.each(caja.cuenta, function(caja, tipoIngreso_id){
-					if (tipoIngreso_id == pago.tipoIngreso_id)
-						 caja.cuenta[tipoIngreso_id].saldo = Number(parseFloat(caja.cuenta[tipoIngreso_id].saldo - pago.totalPago).toFixed(2));				
-			});
-			var tempId = caja._id;
-			delete caja._id;
-			Cajas.update(tempId, {$set:caja});	
-*/
-			
-			
-  },
-    
+     
 });

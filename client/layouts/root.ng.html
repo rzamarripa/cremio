@@ -7,12 +7,14 @@
         </a>
       </span>
     </div>
-    <div id="logo-group">
+<!--     <div id="logo-group"> -->
 
-    <span id="logo"> <img src="img/logoCremio.png" alt="SmartAdmin" style="margin-top: -15px;width: 100px;height: 60px;"> </span>
+    <span > <img src="img/logoCremio.png" alt="SmartAdmin" style="margin-top: -5px; margin-right: 15px; width: 100px;height: 60px;"> </span>
+    <span> <img src="img/LogoBigValeN.png" alt="SmartAdmin" style="margin-top: -5px;width: 120px;height: 55px;"> </span>
 
-  	</div>
-
+<!--   	</div> -->
+		
+		
     <div class="btn-header pull-right">
       <span>
         <a ui-sref="anon.logout" title="Cerrar Sesión">
@@ -31,7 +33,7 @@
     
     <form class="header-search pull-right">
 	    <div class="form-group" style="width: 800px; margin-top: 9px;">
-				<div ng-include=" 'client/layouts/_buscarCliente.html' "></div>
+				<div ng-include=" 'client/layouts/_buscarCliente.html' " ng-show = "currentUser.roles[0] != 'Distribuidor' && currentUser.username != 'admin'" ></div>
 	    </div>	    
 		</form>
   </div>
@@ -42,9 +44,9 @@
 		<span > <!-- User image size is adjusted inside CSS, it should stay as it --> 
 			
 			<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-				<img ng-src="{{currentUser.profile.foto || 'img/badmenprofile.png' }}" alt="me" class="online"> 
+<!-- 				<img ng-src="{{currentUser.profile.foto || 'img/badmenprofile.png' }}" alt="me" class="online">  -->
 				<span>
-					{{currentUser.profile.nombreCompleto}} 
+					{{currentUser.profile.nombre}}
 				</span>
 			</a> 
 			

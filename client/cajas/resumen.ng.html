@@ -4,13 +4,13 @@
 			<div class="row text-center">
 				<div class="col-sm-4 col-sm-offset-4" style="font-size: small">
 					<span id="logo"> <img src="img/logoCreditoMioBN.png" alt="SmartAdmin" style="margin-top: -18px;width: 170px;height: 100px;"> </span>
-					<p style="text-align: center"><strong>---INGRESOS POR FORMA DE PAGO---</strong></p>
+					<p style="font-size: smaller;text-align: center"><strong>---INGRESOS POR FORMA DE PAGO---</strong></p>
 					<table style="width: 100%">
 						<tr ng-repeat="(key, resu) in cj.ingresosAgrupados">
 							<td style="text-align: left; width: 50%;">
 								{{key}}
 							</td>
-							<td style="text-align: right; width: 50%;">
+							<td style="text-align: right; width: 50%; padding-right: 10px">
 								{{resu | currency}}
 							</td>
 						</tr>
@@ -18,18 +18,18 @@
 							<td style="text-align: left; width: 50%;">
 								<strong>TOTAL: </strong>
 							</td>
-							<td style="text-align: right; width: 50%;">
+							<td style="text-align: right; width: 50%; padding-right: 10px">
 								<strong>{{cj.totalIngresos | currency}}</strong>
 							</td>
 						</tr>
 					</table>
-					<p style="text-align: center"><strong>-----ENTREGA DE CRÉDITOS------</strong></p>
-					<table style="width: 100%">
+					<p style="font-size: smaller;text-align: center"><strong>-----ENTREGA DE CRÉDITOS------</strong></p>
+					<table style="font-size: smaller; width: 100%">
 						<tr>
 							<td style="text-align: left; width: 60%;">
 								CREDITOS ENTREGADOS:
 							</td>
-							<td style="text-align: right; width: 50%;">
+							<td style="text-align: right; width: 50%; padding-right: 10px">
 								{{cj.creditosEntregados}}
 							</td>
 						</tr>
@@ -37,7 +37,7 @@
 							<td style="text-align: left; width: 50%;">
 								{{key}}
 							</td>
-							<td style="text-align: right; width: 50%;">
+							<td style="text-align: right; width: 50%; padding-right: 10px">
 								{{ag | currency}}
 							</td>
 						</tr>
@@ -45,29 +45,56 @@
 							<td style="text-align: left; width: 50%;">
 								<strong>TOTAL: </strong>
 							</td>
-							<td style="text-align: right; width: 50%;">
+							<td style="text-align: right; width: 50%; padding-right: 10px">
 								<strong>{{cj.totalCreditos | currency}}</strong>
 							</td>
 						</tr>
 					</table>
-					<p style="text-align: center"><strong>----TRANSF. DE FONDOS A VENTANILLA-----</strong></p>
-					<table style="width: 100%">
+					<p style="font-size: smaller;text-align: center;"><strong>-------------ENTREGA DE VALES--------------</strong></p>
+					<table style="font-size: smaller; width: 100%;">
+						<tr>
+							<td style="text-align: left; width: 60%;">
+								VALES ENTREGADOS:
+							</td>
+							<td style="text-align: right; width: 40%; padding-right: 10px">
+								{{cj.valesEntregados}}
+							</td>
+						</tr>
+						<tr ng-repeat="(key, ag) in cj.valesAgrupados">
+							<td style="text-align: left; width: 50%;">
+								{{key}}
+							</td>
+							<td style="text-align: right; width: 50%; padding-right: 10px">
+								{{ag | currency}}
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; width: 50%;">
+								<strong>TOTAL: </strong>
+							</td>
+							<td style="text-align: right; width: 50%; padding-right: 10px">
+								<strong>{{cj.totalVales | currency}}</strong>
+							</td>
+						</tr>
+					</table>
+					<p style="font-size: smaller;text-align: center"><strong>----TRANSF. DE FONDOS A VENTANILLA-----</strong></p>
+					<table style="font-size: smaller; width: 100%">
 						<tr>
 							<td style="text-align: left; width: 50%;">
 								<strong>MONEDA NACIONAL: </strong>
 							</td>
-							<td style="text-align: right; width: 50%;">
+							<td style="text-align: right; width: 50%; padding-right: 10px">
 								<strong>{{cj.totalTransAVentanilla | currency}}</strong>
 							</td>
 						</tr>
 					</table>
-					<p style="text-align: center"><strong>----RETIRO DE FONDOS DE VENTANILLA----</strong></p>
-					<table style="width: 100%">
+					<p style="font-size: smaller;text-align: center"><strong>----RETIRO DE FONDOS DE VENTANILLA----</strong></p>
+					<table style="font-size: smaller; width: 100%">
 						<tr>
 							<td style="text-align: left; width: 50%;">
 								<strong>MONEDA NACIONAL: </strong>
 							</td>
-							<td style="text-align: right; width: 50%;">
+							<td style="text-align: right; width: 50%; padding-right: 10px">
 								<strong>{{cj.totalTransDeVentanilla | currency}}</strong>
 							</td>
 						</tr>
@@ -75,8 +102,8 @@
 					<br>
 					<div class="row">
 						<div class="col-sm-12">
-							<strong><span class="pull-left">(=)EFECTIVO EN CAJA:</span> </trong>
-							<strong><span class="pull-right">{{cj.totalEnCaja | currency}}</span></strong>
+							<strong><span class="pull-left" style="font-size: smaller;">(=)EFECTIVO EN CAJA:</span> </trong>
+							<strong><span class="pull-right" style="text-align: right; width: 50%; padding-right: 10px">{{cj.totalEnCaja | currency}}</span></strong>
 						</div>
 					</div>
 					

@@ -1,6 +1,14 @@
-<div class="col-sm-10 pull-right" ng-if="currentUser.roles[0] != 'Distribuidor'">
+<div class="col-sm-3 pull-right">
 	<div class="input-group">
-		
+		<span class="input-group-btn">
+			<select name="sucursal" class="form-control select2" placeholder="Seleccione" ng-model="ro.sucursal_id" required>
+				<option  value="{{objeto._id}}" ng-repeat="objeto in ro.sucursales">{{objeto.nombreSucursal}}</option>
+			</select>						
+		</span>
+	</div>
+</div>
+<div class="col-sm-8 pull-right">
+	<div class="input-group">
 		<input type="text" class="form-control" placeholder="Escribe el nombre" ng-show="ro.porNumero" ng-model="ro.buscar.nombre" capitalize>
 		<input type="text" class="form-control" placeholder="Escribe el número" ng-show="!ro.porNumero" ng-model="ro.buscar.numeroCliente " capitalize>
 		<span class="input-group-btn">
@@ -12,10 +20,15 @@
 			
 			<a class="btn btn-default" ng-show="!ro.porCliente" ng-click="ro.cambiarDistribuidor()" style="height: 34px;" type="button">Cliente</a> 
 			<a class="btn btn-default" ng-show="ro.porCliente" ng-click="ro.cambiarCliente()" style="height: 34px;" type="button">Distribuidor</a>
-			 
+			
 		</span>
 	</div>
-</div>	
+</div>
+<div class="col-sm-2" style="margin-top: -25px; margin-left: -50px; padding-left: -10px;">
+			<span> <i class="fa fa-ticket"></i> <b class="badge bounceIn animated">{{ro.vales}}</b> </span>
+			<span> <i class="fa fa-user"></i> <b class="badge bounceIn animated">{{ro.prospectos}}</b> </span>
+</div>
+	
 <div class="ajax-dropdown" ng-show="ro.buscando" style="display: block; width: 100% !important;">
 	<div class="ajax-notifications custom-scroll">
 		

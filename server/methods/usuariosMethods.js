@@ -57,7 +57,14 @@ Meteor.methods({
 	  			 usuario.username = sucursal.clave + '-D' + numero;
 	  			 	  			 	 
 	  		//usuario.contrasena = Math.random().toString(36).substring(2,7);
-	  		usuario.password = '123';
+	  		
+	  		var dia  = usuario.profile.fechaNacimiento.getDate();
+				var anio = usuario.profile.fechaNacimiento.getFullYear();
+				
+				var pwd = dia.toString() + anio.toString();
+				//console.log(pwd); 
+	  		
+	  		usuario.password = pwd;
 	  		//console.log(usuario.username);
 	  		sucursal.folioDistribuidor = numero;
 	  		usuario.profile.numeroCliente = usuario.username;
@@ -353,6 +360,7 @@ if (referenciaPersonal.buscarPersona_id)
 			profile: user.profile
 		}});
 		
+		
 		if (cambiarPassword == false)
 				Accounts.setPassword(user._id, usuario.password, {logout: false});		
 				
@@ -570,7 +578,6 @@ if (referenciaPersonal.buscarPersona_id)
 	  
  		return imagen;
 	},
-	
 	setDocumentosCliente: function (cliente_id, documento_id, imagen) {	
 		
 		 var documento = {};
@@ -591,7 +598,6 @@ if (referenciaPersonal.buscarPersona_id)
 		 });
 		 return documentos;
 	},
-	
 	getDocumentosClientes: function (cliente_id) {	
 				 
 		 var documentos = DocumentosClientes.find({cliente_id: cliente_id}, {fields: { "imagen": 0 }}).fetch();
@@ -604,7 +610,6 @@ if (referenciaPersonal.buscarPersona_id)
 		 return documentos;
 
 	},
-	
 	borrarDocumentoCliente: function (cliente_id, id) {	
 		
 		DocumentosClientes.remove({_id: id});			 
@@ -619,10 +624,15 @@ if (referenciaPersonal.buscarPersona_id)
 		 return documentos;
 
 	},
-
 	getDocumentoCliente: function (id) {		
 		var doc = DocumentosClientes.findOne({_id: id});
 		return doc.imagen;
+	},
+	updateSucursal: function (usuario_id, sucursal_id) {
+	  Meteor.users.update({_id: usuario_id}, {$set:{
+			"profile.sucursal_id": sucursal_id
+		}});
+	
 	},
 	
 	

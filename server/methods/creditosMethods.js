@@ -337,7 +337,7 @@ Meteor.methods({
 				
 				Meteor.users.update({_id: cliente._id}, {$set: {"profile.saldoCredito": saldo}});
 				
-				saldoBeneficiario				
+				//saldoBeneficiario				
 				var saldoBeneficiario 		= 0;
 				var saldoBeneficiarioVale = 0;
 				
@@ -432,7 +432,41 @@ Meteor.methods({
 		  	if (credito.tipoGarantia == tipo && credito.garantias.length > 0)
 		  	{
 			  		_.each(credito.garantias, function(garantia){
-				  			respaldos.push(garantia);
+				  			
+				  			if (tipo == "mobiliaria")
+				  			{
+					  				var ban = false;
+					  				_.each(respaldos, function(respaldo){
+						  					if (respaldo.descripcion == garantia.descripcion && 
+						  							respaldo.caracteristicas == garantia.caracteristicas && 
+						  							respaldo.avaluoMobiliaria == garantia.avaluoMobiliaria )
+				  							{
+														ban = true;									  							
+				  							}
+					  				});	
+					  				
+					  				if (!ban)
+					  					 respaldos.push(garantia);
+					  					 
+				  			}
+				  			else if (tipo == "general")
+				  			{
+					  				var ban = false;
+					  				_.each(respaldos, function(respaldo){
+						  					if (respaldo.terrenoYconstruccion == garantia.terrenoYconstruccion && 
+						  							respaldo.ubicacion == garantia.ubicacion && 
+						  							respaldo.medidasColindancias == garantia.medidasColindancias &&
+						  							respaldo.avaluoGeneral == garantia.avaluoGeneral )
+				  							{
+														ban = true;									  							
+				  							}
+					  				});	
+					  				
+					  				if (!ban)
+					  					 respaldos.push(garantia);
+					  			
+				  			}
+				  			
 			  		});	
 		  	}		  	
 	  });

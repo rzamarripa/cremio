@@ -251,10 +251,10 @@
 																</tr>	
 															</thead>
 															<tbody>
-																<tr ng-repeat="item in cd.objeto.profile.documentos">
+																<tr ng-repeat="item in cd.documentos">
 																	<td>{{item.nombre}}</td>
-																  <td><a href="#" ng-click="cd.modalDoc(item.pos)"> <i class="fa fa-eye"></a></td>
-																	<td><a href="#" ng-click="cd.imprimirDoc(item.pos)"> <i class="fa fa-print"></i></a></td>
+																  <td><a href="#" ng-click="cd.modalDoc(item._id)"> <i class="fa fa-eye"></a></td>
+																	<td><a href="#" ng-click="cd.imprimirDoc(item._id)"> <i class="fa fa-print"></i></a></td>
 																</tr>	
 															</tbody>	
 														</table>	
@@ -647,16 +647,17 @@
 								<thead class="thead">
 									<tr>
 										<th class="text-center" width="5%">No.</th>	
-										<th class="text-center" width="7%">Crédito No.</th>
+										<th class="text-center" width="5%">Crédito</th>
 										<th class="text-center" width="10%">Tipo</th>
-										<th class="text-center" width="7%">Tasa</th>
-										<th class="text-center" width="5%">Aval</th>
-										<th class="text-center" width="15%">Fecha Solicitud</th>
-										<th class="text-center" width="15%">Fecha Entrega</th>
+										<th class="text-center" width="5%">Tasa</th>
+										<th class="text-center" width="2%">Aval</th>
+										<th class="text-center" width="10%">Fecha Solicitud</th>
+										<th class="text-center" width="10%">Fecha Entrega</th>
 										<th class="text-center" width="10%">Capital Solicitado</th>
 										<th class="text-center" width="10%">Adeudo Inicial</th>
 										<th class="text-center" width="10%">Saldo Actual</th>
-										<th class="text-center" width="10%">Acciones</th>
+										<th class="text-danger text-center" width="10%">Saldo C.M.</th>
+										<th class="text-center" width="8%">Acciones</th>
 										<th ng-show="cd.openModal"></th>
 									</tr>
 								</thead>
@@ -673,6 +674,7 @@
 										<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
 										<td class="text-right">{{credito.adeudoInicial | currency}}</td>
 										<td class="text-right">{{credito.saldoActual | currency}}</td>
+										<td class="text-danger text-right">{{credito.saldoMultas | currency}}</td>
 										<td>
 											<div class="text-center">
 													<button type="button" class="btn btn-xs btn-link" ng-click="cd.verPagos(credito)">Ver Pagos</button>
@@ -1117,7 +1119,15 @@
 				<br/>
 	</div>
 </div>
+<div id="myModalVerDocumento" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+	<div class="modal-dialog modal-lg" role="document">
+		<div id="imagenDiv" class="modal-content">
+		</div>
+  </div>
+</div>
+
 <!-- /////////////////////////MODAL NOTA CUENTA ////////////////////////// -->
+
 <div class="modal fade" id="myModal"	data-backdrop="static" role="dialog">
 				<div class="modal-dialog">
 			<!-- Modal content-->

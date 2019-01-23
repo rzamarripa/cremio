@@ -8,14 +8,31 @@ angular.module("creditoMio")
 	this.action = true;
 	this.nuevo 	= true;
 	
-	this.actionArreglo = true;
+	this.actionArreglo 					= true;
+	this.actionArregloComision 	= true;
 		 
 	this.objeto 		= {}; 
 	this.objeto_id 	= "";
 	
-	rc.renglonTasa	= {};
+	rc.renglonTasa			= {};
+	rc.renglonComision	= {};
+
+/*
+	rc.comisionesVales.valor1 = {valor1: 3, valor2:18, porcentaje: 15 };
+	rc.comisionesVales.valor2 = {valor1: 4, valor2:19, porcentaje: 14 };
+	rc.comisionesVales.valor3 = {valor1: 5, valor2:20, porcentaje: 13 };
+	rc.comisionesVales.valor4 = {valor1: 6, valor2:21, porcentaje: 9 };
+	rc.comisionesVales.valor5 = {valor1: 7, valor2:22, porcentaje: 7 };
+*/
+
+/*
+	rc.comisionesVales.valor5 = {valor1: 3, valor2:16, porcentaje: 15 };
+	rc.comisionesVales.valor6 = {valor1: 3, valor2:16, porcentaje: 15 };
+	rc.comisionesVales.valor7 = {valor1: 3, valor2:16, porcentaje: 15 };
+*/
 			
-	rc.arregloTasa  = [];
+	rc.arregloTasa  			= [];
+	rc.arregloComisiones  = [];
 	
 			
 	this.subscribe('configuraciones',()=>{
@@ -29,8 +46,10 @@ angular.module("creditoMio")
 			var connfiguraciones = Configuraciones.findOne();
 			
 			if (connfiguraciones != undefined)
-					rc.arregloTasa = connfiguraciones.arregloTasa;
-			
+			{
+					rc.arregloTasa 				= connfiguraciones.arregloTasa;
+					rc.arregloComisiones	= connfiguraciones.arregloComisiones
+			}
 			
 			return connfiguraciones;
 		},
@@ -55,12 +74,17 @@ angular.module("creditoMio")
 				toastr.error('Error al actualizar los datos.');
 				return;
 			}
-	
+			
 			_.each(rc.arregloTasa, function(elemento){					
 					delete elemento.$$hashKey;
 			});
-	
-			objeto.arregloTasa = rc.arregloTasa;
+			
+			_.each(rc.arregloComisiones, function(elemento){					
+					delete elemento.$$hashKey;
+			});
+			
+			objeto.arregloTasa 				= rc.arregloTasa;
+			objeto.arregloComisiones	= rc.arregloComisiones;
 			
 			var datos = Configuraciones.findOne();
 			if (datos == undefined)
@@ -75,6 +99,7 @@ angular.module("creditoMio")
 			
 			this.action = true;
 			this.actionArreglo = true;
+			this.actionArregloComision = true;
 	};
 	
 	this.agregar = function(objeto)
@@ -143,10 +168,73 @@ angular.module("creditoMio")
 			this.actionArreglo 	= true;
 	}
 	
+	this.cancelarArreglo = function()
+	{
+			this.actionArreglo 	= true;
+			rc.renglonTasa 			= {};;
+	}
+	
 	this.quitar = function(objeto){
 			
 			
 	}
+	
+	
+	this.agregarComision = function(objeto)
+	{
+			
+			if (objeto.valor1 == undefined || objeto.valor1 === "" || objeto.valor1 < 0){ toastr.warning("Teclee día 1."); return; }
+			if (objeto.valor2 == undefined || objeto.valor2 === "" || objeto.valor2 < 0){ toastr.warning("Teclee día 1."); return; }
+			if (objeto.porcentaje == undefined || objeto.porcentaje === "" || objeto.porcentaje < 0 ){ toastr.warning("Teclee el porcentaje."); return; }
+					
+			if (rc.arregloComisiones == undefined)
+					rc.arregloComisiones = [];
+			
+			rc.renglonComision.numero	= rc.arregloComisiones.length + 1;
+			
+			rc.arregloComisiones.push(rc.renglonComision);
+			rc.renglonComision = {};						
+	}
+	
+	this.editarArregloComision = function(objeto)
+	{
+			this.actionArregloComision = false;
+			
+			rc.renglonComision.numero			= objeto.numero;
+			rc.renglonComision.valor1			= objeto.valor1;
+			rc.renglonComision.valor2			= objeto.valor2;
+			rc.renglonComision.porcentaje	= objeto.porcentaje;
+	}
+	
+	this.actualizarArregloComision = function(objeto)
+	{
+			
+			
+			if (objeto.valor1 == undefined || objeto.valor1 === "" || objeto.valor1 < 0){ toastr.warning("Teclee día 1."); return; }
+			if (objeto.valor2 == undefined || objeto.valor2 === "" || objeto.valor2 < 0){ toastr.warning("Teclee día 1."); return; }
+			if (objeto.porcentaje == undefined || objeto.porcentaje === "" || objeto.porcentaje < 0 ){ toastr.warning("Teclee el porcentaje."); return; }
+			
+			_.each(rc.arregloComisiones, function(elemento){					
+					if (elemento.numero == objeto.numero)
+					{
+							elemento.valor1			= objeto.valor1;
+							elemento.valor2			= objeto.valor2;
+							elemento.porcentaje	= objeto.porcentaje;
+							return;
+					}
+			});
+			
+			rc.renglonComision = {};
+			this.actionArregloComision 	= true;
+	}
+	
+	this.cancelarArregloComision = function()
+	{
+			this.actionArregloComision = true;
+			rc.renglonComision = {};;
+	}
+	
+	
 	
 	
 };

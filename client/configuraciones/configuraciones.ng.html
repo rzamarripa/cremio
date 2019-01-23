@@ -44,12 +44,18 @@
 							<label>16</label>
 							<input name="dieciseis" min="0" class="form-control" type="number" ng-model="conf.renglonTasa.dieciseis" ng-disabled="conf.action">								
 						</div>
-						<div class="col-sm-2">
+						<div class="col-sm-1">
 							<br>	
 							<input type="button" ng-click="conf.agregar(conf.renglonTasa)" class="btn btn-primary" value="Agregar" ng-disabled="conf.action" ng-if="conf.actionArreglo">
 							<input type="button" ng-click="conf.actualizarArreglo(conf.renglonTasa)" class="btn btn-primary" value="Actualizar" ng-if="!conf.actionArreglo">								
 						</div>
+						<div class="col-sm-1">
+							<br>
+							<input type="button" ng-click="conf.cancelarArreglo()" class="btn btn-danger" value="Cancelar" ng-if="!conf.actionArreglo">
+						</div>	
+						
 				</div>	
+				<br>
 				<h4>Valores Tasas</h4>
         <div class="row">
       			<table class="table table-bordered table-condensed">
@@ -110,21 +116,75 @@
         				</tbody>	
       			</table>
         </div>
+        <h4>Porcentaje Comisiones</h4>
+        <div class="row">
+						<div class="col-sm-2" >
+							<label>Día 1</label>
+							<input name="valor1" min="0" class="form-control" type="number" ng-model="conf.renglonComision.valor1" ng-disabled="conf.action">								
+						</div>
+						<div class="col-sm-2" >
+							<label>Día 2</label>
+							<input name="valor2" min="0" class="form-control" type="number" ng-model="conf.renglonComision.valor2" ng-disabled="conf.action">								
+						</div>
+						<div class="col-sm-2" >
+							<label>Porcentaje</label>
+							<input name="porcentaje" min="0" class="form-control" type="number" ng-model="conf.renglonComision.porcentaje" ng-disabled="conf.action">								
+						</div>
+						<div class="col-sm-1">
+							<br>
+							<input type="button" ng-click="conf.agregarComision(conf.renglonComision)" class="btn btn-primary" value="Agregar" ng-disabled="conf.action" ng-if="conf.actionArregloComision">
+							<input type="button" ng-click="conf.actualizarArregloComision(conf.renglonComision)" class="btn btn-primary" value="Actualizar" ng-if="!conf.actionArregloComision">
+						</div>
+						<div class="col-sm-1">
+							<br>
+							<input type="button" ng-click="conf.cancelarArregloComision()" class="btn btn-danger" value="Cancelar" ng-if="!conf.actionArregloComision">
+						</div>		
+        </div>		
+        <h4>Valores Porcentaje Comisiones</h4>
+        <div class="row">
+	        	<div class="col-sm-6">
+		        		<table class="table table-bordered table-condensed">
+		        				<thead>
+			        				<tr>
+				        				<th  style="text-align: center" width="10%">Día 1</th>
+				        				<th  style="text-align: center" width="10%">Día 2</th>
+				        				<th  style="text-align: center" width="10%">Porcentaje</th>
+				        				<th  style="text-align: center" width="10%">Acción</th>
+			        				</tr>		
+		        				</thead>
+		        				<tbody>
+			        				<tr ng-repeat="obj in conf.arregloComisiones">
+				        				<td style="text-align: center">{{obj.valor1}}</td>
+				        				<td style="text-align: center">{{obj.valor2}}</td>
+				        				<td style="text-align: center">{{obj.porcentaje}}</td>
+				        				<td style="text-align: center">
+					        					<input type="button" ng-click="conf.editarArregloComision(obj)" class="btn btn-xs btn-warning" value="editar" ng-disabled="conf.action">
+				        				</td>	
+			        				</tr>
+		        				</tbody>	
+		      			</table>
+		        		
+	        	</div>
+        </div>
         
-    </div>    
-	<div class="row">
-		<div class="col-sm-12">
-			<div class="well">
+        
+		</div>    
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="well">
+					
+	          <div class="row">
+	              <div class="col-sm-12">
+	                  <input type="submit" ng-click="conf.editar()" value="Editar" class="btn btn-primary" ng-show="conf.action">
+	                  <input type="submit" ng-click="conf.actualizar(conf.objeto,form)" value="Actualizar" class="btn btn-success" ng-show="!conf.action" valida-form formulario="form">
+	                  <input type="submit" ng-click="conf.cancelar()" value="Cancelar" class="btn btn-danger" ng-show="!conf.action">
+	                  
+	              </div>
+	          </div>
+	      </div>
+			</div>  
+		</div>
 				
-          <div class="row">
-              <div class="col-sm-12">
-                  <input type="submit" ng-click="conf.editar()" value="Editar" class="btn btn-primary" ng-show="conf.action">
-                  <input type="submit" ng-click="conf.actualizar(conf.objeto,form)" value="Actualizar" class="btn btn-success" ng-show="!conf.action" valida-form formulario="form">
-                  <input type="submit" ng-click="conf.cancelar()" value="Cancelar" class="btn btn-danger" ng-show="!conf.action">
-                  
-              </div>
-          </div>
-      </div>
-		</div>  
-	</div>
+		
+		
 </form>

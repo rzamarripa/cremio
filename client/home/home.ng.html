@@ -1,4 +1,11 @@
-<h1>Bienvenido a Crédito Mio</h1>
+<div class="row">
+	<div class="col-sm-6" ng-if = "currentUser.roles[0] != 'admin'">
+		<h1>Bienvenido a Crédito Mio, Sucursal : {{ho.sucursal.nombreSucursal}}</h1>
+	</div>
+	<div class="col-sm-3 pull-right" ng-if="currentUser.roles[0] == 'Gerente'">
+		<a ng-click = "ho.abrirModal()" href="javascript:void(0);" class="btn bg-color-blueDark txt-color-white" style="text-align: left"> <span class="btn-label"><i class="fa fa-lg fa-fw fa-institution"></i></span>Cambiar Sucursal</a>
+	</div>	
+</div>	
 
 <div class="alert alert-info" ng-if="currentUser.roles[0] == 'Cajero' && ho.estaCerrada == true">
 		<p><i class="fa-fw fa fa-info"></i> La ventanilla asignada esta cerrada </p>		
@@ -27,4 +34,36 @@
 			  </tbody>
 			</table>
 	</div>		
+</div>
+
+<div id="modalSucursal"	class="modal fade" data-backdrop="static" role="dialog">
+ 	<div class="modal-dialog">
+	<!-- Modal content-->
+		<form name="form" novalidate>
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Seleccione la Sucursal a Ingresar</h4>
+  			</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-6" valida>
+							<label>Sucursal *</label>
+							<select name="sucursal_id" class="form-control" ng-model="ho.sucursal_id" required>
+								<option ng-repeat="obj in ho.sucursales" value="{{obj._id}}">{{obj.nombreSucursal}}</option>
+							</select>
+						</div>
+					</div>		
+ 				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col-sm-12 "><br/>
+							<button type="button" ng-click="ho.asignar(form)" class="btn btn-success" valida-form formulario="form">Aceptar</button> 
+							<button type="button" id="cerrarRespuesta" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+						</div>
+					</div>								 
+				</div>
+			</div>  
+		</form>	
+  </div>
+
 </div>

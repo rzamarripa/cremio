@@ -56,6 +56,14 @@
 								    	<label>Contraseña Desbloqueo *</label>																	
 								    	<input name="passwordDesbloqueo" type="password" class="form-control" placeholder="Contraseña Desbloqueo" ng-model="ger.objeto.profile.passwordDesbloqueo" required>
 							    	</div>
+							    	
+							    	<div class="col-sm-4">
+											<label>Sucursal</label>
+											<select class="form-control select2" placeholder="Seleccione" ng-model="ger.objeto.profile.sucursal_id">
+												<option ng-repeat="objeto in ger.sucursales" value="{{objeto._id}}">{{objeto.nombreSucursal}}</option>
+											</select>
+										</div> 
+							    	
 							    </div>	
 					    </div>
 					  </div>

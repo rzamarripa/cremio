@@ -581,8 +581,8 @@
 							<th class="text-center" width="3%"></th>
 							<!-- <th class="text-center" width="3%">No.</th> -->
 							<th class="text-center" width="3%">Folio</th>
-							<th class="text-center" width="15%">Beneficiario</th>
-							<th class="text-center" width="5%">Movimiento</th>
+							<th class="text-center" width="20%">Beneficiario</th>
+							<!-- <th class="text-center" width="5%">Movimiento</th> -->
 							<th class="text-center" width="20%">Fecha de Pago</th>
 							<th class="text-center" width="5%">Recibo</th>
 							<th class="text-center" width="5%">Capital</th>
@@ -602,7 +602,7 @@
 							<!-- <td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	 -->
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.beneficiario.nombreCompleto}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.movimiento }}</td>
+							<!-- <td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.movimiento }}</td> -->
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pagV.getnumeroPagos(pago.credito_id)}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.capital  | currency}}</td>

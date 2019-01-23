@@ -5,6 +5,17 @@ angular.module("creditoMio")
   let rc = $reactive(this).attach($scope);
   window.rc = rc;
   
+/*
+	const options = {
+	  targetSize: 0.2,
+	  quality: 0.75,
+	  maxWidth: 800,
+	  maxHeight: 600
+	}
+	 
+	const compress = new Compress(options)
+*/
+  
   this.cambiarContrasena = true;
   this.action = true;
   this.actionReferencia = true;
@@ -222,7 +233,16 @@ angular.module("creditoMio")
 	              });   
 								$scope.$apply();	
  									
-								rc.documents = rc.objeto.profile.documentos;
+ 								//getdocumentos
+	              Meteor.call('getDocumentosClientes', rc.objeto_id, function(error,result){
+						      if (result)
+						        {
+						          //ir por los documentos
+						          rc.documents = result;
+						          $scope.$apply();      
+						        }
+						    });		
+								//rc.documents = rc.objeto.profile.documentos;
 								loading(false);
             }
       });
@@ -430,7 +450,9 @@ objetoEditar : () => {
 
 	this.tomarFoto = function(objeto){
       //console.log(objeto)
-      $meteor.getPicture().then(function(data){
+      $meteor.getPicture().then(function(data, error){
+	    console.log("ERROR:", error);
+	      
       rc.fotillo = data
       rc.pic = rc.fotillo
       //objeto.profile.fotografia = this.objeto.profile.fotografia;
@@ -515,11 +537,8 @@ objetoEditar : () => {
        	objeto.profile.documentos = rc.documents;
     }
       
-  
-    if (rc.pic != ""){
-      objeto.profile.foto = rc.pic
-    }
-   
+		//console.log(objeto.profile.foto);
+		   
     delete objeto.profile.repeatPassword;
     
     
@@ -782,13 +801,28 @@ objetoEditar : () => {
         arraytosearch[i][key] = i + 1;  
       }
   };
+  
+  this.AlmacenaImagen = function(imagen)
+	{			
+			rc.objeto.profile.foto = imagen;
+			toastr.success("Foto Cargada...");
+	}
 	
   $(document).ready( function() {
 			
+			const imageFileToBase64 = require('image-file-to-base64-exif');
+			
+			const maxWidth = 200;
+			const maxHeight = 180;
+			const quality = 0.8;
 			
       var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+      //var fotoArea = document.getElementById('fotoArea');
    
       var fileInput1 = document.getElementById('fileInput1');
+      
+      var foto = document.getElementById('foto');
+      
       //var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
             //JavaScript para agregar la Foto
       fileInput1.addEventListener('change', function(e) {
@@ -822,12 +856,45 @@ objetoEditar : () => {
           //fileDisplayArea1.innerHTML = "File not supported!";
         }
       });   
+      
+     	foto.addEventListener('change', function(e) {
+				var file = foto.files[0];
+				var imageType = /image.*/;
+	
+				if (file.type.match(imageType)) {
+										
+						var reader = new FileReader();
+		
+						reader.onload = function(e) {
+							
+							imageFileToBase64(foto.files[0], maxWidth, maxHeight, quality)
+									.then(addThumbnail)							
+						}
+						reader.readAsDataURL(file);			
+				} else {
+					fotoArea.innerHTML = "Archivo no sportado!";
+				}
+			});
+			
+			
+      function addThumbnail (base64) {
+			    
+			    /*
+fotoArea.innerHTML = ""; 
+			    var img = new Image();
+					img.src = base64;
+					img.width = 200;
+					img.height= 180;
+					fotoArea.appendChild(img);
+*/			    
+			    
+			    rc.AlmacenaImagen(base64);
+			}
+            
    });
-	 
- 	 
+	
 	this.agregarImagen = function(){ 	
 	  
-	  	//Validar 
 	  
  	  	var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
 	  	while (fileDisplayArea1.firstChild) {
@@ -836,31 +903,25 @@ objetoEditar : () => {
 	  	$("#modalDocumentoImagen").modal('show');
  	}  
 	 
-  this.agregarDoc = function(doc,imagen)
+  this.agregarDoc = function(doc, imagen)
   {
 
     if (imagen == false) {
        toastr.error("Ninguna imagen agregada");
 
-    }else{
-    if (doc == undefined) {
-      toastr.error("Ningun documento agregado");
-
-    }else{
-     	 	// rc.imagen = imagen
-    
-		    rc.referencias = [];
-		    Meteor.call('getDocs', doc, function(error,result){
+    }
+		else{
+				loading(true);
+		    Meteor.call('setDocumentosCliente', rc.objeto_id, this.documento_id, imagen, function(error,result){
 		      if (result)
 		        {
-		          rc.documents.push({imagen: imagen, nombre: result.nombre});
+		          //ir por los documentos
+		          rc.documents = result;
 		          $scope.$apply();      
+		          loading(false);
 		        }
-		
 		    });
- 
-      }  
-    }
+    }  
     
     $("#modalDocumentoImagen").modal('hide');
            
@@ -891,12 +952,87 @@ objetoEditar : () => {
     //rc.nota.unidad = Unidades.findOne(rc.nota.unidad_id);
   };
 
-  this.mostrarModal= function(img)
+  this.mostrarModal = function(id)
   {
-    var imagen = '<img class="img-responsive" src="'+img+'" style="margin:auto;">';
-    $('#imagenDiv').empty().append(imagen);
-    $("#myModal").modal('show');
+	  	Meteor.call('getDocumentoCliente', id, function(error,result){
+	      if (result)
+	        {
+	          var imagen = '<img class="img-responsive" src="'+result+'" style="margin:auto;">';
+				    $('#imagenDiv').empty().append(imagen);
+				    $("#myModal").modal('show');
+	        }
+	    });      
   };
+  
+  this.borrarDoc = function(id)
+  {
+	  customConfirm('¿Estás seguro Eliminar el documento?', function() {
+	  
+    	Meteor.call('borrarDocumentoCliente', rc.objeto_id, id, function(error,result){
+	      if (result)
+	        {
+	          rc.documents = result;
+	          $scope.$apply();      
+	        }
+	    });    
+	    
+	  });  
+  };
+  
+  this.imprimirDoc = function(id) {
+			
+			Meteor.call('getDocumentoCliente', id, function(error,result){
+	      if (result)
+        {
+	        	console.log(result);
+						Meteor.call('imprimirImagenDocumento', result, function(error, response) {
+				       if(error)
+				       {
+				        console.log('ERROR :', error);
+				        return;
+				       }
+				       else
+				       {
+				              function b64toBlob(b64Data, contentType, sliceSize) {
+				                  contentType = contentType || '';
+				                  sliceSize = sliceSize || 512;
+				                
+				                  var byteCharacters = atob(b64Data);
+				                  var byteArrays = [];
+				                
+				                  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+				                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+				                
+				                    var byteNumbers = new Array(slice.length);
+				                    for (var i = 0; i < slice.length; i++) {
+				                      byteNumbers[i] = slice.charCodeAt(i);
+				                    }
+				                
+				                    var byteArray = new Uint8Array(byteNumbers);
+				                
+				                    byteArrays.push(byteArray);
+				                  }
+				                    
+				                  var blob = new Blob(byteArrays, {type: contentType});
+				                  return blob;
+				              }
+				              
+				              var blob = b64toBlob(response, "application/docx");
+				              var url = window.URL.createObjectURL(blob);
+				              
+				              //console.log(url);
+				              var dlnk = document.getElementById('dwnldLnk');
+				
+				              dlnk.download = "imagenDocumento.docx"; 
+				              dlnk.href = url;
+				              dlnk.click();       
+				              window.URL.revokeObjectURL(url);
+				  
+				       }
+						});
+        }
+	    });  
+  }
 
   this.seleccionEstadoCivil = function(estadoCivil)
   {
@@ -966,6 +1102,7 @@ objetoEditar : () => {
 			this.nuevoEmpresa = false;
   };
 
+	/*
   this.imprimirDoc = function(imagen) {
      //console.log(imagen)
      Meteor.call('imprimirImagenDocumento', imagen, function(error, response) {
@@ -1013,18 +1150,8 @@ objetoEditar : () => {
   
        }
     });
-     
-    /*
- var html  = "<html><head>" +
-        "</head>" +
-        "<body  style ='-webkit-print-color-adjust:exact;'>"+
-        "<img src=\"" + imagen + "\" onload=\"javascript:window.print();\"/>" +
-        "</body>";
-    var win = window.open("about:blank","_blank");
-    win.document.write(html);
-*/
-     
   }
+*/
 
   this.insertarAval = function()
   {

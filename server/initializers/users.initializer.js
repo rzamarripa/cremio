@@ -4,6 +4,7 @@ Meteor.startup(function () {
       username: 'admin',
       password: '123qwe',
     }); 
+    
   }
   var tipoNotaCredito = TiposIngreso.find({nombre:"Nota de Credito"}).fetch();
   if (tipoNotaCredito.length < 1){

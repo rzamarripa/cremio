@@ -760,11 +760,11 @@
 							<form name="form2" novalidate>
 									<div class="well">	    
 								    <div class="row">
-												<table class="table" ng-if="ge.credito.tipoGarantia == 'mobiliaria'">
+												<table class="table table-condensed" ng-if="ge.credito.tipoGarantia == 'mobiliaria'">
 														<thead>
 															<tr>
 																<th>Descripción</th>
-																<th>Caracteristicas</th>
+																<th>Características</th>
 																<th>Avalúo</th>
 																<th></th>
 															</tr>	
@@ -774,12 +774,12 @@
 																<td>{{objeto.descripcion}}</td>
 																<td>{{objeto.caracteristicas}}</td>
 																<td>{{objeto.avaluoMobiliaria}}</td>	
-																<td><a href="#" class="btn btn-default" ng-click="ge.copiarGarantia(ge.credito.tipoGarantia, objeto)"><i class="fa fa-plus"></i></a></td>
+																<td><a href="#" class="btn btn-xs btn-default" ng-click="ge.copiarGarantia(ge.credito.tipoGarantia, objeto)"><i class="fa fa-plus"></i></a></td>
 															</tr>	
 														</tbody>
 												</table>	
 												
-												<table class="table" ng-if="ge.credito.tipoGarantia == 'general'">
+												<table class="table table-condensed" ng-if="ge.credito.tipoGarantia == 'general'">
 														<thead>
 															<tr>
 																<th>Sup. de terreno y construcción </th>
@@ -795,7 +795,7 @@
 																<td>{{objeto.ubicacion}}</td>
 																<td>{{objeto.medidasColindancias}}</td>
 																<td>{{objeto.avaluoGeneral}}</td>	
-																<td><a href="#" class="btn btn-default" ng-click="ge.copiarGarantia(ge.credito.tipoGarantia, objeto)"><i class="fa fa-plus"></i></a></td>
+																<td><a href="#" class="btn btn-xs btn-default" ng-click="ge.copiarGarantia(ge.credito.tipoGarantia, objeto)"><i class="fa fa-plus"></i></a></td>
 															</tr>	
 														</tbody>
 												</table>

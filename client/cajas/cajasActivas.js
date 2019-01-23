@@ -24,7 +24,9 @@ function CajasActivasCtrl($scope, $meteor, $reactive, $state, toastr) {
     return [{ sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "" }]
   });
   this.subscribe('allCajeros', () => {
-    return [{}]
+    return [{"profile.sucursal_id": Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+						 "profile.estatus" 		: true,
+						 roles 								: ["Cajero" ]}]
   });
   
 /*

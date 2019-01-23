@@ -3,6 +3,8 @@ angular.module("creditoMio")
  function CajasCtrl($scope, $meteor, $reactive, $state, toastr){
  	
  	let rc = $reactive(this).attach($scope);
+ 	window = rc;
+ 	
 	
 	this.action = true;
 	this.nuevo = true;	 
@@ -25,7 +27,9 @@ angular.module("creditoMio")
 		}]
 	});
 	this.subscribe('allCajeros',()=>{
-		return [{
+		return [{"profile.sucursal_id": Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+						 "profile.estatus" 		: true,
+						 roles 								: ["Cajero"]	
 		}]
 	});
 

@@ -16,8 +16,8 @@ Meteor.methods({
 			return referencia;
 	},
 	getPeople: function (idReferencia) {
+			
 			var persona = Meteor.users.findOne({_id: idReferencia}, {fields: {"profile.documentos" : 0}});
-
 				_.each(persona, function(objeto){
 						objeto.nacionalidadCliente = Nacionalidades.findOne(objeto.nacionalidad_id);
 						objeto.coloniaCliente = Colonias.findOne(objeto.colonia_id);
@@ -37,14 +37,18 @@ Meteor.methods({
 							 objeto.estadoEmpresa = Estados.findOne(objeto.empresa.estado_id);
 							 objeto.municipioEmpresa = Municipios.findOne(objeto.empresa.municipio_id);
 							 objeto.ciudadEmpresa = Ciudades.findOne(objeto.empresa.ciudad_id);	 
-							 objeto.coloniaEmpresa = Colonias.findOne(objeto.empresa.colonia_id);	 
-							 							 
+							 objeto.coloniaEmpresa = Colonias.findOne(objeto.empresa.colonia_id);	 		 
 						}	 						
+						
+						_.each(objeto.referenciasPersonales_ids, function(r){
+								
+								var ref = ReferenciasPersonales.findOne(r.referenciaPersonal_id);
+								r.telefono = ref.telefono;
+						});
+						
 	  		});
-
-				//console.log(persona,"termina")
-				
-			//console.log("esta es la referencia",referencia)
+				//console.log(persona,"termina")				
+				//console.log("esta es la referencia",referencia)
 			return persona;
 	},
  	obAvales: function (idReferencia) {
@@ -475,6 +479,225 @@ Meteor.methods({
     return res.wait();
 				
   },
+	
+	getFichaAval: function (id, tipo) {
+		
+		const formatCurrency = require('format-currency');
+		var fs = require('fs');
+    var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		var ImageModule = require('docxtemplater-image-module');
+		
+		var unoconv = require('better-unoconv');
+    var future = require('fibers/future');
+		
+		var templateType = (tipo === 'pdf') ? '.docx' : (tipo === 'excel' ? '.xlsx' : '.docx');
+		
+    if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/" + "FICHAAVAL" + templateType;
+      var produccionFoto = publicPath + "public/fotos/" + "FICHAAVAL";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "plantillas/" + "FICHAAVAL" + templateType;
+      var produccionFoto = publicPath + "fotos/" + "FICHAAVAL";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+		
+
+		var opts = {}
+			opts.centered = false;
+			opts.getImage=function(tagValue, tagName) {
+					var binaryData =  fs.readFileSync(tagValue,'binary');
+					return binaryData;
+		}
+		
+		opts.getSize=function(img,tagValue, tagName) {
+		    return [180,160];
+		}
+		
+		var imageModule=new ImageModule(opts);
+
+		var content = fs.readFileSync(produccion, "binary");
+
+		var res = new future();
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.attachModule(imageModule)
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+				if (!part.module) {
+				return "";
+				}
+				if (part.module === "rawxml") {
+				return "";
+				}
+				return "";
+		}});
+		
+		//console.log(id);
+		var aval = Avales.findOne(id);
+		
+		var objeto = aval.profile;
+		
+				
+		var fecha = new Date();
+		var hora = moment(fecha).format("hh:mm:ss a");
+
+		fecha.setHours(0,0,0,0);
+	  var fechaEmision = new Date()
+
+    var f = String(objeto.foto);
+		objeto.foto = f.replace('data:image/jpeg;base64,', '');
+
+		var bitmap = new Buffer(objeto.foto, 'base64');
+		
+		fs.writeFileSync(produccionSalida + objeto.nombreCompleto + ".jpeg", bitmap);
+		objeto.foto = produccionSalida + objeto.nombreCompleto + ".jpeg";
+			
+		
+			
+		objeto.referencias = [];	
+		_.each(objeto.referenciasPersonales_ids, function(rp){
+				
+				var referencia = {};
+				
+				var ref = ReferenciasPersonales.findOne(rp.referenciaPersonal_id);
+				
+				referencia.nombreCompleto = ref.nombreCompleto;	
+				referencia.direccion = ref.direccion;	
+				referencia.telefono = ref.telefono;	
+				referencia.tiempo = rp.tiempoConocerlo;	
+				
+				
+				objeto.referencias.push(referencia);
+				
+		});	
+		
+		//objeto.referenciasPersonales_ids.referencia .find(objeto.referenciasPersonales_ids		
+		
+		objeto.edad										= moment().diff(objeto.fechaNacimiento, 'years',false);
+		
+		objeto.fechaCreacion 					= moment(objeto.fechaCreacion).format("DD-MM-YYYY")
+		objeto.fechaNacimiento 				= moment(objeto.fechaNacimiento).format("DD-MM-YYYY")
+		objeto.fechaEmision 					= fechaEmision
+		objeto.fechaEmision						= moment(objeto.fechaEmision).format("DD-MM-YYYY")
+
+	  objeto.pais 									= Paises.findOne(objeto.pais_id).nombre; 
+		objeto.ciudad 								= Ciudades.findOne(objeto.ciudad_id).nombre;
+		objeto.sucursal 							= Sucursales.findOne(objeto.sucursal_id).nombre;
+		objeto.colonia 								= Colonias.findOne(objeto.colonia_id).nombre;
+		objeto.municipio 							= Municipios.findOne(objeto.municipio_id).nombre;
+		objeto.estado 								= Estados.findOne(objeto.estado_id).nombre;
+		objeto.nacionalidad 					= objeto.nacionalidadCliente == undefined ? "" : objeto.nacionalidadCliente.nombre;
+		objeto.estadoCivil 						= objeto.estadoCivilCliente == undefined ? "" : objeto.estadoCivilCliente.nombre;
+		objeto.ocupacion 							= objeto.ocupacionCliente == undefined ? "" : objeto.ocupacionCliente.nombre;
+		objeto.cp 										= objeto.codigoPostal; 
+		objeto.telefonoMovilContacto 	= objeto.celular;
+		objeto.telefonoContacto 			= objeto.particular;
+		objeto.empresaC 							= Empresas.findOne(objeto.empresa_id);
+		
+		var estadoCivil = EstadoCivil.findOne(objeto.estadoCivil_id);
+		
+		if (estadoCivil != undefined && estadoCivil.nombre != "CASADO (A)")
+		{
+				objeto.nombreConyuge 					= "";
+				objeto.telefonoConyugeTrabajo = "";
+				objeto.puestoConyuge 					= "";
+				objeto.celularConyuge 				= "";
+				objeto.direccionEmpresa 			= "";
+		}
+		
+		if (objeto.empresaC != undefined)
+		{
+				objeto.empresaC.municipio 		= Municipios.findOne(objeto.empresaC.municipio_id);
+				objeto.municipioEmpresa 			= objeto.empresaC.municipio == undefined ? "" : objeto.empresaC.municipio.nombre;
+				objeto.empresaC.municipio 		= Municipios.findOne(objeto.empresaC.municipio_id);
+				objeto.municipioEmpresa 			= objeto.empresaC.municipio == undefined ? "" : objeto.empresaC.municipio.nombre;
+				objeto.empresaC.estado 				= Estados.findOne(objeto.empresaC.estado_id);
+				objeto.estadoEmpresa 					= objeto.empresaC.estado == undefined ? "" : objeto.empresaC.estado.nombre;
+				objeto.empresaC.colonia 			= Colonias.findOne(objeto.empresaC.colonia_id);
+				objeto.coloniaEmpresa 				= objeto.empresaC.colonia == undefined ? "" : objeto.empresaC.colonia.nombre;
+				objeto.empresaC.pais 					= Paises.findOne(objeto.empresaC.pais_id);
+				objeto.paisEmpresa 						= objeto.empresaC.pais == undefined ? "" : objeto.empresaC.pais.nombre;
+				objeto.numeroEmpresa 					= objeto.empresaC.no
+				objeto.empresa 								= objeto.empresaC.nombre
+				objeto.calleEmpresa 					= objeto.empresaC.calle
+				objeto.cpEmpresa							= objeto.empresaC.codigoPostal;
+				objeto.numeroEmpresa 					= objeto.empresaC.numero	
+ 		}
+ 		else
+ 		{
+ 
+				objeto.municipioEmpresa 			= "";
+ 				objeto.municipioEmpresa 			= "";
+ 				objeto.estadoEmpresa 					= "";
+ 				objeto.coloniaEmpresa 				= "";
+ 				objeto.paisEmpresa 						= "";
+				objeto.numeroEmpresa 					= "";
+				objeto.empresa 								= "";
+				objeto.calleEmpresa 					= "";
+				objeto.cpEmpresa							= "";
+				objeto.numeroEmpresa 					= "";
+  	}
+		
+		
+		
+		objeto.ingresosPersonales 	= formatCurrency(objeto.ingresosPersonales);
+		objeto.ingresosConyuge		 	= formatCurrency(objeto.ingresosConyuge);
+		objeto.otrosIngresos				= formatCurrency(objeto.otrosIngresos);
+		objeto.gastosFijos 					= formatCurrency(objeto.gastosFijos);
+		objeto.gastosEventuales 		= formatCurrency(objeto.gastosEventuales);
+		
+		/*
+var referencia ≈ [];
+		
+		_.each(objeto.referenciasPersonales_ids, function(ref){
+				
+				var rp = {};
+				var r = ReferenciasPersonales.findOne(ref.referenciaPersonal_id);
+				
+				rp.nombreCompleto = r.nombreCompleto;
+				rp.telefono				= r.telefono;
+				rp.direccion 			= r.direccion;
+				rp.tiempo 				= ref.tiempoConocerlo;
+				
+				referencia.push(rp);
+		});
+*/
+		
+		
+		doc.setData({	item					: objeto,
+									foto					: objeto.foto,
+									//referencias		: referencia,
+									fechaEmision 	: objeto.fechaEmision,
+									referencias		: objeto.referencias,
+									hora					: hora,
+								});								
+		doc.render(); 
+		var buf = doc.getZip().generate({type:"nodebuffer"});
+		
+		
+    var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "FICHAAVALOut" + templateType;
+    //var rutaOutputpdf = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "FICHASOCIOOut.pdf" ;
+     
+    fs.writeFileSync(rutaOutput, buf);
+     
+		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+        if(!err){
+          fs.unlink(rutaOutput);
+          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "FICHAAVALOut" + '.pdf' });
+        }else{
+          res['return']({err: err});
+          console.log("Error al convertir pdf:", err);
+        }
+     });
+
+    return res.wait();
+				
+  },
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -795,148 +1018,6 @@ var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
 		//Pasar a base64
 		// read binary data
     var bitmap = fs.readFileSync(produccionSalida+"ReporteMovimientoCuentasSalida.docx");
-    
-    // convert binary data to base64 encoded string
-    return new Buffer(bitmap).toString('base64');
-		
-  },
-  ReportesBanco: function (objeto,inicial,final) {
-	
-		//console.log(objeto,"creditos ")
-		var fs = require('fs');
-    	var Docxtemplater = require('docxtemplater');
-		var JSZip = require('jszip');
-		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
-		
-		if(Meteor.isDevelopment){
-      var path = require('path');
-      var publicPath = path.resolve('.').split('.meteor')[0];
-      var produccion = publicPath + "public/plantillas/";
-      var produccionSalida = publicPath + "public/generados/";
-    }else{						 
-      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
-      var produccion = publicPath + "/plantillas/";
-      var produccionSalida = "/home/cremio/archivos/";
-    }
-
-		
-		//var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
-				 
-		var content = fs
-    	   .readFileSync(produccion+"ReporteBancos.docx", "binary");
-		var zip = new JSZip(content);
-		var doc=new Docxtemplater()
-								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			return "";
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
-		const formatCurrency = require('format-currency')
-			var fecha = new Date();
-			var f = fecha;
-			var fechaInicial = inicial
-			var fechaFinal = final
-
-	     var suma = 0
-		   var sumaInter = 0
-		   var sumaIva = 0
-		   var sumaSeguro = 0
-		   totalcobranza = 0
-		   
-	    _.each(objeto,function(item){
-	    	suma += item.pagoCapital
-	        sumaInter += item.pagoInteres
-	        sumaIva += item.pagoIva
-	        sumaSeguro += item.pagoSeguro;
-	        totalcobranza += parseFloat(item.totalPago);
-	        
-	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY");
-	    	item.fechaDeposito = moment(item.fechaDeposito).format("DD-MM-YYYY");
-	    	
-	    	item.totalPago = parseFloat(item.totalPago.toFixed(2))
-	    	item.totalPago = formatCurrency(item.totalPago)
-	    	item.pagoInteres = parseFloat(item.pagoInteres.toFixed(2))
-	    	item.pagoInteres = formatCurrency(item.pagoInteres)
-	    	item.pagoCapital = parseFloat(item.pagoCapital.toFixed(2))
-	    	item.pagoCapital = formatCurrency(item.pagoCapital)
-	    	item.pagoIva = parseFloat(item.pagoIva.toFixed(2))
-	    	item.pagoIva = formatCurrency(item.pagoIva)
-	    });
-	    
-
-	 		    
- 		   var dia = fecha.getDate()
- 		    var mes = fecha.getMonth()+1
- 		    var anio = fecha.getFullYear()
- 		    if (Number(dia) < 10) {
- 		    	dia = "0" + dia;
- 		    }
- 		    if (Number(mes) < 10) {
- 		    	mes = "0" + mes;
- 		    }
- 		    fecha = dia+ "-" + mes + "-" + anio
-
- 		    var dia2 = fechaInicial.getDate()
- 		    var mes2 = fechaInicial.getMonth()+1
- 		    var anio2 = fechaInicial.getFullYear()
- 		    if (Number(dia2) < 10) {
- 		    	dia2 = "0" + dia2;
- 		    }
- 		    if (Number(mes2) < 10) {
- 		    	mes2 = "0" + mes2;
- 		    }
- 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
-
- 		    var dia3 = fechaFinal.getDate()
- 		    var mes3 = fechaFinal.getMonth()+1
- 		    var anio3 = fechaFinal.getFullYear()
- 		    if (Number(dia3) < 10) {
- 		    	dia3 = "0" + dia3;
- 		    }
- 		    if (Number(mes3) < 10) {
- 		    	mes3 = "0" + mes3;
- 		    }
- 		    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
- 		    //totalcobranza = suma + sumaIva + sumaInter
- 		    
-        parseFloat(suma.toFixed(2))
- 		    suma = formatCurrency(suma)
- 		    parseFloat(sumaInter.toFixed(2))
- 		    sumaInter = formatCurrency(sumaInter)
- 		    parseFloat(sumaIva.toFixed(2))
- 		    sumaIva = formatCurrency(sumaIva)
- 		    parseFloat(sumaSeguro.toFixed(2))
- 		    sumaSeguro = formatCurrency(sumaSeguro)
- 		    parseFloat(totalcobranza.toFixed(2))
- 		    totalcobranza = formatCurrency(totalcobranza)
-		
-		doc.setData({				
-			            item: 		 objeto,
-						fecha:       fecha,
-						inicial:     fechaInicial,
-						final:       fechaFinal,
-						sumaCapital:    suma,
-						sumaIntereses:  sumaInter,
-						sumaIva:        sumaIva,
-						totalSeguro:    sumaSeguro,
-						totalCobranza:  totalcobranza,
-													
-				});
-								
-		doc.render();
- 
-		var buf = doc.getZip()
-             		 .generate({type:"nodebuffer"});
-		fs.writeFileSync(produccionSalida+"ReporteBancosSalida.docx",buf);		
-				
-		//Pasar a base64
-		// read binary data
-    var bitmap = fs.readFileSync(produccionSalida+"ReporteBancosSalida.docx");
     
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
@@ -1416,10 +1497,11 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
     if (Number(mesV) < 10) {
     	mesV = "0" + mesV;
     }
-    vigencia.fechaLimite = diaV+ "-" + mesV + "-" + anioV
-  		
+    vigencia.fechaLimite = diaV+ "-" + mesV + "-" + anioV;
+    
   	if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) 
   	{
+
 				var fs = require('fs');
 		    	var Docxtemplater = require('docxtemplater');
 				var JSZip = require('jszip');
@@ -1497,6 +1579,7 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
    }
    	if (contrato.avales_ids && _.isEmpty(contrato.garantias)) 
    	{
+
 		   	//console.log(contrato,"contratos con aval sin garantias ")
 				var fs = require('fs');
 		    	var Docxtemplater = require('docxtemplater');
@@ -1581,6 +1664,7 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 				var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 				
 				if (contrato.tipoInteres.tipoInteres == "Simple") {
+
 					if (tieneAval)
 							var content = fs				
 									.readFileSync(produccion+"CONTRATOHIPOTECARIO.docx", "binary");
@@ -1590,7 +1674,7 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 					
 				}
 				if (contrato.tipoInteres.tipoInteres == "Compuesto") {
-					
+
 					if (tieneAval)
 							var content = fs				
 									.readFileSync(produccion+"CONTRATOHIPOTECARIOCOMPUESTO.docx", "binary");
@@ -1599,8 +1683,8 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 									.readFileSync(produccion+"CONTRATOHIPOTECARIOCOMPUESTOSINAVAL.docx", "binary");
 					
 				}
-				if (contrato.tipoInteres.tipoInteres == "saldos Insolutos") {
-					
+				if (contrato.tipoInteres.tipoInteres == "Saldos Insolutos") {
+
 					if (tieneAval)
 							var content = fs				
 									.readFileSync(produccion+"CONTRATOHIPOTECARIOSSI.docx", "binary");
@@ -1621,24 +1705,25 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 					}
 					return "";
 				}});
-				
-			  		doc.setData({		    items: 	   contrato,
-											fecha:     fechaLetra,
-											cliente: cliente,
-											contrato: contrato,
-											pp: planPagos,
-											letra : letra,
-											letraAI: letraAI,
-											centavosAI: centavosAI,
-											aval: avales,
-											tasaPor : tasaPor,
-											vigencia : fechaVigencia,
-											vigenciaMasUnDia : vigenciaMasUnDia,
-											diaPreferidoPago				 : diaPreferidoPago,
-											autorizacionProveedorSi : autorizacionProveedorSi,
-											autorizacionProveedorNo : autorizacionProveedorNo,
-											autorizacionPublicidadSi : autorizacionPublicidadSi,
-											autorizacionPublicidadNo : autorizacionPublicidadNo,
+						
+						
+			  		doc.setData({	items										: contrato,
+													fecha										: fechaLetra,
+													cliente									: cliente,
+													contrato								: contrato,
+													pp											: planPagos,
+													letra 									: letra,
+													letraAI									: letraAI,
+													centavosAI							: centavosAI,
+													aval										: avales,
+													tasaPor 								: tasaPor,
+													vigencia 								: fechaVigencia,
+													vigenciaMasUnDia 				: vigenciaMasUnDia,
+													diaPreferidoPago				: diaPreferidoPago,
+													autorizacionProveedorSi : autorizacionProveedorSi,
+													autorizacionProveedorNo : autorizacionProveedorNo,
+													autorizacionPublicidadSi: autorizacionPublicidadSi,
+													autorizacionPublicidadNo: autorizacionPublicidadNo,
 															
 						});
 										
@@ -1660,15 +1745,13 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 		             		 	fs.writeFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaCOMPUESTOSalida.docx",buf);
 		             		 	 var bitmap = fs.readFileSync(produccionSalida+"CONTRATOHIPOTECARIOSalidaCOMPUESTOSalida.docx");
 		             		 }
-						    
-		  
+
 		    // convert binary data to base64 encoded string
 		    return new Buffer(bitmap).toString('base64');
 
    }
 	 	if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") 
 	 	{
-
 				var fs = require('fs');
 		    	var Docxtemplater = require('docxtemplater');
 				var JSZip = require('jszip');
@@ -2600,7 +2683,24 @@ console.log(credito.adeudoInicial);
     }
 
  		var res = new future();
-    var rutaOutput =  produccion + (op == 1 ? "FormatoSol.pdf" : "FormatoSolVales.pdf");
+ 		var rutaOutput = "";
+ 		
+ 		if (op == 1)
+ 				rutaOutput = produccion + "AVISODECOBRO.pdf";
+ 		else if (op == 2)
+ 				rutaOutput = produccion + "CESIONDERECHOSPRENDARIOS.pdf";
+ 		else if (op == 3)
+ 				rutaOutput = produccion + "FormatoSol.pdf";
+ 		else if (op == 4)
+ 		    rutaOutput = produccion + "FormatoSolVales.pdf";
+ 		else if (op == 6)
+ 		    rutaOutput = produccion + "VERIFICACIONCREDITOMIO.pdf";
+ 		else if (op == 7)
+ 		    rutaOutput = produccion + "VERIFICACIONBIGVALE.pdf";    
+ 		    
+ 		    	
+ 		
+    //var rutaOutput =  produccion + (op == 3 ? "FormatoSol.pdf" : "FormatoSolVales.pdf");
     var bitmap = fs.readFileSync(rutaOutput);
     res['return']({ uri: 'data:application/pdf;base64,' + bitmap.toString('base64'), nombre: "FormatoSol" + '.pdf' });
     return res.wait();
@@ -2636,14 +2736,26 @@ console.log(credito.adeudoInicial);
 					return binaryData;
 		}
 		
+		var ancho = 400;
+		var largo	= 600;
+		
+		/*
+if (nombre == 'CREDENCIAL DE ELECTOR REVERSO' || nombre == 'CREDENCIAL DE ELECTOR ANVERSO')
+		{
+				ancho = 100;
+				largo	= 200;
+				console.log("aqui")
+		}
+*/
+		
 		opts.getSize=function(img,tagValue, tagName) {
-		    return [400,600];
+		    return [ancho,largo];
 		}
 		
 		var imageModule=new ImageModule(opts);
 
 				 
-				var content = fs
+		var content = fs
     	   .readFileSync(produccion+"imagenDocumento.docx", "binary");
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
@@ -2659,7 +2771,7 @@ console.log(credito.adeudoInicial);
 		}});
 								//console.log(imagen,"IMAGEN MORRO")
 
-								var f = String(imagen);
+					var f = String(imagen);
 					//if (data:image/jpeg;base64) {}
 					if (imagen.indexOf('jpeg') > -1){
 						//console.log("entro con jpeg")

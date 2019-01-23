@@ -1210,7 +1210,6 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
-		
 }]);
 
 function irArriba(){

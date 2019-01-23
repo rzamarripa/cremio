@@ -68,6 +68,11 @@ angular.module("creditoMio")
   });
 
 	//Quitar
+	
+	
+  this.subscribe("configuraciones", ()=>{
+    return [{}]
+  });
  
   this.subscribe("nacionalidades", ()=>{
     return [{}]
@@ -305,8 +310,18 @@ planPagosViejo : () => {
 		  
 				var n = fecha.getDate();
 				var fechaLimite = "";
-			
-				if (n >= 20)
+				
+				if (n < 15) 
+				{
+						fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),30,0,0,0,0);
+				}
+				else //if (n >= 5 && n < 20)		
+				{
+						fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,15,0,0,0,0);
+				}
+				
+				/*
+if (n >= 20)
 				{
 						fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);		
 				}
@@ -318,6 +333,11 @@ planPagosViejo : () => {
 				{
 						fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
 				}
+*/
+				
+				//console.log(n);
+				//console.log("");
+				//console.log(fechaLimite);
 				
 				fechaLimite.setHours(0,0,0,0);
 			  
@@ -331,9 +351,7 @@ planPagosViejo : () => {
 		    Meteor.call('getCobranzaVales', FI, FF, 1, Meteor.user().profile.sucursal_id, function(error, result) {           
 		          if (result)
 		          {
-		              
 		              //console.log(result,"resullltt")
-		              
 		              rc.cobranza = result;
 		              rc.totalRecibos = 0;
 		              rc.totalMultas = 0;
@@ -354,8 +372,6 @@ planPagosViejo : () => {
     },
 
   });
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -404,8 +420,18 @@ planPagosViejo : () => {
 	      	var fecha = rc.getReactively("fechaInicial");
 					var n = fecha.getDate();
 					var fechaLimite = "";
-				
-					if (n >= 20)
+					
+					if (n < 15) 
+					{
+							fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),30,0,0,0,0);
+					}
+					else //if (n >= 5 && n < 20)		
+					{
+							fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,15,0,0,0,0);
+					}
+					
+					/*
+if (n >= 20)
 					{
 							fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);		
 					}
@@ -417,6 +443,7 @@ planPagosViejo : () => {
 					{
 							fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
 					}
+*/
 					
 					fechaLimite.setHours(0,0,0,0);
 				  
@@ -476,6 +503,9 @@ planPagosViejo : () => {
           //console.log("FF:", FF);
       }
       
+      //console.log(n);
+			//console.log("opcion:", op);
+			//console.log(fechaLimite);
       
       //Meteor.call("actualizarMultas",function(err, res){console.log("Fue por multas:",res)});
       
@@ -608,7 +638,9 @@ planPagosViejo : () => {
   }
   
   this.verPagos= function(pago) {
+	  
 		rc.pagoPlanPago = pago.planPagos;		
+		rc.pago					= pago;
 		$("#modalPagos").modal('show');
 	};
   
@@ -616,7 +648,8 @@ planPagosViejo : () => {
 
 			rc.credito = Creditos.findOne({folio: pago.folioCredito});
 			//console.log(rc.credito);
-			
+			rc.pagoDis	  = pago;
+			//console.log(pago);
 			Meteor.call('getPlanPagos', rc.credito._id, function(error, result) {
 	       if(error)
 	       {
@@ -1451,13 +1484,30 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 					    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$1,');
 					};
 	        
+	        
+					var fecha = rc.getReactively("fechaInicial");
+					var n = fecha.getDate();
+					var fechaCorte = "";
+					
+					if (n < 15) 
+					{
+							fechaCorte = new Date(fecha.getFullYear(),fecha.getMonth(),7,0,0,0,0);
+					}
+					else //if (n >= 5 && n < 20)		
+					{
+							fechaCorte = new Date(fecha.getFullYear(),fecha.getMonth(),22,0,0,0,0);
+					}        
+	        
           objeto.cliente = result;
           
           var datos = {};
-
+					
+					
 			    var sumaCargos = 0;
 			    var sumaAbonos = 0;
 			    var sumaAbonosCM = 0;
+			    
+			    datos.fechaCorte		= fechaCorte;
 					
 					datos.distribuidor 	= objeto.cliente.profile.nombreCompleto;
 					datos.direccion 		= objeto.cliente.profile.calle + 
@@ -1532,6 +1582,9 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 			    
 					var dia = rc.fechaInicial.getDate();
 					var mes = rc.fechaInicial.getMonth();
+					
+					var configuracion = Configuraciones.findOne();
+					var arregloComisiones = configuracion.arregloComisiones;
 			    
 			    datos.comisiones = [];
 			    
@@ -1542,38 +1595,49 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 							for (i = 1; i <= 5 ; i++)
 				    	{	
 					    		var comisiones = {};
+					    							    		
+					    		_.each(arregloComisiones, function(c){
+						    			if (c.numero == i + 1)
+						    			{
+							    				comisiones.porcentaje 	= c.porcentaje;
+							    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, c.valor1);
+						    			}						    			
+					    		});
 					    		
-					    		if (i == 1)
+					    		/*
+if (i == 1)
 					    		{
 					    				comisiones.porcentaje 	= 15;
 					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 3);
-					    				comisiones.totalGral 		= sumaConComision;
+					    				
 					    		}		
 					    		else if (i == 2)
 					    		{
 					    				comisiones.porcentaje 	= 14;
 					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 4);
-					    				comisiones.totalGral 		= sumaConComision;
+					    				//comisiones.totalGral 		= sumaConComision;
 					    		}
 					    		else if (i == 3)
 					    		{
 					    				comisiones.porcentaje 	= 13;
 					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 5);
-					    				comisiones.totalGral 		= sumaConComision;
+					    				//comisiones.totalGral 		= sumaConComision;
 					    		}
 					    		else if (i == 4)
 					    		{
 					    				comisiones.porcentaje 	= 9;
 					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 6);
-					    				comisiones.totalGral 		= sumaConComision;
+					    				//comisiones.totalGral 		= sumaConComision;
 					    		}
 					    		else if (i == 5)
 					    		{
 					    				comisiones.porcentaje 	= 7;
 					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 7);
-					    				comisiones.totalGral 		= sumaConComision;
+					    				//comisiones.totalGral 		= sumaConComision;
 					    		}
+*/
 					    		
+					    		comisiones.totalGral 				= sumaConComision;
 					    		comisiones.comision 				= '$ ' + Number(parseFloat(sumaConComision * (comisiones.porcentaje/100)).toFixed(2));
 					    		comisiones.totalConComision = '$ ' + Number(parseFloat(sumaConComision).toFixed(2)).format(2);
 					    		comisiones.totalSinComision	= '$ ' + Number(sumaSinComision).format(2);
@@ -1584,8 +1648,6 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 					    																													 - (sumaConComision * (comisiones.porcentaje/100) )).toFixed(2)).format(2);
 					    		
 					    		comisiones.porcentaje				= comisiones.porcentaje + '%';
-									
-									
 									
 					    		datos.comisiones.push(comisiones);
 				    	}  		  	
@@ -1599,37 +1661,49 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 				    	{	
 					    		var comisiones = {};
 					    		
+					    		_.each(arregloComisiones, function(c){
+						    			if (c.numero == i + 1)
+						    			{
+							    				comisiones.porcentaje 	= c.porcentaje;
+							    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, c.valor2);
+						    			}						    			
+					    		});
+					    		
+					    		/*
+
 					    		if (i == 1)
 					    		{
 					    				comisiones.porcentaje 	= 15;
 					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 18);
-					    				comisiones.totalGral 		= sumaConComision;
+					    				
 					    		}		
 					    		else if (i == 2)
 					    		{
 					    				comisiones.porcentaje 	= 14;
 					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 19);
-					    				comisiones.totalGral 		= sumaConComision;
+					    				//comisiones.totalGral 		= sumaConComision;
 					    		}
 					    		else if (i == 3)
 					    		{
 					    				comisiones.porcentaje 	= 13;
 					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 20);
-					    				comisiones.totalGral 		= sumaConComision;
+					    				//comisiones.totalGral 		= sumaConComision;
 					    		}
 					    		else if (i == 4)
 					    		{
 					    				comisiones.porcentaje 	= 9;
 					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 21);
-					    				comisiones.totalGral 		= sumaConComision;
+					    				//comisiones.totalGral 		= sumaConComision;
 					    		}
 					    		else if (i == 5)
 					    		{
 					    				comisiones.porcentaje 	= 7;
 					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 22);
-					    				comisiones.totalGral 		= sumaConComision;
+					    				//comisiones.totalGral 		= sumaConComision;
 					    		}
+*/
 					    		
+					    		comisiones.totalGral 				= sumaConComision;
 					    		comisiones.comision 				= '$ ' + Number(parseFloat(sumaConComision * (comisiones.porcentaje/100))).format(2);
 					    		comisiones.totalConComision = '$ ' + Number(parseFloat(sumaConComision).toFixed(2)).format(2);
 					    		comisiones.totalSinComision	= '$ ' + Number(sumaSinComision).format(2);
@@ -1678,16 +1752,14 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
   this.imprimirVales = function(objeto)
   {
 			
-      console.log(objeto);
+      //console.log(objeto);
       
       var dia  = rc.fechaInicial.getDate();
       var mes  = rc.fechaInicial.getMonth();
       var anio = rc.fechaInicial.getFullYear();
-/*
       
-      console.log("DisT:", objeto.distribuidor._id);
-      console.log("Fecha:", dia, mes, anio);
-*/
+      //console.log("DisT:", objeto.distribuidor._id);
+      //console.log("Fecha:", dia, mes, anio);
       
       var url = $state.href("anon.ticketValesDistribuidor", { distribuidor_id: objeto.distribuidor._id, dia: dia, mes: mes, anio: anio }, { newTab: true });
 		  window.open(url, '_blank');

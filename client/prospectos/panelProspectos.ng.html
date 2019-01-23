@@ -4,9 +4,11 @@
 					<i class="fa fa-list fa-fw "></i>
 					Prospectos por autorizar o rechazar
 				</h1>
+<!--
 				<a ng-click="ppros.mostrarModalValidaBeneficiario()" class="btn txt-color-white bg-color-blue btn-sm">
 					<i class="fa fa-plus"></i> Validar
 				</a>
+-->
     </div>
 </div>
 <div class="well">
@@ -43,6 +45,7 @@
 													  <ul class="dropdown-menu dropdown-menu-right text-left">
 													    <li><a href="#" ng-click="ppros.autorizar(objeto)"><i class="fa fa-check"></i> Autorizar</a></li>
 													    <li><a href="#" ng-click="ppros.mostrarRechazoCredito(objeto._id)"><i class="fa fa-times"></i> Rechazar</a></li>
+													    <li><a href="#" ng-click="ppros.mostrarModalValidaBeneficiario(objeto.nombreCompleto)"><i class="fa fa-plus"></i> Validar</a></li>
 													  </ul>
 													</div>
 										    </div>
@@ -80,10 +83,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 <div id="modalvalidaBeneficiario" class="modal fade bs-cargos-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">

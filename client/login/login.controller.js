@@ -26,10 +26,12 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 		    		if (Meteor.user().username != "admin" && Meteor.user().roles != "Gerente" ) {
 	          //Preguntar si es Distribuidor
 	        	if (Meteor.user().roles == "Distribuidor" ) {  
-		        		$state.go("root.distribuidoresDetalle",{objeto_id : Meteor.userId()});
+		        		//$state.go("root.distribuidoresDetalle",{objeto_id : Meteor.userId()});
+		        		$state.go('root.home');
 		        }
 		        else
 		        {
+			        	//$state.go('root.home'); 
 			        	Meteor.call("getHorario", Meteor.user().profile.sucursal_id,  function(error,result){
 			            if(error){
 			              toastr.error('Error en el servidor');

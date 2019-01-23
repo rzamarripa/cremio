@@ -72,6 +72,20 @@ angular.module("creditoMio")
             }
       }); 
 	};
+	
+	this.CopiarDocumentos = function(form)
+	{
+			if(form.$invalid){
+		        toastr.error('Error .');
+		        return;
+		  }
+			Meteor.call('copiarDocumentos', function(error, result){       
+            if (result)
+            {
+	            	toastr.success("Documentos Copiados");
+            }
+      }); 
+	};
 
 	
 };

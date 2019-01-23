@@ -7,14 +7,44 @@ Meteor.methods({
 			
 			var resultado = {};
 			
-			resultado.cobranza 					= [];
-			resultado.seguroDistribuidor = 0;
-			resultado.bonificaciones		= 0;
+			resultado.cobranza 										= [];
+			resultado.seguroDistribuidorCobranza 	= [];
+			resultado.seguroDistribuidor 					= 0;
+			resultado.bonificaciones							= 0;
 						
 			_.each(cobranzaDiaria, function(cd){
 				
-					if (cd.seguro != undefined)
+					if (cd.seguro != undefined && cd.seguro != 0)
+					{
+							var pago = {};
 							resultado.seguroDistribuidor += Number(parseFloat(cd.seguro).toFixed(2));
+							
+							pago.seguro = Number(parseFloat(cd.seguro).toFixed(2));
+							pago.tipoIngreso	= TiposIngreso.findOne(cd.tipoIngreso_id).nombre;
+							pago.fechaPago		= cd.fechaPago;
+							pago.seguro				= cd.seguro;
+							
+							var user = Meteor.users.findOne({"_id" : cd.usuario_id}, 
+		  																{fields: {"profile.nombreCompleto": 1,
+			  																				"profile.nombre": 1,
+			  																				"profile.apellidoPaterno": 1,
+			  																				"profile.numeroCliente": 1 }});
+		  				
+		  				pago.numeroCliente 	= user.profile.numeroCliente;	
+							pago.nombreCompleto = user.profile.nombre  + ' ' + user.profile.apellidoPaterno;												
+							
+	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
+	  																{fields: {"profile.nombre": 1}});											
+	  					
+	  					
+	  					pago.cajero = cajero.profile.nombre;
+	  									
+							pago.numeroCliente = user.profile.numeroCliente;	
+							pago.nombreCompleto = user.profile.nombre  + ' ' + user.profile.apellidoPaterno;
+							
+		  				resultado.seguroDistribuidorCobranza.push(pago);
+								
+					}
 					
 					if (cd.bonificacion != undefined)		
 							resultado.bonificaciones += Number(parseFloat(cd.bonificacion).toFixed(2));
@@ -23,22 +53,20 @@ Meteor.methods({
 						
 						if (plan.folioCredito != 0)
 						{
-								plan.fechaPago = cd.fechaPago;
-								var pp = PlanPagos.findOne(plan.planPago_id);
-								var credito = Creditos.findOne(pp.credito_id);
-								var tipoIngreso = TiposIngreso.findOne(cd.tipoIngreso_id);
-								var cuenta = Cuentas.findOne({tipoIngreso_id: cd.tipoIngreso_id});
-								
-								plan.folio = credito.folio;
-								plan.numeroPago = pp.numeroPago;
+								plan.fechaPago 		= cd.fechaPago;
+								var pp 						= PlanPagos.findOne(plan.planPago_id);
+								var credito 			= Creditos.findOne(pp.credito_id);
+								var tipoIngreso 	= TiposIngreso.findOne(cd.tipoIngreso_id);
+								var cuenta 				= Cuentas.findOne({tipoIngreso_id: cd.tipoIngreso_id});
+									
+								plan.folio 				= credito.folio;
+								plan.numeroPago 	= pp.numeroPago;
 								plan.tipoCredito	= pp.tipoCredito;
-								plan.numeroPagos = credito.numeroPagos;
-								plan.tipoIngreso = tipoIngreso.nombre;
+								plan.numeroPagos 	= credito.numeroPagos;
+								plan.tipoIngreso 	= tipoIngreso.nombre;								
+								
 								if (cuenta != undefined)
 									 plan.tipoCuenta = cuenta.tipoCuenta;
-								
-								//if (pp.movimiento == "Cargo Moratorio")
-								//	 plan.pagoCapital	= plan.totalPago;
 								
 								var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
 		  																{fields: {"profile.nombreCompleto": 1,
@@ -91,13 +119,25 @@ Meteor.methods({
 			return resultado;
 			
 	},
+	
 	getBancos:function(fechaInicial, fechaFinal, sucursal_id){
 			
 			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}, {sort: {fechaEntrega: 1}}).fetch();
 
-			var cobranza = [];
+			var resultado = {};
+			
+			resultado.cobranza 						= [];
+			resultado.seguroDistribuidor 	= 0;
+			resultado.bonificaciones			= 0;
 
 			_.each(cobranzaDiaria, function(cd){
+				
+					if (cd.seguro != undefined)
+							resultado.seguroDistribuidor += Number(parseFloat(cd.seguro).toFixed(2));
+					
+					if (cd.bonificacion != undefined)		
+							resultado.bonificaciones += Number(parseFloat(cd.bonificacion).toFixed(2));
+				
 					_.each(cd.planPagos, function(plan){
 						
 						if (plan.folioCredito != 0)
@@ -109,21 +149,20 @@ Meteor.methods({
 							var tipoIngreso = TiposIngreso.findOne(cd.tipoIngreso_id);
 							var cuenta = Cuentas.findOne({tipoIngreso_id: cd.tipoIngreso_id});
 
-							
-							plan.folio = credito.folio;
-							plan.numeroPago = pp.numeroPago;
-							plan.numeroPagos = credito.numeroPagos;
-							plan.tipoIngreso = tipoIngreso.nombre;
-							plan.tipoCuenta = cuenta.tipoCuenta;
-							
-						
+							plan.folio 				= credito.folio;
+							plan.numeroPago 	= pp.numeroPago;
+							plan.tipoCredito	= pp.tipoCredito;
+							plan.numeroPagos 	= credito.numeroPagos;
+							plan.tipoIngreso 	= tipoIngreso.nombre;
+							plan.tipoCuenta 	= cuenta.tipoCuenta;
+													
 							var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
 	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
 	  																
 	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
-	  																{fields: {"profile.nombreCompleto": 1}});											
-	  												
-	  					plan.cajero = cajero.profile.nombreCompleto;
+		  																{fields: {"profile.nombre": 1}});											
+		  						
+		  				plan.cajero = cajero.profile.nombre;
 	  									
 							plan.numeroCliente = user.profile.numeroCliente; 
 							
@@ -131,7 +170,7 @@ Meteor.methods({
 							plan.numeroCliente = user.profile.numeroCliente;	
 							plan.nombreCompleto = user.profile.nombreCompleto;
 							if (plan.tipoCuenta == "Banco"){
-								cobranza.push(plan);
+								resultado.cobranza.push(plan);
 								plan.mostrar = true;
 							}
 							else{
@@ -146,12 +185,13 @@ Meteor.methods({
 								
 								plan.folio 				= 0;
 								plan.numeroPago 	= 0;
+								plan.tipoCredito	= pp.tipoCredito;
 								plan.numeroPagos 	= 0;
 								plan.tipoIngreso 	= tipoIngreso.nombre;
 								plan.tipoCuenta 	= cuenta.tipoCuenta;
 								
 		  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
-		  																						{fields: {"profile.nombre": 1}});											
+		  																{fields: {"profile.nombre": 1}});											
 		  					
 		  					
 		  					plan.cajero = cajero.profile.nombre;
@@ -160,7 +200,7 @@ Meteor.methods({
 								plan.nombreCompleto = cd.usuario_id;
 								
 								if (plan.tipoCuenta == "Banco"){
-									cobranza.push(plan);
+									resultado.cobranza.push(plan);
 									plan.mostrar = true;
 								}
 								else{
@@ -174,7 +214,7 @@ Meteor.methods({
 					
 			});
 						
-			return cobranza;
+			return resultado;
 			
 	},
 
@@ -243,6 +283,22 @@ Meteor.methods({
 					credito.numeroCliente = user.profile.numeroCliente;	
 					credito.nombreCompleto = user.profile.nombreCompleto;
 					
+					var entrega_id = credito.entrega.movimientosCaja[0];
+
+					var movimientoCaja = MovimientosCajas.findOne(entrega_id);
+					var tipoIngreso 	 = TiposIngreso.findOne(movimientoCaja.tipoIngreso_id);
+					
+					credito.entregaCredito = tipoIngreso.nombre;
+					
+					if (credito.tipo == "vale")
+					{
+							var beneficiario = Beneficiarios.findOne(credito.beneficiario_id);
+							
+							if (beneficiario != undefined)
+									credito.beneficiario = beneficiario.nombreCompleto;
+							
+					}
+										
 					if (credito.garantias != undefined)
 					{
 						if (credito.garantias.length > 0 ) {
@@ -257,22 +313,16 @@ Meteor.methods({
 							credito.estatusGarantia = "No"
 						}
 					
-
 					var cajero = Meteor.users.findOne({"_id" : credito.usuario_id}, 
-	  																{fields: {"profile.nombre": 1}});											
-	  			
+	  																{fields: {"profile.nombre": 1}});
 	  			if (cajero != undefined)
 	  				 credito.cajero = cajero.profile.nombre;
 	  			else
 	  				 credito.cajero = "";	 
 
-					
-					
 			});
 			
 			return 	creditosEntregados;
-			
-			
 		
 	},
 	getCreditosLiquidados:function(fechaInicial, fechaFinal, sucursal_id){
@@ -293,6 +343,15 @@ Meteor.methods({
 					
 					credito.numeroCliente = user.profile.numeroCliente;	
 					credito.nombreCompleto = user.profile.nombreCompleto;
+					
+					if (credito.tipo == "vale")
+					{
+							var beneficiario = Beneficiarios.findOne(credito.beneficiario_id);
+							
+							if (beneficiario != undefined)
+									credito.beneficiario = beneficiario.nombreCompleto;
+							
+					}
 					
 					if (credito.garantias != undefined)
 					{
@@ -596,7 +655,13 @@ Meteor.methods({
 		var res = new future();
 
 		var fecha = new Date();
+		
 		var f = fecha;
+		
+		console.log("Ini:", inicial);
+		console.log("Fin:", final);
+		
+		
 		var fechaInicial = inicial;
 		var fechaFinal = final;
 
@@ -607,11 +672,11 @@ Meteor.methods({
 		var sumaSeguro 							= 0;
 		var sumaSeguroDistribuidor 	= 0;
 		var sumaCargosM 						= 0;
-		totalcobranza 							= 0;
+		var totalcobranza 					= 0;
 		
 		
 	    _.each(objeto,function(item){
-	    	
+
 	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
 	    	moment(item.fechaInicial).format("DD-MM-YYYY")
 	      moment(item.fechaFinal).format("DD-MM-YYYY")
@@ -638,7 +703,11 @@ Meteor.methods({
 	      else if (item.descripcion == "Cargo Moratorio")
 	      {
 	      	item.movimiento = "CM";
-	      	sumaCargosM += item.totalPago;
+	      	sumaCargosM += Number(parseFloat(item.totalPago).toFixed(2));
+	      }
+	      else if (item.descripcion == "Vale") 
+	      {
+	      	item.movimiento = "V";
 	      }
 
 	       suma 				 += item.pagoCapital;
@@ -651,15 +720,15 @@ Meteor.methods({
 		       	totalcobranza += parseFloat(item.totalPago);
 	       
 
-	        item.cargo = parseFloat(item.totalPago.toFixed(2))
-	        item.cargo = formatCurrency(item.cargo)
-	        item.interes = parseFloat(item.pagoInteres.toFixed(2))
+	        item.cargo = parseFloat(item.totalPago).toFixed(2);
+	        item.cargo = formatCurrency(item.cargo);
+	        item.interes = parseFloat(item.pagoInteres).toFixed(2)
 	        item.interes = formatCurrency(item.interes)
-	        item.iva = parseFloat(item.pagoIva.toFixed(2))
+	        item.iva = parseFloat(item.pagoIva).toFixed(2);
 	        item.iva = formatCurrency(item.iva)
-	        item.seguro = parseFloat(item.pagoSeguro.toFixed(2))
+	        item.seguro = parseFloat(item.pagoSeguro).toFixed(2);
 	        item.seguro = formatCurrency(item.seguro)
-	        item.pago = parseFloat(item.pagoCapital.toFixed(2))
+	        item.pago = parseFloat(item.pagoCapital).toFixed(2)
 	        item.pago = formatCurrency(item.pago)
 	        if (item.folio < 10) {
 						 item.folio = "0"+item.folio
@@ -774,6 +843,200 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
     return res.wait();
 		
 		
+		
+  },
+	ReportesBanco: function (objeto,inicial,final) {
+	
+		//console.log(objeto,"creditos ")
+		var fs = require('fs');
+    	var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		
+		var unoconv = require('better-unoconv');
+    var future = require('fibers/future');
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+
+		
+		//var produccion = "/home/cremio/archivos/";
+		//var produccion = meteor_root+"/web.browser/app/plantillas/";
+		
+		var templateType = 'pdf';
+		var res = new future();
+				 
+		var content = fs
+    	   .readFileSync(produccion+"ReporteBancos.docx", "binary");
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) {
+			if (!part.module) {
+			return "";
+			}
+			if (part.module === "rawxml") {
+			return "";
+			}
+			return "";
+		}});
+		const formatCurrency = require('format-currency')
+			var fecha = new Date();
+			var f = fecha;
+			var fechaInicial = inicial
+			var fechaFinal = final
+
+	     var suma 					= 0
+		   var sumaInter 			= 0
+		   var sumaIva 				= 0
+		   var sumaSeguro 		= 0
+		   var totalcobranza 	= 0
+		   
+	    _.each(objeto,function(item){
+		    	
+		    	if (item.tipoIngreso == 'EFECTIVO')
+		      	item.tipoIngreso = 'EFVO.';
+		      else if (item.tipoIngreso == 'Nota de Credito')		
+		      	item.tipoIngreso = 'NC.';
+		      else if (item.tipoIngreso == 'FICHA DE DEPOSITO')		
+		      	item.tipoIngreso = 'F DEP.';		
+		      else if (item.tipoIngreso == 'TRANSFERENCIA')		
+		      	item.tipoIngreso = 'TRANSF.';
+		      else if (item.tipoIngreso == 'TARJETA DE CREDITO/DEBITO')		
+		      	item.tipoIngreso = 'TC/D.';
+		      else if (item.tipoIngreso == 'REFINANCIAMIENTO')		
+		      	item.tipoIngreso = 'REF.';		
+		      else if (item.tipoIngreso == 'CHEQUE')		
+		      	item.tipoIngreso = 'CH.';	
+		      	
+		      if (item.descripcion == "Recibo") 
+		      {
+		      	item.movimiento = "R";
+		      }
+		      else if (item.descripcion == "Cargo Moratorio")
+		      {
+		      	item.movimiento = "CM";
+		      	//sumaCargosM += Number(parseFloat(item.totalPago).toFixed(2));
+		      }
+		      else if (item.descripcion == "Vale") 
+		      {
+		      	item.movimiento = "V";
+		      }	
+		    
+		    	suma += item.pagoCapital
+		        sumaInter += item.pagoInteres
+		        sumaIva += item.pagoIva
+		        sumaSeguro += item.pagoSeguro;
+		        totalcobranza += parseFloat(item.totalPago);
+		        
+		    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY");
+		    	item.fechaDeposito = moment(item.fechaDeposito).format("DD-MM-YYYY");
+		    	item.totalPago = parseFloat(item.totalPago).toFixed(2);
+		    	item.totalPago = formatCurrency(item.totalPago)
+		    	item.pagoInteres = parseFloat(item.pagoInteres).toFixed(2);
+		    	item.pagoInteres = formatCurrency(item.pagoInteres)
+		    	item.pagoCapital = parseFloat(item.pagoCapital).toFixed(2);
+		    	item.pagoCapital = formatCurrency(item.pagoCapital);
+		    	item.pagoIva = parseFloat(item.pagoIva).toFixed(2);
+		    	item.pagoIva = formatCurrency(item.pagoIva);
+	    });
+	    
+
+	 		    
+ 		   var dia = fecha.getDate()
+ 		    var mes = fecha.getMonth()+1
+ 		    var anio = fecha.getFullYear()
+ 		    if (Number(dia) < 10) {
+ 		    	dia = "0" + dia;
+ 		    }
+ 		    if (Number(mes) < 10) {
+ 		    	mes = "0" + mes;
+ 		    }
+ 		    fecha = dia+ "-" + mes + "-" + anio
+
+ 		    var dia2 = fechaInicial.getDate()
+ 		    var mes2 = fechaInicial.getMonth()+1
+ 		    var anio2 = fechaInicial.getFullYear()
+ 		    if (Number(dia2) < 10) {
+ 		    	dia2 = "0" + dia2;
+ 		    }
+ 		    if (Number(mes2) < 10) {
+ 		    	mes2 = "0" + mes2;
+ 		    }
+ 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
+
+ 		    var dia3 = fechaFinal.getDate()
+ 		    var mes3 = fechaFinal.getMonth()+1
+ 		    var anio3 = fechaFinal.getFullYear()
+ 		    if (Number(dia3) < 10) {
+ 		    	dia3 = "0" + dia3;
+ 		    }
+ 		    if (Number(mes3) < 10) {
+ 		    	mes3 = "0" + mes3;
+ 		    }
+ 		    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
+ 		    //totalcobranza = suma + sumaIva + sumaInter
+ 		    
+        parseFloat(suma).toFixed(2);
+ 		    suma = formatCurrency(suma)
+ 		    parseFloat(sumaInter).toFixed(2);
+ 		    sumaInter = formatCurrency(sumaInter)
+ 		    parseFloat(sumaIva).toFixed(2);
+ 		    sumaIva = formatCurrency(sumaIva)
+ 		    parseFloat(sumaSeguro).toFixed(2);
+ 		    sumaSeguro = formatCurrency(sumaSeguro);
+ 		    parseFloat(totalcobranza).toFixed(2);
+ 		    totalcobranza = formatCurrency(totalcobranza);
+		
+		doc.setData({				
+			            item: 		 objeto,
+						fecha:       fecha,
+						inicial:     fechaInicial,
+						final:       fechaFinal,
+						sumaCapital:    suma,
+						sumaIntereses:  sumaInter,
+						sumaIva:        sumaIva,
+						totalSeguro:    sumaSeguro,
+						totalCobranza:  totalcobranza,
+													
+				});
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+             		 
+		//fs.writeFileSync(produccionSalida+"ReporteBancosSalida.docx",buf);
+		
+		var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "ReporteBancosSalida" + templateType;
+				
+		//Pasar a base64
+		// read binary data
+    //var bitmap = fs.readFileSync(produccionSalida+"ReporteBancosSalida.docx");
+    
+    // convert binary data to base64 encoded string
+    //return new Buffer(bitmap).toString('base64');
+    
+    fs.writeFileSync(rutaOutput, buf);
+    
+    unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+        if(!err){
+          fs.unlink(rutaOutput);
+          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "ReporteBancosSalida" + '.pdf' });
+        }else{
+          res['return']({err: err});
+          console.log("Error al convertir pdf:", err);
+        }
+     });
+
+    return res.wait();
 		
   },
   ReporteCarteraVencida: function (objeto, tipo) {
@@ -1225,6 +1488,7 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 	    return res.wait();
 	    		
   },
+	
 	report: function(params) {
     var Docxtemplater = require('docxtemplater');
     var JSZip = require('jszip');

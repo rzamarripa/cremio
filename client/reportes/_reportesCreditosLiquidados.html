@@ -117,6 +117,187 @@
 	
 </div>
 
+
+<div class="well">
+		<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
+				<header role="heading">
+				<!--<h2><strong>Panel de Folios </strong></h2>-->
+				
+				<ul id="widget-tab-1" class="nav nav-tabs pull-left">
+		
+					<li class="active">
+						<a data-toggle="tab" href="#hr1" aria-expanded="false"> 
+<!-- 								<i class="fa fa-lg fa-thumbs-o-up"></i>  -->
+									<span class="hidden-mobile hidden-tablet"> Totales 
+						</a>
+					</li>
+					
+					<li class="">
+						<a data-toggle="tab" href="#hr2" aria-expanded="false"> 
+<!-- 							<i class="fa fa-lg fa-thumbs-o-up"></i>  -->
+									<span class="hidden-mobile hidden-tablet"> Créditos Personales 
+						</a>
+					</li>
+					
+					<li class="">
+						<a data-toggle="tab" href="#hr3" aria-expanded="false"> 
+<!-- 							<i class="fa fa-lg fa-thumbs-o-up"></i>  -->
+									<span class="hidden-mobile hidden-tablet"> Vales 
+					</li>
+
+				</ul>	
+				
+			<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+		
+			<!-- widget div-->
+			<div role="content">
+				
+				<!-- widget edit box -->
+				<div class="jarviswidget-editbox">
+					<!-- This area used as dropdown edit box -->
+					
+				</div>
+				<!-- end widget edit box -->
+				
+				<!-- widget content -->
+				<div class="widget-body no-padding">
+		
+					<!-- widget body text-->
+					
+					<div class="tab-content padding-10">
+						
+						<div class="tab-pane fade active in" id="hr1">
+								<div class="row">
+									<div class="col-sm-12" >
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+												  <th width="5%"><div class="text-center">No.</div></th>
+												  <th><div class="text-center">Cliente</div></th>
+													<th><div class="text-center">Nombre</div></th>
+													<th width="10%"> <div class="text-center">Fecha Liquidó</div></th>
+													<th width="11%"> <div class="text-center">Fecha Entregó</div></th>
+													<th width="7%"><div class="text-center">Pagaré</div></th>
+													<th width="7%"><div class="text-center">Recibos</div></th>
+													<th><div class="text-center">Garantia</div></th>
+													<th><div class="text-center">Solicitado</div></th>
+													<th><div class="text-center">A pagar</div></th>
+												</tr>
+											</thead>
+											<tbody style="font-size: small">
+										    <tr ng-repeat="objeto in re.creditosLiquidados ">
+										    	<td><div class="text-center">{{$index + 1}}</div></td>
+										    	<td><div class="text-left">{{objeto.numeroCliente}}</div></td>
+											    <td><div class="text-left">{{objeto.nombreCompleto}}</div></td>
+											    <td><div class="text-center">{{objeto.fechaLiquidacion | date:"dd-MM-yyyy"}}</div></td>
+											    <td><div class="text-center">{{objeto.fechaEntrega | date:"dd-MM-yyyy"}}</div></td>
+											    <td><div class="text-center">{{objeto.folio}}</div></td>
+											    <td><div class="text-center">{{objeto.numeroPagos}}</div></td>
+											    <td><div class="text-center">{{objeto.estatusGarantia}}</div></td>
+											    <td><div class="pull-right">{{objeto.capitalSolicitado | currency}}</div></td>
+											    <td><div class="pull-right">{{objeto.adeudoInicial | currency }}</div></td> 				
+										    </tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+						</div>
+						
+						<div class="tab-pane fade" id="hr2">
+								<div class="row">
+									<div class="col-sm-12" >
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+												  <th width="5%"><div class="text-center">No.</div></th>
+												  <th><div class="text-center">Cliente</div></th>
+													<th><div class="text-center">Nombre</div></th>
+													<th width="10%"> <div class="text-center">Fecha Liquidó</div></th>
+													<th width="11%"> <div class="text-center">Fecha Entregó</div></th>
+													<th width="7%"><div class="text-center">Pagaré</div></th>
+													<th width="7%"><div class="text-center">Recibos</div></th>
+													<th><div class="text-center">Garantia</div></th>
+													<th><div class="text-center">Solicitado</div></th>
+													<th><div class="text-center">A pagar</div></th>
+												</tr>
+											</thead>
+											<tbody style="font-size: small">
+										    <tr ng-repeat="objeto in re.creditosLiquidados" ng-if = "objeto.tipo == 'creditoP' ">
+										    	<td><div class="text-center">{{$index + 1}}</div></td>
+										    	<td><div class="text-left">{{objeto.numeroCliente}}</div></td>
+											    <td><div class="text-left">{{objeto.nombreCompleto}}</div></td>
+											    <td><div class="text-center">{{objeto.fechaLiquidacion | date:"dd-MM-yyyy"}}</div></td>
+											    <td><div class="text-center">{{objeto.fechaEntrega | date:"dd-MM-yyyy"}}</div></td>
+											    <td><div class="text-center">{{objeto.folio}}</div></td>
+											    <td><div class="text-center">{{objeto.numeroPagos}}</div></td>
+											    <td><div class="text-center">{{objeto.estatusGarantia}}</div></td>
+											    <td><div class="pull-right">{{objeto.capitalSolicitado | currency}}</div></td>
+											    <td><div class="pull-right">{{objeto.adeudoInicial | currency }}</div></td> 				
+										    </tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+						</div>
+						
+						<div class="tab-pane fade" id="hr3">
+								<div class="row">
+									<div class="col-sm-12" >
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+												  <th width="5%"><div class="text-center">No.</div></th>
+												  <th><div class="text-center">Cliente</div></th>
+													<th><div class="text-center">Nombre</div></th>
+													<th width="10%"> <div class="text-center">Fecha Liquidó</div></th>
+													<th width="11%"> <div class="text-center">Fecha Entregó</div></th>
+													<th width="7%"><div class="text-center">Pagaré</div></th>
+													<th width="7%"><div class="text-center">Recibos</div></th>
+													<th><div class="text-center">Garantia</div></th>
+													<th><div class="text-center">Solicitado</div></th>
+													<th><div class="text-center">A pagar</div></th>
+												</tr>
+											</thead>
+											<tbody style="font-size: small">
+										    <tr ng-repeat="objeto in re.creditosLiquidados" ng-if = "objeto.tipo == 'vale' ">
+										    	<td><div class="text-center">{{$index + 1}}</div></td>
+										    	<td><div class="text-left" style="font-size: smaller">{{objeto.numeroCliente}}</div></td>
+											    <td><div class="text-left" style="font-size: smaller">{{objeto.nombreCompleto}} <br> {{objeto.beneficiario}} </div></td>
+											    <td><div class="text-center">{{objeto.fechaLiquidacion | date:"dd-MM-yyyy"}}</div></td>
+											    <td><div class="text-center">{{objeto.fechaEntrega | date:"dd-MM-yyyy"}}</div></td>
+											    <td><div class="text-center">{{objeto.folio}}</div></td>
+											    <td><div class="text-center">{{objeto.numeroPagos}}</div></td>
+											    <td><div class="text-center">{{objeto.estatusGarantia}}</div></td>
+											    <td><div class="pull-right">{{objeto.capitalSolicitado | currency}}</div></td>
+											    <td><div class="pull-right">{{objeto.adeudoInicial | currency }}</div></td> 				
+										    </tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+						</div>
+					</div>
+					
+					<!-- end widget body text-->
+					
+					<!-- widget footer -->
+					<div class="widget-footer text-right">
+						
+				
+					</div>
+					<!-- end widget footer -->
+					
+				</div>
+				<!-- end widget content -->
+				
+			</div>
+			<!-- end widget div -->
+			
+		</div>
+</div>
+
+
+<!--
 <div class="row">
 	<div class="col-sm-12" >
 			<table class="table table-bordered">
@@ -150,4 +331,5 @@
 				</tbody>
 			</table>
 		</div>
-	</div>
+</div>
+-->

@@ -3,9 +3,9 @@
 	<div class="widget-body no-padding">
 		<div class="padding-12">
 			<div class="row text-center">
-				<div class="col-sm-4 col-sm-offset-4">
+				<div class="col-sm-4 col-sm-offset-4">	
 					<span id="logo"> <img src="img/LogoBigVale.jpg" alt="SmartAdmin" style="margin-top: -13px;margin-left:-50px;width: 250px;height: 110px;"> </span>
-					<address style="font-size: larger">
+					<address>
 						RUBIDIA MARTINEZ ALCARAZ<br>
 						BLVD. EMILIANO ZAPATA 3125 LOCAL 12BC<br>
 						COLONIA LOMAS DEL BOULEVARD<br>
@@ -14,7 +14,7 @@
 					</address>
 					<strong>----------------------------------------------------------------</strong>
 					<div class="row">
-						<div class="col-sm-12" style="text-align: left">
+						<div class="col-sm-12" style="font-size: small; text-align: left">
 							<span>Cliente: {{tktEV.beneficiario.nombreCompleto}}</span>
 							<br>
 							<span>Folio Vale: {{tktEV.credito.folio}}</span>
@@ -27,7 +27,7 @@
 						</div>
 					</div>	
 					<strong>----------------------------------------------------------------</strong>
-					<table style="width: 100%">
+					<table style="font-size: smaller;width: 100%">
 						<tbody>
 							<tr>
 								<th style="text-align: center;width: 30%">Abono</th>
@@ -37,7 +37,7 @@
 							<tr ng-repeat="pago in tktEV.planPagos">
 								<td style="text-align: center;width: 20%">{{pago.numeroPago}}</td>
 								<td style="text-align: center;width: 40%">{{pago.fechaLimite | date: 'dd/MM/yyyy'}}</td>
-								<td style="text-align: right;width: 30%">{{pago.importeRegular | currency}}</td>
+								<td style="text-align: right;width: 30%; padding-right: 10px">{{pago.importeRegular | currency}}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -51,7 +51,7 @@
 					
 					<br>
 					<div class="row">
-						<div class="col-sm-12" style="text-align: justify">
+						<div class="col-sm-12" style="font-size: small; text-align: justify">
 							<span>Realizar el pago a: {{tktEV.distribuidor.profile.nombreCompleto}}</span>
 						</div>
 						<br><br><br>
@@ -59,25 +59,25 @@
 					</div>						
 					<br><br><br>
 					<div class="row">
-						<div class="col-sm-12" style="text-align: left">
+						<div class="col-sm-12" style="font-size: small; text-align: left">
 							<span>Recibí: </span>
 						</div>
 						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
 					</div>
 					<div class="row">
-						<div class="col-sm-12" style="text-align: center">
+						<div class="col-sm-12" style="font-size: small; text-align: center">
 							<span>{{tktEV.beneficiario.nombreCompleto}}</span>
 						</div>
 					</div>
 					<br><br><br>
 					<div class="row">
-						<div class="col-sm-12" style="text-align: left">
+						<div class="col-sm-12" style="font-size: small; text-align: left">
 							<span>Entregó: </span>
 						</div>
 						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
 					</div>
 					<div class="row">
-						<div class="col-sm-12" style="text-align: center">
+						<div class="col-sm-12" style="font-size: small; text-align: center">
 							<span>{{tktEV.cajero.profile.nombre}}</span>
 						</div>
 					</div>					

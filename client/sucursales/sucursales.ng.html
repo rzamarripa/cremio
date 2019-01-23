@@ -8,6 +8,7 @@
 		<div class="collapse" id="collapseExample">
 			<form name="form" class="form-horizontal" role="form" novalidate>
 				<section id="usuario" data-widget-grid="data-widget-grid1" >
+<!--
 				  <div class="row">
 				    <div class="col-sm-12">
 				      <div data-widget-color="blue" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-jarvis-widget="data-jarvis-widget">
@@ -60,6 +61,7 @@
 				      </div>
 				    </div>
 				  </div>
+-->
 					<div class="row">
 				    <div class="col-sm-12">
 				      <div data-widget-color="blue" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-jarvis-widget="data-jarvis-widget2">
@@ -74,7 +76,7 @@
 							    	</div>
 							    	<div class="col-sm-3" valida>
 							    		<label>Nombre *</label>
-								    	<input name="nombreobjeto" type="text" class="form-control" placeholder="Nombre Sección" ng-model="suc.objeto.nombreSucursal" required="" capitalize>
+								    	<input name="nombreobjeto" type="text" class="form-control" placeholder="Nombre Sucursal" ng-model="suc.objeto.nombreSucursal" required="" capitalize>
 							    	</div>
 							    	<div class="col-sm-6">
 									    <label>Descripción</label>
@@ -136,8 +138,7 @@
 					          	<input name="folioPago" type="number" class="form-control" ng-model="suc.objeto.folioPago" required>
 							    	</div>
 							    	
-							    </div>
-							    				
+							    </div>							    				
 							    <!--
 							    <div class="row">
 								    <div class="col-sm-3">
@@ -215,11 +216,11 @@
 			    <td class="col-sm-1">
 				    <div class="text-center">
 					    <div class="btn-group">
-							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							    <span class="caret"></span>
 							    <span class="sr-only">Toggle Dropdown</span>
 							  </button>
-							  <ul class="dropdown-menu text-left">
+							  <ul class="dropdown-menu dropdown-menu-right text-left">
 							    <li><a href="#" ng-click="suc.editar(objeto._id)"><i class="fa fa-pencil"></i> Editar</a></li>
 							    <li><a href="#" ng-click="suc.cambiarEstatus(objeto._id)"><i class="fa fa-trash"></i> 
 								    		<span ng-if="objeto.estatus">

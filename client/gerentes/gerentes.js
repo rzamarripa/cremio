@@ -35,6 +35,7 @@ function GerentesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams) 
     this.action = true;
     rc.nuevo = !rc.nuevo;
     this.objeto = {}; 
+    rc.cambiarContrasena = false;
   };
   
   this.guardar = function(objeto,form)
@@ -59,53 +60,31 @@ function GerentesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams) 
 		objeto.folioPago = 0;
 		objeto.folioCredito = 0; //Folio de Credito
 		
-		objeto_id = Sucursales.insert(this.objeto,
-																						 function(error,result)
-																						 {
-																									if (error)
-																									{
-																											console.log("Error:",error);
-																											return;		
-																									}
-																									if (result)
-																									{
-																											var nombre = objeto.nombre != undefined ? objeto.nombre + " " : "";
-																											var apPaterno = objeto.apPaterno != undefined ? objeto.apPaterno + " " : "";
-																											var apMaterno = objeto.apMaterno != undefined ? objeto.apMaterno : ""
-																											objeto.nombreCompleto = nombre + apPaterno + apMaterno;
-																											var usuario = {
-																												username : objeto.username,
-																												password : objeto.password,
-																												profile : {
-																													nombre : objeto.nombre,
-																													apPaterno : objeto.apPaterno,
-																													apMaterno : objeto.apMaterno,
-																													nombreCompleto : nombre + apPaterno + apMaterno,
-																													sucursal_id : result,
-																													estatus : true,
-																													sexo : objeto.sexo,
-																													passwordDesbloqueo : objeto.profile.passwordDesbloqueo
-																												}
-																											}
-																											
-																											delete objeto.password;
-																									
-																											Meteor.call('createGerenteSucursal', usuario, 'Gerente');
-																											toastr.success('Guardado correctamente.');
-																											this.objeto = {};
-																											$('.collapse').collapse('hide');
-																											rc.nuevo = true;
-																											form.$setPristine();
-																									    form.$setUntouched();	
-																									}
-																							}
-																	);									
+		objeto.profile.foto = rc.pic;
+		objeto.profile.estatus = true;
+		objeto.profile.usuarioInserto = Meteor.userId();
+		//objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
+		objeto.profile.fechaCreacion = new Date();
+		var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
+		var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
+		var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
+		objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
+		//console.log(objeto.profile.nombreCompleto);
+		Meteor.call('createUsuario', objeto, "Gerente");
+		toastr.success('Guardado correctamente.');
+		this.usuario = {};
+		$('.collapse').collapse('hide');
+		this.nuevo = true;
 		
+		rc.cambiarContrasena = true;		
+				
 	};
 	
 	this.editar = function(id)
 	{
 			this.objeto = Meteor.users.findOne({_id:id});
+			this.objeto.confirmarpassword = "sinpassword";	
+			this.objeto.password 					= "sinpassword"; 
 	    this.action = false;
 	    $('.collapse').collapse('show');
 	    rc.nuevo = false;
@@ -118,53 +97,23 @@ function GerentesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams) 
 	      toastr.error('Error al actualizar los datos.');
 	      return;
 		  }
-			
-			console.log(this.objeto);
-			console.log(objeto);
 		  
-			var idTemp = objeto._id;
-			delete objeto._id;		
-			Sucursales.update({_id:idTemp},{$set:objeto},
-																									function(error,result)
-																								  {
-																											if (error)
-																											{
-																													console.log("Error:",error);
-																													return;		
-																											}
-																											if (result)
-																											{
-																												
-																												  var nombre = objeto.nombre != undefined ? objeto.nombre + " " : "";
-																													var apPaterno = objeto.apPaterno != undefined ? objeto.apPaterno + " " : "";
-																													var apMaterno = objeto.apMaterno != undefined ? objeto.apMaterno : ""
-																													objeto.nombreCompleto = nombre + apPaterno + apMaterno;
+		  var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
+			var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
+			var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
+			objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
 
-																													var usuario = {
-																														username : objeto.username,
-																														password : objeto.password,
-																														profile : {
-																															nombre : objeto.nombre,
-																															apPaterno : objeto.apPaterno,
-																															apMaterno : objeto.apMaterno,
-																															nombreCompleto : nombre + apPaterno + apMaterno,
-																															sucursal_id : idTemp,
-																															estatus : true,
-																															sexo : objeto.sexo,
-																															passwordDesbloqueo : objeto.profile.passwordDesbloqueo
-																															//folioDistribuidor : objeto.folioDistribuidor
-																														}
-																													}
-																																																										
-																													Meteor.call('updateGerenteSucursal', usuario, 'Gerente');
-																													toastr.success('Actualizado correctamente.');
-																													$('.collapse').collapse('hide');
-																													rc.nuevo = true;
-																													form.$setPristine();
-																											    form.$setUntouched();
-																											}
-																								}			
-			);
+			delete objeto.profile.repeatPassword;
+			Meteor.call('updateUsuario', objeto,null, "Gerente", this.cambiarContrasena);
+			toastr.success('Actualizado correctamente.');
+			
+			$('.collapse').collapse('hide');
+			
+			this.cambiarContrasena = true;
+			
+			
+			this.nuevo = true;
+			
 		
 	};
 

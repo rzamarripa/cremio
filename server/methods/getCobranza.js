@@ -4,11 +4,11 @@ Meteor.methods({
 			var planPagos = {};
  
  			if (op == 0)
-					var planPagos = PlanPagos.find({fechaLimite: {$lte: fechaFinal}, tipoCredito: "creditoP", importeRegular: {$gt:0}, estatus: { $in: [0,2] }}).fetch();
+					var planPagos = PlanPagos.find({sucursal_id: sucursal_id,fechaLimite: {$lte: fechaFinal}, tipoCredito: "creditoP", importeRegular: {$gt:0}, estatus: { $in: [0,2] }}).fetch();
 			else if (op == 1)
-					var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, tipoCredito: "creditoP", descripcion: "Recibo", estatus:{$in: [0,2]}}).fetch();
+					var planPagos = PlanPagos.find({sucursal_id: sucursal_id,fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, tipoCredito: "creditoP", descripcion: "Recibo", estatus:{$in: [0,2]}}).fetch();
 			else
-					var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, tipoCredito: "creditoP", estatus: { $in: [0,2] }}).fetch();
+					var planPagos = PlanPagos.find({sucursal_id: sucursal_id,fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, tipoCredito: "creditoP", estatus: { $in: [0,2] }}).fetch();
 			//console.log(planPagos);
 					
 			var hoy = new Date();
@@ -49,6 +49,16 @@ Meteor.methods({
 			
 			function calculaBonificacion(fechaLimite){
 	  	
+			  	var configuraciones = Configuraciones.findOne();
+
+			  	var comisionMayor = 0;
+			  	var comision = 0;
+			  	
+			  	_.each(configuraciones.arregloComisiones, function(c){
+				  		if (c.porcentaje > comisionMayor)
+				  			comisionMayor = c.porcentaje;
+			  	});
+			  	
 			  	var date = new Date();
 			  	date.setHours(23,59,59);
 			  	var fecha1 = moment(date);
@@ -56,58 +66,42 @@ Meteor.methods({
 					var fecha2 = moment(fechaLimite);
 					
 					var dias = fecha1.diff(fecha2, 'days');
-
-					var comision = 15;
+		
+					comision = comisionMayor;
 					
-					if (dias > 7)
+					if (dias > 6)
 					{
 						 	comision = 0;
 					}
 					else if (dias <= 0)
 					{
-							comision = 15;
+							//Comisión Mayor
+							comision = comisionMayor;
 					}
-					else if (dias <= 7)
+					else if (dias <= 6)
 					{
-		
 							var fechaPago = new Date(fecha1);
-
 							var nfp = fechaPago.getDate();
-							var mesfp = fechaPago.getMonth();
-							switch(nfp)
-							{
-								case 1: comision = 15; break;
-								case 2: comision = 15; break;
-								case 3: comision = 15; break;
-								case 4: comision = 14; break;
-								case 5: comision = 13; break;
-								case 6: comision = 9; break;
-								case 7: comision = 7; break;
-								case 16: comision = 15; break;
-								case 17: comision = 15; break;
-								case 18: comision = 15; break;
-								case 19: comision = 14; break;
-								case 20: comision = 13; break;
-								case 21: comision = 9; break;
-								case 22: comision = 7; break;
-								default: comision = 0;
-							}	
-						
+							var mesfp = fechaPago.getMonth();					
+							comision = 0;
+							_.each(configuraciones.arregloComisiones, function(c){
+					  		if (c.valor1 == nfp || c.valor2 == nfp)
+					  				comision = c.porcentaje;
+							});				
 					}	
-			  	
+			  	//console.log(comision);
 			  	return comision;			  	
 		  };
-			
-			
+						
 			var planPagos = {};
 			
  			if (op == 0)
-					var planPagos = PlanPagos.find({fechaLimite: {$lte: fechaFinal}, tipoCredito: "vale", importeRegular: {$gt:0}, estatus: { $in: [0,2] }}).fetch();
+					var planPagos = PlanPagos.find({sucursal_id: sucursal_id,fechaLimite: {$lte: fechaFinal}, tipoCredito: "vale", importeRegular: {$gt:0}, estatus: { $in: [0,2] }}).fetch();
 			else if (op == 1)
-					var planPagos = PlanPagos.find({fechaLimite: {$lte: fechaFinal}, tipoCredito: "vale", importeRegular: {$gt:0}, estatus:{$in: [0,2]}},{sort : {fechaLimite : 1}}).fetch();
+					var planPagos = PlanPagos.find({sucursal_id: sucursal_id,fechaLimite: {$lte: fechaFinal}, tipoCredito: "vale", importeRegular: {$gt:0}, estatus:{$in: [0,2]}},{sort : {fechaLimite : 1, credito_id: 1, numeroPago: 1}}).fetch();
 			else
 					//var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, tipoCredito: "vale", estatus: { $in: [0,2] }}).fetch();
-					var planPagos = PlanPagos.find({fechaLimite: {$lte: fechaFinal}, tipoCredito: "vale", importeRegular: {$gt:0}, estatus:{$in: [0,2]}},{sort : {fechaLimite : 1}}).fetch();
+					var planPagos = PlanPagos.find({sucursal_id: sucursal_id,fechaLimite: {$lte: fechaFinal}, tipoCredito: "vale", importeRegular: {$gt:0}, estatus:{$in: [0,2]}},{sort : {fechaLimite : 1, credito_id: 1, numeroPago: 1}}).fetch();
 			
 			
 			var configuraciones = Configuraciones.findOne();
@@ -128,7 +122,12 @@ Meteor.methods({
 					
 					var comision = calculaBonificacion(planPago.fechaLimite);
 	        //planPago.bonificacion = Number(parseFloat(((planPago.capital + planPago.interes) * (comision / 100))).toFixed(2));
-	        planPago.bonificacion = Number(parseFloat(((planPago.importeRegular) * (comision / 100))).toFixed(2));
+	        planPago.bonificacion = 0;
+	        
+	        if (planPago.importeRegular == planPago.cargo)
+					{	
+	        		planPago.bonificacion = Number(parseFloat(((planPago.importeRegular) * (comision / 100))).toFixed(2));
+	        }		
 	        
 	        planPago.adeudoInicial					= credito.adeudoInicial;
 	        planPago.saldoActual						= credito.saldoActual;
@@ -196,33 +195,6 @@ Meteor.methods({
 				 			arreglo[credito.cliente_id].planPagos.push(planPago);
 		 			}
 	 				
-					
-					/*
-
-					if (planPago.descripcion == "Cargo Moratorio")	
-						 classPago = "text-danger";	
-					
-										
-					if (planPago.importeRegular != 0 )
-					{
-				 			
-							var u = Meteor.users.findOne({_id: planPago.cliente_id});
-							var c = Creditos.findOne({_id: planPago.credito_id});
-
-				 			//planPago.cliente = u.profile.nombreCompleto;
-				 			planPago.cliente = Meteor.users.findOne({_id: planPago.cliente_id}, {fields: {"profile.documentos" : 0}});
- 
-				 			planPago.nombreCompleto = planPago.cliente != undefined ? planPago.cliente.profile.nombreCompleto : "";				 					
-				 			
-				 			planPago.credito = Creditos.findOne({_id: planPago.credito_id});
-				 			
-				 			planPago.imprimir = false;
-				 			planPago.classPago = classPago;
-				 			planPago.numeroPagos = c.numeroPagos;		
-
-					}
-*/
-
 			});
 						
 			return _.toArray(arreglo);
@@ -291,29 +263,28 @@ Meteor.methods({
 			var saldos 	= {};
 			
 			var planPagosDistribuidor = [];
-			
 								
 			var hoy = new Date();
 			var fechaActual = moment();
-			
+						
 			_.each(planPagos, function(planPago){
 				var classPago = "";
 										
 					var credito = Creditos.findOne(planPago.credito_id);
-
-					if (credito.cliente_id == distribuidor_id)
+											
+					if (credito.cliente_id == distribuidor_id && planPago.descripcion != "Cargo Moratorio")
 					{
-							var distribuidor = Meteor.users.findOne({_id: credito.cliente_id},{fields: {"profile.numeroCliente":1, "profile.nombreCompleto":1}});	
+							
+							var distribuidor = Meteor.users.findOne({_id: credito.cliente_id},{fields: {"profile.numeroCliente" : 1, "profile.nombreCompleto" : 1}});
+							
 							planPago.numeroPagos = credito.numeroPagos;					
 							planPago.beneficiario = credito.beneficiario_id != undefined ? Beneficiarios.findOne(credito.beneficiario_id).nombreCompleto : "";
 							
 							var comision = calculaBonificacion(planPago.fechaLimite);
 							
-			        //planPago.bonificacion = Number(parseFloat(((planPago.capital + planPago.interes) * (comision / 100))).toFixed(2));
 			        planPago.bonificacion = Number(parseFloat(((planPago.importeRegular) * (comision / 100))).toFixed(2));
 			        
 			        planPago.adeudoInicial					= credito.adeudoInicial;
-			        //planPago.saldoActual						= credito.saldoActual;
 			        planPago.folio									= credito.folio;
 			        planPago.distribuidor						= distribuidor.profile.nombreCompleto;
 			        
@@ -328,50 +299,11 @@ Meteor.methods({
 			        
 			        planPago.saldoActual	= Number(parseFloat(saldos[planPago.folio]).toFixed(2));
 			        
-			        							
-						/*
-	if (arreglo[credito.cliente_id] == undefined)
-							{
-			 			 			arreglo[credito.cliente_id] 									= {};
-			 			 			arreglo[credito.cliente_id].credito 		 			= credito;
-							 		arreglo[credito.cliente_id].distribuidor 			= distribuidor;
-							 		arreglo[credito.cliente_id].importe 					= 0.00;
-							 		arreglo[credito.cliente_id].cargosMoratorios 	= 0.00;
-							 		arreglo[credito.cliente_id].bonificacion		 	= 0.00;
-							 		arreglo[credito.cliente_id].seguro					 	= 0.00;
-							 		arreglo[credito.cliente_id].seguro					 	= configuraciones.seguro;
-							 		
-							 		arreglo[credito.cliente_id].bonificacion		 	= planPago.bonificacion;					 		
-							 		if (planPago.descripcion == "Recibo")
-							 				arreglo[credito.cliente_id].importe 					= planPago.importeRegular;
-							 		else if (planPago.descripcion == "Cargo Moratorio")
-		
-							 				arreglo[credito.cliente_id].cargosMoratorios	= planPago.importeRegular;
-							 		
-							 		arreglo[credito.cliente_id].planPagos 				= [];
-							 		arreglo[credito.cliente_id].planPagos.push(planPago);
-				 			}
-				 			else
-				 			{
-						 			
-						 			if (planPago.descripcion == "Recibo")
-							 				arreglo[credito.cliente_id].importe 					+= planPago.importeRegular;
-							 		else if (planPago.descripcion == "Cargo Moratorio")		
-							 				arreglo[credito.cliente_id].cargosMoratorios	+= planPago.importeRegular;
-						 			
-						 			arreglo[credito.cliente_id].bonificacion		 			+= planPago.bonificacion;
-						 			//arreglo[credito.cliente_id].importe += planPago.importeRegular;
-						 			arreglo[credito.cliente_id].planPagos.push(planPago);
-				 			}
-*/
-				 			
 				 			if (planPago.descripcion != "Cargo Moratorio")
 	 				 			 planPagosDistribuidor.push(planPago);
-						
 					}
-
 			});
-			
+						
 			//return _.toArray(arreglo);
 			return planPagosDistribuidor;
 	},

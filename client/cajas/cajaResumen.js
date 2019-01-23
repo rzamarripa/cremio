@@ -13,11 +13,10 @@ angular.module("creditoMio")
  	Meteor.apply('getResumen', [$stateParams.caja_id, $stateParams.fechaApertura], function(err, result){
 	 	if (result){
 				rc = _.extend(rc, result);
+				console.log(rc);
 				$scope.$apply(); 
-	 	}
- 		
+	 	} 		
  	});
- 	
  	
  	this.borrarBotonImprimir= function()
 	{

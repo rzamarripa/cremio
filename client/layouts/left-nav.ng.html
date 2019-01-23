@@ -1,6 +1,5 @@
 <nav>
 	<ul data-smart-menu>
-		
 		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador' || currentUser.roles[0] == 'Supervisor'">
 			<a ui-sref="root.home" tilte="Credito Mio">
 				<i class="fa fa-lg fa-fw fa-home"></i>
@@ -235,15 +234,49 @@
 				<li data-ui-sref-active="active">
 		        <a  href="#" ng-click="ro.descargarFormato(1)" tilte="Credito Mio">
 		            <i class="fa fa-lg fa-fw fa-download"></i>
+		            <span class="menu-item-parent">Aviso de Cobro</span>
+		        </a>
+		    </li>
+				<li data-ui-sref-active="active">
+		        <a  href="#" ng-click="ro.descargarFormato(2)" tilte="Credito Mio">
+		            <i class="fa fa-lg fa-fw fa-download"></i>
+		            <span class="menu-item-parent">Cesión de Der. Prend.</span>
+		        </a>
+		    </li>
+				<li data-ui-sref-active="active">
+		        <a  href="#" ng-click="ro.descargarFormato(3)" tilte="Credito Mio">
+		            <i class="fa fa-lg fa-fw fa-download"></i>
 		            <span class="menu-item-parent">Crédito Personal</span>
 		        </a>
 		    </li>
 		    <li data-ui-sref-active="active">
-		        <a  href="#" ng-click="ro.descargarFormato(2)" tilte="Credito Mio">
+		        <a  href="#" ng-click="ro.descargarFormato(4)" tilte="Credito Mio">
 		            <i class="fa fa-lg fa-fw fa-download"></i>
 		            <span class="menu-item-parent">Distribuidor</span>
 		        </a>
 		    </li>
+		    
+		    <li data-ui-sref-active="active">
+		        <a  href="#" ng-click="ro.descargarFormato(5)" tilte="Credito Mio">
+		            <i class="fa fa-lg fa-fw fa-download"></i>
+		            <span class="menu-item-parent">Tabla de Amortización</span>
+		        </a>
+		    </li>
+		    
+		    <li data-ui-sref-active="active">
+		        <a  href="#" ng-click="ro.descargarFormato(6)" tilte="Credito Mio">
+		            <i class="fa fa-lg fa-fw fa-download"></i>
+		            <span class="menu-item-parent">Verificación Créditos P.</span>
+		        </a>
+		    </li>
+		    
+		    <li data-ui-sref-active="active">
+		        <a  href="#" ng-click="ro.descargarFormato(7)" tilte="Credito Mio">
+		            <i class="fa fa-lg fa-fw fa-download"></i>
+		            <span class="menu-item-parent">Verificación Big Vale</span>
+		        </a>
+		    </li>
+		    
 		  </ul>
 		</li> 	
     
@@ -355,7 +388,7 @@
     <li data-ui-sref-active="active" ng-show="currentUser.username != 'admin'  && currentUser.roles[0] == 'Distribuidor'">
         <a ui-sref="root.prospectos" tilte="Credito Mio">
             <i class="fa fa-lg fa-fw fa-user"></i>
-            <span class="menu-item-parent">Propectos</span>
+            <span class="menu-item-parent">Prospectos</span>
         </a>
     </li>
     

@@ -25,26 +25,15 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
     return [{}]
   });
   this.subscribe('allCajeros', () => {
-    return [{}]
+    return [{"profile.sucursal_id": Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+						 "profile.estatus" 		: true,
+						 roles 								: ["Cajero"]}]
   });
 
   this.subscribe('cuentas', () => {
     return [{}]
   });
 	
-/*
-	this.subscribe('traspasos', () => {
-    return [{
-      $or: [
-        { origen_id: this.getReactively('caja._id') },
-        { destino_id: this.getReactively('caja._id') }
-      ],
-      createdAt: {$gte: this.getReactively('caja.ultimaApertura')},
-      sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
-    }];
-  });
-*/
-
  
   this.subscribe('cortesCaja', () => {
     return [{_id: $stateParams.corteCaja_id}]
@@ -85,7 +74,11 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 
 					        
 					        _.each(rc.cajaInactiva.movimientosCaja, function(mov) {						        	
-						        	if (mov.origen == "Pago de Cliente" || mov.origen == "Cancelación de pago") 
+						      
+						      	
+						        	console.log(mov);
+						        	
+						        	if (mov.origen == "Pago de Cliente" || mov.origen == "Pago de Distribuidor" || mov.origen == "Cancelación de pago")  
 						        	{
 							        		
 							        		Meteor.call('getPago', mov.origen_id, function(err, result) {
@@ -95,12 +88,13 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 												  		if (result)
 															{
 																var p = result;
+																console.log(p);
 																Meteor.apply('getUsuario', [p.usuario_id], function(err, result) {
 														      if (err) {
 														        toastr.warning('Error al consultar los datos');
 														      } else {
 														        var u = result;
-														        mov.numeroCliente = u.numeroCliente;
+														        mov.numeroCliente = u.numeroCliente != undefined ? u.numeroCliente : u.numeroDistribuidor;
 																		mov.nombreCliente = u.nombreCompleto;
 																		$scope.$apply();
 														      }
@@ -112,6 +106,8 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 															}
 															if (mov.origen == "Cancelación de pago")
 															   mov.clase = "bg-color-pinkDark";
+															   
+															mov.bonificacion 	= mov.pago.bonificacion == undefined ? 0 : -mov.pago.bonificacion;   
 							        		
 							        		});
 							        		
@@ -119,7 +115,7 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 							        			
 							        }
 							        
-							        if (mov.origen == "Entrega de Credito" || mov.origen == "Cancelación de Ent. de Crédito") 
+							        if (mov.origen == "Entrega de Credito" || mov.origen == "Entrega de Vale" || mov.origen == "Cancelación de Ent. de Crédito" || mov.origen == "Cancelación de Ent. de Vale") 
 							        {
          
 							          	Meteor.call('getCredito', mov.origen_id, function(err, result) {
@@ -129,21 +125,24 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 												      
 												      if (result) {
 												        credito = result;
+												        //console.log(credito);
 												        if (credito != undefined)
 																{
+																	
 													        Meteor.call('getUsuario', credito.cliente_id, function(err, result) {
 															      if (err) {
 															        toastr.warning('Error al consultar los datos');
 															      } else {
 															        var u = result;
-															        mov.numeroCliente = u.numeroCliente;
+															        console.log(result);
+															        mov.numeroCliente = u.numeroCliente != undefined ? u.numeroCliente : u.numeroDistribuidor;
 																			mov.nombreCliente = u.nombreCompleto;
-																			
+																			$scope.$apply();
 															      }
 															    });
 															    mov.credito = credito;
 															    mov.folio = credito.folio;
-															    $scope.$apply();
+															    //$scope.$apply();
 															  }  
 												      }
 												  });	
@@ -153,14 +152,12 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 													if (mov.cuenta_id != undefined)	
 															mov.tipoIngreso = TiposIngreso.findOne(mov.cuenta_id);	
 						
-												  if (mov.origen == "Cancelación de Ent. de Crédito")
+												  if (mov.origen == "Cancelación de Ent. de Crédito" || mov.origen == "Cancelación de Ent. de Vale")
 													   mov.clase = "bg-color-pinkDark";
 													mov.credito_id				= mov.origen_id;
 													mov.movimientoCaja_id = mov._id; 
 							        } 
-							        
-							        
-							        
+							      
 					        });
 					        $scope.$apply();
 
@@ -171,12 +168,6 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
       }
       return caj
     },
-   /*
- cortesCaja: () => {
-      var corte = CortesCaja.find().fetch();
-      return corte;
-    },
-*/
     cuentas: () => {
       var cuentas = Cuentas.find().fetch();
       _.each(cuentas, function(cuenta) {
@@ -212,6 +203,7 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
     cajeros: () => {
       return Meteor.users.find({ roles: ["Cajero"] });
     },
+/*
     movimientosCaja: () => {
       var ret = [];
       var caj = Cajas.findOne({ _id: $stateParams.caja_id });  
@@ -255,15 +247,22 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 							if (p != undefined)
 							{
 								Meteor.apply('getUsuario', [p.usuario_id], function(err, result) {
-						      if (err) {
-						        toastr.warning('Error al consultar los datos');
+						      if (err) {						        
+						        d.nombreCliente = p.usuario_id;
+						        d.numeroCliente = "S/N";
+						        
 						      } else {
 						        var u = result;
-						        d.numeroCliente = u.numeroCliente;
+						        console.log(result);
+						        d.numeroCliente = u.numeroCliente != undefined ? u.numeroCliente : u.numeroDistribuidor;
 										d.nombreCliente = u.nombreCompleto;
 										$scope.$apply();
 						      }
 						    });
+							}
+							if (mov.origen == "Cancelación de pago")
+							{
+									d.clase = "bg-color-pinkDark";
 							}
           }
           
@@ -312,11 +311,13 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
           
           //d.pago_id = mov.origen_id;
           if (d.pago) {
-            d.multas = 0;
-            d.capital = 0;
-            d.intereses = 0;
-            d.iva = 0;
-            d.seguro = 0;
+            d.multas 				= 0;
+            d.capital 			= 0;
+            d.intereses 		= 0;
+            d.iva 					= 0;
+            d.seguro 				= 0;
+            d.bonificacion 	= d.pago.bonificacion == undefined ? 0 : -d.pago.bonificacion;
+            d.seguroDis 		= d.pago.seguro == undefined ? 0 : d.pago.seguro;
 
             if (d.pago.tipoIngreso_id != undefined)
               d.tipoIngreso = TiposIngreso.findOne(d.pago.tipoIngreso_id);
@@ -338,8 +339,9 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 			
       return ret
     },
+*/
     traspasos: () => {
-      var traspasos = Traspasos.find({}, { order: { createdAt: -1 } }).fetch();
+      var traspasos = Traspasos.find({}, { sort: { createdAt: -1 } }).fetch();
       _.each(traspasos, function(traspaso) {
         if (traspaso.tipo == "CuentaCaja") {
           traspaso.origen = Cuentas.findOne(traspaso.origen_id);
@@ -369,24 +371,6 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
   this.detalle = function(_id) {
     rc.detalleOrigenDestino = _.findWhere(rc.cajas, {_id: _id}) || _.findWhere(rc.cuentas, {_id: _id});
   };
-  
-  
-
-  /*
-this.getHistorialCajas = function(fechaInicio, fechaFin) {
-    fechaInicio = moment(fechaInicio).startOf('day').toDate();
-    fechaFin = moment(fechaFin).endOf('day').toDate();
-    Meteor.apply('getHistorialCajas', [fechaInicio, fechaFin, Meteor.user().profile.sucursal_id], function(err, result) {
-      if (err) {
-        toastr.warning('Error al consultar los datos');
-      } else {
-        rc.cajasInactivas = result;
-        $scope.$apply();
-      }
-    });
-  };
-*/
-
-   
+    
 
 }

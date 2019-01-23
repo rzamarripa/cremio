@@ -26,7 +26,17 @@ function TicketDistribuidorCtrl($scope, $meteor, $reactive,  $state, $stateParam
 			
 			var n = rc.fecha.getDate();
 			var fechaInicial = "";
+			
+			if (n < 15) 
+			{
+					fechaInicial = new Date(rc.fecha.getFullYear(),rc.fecha.getMonth(),30,0,0,0,0);
+			}
+			else //if (n >= 5 && n < 20)		
+			{
+					fechaInicial = new Date(rc.fecha.getFullYear(),rc.fecha.getMonth() + 1,15,0,0,0,0);
+			}
 		
+/*
 			if (n >= 20)
 			{
 					fechaInicial = new Date(rc.fecha.getFullYear(),rc.fecha.getMonth() + 1,1,0,0,0,0);		
@@ -39,16 +49,21 @@ function TicketDistribuidorCtrl($scope, $meteor, $reactive,  $state, $stateParam
 			{
 					fechaInicial = new Date(rc.fecha.getFullYear(),rc.fecha.getMonth(),16,0,0,0,0);
 			}
+*/
 			
 			fechaInicial.setHours(0,0,0,0);
 			
 			var fechaFinal = new Date(fechaInicial.getTime());
 			fechaFinal.setHours(23,59,59,999);
 			
+			//console.log("FI:", fechaInicial);
+			//console.log("FF:", fechaFinal);
+			
 			rc.planPagos = [];
 			Meteor.call('getPlanPagosDistribuidorTickets',fechaInicial, fechaFinal, $stateParams.distribuidor_id, function(error, result){           					
 					if (result)
 					{
+							console.log(result);
 							rc.planPagos = result;
 							$scope.$apply();
 					}

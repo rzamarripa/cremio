@@ -166,144 +166,6 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 					return cli;
 				}		
 		},
-		/*
-historialCreditos : () => {
-			
-			var creditos = Creditos.find().fetch();
-			if(creditos != undefined){
-				rc.creditos_id = _.pluck(creditos, "cliente_id");
-			}
-			
-			return creditos
-			
-			
-		},
-*/
-		/*
-planPagosHistorial  : () => {
-			
-			var planes = PlanPagos.find({credito_id : rc.getReactively("credito_id")}).fetch()
-			//rc.creditos_id = _.pluck(planes, "cliente_id");
-			//console.log("kaka",planes)
-			return planes;
-
-		},
-*/
-		/*
-historial : () => {
-			arreglo = [];
-			var saldoPago = 0;
-			var saldoActual = 0; 
-			rc.saldo =0;	
-			var credito = rc.credito
-			rc.saldoMultas = 0;
-			//return PlanPagos.find({credito_id : this.getReactively("credito_id")}).fetch();
-			
-			_.each(rc.planPagos, function(planPago, index){
-				//planPago.ciudad = PlanPagos.findOne(planPago.credito_id);
-				//console.log("entro al segundo");
-				//console.log("credito",credito);
-				
-				if(planPago.descripcion == "Recibo")
-					rc.saldo += planPago.cargo;
-				if(planPago.descripcion == "Cargo Moratorio")
-					rc.saldoMultas += planPago.importeRegular;
-					
-				if(planPago.descripcion == "Cargo Moratorio" )
-					rc.saldo += planPago.cargo;
-				
-				fechaini= planPago.fechaPago? planPago.fechaPago:planPago.fechaLimite;
-
-				arreglo.push({saldo:rc.saldo,
-					numeroPago : planPago.numeroPago,
-					cantidad : rc.credito.numeroPagos,
-					fechaSolicito : rc.credito.fechaSolicito,
-					fecha : fechaini,
-					pago : 0, 
-					cargo : planPago.cargo,
-					movimiento : planPago.movimiento,
-					planPago_id : planPago._id,
-					cantidad: rc.credito.numeroPagos,
-					credito_id : planPago.credito_id,
-					descripcion : planPago.descripcion,
-					importe : planPago.importeRegular,
-					pagos : planPago.pagos
-			  });				
-				
-				if(planPago.pagos.length > 0)
-					_.each(planPago.pagos,function (pago) {
-							rc.saldo -= pago.totalPago;
-							arreglo.push({saldo:rc.saldo,
-														numeroPago : planPago.numeroPago,
-														cantidad : rc.credito.numeroPagos,
-														fechaSolicito : rc.credito.fechaSolicito,
-														fecha : pago.fechaPago,
-														pago : pago.totalPago, 
-														cargo : 0,
-														movimiento : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
-														planPago_id : planPago._id,
-														credito_id : planPago.credito_id,
-														descripcion : planPago.descripcion=="Cargo Moratorio"? "Abono de Cargo Moratorio":"Abono",
-														importe : planPago.importeRegular,
-														pagos : planPago.pagos
-					  	});
-					})
-				//console.log(rc.saldo)
-
-			});
-
-			if(this.getReactively("credito_id")){
-        var filtrado = [];
-        var flags = {
-          abonoKey: undefined,
-          multaKey:undefined
-      };
-        
-			_.each(arreglo, function(pago,key){
-          if(pago.descripcion == "Cargo Moratorio"){
-            flags.multaKey = key;
-          }
-          if(pago.descripcion == "Recibo"){
-            flags.abonoKey = key;
-          }
-          if(pago.descripcion == "Abono de Multa"){
-            //console.log(flags);
-            //console.log(arreglo[flags.multaKey].saldoActualizado);
-            if(arreglo[flags.multaKey].saldoActualizado){
-              arreglo[flags.multaKey].saldoActualizado -= pago.pago;
-            }else{
-              arreglo[flags.multaKey].saldoActualizado = arreglo[flags.multaKey].cargo - pago.pago;
-            }
-          }
-          if(pago.descripcion == "Abono"){
-            if(arreglo[flags.abonoKey].saldoActualizado){
-              arreglo[flags.abonoKey].saldoActualizado -= pago.pago;
-            }else{
-              arreglo[flags.abonoKey].saldoActualizado = arreglo[flags.abonoKey].cargo - pago.pago;
-            }
-          }
-          if(pago.credito_id == rc.credito_id){
-            filtrado.push(pago);
-          }
-          if(pago.numeroPago % 2 == 0)
-            {
-              
-              pago.tipoPar = "par"
-            }
-            else
-            {
-              
-              pago.tipoPar = "impar"
-            }
-
-        })
-			  //console.log(filtrado,"filtrado")
-        return filtrado;
-      }
-			
-			return arreglo;
-		},
-*/
     tiposIngreso: () => {
 	    
 	    var ti = TiposIngreso.find().fetch();
@@ -351,9 +213,7 @@ historial : () => {
 		        		//console.log("Entro: CM", pago)
 		        }
 		        pago.folio = pago.credito.folio;
-		        
-		        //console.log(pago.folio);
-		        
+		        		        
 		        if (pago.pagoSeguro !=  undefined)
 							 pago.seguro = pago.seguro -  pago.pagoSeguro;
 						
@@ -374,7 +234,7 @@ historial : () => {
 								ultimo = _.last(asignados);
 								asignados[pago.credito.folio] = (ultimo == undefined ? 0 : ultimo+1 > 4 ? ultimo-4 : ultimo+1);
 						}
-							pago.color = colores[asignados[pago.credito.folio]];
+						pago.color = colores[asignados[pago.credito.folio]];
 			      rc.total = rc.subtotal + rc.cargosMoratorios;
 					});
 			}		

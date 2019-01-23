@@ -931,7 +931,7 @@
 																					<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'">Editar</a>
 																				</div>
 																				<div class="panel-footer no-padding">
-																					<a ng-click ="dis.mostrarModalValidaBeneficiario(pendiente.beneficiado, pendiente)" class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">Autorizar</a>
+																					<a ng-click ="dis.mostrarModalValidaBeneficiario(pendiente.beneficiario.nombreCompleto, pendiente)" class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">Autorizar</a>
 																				</div>
 																				
 																			</div>
@@ -1097,7 +1097,7 @@
 																									<td class="text-center">{{credito.capitalSolicitado | currency}}</td>
 																									<td class="text-center">{{credito.fechaSolicito | date:'dd-MM-yyyy'}}</td>
 																									<td class="text-center">{{credito.motivo}}</td>
-																									<td class="text-center"><a href="" ng-click="dis.recuperarCredito(credito._id)" class="btn btn-success btn-sm" >Recuperar</a></td>
+																									<td class="text-center"><a href="" ng-click="dis.recuperarCredito(credito._id)" ng-if="currentUser.roles[0] != 'Distribuidor'" class="btn btn-success btn-sm" >Recuperar</a></td>
 																								</tr>
 																							</tbody>
 																					</table>
@@ -1458,7 +1458,7 @@
     <div class="modal-content">
 	    	<div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="myModalLabel">Pagos</h4>
+		        <h4 class="modal-title" id="myModalLabel">Folio pago: {{dis.pago.folioPago}}, Total = {{dis.pago.pago | currency}}</h4>
 		    </div>
 				<div class="modal-body">
 							<form name="form2" novalidate>
@@ -1513,7 +1513,7 @@
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">Movimientos en Cuenta</h4>
+				<h4 class="modal-title">Beneficiario : {{dis.pagoDis.beneficiario}} - Folio : {{dis.credito.folio}}</h4>
 			</div>
 			<div class="modal-body">
 				<table class="table table-striped table-bordered table-condensed">

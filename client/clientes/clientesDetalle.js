@@ -231,6 +231,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 									     	function(err, result) {
 									      if(result){
 													nota.nombreCompleto = result.nombreCompleto;
+													$scope.$apply();
 									      }
 								    });	
 										$("#myModal").modal(); 
@@ -242,7 +243,19 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 										$("#notaPerfil").modal();
 									}
 							});
-					}												
+					}
+					
+					//getdocumentos
+          Meteor.call('getDocumentosClientes', $stateParams.objeto_id, function(error,result){
+			      if (result)
+			        {
+			          //ir por los documentos
+			          rc.documentos = result;
+			          $scope.$apply();      
+			        }
+			    });
+
+																	
 			}
 			
 			return cli;	
@@ -333,15 +346,22 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 									}
 										
 								}
-								
-								if (rc.cargosMoratorios != credito.saldoMultas)
-										credito.saldoMultas = rc.cargosMoratorios;
-								
-								if (credito.sumaRecibos != credito.saldoActual)
-										credito.saldoActual = credito.sumaRecibos;
 
-
-					})
+					});
+					
+					if (rc.cargosMoratorios != credito.saldoMultas){
+							credito.saldoMultas = rc.cargosMoratorios;
+							Creditos.update({_id: credito._id}, {$set: {saldoMultas : rc.cargosMoratorios}});
+					}
+												
+					if (credito.sumaRecibos != credito.saldoActual){
+							credito.saldoActual = credito.sumaRecibos;
+							//Creditos.update({_id: credito._id}, {$set: {saldoActual : credito.sumaRecibos}});
+							
+					}
+							
+					
+						
 				})
 			}
 
@@ -851,25 +871,28 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		rc.pagos = credito.pagos
 		rc.openModal = true;
 	};
-	this.modalDoc= function(pos){	
+	this.modalDoc= function(id){	
+			console.log(id);
 			loading(true);
-			Meteor.call('getImagenDocumentoCliente',rc.objeto._id, pos, function(error, result) {           
-	        if (result)
+	  	Meteor.call('getDocumentoCliente', id, function(error,result){
+	      if (result)
 	        {
-		  				loading(false);      	
-							var imagen = '<img class="img-responsive" src="'+result+'" style="margin:auto;">';
-							$('#imagenDiv').empty().append(imagen);
-							$("#modaldoc").modal('show');        
- 		   		}
-			});
+	          loading(false);
+	          var imagen = '<img class="img-responsive" src="'+result+'" style="margin:auto;">';
+				    $('#imagenDiv').empty().append(imagen);
+				    $("#myModalVerDocumento").modal('show');
+	        }
+	    });
  	};
-	this.imprimirDoc= function(pos)
+	this.imprimirDoc= function(id)
 	{
- 		 	Meteor.call('getImagenDocumentoCliente',rc.objeto._id, pos, function(error, result) {           
-	        if (result)
-	        {
+
+ 		 	Meteor.call('getDocumentoCliente', id, function(error,result){
+	      if (result)
+        {
+
  		        	loading(true);
-							Meteor.call('imprimirImagenDocumento', result, function(error, response) {
+							Meteor.call('imprimirImagenDocumento', result,function(error, response) {
 					       if(error)
 					       {
 					        console.log('ERROR :', error);
