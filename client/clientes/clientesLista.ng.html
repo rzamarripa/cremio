@@ -27,11 +27,13 @@
               <img alt="image" class="img-circle" ng-src="{{lcli.tieneFoto(cliente.profile.sexo, cliente.profile.foto)}}">
               <p class="lead font-xs text-center"><strong>{{cliente.profile.nombre}} <br/> {{cliente.profile.apellidoPaterno}} {{cliente.profile.apellidoMaterno}}</strong></p>
               <div class="font-bold">{{cliente.username}}</div>
+              
               <address class="font-xs">
                   <strong ng-if="cliente.roles[0] == 'Cliente'">Cliente <br></strong>
 	                <strong ng-if="cliente.roles[0] == 'Distribuidor'">Distribuidor <br></strong>
                   <abbr title="Teléfono">Teléfono:</abbr> {{cliente.profile.particular}}<br/>
-                  <abbr title="Celular">Celular:</abbr> {{cliente.profile.celular}}
+                  <abbr title="Celular">Celular:</abbr> {{cliente.profile.celular}}<br>
+                  <abbr title="Celular">Sucursal:</abbr> {{cliente.profile.sucursal}}
               </address>
           </a>
           <a ng-if="cliente.roles == 'Distribuidor'" href="/distribuidores/{{cliente._id}}" style="text-decoration: none;">

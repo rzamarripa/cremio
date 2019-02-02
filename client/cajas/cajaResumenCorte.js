@@ -6,17 +6,24 @@ angular.module("creditoMio")
  	rc.total = 0;
  	rc.$stateParams = $stateParams;
  	rc.fecha = new Date();
- 	
- 	this.subscribe('movimientosCaja', () => {
-    return [{}]
-  });
+ 	rc.sucursal = {};
+ 	rc.sucursal_id = "";
+
  	Meteor.apply('getCorte', [$stateParams.corte_id], function(err, result){
  		if (result){
 				rc = _.extend(rc, result);
+				Meteor.call("getSucursal", result.caja.sucursal_id,  function(error,result){
+		     	if (result){
+		      		rc.sucursal = result;
+		      		$scope.$apply();
+		      }
+		      else
+		      {
+		      }
+				});
 				$scope.$apply(); 
 	 	}
  	});
- 	
  		
  	this.borrarBotonImprimir= function()
 	{
@@ -25,5 +32,4 @@ angular.module("creditoMio")
 	 	window.print()
 	 	printButton.style.visibility = 'visible';
 	};
-
 };

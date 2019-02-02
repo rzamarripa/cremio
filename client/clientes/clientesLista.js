@@ -10,8 +10,7 @@ angular.module("creditoMio")
   this.buscar.nombre = "";
   window.rc = rc;
   rc.clientes = [];
-  
-  
+    
   this.subscribe('buscarClientes', () => {
 	  
 		if(this.getReactively("buscar.nombre").length > 4){
@@ -26,15 +25,31 @@ angular.module("creditoMio")
   
   this.helpers({
 		clientes : () => {
-			return Meteor.users.find({
+			var cli = Meteor.users.find({
 		  	"profile.nombreCompleto": { '$regex' : '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options' : 'i' },
 		  	roles : {$in : ["Cliente", "Distribuidor"]}
-			}, { sort : {"profile.nombreCompleto" : 1 }});
-		},
+			}, { sort : {"profile.nombreCompleto" : 1 }}).fetch();
+			
+			if (cli != undefined)
+			{
+					_.each(cli, function(c){
+						if (c.profile.sucursal_id != undefined)	
+							 Meteor.call("getSucursal", c.profile.sucursal_id,  function(error,result){
+						     	if (result){
+						      		c.profile.sucursal = result.nombreSucursal;
+						      		$scope.$apply()
+						      }
+							});							
+					});
+			}
+			return cli;
+		},	
 	});
 	
 	this.tieneFoto = function(sexo, foto){
-	  if(foto === undefined){
+		//console.log(sexo)
+	  if(foto === undefined || foto === "")
+	  {
 		  if(sexo === "Masculino")
 			  return "img/badmenprofile.png";
 			else if(sexo === "Femenino"){

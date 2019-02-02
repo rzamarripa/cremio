@@ -4,6 +4,8 @@ angular
 function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
 	
 	let rc = $reactive(this).attach($scope);
+	window.rc = rc;
+	
 	rc.pago = {};
 	rc.caja = {};	
 	rc.cliente = {};
@@ -11,8 +13,21 @@ function TicketPagoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toast
 	rc.sucursal = {};
 	rc.cajero = {};
 	rc.tipoIngreso = {};
+	rc.sucursal = {};
 	
-	window.rc = rc;
+	
+	if (Meteor.user() != undefined){
+		rc.sucursal_id 		= Meteor.user() != undefined  && Meteor.user().profile.sucursal_id;
+		Meteor.call("getSucursal", Meteor.user().profile.sucursal_id,  function(error,result){
+     	if (result){
+      		rc.sucursal = result;
+      }
+      else
+      {
+				
+      }
+		});	
+	}
 	
 	this.subscribe('tiposIngreso',()=>{
 		return [{}]

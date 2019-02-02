@@ -31,7 +31,17 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 		        }
 		        else
 		        {
-			        	//$state.go('root.home'); 
+			        	//Revisar que no sea domingo
+			        	var fecha = new Date();
+			        	var n = fecha.getDay()
+			        	if (n == 0)
+			        	{
+				        		toastr.error("No puedes entrar en este día");
+			              $state.go('anon.logout');
+			              return;
+			        	}
+			        			
+			        	 
 			        	Meteor.call("getHorario", Meteor.user().profile.sucursal_id,  function(error,result){
 			            if(error){
 			              toastr.error('Error en el servidor');

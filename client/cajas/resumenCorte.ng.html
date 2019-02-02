@@ -2,7 +2,7 @@
 	<div class="widget-body no-padding">
 		<div class="padding-10">
 			<div class="row text-center">
-				<div class="col-sm-4 col-sm-offset-4" style="font-size: small">
+				<div class="col-sm-4 col-sm-offset-4" style="font-size: smaller">
 				<span id="logo"> <img src="img/logoCreditoMioBN.png" alt="SmartAdmin" style="margin-top: -15px;width: 170px;height: 100px;"> </span>
 					<strong> <h3>Corte</h3> </strong>
 					<div class="row">
@@ -138,10 +138,10 @@
 						VENTANILLA: {{cjc.caja.nombre}}<br>
 
 						RUBIDIA MARTINEZ ALCARAZ<br>
-						BLVD. EMILIANO ZAPATA 3125 LOCAL 12BC<br>
-						COLONIA LOMAS DEL BOULEVARD<br>
+						{{cjc.sucursal.direccion}}<br>
+						{{cjc.sucursal.colonia}}<br>
 						MAAR-661007-BF5<br>
-						(667) 717-21-21<br>
+						{{cjc.sucursal.telefono1}}
 					</address>
 					<div class="row">
 						<div class="col-sm-6 pull-left">Fecha : {{ cjc.fecha | date:'dd-MM-yyyy'}}</div>

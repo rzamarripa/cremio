@@ -92,22 +92,10 @@
 													<header role="heading">
 														<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
 															<h2>Vales Activos</h2>
-			<!--
-														<ul class="nav nav-tabs pull-right" id="myTab">
-															<li class="{{$index == 0 ? 'active' : ''}}" ng-repeat="credito in dis.creditos track by $index">
-																<a ng-click="dis.getAvales(credito);dis.trance(credito)" data-toggle="tab" href="#s{{$index + 1}}"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">{{credito.capitalSolicitado}}</span></a>
-															</li>
-														</ul>
-			-->
 														<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
 													</header>
-									
-													
-													<div class="no-padding" role="content">
-													
+													<div class="no-padding" role="content">													
 														<div class="jarviswidget-editbox">
-									
-									
 														</div>
 									
 														<div class="widget-body">
@@ -116,14 +104,6 @@
 																<div class="well">
 																	<!-- Beficiario -->
 																	<div class="row">
-			<!--
-																		<div class="col-sm-4">
-																			<label>Beneficiario </label>
-																			<select name="beneficiario" class="form-control select2" placeholder="Seleccione" ng-model="dis.seleccionCredito_id">
-																				<option ng-repeat="ben in dis.beneficiarios" value="{{ben.credito_id}}">{{ben.beneficiario}}</option>
-																			</select>
-																		</div>
-			-->										
 																		<div class="col-sm-2">
 																			<br >
 																			<label class="checkbox-inline">
@@ -135,7 +115,7 @@
 																		<div class="col-sm-2">
 																			<label>Importe</label>
 																			<br />
-																			<h4><span>{{dis.saldo | currency}}</span></h4>
+																			<h4><span>{{dis.importe | currency}}</span></h4>
 																		</div>	
 																		<div class="col-sm-2">	
 																			<label>Cargos Moratorios </label>
@@ -147,6 +127,12 @@
 																			<label>Bonificación </label>
 																			<br />
 																			<h4><span>{{dis.bonificacion | currency}}</span></h4>
+																		</div>
+																		
+																		<div class="col-sm-2">	
+																			<label>Total </label>
+																			<br />
+																			<h4><span>{{dis.importe + dis.cargosMoratorios - dis.bonificacion | currency}}</span></h4>
 																		</div>	
 																		
 			<!--

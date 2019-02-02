@@ -83,21 +83,6 @@
 					    </div>  
 					    
 					    <div class="row">
-						    <div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">					    
-						    	<label>Duración (Meses) *</label>
-						    	<input id="meses" name="duracionMesesCreditoNuevo" min="1" max="48" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ge.credito.duracionMeses" required="">
-					    	</div>
-					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
-						    	<label>Duración (Meses) *</label>
-						    	<select name="duracionMesesCreditoNuevo" class="form-control" ng-model="ge.credito.duracionMeses" required="">
-							    	<option value="3">3</option>
-							    	<option value="4">4</option>
-							    	<option value="5">5</option>
-							    	<option value="6">6</option>
-							    	<option value="7">7</option>
-							    	<option value="8">8</option>
-						    	</select>
-					    	</div>
 					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Capital Solicitado *</label>
 						    	<input id="capitalSolicitado" name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" ng-model="ge.credito.capitalSolicitado" required="">
@@ -116,7 +101,21 @@
 							    	<option value="5000">5000</option>
 							    	<option value="5500">5500</option>
 							    	<option value="6000">6000</option>
-
+						    	</select>
+					    	</div>
+					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Cliente'">					    
+						    	<label>Duración (Meses) *</label>
+						    	<input id="meses" name="duracionMesesCreditoNuevo" min="1" max="48" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ge.credito.duracionMeses" required="">
+					    	</div>
+					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
+						    	<label>Duración (Meses) *</label>
+						    	<select name="duracionMesesCreditoNuevo" class="form-control" ng-model="ge.credito.duracionMeses" required="">
+							    	<option value="3">3</option>
+							    	<option value="4">4</option>
+							    	<option value="5">5</option>
+							    	<option value="6">6</option>
+							    	<option value="7">7</option>
+							    	<option value="8">8</option>
 						    	</select>
 					    	</div>
 					    	<div class="col-sm-3">					    

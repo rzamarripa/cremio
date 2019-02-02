@@ -2,7 +2,7 @@
 	<div class="widget-body no-padding">
 		<div class="padding-10">
 			<div class="row text-center">
-				<div class="col-sm-4 col-sm-offset-4" style="font-size: small">
+				<div class="col-sm-4 col-sm-offset-4" style="font-size: smaller">
 					<span id="logo"> <img src="img/logoCreditoMioBN.png" alt="SmartAdmin" style="margin-top: -18px;width: 170px;height: 100px;"> </span>
 					<p style="font-size: smaller;text-align: center"><strong>---INGRESOS POR FORMA DE PAGO---</strong></p>
 					<table style="width: 100%">
@@ -110,12 +110,11 @@
 					<address>
 						OPERADOR (A): {{cj.cajero.profile.nombre}}<br>
 						VENTANILLA: {{cj.caja.nombre}}<br>
-
 						RUBIDIA MARTINEZ ALCARAZ<br>
-						BLVD. EMILIANO ZAPATA 3125 LOCAL 12BC<br>
-						COLONIA LOMAS DEL BOULEVARD<br>
+						{{cj.sucursal.direccion}}<br>
+						{{cj.sucursal.colonia}}<br>
 						MAAR-661007-BF5<br>
-						(667) 717-21-21<br>
+						{{cj.sucursal.telefono1}}
 					</address>
 					<div class="row">
 						<div class="col-sm-6 pull-left">Fecha : {{ cj.fecha | date:'dd-MM-yyyy'}}</div>

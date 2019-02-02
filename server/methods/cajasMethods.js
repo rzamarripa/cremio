@@ -797,5 +797,15 @@ Meteor.methods({
 							caja
 						};
   },
+  tieneCajaAbierta: (cajero_id) => {
+	  	var caja = Cajas.findOne({usuario_id: cajero_id});
+	  	
+	  	if (caja == undefined) 
+	  			return false;
+	  			
+	  	if (caja.estadoCaja == "Abierta")
+	  			return true;
+	  	return false;		
+	},  
      
 });

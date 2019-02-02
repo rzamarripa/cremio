@@ -25,6 +25,12 @@ angular.module("creditoMio")
   this.buscar.coloniaNombre = "";
 	rc.colonia = {};
 	this.buscandoColonia = false;
+	rc.sucursalOrigen_id = "";
+		
+	
+	this.subscribe('sucursales',()=>{
+		return [{}]
+	});	
 		
 	this.subscribe('estadoCivil',()=>{
 		return [{estatus: true}]
@@ -89,7 +95,9 @@ angular.module("creditoMio")
 			var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
 			rc.objeto = objeto;
 			rc.objeto.confirmpassword = "sinpassword";	
-			rc.objeto.password 				= "sinpassword"; 
+			rc.objeto.password 				= "sinpassword";
+			rc.sucursalOrigen_id = rc.objeto.profile.sucursal_id;
+			console.log("Sucursal origen", rc.sucursalOrigen_id);
 			$scope.$apply()
 		}});
 	}
@@ -123,6 +131,9 @@ angular.module("creditoMio")
     col : () => {
 	    rc.colonia = Colonias.findOne({_id: this.getReactively("objeto.profile.colonia_id")});			
     },
+    sucursales : () => {
+			return Sucursales.find();
+		},
 	}); 
 	
 	this.Nuevo = function()
@@ -165,10 +176,33 @@ angular.module("creditoMio")
 				toastr.error('Error al actualizar los datos.');
 				return;
 			}
+			
+			//Revisar que no este en otra sucursal con caja abierta
+						
 			var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
 			var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
 			var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
 			objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
+				
+			if (rc.sucursalOrigen_id != objeto.profile.sucursal_id){
+					console.log("Verificar si no tiene Caja Abierta");
+					
+					Meteor.call("tieneCajaAbierta", objeto._id,  function(error,result){
+			     	if (result)
+			     	{
+					 			//console.log("Tiene Caja Abierta");	
+					 			toastr.warning('Tiene Caja Abierta, Es necesario cerrar la caja antes de cambiarlo sucursal.');
+								return;	 			
+			      }
+/*
+			      else
+			      {
+								console.log("No Tiene Caja Abierta");			
+								
+			      }
+*/
+				});
+			}
 				
 			if (rc.pic != ""){
 				objeto.profile.foto = rc.pic

@@ -6,14 +6,21 @@ angular.module("creditoMio")
  	rc.total = 0;
  	rc.$stateParams = $stateParams;
  	rc.fecha = new Date();
- 	
- 	this.subscribe('movimientosCaja', () => {
-    return [{}]
-  });
+ 	rc.sucursal = {};
+ 	rc.sucursal_id = "";
+	 	  
  	Meteor.apply('getResumen', [$stateParams.caja_id, $stateParams.fechaApertura], function(err, result){
 	 	if (result){
 				rc = _.extend(rc, result);
-				console.log(rc);
+				Meteor.call("getSucursal", result.caja.sucursal_id,  function(error,result){
+		     	if (result){
+		      		rc.sucursal = result;
+		      		$scope.$apply();
+		      }
+		      else
+		      {
+		      }
+				});
 				$scope.$apply(); 
 	 	} 		
  	});

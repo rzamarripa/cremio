@@ -96,7 +96,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 
 	
 	this.subscribe("tiposCredito", ()=>{
-		return [{ estatus : true, sucursal_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "" }]
+		return [{ estatus : true}]
 	});
 	
 	this.subscribe('cliente', () => {

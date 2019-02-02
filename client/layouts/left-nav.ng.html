@@ -378,12 +378,14 @@
 			</a>
 		</li>
     
-    <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Cajero'">
+    <!--
+<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Cajero'">
         <a ui-sref="root.pagoSistema" tilte="Credito Mio">
             <i class="fa fa-lg fa-fw fa-money"></i>
             <span class="menu-item-parent">Pago Sistema</span>
         </a>
     </li>
+-->
     
     <li data-ui-sref-active="active" ng-show="currentUser.username != 'admin'  && currentUser.roles[0] == 'Distribuidor'">
         <a ui-sref="root.prospectos" tilte="Credito Mio">

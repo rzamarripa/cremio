@@ -43,7 +43,14 @@
 	                    <div class="col-sm-3" valida>
 	                        <label>Tasa Máxima *</label>
 	                        <input name="tasaMaxima" type="number" class="form-control" placeholder="Tasa Máxima" ng-model="ven.objeto.profile.tasaMaxima" required="">
-	                    </div>               
+	                    </div>      
+	                    <div class="col-sm-3" valida>
+	                        <label>Sucursal *</label>
+	                        <select name="sucursal" class="form-control select2" placeholder="Seleccione" ng-model="ven.objeto.profile.sucursal_id" required>
+														<option  value="{{objeto._id}}" ng-repeat="objeto in ven.sucursales">{{objeto.nombreSucursal}}</option>
+													</select>
+	                    </div> 
+	                             
 	                </div>
 	            </div>
 	    </div>

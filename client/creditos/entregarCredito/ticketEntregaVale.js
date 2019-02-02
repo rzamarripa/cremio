@@ -17,6 +17,21 @@ function ticketEntregaValeCtrl($scope, $meteor, $reactive,  $state, $stateParams
 	
 	rc.planPagos = [];
 	
+	rc.sucursal = {};
+	
+	if (Meteor.user() != undefined){
+		rc.sucursal_id 		= Meteor.user() != undefined  && Meteor.user().profile.sucursal_id;
+		Meteor.call("getSucursal", Meteor.user().profile.sucursal_id,  function(error,result){
+     	if (result){
+      		rc.sucursal = result;
+      }
+      else
+      {
+				
+      }
+		});	
+	}
+	
 		
 	this.subscribe('creditos',()=>{
 		return [{

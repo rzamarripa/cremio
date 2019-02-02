@@ -353,9 +353,11 @@ this.subscribe('personas',()=>{
 			
 			//fechaEntrega : { $gte : fechaInicial, $lte : fechaFinal}
 			
-			rc.saldo = 0;
+			rc.importe = 0;
 			rc.cargosMoratorios = 0;
 			rc.bonificacion = 0;
+			
+			var configuraciones = Configuraciones.findOne();
 			
 			_.each(planPagos, function(pp){				
 					var credito = Creditos.findOne(pp.credito_id);
@@ -373,19 +375,20 @@ this.subscribe('personas',()=>{
 					  });
 						//pp.beneficiado = credito.beneficiado;
 
-						var configuraciones = Configuraciones.findOne();
+						
 						var comision 				= 0;
 						pp.bonificacion 		= 0;
-		        if (pp.importeRegular == pp.cargo)
-		        	 comision = calculaBonificacion(pp.fechaLimite, configuraciones.arregloComisiones);
+		        //if (pp.importeRegular == pp.cargo)
+
 			      if (pp.importeRegular == pp.cargo)
-			      {
+			      {	
+				      	comision = calculaBonificacion(pp.fechaLimite, configuraciones.arregloComisiones);
 				    		pp.bonificacion = parseFloat(((pp.capital + pp.interes) * (comision / 100))).toFixed(2);
 								rc.bonificacion += Number(parseFloat(pp.bonificacion).toFixed(2));  
 			      }
 						
 						if (pp.descripcion == 'Recibo')
-							 rc.saldo += pp.importeRegular;	
+							 rc.importe += Number(parseFloat(pp.importeRegular).toFixed(2));
 						else if (pp.descripcion == 'Cargo Moratorio')
 							 rc.cargosMoratorios += pp.importeRegular;		
 						
@@ -395,6 +398,7 @@ this.subscribe('personas',()=>{
 							
 			});
 			
+			console.log("Saldo: ", rc.importe)
 			
 			_.each(rc.empresas, function(empresa){
 
@@ -1744,7 +1748,8 @@ var fecha = new Date();
 			if (valor){
 					rc.planPagos = PlanPagos.find({importeRegular: {$gt: 0}},{sort : {fechaLimite : 1}}).fetch();
 			}
-			else{
+			else
+			{
 					var fecha = new Date();
 					var n = fecha.getDate();
 					var fechaLimite = "";
@@ -1768,9 +1773,11 @@ var fecha = new Date();
 					
 			}
 			
-			rc.saldo = 0;
+			rc.importe = 0;
 			rc.cargosMoratorios = 0;
 			rc.bonificacion = 0;
+			
+			var configuraciones = Configuraciones.findOne();
 			
 			_.each(rc.planPagos, function(pp){				
 					var credito = Creditos.findOne(pp.credito_id);
@@ -1787,25 +1794,25 @@ var fecha = new Date();
 					  
 					}  
 					
-					var configuraciones = Configuraciones.findOne();
+					
 					var comision = 0;
-	        if (pp.importeRegular == pp.cargo)
-	        	 comision = calculaBonificacion(pp.fechaLimite, configuraciones.arregloComisiones);
-		        	 
-	        //pp.bonificacion = parseFloat(((pp.capital + pp.interes) * (comision / 100))).toFixed(2);
-	        pp.bonificacion = parseFloat(((pp.importeRegular) * (comision / 100))).toFixed(2);
+	        //if (pp.importeRegular == pp.cargo)
+					if (pp.importeRegular == pp.cargo)
+		      {		comision = calculaBonificacion(pp.fechaLimite, configuraciones.arregloComisiones);
+			    		pp.bonificacion = parseFloat(((pp.capital + pp.interes) * (comision / 100))).toFixed(2);
+							rc.bonificacion += Number(parseFloat(pp.bonificacion).toFixed(2));  
+		      }	 
 	        
-	        rc.bonificacion += Number(parseFloat(pp.bonificacion).toFixed(2));
+	        //pp.bonificacion = parseFloat(((pp.importeRegular) * (comision / 100))).toFixed(2);	        
+	        //rc.bonificacion += Number(parseFloat(pp.bonificacion).toFixed(2));
 					
 					if (pp.descripcion == 'Recibo')
-						 rc.saldo += pp.importeRegular;	
+						 rc.importe += pp.importeRegular;	
 					else if (pp.descripcion == 'Cargo Moratorio')
 						 rc.cargosMoratorios += pp.importeRegular;	
 					
 					
 					pp.numeroPagos = credito.numeroPagos;
-					
-					//rc.saldo += pp.importeRegular;
 					
 			});
 

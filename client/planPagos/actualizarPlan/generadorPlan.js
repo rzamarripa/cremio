@@ -93,7 +93,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	});
 	
 	this.subscribe("tiposCredito", ()=>{
-		return [{ estatus : true, sucursal_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "" }]
+		return [{ estatus : true}]
 	});
 	
 	this.subscribe('cliente', () => {

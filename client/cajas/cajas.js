@@ -167,8 +167,6 @@ angular.module("creditoMio")
 			
 			//console.log(objeto.cuenta);
 			
-/*
-			
 			Meteor.call ("actualizarCaja",objeto,function(error,result){
 		
 				if(error){
@@ -186,7 +184,6 @@ angular.module("creditoMio")
 					form.$setUntouched();
 				}
 			});
-*/
 
 	};
 

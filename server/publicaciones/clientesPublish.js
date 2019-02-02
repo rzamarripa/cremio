@@ -17,6 +17,7 @@ Meteor.publish("buscarClientes",function(options){
 																											"profile.foto"								: 1,
 																											"profile.numeroCliente"				: 1,
 																											"profile.esAval"							: 1,
+																											"profile.sucursal_id"					: 1,
 																											roles													: 1 }}, options.options);	
 			}
 });

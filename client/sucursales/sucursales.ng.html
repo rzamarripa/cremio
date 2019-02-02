@@ -83,20 +83,30 @@
 									    <textarea name="descripcion" class="form-control" placeholder="Descripción" ng-model="suc.objeto.descripcion" capitalize></textarea>
 							    	</div>
 							    </div>
-				          <div class="row" valida>
+				          <div class="row">
 					          <div class="col-sm-3">
 								    	<label>Teléfono 1 *</label>
-								    	<input name="telefono1" type="number" class="form-control" placeholder="Teléfono 1" ng-model="suc.objeto.telefono1" required>
+								    	<input name="telefono1" type="text" class="form-control" placeholder="Teléfono 1" ng-model="suc.objeto.telefono1" required>
 							    	</div>
 							    	<div class="col-sm-3">					    										
 								    	<label>Teléfono 2</label>																	
-								    	<input type="number" class="form-control" placeholder="Teléfono 2" ng-model="suc.objeto.telefono2">
+								    	<input type="text" class="form-control" placeholder="Teléfono 2" ng-model="suc.objeto.telefono2">
 							    	</div>
 							    	<div class="col-sm-6" valida>
 									    <label>Dirección *</label>
 									    <textarea name="direccion" class="form-control" placeholder="Dirección" ng-model="suc.objeto.direccion" required capitalize></textarea>
 							    	</div>				    	
-							    </div>	
+							    </div>
+							    <div class="row">
+					          <div class="col-sm-6">
+								    	<label>Colonia *</label>
+								    	<input name="colonia" type="text" class="form-control" placeholder="Colonia" ng-model="suc.objeto.colonia" capitalize required>
+							    	</div>
+							    	<div class="col-sm-3">					    										
+								    	<label>RFC *</label>																	
+								    	<input type="text" class="form-control" placeholder="RFC" ng-model="suc.objeto.rfc">
+							    	</div>
+							    </div>
 							    <div class="row">
 					          <div class="col-sm-2" valida>
 					          <label>Horario de entrada </label>	
@@ -114,8 +124,7 @@
 								    	<label>Horario sabado salida </label>	
 								    	<input name="horaSalidaSabado" type="time" class="form-control" ng-model="suc.objeto.horaSalidaSabado" required>																
 							    	</div>
-							    </div>
-							    
+							    </div>							    
 							    <div class="row">
 					          <div class="col-sm-2" valida>
 						          <label>Folio Cliente *</label>	

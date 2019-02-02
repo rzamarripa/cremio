@@ -13,8 +13,6 @@ angular.module("creditoMio")
  	//rc.sucursal = {};
  	rc.sucursal_id 		= "";
  	
- 	
- 	
  	this.caja_id = "";
  	this.cajero_id = "";
   this.cajeros_id = [];
@@ -25,8 +23,9 @@ angular.module("creditoMio")
   
 	if (Meteor.user().username != "admin")  
 	{
-		//console.log("suc")	
+		//console.log("User: ", Meteor.user().profile.sucursal_id)	
 		rc.sucursal_id 		= Meteor.user().profile.sucursal_id;
+		
 	  Meteor.call("getSucursal", Meteor.user().profile.sucursal_id,  function(error,result){
 	     	if (result){
 	      		rc.sucursal = result;
@@ -40,7 +39,10 @@ angular.module("creditoMio")
    	
  	if (Meteor.user().roles == "Gerente")
  	{	
-	 		//console.log("Aqui", new Date())
+	 		this.subscribe('sucursales', () => {
+					 return [{}]
+			});	
+			
 		 	let cajasS = this.subscribe('cajas',()=>{
 			 	
 				return [{ sucursal_id :	 Meteor.user() != undefined ? rc.getReactively("sucursal_id") : "", 
@@ -102,7 +104,6 @@ angular.module("creditoMio")
 				},
 				catidadCobranzaDiaria :() =>{								
 					var arreglo = [];
-		
 					
 				  if(pagosS.ready() && fondos.ready()){
 						
@@ -210,8 +211,7 @@ angular.module("creditoMio")
 			}); 
 			this.subscribe('tiposIngreso',()=>{
 				return [{estatus: true}]
-			});
-			
+			});			
 			
 			this.helpers({
 				cajas : () => {

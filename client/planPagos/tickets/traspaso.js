@@ -4,6 +4,8 @@ angular
 function TicketTraspasoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
 	
 	let rc = $reactive(this).attach($scope);
+	window.rc = rc;
+	
 	rc.traspaso = {};
 	rc.caja = {};	
 	rc.cliente = {};
@@ -11,8 +13,6 @@ function TicketTraspasoCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	rc.sucursal = {};
 	rc.cajero = {};
 	rc.tipoIngreso = {};
-	
-	window.rc = rc;
 	
 
 	this.subscribe('traspasos',()=>{
