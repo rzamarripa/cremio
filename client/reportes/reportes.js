@@ -21,6 +21,7 @@ angular.module("creditoMio")
 	rc.sumaSeguroDistribuidor = 0;
 	rc.sumaBonificaciones = 0;
 	rc.sumaCargoMoratorio = 0;
+	rc.sumaOtrasSucursales = 0;
 	
 	rc.sumaCreditos = 0;
 	rc.sumaVales 		= 0;
@@ -58,6 +59,7 @@ angular.module("creditoMio")
   rc.seleccionadoRecibos = 0;
   rc.seleccionadoMultas = 0;
 	
+	rc.sucursal_id = Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "";
   
   this.selected_credito = 0;
   this.ban = false;
@@ -89,9 +91,11 @@ angular.module("creditoMio")
 		return [{estatus:1},{ fechaPago:  { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}];
 	});
 
+/*
 	this.subscribe('cajas',()=>{
 		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""}]
 	});
+*/
 	this.subscribe('cuentas',()=>{
 		return [{estatus : 1}]});
 
@@ -133,23 +137,28 @@ angular.module("creditoMio")
     rc.sumaCreditos 			= 0;
 		rc.sumaVales 					= 0;
 		rc.sumaCargoMoratorio = 0;
+		rc.sumaOtrasSucursales= 0;
     
     rc.planPagos 										= [];
     rc.arregloTiposIngresos 				= [];
     rc.arregloTiposIngresosobjetos 	= [];
     rc.arregloSeguroDistribuidor 		= [];
+    rc.arregloOtrasSucursales		 		= [];
 		
 		loading(true);		
 		Meteor.call("getCobranzaDiaria", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id, function(error, result){
 				if  (result)
 				{
-
+						
 						rc.planPagoOriginal 					= result.cobranza;
 						rc.planPagos 									= result.cobranza;		
 						rc.arregloSeguroDistribuidor	= result.seguroDistribuidorCobranza;
+						rc.arregloOtrasSucursales			= _.toArray(result.otrasSucursales)
 						
 						rc.sumaSeguroDistribuidor 		= result.seguroDistribuidor;
-						rc.sumaBonificaciones 				= result.bonificaciones;			
+						rc.sumaBonificaciones 				= result.bonificaciones;
+						rc.sumaOtrasSucursales				= result.sumaOtrasSucursales;
+						
 						
 						_.each(rc.planPagos, function(plan){
 							
@@ -183,12 +192,11 @@ angular.module("creditoMio")
 												rc.sumaVales += Number(parseFloat(plan.totalPago).toFixed(2));
 										}
 										
-										if (plan.descripcion == "Cargo Moratorio" && plan.tipoCredito == "vale")
+										if (plan.descripcion == "Cargo Moratorio")
 												plan.descripcion = "C. Moratorio";
-										else
-												plan.descripcion = "Vale";		
-																								
-										
+										else if (plan.tipoCredito == "vale")
+												plan.descripcion = "Vale";
+																																		
 								}		
 								
 								if (rc.arregloTiposIngresos[plan.tipoIngreso] == undefined)
@@ -211,7 +219,7 @@ angular.module("creditoMio")
 						  rc.arregloTiposIngresosobjetos.push({tipoPago: key, total: rc.arregloTiposIngresos[key]})
 						}
 
-						console.log(rc.arregloSeguroDistribuidor);
+						//console.log(rc.arregloSeguroDistribuidor);
 						
 						loading(false);
 						$scope.$apply();
@@ -808,81 +816,19 @@ this.guardarNotaCobranza=function(nota){
 		var suma = 0
 		var sumaInter = 0
 		var sumaIva = 0
-	/*
-	_.each(objeto,function(item){
-			
-	    	// item.numerosPagos= item.credito.folio
-	    	// item.numeroCliente = item.numeroCliente
-
-	    	suma 				= rc.sumaCapital
-	    	sumaInter 	+= rc.sumaInteres
-	    	sumaIva 		+= rc.sumaCapital 
-	  });
-   
-
-	  _.each(objeto,function(item){
-	     item.sumaCapital = suma ;
-	     item.sumaInteres = sumaInter;
-	     item.sumaIva 		= sumaIva ; 
-	     item.sumaCapital = parseFloat(item.sumaCapital.toFixed(2))
-	     item.sumaInteres = parseFloat(item.sumaInteres.toFixed(2))
-	     item.sumaIva 		= parseFloat(item.sumaIva.toFixed(2))
-	     
-	 	});
-*/
 
 	 	loading(true);	
-		Meteor.call('ReporteCobranza', objeto,rc.fechaInicial,rc.fechaFinal, rc.arregloTiposIngresosobjetos ,function(error, response) {
-
-
+		Meteor.call('ReporteCobranza', objeto, rc.arregloOtrasSucursales, rc.fechaInicial,rc.fechaFinal, rc.arregloTiposIngresosobjetos ,function(error, response) {
 		   if(error)
 		   {
-		    console.log('ERROR :', error);
-		    loading(false);
-		    return;
+		    	console.log('ERROR :', error);
+					loading(false);
+					return;
 		   }
 		   else
 		   {
 			   		downloadFile(response);	
 			   		loading(false);
-			   			
-			 				/*
-function b64toBlob(b64Data, contentType, sliceSize) {
-								  contentType = contentType || '';
-								  sliceSize = sliceSize || 512;
-								
-								  var byteCharacters = atob(b64Data);
-								  var byteArrays = [];
-								
-								  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-								    var slice = byteCharacters.slice(offset, offset + sliceSize);
-								
-								    var byteNumbers = new Array(slice.length);
-								    for (var i = 0; i < slice.length; i++) {
-								      byteNumbers[i] = slice.charCodeAt(i);
-								    }
-								
-								    var byteArray = new Uint8Array(byteNumbers);
-								
-								    byteArrays.push(byteArray);
-								  }
-								    
-								  var blob = new Blob(byteArrays, {type: contentType});
-								  return blob;
-							}
-							
-							var blob = b64toBlob(response, "application/docx");
-						  var url = window.URL.createObjectURL(blob);
-						  
-						  //console.log(url);
-						  var dlnk = document.getElementById('dwnldLnk');
-
-					    dlnk.download = "reporteDiarioCobranza.docx"; 
-							dlnk.href = url;
-							dlnk.click();		    
-						  window.URL.revokeObjectURL(url);
-*/
-  
 		   }
 		});
 		

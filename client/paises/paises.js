@@ -15,7 +15,7 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  paises : () => {
-		  return Paises.find();
+		  return Paises.find({},{sort :{ nombre: 1} });
 	  }
   }); 
   

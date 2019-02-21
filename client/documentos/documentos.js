@@ -15,7 +15,7 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  documentos : () => {
-		  return Documentos.find();
+		  return Documentos.find({},{sort :{ nombre: 1} });
 	  }
   }); 
   

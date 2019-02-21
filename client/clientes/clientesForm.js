@@ -482,7 +482,7 @@ objetoEditar : () => {
       
       objeto.profile.estatus = true;
       objeto.profile.documentos = rc.documents;
-      objeto.profile.foto = rc.pic;
+      //objeto.profile.foto = rc.pic;
       objeto.profile.usuarioInserto = Meteor.userId();
       objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
       objeto.profile.fechaCreacion = new Date();
@@ -824,7 +824,8 @@ objetoEditar : () => {
       var foto = document.getElementById('foto');
       
       //var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
-            //JavaScript para agregar la Foto
+      //JavaScript para agregar la Foto
+      
       fileInput1.addEventListener('change', function(e) {
         var file = fileInput1.files[0];
         var imageType = /image.*/;

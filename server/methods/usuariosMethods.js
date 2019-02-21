@@ -147,6 +147,14 @@ Meteor.methods({
 	  	 
  		return false;
 	},
+	validarDistribuidor: function (nombreCompleto) {	
+	  var user = Meteor.users.find({"profile.nombreCompleto" : nombreCompleto, roles: ["Distribuidor"]} ).fetch();
+	  
+	  if (user.length > 0)
+	  	 return true;
+	  	 
+ 		return false;
+	},
 	userIsInRole: function(usuario, rol, grupo, vista){
 		if (!Roles.userIsInRole(usuario, rol, grupo)) {
 	    throw new Meteor.Error(403, "Usted no tiene permiso para entrar a " + vista);

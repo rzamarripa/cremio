@@ -23,10 +23,10 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  municipios : () => {
-		  return Municipios.find({});
+		  return Municipios.find({},{sort :{ nombre: 1} });
 	  },
 		paises : () => {
-		  return Paises.find();
+		  return Paises.find({},{sort :{ nombre: 1} });
 	  },
 	  estadosBuscar : () => {
 		  return Estados.find({pais_id: this.getReactively('buscar.pais_id')? this.getReactively('buscar.pais_id'):""});

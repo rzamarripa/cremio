@@ -481,12 +481,15 @@ objetoEditar : () => {
             toastr.error('Error al guardar los datos.');
             return;
       }
+			
+			/*
 
       if (_.isEmpty(rc.avales))    
       {
           toastr.error("Error, se debe agregar AVAL.");
           return;
       }
+*/
 
             
       if (this.action)
@@ -499,7 +502,7 @@ objetoEditar : () => {
          delete item.$$hashKey;
       })
       
-       _.each(rc.avales, function(aval){
+      _.each(rc.avales, function(aval){
          aval.estatus = "G"
          delete aval.$$hashKey;
       })
@@ -512,7 +515,7 @@ objetoEditar : () => {
 
       //objeto.profile.documentos = rc.documents;
       
-      objeto.profile.foto = rc.pic;
+      //objeto.profile.foto = rc.pic;
       objeto.profile.usuarioInserto = Meteor.userId();
       objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
       objeto.profile.fechaCreacion = new Date();

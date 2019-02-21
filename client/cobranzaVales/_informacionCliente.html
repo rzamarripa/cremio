@@ -292,34 +292,104 @@
 				    <div class="panel-heading" role="tab" id="headingSeven">
 				      <h4 class="panel-title">
 				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href7" aria-expanded="false" aria-controls="href7">
-				          Referencias Personales
+				          Referencias Personales y Avales
 				        </a>
 				      </h4>
 				    </div>
-				    
-				      <div class="panel-body">
-				        	<div class="row">
-										<table class="table table-bordered">
-											<thead>
-												<tr>
-													<th width="5%">Número</th>
-													<th width="20%">Nombre</th>
-													<th width="5%">Parentesco</th>
-													<th width="10%">Tiempo</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="p in cobv.cliente.profile.referenciasPersonales_ids">
-													<td>{{p.num}}</td>
-													<td>{{p.nombreCompleto}}</td>
-													<td>{{p.parentesco}}</td>
-													<td>{{p.tiempoConocerlo}}</td>
-												</tr>
-											</tbody>
-										</table>
+				    <div class="panel-body">
+			        	<!--
+<div class="row">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th width="5%">Número</th>
+												<th width="20%">Nombre</th>
+												<th width="5%">Parentesco</th>
+												<th width="10%">Tiempo</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="p in cobv.cliente.profile.referenciasPersonales_ids">
+												<td>{{p.num}}</td>
+												<td>{{p.nombreCompleto}}</td>
+												<td>{{p.parentesco}}</td>
+												<td>{{p.tiempoConocerlo}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+-->
+			        	<div role="content">
+																	<!-- Start widget content -->
+									<div class="widget-body">
+										<hr class="simple">
+										<ul id="myTab1" class="nav nav-tabs bordered">
+											<li class="active">
+												<a href="#s1" data-toggle="tab">Referencias Personales</a>
+											</li>
+											<li>
+												<a href="#s2" data-toggle="tab"> Avales</a>
+											</li>
+											<li class="pull-right">
+												<a href="javascript:void(0);">
+												<div class="sparkline txt-color-pinkDark text-align-right" data-sparkline-height="18px" data-sparkline-width="90px" data-sparkline-barwidth="7"><canvas width="52" height="18" style="display: inline-block; width: 52px; height: 18px; vertical-align: top;"></canvas></div> </a>
+											</li>
+										</ul>
+										<div id="myTabContent1" class="tab-content padding-10">
+											<div class="tab-pane fade in active" id="s1">
+													<div class="row">
+														<div class="col-sm-12">
+															<table class="table table-bordered">
+																<thead>
+																	<tr>
+																		<th width="5%">Número</th>
+																		<th width="20%">Nombre</th>
+																		<th width="5%">Parentesco</th>
+																		<th width="10%">Tiempo</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr ng-repeat="p in cobv.cliente.profile.referenciasPersonales_ids">
+																		<td>{{p.num}}</td>
+																		<td>{{p.nombreCompleto}}</td>
+																		<td>{{p.parentesco}}</td>
+																		<td>{{p.tiempoConocerlo}}</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>	
+													</div>
+											</div>
+											<div class="tab-pane fade" id="s2">
+													<div class="row">
+														<div class="col-sm-12">
+															<table class="table table-bordered">
+																<thead>
+																	<tr>
+																		<th width="5%">Número</th>
+																		<th width="15%">Nombre</th>
+																		<th width="10%">Parentesco</th>
+																		<th width="10%">Tiempo Conocerlo</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr ng-repeat="aval in cobv.cliente.profile.avales_ids">
+																		<td>{{aval.num}}</td>
+																		<td>{{aval.nombre}}</td>
+																		<td>{{aval.parentesco}}</td>
+																		<td>{{aval.tiempoConocerlo}}</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+													
+											</div>
+										</div>
 									</div>
-				      </div>
-				    
+									<!-- end widget content -->
+								</div>
+				    </div>
 				</div>
 				<div class="panel panel-default">
 				    <div class="panel-heading" role="tab" id="headingEight">

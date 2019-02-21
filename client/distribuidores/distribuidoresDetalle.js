@@ -163,7 +163,6 @@ this.subscribe('personas',()=>{
   });
 		
 	this.helpers({
-
 		//Estos son los Vales Activos
 		creditos : () => {
 			var creditos = Creditos.find({estatus:4}, {sort:{fechaSolicito:1}}).fetch();
@@ -202,7 +201,6 @@ this.subscribe('personas',()=>{
 
 			return creditos;
 		},
-	
 		creditosAprobados : () =>{
 			var creditos = Creditos.find({estatus:2}, {sort:{fechaSolicito:1}}).fetch();			
 			if(creditos != undefined){
@@ -271,7 +269,6 @@ this.subscribe('personas',()=>{
 					return notas;
 
 		},
-
 		objeto : () => {
 			
 			var cli = Meteor.users.findOne({_id : rc.distribuidor_id});
@@ -417,8 +414,6 @@ this.subscribe('personas',()=>{
 			return Meteor.users.findOne()
 		},
 		planPagosHistorial  : () => {
-			
-
 		},
 		historial : () => {
 			
@@ -564,7 +559,6 @@ this.subscribe('personas',()=>{
 			}	
 			return creditos;
 		},
-
 		cajero: () => {
 			var c = Meteor.users.findOne({roles: "Cajero"});
 			
@@ -591,8 +585,7 @@ this.subscribe('personas',()=>{
 		
 		   	});
   		return imagen
-		},
-				
+		},		
 	});
 
 //////////////////////////////////////////////////////////////////////////////////////////

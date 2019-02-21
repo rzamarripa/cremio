@@ -11,11 +11,8 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 
   this.login = function () {
     $meteor.loginWithPassword(this.credentials.username, this.credentials.password).then(
-      function () {
-	      
+      function () {	      
 	      var usuario = Meteor.user();
-	      //console.log(usuario);
-	      
 	      if (usuario.profile != undefined && !usuario.profile.estatus)
 	      {
 		      	toastr.error("Usuario Desactivado");
@@ -68,11 +65,17 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 	        }  
 		      
 	      }
-	      
-        
       },
       function (error) {
-        toastr.error(error.reason);
+        if(error.reason == "Match failed"){
+		      toastr.error("Escriba su usuario y contraseña para iniciar");
+	      }else if(error.reason == "User not found"){
+		      toastr.error("Usuario no encontrado");
+	      }else if(error.reason == "Incorrect password"){
+		      toastr.error("Contraseña incorrecta");
+	      }
+	      else
+	      	toastr.error("error,:", error.reason);
       }
     )
   }

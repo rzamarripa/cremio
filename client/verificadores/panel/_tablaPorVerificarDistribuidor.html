@@ -10,8 +10,8 @@
 			<th class="text-center" width="10%"><div class="text-center">Fecha Solicitud</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
 			<th class="text-center" width="5%"><div class="text-center">Turno</div></th>
-			<th ng-show="currentUser.roles[0] != 'Cajero'" class="text-center" width="5%"><div class="text-center">Verificar</div></th>
-			<th ng-show="currentUser.roles[0] != 'Cajero'" class="text-center" width="5%"><div class="text-center">Acción</div></th>
+			<th class="text-center" width="5%"><div class="text-center">Verificar</div></th>
+			<th class="text-center" width="5%"><div class="text-center">Acción</div></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -21,36 +21,35 @@
 	    <td>{{distribuidor.profile.nombreCompleto}}</td>
 	    <td>{{distribuidor.profile.avales_ids[0].nombre}} {{distribuidor.profile.avales_ids[0].apellidoPaterno}} {{distribuidor.profile.avales_ids[0].apellidoMaterno}}</td>
 	    <td class="text-right">{{distribuidor.profile.limiteCredito | currency}}</td>
-	    <td class="text-center">{{distribuidor.createdAt.getUTCDate() +"/"+ (distribuidor.createdAt.getUTCMonth()+1) +"/"+ distribuidor.createdAt.getUTCFullYear()}} </td>
-	    <td class="text-center">{{distribuidor.profile.fechaVerificacion.getUTCDate() +"/"+ (distribuidor.profile.fechaVerificacion.getUTCMonth()+1) +"/"+ distribuidor.profile.fechaVerificacion.getUTCFullYear()}} </td>
+	    <td class="text-center">{{distribuidor.createdAt | date: "dd/MM/yyyy"}} </td>
+	    <td class="text-center">{{distribuidor.profile.fechaVerificacion | date: "dd/MM/yyyy"}} </td>
 	    <td class="text-center">{{distribuidor.profile.turno}}</td>
-	    <td ng-show="currentUser.roles[0] != 'Cajero'">
+	    <td>
 			    <div class="text-center">
 				    <div class="btn-group">
-						  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
 						  <ul class="dropdown-menu text-left">
-						    <li><a ui-sref="root.verificacion({id : distribuidor._id, verificacion_id: '-1', tipo: 'V', persona:1})">Solicitante o Aval</a></li>
+						    <li><a ui-sref="root.verificacion({id : distribuidor._id, verificacion_id: '-1', tipo: 'V', persona:1})">Distribuidor</a></li>
 						    <li><a ui-sref="root.verificacionVecino({id : distribuidor._id, verificacion_id: '-1', tipo: 'V', persona:1})">Vecino</a></li>
-						    <li ng-if = "distribuidor.profile.requiereVerificacionAval">
+						    <li ng-if = "distribuidor.profile.avales_ids.length > 0 ">
 						    		<a ui-sref="root.verificacion({id : distribuidor._id, verificacion_id: '-1', tipo: 'V', persona:2})">Aval</a>
 						    </li>
-						    <li ng-if = "distribuidor.profile.requiereVerificacionAval">
+						    <li ng-if = "distribuidor.profile.avales_ids.length > 0 ">
 						    		<a ui-sref="root.verificacionVecino({id : distribuidor._id, verificacion_id: '-1', tipo: 'V', persona:2})">Vecino Aval</a>
 						    </li>
 						  </ul>
 						</div>
 			    </div>				    
 			</td>
-	    <td ng-show="currentUser.roles[0] != 'Cajero'" class="text-center">
-		    	<button type="button" class="btn btn-primary" ng-click="pver.mostrarEvaluacionD(distribuidor._id)">Evaluar</button>
+	    <td class="text-center">
+		    	<button type="button" class="btn btn-xs btn-primary" ng-click="pver.mostrarEvaluacionD(distribuidor._id)">Evaluar</button>
 	    </td>
     </tr>
 	</tbody>
 </table>
-
 
 <!-- Modal para cargos Moratorios -->
 
@@ -90,9 +89,6 @@
      
   </div>
 </div>
-
-
-
 
 <!--		 //////////////////////////////////////////////////////////// -->
 

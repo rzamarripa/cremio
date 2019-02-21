@@ -9,8 +9,11 @@ Meteor.methods({
 			
 			resultado.cobranza 										= [];
 			resultado.seguroDistribuidorCobranza 	= [];
+			resultado.otrasSucursales							= {};
+			
 			resultado.seguroDistribuidor 					= 0;
 			resultado.bonificaciones							= 0;
+			resultado.sumaOtrasSucursales					= 0;
 						
 			_.each(cobranzaDiaria, function(cd){
 				
@@ -90,6 +93,7 @@ Meteor.methods({
 						}
 						else
 						{
+								
 								plan.fechaPago 		= cd.fechaPago;
 								var tipoIngreso 	= TiposIngreso.findOne(cd.tipoIngreso_id);
 								var cuenta 				= Cuentas.findOne({tipoIngreso_id: cd.tipoIngreso_id});
@@ -112,8 +116,26 @@ Meteor.methods({
 								resultado.cobranza.push(plan);	
 							
 						}
-					})
+					});
 					
+					//Cobros de Clientes de Otra Sucursal
+					var credito = Creditos.findOne({_id: cd.credito_id},{fields: {cliente_id:1}});
+					var cliente = Meteor.users.findOne({_id: credito.cliente_id}, {fileds: {"profile.sucursal_id":1}});
+					if (cd.sucursalPago_id != cliente.profile.sucursal_id)
+					{
+							if (resultado.otrasSucursales[cliente.profile.sucursal_id] == undefined)
+							{
+									resultado.otrasSucursales[cliente.profile.sucursal_id] 						= {};
+							 		resultado.otrasSucursales[cliente.profile.sucursal_id].importe 		= cd.totalPago;
+							 		var sucursal = Sucursales.findOne(cliente.profile.sucursal_id);
+							 		resultado.otrasSucursales[cliente.profile.sucursal_id].sucursal 	= sucursal.nombreSucursal;
+							}
+							else
+							{
+									resultado.otrasSucursales[cliente.profile.sucursal_id].importe 		+= Number(parseFloat(cd.totalPago).toFixed(2));
+							}
+							resultado.sumaOtrasSucursales	+= Number(parseFloat(cd.totalPago).toFixed(2));
+					}
 			});
 									
 			return resultado;
@@ -612,7 +634,7 @@ Meteor.methods({
 			return pagos;
 	},	
 	
-	ReporteCobranza: function (objeto,inicial,final,tiposIngreso) {
+	ReporteCobranza: function (objeto, otrasSucursales, inicial, final, tiposIngreso) {
 	
 		//console.log(objeto,"creditos ")
 		var fs = require('fs');
@@ -657,11 +679,7 @@ Meteor.methods({
 		var fecha = new Date();
 		
 		var f = fecha;
-		
-		console.log("Ini:", inicial);
-		console.log("Fin:", final);
-		
-		
+				
 		var fechaInicial = inicial;
 		var fechaFinal = final;
 
@@ -793,10 +811,15 @@ Meteor.methods({
 	 				ti.total = formatCurrency(ti.total)
  				});
  				
+ 				_.each(otrasSucursales, function(s){
+	 					s.importe = formatCurrency(s.importe);
+ 				});
+ 				
  				var hora = moment(new Date()).format("hh:mm:ss a");
 		
 	      doc.setData({				
     	            items					: objeto,
+    	            sucursales		: otrasSucursales,
 									fecha					: fecha,
 									hora					: hora,
 									inicial				: fechaInicial,

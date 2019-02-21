@@ -23,12 +23,10 @@ angular.module("creditoMio")
 		return [{estatus: true}]
 	});
   
-	this.subscribe('colonias',()=>{
-		return [{estatus:true}]});	
-
-	
-
-
+	this.subscribe('colonias',()=>{	
+		return [{estatus:true}]
+	});	
+		
 	 
 	this.helpers({
 	  colonias : () => {

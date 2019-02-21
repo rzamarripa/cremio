@@ -48,8 +48,16 @@
 												  <span> Crear Notas de Crédito</span>
 											</label>
 										</div>
+										
+										<div class="col-sm-3" valida>
+                        <label>Sucursal *</label>
+                        <select name="sucursal" class="form-control select2" placeholder="Seleccione" ng-model="sup.objeto.profile.sucursal_id" required>
+													<option  value="{{objeto._id}}" ng-repeat="objeto in sup.sucursales">{{objeto.nombreSucursal}}</option>
+												</select>
+                    </div>
 							    	
                 </div> 
+<!--
                 <div class="row">
                     <div class="col-sm-1">
                         <br/>
@@ -61,6 +69,7 @@
                         <img width="300px" ng-src="{{sup.pic}}" ng-class="{'img-thumbnail': !!sup.pic}" />
                     </div>
                 </div>
+-->
             </div>
             <div class="col-sm-12">
                 <h4>Información de Contacto</h4>

@@ -250,8 +250,6 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
             	
             //console.log("Folio y Estatus:", d)	 
 						//console.log("Folio y Estatus:", d.pago.folioPago, "-",  d.pago.estatus)
-						
-						
           }
           else
           {

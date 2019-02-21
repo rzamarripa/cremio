@@ -33,7 +33,7 @@ angular.module("creditoMio")
 
     if (this.getReactively("pais_id") !=  "")
     {
-        console.log("Cambio pais:", this.pais_id);    
+        //console.log("Cambio pais:", this.pais_id);    
         return [{pais_id: this.getReactively("pais_id"), estatus: true}];
         
     }   
@@ -47,7 +47,7 @@ angular.module("creditoMio")
   this.subscribe('municipios',()=>{
     if (this.getReactively("estado_id") !=  "")
     { 
-        console.log("Cambio Estado");
+        //console.log("Cambio Estado");
         return [{estado_id: this.getReactively("estado_id"), estatus: true}];
         
     }   
@@ -62,7 +62,7 @@ angular.module("creditoMio")
   this.subscribe('ciudades',()=>{
     if (this.getReactively("municipio_id") !=  "")
     {
-        console.log("Cambio Muni");
+        //console.log("Cambio Muni");
         return [{municipio_id: this.getReactively("municipio_id"), estatus: true}];
         
     }   
@@ -85,7 +85,7 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  empresas : () => {
-		  return Empresas.find().fetch();
+		  return Empresas.find({},{sort :{ nombre: 1} }).fetch();
 	  },
     nacionalidades : () => {
       return Nacionalidades.find();
@@ -95,24 +95,24 @@ angular.module("creditoMio")
     },
 
     paises : () => {
-      return Paises.find();
+      return Paises.find({},{sort :{ nombre: 1} });
     },
 
     estados : () => {
-          return Estados.find();
+          return Estados.find({},{sort :{ nombre: 1} });
     },
     municipios : () => {
-      return Municipios.find();
+      return Municipios.find({},{sort :{ nombre: 1} });
     },
     ciudades : () => {
-      return Ciudades.find();
+      return Ciudades.find({},{sort :{ nombre: 1} });
     },
     colonias : () => {
-      return Colonias.find();
+      return Colonias.find({},{sort :{ nombre: 1} });
     },
  
     documentos : () => {
-      return Documentos.find();
+      return Documentos.find({},{sort :{ nombre: 1} });
     },
   }); 
   

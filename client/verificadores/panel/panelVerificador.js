@@ -144,7 +144,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	
 	this.helpers({
 		creditos : () => {
-			rc.creditos = Creditos.find({},{ sort : {fechaSolicito : 1 }}).fetch();
+			rc.creditos = Creditos.find({},{ sort : {fechaSolicito : -1 }}).fetch();
 		  if (rc.creditos != undefined)
 		  {
 			  _.each(rc.creditos, function(credito){
@@ -188,7 +188,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 		}, 	
 		verificacionesHechas :() =>{
 			var ver = Verificaciones.find({}).fetch();
-			console.log(ver);
+			//console.log(ver);
 			_.each(ver, function(v){
 				
 				if (v.tipoVerificacion == 'solicitante o aval' && v.verificacionPersona == 1)
@@ -225,7 +225,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 			return ver;
 		},
 		distribuidores :() =>{
-			return Meteor.users.find({roles: ["Distribuidor"]});			
+			return Meteor.users.find({roles: ["Distribuidor"]}, {sort: {"profile.fechaVerificacion": -1}});			
 		},		
 	});	 
 					  
@@ -260,9 +260,6 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 					return;	
 			}
 			//Validar que el credito tengo las dos verifiaciones antes de guardar la verificación
-			
-			
-			
 			
 			if (rc.creditoSeleccionado != "")
 			{
@@ -335,13 +332,16 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 						   }
 						   if(result)
 						   {		
-							   		var distribuidorRequiereVerificacionAval = Meteor.users.findOne(rc.distribuidorSeleccionado).profile.requiereVerificacionAval;
+							   		//console.log(result);
+							   		var distribuidorRequiereVerificacionAval = Meteor.users.findOne(rc.distribuidorSeleccionado);
+							   		//console.log("dis:", distribuidorRequiereVerificacionAval)
 							   		
-							   		if (distribuidorRequiereVerificacionAval == undefined || distribuidorRequiereVerificacionAval == false)
-											 numeroVerificaciones = 1;
-										else		 
-											numeroVerificaciones = 2;
-							   		
+							   		//if (distribuidorRequiereVerificacionAval == undefined || distribuidorRequiereVerificacionAval == false)
+										//	 numeroVerificaciones = 1;
+										//else		 
+										numeroVerificaciones = 2;
+
+							   		//console.log("NV:", numeroVerificaciones);
 							   		
 								 		_.each(result, function(v){
 		

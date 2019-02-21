@@ -41,12 +41,6 @@
 				</div>
 				<br/>
 				<div class="row">
-<!--
-				  <div class="col-sm-1">
-						<label for="talla">Foto</label>
-						<button class="btn btn-primary" ng-model="dis.objeto.foto" ng-click="dis.tomarFoto()"><i class="fa fa-camera"></i></button>
-					</div>
--->
 					<div class="col-sm-4">
 						<label>Foto</label>
 						<input name="foto" type="file" id="foto">																
@@ -54,10 +48,6 @@
 					<div class="col-sm-4">
 						<img ng-src="{{dis.objeto.profile.foto}}" style="width: 200px; height: 180px;" ng-class="{'img-thumbnail': !!dis.pic}" />
 					</div>
-					<!-- <div class="col-sm-3" valida> 					    
-						<label>Numero Cliente (s) *</label>
-						<input name="numeroCliente" type="text" class="form-control" ng-model="dis.objeto.profile.numeroDistribuidor" required >
-					</div> -->
 				</div>  
 			</div>
 			<h4 ng-if = "!dis.action">Documentos</h4>
@@ -257,15 +247,14 @@
 								</button> 
 							</span>
 						</div>
-						<div class="ajax-dropdown" ng-show="dis.buscandoColonia" style="display: block; width: 100% !important;">
+						<div class="ajax-dropdown" ng-show="dis.buscandoColonia" style="display: block; width: 150% !important;">
 							<div class="ajax-notifications custom-scroll">
 								<div class="alert alert-transparent">
 									<div class="tab-pane fade active in" id="a2">
 										<div class="user well" title="{{colonia.nombre}}" ng-repeat="colonia in dis.colonias" style="width: 100%">
 											<div class="row">
 												<div class="col-sm-4">
-													<a href="javascript:void(0);"> {{colonia.nombre}}</a> 						
-													<a href="javascript:void(0);" ng-click="dis.agregarColonia(colonia);dis.buscandoColonia = false"> Seleccionar</a>
+													<a href="javascript:void(0);" ng-click="dis.agregarColonia(colonia);dis.buscandoColonia = false"> {{colonia.nombre}}</a>
 												</div>
 											</div>
 										</div>
@@ -709,21 +698,21 @@
 					</div>
 				</div> -->
 			</div>
-		<!-- 	//kaka -->
+	
 		<div class="well">
 		<div class="row">
-					<div class="col-sm-4">					    
+					<div class="col-sm-4" valida>				    
 						<label>Límite de Crédito</label>
-						<input name="lCredito" type="number" class="form-control" placeholder="Limite credito" ng-model="dis.objeto.profile.limiteCredito" >
+						<input name="lCredito" type="number" class="form-control" placeholder="Limite credito" ng-model="dis.objeto.profile.limiteCredito" required="" >
 <!-- 						<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form"> -->
 					</div>
 					<div class="col-sm-2" valida>
 			    	<label>Fecha Verificación *</label>
-			    	<input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="dis.objeto.profile.fechaVerificacion" />
+			    	<input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="dis.objeto.profile.fechaVerificacion" required="" />
 		    	</div>
 					<div class="col-sm-2" valida>
 			    	<label>Horario *</label>
-			    	<select name="horario" class="form-control" ng-model="dis.objeto.profile.turno" >
+			    	<select name="horario" class="form-control" ng-model="dis.objeto.profile.turno" required="">
 				    	<option value="mañana">Mañana</option>
 				    	<option value="tarde">Tarde</option>
 			    	</select>
@@ -733,10 +722,7 @@
 			    	<a ng-click="dis.cambiarEstatus(dis.objeto.profile.estatus)" class="btn btn-{{dis.estatusClase}}">
 								 {{dis.objeto.profile.estatus == true ? 'Activo': 'Inactivo'}}
 						</a>
-			    
 		    	</div>	
-		    	
-			
 		</div>
 		<div class="row">
 				<div class="col-sm-12">

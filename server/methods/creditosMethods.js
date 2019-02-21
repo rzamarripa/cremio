@@ -315,6 +315,7 @@ Meteor.methods({
 		//credito.entregado = true;
 		credito.estatus = 4;
 		credito.usuario_id = user._id;
+		//credito.sucursal_id = Meteor.user().profile.sucursal_id;
 		
 		delete credito._id ;
 		Creditos.update({_id:creditoid},{$set:credito});

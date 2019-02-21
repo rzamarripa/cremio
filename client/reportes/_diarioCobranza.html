@@ -140,6 +140,12 @@
 									<span class="hidden-mobile hidden-tablet"> Seguros Distribuidores 
 										<span style="font-size: medium" class="badge bg-color-blue txt-color-white">{{re.sumaSeguroDistribuidor | currency}} </span></a>
 					</li>
+					
+					<li class="">
+						<a data-toggle="tab" href="#hr5" aria-expanded="false"> 
+									<span class="hidden-mobile hidden-tablet"> Otras Sucursales 
+										<span style="font-size: medium" class="badge bg-color-blue txt-color-white">{{re.sumaOtrasSucursales | currency}} </span></a>
+					</li>
 
 				</ul>	
 				
@@ -191,7 +197,7 @@
 											    <td><div class="text-center">{{objeto.fechaPago  | date:"dd-MM-yyyy"}} - {{objeto.fechaPago  | date:'H:mm:ss'}}</div></td>
 											    <td><div class="text-center">{{objeto.folio}}</div></td>
 											    <td><div class="text-center">{{objeto.numeroPago}} - {{objeto.numeroPagos}}</div></td>
-											    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
+											    <td  style="font-size: x-small"><div class="text-center">{{objeto.numeroCliente}}</div></td>
 											    <td><div class="text-left">{{objeto.nombreCompleto}}</div></td>
 											    <td><div class="pull-right">{{objeto.pagoInteres | currency}}</div></td>
 											    <td><div class="pull-right">{{objeto.pagoCapital | currency}}</div></td>
@@ -328,6 +334,29 @@
 									    </tr>
 										</tbody>
 									</table>
+									</div>
+								</div>
+						</div>
+						
+						<div class="tab-pane fade" id="hr5">
+								<div class="row">
+									<div class="col-sm-12" >
+										<table class="table table-condensed table-bordered">
+											<thead>
+												<tr>
+												  <th style="text-align: center; width: 3%"><div class="text-center">No.</div></th>													
+													<th><div class="text-center">Sucursal</div></th>
+													<th><div class="text-center">Importe</div></th>
+												</tr>
+											</thead>
+											<tbody>
+										    <tr ng-repeat="objeto in re.arregloOtrasSucursales" >
+										    	<td style="text-align: center">{{$index + 1}}</td>
+											    <td><div class="text-center">{{objeto.sucursal}}</div></td>
+											    <td><div class="text-center">{{objeto.importe | currency}}</div></td>
+										    </tr>
+											</tbody>
+										</table>
 									</div>
 								</div>
 						</div>

@@ -10,8 +10,8 @@
 			<th class="text-center" width="10%"><div class="text-center">Fecha Solicitud</div></th>
 			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
 			<th class="text-center" width="5%"><div class="text-center">Turno</div></th>
-			<th ng-show="currentUser.roles[0] != 'Cajero'" class="text-center" width="5%"><div class="text-center">Verificar</div></th>
-			<th ng-show="currentUser.roles[0] != 'Cajero'" class="text-center" width="5%"><div class="text-center">Acción</div></th>
+			<th class="text-center" width="5%"><div class="text-center">Verificar</div></th>
+			<th class="text-center" width="5%"><div class="text-center">Acción</div></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -21,13 +21,13 @@
 	    <td>{{credito.nombreCliente}}</td>
 	    <td>{{credito.avales_ids[0].nombreCompleto}}</td>
 	    <td class="text-right">{{credito.capitalSolicitado | currency}}</td>
-	    <td class="text-center">{{credito.fechaSolicito.getUTCDate() +"/"+ (credito.fechaSolicito.getUTCMonth()+1) +"/"+ credito.fechaSolicito.getUTCFullYear()}} </td>
-	    <td class="text-center">{{credito.fechaVerificacion.getUTCDate() +"/"+ (credito.fechaVerificacion.getUTCMonth()+1) +"/"+ credito.fechaVerificacion.getUTCFullYear()}} </td>
+	    <td class="text-center">{{credito.fechaSolicito | date: "dd/MM/yyyy"}} </td>
+	    <td class="text-center">{{credito.fechaVerificacion | date: "dd/MM/yyyy"}} </td>
 	    <td class="text-center">{{credito.turno}}</td>
-	    <td ng-show="currentUser.roles[0] != 'Cajero'">
+	    <td>
 			    <div class="text-center">
 				    <div class="btn-group">
-						  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    <span class="caret"></span>
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
@@ -40,8 +40,9 @@
 						</div>
 			    </div>				    
 			</td>
-	    <td ng-show="currentUser.roles[0] != 'Cajero'" class="text-center">
-		    	<button type="button" class="btn btn-primary" ng-click="pver.mostrarEvaluacion(credito._id)">Evaluar</button>
+<!-- 	    <td ng-show="currentUser.roles[0] != 'Cajero'" class="text-center"> Se lo quite para ver --> 
+			<td class="text-center">
+		    	<button type="button" class="btn btn-xs btn-primary" ng-click="pver.mostrarEvaluacion(credito._id)">Evaluar</button>
 	    </td>
     </tr>
 	</tbody>

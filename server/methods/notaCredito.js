@@ -17,6 +17,8 @@ Meteor.methods({
 		 		fechaFinal = new Date(fechaFinal.getFullYear(),fechaFinal.getMonth(),fechaFinal.getDate(),0,0,0,0);
 		} 		
 		
+		var sucursal_id = Meteor.users.findOne(user_id).profile.sucursal_id;
+		
 		var objeto ={
 			importe 			: Number(parseFloat(nota.monto).toFixed(2)),
 			saldo 				: Number(parseFloat(nota.monto).toFixed(2)),
@@ -27,7 +29,8 @@ Meteor.methods({
 			createdBy 	  : user._id,
 			createdAt 	  : fechaInicial,
 			vigencia 		  : fechaFinal,
-			sucursal_id   : user.profile.sucursal_id,
+			//sucursal_id   : user.profile.sucursal_id,
+			sucursal_id   : sucursal_id,
 			updated 		  : false
 		};
 
@@ -99,10 +102,9 @@ Meteor.methods({
 	deprecarNotasDeCredito : function(){
 		var fecha = new Date();
 		fecha = new Date(fecha.getFullYear(),fecha.getMonth(),fecha.getDate(),0,0,0,0);
-		var notas =  NotasCredito.find({estatus:1, vigencia:{$lt:fecha}, saldo : {$gt: 0}}).fetch();
-		
-		//console.log(notas);
-		_.each(notas,function(nota){
+		var notas =  NotasCredito.find({estatus: 1, vigencia:{$lt:fecha} }).fetch();		
+		_.each(notas,function(nota)
+		{
 			//var usuario = Meteor.users.findOne(nota.cliente_id);
 			//usuario.profile.notasCredito.saldo -= Number(parseFloat(nota.saldo).toFixed(2));
 			//nota.saldo = 0;

@@ -503,6 +503,8 @@ Meteor.methods({
     //Ingresos por forma de pago
     var ingresosAgrupados = {};
     var totalIngresos = 0;
+    //console.log(filtroFechas)
+    //console.log(caja_id)
     var movs = MovimientosCajas.find({ caja_id: caja_id, $or:[ {tipoMovimiento: 'Pago'}, {origen: 'Cancelación de pago'}], createdAt: filtroFechas }).fetch();
     if (movs.length) {
       _.each(movs, function(mov) {
@@ -541,12 +543,13 @@ Meteor.methods({
            valesAgrupados[mov.tipoIngreso.nombre] = 0;
         }
         
-        if (mov.origen == 'Entrega de Crédito' || mov.origen == 'Entrega de Credito')
+        if (mov.origen == 'Entrega de Crédito' || mov.origen == 'Entrega de Credito' || mov.origen == 'Cancelación de Ent. de Crédito')
         {
 	        	creditosAgrupados[mov.tipoIngreso.nombre] += (mov.monto*-1);
 	        	totalCreditos += mov.monto;
+	        	//console.log(totalCreditos);
         }	
-        else if (mov.origen == 'Entrega de Vale')
+        else if (mov.origen == 'Entrega de Vale' || mov.origen == 'Cancelación de Ent. de Vale')
         {
 	        	valesAgrupados[mov.tipoIngreso.nombre] += (mov.monto*-1);
 	        	totalVales += mov.monto;
@@ -563,6 +566,7 @@ Meteor.methods({
         
       });
     };
+    //console.log(totalCreditos);
     totalCreditos = totalCreditos * -1;
     totalVales = totalVales	* -1;
     
@@ -712,12 +716,12 @@ Meteor.methods({
 		           valesAgrupados[movs.tipoIngreso.nombre] = 0;
 		        }
 		        
-		        if (movs.origen == 'Entrega de Crédito' || movs.origen == 'Entrega de Credito')
+		        if (movs.origen == 'Entrega de Crédito' || movs.origen == 'Entrega de Credito' || movs.origen == 'Cancelación de Ent. de Crédito')
 		        {
 			        	creditosAgrupados[movs.tipoIngreso.nombre] += (movs.monto*-1);
 			        	totalCreditos += movs.monto;
 		        }	
-		        else if (movs.origen == 'Entrega de Vale')
+		        else if (movs.origen == 'Entrega de Vale' || movs.origen == 'Cancelación de Ent. de Vale')
 		        {
 			        	valesAgrupados[movs.tipoIngreso.nombre] += (movs.monto*-1);
 			        	totalVales += movs.monto;

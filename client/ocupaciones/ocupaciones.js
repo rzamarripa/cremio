@@ -15,7 +15,7 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  ocupaciones : () => {
-		  return Ocupaciones.find();
+		  return Ocupaciones.find({},{sort :{ nombre: 1} });
 	  }
   }); 
   

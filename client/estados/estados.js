@@ -19,10 +19,10 @@ angular.module("creditoMio")
 	 
 	this.helpers({
 	  estados : () => {
-		  return Estados.find();
+		  return Estados.find({},{sort :{ nombre: 1} });
 	  },
 		paises : () => {
-			return Paises.find();
+			return Paises.find({},{sort :{ nombre: 1} });
 	  },
   }); 
   

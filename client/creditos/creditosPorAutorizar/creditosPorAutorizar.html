@@ -64,10 +64,10 @@
 <!--                     <td class="text-center">{{credito.indicacion}}</td> -->
                     <td class="text-center">{{credito.tipo}}</td>
                     <td class="text-center">
-                      <button ng-if="credito.tipo == 'Crédito Personal'" ng-click="cpa.autorizar(credito.credito_id, credito.tipo)" class="btn btn-primary">Autorizar</button>
-                      <button ng-if="credito.tipo == 'Distribuidor'" ng-click="cpa.autorizar(credito._id, credito.tipo)" class="btn btn-primary">Autorizar</button>
-                      <button ng-if="credito.tipo == 'Crédito Personal'" ng-click="cpa.mostrarRechazoCredito(credito.credito_id, credito.tipo)" class="btn btn-warning">Rechazar</button>
-                      <button ng-if="credito.tipo == 'Distribuidor'" ng-click="cpa.mostrarRechazoCredito(credito._id, credito.tipo)" class="btn btn-warning">Rechazar</button>
+                      <button ng-if="credito.tipo == 'Crédito Personal'" ng-click="cpa.autorizar(credito.credito_id, credito.tipo)" class="btn btn-xs btn-primary">Autorizar</button>
+                      <button ng-if="credito.tipo == 'Distribuidor'" ng-click="cpa.autorizar(credito._id, credito.tipo)" class="btn btn-xs btn-primary">Autorizar</button>
+                      <button ng-if="credito.tipo == 'Crédito Personal'" ng-click="cpa.mostrarRechazoCredito(credito.credito_id, credito.tipo)" class="btn btn-xs btn-warning">Rechazar</button>
+                      <button ng-if="credito.tipo == 'Distribuidor'" ng-click="cpa.mostrarRechazoCredito(credito._id, credito.tipo)" class="btn btn-xs btn-warning">Rechazar</button>
                     </td>
                 </tr>
             </tbody>
