@@ -689,7 +689,7 @@ angular.module("creditoMio")
 	    Meteor.call('validarCredenciales', credenciales, usuario.profile.sucursal_id , function(err, result) {
 	      if (result) {
 		      
-		      console.log("VER:", result);
+		      //console.log("VER:", result);
 	        rc.estatusFecha = false;
 	        $scope.$apply();
 	        $("#modalActivarFecha").modal('hide');

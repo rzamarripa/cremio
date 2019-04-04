@@ -51,18 +51,45 @@ function TicketPagareCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			},
 			{
 				onReady: function () {
-					rc.planPagos = PlanPagos.find({}).fetch();							
 					
+					/*
+rc.planPagos = PlanPagos.find({}).fetch();							
 					if (rc.planPagos != undefined)
 					{
 							var vigencia = rc.planPagos[rc.planPagos.length - 1];
 							rc.vigenciaFecha = formatDate(vigencia.fechaLimite);	
 					}
+*/
+					
+					Meteor.call('generarPlanPagos', rc.credito, rc.credito.cliente_id, function(error, result){
+						if(result){
+							rc.planPagos = result;
+							
+							if (rc.planPagos != undefined)
+							{
+									var vigencia = rc.planPagos[rc.planPagos.length - 1];
+									rc.vigenciaFecha = formatDate(vigencia.fechaLimite);	
+							}
+							$scope.$apply();	
+						}
+					});
+
+					
+					
 				}
 			});
 			
 			rc.fecha = new Date();
-			rc.fechaLetra = formatDate(rc.fecha);			
+			rc.fechaLetra = formatDate(rc.fecha);
+			
+			Meteor.call('getUsuarioId', rc.credito.cliente_id, function(error, result){
+				//if(result){
+					//console.log(result);
+					rc.distribuidor = result;
+					//console.log(rc.distribuidor.nombreCompleto);
+					$scope.$apply();	
+				//}
+			});
 			
 			this.subscribe('beneficiarios',()=>{
 				return[{
@@ -256,7 +283,6 @@ function TicketPagareCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			console.log(valores[0]);
 			console.log(valores[1]);
 */
-
 			
 			rc.centavos = valores[1];
 			if (Number(rc.centavos) < 9)
@@ -264,7 +290,19 @@ function TicketPagareCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			
 			rc.letra = NumeroALetras(valores[0]);
 			
-			console.log(rc.letra);
+			rc.subscribe('sucursales',()=>{
+				return[{
+					_id: rc.credito.sucursal_id
+				}]
+			},
+			{
+				onReady:()=>{
+					rc.sucursal = Sucursales.findOne(rc.credito.sucursal_id);
+					rc.sucursal = rc.sucursal? rc.sucursal:{};
+					//console.log(rc.sucursal);
+				}
+			});
+			
 			/*
 
 			Meteor.call('getCredito', rc.pago.credito_id ,function(err, res){

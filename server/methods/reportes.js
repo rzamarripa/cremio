@@ -3,6 +3,11 @@ Meteor.methods({
 
 	getCobranzaDiaria:function(fechaInicial, fechaFinal, sucursal_id){
 			
+/*
+			console.log(sucursal_id);
+			console.log(fechaInicial);
+			console.log(fechaFinal);
+*/
 			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}).fetch();
 			
 			var resultado = {};
@@ -16,7 +21,7 @@ Meteor.methods({
 			resultado.sumaOtrasSucursales					= 0;
 						
 			_.each(cobranzaDiaria, function(cd){
-				
+					
 					if (cd.seguro != undefined && cd.seguro != 0)
 					{
 							var pago = {};
@@ -37,7 +42,7 @@ Meteor.methods({
 							pago.nombreCompleto = user.profile.nombre  + ' ' + user.profile.apellidoPaterno;												
 							
 	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
-	  																{fields: {"profile.nombre": 1}});											
+	  																						{fields: {"profile.nombre": 1}});											
 	  					
 	  					
 	  					pago.cajero = cajero.profile.nombre;
@@ -119,7 +124,7 @@ Meteor.methods({
 					});
 					
 					//Cobros de Clientes de Otra Sucursal
-					var credito = Creditos.findOne({_id: cd.credito_id},{fields: {cliente_id:1}});
+					var credito = Creditos.findOne({_id: cd.credito_id},{fields: {cliente_id : 1}});
 					var cliente = Meteor.users.findOne({_id: credito.cliente_id}, {fileds: {"profile.sucursal_id":1}});
 					if (cd.sucursalPago_id != cliente.profile.sucursal_id)
 					{
@@ -141,7 +146,6 @@ Meteor.methods({
 			return resultado;
 			
 	},
-	
 	getBancos:function(fechaInicial, fechaFinal, sucursal_id){
 			
 			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}, {sort: {fechaEntrega: 1}}).fetch();

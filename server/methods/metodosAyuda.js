@@ -12,6 +12,12 @@ Meteor.methods({
 		var referencia = Sucursales.findOne(idReferencia);
 		return referencia;
 	},
+	getSucursalDistribuidor: function (distribuidor_id) {
+		
+		var usuario = Meteor.users.findOne({_id: distribuidor_id}, {fields: {"profile.sucursal_id" : 1}});
+		var sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
+		return sucursal;
+	},
 	getHorario: function (sucursal_id) {
 		var anio = 2000;
 		var sucursal = Sucursales.findOne(sucursal_id);
@@ -44,6 +50,11 @@ Meteor.methods({
 		});
 
 			
+	},
+	
+	getEmpresa: function (id) {
+		var objeto = Empresas.findOne(id);
+		return objeto;
 	},
 		
 })

@@ -71,12 +71,13 @@ angular.module("creditoMio")
 
 		customConfirm('¿Estás seguro de Autorizar a ' + objeto.nombreCompleto +'?', function() {
 				
+				objeto.usuarioAutorizo = Meteor.userId();
 				delete objeto.$$hashKey;				
 				Beneficiarios.insert(objeto);
 				
 				var idTemp = objeto._id;
 				delete objeto._id;
-				Prospectos.update({_id: idTemp},{$set: {estatus: 2}});
+				Prospectos.update({_id: idTemp},{$set: {usuarioAutorizo : Meteor.userId(),estatus: 2}});
 				toastr.success("Se autorizó correctamente.")		
 		});	
 		
@@ -102,7 +103,6 @@ angular.module("creditoMio")
 	  $('#modalRechazo').modal('hide');
 	  
   }
-  
   
   this.mostrarRechazoCredito = function(id){
 	  

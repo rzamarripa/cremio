@@ -69,13 +69,14 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 		}	
   });
   
-  this.subscribe('buscarBeneficiarios', () => {
-		if(this.getReactively("buscar.nombreBeneficiario").length > 3){
+  this.subscribe('buscarBeneficiariosDistribuidor', () => {
+		if (this.getReactively("buscar.nombreBeneficiario").length > 3){
 			this.buscando = true;
 			return [{
 		    options : { limit: 20 },
 		    where : { 
-					nombreCompleto : this.getReactively('buscar.nombreBeneficiario')
+					distribuidor_id	: $stateParams.objeto_id,	
+					nombreCompleto  : this.getReactively('buscar.nombreBeneficiario')
 				} 		   
 	    }];
 		}
@@ -143,7 +144,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 				{
 						//console.log(c);
 						this.credito.conSeguro = true;
-						this.credito.seguro = 8;
+						this.credito.seguro = 10;
 				}
 				
 				return  c;
@@ -458,7 +459,8 @@ _.each(result,function (pago) {
 			estatus 									: 1,
 			requiereVerificacion			: rc.credito.requiereVerificacion,
 			requiereVerificacionAval	: rc.credito.requiereVerificacionAval,
-			sucursal_id 							: Meteor.user().profile.sucursal_id,
+			//sucursal_id 							: Meteor.user().profile.sucursal_id,
+			sucursal_id 							: rc.cliente.profile.sucursal_id,
 			fechaVerificacion					: rc.credito.fechaVerificacion,
 			turno 										: rc.credito.turno,
 			tipoGarantia 							: rc.credito.tipoGarantia,

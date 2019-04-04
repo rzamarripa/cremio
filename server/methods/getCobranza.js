@@ -126,13 +126,13 @@ Meteor.methods({
 	        
 	        if (planPago.importeRegular == planPago.cargo)
 					{	
-	        		planPago.bonificacion = Number(parseFloat(((planPago.importeRegular) * (comision / 100))).toFixed(2));
+	        		//planPago.bonificacion = Number(parseFloat(((planPago.importeRegular) * (comision / 100))).toFixed(2));
+	        		planPago.bonificacion = Number(parseFloat(((planPago.capital + planPago.interes) * (comision / 100))).toFixed(2));
 	        }		
 	        
 	        planPago.adeudoInicial					= credito.adeudoInicial;
 	        planPago.saldoActual						= credito.saldoActual;
 	        planPago.folio									= credito.folio;
-	        
 					
 					if(arreglo[credito.cliente_id] == undefined)
 					{

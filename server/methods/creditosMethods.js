@@ -475,4 +475,12 @@ Meteor.methods({
 		return respaldos;
 	},
 	
+	getCreditosBeneficiario: function (id) {
+	  var creditos = Creditos.find({"beneficiario_id" : id, estatus : { $in: [4,5] } }, {sort: {fechaEntrega : 1}}).fetch();	
+	  
+	  
+	    	  
+		return creditos;
+	},
+	
 });

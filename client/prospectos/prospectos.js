@@ -9,16 +9,26 @@ angular.module("creditoMio")
   this.nuevo = true;	 
   this.objeto = {}; 
   this.buscar = {};
+  this.arreglo = [];
+  
+  rc.avance 			= 20;
+  rc.numeroPagina = 0;
 	
+/*
 	this.subscribe("prospectos", ()=>{
 		return [{distribuidor_id: Meteor.userId()}]
 	});
+*/
+	this.subscribe("prospectosListado", ()=>{
+		return [{options 	: { skip				 		: rc.getReactively("numeroPagina") , limit: rc.avance },
+    				where 		: { distribuidor_id	: Meteor.userId() } }];
+	});
+	
 	 
 	this.helpers({
 	  arreglo : () => {
-		  return Prospectos.find();
-	  },
-	  
+		  return Prospectos.find({},{sort: {fecha: -1} }).fetch();
+	  },	  
   });
   
   this.Nuevo = function()
@@ -74,6 +84,12 @@ angular.module("creditoMio")
 		        toastr.error('Error al actualizar los datos.');
 		        return;
 		  }
+		  
+		  var nombre = objeto.nombre != undefined ? objeto.nombre + " " : "";
+      var apPaterno = objeto.apellidoPaterno != undefined ? objeto.apellidoPaterno + " " : "";
+      var apMaterno = objeto.apellidoMaterno != undefined ? objeto.apellidoMaterno : "";
+      objeto.nombreCompleto = nombre + apPaterno + apMaterno;
+		  
 			var idTemp = objeto._id;
 			delete objeto._id;		
 			objeto.usuarioActualizo = Meteor.userId(); 
@@ -95,4 +111,19 @@ angular.module("creditoMio")
 			
 			Prospectos.update({_id: id},{$set :  {estatus : objeto.estatus}});
   };	
+	
+	this.izq = function()
+  {
+	 		if (rc.numeroPagina > 0)
+	 			 rc.numeroPagina -= rc.avance;
+	}
+
+	this.der = function()
+  {
+	  	if (rc.arreglo.length > 0)
+	  	{
+			  	rc.numeroPagina += rc.avance;
+	  	}	
+	}
+	
 };

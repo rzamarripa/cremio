@@ -55,7 +55,6 @@ angular.module("creditoMio")
 			});
 						
 			this.subscribe('allCajeros',()=>{
-				//console.log("Cabmio", rc.getReactively("sucursal_id"))
 				return [{ "profile.sucursal_id"	: Meteor.user() != undefined ? rc.getReactively("sucursal_id") : "",
 									"profile.estatus" 		: true,
 									roles : ["Cajero"]}]
@@ -237,9 +236,6 @@ angular.module("creditoMio")
 				  }					
 				},	
 			});	
-			
-	 		
-	 				
 	}
  	
  	this.abrirModal = function()
@@ -262,7 +258,12 @@ angular.module("creditoMio")
 	  	$("#modalSucursal").modal('hide');
 	  	//$state.go('root.home');	
 	  	
-	  	console.log(Meteor.users.find().fetch())
-;	}
+	  	console.log(Meteor.users.find().fetch());	
+	}
+	
+	
+	
+	
+	
  	 	
 };

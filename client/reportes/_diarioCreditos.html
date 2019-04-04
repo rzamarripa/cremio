@@ -36,7 +36,7 @@
 				<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaInicial"/>
 			</div>
 		</div>
-		<div class="col-sm-3 pull-left">
+		<div class="col-sm-3 pull-left" ng-show="currentUser.roles[0] == 'Gerente'">
 			<div class="form-group">
 				<label for="fecha">Fecha Final:</label>
 				<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaFinal"/>
@@ -175,7 +175,7 @@
 											<thead>
 												<tr>
 												  <th width="3%"><div class="text-center">No.</div></th>
-													<th width="10%"><div class="text-center">Cliente</div></th>
+													<th width="8%"><div class="text-center"># C/D</div></th>
 													<th><div class="text-center">Nombre</div></th>
 													<th><div class="text-center">Pagaré</div></th>
 													<th width="15%"> <div class="text-center">Fecha y Hora</div></th>
@@ -214,7 +214,7 @@
 											<thead>
 												<tr>
 												  <th width="3%"><div class="text-center">No.</div></th>
-													<th width="10%"><div class="text-center">Cliente</div></th>
+													<th width="8%"><div class="text-center"># Cliente</div></th>
 													<th><div class="text-center">Nombre</div></th>
 													<th><div class="text-center">Pagaré</div></th>
 													<th width="15%"> <div class="text-center">Fecha y Hora</div></th>
@@ -253,7 +253,7 @@
 											<thead>
 												<tr>
 												  <th width="3%"><div class="text-center">No.</div></th>
-													<th width="10%"><div class="text-center">Cliente</div></th>
+													<th width="8%"><div class="text-center"># Distr.</div></th>
 													<th><div class="text-center">Nombre</div></th>
 													<th><div class="text-center">Pagaré</div></th>
 													<th width="15%"> <div class="text-center">Fecha y Hora</div></th>

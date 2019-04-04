@@ -1,8 +1,11 @@
 <div class="row">
-	<div class="col-sm-6" ng-if = "currentUser.roles[0] != 'admin'">
+	<div class="col-sm-6" ng-if = "currentUser.roles[0] != 'admin' && currentUser.roles[0] != 'Distribuidor'">
 		<h1>Bienvenido a Crédito Mio, Sucursal : {{ho.sucursal.nombreSucursal}}</h1>
 	</div>
-	<div class="col-sm-3 pull-right" ng-if="currentUser.roles[0] == 'Gerente'">
+	<div class="col-sm-6" ng-if = "currentUser.roles[0] == 'Distribuidor'">
+		<h1>Bienvenido a Big Vale, Sucursal : {{ho.sucursal.nombreSucursal}}</h1>
+	</div>
+	<div class="col-sm-3 pull-right" ng-if="currentUser.roles[0] == 'Gerente' || (currentUser.roles[0] == 'Supervisor' && currentUser.profile.cambiarSucursal == true) ">
 		<a ng-click = "ho.abrirModal()" href="javascript:void(0);" class="btn bg-color-blueDark txt-color-white" style="text-align: left"> <span class="btn-label"><i class="fa fa-lg fa-fw fa-institution"></i></span>Cambiar Sucursal</a>
 	</div>	
 </div>	

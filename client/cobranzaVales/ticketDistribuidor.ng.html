@@ -4,36 +4,36 @@
 		<div class="padding-12">
 			<div class="row text-center">
 				<div class="col-sm-4 col-sm-offset-4" ng-repeat = "objeto in tktD.planPagos">
-					<span id="logo"> <img src="img/LogoBigVale.jpg" alt="SmartAdmin" style="margin-top: -13px;margin-left:-50px;width: 250px;height: 110px; text-align: center;"> </span>	
-					<br>
-					<address style="font-size: medium; text-align: center">
+					<span id="logo"> <img src="img/LogoBigVale.jpg" alt="SmartAdmin" style="margin-top: -13px;margin-left:-50px;width: 250px;height: 80px; text-align: center;"> </span>	
+					<br><br>
+					<address style="font-size: small; text-align: center">
 						<stnong>VALES DE CRÉDITO</stnong>
 					</address>
 					<div class="row">
 						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
-						<div class="col-sm-6" style="text-align: left">
+						<div class="col-sm-4" style="text-align: left; padding-left: 30px;">
 							<span><strong>Folio: </strong>{{objeto.folio}}</span>
 						</div>
-						<div class="col-sm-6" style="text-align: right">
+						<div class="col-sm-6" style="text-align: right; padding-right: 35px;">
 							<span><strong>Fecha: </strong>{{tktD.fecha | date:"dd-MM-yyyy"}}</span>
 						</div>						
 					</div>
 					<br>
 					<div class="row">
-						<div class="col-sm-12" style="font-size: small;text-align: left">
+						<div class="col-sm-12" style="font-size: smaller;text-align: left;padding-left: 30px;">
 							<strong>Distribuidor: </strong> {{objeto.distribuidor}}
 						</div>
-						<div class="col-sm-12" style="font-size: small;text-align: left">
+						<div class="col-sm-12" style="font-size: smaller;text-align: left;padding-left: 30px;">
 							<strong>Beneficiario: </strong> {{objeto.beneficiario}}
 						</div>
 					</div>					
 					<br>
 					<div class="row">
-						<table style="font-size: smaller;width: 100%">
+						<table style="font-size: smaller;width: 80%; margin-left:auto; margin-right:auto;">
 							<thead>
 								<tr>
 									<th style="text-align: center; width: 25%">Vencimiento</th>
-									<th style="text-align: center; width: 25%">No. Pago</th>
+									<th style="text-align: center; width: 15%">No. Pago</th>
 									<th style="text-align: center; width: 25%">Importe</th>
 									<th style="text-align: center; width: 25%">N. Saldo</th>
 								</tr>	
@@ -41,7 +41,7 @@
 							<tbody>
 									<tr>
 									<td style="padding-left : 10px">{{objeto.fechaLimite | date:"dd-MM-yyyy"}}</td>
-									<td>{{objeto.numeroPago}}</td>
+									<td>{{objeto.numeroPago}} - {{objeto.numeroPagos}}</td>
 									<td>{{objeto.importeRegular | currency}}</td>
 									<td style="padding-right: 15px">{{objeto.saldoActual | currency}}</td>
 								</tr>	
@@ -51,8 +51,12 @@
 					</div>
 					<br>
 					<address style="font-size: x-small; text-align: center">
-						Blvd. Emiliano Zapata No. 3125 Loc. 12 BC Col. Lomas de Boulevard <br>
-						Tel. (667) 717-2121
+						{{tktD.sucursal.direccion}}<br>
+						{{tktD.sucursal.colonia}} TEL. {{tktD.sucursal.telefono1}}
+						<br>
+						SE COBRARÁ UN 20% DE PENA POR INCUMPLIMIENTO 
+						<br>
+						DE PAGO EN LA FECHA ESTABLECIDA
 					</address>	
 					<div class="row">
 						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">

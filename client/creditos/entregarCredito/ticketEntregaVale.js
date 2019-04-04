@@ -51,11 +51,23 @@ function ticketEntregaValeCtrl($scope, $meteor, $reactive,  $state, $stateParams
 			},
 			{
 				onReady: function () {
+/*
 					rc.planPagos = PlanPagos.find({}).fetch();
 					
 					if (rc.planPagos != undefined)
 							rc.pago = rc.planPagos[0];
+*/
+					
+					Meteor.call('generarPlanPagos', rc.credito, rc.credito.cliente_id, function(error, result){
+						if(result){
+							rc.planPagos = result;
 							
+							if (rc.planPagos != undefined)
+									rc.pago = rc.planPagos[0];
+							$scope.$apply();	
+						}
+					});
+												
 				}
 			});
 			//console.log("planes: ", rc.planPagos);

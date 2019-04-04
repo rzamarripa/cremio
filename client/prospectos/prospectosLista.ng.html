@@ -1,0 +1,77 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Prospectos &gt; Buscar
+		</h1>
+	</div>
+</div>
+<br>
+<div class="well">
+	<div class="row">
+			<div class="col-sm-6">
+					<input class="form-control" type="text" placeholder="Nombre prospecto..." ng-model="obj.buscar.nombre" capitalize>
+			</div>
+	</div>
+</div>
+
+<div class="well">
+	<div class="row">
+		<div class="col-sm-12">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+					<th width="3%"><div class="text-center">No.</div></th>
+						<th width="15%"><div class="text-center">Nombre</div></th>
+						<th width="15%"><div class="text-center">Distribuidor</div></th>
+						<th width="5%">
+							<div class="text-center">
+								Estatus
+							</div>
+						</th>
+						<th width="5%">
+							<div class="text-center">
+								Acciones
+							</div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+			    <tr ng-repeat="objeto in obj.prospectos">
+			    <td>{{$index + 1}}</td>
+				    <td>{{objeto.nombreCompleto}}</td>
+				    <td>{{objeto.numeroCliente}} - {{objeto.distribuidor}}</td>
+				    <td>
+					    <div class="text-center">
+					    	<span ng-if="objeto.estatus == 1" class="label label-warning">
+								  Por Confirmar
+								</span>
+								<span ng-if="objeto.estatus == 2" class="label label-success">
+								  Aceptado
+								</span>
+								<span ng-if="objeto.estatus == 3" class="label label-danger">
+								  Rechazado
+								</span>
+					    </div>
+				    </td>
+				    <td>
+					    <div class="text-center">
+						    <div class="btn-group">
+								  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								    <span class="caret"></span>
+								    <span class="sr-only">Toggle Dropdown</span>
+								  </button>
+								  <ul class="dropdown-menu dropdown-menu-right text-left">
+								    <li><a href="/prospectosFormEditar/{{objeto._id}}"><i class="fa fa-pencil"></i> Editar</a></li>
+								  </ul>
+								</div>
+					    </div>				    
+				    </td>
+			    </tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</div>	
+	

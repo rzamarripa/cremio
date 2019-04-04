@@ -56,6 +56,13 @@
 			</a>
 		</li>
 		
+		<li data-ui-sref-active="active">
+				<a ui-sref="root.beneficiariosLista" tilte="Credito Mio" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador' || currentUser.roles[0] == 'Supervisor'">
+					<i class="fa fa-lg fa-fw fa-user"></i>
+					<span class="menu-item-parent">Beneficiarios</span>
+				</a>
+		</li>
+		
 		<li data-menu-collapse>
 			<a href="#" ng-show="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'">
 				<i class="fa fa-lg fa-fw fa-tags"></i>
@@ -231,7 +238,82 @@
 					<span class="menu-item-parent">Formatos</span>
 			</a>
 		  <ul>
+			  
+			  <li data-menu-collapse>
+					<a  href="#" tilte="Credito Mio" ng-show="currentUser.username != 'admin' && currentUser.roles[0] != 'Distribuidor'">
+				    	<i class="fa fa-lg fa-fw fa-download"></i>
+							<span class="menu-item-parent">Créditos Personales</span>
+					</a>
+				  <ul>
+					  <li data-ui-sref-active="active">
+				        <a  href="#" ng-click="ro.descargarFormato(1)" tilte="Credito Mio">
+				            <i class="fa fa-lg fa-fw fa-download"></i>
+				            <span class="menu-item-parent">Aviso de Cobro</span>
+				        </a>
+				    </li>
+					  <li data-ui-sref-active="active">
+				        <a  href="#" ng-click="ro.descargarFormato(3)" tilte="Credito Mio">
+				            <i class="fa fa-lg fa-fw fa-download"></i>
+				            <span class="menu-item-parent">Crédito Personal</span>
+				        </a>
+				    </li>
+				    <li data-ui-sref-active="active">
+				        <a  href="#" ng-click="ro.descargarFormato(6)" tilte="Credito Mio">
+				            <i class="fa fa-lg fa-fw fa-download"></i>
+				            <span class="menu-item-parent">Verificación</span>
+				        </a>
+				    </li>
+				  </ul>
+			  </li>
+			  
+			  <li data-menu-collapse>
+					<a  href="#" tilte="Credito Mio" ng-show="currentUser.username != 'admin' && currentUser.roles[0] != 'Distribuidor'">
+				    	<i class="fa fa-lg fa-fw fa-download"></i>
+							<span class="menu-item-parent">Vales</span>
+					</a>
+				  <ul>   
+					  <li data-ui-sref-active="active">
+				        <a  href="#" ng-click="ro.descargarFormato(4)" tilte="Credito Mio">
+				            <i class="fa fa-lg fa-fw fa-download"></i>
+				            <span class="menu-item-parent">Distribuidor</span>
+				        </a>
+				    </li>
+				    <li data-ui-sref-active="active">
+				        <a  href="#" ng-click="ro.descargarFormato(9)" tilte="Credito Mio">
+				            <i class="fa fa-lg fa-fw fa-download"></i>
+				            <span class="menu-item-parent">Información</span>
+				        </a>
+				    </li>
+				    <li data-ui-sref-active="active">
+				        <a  href="#" ng-click="ro.descargarFormato(8)" tilte="Credito Mio">
+				            <i class="fa fa-lg fa-fw fa-download"></i>
+				            <span class="menu-item-parent">Manual</span>
+				        </a>
+				    </li>
+				    <li data-ui-sref-active="active">
+				        <a  href="#" ng-click="ro.descargarFormato(5)" tilte="Credito Mio">
+				            <i class="fa fa-lg fa-fw fa-download"></i>
+				            <span class="menu-item-parent">Tabla Amortización</span>
+				        </a>
+				    </li>
+				    <li data-ui-sref-active="active">
+				        <a  href="#" ng-click="ro.descargarFormato(7)" tilte="Credito Mio">
+				            <i class="fa fa-lg fa-fw fa-download"></i>
+				            <span class="menu-item-parent">Verificación</span>
+				        </a>
+				    </li>
+				  </ul>  
+			  </li>  
+			  			  
 				<li data-ui-sref-active="active">
+		        <a  href="#" ng-click="ro.descargarFormato(2)" tilte="Credito Mio">
+		            <i class="fa fa-lg fa-fw fa-download"></i>
+		            <span class="menu-item-parent">Cesión de Der. Prend.</span>
+		        </a>
+		    </li>
+			  
+				<!--
+<li data-ui-sref-active="active">
 		        <a  href="#" ng-click="ro.descargarFormato(1)" tilte="Credito Mio">
 		            <i class="fa fa-lg fa-fw fa-download"></i>
 		            <span class="menu-item-parent">Aviso de Cobro</span>
@@ -276,6 +358,7 @@
 		            <span class="menu-item-parent">Verificación Big Vale</span>
 		        </a>
 		    </li>
+-->
 		    
 		  </ul>
 		</li> 	
@@ -322,6 +405,13 @@
 				</li>
 		    
 		  </ul>
+    </li>
+		
+		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador' || currentUser.roles[0] == 'Supervisor'">
+        <a ui-sref="root.prospectosLista" tilte="Credito Mio">
+            <i class="fa fa-lg fa-fw fa-user"></i>
+            <span class="menu-item-parent">Prospectos</span>
+        </a>
     </li>
 		
 		<li data-menu-collapse>
@@ -377,7 +467,7 @@
 				<span class="menu-item-parent">Solicitudes por Autorizar</span>
 			</a>
 		</li>
-    
+        
     <!--
 <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Cajero'">
         <a ui-sref="root.pagoSistema" tilte="Credito Mio">

@@ -14,13 +14,25 @@ function TicketDistribuidorCtrl($scope, $meteor, $reactive,  $state, $stateParam
 	rc.sucursal = {};
 	rc.cajero = {};
 	rc.pago = {};
-	
 	rc.fecha = "";
-	
 	rc.planPagos = [];
+	rc.sucursal = {};
 	
 	if ($stateParams.distribuidor_id != undefined)
 	{
+			rc.sucursal_id 		= Meteor.user() != undefined  && Meteor.user().profile.sucursal_id;
+			Meteor.call("getSucursalDistribuidor", $stateParams.distribuidor_id, function(error,result){
+	     	if (result){
+	      		rc.sucursal = result;
+	      		//console.log("Suc:", rc.sucursal)
+	      		$scope.$apply();
+	      }
+	      else
+	      {
+					
+	      }
+			});	
+			
 			
 			rc.fecha = new Date($stateParams.anio, $stateParams.mes, $stateParams.dia);
 			
@@ -36,20 +48,6 @@ function TicketDistribuidorCtrl($scope, $meteor, $reactive,  $state, $stateParam
 					fechaInicial = new Date(rc.fecha.getFullYear(),rc.fecha.getMonth() + 1,15,0,0,0,0);
 			}
 		
-/*
-			if (n >= 20)
-			{
-					fechaInicial = new Date(rc.fecha.getFullYear(),rc.fecha.getMonth() + 1,1,0,0,0,0);		
-			}
-			else if (n < 5) 
-			{
-					fechaInicial = new Date(rc.fecha.getFullYear(),rc.fecha.getMonth(),1,0,0,0,0);
-			}
-			else if (n >= 5 && n < 20)		
-			{
-					fechaInicial = new Date(rc.fecha.getFullYear(),rc.fecha.getMonth(),16,0,0,0,0);
-			}
-*/
 			
 			fechaInicial.setHours(0,0,0,0);
 			
@@ -63,7 +61,7 @@ function TicketDistribuidorCtrl($scope, $meteor, $reactive,  $state, $stateParam
 			Meteor.call('getPlanPagosDistribuidorTickets',fechaInicial, fechaFinal, $stateParams.distribuidor_id, function(error, result){           					
 					if (result)
 					{
-							console.log(result);
+							//console.log(result);
 							rc.planPagos = result;
 							$scope.$apply();
 					}

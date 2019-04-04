@@ -311,13 +311,27 @@ planPagosViejo : () => {
 				var n = fecha.getDate();
 				var fechaLimite = "";
 				
-				if (n < 15) 
+				/*
+if (n < 15) 
 				{
 						fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),30,0,0,0,0);
 				}
 				else //if (n >= 5 && n < 20)		
 				{
 						fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,15,0,0,0,0);
+				}
+*/
+				if (n >= 22)
+				{
+						fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);		
+				}
+				else if (n <= 7) 
+				{
+						fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),1,0,0,0,0);
+				}
+				else if (n > 7 && n < 22)		
+				{
+						fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
 				}
 				
 				/*
@@ -1498,6 +1512,8 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 							fechaCorte = new Date(fecha.getFullYear(),fecha.getMonth(),22,0,0,0,0);
 					}        
 	        
+          
+          
           objeto.cliente = result;
           
           var datos = {};
@@ -1518,8 +1534,9 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 					datos.telefonos 		= objeto.cliente.profile.celular + ' y ' + objeto.cliente.profile.particular;
 
 					datos.limiteCredito	= '$' + Number(objeto.cliente.profile.limiteCredito).format(2);
-					datos.disponible		= '$' + Number(objeto.cliente.profile.limiteCredito - objeto.cliente.profile.saldoCredito).format(2);
-					datos.saldo					= '$' + Number(objeto.cliente.profile.limiteCredito - (objeto.cliente.profile.limiteCredito - objeto.cliente.profile.saldoCredito)).format(2);
+					datos.disponible		= '$' + Number(objeto.cliente.profile.limiteCredito - (objeto.cliente.profile.limiteCredito - objeto.cliente.profile.saldoCredito)).format(2);
+					datos.saldo					= '$' + Number(objeto.cliente.profile.limiteCredito - objeto.cliente.profile.saldoCredito).format(2);
+					
 					datos.aLiberar			= 0;
 			    
 			    datos.planPagos			= [];
@@ -1531,6 +1548,7 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 			    
 			    var sumaConComision  	= 0;
 			    var sumaSinComision  	= 0;
+			    var sumaBonificacion  = 0;
 			    var cargosMoratorios 	= 0;
 			    
 			    _.each(objeto.planPagos, function(pp){
@@ -1556,10 +1574,15 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 							
 							if (pp.movimiento == "Recibo")
 							{
-									if (pp.bonificacion > 0)							
-										 sumaConComision				 += Number(parseFloat(pp.importeRegular).toFixed(2)); 
+									//NO SUMAR iva y Seguro
+									if (pp.bonificacion > 0)
+									{
+											sumaBonificacion	+= Number(parseFloat(pp.capital + pp.interes).toFixed(2));
+											sumaConComision		+= Number(parseFloat(pp.importeRegular).toFixed(2));
+									}
+										  
 									else 
-										 sumaSinComision				 += Number(parseFloat(pp.importeRegular).toFixed(2));				
+										 sumaSinComision		+= Number(parseFloat(pp.importeRegular).toFixed(2));				
 									pago.tipo = "V";	 
 									
 							}
@@ -1588,13 +1611,18 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 			    
 			    datos.comisiones = [];
 			    
-			    if (dia >= 1 && dia <= 15)
+			    if (dia >= 22 || dia <= 6)
 			    {
-				    	datos.fechaLimitePago	= new Date(rc.fechaInicial.getFullYear(),mes, 7);
+				    	
+				    	if (dia >= 22)
+					    	 mes = mes + 1;
+					    	 
+					    datos.fechaLimitePago	= new Date(rc.fechaInicial.getFullYear(),mes, 6);	 
 				    	
 							for (i = 1; i <= 5 ; i++)
 				    	{	
 					    		var comisiones = {};
+					    		
 					    							    		
 					    		_.each(arregloComisiones, function(c){
 						    			if (c.numero == i + 1)
@@ -1638,14 +1666,14 @@ if (i == 1)
 */
 					    		
 					    		comisiones.totalGral 				= sumaConComision;
-					    		comisiones.comision 				= '$ ' + Number(parseFloat(sumaConComision * (comisiones.porcentaje/100)).toFixed(2));
+					    		comisiones.comision 				= '$ ' + Number(parseFloat(sumaBonificacion * (comisiones.porcentaje/100)).toFixed(2));
 					    		comisiones.totalConComision = '$ ' + Number(parseFloat(sumaConComision).toFixed(2)).format(2);
 					    		comisiones.totalSinComision	= '$ ' + Number(sumaSinComision).format(2);
 					    		comisiones.seguro						= '$ ' + Number(objeto.seguro).format(2);
 					    		comisiones.cargosMoratorios = '$ ' + Number(parseFloat(cargosMoratorios).toFixed(2));
 					    		
 					    		comisiones.aPagar 					= '$ ' + Number(parseFloat(sumaConComision + sumaSinComision + objeto.seguro + cargosMoratorios 
-					    																													 - (sumaConComision * (comisiones.porcentaje/100) )).toFixed(2)).format(2);
+					    																													 - (sumaBonificacion * (comisiones.porcentaje/100) )).toFixed(2)).format(2);
 					    		
 					    		comisiones.porcentaje				= comisiones.porcentaje + '%';
 									
@@ -1655,7 +1683,7 @@ if (i == 1)
 			    }
 			    else
 			    {
-				    	datos.fechaLimitePago	= new Date(rc.fechaInicial.getFullYear(), mes, 22);
+				    	datos.fechaLimitePago	= new Date(rc.fechaInicial.getFullYear(), mes, 21);
 				    	
 				    	for (i = 1; i <= 5 ; i++)
 				    	{	
@@ -1704,14 +1732,14 @@ if (i == 1)
 */
 					    		
 					    		comisiones.totalGral 				= sumaConComision;
-					    		comisiones.comision 				= '$ ' + Number(parseFloat(sumaConComision * (comisiones.porcentaje/100))).format(2);
+					    		comisiones.comision 				= '$ ' + Number(parseFloat(sumaBonificacion * (comisiones.porcentaje/100))).format(2);
 					    		comisiones.totalConComision = '$ ' + Number(parseFloat(sumaConComision).toFixed(2)).format(2);
 					    		comisiones.totalSinComision	= '$ ' + Number(sumaSinComision).format(2);
 					    		comisiones.seguro						= '$ ' + Number(objeto.seguro).format(2);
 					    		comisiones.cargosMoratorios = '$ ' + Number(parseFloat(cargosMoratorios).toFixed(2)).format(2);
  					    		
 					    		comisiones.aPagar 					= '$ ' + Number(parseFloat(sumaConComision + sumaSinComision + objeto.seguro + cargosMoratorios 
-					    																													 - (sumaConComision * (comisiones.porcentaje/100) )).toFixed(2)).format(2);
+					    																													 - (sumaBonificacion * (comisiones.porcentaje/100) )).toFixed(2)).format(2);
 					    		
 					    		comisiones.porcentaje				= comisiones.porcentaje + '%';
 									
@@ -1889,5 +1917,7 @@ if (i == 1)
 */
   }
 
-  
+  function round(value, decimals) {
+		  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+	} 
 };

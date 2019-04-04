@@ -487,17 +487,15 @@ angular.module("creditoMio")
   }
   
   this.selCredito=function(objeto, num)
-  {
-			
-			//console.log(objeto);
-			
+  {			
+			//console.log(objeto);		
       Meteor.call('getPeople',objeto.cliente._id, function(error, result){                     
           if (result)
           {
 
             objeto.cliente = result;
 						
-						console.log("Objeto:", objeto);
+						//console.log("Objeto:", objeto);
 						
 			      rc.cliente_id = objeto.cliente._id
 			
@@ -576,19 +574,9 @@ angular.module("creditoMio")
     }
   
   this.isSelected=function(objeto){
-   
-		
-		// if (this.selected_numero === objeto)
-		//{
-				// console.log("isSelected:", objeto); 	
-				 //console.log(objeto,"ATMOSFEARZ")
-		//}
-		
 		
     this.sumarSeleccionados();
-      return this.selected_numero===objeto;
-      
-    
+    return this.selected_numero===objeto;
 
   };
   

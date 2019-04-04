@@ -2058,8 +2058,7 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 		
 		
 		const formatCurrency = require('format-currency');
-		
-			
+					
 /*
 		if (avales == undefined) {
 			avales = cliente
@@ -2696,7 +2695,12 @@ console.log(credito.adeudoInicial);
  		else if (op == 6)
  		    rutaOutput = produccion + "VERIFICACIONCREDITOMIO.pdf";
  		else if (op == 7)
- 		    rutaOutput = produccion + "VERIFICACIONBIGVALE.pdf";    
+ 		    rutaOutput = produccion + "VERIFICACIONBIGVALE.pdf";
+ 		else if (op == 8)
+ 		    rutaOutput = produccion + "ManualDistribuidor.pdf";      
+ 		else if (op == 9)
+ 		    rutaOutput = produccion + "InformacionDistribuidor.pdf";    
+ 		    
  		    
  		    	
  		

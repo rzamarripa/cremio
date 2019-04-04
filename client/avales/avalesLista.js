@@ -31,15 +31,16 @@ angular.module("creditoMio")
 	});
 	
 	this.tieneFoto = function(sexo, foto){
-	  if(foto === undefined){
-		  if(sexo === "Masculino")
+		
+	  if(foto === undefined || foto == ""){
+		  console.log(foto);
+		  if(sexo === "Masculino" || sexo === "MASCULINO")
 			  return "img/badmenprofile.png";
-			else if(sexo === "Femenino"){
+			else if(sexo === "Femenino" || sexo === "FEMENINO"){
 				return "img/badgirlprofile.png";
 			}else{
 				return "img/badprofile.png";
 			}
-			  
 	  }else{
 		  return foto;
 	  }

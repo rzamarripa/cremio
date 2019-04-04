@@ -481,7 +481,7 @@ if (rc.folioVale == undefined || rc.folioVale == "")
 
 	this.imprimirContrato = function(contrato,cliente){
 		
-			console.log("Imprmir contrato");
+		
 			contrato.tipoInteres = TiposCredito.findOne(contrato.tipoCredito_id)
 
 		  rc.planPagos = [];
@@ -720,7 +720,15 @@ if (rc.folioVale == undefined || rc.folioVale == "")
 			var url = $state.href("anon.ticketPagare", { credito_id: $stateParams.credito_id }, { newTab: true });
 			window.open(url, '_blank');
 		
-		};
+	};
+	
+	this.imprimirAmortizacion = function(contrato,cliente){
+		
+			//Imprimir Pagare
+			var url = $state.href("anon.ticketAmortizacion", { credito_id: $stateParams.credito_id }, { newTab: true });
+			window.open(url, '_blank');
+		
+	};
 	
 	/////FINAL///
 	

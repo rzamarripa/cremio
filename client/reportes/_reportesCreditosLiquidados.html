@@ -35,7 +35,7 @@
 				<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaInicial"/>
 			</div>
 		</div>
-		<div class="col-sm-3">
+		<div class="col-sm-3" ng-show="currentUser.roles[0] == 'Gerente'">
 			<div class="form-group">
 				<label for="fecha">Fecha Final:</label>
 				<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaFinal"/>

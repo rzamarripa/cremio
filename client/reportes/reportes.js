@@ -125,9 +125,18 @@ angular.module("creditoMio")
 
 		var usuario = Meteor.user();
 				
-	  rc.fechaInicial.setHours(0,0,0,0);
-		rc.fechaFinal.setHours(23,59,59,999);
+		rc.fechaInicial.setHours(0,0,0,0);
+
+		if (Meteor.user().roles[0] == "Supervisor")
+		{
+				
+				rc.fechaFinal = new Date(rc.fechaInicial);
+				rc.fechaFinal.setHours(23,59,59,999);			
+		}
+		else	  
+				rc.fechaFinal.setHours(23,59,59,999);
 		
+
 		rc.sumaCapital 				= 0;
     rc.sumaInteres 				= 0;
     rc.sumaIva 						= 0;
@@ -233,7 +242,14 @@ angular.module("creditoMio")
 		var usuario = Meteor.user();
 				
 	  rc.fechaInicial.setHours(0,0,0,0);
-		rc.fechaFinal.setHours(23,59,59,999);
+	  
+		if (Meteor.user().roles[0] == "Supervisor")
+		{
+				rc.fechaFinal = new Date(rc.fechaInicial);
+				rc.fechaFinal.setHours(23,59,59,999);			
+		}
+		else	  
+				rc.fechaFinal.setHours(23,59,59,999);
 		
 		rc.totalSolicitadoVales 		= 0;
 		rc.totalPagarVales 					= 0;
@@ -285,7 +301,13 @@ angular.module("creditoMio")
 		var usuario = Meteor.user();
 				
 	  rc.fechaInicial.setHours(0,0,0,0);
-		rc.fechaFinal.setHours(23,59,59,999);
+		if (Meteor.user().roles[0] == "Supervisor")
+		{
+				rc.fechaFinal = new Date(rc.fechaInicial);
+				rc.fechaFinal.setHours(23,59,59,999);			
+		}
+		else	  
+				rc.fechaFinal.setHours(23,59,59,999);
 		
 		rc.totalSolicitadoVales 		= 0;
 		rc.totalPagarVales 					= 0;

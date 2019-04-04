@@ -90,6 +90,11 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			templateUrl: 'client/creditos/entregarCredito/ticketPagare.ng.html',
 			controller: 'TicketPagareCtrl as tktP'
 		})
+		.state('anon.ticketAmortizacion',{
+			url: '/creditos/entregarCredito/ticketAmortizacion/:credito_id',
+			templateUrl: 'client/creditos/entregarCredito/ticketAmortizacion.ng.html',
+			controller: 'TicketAmortizacionCtrl as tktA'
+		})
 		.state('anon.ticketValesDistribuidor',{
 			url: '/client/cobranzaVales/ticketDistribuidor/:distribuidor_id/:dia/:mes/:anio',
 			templateUrl: 'client/cobranzaVales/ticketDistribuidor.ng.html',
@@ -498,7 +503,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor" ){
+						if(user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor"  || user.roles[0] == "Distribuidor"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
@@ -1164,6 +1169,36 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.prospectosLista', {
+			url: '/prospectosLista',
+			templateUrl: 'client/prospectos/prospectosLista.ng.html',
+			controller: 'ProspectosListaCtrl as obj',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.prospectosForm', {
+			url: '/prospectosForm',
+			templateUrl: 'client/prospectos/prospectosForm.ng.html',
+			controller: 'ProspectosFormCtrl as obj',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.prospectosFormEditar', {
+			url: '/prospectosFormEditar/:objeto_id',
+			templateUrl: 'client/prospectos/prospectosForm.ng.html',
+			controller: 'ProspectosFormCtrl as obj',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
 		.state('root.panelProspectos', {
 			url: '/panelProspectos',
 			templateUrl: 'client/prospectos/panelProspectos.ng.html',
@@ -1204,6 +1239,26 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			url: '/panelSolicitudesVales',
 			templateUrl: 'client/distribuidores/panelSolicitudesVales.ng.html',
 			controller: 'PanelSolicitudesValesCtrl as psolv',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.beneficiariosLista', {
+			url: '/beneficiariosLista',
+			templateUrl: 'client/beneficiarios/beneficiariosLista.ng.html',
+			controller: 'BeneficiariosListaCtrl as obj',
+			resolve: {
+				"currentUser": ["$meteor", function($meteor){
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.beneficiariosFormEditar', {
+			url: '/beneficiariosFormEditar/:objeto_id',
+			templateUrl: 'client/beneficiarios/beneficiariosForm.ng.html',
+			controller: 'BeneficiariosFormCtrl as obj',
 			resolve: {
 				"currentUser": ["$meteor", function($meteor){
 					return $meteor.requireUser();

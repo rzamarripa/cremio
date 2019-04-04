@@ -1383,12 +1383,12 @@ if (tipoCredito.calculo == "importeSolicitado")
 		pago.usuarioCobro_id 	= Meteor.userId();
 		pago.tipoIngreso_id 	= tipoIngresoId;
 		pago.pago 						= abono;
-		pago.totalPago 				= Number(parseFloat(totalVales - bonificacion + cargosMoratorios + seguro).toFixed(2));
+		pago.totalPago 				= round(Number(parseFloat(totalVales - bonificacion + cargosMoratorios + seguro).toFixed(3)),2);
 		//pago.total 						= Number(parseFloat(totalPago - bonificacion + cargosMoratorios + seguro).toFixed(2));
-		pago.total 						= Number(parseFloat(totalVales + cargosMoratorios).toFixed(2));
+		pago.total 						= round(Number(parseFloat(totalVales + cargosMoratorios).toFixed(3)),2);
 		pago.bonificacion 		= bonificacion;
 		pago.seguro 					= seguro;
-		pago.cambio 					= abono - (totalPago - bonificacion);
+		pago.cambio 					= abono - totalPago;
 		pago.cambio 					= pago.cambio < 0 ? 0: Number(parseFloat(pago.cambio).toFixed(2));
 		pago.diaPago 					= ffecha.weekday();
 		pago.semanaPago 			= ffecha.isoWeek();
@@ -1396,6 +1396,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 		pago.estatus 					= 1;
 		pago.fechaDeposito = fechaDeposito;
 		
+		//round(parseFloat((renglon.valor / 30 ) * rc.diasPeriodo).toFixed(3),2);
 		//Guardar Pago de Seguro 
 		
 		if (seguro > 0)
@@ -1418,8 +1419,8 @@ if (tipoCredito.calculo == "importeSolicitado")
 		//----------------------
 				
 		//corregir---*********
-		pago.saldoAnterior = Number(parseFloat(total).toFixed(2));
-		pago.saldoActual	 = Number(parseFloat(total - totalPago).toFixed(2));
+		pago.saldoAnterior = round(parseFloat(total).toFixed(3),2); 
+		pago.saldoActual	 = round(Number(parseFloat(total - totalPago).toFixed(3)),2);
 		
 		if (ocultaMulta)
 			 pago.saldoCargoMoratorio = 0;
@@ -1535,8 +1536,8 @@ if (tipoCredito.calculo == "importeSolicitado")
 							saldoBeneficiario 				= beneficiario.saldoActual;
 							saldoBeneficiarioVale 		= beneficiario.saldoActualVales;
 							
-							saldoBeneficiario 				-= Number(parseFloat(p.capital).toFixed(2));
-							saldoBeneficiarioVale 		-= Number(parseFloat(p.capital + p.interes + p.iva + p.seguro).toFixed(2));							
+							saldoBeneficiario 				-= round(Number(parseFloat(p.capital).toFixed(3)),2);
+							saldoBeneficiarioVale 		-= round(Number(parseFloat(p.capital + p.interes + p.iva + p.seguro).toFixed(3)),2);
 							
 						  Beneficiarios.update({_id: credito.beneficiario_id}, {$set: {saldoActual : saldoBeneficiario, saldoActualVales: saldoBeneficiarioVale}})
 							//--------------------------------------
@@ -1545,9 +1546,9 @@ if (tipoCredito.calculo == "importeSolicitado")
 					else //Cargo Moratorio
 					{
 							var credito 				= Creditos.findOne(p.credito_id);
-							credito.saldoMultas -= Number(parseFloat(p.importeRegular).toFixed(2));
+							credito.saldoMultas -= round(Number(parseFloat(p.importeRegular).toFixed(3)),2);
 							
-							credito.saldoMultas = Number(parseFloat(credito.saldoMultas).toFixed(2));
+							credito.saldoMultas = round(Number(parseFloat(credito.saldoMultas).toFixed(3)),2);
 							Creditos.update({_id:credito._id},{$set:{saldoMultas:credito.saldoMultas}})
 							
 					}
@@ -1592,7 +1593,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 							var beneficiario 					= Beneficiarios.findOne(credito.beneficiario_id);		
 							saldoBeneficiario 				= beneficiario.saldoActual;
 							saldoBeneficiarioVale 		= beneficiario.saldoActualVales;
-							saldoBeneficiarioVale 		-= Number(parseFloat(abono).toFixed(2));
+							saldoBeneficiarioVale 		-= round(Number(parseFloat(abono).toFixed(3)),2);
 						  //-------------------------------------							
 					}
 					else //Cargo Moratorio
@@ -1656,7 +1657,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 						{
 								//console.log("parcial:" ,p.pagoCapital);
 								//console.log("Abono:" ,abono);
-								saldoBeneficiario 				-= Number(parseFloat(abono).toFixed(2));
+								saldoBeneficiario 				-= round(Number(parseFloat(abono).toFixed(3)),2);
 								Beneficiarios.update({_id: credito.beneficiario_id}, {$set: {saldoActual : saldoBeneficiario, saldoActualVales: saldoBeneficiarioVale}})
 						}
 						sumaCapital = abono;
@@ -1670,7 +1671,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 						{
 								//console.log("total:", p.pagoCapital);
 								//console.log("Abono:" ,abono);
-								saldoBeneficiario 				-= Number(parseFloat(abono).toFixed(2));
+								saldoBeneficiario 				-= round(Number(parseFloat(abono).toFixed(3)),2);
 								Beneficiarios.update({_id: credito.beneficiario_id}, {$set: {saldoActual : saldoBeneficiario, saldoActualVales: saldoBeneficiarioVale}})
 						}
 						sumaCapital = abono;
@@ -1839,7 +1840,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 		//Actualizar Saldo Credito Distribuidor---//////////////////
 		//console.log("Suma capital:", sumaCapital);		
 		var dis = Meteor.users.findOne(pusuario_id);
-		dis.profile.saldoCredito += Number(parseFloat(sumaCapital).toFixed(2));
+		dis.profile.saldoCredito += round(Number(parseFloat(sumaCapital).toFixed(3)),2);
 		Meteor.users.update({_id: pusuario_id}, {$set: {"profile.saldoCredito": dis.profile.saldoCredito}});
 		//----------------------------------------//////////////////		
 		
@@ -1981,7 +1982,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 			return Pagos.findOne(pago_id);		
 	},
 	getPagosDistribuidor: function(distribuidor_id){
-			var pagos = Pagos.find({usuario_id: distribuidor_id}, {sort:{fechaPago:-1}}).fetch();
+			var pagos = Pagos.find({usuario_id: distribuidor_id, estatus: 1}, {sort:{fechaPago:-1}}).fetch();
 			_.each(pagos, function(pago){						
 					_.each(pago.planPagos, function(pp){
 							pp.beneficiario = pp.beneficiado != undefined ? Beneficiarios.findOne(pp.beneficiado).nombreCompleto : "";
@@ -2023,8 +2024,8 @@ if (tipoCredito.calculo == "importeSolicitado")
 					saldoBeneficiario 				= beneficiario.saldoActual;
 					saldoBeneficiarioVale 		= beneficiario.saldoActualVales;
 					
-					saldoBeneficiario 				-= Number(parseFloat(credito.capitalSolicitado).toFixed(2));
-					saldoBeneficiarioVale 		-= Number(parseFloat(credito.adeudoInicial).toFixed(2));
+					saldoBeneficiario 				-= round(Number(parseFloat(credito.capitalSolicitado).toFixed(3)),2);
+					saldoBeneficiarioVale 		-= round(Number(parseFloat(credito.adeudoInicial).toFixed(3)),2);
 					
 				  Beneficiarios.update({_id: beneficiario_id}, {$set: {saldoActual : saldoBeneficiario, saldoActualVales: saldoBeneficiarioVale}});	    		
     	}
@@ -2086,8 +2087,8 @@ if (tipoCredito.calculo == "importeSolicitado")
 													saldoBeneficiario 				= beneficiario.saldoActual;
 													saldoBeneficiarioVale 		= beneficiario.saldoActualVales;
 													
-													saldoBeneficiario 				+= Number(parseFloat(ppPagos.pagoCapital).toFixed(2));
-													saldoBeneficiarioVale 		+= Number(parseFloat(ppPagos.pagoCapital + ppPagos.pagoInteres + ppPagos.pagoIva + ppPagos.pagoSeguro).toFixed(2));							
+													saldoBeneficiario 				+= round(Number(parseFloat(ppPagos.pagoCapital).toFixed(3)),2);
+													saldoBeneficiarioVale 		+= round(Number(parseFloat(ppPagos.pagoCapital + ppPagos.pagoInteres + ppPagos.pagoIva + ppPagos.pagoSeguro).toFixed(3)),2);	
 													
 												  Beneficiarios.update({_id: credito.beneficiario_id}, {$set: {saldoActual : saldoBeneficiario, saldoActualVales: saldoBeneficiarioVale}})
 											}	  
@@ -2169,7 +2170,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 					
 					//Cancelar el seguro de distribuidor si es que se hizo pago
 					var dis = Meteor.users.findOne(distribuidor_id);
-					dis.profile.saldoCredito -= Number(parseFloat(sumaCapital).toFixed(2));
+					dis.profile.saldoCredito -= round(Number(parseFloat(sumaCapital).toFixed(3)),2);
 					Meteor.users.update({_id: distribuidor_id}, {$set: {"profile.saldoCredito": dis.profile.saldoCredito}});						
 			}
             
@@ -2202,4 +2203,10 @@ if (tipoCredito.calculo == "importeSolicitado")
 																															descripcion	: -1}} ).fetch();		
 	},
 	
-}); 
+	
+	
+});
+
+function round(value, decimals) {
+	  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+} 

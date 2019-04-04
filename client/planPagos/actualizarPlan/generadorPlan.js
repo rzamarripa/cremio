@@ -67,12 +67,13 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			this.buscando = false;
   });
   
-  this.subscribe('buscarBeneficiarios', () => {
+  this.subscribe('buscarBeneficiariosDistribuidor', () => {
 		if(this.getReactively("buscar.nombreBeneficiario").length > 3){
 			this.buscando = true;
 			return [{
 		    options : { limit: 20 },
 		    where : { 
+			    distribuidor_id	: $stateParams.objeto_id,
 					nombreCompleto : this.getReactively('buscar.nombreBeneficiario')
 				} 		   
 	    }];
@@ -109,8 +110,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 	},{
 		onReady:()=>{
 			rc.credito = Creditos.findOne($stateParams.credito_id);
-			
-			
+						
 			rc.avales = [];
 			
 			Meteor.call('getBeneficiario', rc.credito.beneficiario_id, function(error, result) {           

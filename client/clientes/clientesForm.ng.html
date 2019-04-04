@@ -254,8 +254,7 @@
 										<div class="user well" title="{{colonia.nombre}}" ng-repeat="colonia in cli.colonias" style="width: 100%">
 											<div class="row">
 												<div class="col-sm-4">
-													<a href="javascript:void(0);"> {{colonia.nombre}}</a> 						
-													<a href="javascript:void(0);" ng-click="cli.agregarColonia(colonia);cli.buscandoColonia = false"> Seleccionar</a>
+													<a href="javascript:void(0);" ng-click="cli.agregarColonia(colonia);cli.buscandoColonia = false"> {{colonia.nombre}}</a>
 												</div>
 											</div>
 										</div>
@@ -482,11 +481,51 @@
 				</div>
 				<br>
 				<div class="row">
-					<div class="col-sm-4" >
+						<div class="col-sm-4">
+							<label for="seccion_id">Buscar Empresa</label>
+							<div class="input-group"> 
+								<input name="colonia_id" type="text" class="form-control" ng-model="cli.buscar.empresaNombre" capitalize>
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button" style="height: 34px;">
+										<i class="fa fa-search"></i>
+									</button> 
+								</span>
+							</div>
+							<div class="ajax-dropdown" ng-show="cli.buscandoEmpresa" style="display: block; width: 180% !important;">
+								<div class="ajax-notifications custom-scroll">
+									<div class="alert alert-transparent">
+										<div class="tab-pane fade active in" id="a2">
+											<div class="user well" title="{{objeto.nombre}}" ng-repeat="objeto in cli.empresas" style="width: 100%">
+												<div class="row">
+													<div class="col-sm-4">
+														<a href="javascript:void(0);" ng-click="cli.agregarEmpresa(objeto);cli.buscandoEmpresa = false"> {{objeto.nombre}}</a> 
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<span> 
+									<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="cli.buscando = false; cli.buscar.nombre = ''">
+										<i class="fa fa-times"></i>
+									</button> 
+								</span>							
+							</div>
+						</div>					
+				</div>	
+				<div class="row">
+					<!--
+<div class="col-sm-4" >
 						<label for="seccion_id">Empresa *</label>
 						<select name="empresa" class="js-example-basic-single js-states form-control" placeholder="Seleccione" ng-model="cli.objeto.profile.empresa_id" >
 							<option ng-repeat="empresa in cli.empresas" value="{{empresa._id}}">{{empresa.nombre}}</option>
 						</select>						
+					</div>
+-->
+					
+					<div class="col-sm-4" >					    
+						<label>Empresa *</label>
+						<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="cli.empresa.nombre" disabled="true" >
 					</div>
 					<div class="col-sm-4" >					    
 						<label>Teléfono *</label>
@@ -511,7 +550,7 @@
 						<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cli.objeto.profile.jefeInmediato" capitalize>
 					</div>
 					<div class="col-sm-4">					    
-						<label>Télefono del Jefe</label>
+						<label>Teléfono del Jefe</label>
 						<input name="telefonoJefe" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="cli.objeto.profile.telefonoJefe" capitalize>
 					</div>
 				</div>
@@ -607,8 +646,7 @@
 											<div class="user well" title="{{colonia.nombre}}" ng-repeat="colonia in cli.coloniasEmpresa" style="width: 100%">
 												<div class="row">
 													<div class="col-sm-4">
-														<a href="javascript:void(0);"> {{colonia.nombre}}</a> 						
-														<a href="javascript:void(0);" ng-click="cli.agregarColoniaEmpresa(colonia);rc.buscandoColoniaEmpresa = false"> Seleccionar</a>
+														<a href="javascript:void(0);" ng-click="cli.agregarColoniaEmpresa(colonia);rc.buscandoColoniaEmpresa = false"> {{colonia.nombre}}</a> 
 													</div>
 												</div>
 											</div>
@@ -763,9 +801,7 @@
 		</div>
 	</div>
 </div>
- 
- 
- 
+  
 <script>
 	$('#bootstrap-wizard-1').bootstrapWizard({
 	'tabClass': 'form-wizard',

@@ -1,5 +1,3 @@
-
-
 Meteor.methods({
   createUsuario: function (usuario, rol, grupo) {
 
@@ -220,7 +218,9 @@ Meteor.methods({
 		
 */
 		
+		
 		_.each(referenciasPersonales, function(referenciaPersonal){
+			
 				
 				if (referenciaPersonal.estatus == "N"){					
 						referenciaPersonal.estatus = "G";
@@ -256,6 +256,11 @@ Meteor.methods({
 										referenciaPersonal_ids.estatus 					= "G";
 										
 										var RP = ReferenciasPersonales.findOne(referenciaPersonal_ids.referenciaPersonal_id);
+										
+										RP.telefono 	= referenciaPersonal.telefono;
+										RP.direccion 	= referenciaPersonal.direccion;
+										RP.celular	 	= referenciaPersonal.celular;
+										
 										_.each(RP.clientes, function(cliente){
 												if (cliente.cliente_id == user._id)
 												{
@@ -367,7 +372,6 @@ if (referenciaPersonal.buscarPersona_id)
 			roles: [rol],
 			profile: user.profile
 		}});
-		
 		
 		if (cambiarPassword == false)
 				Accounts.setPassword(user._id, usuario.password, {logout: false});		
@@ -642,6 +646,4 @@ if (referenciaPersonal.buscarPersona_id)
 		}});
 	
 	},
-	
-	
 });

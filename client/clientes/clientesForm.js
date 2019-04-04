@@ -53,9 +53,11 @@ angular.module("creditoMio")
   this.buscar.nombre = "";
   this.buscar.coloniaNombre = "";
   this.buscar.coloniaNombreEmpresa = "";
+  this.buscar.empresaNombre = "";
   this.buscando = false;
   this.buscandoColonia = false;
   this.buscandoColoniaEmpresa = false;
+  this.buscandoEmpresa = false;
   
   var fotillo = ""
   //this.pic = {};
@@ -70,8 +72,8 @@ angular.module("creditoMio")
   
   rc.colonia = {};
   rc.coloniaEmpresa = {};
+  rc.empresa = {};
   rc.aval = {};
-
 
   this.subscribe('buscarReferenciasPersonales', () => {
     if(this.getReactively("buscar.nombre").length > 3){
@@ -117,10 +119,26 @@ angular.module("creditoMio")
       this.buscandoColoniaEmpresa = false;
   });
   
+  this.subscribe('buscarEmpresas', () => {
+    if(this.getReactively("buscar.empresaNombre").length > 3){
+      this.buscandoEmpresa = true;
+      return [{
+        options : { limit: 10 },
+        where : { 
+          nombre 		: this.getReactively('buscar.empresaNombre')
+        }        
+      }];
+    }
+    else if (this.getReactively("buscar.empresaNombre").length  == 0 )
+      this.buscandoEmpresa = false;
+  });
+  
 
-  this.subscribe('empresas',()=>{
+  /*
+this.subscribe('empresas',()=>{
     return [{estatus: true}]
   });
+*/
   
   this.subscribe('estadoCivil',()=>{
     return [{estatus: true}]
@@ -241,7 +259,18 @@ angular.module("creditoMio")
 						          rc.documents = result;
 						          $scope.$apply();      
 						        }
-						    });		
+						    });
+						    
+						    //getEmpresa
+						    Meteor.call('getEmpresa', rc.objeto.profile.empresa_id, function(error,result){
+						      if (result)
+						        {
+						          //ir por los documentos
+						          rc.empresa = result;
+						          $scope.$apply();      
+						        }
+						    });
+						    		
 								//rc.documents = rc.objeto.profile.documentos;
 								loading(false);
             }
@@ -265,7 +294,6 @@ angular.module("creditoMio")
 	
 	}  
 
-   
   this.helpers({
     estadosCiviles : () => {
       return EstadoCivil.find();
@@ -533,9 +561,11 @@ objetoEditar : () => {
     var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
     objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
       
-    if (rc.documents != undefined && rc.documents.length > 0){
+    /*
+if (rc.documents != undefined && rc.documents.length > 0){
        	objeto.profile.documentos = rc.documents;
     }
+*/
       
 		//console.log(objeto.profile.foto);
 		   
@@ -581,12 +611,23 @@ objetoEditar : () => {
                     objeto.profile.empresa_id = result;
                     toastr.success('Guardado correctamente.');
                     this.empresa = {}; 
-                    $('.collapse').collapse('hide');
-                    this.nuevo = true;
+                    
+                    Meteor.call('getEmpresa', rc.objeto.profile.empresa_id, function(error,response){
+								      if (result)
+								        {
+								          rc.empresa = response;
+								          $scope.$apply();      
+								        }
+								    });
+                    
+                    
+                    //$('.collapse').collapse('hide');
+                    /*
+this.nuevo = true;
                     form.$setPristine();
                     form.$setUntouched();
+*/
                     $("[data-dismiss=modal]").trigger({ type: "click" });
-                    
                 }
       				});
   };
@@ -1091,6 +1132,13 @@ fotoArea.innerHTML = "";
     	rc.buscar.coloniaNombreEmpresa = "";
   };
   
+  this.agregarEmpresa = function(empresa)
+  {
+    	rc.empresa = empresa;
+    	rc.objeto.profile.empresa_id = empresa._id;
+    	rc.buscar.empresaNombre = "";
+  };
+  
   this.createEmpresa = function()
   {
       this.empresa = {};    
@@ -1099,8 +1147,23 @@ fotoArea.innerHTML = "";
   
   this.getEmpresa= function(empresa_id)
   {
-    	rc.empresa = Empresas.findOne(empresa_id);
-			this.nuevoEmpresa = false;
+    	//rc.empresa = Empresas.findOne(empresa_id);
+			//this.nuevoEmpresa = false;
+			
+			Meteor.call('getEmpresa', empresa_id, function(error, response) {
+				       if(error)
+				       {
+				        console.log('ERROR :', error);
+				        return;
+				       }
+				       else if (response)
+				       {
+										rc.empresa = response;
+										this.nuevoEmpresa = false;
+										$scope.$apply();
+					     } 
+			});
+			
   };
 
 	/*

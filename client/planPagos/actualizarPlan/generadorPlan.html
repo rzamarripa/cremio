@@ -42,16 +42,20 @@
 						    	<div class="col-sm-6">
 												<div ng-include=" 'client/planPagos/actualizarPlan/_buscarBeneficiario.html' "></div>
 							    </div>
-							    <div class="col-sm-2">					
+<!--
+							    <div class="col-sm-2" ng-if="ae.cliente.roles[0] != 'Distribuidor'">
 								    <a ng-click="ae.mostrarModalBeneficiario(1)" class="btn txt-color-white bg-color-teal btn-sm" >
 											<i class="fa fa-plus"></i> Beneficiario
 										</a>
 							    </div>
-							    <div class="col-sm-2">					
+-->
+<!--
+							    <div class="col-sm-2" ng-if="ae.cliente.roles[0] != 'Distribuidor'">					
 								    <a ng-click="ae.mostrarModalBeneficiario(2)" class="btn txt-color-white bg-color-teal btn-sm" ng-show = "ae.beneficiario.nombreCompleto != undefined">
 											<i class="fa fa-pencil"></i> Editar
 										</a>
 							    </div>
+-->
 					    </div>
 					    
 					    <div class="row" ng-if="ae.cliente.roles[0] == 'Distribuidor'">					    	
@@ -105,11 +109,11 @@
 
 						    	</select>
 					    	</div>
-					    	<div class="col-sm-3">					    
+					    	<div class="col-sm-3" ng-if="currentUser.roles[0] != 'Distribuidor'"> 
 						    	<label>Con Seguro</label>
 						    	<input name="conSeguro" type="checkbox" class="form-control" ng-model="ae.credito.conSeguro">
 					    	</div>	
-					    	<div class="col-sm-3" ng-if = "ae.credito.conSeguro"  valida>
+					    	<div class="col-sm-3" ng-if = "ae.credito.conSeguro && currentUser.roles[0] != 'Distribuidor'" valida>
 							    <label>Importe seguro *</label>
 						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ae.credito.seguro" required>
 						    </div>		
@@ -511,9 +515,9 @@
 					<th class="text-center" width="5%">No.</th>
 					<th class="text-center" width="10%">Fecha de Pago</th>
 					<th class="text-center" width="5%">Pago</th>
-					<th class="text-center" width="10%">Capital</th>
-					<th class="text-center" width="10%">Interes</th>
-					<th class="text-center" width="10%">IVA</th>
+					<th class="text-center" width="10%" ng-if="currentUser.roles[0] != 'Distribuidor'">Capital</th>
+					<th class="text-center" width="10%" ng-if="currentUser.roles[0] != 'Distribuidor'">Interes</th>
+					<th class="text-center" width="10%" ng-if="currentUser.roles[0] != 'Distribuidor'">IVA</th>
 					<th class="text-center" width="10%">Seguro</th>
 					<th class="text-center" width="10%">Importe total</th>
 					<th class="text-center" width="15%">Saldo Liquidar</th>
@@ -524,9 +528,9 @@
 					<td class="text-center">{{$index + 1}}</td>	
 					<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 					<td class="text-center">{{pago.numeroPago}} - {{ae.planPagos.length}}</td>
-					<td class="text-right">{{pago.capital | currency}}</td>
-					<td class="text-right">{{pago.interes | currency}}</td>
-					<td class="text-right">{{pago.iva | currency}}</td>
+					<td class="text-right" ng-if="currentUser.roles[0] != 'Distribuidor'">{{pago.capital | currency}}</td>
+					<td class="text-right" ng-if="currentUser.roles[0] != 'Distribuidor'">{{pago.interes | currency}}</td>
+					<td class="text-right" ng-if="currentUser.roles[0] != 'Distribuidor'">{{pago.iva | currency}}</td>
 					<td class="text-right">{{pago.seguro | currency}}</td>
 					<td class="text-right">{{pago.importeRegular | currency}}</td>
 					<td class="text-right">{{pago.liquidar | currency}}</td>

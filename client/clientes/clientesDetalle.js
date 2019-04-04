@@ -357,10 +357,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					if (credito.sumaRecibos != credito.saldoActual){
 							credito.saldoActual = credito.sumaRecibos;
 							//Creditos.update({_id: credito._id}, {$set: {saldoActual : credito.sumaRecibos}});
-							
 					}
-							
-					
 						
 				})
 			}
@@ -456,7 +453,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 					
 					_.each(planPago.pagos,function (pago) {
 						
-							//Ir por la Forma de Pago
+						//Ir por la Forma de Pago
 						if (pago.estatus != 3)
 						{	
 							var formaPago = "";

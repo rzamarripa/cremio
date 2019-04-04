@@ -72,14 +72,6 @@
 							    	<label>Nombre del Beneficiado</label>
 							    	<input name="beneficiado" type="text" class="form-control" ng-model="ge.beneficiario.nombreCompleto" disabled="true">					    	
 						    	</div>
-						    	<!--
-
-						    	<div class="col-sm-3">
-							    	<label>Saldo</label>
-							    	<input name="saldo" type="text" class="form-control" ng-model="ge.beneficiario.saldo" disabled="true">					    	
-						    	</div>
-						    	
--->
 					    </div>  
 					    
 					    <div class="row">
@@ -530,12 +522,12 @@
 							<th class="text-center" width="5%">No.</th>
 							<th class="text-center" width="10%">Fecha de Pago</th>
 							<th class="text-center" width="5%">Pago</th>
-							<th class="text-center" width="10%">Capital</th>
-							<th class="text-center" width="10%">Interes</th>
-							<th class="text-center" width="10%">IVA</th>
+							<th class="text-center" width="10%" ng-if="currentUser.roles[0] != 'Distribuidor'">Capital</th>
+							<th class="text-center" width="10%" ng-if="currentUser.roles[0] != 'Distribuidor'">Interes</th>
+							<th class="text-center" width="10%" ng-if="currentUser.roles[0] != 'Distribuidor'">IVA</th>
 							<th class="text-center" width="10%">Seguro</th>
 							<th class="text-center" width="10%">Importe total</th>
-							<th class="text-center" width="15%">Saldo Liquidar</th>
+							<th class="text-center" width="15%" ng-if="currentUser.roles[0] != 'Distribuidor'">Saldo Liquidar</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -543,12 +535,12 @@
 							<td class="text-center">{{$index + 1}}</td>	
 							<td class="text-center">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 							<td class="text-center">{{pago.numeroPago}} - {{ge.planPagos.length}}</td>
-							<td class="text-right">{{pago.capital | currency}}</td>
-							<td class="text-right">{{pago.interes | currency}}</td>
-							<td class="text-right">{{pago.iva | currency}}</td>
+							<td class="text-right" ng-if="currentUser.roles[0] != 'Distribuidor'">{{pago.capital | currency}}</td>
+							<td class="text-right" ng-if="currentUser.roles[0] != 'Distribuidor'">{{pago.interes | currency}}</td>
+							<td class="text-right" ng-if="currentUser.roles[0] != 'Distribuidor'">{{pago.iva | currency}}</td>
 							<td class="text-right">{{pago.seguro | currency}}</td>
 							<td class="text-right">{{pago.importeRegular | currency}}</td>
-							<td class="text-right">{{pago.liquidar | currency}}</td>
+							<td class="text-right" ng-if="currentUser.roles[0] != 'Distribuidor'">{{pago.liquidar | currency}}</td>
 						</tr>
 						<tr><td colspan="10" class="text-right">Total: {{ge.total | currency}}</td></tr>
 					</tbody>

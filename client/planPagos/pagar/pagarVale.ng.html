@@ -13,11 +13,12 @@
 								<div class="row">
 								<a style="margin: 5px;" ng-if="pagV.objeto.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : pagV.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
 								<a style="margin: 5px;" ng-if="pagV.objeto.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : pagV.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;						
-									<div class="col-sm-8">
-										<h1>{{pagV.objeto.profile.nombre}} <span class="semi-bold">{{pagV.objeto.profile.apellidoPaterno}} {{pagV.objeto.profile.apellidoMaterno}}</span>
+									<div class="col-sm-10">
+										<h1>{{pagV.objeto.profile.numeroCliente}}  {{pagV.objeto.profile.nombre}} 
+												<span class="semi-bold">{{pagV.objeto.profile.apellidoPaterno}} {{pagV.objeto.profile.apellidoMaterno}}</span>
 										<small> (Distribuidor)</small></h1>
-										<h5>{{pagV.objeto.profile.numeroCliente}}</h5>
 									</div>
+										
 								</div>
 								<!-- <div class="row">
 									<div class="col-sm-12">
@@ -534,31 +535,46 @@
 <!-- Tabla para mostrar los pagos -->
 <div class="well">
 		<div class="row">
-				<div class="col-sm-2">
-				    <label>Ordenar por:</label>
-				    <select name="ordenar" ng-model="pagV.valorOrdenar" ng-change="pagV.funcionOrdenar()" data-placeholder="Ordenar" class="form-control" >
+				<!--
+<div class="col-sm-2">
+				    <label>Ordenar</label>
+				    <select name="ordenar" ng-model="pagV.valorOrdenar" ng-change="pagV.funcionOrdenar()" data-placeholder="Ordenar" class="form-control input-sm" >
 						    <option value=""></option>
 						    <option value="Folio">Folio</option>
 						    <option value="Fecha">Fecha</option>
 						    <option value="Recibo">Recibo</option>
 						</select>
 		  	</div>
+-->
 
 	    	<div class="col-sm-2">
 					<br >
 					<label class="checkbox-inline">
 						  <input name="ocultarMultas" type="checkbox" class="checkbox style-0" ng-model = "pagV.ocultarMultas" ng-click = "pagV.ocultar()">
-						  <span> Ocultar Multas</span>
+							<span> Ocultar CM</span>	
 					</label>
 				</div>
 	    		    	
-	    	<div class="col-sm-2">
+	    	<div class="col-sm-1">
 					<br >
 					<label class="checkbox-inline">
 						  <input name="mostrarTodos" type="checkbox" class="checkbox style-0" ng-model = "pagV.mostrarPP" ng-click = "pagV.mostrarTodos(pagV.mostrarPP)">
-						  <span> Mostrar Todos</span>
+						  <span> Todos</span>
 					</label>
 				</div>
+				
+				<div class="col-sm-1">            
+						<br>
+						<button class="btn btn-xs btn-info" ng-click="pagV.mostrarModalActivarDescuento()">Activar</button>
+        </div>
+				
+				<div class="col-sm-2">
+						<label >Descuento </label>
+						<select name="descuento" class="form-control input-sm" ng-model="pagV.descuento" ng-disabled="pagV.banderaDescuento">
+							<option  value="{{objeto.porcentaje}}" ng-repeat="objeto in pagV.descuentos">{{objeto.porcentaje}}</option>
+						</select>
+				</div>
+				
 		  	<div class="col-xs-6 col-sm-5 col-md-5 col-lg-6">
 						<ul id="sparks" class="">
 							<li class="sparks-info">
@@ -574,15 +590,89 @@
 				</div>									  	
 		</div>	
 		<div class="row">
+			
+			
+			<div class="col-sm-9">
+				<table id="rec" class="table table-hover border-collapse" >
+						<thead>
+							<tr>
+								<th width="10%"><div class="text-center">No. Corte</div></th>
+								<th width="15%"><div class="text-center">Fecha Corte</div></th>
+								<th width="15%"><div class="text-center">Fecha Pago</div></th>
+								<th width="10%"><div class="text-center">Importe</div></th>
+								<th width="10%"><div class="text-center">Cargos Moratorios</div></th>
+								<th width="10%"><div class="text-center">Bonificación</div></th>
+								<th width="10%"><div class="text-center">Total</div></th>
+							</tr>
+						</thead>
+						<tbody>
+					    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in pagV.arregloCortes" ng-class="objeto.classPago">
+						    <td class="text-center" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
+						    <td class="text-center" style="font-size: smaller" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - {{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
+						    <td class="text-center" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</td>
+						    <td class="text-right" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.importe | currency}}</td>
+						    <td class="text-right" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
+						    <td class="text-right" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
+						    <td class="text-right" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}</td>
+					    </tr>
+					    
+					    <tr ng-repeat-end ng-if="pagV.isSelected($index + 1) && pagV.ban">
+			            <td colspan="9">
+											<table class="table table-bordered table-condensed font-xs">
+												<thead class="thead">
+													<tr>
+														<th class="text-center" width="3%"></th>
+														<!-- <th class="text-center" width="3%">No.</th> -->
+														<th class="text-center" width="3%">Folio</th>
+														<th class="text-center" width="20%">Beneficiario</th>
+														<!-- <th class="text-center" width="5%">Movimiento</th> -->
+														<th class="text-center" width="20%">Fecha de Pago</th>
+														<th class="text-center" width="5%">Recibo</th>
+														<th class="text-center" width="5%">Capital</th>
+														<th class="text-center" width="5%">Interés</th>
+														<th class="text-center" width="5%">Seguro</th>
+														<th class="text-center" width="5%">IVA</th>
+														<th class="text-center" width="7%">Bonf.</th>
+														<th class="text-center" width="5%">Saldo</th>
+														<th class="text-center" width="5%">Pago</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-class="pago.color" ng-repeat="pago in objeto.planPagos | orderBy: pagV.funcionOrdenar()" ng-if="pago.verCargo">
+														<td ><a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago, objeto)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
+														<!-- <td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	 -->
+														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
+														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.beneficiario.nombreCompleto}}</td>
+														<!-- <td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.movimiento }}</td> -->
+														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pagV.getnumeroPagos(pago.credito_id)}}</td>
+														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.capital  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.interes  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.bonificacion  | currency}}</td>
+														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
+														<td ><input style="width: 80px" min="0" type="number" ng-change="pagV.seleccionarMontoPago(pago, objeto)" ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
+													</tr>
+												</tbody>
+											</table>
+				           	
+			            </td>
+			        </tr>
+						</tbody>
+				</table>
+			</div>
+			
+			
+			<!--
+
 			<div class="col-sm-9">
 				<table class="table table-bordered table-condensed font-xs">
 					<thead class="thead">
 						<tr>
 							<th class="text-center" width="3%"></th>
-							<!-- <th class="text-center" width="3%">No.</th> -->
 							<th class="text-center" width="3%">Folio</th>
 							<th class="text-center" width="20%">Beneficiario</th>
-							<!-- <th class="text-center" width="5%">Movimiento</th> -->
 							<th class="text-center" width="20%">Fecha de Pago</th>
 							<th class="text-center" width="5%">Recibo</th>
 							<th class="text-center" width="5%">Capital</th>
@@ -596,13 +686,9 @@
 					</thead>
 					<tbody>
 						<tr ng-class="pago.color" ng-repeat="pago in pagV.planPagosViejo | orderBy: pagV.funcionOrdenar()" ng-if="pago.verCargo">
-
 							<td ><a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
-
-							<!-- <td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	 -->
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.beneficiario.nombreCompleto}}</td>
-							<!-- <td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.movimiento }}</td> -->
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pagV.getnumeroPagos(pago.credito_id)}}</td>
 							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.capital  | currency}}</td>
@@ -617,6 +703,7 @@
 				</table>	
 			</div>
 			
+-->
 			<div class="col-sm-3 pull-right">
 				<table class="table" style="font-size: larger">
 					<tbody>
@@ -720,6 +807,38 @@
 
 </div>
 
-
+<div id="modalActivar" class="modal fade bd-example-modal-sm">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+	    	<div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Datos Usuario</h4>
+		    </div>
+				<div class="modal-body">
+							<form name="form2" novalidate>
+									<div class="well">	    
+								    <div class="row" style="text-align: center">
+								    		<div class=".col-xs-6 .col-md-4" style="text-align: center" valida>			
+							            <label>Nombre de Usuario</label>
+							            <input type="text" class="form-control" name="username" ng-model="pagV.credentials.username">
+												</div>
+								    </div>
+								    <div class="row" style="text-align: center">		
+							          <div class=".col-xs-6 .col-md-4" valida>
+							            <label >Clave de desbloqueo</label>
+						              <input type="password" class="form-control" name="password" ng-model="pagV.credentials.password">
+							          </div>
+								    </div>
+									</div>
+							</form>
+	      </div>	
+	      <div class="modal-footer">
+		      	<a	class="btn btn-success" ng-click="pagV.validaCredenciales(pagV.credentials)">Aceptar</a>
+		        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+		     </div>
+     </div>
+     
+  </div>
+</div>
 
 
