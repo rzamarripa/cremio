@@ -254,6 +254,8 @@ this.subscribe('empresas',()=>{
 	                                                             direccion        : result.direccion,
 	                                                             telefono         : result.telefono,
 	                                                             celular         	: result.celular,
+	                                                             ciudad         	: result.ciudad,
+	                                                             estado         	: result.estado,
 	                                                             parentesco       : referenciaPersonal.parentesco,
 	                                                             tiempoConocerlo	: referenciaPersonal.tiempoConocerlo,
 	                                                             num              : referenciaPersonal.num,
@@ -522,11 +524,23 @@ objetoEditar : () => {
 */
 
             
-      if (this.action)
+      /*
+if (this.action)
       {
-	      	objeto.password = Math.random().toString(36).substring(2,7);		
-
+	      	objeto.password = Math.random().toString(36).substring(2,7);
       }
+*/
+      
+      
+     /*
+ var dia  = objeto.profile.fechaNacimiento.getDate();
+			var anio = objeto.profile.fechaNacimiento.getFullYear();
+			
+			var pwd = dia.toString().trim() + anio.toString().trim();
+			console.log(pwd);
+*/
+      
+      //return;
       
       _.each(objeto, function(item){
          delete item.$$hashKey;
@@ -542,10 +556,12 @@ objetoEditar : () => {
 			objeto.profile.estatusVerificacion = 0;
       objeto.profile.estatus = true;
       objeto.profile.saldoCredito = objeto.profile.limiteCredito;
-
-      //objeto.profile.documentos = rc.documents;
-      
-      //objeto.profile.foto = rc.pic;
+			
+			if (objeto.profile.fechaNacimiento != undefined)
+				objeto.profile.fechaNacimiento.setHours(14,0,0,0);
+			if (objeto.profile.fechaVerificacion != undefined)
+				 objeto.profile.fechaVerificacion.setHours(14,0,0,0);
+			
       objeto.profile.usuarioInserto = Meteor.userId();
       objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
       objeto.profile.fechaCreacion = new Date();
@@ -556,6 +572,7 @@ objetoEditar : () => {
       objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
       objeto.profile.avales_ids = rc.avales;
 			
+			//console.log("A grabar", objeto);
 			loading(true);
       Meteor.call('createUsuario', objeto, "Distribuidor", function(e,r){
           if (r)
@@ -569,7 +586,12 @@ objetoEditar : () => {
               form.$setUntouched();
               $state.go('root.distribuidoresDetalle', { 'objeto_id':r});
           }
+          else
+          		loading(false);
+          
+          
       });
+      
     //      }
       
     // });
@@ -739,14 +761,18 @@ objetoEditar : () => {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
   
   this.AgregarReferencia = function(a){
-    this.referenciaPersonal.nombre = a.nombre;
+	  
+    this.referenciaPersonal.nombre 					= a.nombre;
     this.referenciaPersonal.apellidoPaterno = a.apellidoPaterno;
     this.referenciaPersonal.apellidoMaterno = a.apellidoMaterno;
-    this.referenciaPersonal.direccion = a.direccion;
-    this.referenciaPersonal.telefono = a.telefono;
-    this.referenciaPersonal.celular = a.celular;
+    this.referenciaPersonal.direccion 			= a.direccion;
+    this.referenciaPersonal.telefono 				= a.telefono;
+    this.referenciaPersonal.celular 				= a.celular;
+    this.referenciaPersonal.ciudad 					= a.ciudad;
+    this.referenciaPersonal.estado 					= a.estado;
     this.referenciaPersonal.tiempoConocerlo = a.tiempoConocerlo;
-    this.referenciaPersonal.nombreCompleto = a.nombreCompleto;
+    this.referenciaPersonal.nombreCompleto 	= a.nombreCompleto;
+    
     this.referenciaPersonal._id = a._id;
     this.buscar.nombre = "";
   };
@@ -772,13 +798,15 @@ objetoEditar : () => {
       _.each(this.referenciasPersonales, function(rp){
               if (rp.num == p.num)
               {
-                  rp.nombre = p.nombre;
-                  rp.apellidoPaterno = p.apellidoPaterno;
-                  rp.apellidoMaterno = p.apellidoMaterno;    
-                  rp.direccion = p.direccion;
-                  rp.telefono = p.telefono;
-                  rp.celular = p.celular;
-                  rp.parentesco = p.parentesco;
+                  rp.nombre 					= p.nombre;
+                  rp.apellidoPaterno 	= p.apellidoPaterno;
+                  rp.apellidoMaterno 	= p.apellidoMaterno;    
+                  rp.direccion 				= p.direccion;
+                  rp.telefono 				= p.telefono;
+                  rp.celular 					= p.celular;
+                  rp.ciudad 					= p.ciudad;
+                  rp.estado 					= p.estado;
+                  rp.parentesco 			= p.parentesco;
                   rp.tiempoConocerlo = p.tiempoConocerlo;
                   if (rp.estatus == "G")
                   		rp.estatus = "A"; 
@@ -805,6 +833,8 @@ objetoEditar : () => {
       this.referenciaPersonal.direccion = "";
       this.referenciaPersonal.telefono = "";
       this.referenciaPersonal.celular = "";
+      this.referenciaPersonal.ciudad = "";
+	    this.referenciaPersonal.estado = "";
       this.referenciaPersonal.parentesco = "";
       this.referenciaPersonal.tiempoConocerlo = "";
       delete this.referenciaPersonal["_id"];
@@ -812,11 +842,16 @@ objetoEditar : () => {
   
   this.quitarReferencia = function(numero)
   {
-      pos = functiontofindIndexByKeyValue(this.referenciasPersonales, "num", numero);
-      this.referenciasPersonales.splice(pos, 1);
-      if (this.referenciasPersonales.length == 0) this.con = 0;
-      //reorganiza el consecutivo     
-      functiontoOrginiceNum(this.referenciasPersonales, "num");
+      var rp = this.referenciasPersonales;
+      customConfirm('¿Estás seguro de  quitar la referencia?', function() {
+		      pos = functiontofindIndexByKeyValue(rp, "num", numero);
+		      rp.splice(pos, 1);
+		      if (rp.length == 0) this.con = 0;
+		      //reorganiza el consecutivo     
+		      functiontoOrginiceNum(rp, "num");
+					this.referenciasPersonales = rp;
+					$scope.$apply();
+	    });
   };
   
   this.editarReferencia = function(p)
@@ -829,7 +864,8 @@ objetoEditar : () => {
       this.referenciaPersonal.celular 				= p.celular;
       this.referenciaPersonal.parentesco 			= p.parentesco;
       this.referenciaPersonal.tiempoConocerlo = p.tiempoConocerlo;
-      
+      this.referenciaPersonal.ciudad 					= p.ciudad;
+      this.referenciaPersonal.estado 					= p.estado;
       
       this.num = p.num;
       this.actionReferencia = false;

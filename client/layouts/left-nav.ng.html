@@ -233,7 +233,7 @@
 		
 		
 		<li data-menu-collapse>
-			<a  href="#" tilte="Credito Mio" ng-show="currentUser.username != 'admin' && currentUser.roles[0] != 'Distribuidor'">
+			<a  href="#" tilte="Credito Mio" ng-show="currentUser && currentUser.username != 'admin' && currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora'">
 		    	<i class="fa fa-lg fa-fw fa-download"></i>
 					<span class="menu-item-parent">Formatos</span>
 			</a>
@@ -254,7 +254,7 @@
 					  <li data-ui-sref-active="active">
 				        <a  href="#" ng-click="ro.descargarFormato(3)" tilte="Credito Mio">
 				            <i class="fa fa-lg fa-fw fa-download"></i>
-				            <span class="menu-item-parent">Crédito Personal</span>
+				            <span class="menu-item-parent">Sol. Crédito P.</span>
 				        </a>
 				    </li>
 				    <li data-ui-sref-active="active">
@@ -275,7 +275,7 @@
 					  <li data-ui-sref-active="active">
 				        <a  href="#" ng-click="ro.descargarFormato(4)" tilte="Credito Mio">
 				            <i class="fa fa-lg fa-fw fa-download"></i>
-				            <span class="menu-item-parent">Distribuidor</span>
+				            <span class="menu-item-parent">Sol. Dist.</span>
 				        </a>
 				    </li>
 				    <li data-ui-sref-active="active">
@@ -311,93 +311,83 @@
 		            <span class="menu-item-parent">Cesión de Der. Prend.</span>
 		        </a>
 		    </li>
-			  
-				<!--
-<li data-ui-sref-active="active">
-		        <a  href="#" ng-click="ro.descargarFormato(1)" tilte="Credito Mio">
-		            <i class="fa fa-lg fa-fw fa-download"></i>
-		            <span class="menu-item-parent">Aviso de Cobro</span>
-		        </a>
-		    </li>
-				<li data-ui-sref-active="active">
-		        <a  href="#" ng-click="ro.descargarFormato(2)" tilte="Credito Mio">
-		            <i class="fa fa-lg fa-fw fa-download"></i>
-		            <span class="menu-item-parent">Cesión de Der. Prend.</span>
-		        </a>
-		    </li>
-				<li data-ui-sref-active="active">
-		        <a  href="#" ng-click="ro.descargarFormato(3)" tilte="Credito Mio">
-		            <i class="fa fa-lg fa-fw fa-download"></i>
-		            <span class="menu-item-parent">Crédito Personal</span>
-		        </a>
-		    </li>
-		    <li data-ui-sref-active="active">
-		        <a  href="#" ng-click="ro.descargarFormato(4)" tilte="Credito Mio">
-		            <i class="fa fa-lg fa-fw fa-download"></i>
-		            <span class="menu-item-parent">Distribuidor</span>
-		        </a>
-		    </li>
-		    
-		    <li data-ui-sref-active="active">
-		        <a  href="#" ng-click="ro.descargarFormato(5)" tilte="Credito Mio">
-		            <i class="fa fa-lg fa-fw fa-download"></i>
-		            <span class="menu-item-parent">Tabla de Amortización</span>
-		        </a>
-		    </li>
-		    
-		    <li data-ui-sref-active="active">
-		        <a  href="#" ng-click="ro.descargarFormato(6)" tilte="Credito Mio">
-		            <i class="fa fa-lg fa-fw fa-download"></i>
-		            <span class="menu-item-parent">Verificación Créditos P.</span>
-		        </a>
-		    </li>
-		    
-		    <li data-ui-sref-active="active">
-		        <a  href="#" ng-click="ro.descargarFormato(7)" tilte="Credito Mio">
-		            <i class="fa fa-lg fa-fw fa-download"></i>
-		            <span class="menu-item-parent">Verificación Big Vale</span>
-		        </a>
-		    </li>
--->
 		    
 		  </ul>
 		</li> 	
-    
+    <!-- Perfil Distribuidora -->
     <li data-ui-sref-active="active" ng-show="currentUser.username != 'admin'  && currentUser.roles[0] == 'Distribuidor'">
         <a ui-sref="root.miPerfil" tilte="Credito Mio">
             <i class="fa fa-lg fa-fw fa fa-home"></i>
             <span class="menu-item-parent">Mi Perfil</span>
         </a>
+    </li>
+    
+    <li data-ui-sref-active="active" ng-show="currentUser.username != 'admin'  && currentUser.roles[0] == 'Distribuidor'">
+        <a ui-sref="root.prospectos" tilte="Credito Mio">
+            <i class="fa fa-lg fa-fw fa-user"></i>
+            <span class="menu-item-parent">Prospectos</span>
+        </a>
+    </li>
+    
+    <!-- Perfil Promotora -->
+    <li data-ui-sref-active="active" ng-show="currentUser.username != 'admin'  && currentUser.roles[0] == 'Promotora'">
+        <a ui-sref="root.miPerfilPromotora" tilte="Credito Mio">
+            <i class="fa fa-lg fa-fw fa fa-home"></i>
+            <span class="menu-item-parent">Mi Perfil</span>
+        </a>
     </li>		
     
+    <li data-ui-sref-active="active" ng-show="currentUser.username != 'admin'  && currentUser.roles[0] == 'Promotora'">
+        <a ui-sref="root.prospectosDistribuidor" tilte="Credito Mio">
+            <i class="fa fa-lg fa-fw fa-user"></i>
+            <span class="menu-item-parent">Prospectos de Dis.</span>
+        </a>
+    </li>
+    
+    <!-- ---------------- -->
     <li data-menu-collapse>
-			<a  href="#" tilte="Credito Mio" ng-show="currentUser.username != 'admin' && currentUser.roles[0] != 'Distribuidor'">
+			<a  href="#" tilte="Credito Mio" ng-show="currentUser && currentUser.username != 'admin' && currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora'">
 		    	<i class="fa fa-lg fa-fw fa-tasks"></i>
 					<span class="menu-item-parent">Paneles</span>
 			</a>
 		  <ul>
-		    <li data-ui-sref-active="active" ng-show="currentUser.username != 'admin'  && currentUser.roles[0] != 'Distribuidor'">
+		    <li data-ui-sref-active="active" ng-show="currentUser && currentUser.username != 'admin'  && currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora'" >
 		        <a ui-sref="root.panelProspectos" tilte="Credito Mio">
 		            <i class="fa fa-lg fa-fw fa-th-list"></i>
-		            <span class="menu-item-parent">Prospectos</span>
+		            <span class="menu-item-parent">Prospectos Benefic.</span>
 		        </a>
 		    </li>
 		    
-		    <li data-ui-sref-active="active" ng-show="currentUser.username != 'admin'  && currentUser.roles[0] != 'Distribuidor'">
+		    <li data-ui-sref-active="active" ng-show="currentUser && currentUser.username != 'admin'  && currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora'" >
+		        <a ui-sref="root.panelProspectosDistribuidores" tilte="Credito Mio">
+		            <i class="fa fa-lg fa-fw fa-th-list"></i>
+		            <span class="menu-item-parent">Prospectos Distr.</span>
+		        </a>
+		    </li>
+		    
+		    
+		    <li data-ui-sref-active="active" ng-show="currentUser && currentUser.username != 'admin'  && currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora'">
 		        <a ui-sref="root.panelSolicitudesVales" tilte="Credito Mio">
 		            <i class="fa fa-lg fa-fw fa-th-list"></i>
 		            <span class="menu-item-parent">Solicitudes Vales</span>
 		        </a>
 		    </li>
 		    
-		    <li data-ui-sref-active="active" ng-show="currentUser.username != 'admin'  && currentUser.roles[0] != 'Distribuidor'">
-		        <a ui-sref="root.panelVerificador" tilte="Credito Mio">
+		    <li data-ui-sref-active="active" ng-show="currentUser && currentUser.username != 'admin'  && currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora'">
+		        <a ui-sref="root.panelValesAcreditados" tilte="Credito Mio">
 		            <i class="fa fa-lg fa-fw fa-th-list"></i>
-		            <span class="menu-item-parent">Verificadores</span>
+		            <span class="menu-item-parent">Vales Aprobados</span>
 		        </a>
 		    </li>
 		    
-		    <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">
+		    <li data-ui-sref-active="active" ng-show="currentUser && currentUser.username != 'admin'  && currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora'">
+		        <a ui-sref="root.panelVerificador" tilte="Credito Mio">
+		            <i class="fa fa-lg fa-fw fa-th-list"></i>
+		            <span class="menu-item-parent">Verificaciones</span>
+		        </a>
+		    </li>
+		    
+		    <li data-ui-sref-active="active" ng-show="currentUser && currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' && currentUser.roles[0] != 'Promotora'">
 					<a ui-sref="root.panelNotasCredito" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-sliders"></i>
 						<span class="menu-item-child">Notas de Crédito</span>
@@ -410,7 +400,7 @@
 		<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador' || currentUser.roles[0] == 'Supervisor'">
         <a ui-sref="root.prospectosLista" tilte="Credito Mio">
             <i class="fa fa-lg fa-fw fa-user"></i>
-            <span class="menu-item-parent">Prospectos</span>
+            <span class="menu-item-parent">Prospectos Vales</span>
         </a>
     </li>
 		
@@ -439,19 +429,17 @@
 					</a>
 				</li>
 				<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">
+					<a ui-sref="root.reportesSeguroDistribuidores" tilte="Credito Mio">
+						<i class="fa fa-lg fa-fw fa-bank"></i>
+						<span class="menu-item-child">Reportes de Seguros Distribuidores</span>
+					</a>
+				</li>
+				<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">
 					<a ui-sref="root.reportesBanco" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-bank"></i>
 						<span class="menu-item-child">Reportes de bancos</span>
 					</a>
 				</li>
-<!--
-				<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">
-					<a ui-sref="root.reportesDocumentos" tilte="Credito Mio">
-						<i class="fa fa-lg fa-fw fa-file-text-o"></i>
-						<span class="menu-item-child">Reportes de documentos</span>
-					</a>
-				</li>
--->
 				<li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente'">
 					<a ui-sref="root.carteraVencida" tilte="Credito Mio">
 						<i class="fa fa-lg fa-fw fa-exclamation"></i>
@@ -477,13 +465,6 @@
     </li>
 -->
     
-    <li data-ui-sref-active="active" ng-show="currentUser.username != 'admin'  && currentUser.roles[0] == 'Distribuidor'">
-        <a ui-sref="root.prospectos" tilte="Credito Mio">
-            <i class="fa fa-lg fa-fw fa-user"></i>
-            <span class="menu-item-parent">Prospectos</span>
-        </a>
-    </li>
-    
     <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Cajero'">
         <a ui-sref="root.reimpresionTickets" tilte="Credito Mio">
             <i class="fa fa-lg fa-fw fa-ticket"></i>
@@ -504,6 +485,12 @@
                 </a>
             </li>
             <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">
+                <a ui-sref="root.promotorasLista" tilte="Credito Mio">
+                    <i class="fa fa-lg fa-fw  fa-road"></i>
+                    <span class="menu-item-child">Promotoras</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">
                 <a ui-sref="root.supervisoresLista" tilte="Credito Mio">
                     <i class="fa fa-lg fa-fw  fa-eye"></i>
                     <span class="menu-item-child">Supervisores</span>
@@ -517,10 +504,17 @@
             </li>
         </ul>
     </li>
-    <li data-ui-sref-active="active" ng-show="currentUser.username != 'admin' && currentUser.roles[0] != 'Distribuidor'" >
+    <li data-ui-sref-active="active" ng-if="currentUser && currentUser.username != 'admin' && currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora'" >
           <a ui-sref="root.validacionCARP" tilte="Credito Mio">
               <i class="fa fa-lg fa-fw fa-lock"></i>
               <span class="menu-item-parent">Validación Personas</span>
+          </a>
+    </li>
+    
+    <li data-ui-sref-active="active" ng-if="!currentUser" >
+          <a ui-sref="anon.login" tilte="Credito Mio">
+              <i class="fa fa-lg fa-fw fa-sign-in"></i>
+              <span class="menu-item-parent">Iniciar Sesión</span>
           </a>
     </li>
     

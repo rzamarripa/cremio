@@ -2,19 +2,25 @@ angular
 .module("creditoMio")
 .controller("VerificacionCtrl", VerificacionCtrl);
 function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
-
-	let rc = $reactive(this).attach($scope);
-	window = rc;
 	
-	rc.action = true;	
+	let rc = $reactive(this).attach($scope);
+	window.rc = rc;
+	
+	rc.action = true;
+	rc.firmar = true;
+	
 	this.actionGarantia = true;
 	this.conG = 0;
 	this.numG = 0;
 	this.conGen = 0;
 	this.numGen = 0;
 	
+	rc.tipoVerificacion 				= "";
+	rc.tipoClienteDistribuidor	= "";
+	
 	//rc.credito = {};
   rc.objeto = {};
+  
 	
 	this.garantias = [];
 	this.garantiasGeneral = [];
@@ -22,52 +28,93 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	
 	this.tipo = $stateParams.tipo;
 	
-	//rc.actualizarNo = false;
-	
-/*
-	if ($stateParams.persona == -1)
-		 rc.actualizarNo = true;	 
-*/
-	
+	rc.persona = 0;
+		
 	if ($stateParams.verificacion_id == "-1")
 	{
 		 rc.action = true;
 		 rc.actualizarNo = false;
+		 rc.firmar = true;
 	}	 
 	else
 	{
 		 rc.action = false;
+		 rc.firmar = false;
 		 rc.actualizarNo = true;
 	}
 	
+	if ($stateParams.verificacion_id != "-1")
+	{
+			this.subscribe('verificaciones',()=>{					
+							return [{_id : $stateParams.verificacion_id }]
+			});
+	}
 
-	this.subscribe('verificaciones',()=>{
-			if ($stateParams.verificacion_id != -1)
-					return [{_id : $stateParams.verificacion_id }]
-	});
-	
-	
 	if ($stateParams.tipo == "CP")
 	{	
 		
 		this.subscribe('creditos',()=>{
-				return [{_id : $stateParams.id }]
+				return [{_id : $stateParams.id}]
 		});	
+		
+		//Ir por los datos Generals del Cliente o Aval si tiene
+		rc.tipoVerificacion = "Crédito Personal";
+		rc.persona = 	$stateParams.persona;
+		if ($stateParams.persona == 1)
+				rc.tipoClienteDistribuidor	= "Cliente";	
+		else if ($stateParams.persona == 2)
+				rc.tipoClienteDistribuidor	= "Aval";
+		
+		rc.objeto.tipo = "creditoP";
 	}
 	else if($stateParams.tipo == "V")
 	{
 		this.subscribe('cliente',()=>{
 				return [{_id : $stateParams.id }]
+		},
+		{
+				onReady: function () {
+					
+					rc.tipoVerificacion = "Distribuidor";
+					rc.persona = $stateParams.persona;
+					
+					if ($stateParams.persona == 1)
+					{
+							Meteor.call('getUsuarioVerificacion', $stateParams.id, function(error, result){
+									if(result)
+									{
+											rc.objeto.cliente = result;
+											$scope.$apply();
+									}
+							});
+							rc.tipoClienteDistribuidor	= "Distribuidor";
+					}
+							
+					else if ($stateParams.persona == 2)
+					{
+							var dis = Meteor.users.findOne({_id: $stateParams.id});				
+							if (dis != undefined)
+							{
+									Meteor.call('getAvalVerificacion', dis.profile.avales_ids[0]._id, function(error, result){
+											if(result)
+											{		
+													rc.objeto.cliente = result;
+													$scope.$apply();
+											}
+									});
+							}
+							rc.tipoClienteDistribuidor	= "Aval";
+					}
+					
+				}	
 		});
 	}
 	
   this.helpers({
-	  verificaciones : () => {		  
-		  
-		  
+	  verificaciones : () => {		  		  
 		  if ($stateParams.verificacion_id != -1)
 		  {
-				  rc.objeto = Verificaciones.findOne();
+				  rc.objeto = Verificaciones.findOne($stateParams.verificacion_id);
 				  if (rc.objeto != undefined)
 				  {
 					  	
@@ -88,25 +135,59 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 						  	  		var ele = this.garantias[this.garantias.length - 1];
 						  	  		this.conG = ele.num;
 						  	 }
-						  }				  	
+						  }
+							
+							if ($stateParams.tipo == "CP")	
+							{							
+							  var c = Creditos.findOne({_id: $stateParams.id});	 
+							  if (c !== undefined)
+								{
+										rc.objeto.tipoGarantia = c.tipoGarantia;
+										rc.objeto.tipo 				 = c.tipo;
+								}	 
+							}
+						  
 				  }
-			}	  
-
+			}	
 	  }, 
 	  credito : () => {
-		  var c = Creditos.findOne();
-		  
-		  if (c != undefined)
+		  if ($stateParams.tipo == "CP")
 		  {
-					
-			 		if (c.tipoGarantia == "mobiliaria") 	
-			 				this.garantias = c.garantias;
-			 		else if (c.tipoGarantia == "general") 	
-			 				this.garantiasGeneral = c.garantias;
-			 		
-			 	 	return c;  	
-		  }	
-		
+				  var c = Creditos.findOne({_id: $stateParams.id});	  
+				  if (c !== undefined)
+				  { 
+					  	
+							if (rc.tipoClienteDistribuidor == "Cliente")
+							{
+									Meteor.call('getUsuarioVerificacion', c.cliente_id, function(error, result){
+											if(result)
+											{
+													rc.objeto.cliente = result;
+													$scope.$apply();
+											}
+									});
+							}
+							else if (rc.tipoClienteDistribuidor == "Aval")
+							{
+									Meteor.call('getAvalVerificacion', c.avales_ids[0].aval_id, function(error, result){
+											if(result)
+											{
+													rc.objeto.cliente = result;
+													$scope.$apply();
+											}
+									});
+							}					
+					 		if (c.tipoGarantia == "mobiliaria")	
+					 		{
+						 		 this.garantias = c.garantias;
+					 		}
+					 		else if (c.tipoGarantia == "general")
+					 		{
+						 		 rc.objeto.tipoGarantia = "general";
+					 		}
+					 	 	return c;  	
+				  }	
+		  }
 		},
   });
   
@@ -120,13 +201,15 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		  }
 		  
 			obj.estatus = true;
-			obj.usuarioVerifico = Meteor.userId();
-			obj.tipoVerificacion = "solicitante o aval";
-			obj.fechaVerificacion = new Date();
-			obj.sucursal_id = Meteor.user().profile.sucursal_id;
+			obj.usuarioVerifico 		= Meteor.userId();
+			
+			obj.tipoVerificacion 		= rc.tipoClienteDistribuidor;
+			obj.rolVerificacion 		= rc.tipoClienteDistribuidor;
+			obj.fechaVerificacion 	= new Date();
+			obj.sucursal_id 				= Meteor.user().profile.sucursal_id;
 			obj.verificacionPersona = $stateParams.persona;
-				
-			//console.clear();
+			var dataUrl 						= canvas.toDataURL();			
+			obj.firma 							= dataUrl;	
 				
 			if ($stateParams.tipo == "CP")
 			{
@@ -136,21 +219,16 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			
 				obj.garantias = [];
 				var credito = Creditos.findOne($stateParams.id);
-				
 				if (obj.tipoGarantia == "mobiliaria")
 				{
-					//console.log("Entro");
 					obj.garantias = angular.copy(this.garantias)
 					Creditos.update({_id: credito._id}, {$set:{garantias: angular.copy(this.garantias), tipoGarantia: this.objeto.tipoGarantia}})
  				}	
 				else
 				{
-					
 					obj.garantias = angular.copy(this.garantiasGeneral);	
 					Creditos.update({_id: credito._id}, {$set:{garantias: angular.copy(this.garantiasGeneral), tipoGarantia: this.objeto.tipoGarantia}})
-
-				}						 						
-				
+				}
 			}
 			else if ($stateParams.tipo == "V")	
 			{
@@ -159,14 +237,11 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 			}
 			
 			Verificaciones.insert(obj);
-
 		
 			toastr.success('Guardado correctamente.');
 			this.objeto = {}; 
 			$('.collapse').collapse('hide');
 			this.nuevo = true;
-			form.$setPristine();
-	    form.$setUntouched();
 	    $state.go('root.panelVerificador');
 			
 	}
@@ -179,7 +254,12 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		        return;
 		  }
 		  
-
+			if (rc.firmar)
+			{
+					var dataUrl = canvas.toDataURL();			
+					obj.firma 	= dataUrl;
+			}
+			
 			if ($stateParams.tipo == "CP")
 			{
 
@@ -553,6 +633,126 @@ this.insertarGarantia = function(tipo)
 					
 	};
 */
-
-  
+	
+	
+	//Elementos para la Pizarra
+	
+	$(document).ready(function() {
+			
+			rc.ctx = {};
+			var lienzo = document.getElementById('canvas');
+	    rc.ctx = lienzo.getContext('2d');	    
+	    rc.ctx.strokeStyle = "#222222";
+			rc.ctx.lineWith = 1;
+			
+	 	  rc.drawing = false;
+	    rc.mousePos = { x:0, y:0 };
+			rc.lastPos = rc.mousePos;
+	    
+	    ///////////////Mouse---------------------------------
+	    canvas.addEventListener('mousedown', function (e) {
+        rc.drawing = true;
+			  rc.lastPos = rc.getMousePos(canvas, e);
+			}, false);
+			canvas.addEventListener('mouseup', function (e) {
+			  rc.drawing = false;
+			}, false);
+			canvas.addEventListener('mousemove', function (e) {
+			  rc.mousePos = rc.getMousePos(canvas, e);
+			}, false);
+			//---------------------------------------------------
+			///////////////Touch---------------------------------
+			canvas.addEventListener("touchstart", function (e) {
+        rc.mousePos = rc.getTouchPos(canvas, e);
+			  var touch = e.touches[0];
+			  var mouseEvent = new MouseEvent("mousedown", {
+			    clientX: touch.clientX,
+			    clientY: touch.clientY
+			  });
+			  canvas.dispatchEvent(mouseEvent);
+			}, false);
+			canvas.addEventListener("touchend", function (e) {
+			  var mouseEvent = new MouseEvent("mouseup", {});
+			  canvas.dispatchEvent(mouseEvent);
+			}, false);
+			canvas.addEventListener("touchmove", function (e) {
+			  var touch = e.touches[0];
+			  var mouseEvent = new MouseEvent("mousemove", {
+			    clientX: touch.clientX,
+			    clientY: touch.clientY
+			  });
+			  canvas.dispatchEvent(mouseEvent);
+			}, false);
+			//---------------------------------------------------
+			//Prevenir el scroll en el canvas
+			window.addEventListener('touchmove', ev => {
+			  if (ev.target == canvas) {
+			    ev.preventDefault();
+			    ev.stopImmediatePropagation();
+			  };
+			}, { passive: false });
+			//---------------------------------------------------	    
+	    window.requestAnimFrame = (function (callback) {
+			        return window.requestAnimationFrame || 
+			           window.webkitRequestAnimationFrame ||
+			           window.mozRequestAnimationFrame ||
+			           window.oRequestAnimationFrame ||
+			           window.msRequestAnimaitonFrame ||
+			           function (callback) {
+			        window.setTimeout(callback, 1000/60);
+			           };
+			})();
+	    
+	    // Allow for animation
+			(function drawLoop () {
+			  requestAnimFrame(drawLoop);
+			  rc.renderCanvas();
+			})();
+	});
+	
+	
+	rc.getMousePos = function(canvasDom, mouseEvent)
+	{
+	  var rect = canvasDom.getBoundingClientRect();
+	  return {
+	    x: mouseEvent.clientX - rect.left,
+			y: mouseEvent.clientY - rect.top
+	  };
+	}
+	
+	rc.getTouchPos = function(canvasDom, touchEvent)
+	{
+	  var rect = canvasDom.getBoundingClientRect();
+	  return {
+	    x: touchEvent.touches[0].clientX - rect.left,
+	    y: touchEvent.touches[0].clientY - rect.top
+	  };
+	}
+	
+	rc.renderCanvas = function()
+	{
+	  if (rc.drawing) 
+	  {
+	    rc.ctx.moveTo(rc.lastPos.x, rc.lastPos.y);
+	    rc.ctx.lineTo(rc.mousePos.x, rc.mousePos.y);
+	    rc.ctx.stroke();
+	    rc.lastPos = rc.mousePos;
+	  }
+	}
+	
+	rc.clearCanvas = function()
+	{
+    	canvas.width = canvas.width;
+	}
+	
+	rc.activaFirma = function()
+	{
+    	canvas.width = canvas.width;
+    	rc.firmar = true;
+    	
+	}
+	
+	
+	
+	  
 };

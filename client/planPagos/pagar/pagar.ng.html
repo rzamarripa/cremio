@@ -5,19 +5,13 @@
 				<div class="col-sm-12 col-md-12 col-lg-12">
 					<div class="well ">
 						<div class="row">
-							<div class="col-sm-12">
-								<div id="myCarousel" class="carousel profile-carousel">
-								</div>
-							</div>
-							<div class="col-sm-12">
-								<div class="row">
-									<div class="col-sm-2">
-										<img style="max-width:150px;" src="{{pvpp.objeto.profile.foto}}" >
+							<div class="col-sm-2">
+										<img style="max-width:130px;" src="{{pvpp.objeto.profile.foto}}" >
 									</div>
-																		
-									<a style="margin: 5px;" ng-if="pvpp.objeto.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : pvpp.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
+							<div class="col-sm-10">
+								<div class="row">
 									<a style="margin: 5px;" ng-if="pvpp.objeto.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : pvpp.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;						
-									<div class="col-sm-10">
+									<div class="col-sm-8">
 										<h1>{{pvpp.objeto.profile.numeroCliente}} {{pvpp.objeto.profile.nombre}} 
 											<span class="semi-bold">{{pvpp.objeto.profile.apellidoPaterno}} {{pvpp.objeto.profile.apellidoMaterno}}</span>
 										<small> (Cliente)</small></h1>
@@ -32,7 +26,6 @@
 	</div>
 </div>
 
-<!-- Tabla para mostrar los pagos -->
 <div  class="well">
 		<div class="row">
 				<div class="col-sm-2">
@@ -130,19 +123,6 @@
 			</div>
 		</div>
 </div>									
-						<!--
-		</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</article>
-</div>
--->
-
-
 
 <!-- ////////////////////////////////////////////////////////////////////////////////////////// -->
 <div id="modalRefinanciamiento" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">

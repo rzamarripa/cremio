@@ -139,22 +139,22 @@
 								<option value="FEMENINO">FEMENINO</option>
 						</select>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-sm-4" valida>
 						<label for="estadocivil">Estado Civil *</label>
 						<!-- 	<select  name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="dis.objeto.profile.estadoCivil_id" required> -->
-						<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-change="dis.seleccionarEstadoCivil(dis.objeto.profile.estadoCivil_id)" ng-model="dis.objeto.profile.estadoCivil_id" required>
+						<select name="estadocivilDis" class="form-control select2" placeholder="Seleccione" ng-change="dis.seleccionarEstadoCivil(dis.objeto.profile.estadoCivil_id)" ng-model="dis.objeto.profile.estadoCivil_id" required>
 							<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in dis.estadosCiviles">
 								{{estadoCivil.nombre}}
 							</option>
 						</select>
 					</div>
-					<div class="col-sm-4">					    
+					<div class="col-sm-4" valida>					    
 						<label>Fecha Nacimiento *</label>
 						<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="dis.objeto.profile.fechaNacimiento" required="">
 					</div>	
 				</div>
 				<div class="row">	
-					<div class="col-sm-4">
+					<div class="col-sm-4" valida>
 						<label for="nacionalidad">Nacionalidad</label>
 						<select name="nacionalidad" class="form-control select2" placeholder="Seleccione" ng-model="dis.objeto.profile.nacionalidad_id" required>
 							<option  value="{{nacionalidad._id}}" ng-repeat="nacionalidad in dis.nacionalidades">
@@ -173,7 +173,7 @@
 				</div>
 				<div class="row">
 					
-				  <div class="col-sm-4">					    
+				  <div class="col-sm-4" valida>
 						<label>Lugar de Nacimiento *</label>
 						<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="dis.objeto.profile.lugarNacimiento" capitalize required="" >
 					</div>
@@ -415,11 +415,11 @@
 										</div>
 										<div class="col-sm-4"> 					    
 											<label>Apellido Paterno</label>
-											<input name="apellidoPaternoParentezco" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="dis.referenciaPersonal.apellidoPaterno" capitalize>
+											<input name="apellidoPaternoParentesco" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="dis.referenciaPersonal.apellidoPaterno" capitalize>
 										</div>
 										<div class="col-sm-4"> 					    
 											<label>Apellido Materno</label>
-											<input name="apellidoMaternoParentezco" type="text" class="form-control" placeholder="Apellido Materno" ng-model="dis.referenciaPersonal.apellidoMaterno" capitalize>
+											<input name="apellidoMaternoParentesco" type="text" class="form-control" placeholder="Apellido Materno" ng-model="dis.referenciaPersonal.apellidoMaterno" capitalize>
 										</div>
 									</div>
 									<div class="row">
@@ -429,14 +429,24 @@
 										</div>
 										<div class="col-sm-4">					    
 											<label>Telefono</label>
-											<input name="telefonoParentesco" type="text" class="form-control" placeholder="Teléfono" ng-model="dis.referenciaPersonal.telefono">
+											<input name="telefonoParentesco" type="text" class="form-control" placeholder="Teléfono" ng-model="dis.referenciaPersonal.telefono" capitalize>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-sm-4">					    
 											<label>Celular</label>
-											<input name="celularParentesco" type="text" class="form-control" placeholder="Celular" ng-model="dis.referenciaPersonal.celular">
+											<input name="celularParentesco" type="text" class="form-control" placeholder="Celular" ng-model="dis.referenciaPersonal.celular" capitalize>
 										</div>
+										<div class="col-sm-4">					    
+											<label>Ciudad</label>
+											<input name="ciudadParentesco" type="text" class="form-control" placeholder="Ciuadad" ng-model="dis.referenciaPersonal.ciudad" capitalize>
+										</div>
+										<div class="col-sm-4">					    
+											<label>Estado</label>
+											<input name="estadoParentesco" type="text" class="form-control" placeholder="Estado" ng-model="dis.referenciaPersonal.estado" capitalize>
+										</div>
+									</div>
+									<div class="row">
 										<div class="col-sm-4">					    
 											<label>Parentesco</label>
 											<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="dis.referenciaPersonal.parentesco" capitalize>
@@ -463,7 +473,7 @@
 												<tr>
 													<th width="5%">No.</th>
 													<th width="20%">Nombre</th>
-													<th width="30%">Dirección</th>
+													<th width="30%">Dirección - Ciudad - Estado</th>
 													<th width="10%">Teléfono</th>
 													<th width="10%">Celular</th>
 													<th width="10%">Parentesco</th>
@@ -475,7 +485,7 @@
 												<tr ng-repeat="p in dis.referenciasPersonales">
 													<td>{{p.num}}</td>
 													<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}}</td>
-													<td>{{p.direccion}}</td>
+													<td>{{p.direccion}} {{p.ciudad}} {{p.estado}}</td>
 													<td>{{p.telefono}}</td>
 													<td>{{p.celular}}</td>
 													<td>{{p.parentesco}}</td>
@@ -522,11 +532,11 @@
 						    <div class="row">	
 							    <div class="col-sm-4">					    
 							    	<label>Calle</label>
-							    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.calle" disabled="true">
+							    	<input name="calleAval" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.calle" disabled="true">
 						    	</div>
 						    	<div class="col-sm-2">					    
 							    	<label>Número</label>
-							    	<input name="numero" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.numero" disabled="true">
+							    	<input name="numeroAval" type="text" class="form-control" placeholder="Calle" ng-model="dis.aval.numero" disabled="true">
 						    	</div>
 						    	<div class="col-sm-2">					    
 							    	<label>Código Postal</label>
@@ -738,40 +748,39 @@
 					</div>
 				</div> -->
 			</div>
-	
-		<div class="well">
-		<div class="row">
-					<div class="col-sm-4" valida>				    
-						<label>Límite de Crédito</label>
-						<input name="lCredito" type="number" class="form-control" placeholder="Limite credito" ng-model="dis.objeto.profile.limiteCredito" required="" >
-<!-- 						<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form"> -->
-					</div>
-					<div class="col-sm-2" valida>
-			    	<label>Fecha Verificación *</label>
-			    	<input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="dis.objeto.profile.fechaVerificacion" required="" />
-		    	</div>
-					<div class="col-sm-2" valida>
-			    	<label>Horario *</label>
-			    	<select name="horario" class="form-control" ng-model="dis.objeto.profile.turno" required="">
-				    	<option value="mañana">Mañana</option>
-				    	<option value="tarde">Tarde</option>
-			    	</select>
-		    	</div>
-		    	<div class="col-sm-2" valida>
-			    	<br>
-			    	<a ng-click="dis.cambiarEstatus(dis.objeto.profile.estatus)" class="btn btn-{{dis.estatusClase}}">
-								 {{dis.objeto.profile.estatus == true ? 'Activo': 'Inactivo'}}
-						</a>
-		    	</div>	
-		</div>
-		<div class="row">
-				<div class="col-sm-12">
-					<input type="submit" ng-click="dis.guardar(dis.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="dis.action" valida-form formulario="form">
-					<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form">
+			<div class="well">
+				<div class="row">
+							<div class="col-sm-4" valida>				    
+								<label>Límite de Crédito</label>
+								<input name="lCredito" type="number" class="form-control" placeholder="Limite credito" ng-model="dis.objeto.profile.limiteCredito" required="" >
+		<!-- 						<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form"> -->
+							</div>
+							<div class="col-sm-3" valida>
+					    	<label>Fecha Verificación *</label>
+					    	<!-- <input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="dis.objeto.profile.fechaVerificacion" required="" /> -->
+					    	<input name="fechaVerificacion" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="dis.objeto.profile.fechaVerificacion" required="">
+				    	</div>
+							<div class="col-sm-2" valida>
+					    	<label>Horario *</label>
+					    	<select name="horario" class="form-control" ng-model="dis.objeto.profile.turno" required="">
+						    	<option value="mañana">Mañana</option>
+						    	<option value="tarde">Tarde</option>
+					    	</select>
+				    	</div>
+				    	<div class="col-sm-2">
+					    	<br>
+					    	<a ng-click="dis.cambiarEstatus(dis.objeto.profile.estatus)" class="btn btn-{{dis.estatusClase}}">
+										 {{dis.objeto.profile.estatus == true ? 'Activo': 'Inactivo'}}
+								</a>
+				    	</div>	
 				</div>
-		</div>
-			
-		</div>
+				<div class="row">
+						<div class="col-sm-12">
+							<input type="submit" ng-click="dis.guardar(dis.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="dis.action" valida-form formulario="form">
+							<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form">
+						</div>
+				</div>
+			</div>
 		</form>
 	</div>
 </div>
@@ -932,15 +941,15 @@
 				<form name="form4" novalidate>
 					<div class="well">	    
 						<div class="row">
-							<div class="col-sm-3" valida> 					    
+							<div class="col-sm-4" valida> 					    
 								<label>Nombre *</label>
 								<input name="nombreRP" type="text" class="form-control" placeholder="Nombre" ng-model="dis.referenciaPersonal.nombre" required capitalize>
 							</div>
-							<div class="col-sm-3" valida> 					    
+							<div class="col-sm-4" valida> 					    
 								<label>Apellido Paterno *</label>
 								<input name="apellidoPaternoRP" type="text" class="form-control" placeholder="Nombre" ng-model="dis.referenciaPersonal.apellidoPaterno" required capitalize>
 							</div>
-							<div class="col-sm-3"> 					    
+							<div class="col-sm-4"> 					    
 								<label>Apellido Materno</label>
 								<input name="apellidoMaternoRP" type="text" class="form-control" placeholder="Nombre" ng-model="dis.referenciaPersonal.apellidoMaterno" capitalize>
 							</div>
@@ -950,17 +959,25 @@
 								<label>Dirección *</label>
 								<input name="direccionRP" type="text" class="form-control" placeholder="Dirección" ng-model="dis.referenciaPersonal.direccion" required capitalize>
 							</div>
+							<div class="col-sm-4" valida>					    
+								<label>Telefono *</label>
+								<input name="telefonoRP" type="text" class="form-control" placeholder="Teléfono" ng-model="dis.referenciaPersonal.telefono" required capitalize>
+							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-4" valida>					    
-								<label>Telefono *</label>
-								<input name="telefonoRP" type="text" class="form-control" placeholder="Teléfono" ng-model="dis.referenciaPersonal.telefono" required>
+								<label>Celular *</label>
+								<input name="celularRP" type="text" class="form-control" placeholder="Celular" ng-model="dis.referenciaPersonal.celular" required capitalize>
 							</div>
 							<div class="col-sm-4" valida>					    
-								<label>Celular *</label>
-								<input name="celularRP" type="text" class="form-control" placeholder="Celular" ng-model="dis.referenciaPersonal.celular" required>
+								<label>Ciudad *</label>
+								<input name="ciudadRP" type="text" class="form-control" placeholder="Ciudad" ng-model="dis.referenciaPersonal.ciudad" required capitalize>
 							</div>
-						</div>	
+							<div class="col-sm-4" valida>					    
+								<label>Estado *</label>
+								<input name="estadoRP" type="text" class="form-control" placeholder="Estado" ng-model="dis.referenciaPersonal.estado" required capitalize>
+							</div>
+						</div>
 					</div>
 				</form>
 			</div>

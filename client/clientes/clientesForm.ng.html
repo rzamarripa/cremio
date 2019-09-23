@@ -411,14 +411,24 @@
 					</div>
 					<div class="col-sm-4">					    
 						<label>Telefono</label>
-						<input name="telefonoParentesco" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.referenciaPersonal.telefono">
+						<input name="telefonoParentesco" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.referenciaPersonal.telefono" capitalize>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-4">					    
 						<label>Celular</label>
-						<input name="celularParentesco" type="text" class="form-control" placeholder="Celular" ng-model="cli.referenciaPersonal.celular">
+						<input name="celularParentesco" type="text" class="form-control" placeholder="Celular" ng-model="cli.referenciaPersonal.celular" capitalize>
 					</div>
+					<div class="col-sm-4">					    
+						<label>Ciudad</label>
+						<input name="ciudadParentesco" type="text" class="form-control" placeholder="Ciuadad" ng-model="cli.referenciaPersonal.ciudad" capitalize>
+					</div>
+					<div class="col-sm-4">					    
+						<label>Estado</label>
+						<input name="estadoParentesco" type="text" class="form-control" placeholder="Estado" ng-model="cli.referenciaPersonal.estado" capitalize>
+					</div>
+				</div>
+				<div class="row">
 					<div class="col-sm-4">					    
 						<label>Parentesco</label>
 						<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="cli.referenciaPersonal.parentesco" capitalize>
@@ -427,7 +437,7 @@
 						<label>Tiempo en Conocerlo</label>
 						<input name="tiempoConocerloParentesco" type="text" class="form-control" placeholder="Tiempo" ng-model="cli.referenciaPersonal.tiempoConocerlo" capitalize>
 					</div>
-				</div>
+				</div>	
 				<br>
 				<div class="row">		
 					<div class="col-sm-12">
@@ -439,12 +449,12 @@
 				</div>
 				<br>
 				<div class="row">
-					<table class="table table-bordered">
+					<table class="table table-bordered" style="font-size: smaller">
 						<thead>
 							<tr>
 								<th width="5%">No.</th>
 								<th width="20%">Nombre</th>
-								<th width="30%">Dirección</th>
+								<th width="30%">Dirección - Ciudad - Estado</th>
 								<th width="10%">Teléfono</th>
 								<th width="10%">Celular</th>
 								<th width="10%">Parentesco</th>
@@ -456,7 +466,7 @@
 							<tr ng-repeat="p in cli.referenciasPersonales">
 								<td>{{p.num}}</td>
 								<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}}</td>
-								<td>{{p.direccion}}</td>
+								<td>{{p.direccion}} {{p.ciudad}} {{p.estado}}</td>
 								<td>{{p.telefono}}</td>
 								<td>{{p.celular}}</td>
 								<td>{{p.parentesco}}</td>
@@ -718,44 +728,52 @@
 				<h4 class="modal-title" id="myModalLabel">Agregar Referencia Personal</h4>
 			</div>
 			<div class="widget-body">
-				<form name="form4" note>
+				<form name="form4" novalidate>
 					<div class="well">	    
 						<div class="row">
-							<div class="col-sm-3" > 					    
+							<div class="col-sm-4" valida> 					    
 								<label>Nombre *</label>
-								<input name="nombreRP" type="text" class="form-control" placeholder="Nombre" ng-model="cli.referenciaPersonal.nombre"  capitalize>
+								<input name="nombreRP" type="text" class="form-control" placeholder="Nombre" ng-model="cli.referenciaPersonal.nombre" required capitalize>
 							</div>
-							<div class="col-sm-3" > 					    
+							<div class="col-sm-4" valida> 					    
 								<label>Apellido Paterno *</label>
-								<input name="apellidoPaternoRP" type="text" class="form-control" placeholder="Nombre" ng-model="cli.referenciaPersonal.apellidoPaterno"  capitalize>
+								<input name="apellidoPaternoRP" type="text" class="form-control" placeholder="Nombre" ng-model="cli.referenciaPersonal.apellidoPaterno" required capitalize>
 							</div>
-							<div class="col-sm-3"> 					    
+							<div class="col-sm-4"> 					    
 								<label>Apellido Materno</label>
 								<input name="apellidoMaternoRP" type="text" class="form-control" placeholder="Nombre" ng-model="cli.referenciaPersonal.apellidoMaterno" capitalize>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-8" >					    
+							<div class="col-sm-8" valida>					    
 								<label>Dirección *</label>
-								<input name="direccionRP" type="text" class="form-control" placeholder="Dirección" ng-model="cli.referenciaPersonal.direccion"  capitalize>
+								<input name="direccionRP" type="text" class="form-control" placeholder="Dirección" ng-model="cli.referenciaPersonal.direccion" required capitalize>
+							</div>
+							<div class="col-sm-4" valida>					    
+								<label>Telefono *</label>
+								<input name="telefonoRP" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.referenciaPersonal.telefono" required capitalize>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-4" >					    
-								<label>Telefono *</label>
-								<input name="telefonoRP" type="text" class="form-control" placeholder="Teléfono" ng-model="cli.referenciaPersonal.telefono" >
-							</div>
-							<div class="col-sm-4" >					    
+							<div class="col-sm-4" valida>					    
 								<label>Celular *</label>
-								<input name="celularRP" type="text" class="form-control" placeholder="Celular" ng-model="cli.referenciaPersonal.celular" >
+								<input name="celularRP" type="text" class="form-control" placeholder="Celular" ng-model="cli.referenciaPersonal.celular" required capitalize>
 							</div>
-						</div>	
+							<div class="col-sm-4" valida>					    
+								<label>Ciudad *</label>
+								<input name="ciudadRP" type="text" class="form-control" placeholder="Ciudad" ng-model="cli.referenciaPersonal.ciudad" required capitalize>
+							</div>
+							<div class="col-sm-4" valida>					    
+								<label>Estado *</label>
+								<input name="estadoRP" type="text" class="form-control" placeholder="Estado" ng-model="cli.referenciaPersonal.estado" required capitalize>
+							</div>
+						</div>
 					</div>
 				</form>
 			</div>
-			<div class="modal-footer"s>
+			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<input type="submit" ng-click="cli.guardarReferenciaPersonal(cli.referenciaPersonal, form4)" value="Guardar" class="btn btn-primary" -form formulario="form4">
+				<input type="submit" ng-click="cli.guardarReferenciaPersonal(cli.referenciaPersonal, form4)" value="Guardar" class="btn btn-primary" valida-form formulario="form4">
 		  </div>
 		</div>
 	</div>

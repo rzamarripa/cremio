@@ -103,7 +103,8 @@ Meteor.methods({
 		
 		_.each(credito.avales_ids, function(aval){
 				var a = Avales.findOne(aval.aval_id);
-				var cliente = Meteor.users.findOne(credito.cliente_id).profile.nombreCompleto;
+				var cliente = Meteor.users.findOne(credito.cliente_id);
+				
 				
 				a.profile.creditos = [];
 				a.profile.creditos.push({credito_id				: credito_id,
@@ -179,9 +180,8 @@ Meteor.methods({
 						
 
 						var a = Avales.findOne(aval._id);
-						//var cliente = Meteor.users.findOne(credito.cliente_id);
-						var cliente = Meteor.users.findOne(credito.cliente_id).profile.nombreCompleto;
 
+						var cliente = Meteor.users.findOne({_id: credito.cliente_id}, {fields: {"profile.nombreCompleto": 1} });
 						a.profile.creditos.push({credito_id				: idCredito, 
 																		 folio						: credito.folio,
 																		 nombreCompleto		: cliente.profile.nombreCompleto,
@@ -203,8 +203,7 @@ Meteor.methods({
 										aval_ids.estatus = "G";
 										
 										var a = Avales.findOne(aval.aval_id);
-										//var cliente = Meteor.users.findOne(credito.cliente_id);
-										var cliente = Meteor.users.findOne(credito.cliente_id).profile.nombreCompleto;
+										var cliente = Meteor.users.findOne({_id: credito.cliente_id}, {fields: {"profile.nombreCompleto": 1} });
 
 										_.each(a.profile.creditos, function(credito){
 												if (credito.credito_id == idCredito)
@@ -483,4 +482,18 @@ Meteor.methods({
 		return creditos;
 	},
 	
-});
+	getCreditos: function (id) {
+	  var creditos = Creditos.find({"cliente_id" : id, estatus : { $in: [4,5] } }, {sort: {fechaEntrega : 1}}).fetch();	
+	  
+	  /*
+_.each(creditos, function(c){
+		  
+		  var beneficiario 	= Beneficiarios.findOne(c.beneficiario_id);
+		  c.beneficiario 		= beneficiario.nombreCompleto
+		  
+	  })
+*/
+	  
+		return creditos;
+	},
+})

@@ -126,10 +126,10 @@
 						<th width="15%"><div class="text-center">Nombre</div></th>
 						<th width="10%"><div class="text-center">Fecha del deposito</div></th>
 						<th width="10%"><div class="text-center">Fecha de Aplicación</div></th>
-						<th width="10%"><div class="text-center">Interes</div></th>
-						<th width="10%"><div class="text-center">Capital</div></th>
-						<th width="10%"><div class="text-center">IVA</div></th>
-						<th width="10%"><div class="text-center">Seguro</div></th>
+						<th width="8%"><div class="text-center">Capital</div></th>
+						<th width="8%"><div class="text-center">Int.</div></th>
+						<th width="8%"><div class="text-center">IVA</div></th>
+						<th width="8%"><div class="text-center">Seguro</div></th>
 						<th width="10%"><div class="text-center">Mov</div></th>
 						<th width="10%"><div class="text-center">Importe</div></th>
 						<th width="10%"><div class="text-center">Cajero</div></th>
@@ -143,8 +143,8 @@
 				    <td><div class="text-left">{{objeto.nombreCompleto}}</div></td>
 				    <td><div class="text-center">{{objeto.fechaDeposito | date:"dd-MM-yyyy"}}</div></td>
 				    <td><div class="text-center">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</div></td>
-				    <td><div class="text-right">{{objeto.pagoInteres | currency}}</div></td>
 				    <td><div class="text-right">{{objeto.pagoCapital | currency}}</div></td> 	
+				    <td><div class="text-right">{{objeto.pagoInteres | currency}}</div></td>
 				    <td><div class="text-right">{{objeto.pagoIva | currency}}</div></td> 	
 				    <td><div class="text-right">{{objeto.pagoSeguro | currency}}</div></td>
 				    <td><div class="text-center">{{objeto.descripcion}}</div></td>

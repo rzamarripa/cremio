@@ -14,23 +14,44 @@ angular.module("creditoMio")
   this.subscribe('prospectos', () => {
 		return [{	sucursal_id :	 Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
 							estatus : 1 }];
-	})
+	});
+	
+	this.subscribe('prospectosDistribuidor', () => {
+		return [{	"profile.sucursal_id" 			:	 Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+							"profile.estatusProspecto" 	: 1 }];
+	});
+	
 	  
     
   this.helpers({
 		arreglo : () => {
-
-				var prospectos = Prospectos.find({}).fetch();
+				var prospectos = [];
 				
-				_.each(prospectos, function(p){
+				var prospectosVales = Prospectos.find({}).fetch();
+				
+				_.each(prospectosVales, function(p){
 						Meteor.call("getUsuarioId", p.distribuidor_id, function(e,r){								
 								if (r)
 								{
 										p.distribuidor = r;
+										prospectos.push(p);
 										$scope.$apply();
 								}
 						});
-				})			
+				});			
+				
+				var prospectosDistribuidor = ProspectosDistribuidor.find({}).fetch();
+				_.each(prospectosDistribuidor, function(p){
+						Meteor.call("getUsuarioId", p.profile.promotora_id, function(e,r){								
+								if (r)
+								{
+										p.distribuidor = r;
+										prospectos.push(p);
+										$scope.$apply();
+								}
+						});
+				});
+				
 				return prospectos;
 		},
 		

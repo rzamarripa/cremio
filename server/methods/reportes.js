@@ -8,6 +8,7 @@ Meteor.methods({
 			console.log(fechaInicial);
 			console.log(fechaFinal);
 */
+
 			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}).fetch();
 			
 			var resultado = {};
@@ -123,8 +124,15 @@ Meteor.methods({
 						}
 					});
 					
-					//Cobros de Clientes de Otra Sucursal
+					
 					var credito = Creditos.findOne({_id: cd.credito_id},{fields: {cliente_id : 1}});
+					//Cobros de Clientes de Otra Sucursal
+					if (credito == undefined)
+					{
+							//console.log(cd._id);
+							//console.log(credito);
+					}
+					
 					var cliente = Meteor.users.findOne({_id: credito.cliente_id}, {fileds: {"profile.sucursal_id":1}});
 					if (cd.sucursalPago_id != cliente.profile.sucursal_id)
 					{
@@ -148,20 +156,27 @@ Meteor.methods({
 	},
 	getBancos:function(fechaInicial, fechaFinal, sucursal_id){
 			
-			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}, {sort: {fechaEntrega: 1}}).fetch();
 
+			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal }, estatus: 1 }, {sort: {fechaEntrega:1} }).fetch();
+			
 			var resultado = {};
 			
 			resultado.cobranza 						= [];
 			resultado.seguroDistribuidor 	= 0;
 			resultado.bonificaciones			= 0;
-
+			var tipoIngreso = {};
+			var cuenta 			= {};
+			
 			_.each(cobranzaDiaria, function(cd){
 				
-					if (cd.seguro != undefined)
+					tipoIngreso = TiposIngreso.findOne(cd.tipoIngreso_id);
+					cuenta 			= Cuentas.findOne({tipoIngreso_id: cd.tipoIngreso_id});
+					
+
+					if (cd.seguro != undefined && cuenta.tipoCuenta == "Banco")
 							resultado.seguroDistribuidor += Number(parseFloat(cd.seguro).toFixed(2));
 					
-					if (cd.bonificacion != undefined)		
+					if (cd.bonificacion != undefined && cuenta.tipoCuenta == "Banco")		
 							resultado.bonificaciones += Number(parseFloat(cd.bonificacion).toFixed(2));
 				
 					_.each(cd.planPagos, function(plan){
@@ -169,32 +184,29 @@ Meteor.methods({
 						if (plan.folioCredito != 0)
 						{
 						
-							plan.fechaPago = cd.fechaPago;
-							var pp = PlanPagos.findOne(plan.planPago_id);
-							var credito = Creditos.findOne(pp.credito_id);
-							var tipoIngreso = TiposIngreso.findOne(cd.tipoIngreso_id);
-							var cuenta = Cuentas.findOne({tipoIngreso_id: cd.tipoIngreso_id});
-
+							plan.fechaPago 	= cd.fechaPago;
+							var pp 					= PlanPagos.findOne(plan.planPago_id);
+							var credito 		= Creditos.findOne(pp.credito_id);
+							
+							//Marca Error.... si lo quito
+							tipoIngreso 		= TiposIngreso.findOne(cd.tipoIngreso_id);
+							cuenta 					= Cuentas.findOne({tipoIngreso_id: cd.tipoIngreso_id});
+								
 							plan.folio 				= credito.folio;
 							plan.numeroPago 	= pp.numeroPago;
+
 							plan.tipoCredito	= pp.tipoCredito;
 							plan.numeroPagos 	= credito.numeroPagos;
 							plan.tipoIngreso 	= tipoIngreso.nombre;
 							plan.tipoCuenta 	= cuenta.tipoCuenta;
 													
-							var user = Meteor.users.findOne({"_id" : credito.cliente_id}, 
-	  																{fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
-	  																
-	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
-		  																{fields: {"profile.nombre": 1}});											
-		  						
+							var user = Meteor.users.findOne({"_id" : cd.usuario_id}, {fields: {"profile.nombreCompleto": 1, "profile.numeroCliente": 1 }});
+	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, {fields: {"profile.nombre": 1}});													
 		  				plan.cajero = cajero.profile.nombre;
-	  									
 							plan.numeroCliente = user.profile.numeroCliente; 
-							
-							
 							plan.numeroCliente = user.profile.numeroCliente;	
 							plan.nombreCompleto = user.profile.nombreCompleto;
+							
 							if (plan.tipoCuenta == "Banco"){
 								resultado.cobranza.push(plan);
 								plan.mostrar = true;
@@ -216,12 +228,9 @@ Meteor.methods({
 								plan.tipoIngreso 	= tipoIngreso.nombre;
 								plan.tipoCuenta 	= cuenta.tipoCuenta;
 								
-		  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
-		  																{fields: {"profile.nombre": 1}});											
-		  					
-		  					
-		  					plan.cajero = cajero.profile.nombre;
-		  									
+								
+		  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, {fields: {"profile.nombre": 1}});											
+		  					plan.cajero = cajero.profile.nombre;		  									
 								plan.numeroCliente = "S/N";	
 								plan.nombreCompleto = cd.usuario_id;
 								
@@ -234,16 +243,64 @@ Meteor.methods({
 								}
 							
 						}
-							
-							
+						
 					})
 					
 			});
 						
 			return resultado;
+	
+	},
+	getSeguroDistribuidores:function(fechaInicial, fechaFinal, sucursal_id){
+			
+			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}).fetch();
+			
+			var resultado = {};
+			
+			resultado.seguroDistribuidorCobranza 	= [];			
+			resultado.seguroDistribuidor 					= 0;
+						
+			_.each(cobranzaDiaria, function(cd){
+					
+					if (cd.seguro != undefined && cd.seguro != 0)
+					{
+							var pago = {};
+
+							resultado.seguroDistribuidor += Number(parseFloat(cd.seguro).toFixed(2));
+							
+							pago.seguro = Number(parseFloat(cd.seguro).toFixed(2));
+							pago.tipoIngreso	= TiposIngreso.findOne(cd.tipoIngreso_id).nombre;
+							pago.fechaPago		= cd.fechaPago;
+							pago.seguro				= cd.seguro;
+							
+							var user = Meteor.users.findOne({"_id" : cd.usuario_id}, 
+		  																{fields: {"profile.nombreCompleto": 1,
+			  																				"profile.nombre": 1,
+			  																				"profile.apellidoPaterno": 1,
+			  																				"profile.numeroCliente": 1 }});
+		  				
+		  				pago.numeroCliente 	= user.profile.numeroCliente;	
+							pago.nombreCompleto = user.profile.nombre  + ' ' + user.profile.apellidoPaterno;												
+							
+	  					var cajero = Meteor.users.findOne({"_id" : cd.usuarioCobro_id}, 
+	  																						{fields: {"profile.nombre": 1}});											
+	  					
+	  					
+	  					pago.cajero = cajero.profile.nombre;
+	  									
+							pago.numeroCliente = user.profile.numeroCliente;	
+							pago.nombreCompleto = user.profile.nombre  + ' ' + user.profile.apellidoPaterno;
+							
+		  				resultado.seguroDistribuidorCobranza.push(pago);
+								
+					}
+					
+					
+			});
+									
+			return resultado;
 			
 	},
-
 	getRDocumentos:function(fechaInicial, fechaFinal, sucursal_id){
 			
 			var cobranzaDiaria = Pagos.find({sucursalPago_id: sucursal_id, fechaPago : { $gte : fechaInicial, $lte : fechaFinal}, estatus: 1}).fetch();
@@ -638,9 +695,18 @@ Meteor.methods({
 			return pagos;
 	},	
 	
-	ReporteCobranza: function (objeto, otrasSucursales, inicial, final, tiposIngreso) {
+	ReporteCobranza: function (objeto, otrasSucursales, inicial, final, tiposIngreso, totalCapital,
+																																										totalInteres,
+																																										totalIva,
+																																										totalSeguro,
+																																										totalSeguroDistribuidor,
+																																										totalBonificaciones,
+																																										totalCargosMoratorios,
+																																										totalCobranza) {
 	
-		//console.log(objeto,"creditos ")
+																																										
+    //console.log(objeto,"creditos ");
+		
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -688,16 +754,19 @@ Meteor.methods({
 		var fechaFinal = final;
 
     
-	  var suma 										= 0;
+	  /*
+		var suma 										= 0;
 		var sumaInter 							= 0;
 		var sumaIva 								= 0;
 		var sumaSeguro 							= 0;
 		var sumaSeguroDistribuidor 	= 0;
 		var sumaCargosM 						= 0;
+		var sumaBonificaciones 			= 0;
 		var totalcobranza 					= 0;
+*/
 		
 		
-	    _.each(objeto,function(item){
+	  _.each(objeto,function(item){
 
 	    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY")
 	    	moment(item.fechaInicial).format("DD-MM-YYYY")
@@ -725,21 +794,25 @@ Meteor.methods({
 	      else if (item.descripcion == "Cargo Moratorio")
 	      {
 	      	item.movimiento = "CM";
-	      	sumaCargosM += Number(parseFloat(item.totalPago).toFixed(2));
+	      	//sumaCargosM += Number(parseFloat(item.totalPago).toFixed(2));
 	      }
 	      else if (item.descripcion == "Vale") 
 	      {
 	      	item.movimiento = "V";
+	      	//sumaBonificaciones += item.bonificacion
 	      }
 
-	       suma 				 += item.pagoCapital;
-	       sumaInter 		 += item.pagoInteres;
-	       sumaIva 			 += item.pagoIva;
-	       sumaSeguro 	 += item.pagoSeguro;
+	       //suma 				 += item.pagoCapital;
+	       //sumaInter 		 += item.pagoInteres;
+	       //sumaIva 			 += item.pagoIva;
+	       //sumaSeguro 	 += item.pagoSeguro;
 	       	       
-
-	       if (item.tipoIngreso != 'NC.')
+				 
+				 
+	       /*
+if (item.tipoIngreso != 'NC.')
 		       	totalcobranza += parseFloat(item.totalPago);
+*/
 	       
 
 	        item.cargo = parseFloat(item.totalPago).toFixed(2);
@@ -761,7 +834,7 @@ Meteor.methods({
 	 	 	if (item.numeroPagos < 10) {
 	 	 		item.numeroPagos = "0"+item.numeroPagos
 	 	 	}
-	    });
+	 });
 	    
 
  		    var dia = fecha.getDate()
@@ -797,6 +870,7 @@ Meteor.methods({
  		    }
  		    fechaFinal = dia3 + "-" + mes3 + "-" + anio3;
  		    
+/*
  		    parseFloat(suma.toFixed(2))
  		    suma = formatCurrency(suma)
  		    parseFloat(sumaInter.toFixed(2))
@@ -808,7 +882,16 @@ Meteor.methods({
  		    parseFloat(sumaCargosM.toFixed(2))
  		    sumaCargosM = formatCurrency(sumaCargosM)
  		    parseFloat(totalcobranza.toFixed(2))
- 		    totalcobranza = formatCurrency(totalcobranza)
+*/
+ 		    
+ 		    totalCapital 							= formatCurrency(parseFloat(totalCapital).toFixed(2));
+ 		    totalInteres 							= formatCurrency(parseFloat(totalInteres).toFixed(2));
+ 		    totalIva		 							= formatCurrency(parseFloat(totalIva).toFixed(2));
+ 		    totalSeguro 							= formatCurrency(parseFloat(totalSeguro).toFixed(2));
+ 		    totalSeguroDistribuidor 	= formatCurrency(parseFloat(totalSeguroDistribuidor).toFixed(2));
+ 		    totalBonificaciones 			= formatCurrency(parseFloat(totalBonificaciones).toFixed(2));
+ 		    totalCargosMoratorios 		= formatCurrency(parseFloat(totalCargosMoratorios).toFixed(2));
+ 		    totalCobranza 						= formatCurrency(parseFloat(totalCobranza).toFixed(2));
  				
  				//Tipos de Ingreso
  				_.each(tiposIngreso, function(ti){
@@ -820,21 +903,26 @@ Meteor.methods({
  				});
  				
  				var hora = moment(new Date()).format("hh:mm:ss a");
-		
+ 				
+ 				var sucursal = Sucursales.findOne(Meteor.user().profile.sucursal_id);
+ 				
 	      doc.setData({				
-    	            items					: objeto,
-    	            sucursales		: otrasSucursales,
-									fecha					: fecha,
-									hora					: hora,
-									inicial				: fechaInicial,
-									final					: fechaFinal,
-									sumaCapital		: suma,
-									sumaIntereses	: sumaInter,
-									sumaIva				: sumaIva,
-									totalSeguro		: sumaSeguro,
-									totalCobranza	: totalcobranza,
-									totalCargosM	: sumaCargosM,
-									tiposIngreso	:	tiposIngreso
+    	            items										: objeto,
+    	            sucursal								: sucursal.nombreSucursal,
+    	            sucursales							: otrasSucursales,
+									fecha										: fecha,
+									hora										: hora,
+									inicial									: fechaInicial,
+									final										: fechaFinal,
+									sumaCapital							: totalCapital,
+									sumaIntereses						: totalInteres,
+									sumaIva									: totalIva,
+									totalSeguro							: totalSeguro,
+									totalSeguroDistribuidor	: totalSeguroDistribuidor,
+									totalBonificaciones			: totalBonificaciones,
+									totalCargosM						: totalCargosMoratorios,
+									totalCobranza						: totalCobranza,									
+									tiposIngreso						:	tiposIngreso
 	
 			  });
 								
@@ -845,16 +933,6 @@ Meteor.methods({
              		 
     var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "reporteDiarioCobranzaSalida" + templateType; 
              		 
-		//fs.writeFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx",buf);		
-				
-		//Pasar a base64
-		// read binary data
-    /*
-var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx");
-    
-    // convert binary data to base64 encoded string
-    return new Buffer(bitmap).toString('base64');
-*/
 		fs.writeFileSync(rutaOutput, buf);
      
 		unoconv.convert(rutaOutput, 'pdf', function(err, result) {
@@ -872,11 +950,18 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 		
 		
   },
-	ReportesBanco: function (objeto,inicial,final) {
+	ReportesBanco: function (objeto,inicial,final,  totalCapital, 
+																									totalInteres,
+																									totalIva,
+																									totalSeguro,
+																									totalSeguroDistribuidor,
+																									totalBonificaciones,
+																									totalCargosMoratorios,
+																									totalCobranza) {
 	
 		//console.log(objeto,"creditos ")
 		var fs = require('fs');
-    	var Docxtemplater = require('docxtemplater');
+    var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
 		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
 		
@@ -888,15 +973,12 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
       var publicPath = path.resolve('.').split('.meteor')[0];
       var produccion = publicPath + "public/plantillas/";
       var produccionSalida = publicPath + "public/generados/";
-    }else{						 
+    }
+		else{						 
       var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
       var produccion = publicPath + "/plantillas/";
       var produccionSalida = "/home/cremio/archivos/";
     }
-
-		
-		//var produccion = "/home/cremio/archivos/";
-		//var produccion = meteor_root+"/web.browser/app/plantillas/";
 		
 		var templateType = 'pdf';
 		var res = new future();
@@ -905,151 +987,161 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
     	   .readFileSync(produccion+"ReporteBancos.docx", "binary");
 		var zip = new JSZip(content);
 		var doc=new Docxtemplater()
-								.loadZip(zip).setOptions({nullGetter: function(part) {
-			if (!part.module) {
-			return "";
-			}
-			if (part.module === "rawxml") {
-			return "";
-			}
-			return "";
-		}});
+								.loadZip(zip).setOptions({nullGetter: function(part) 
+								{
+									if (!part.module) {
+										return "";
+									}
+									if (part.module === "rawxml") {
+										return "";
+									}
+									return "";
+								}});
+								
 		const formatCurrency = require('format-currency')
-			var fecha = new Date();
-			var f = fecha;
-			var fechaInicial = inicial
-			var fechaFinal = final
+		var fecha = new Date();
+		var f = fecha;
+		var fechaInicial = inicial
+		var fechaFinal = final
 
-	     var suma 					= 0
-		   var sumaInter 			= 0
-		   var sumaIva 				= 0
-		   var sumaSeguro 		= 0
-		   var totalcobranza 	= 0
+    /*
+var suma 					= 0
+	  var sumaInter 			= 0
+	  var sumaIva 				= 0
+	  var sumaSeguro 		= 0
+	  var totalcobranza 	= 0
+*/
 		   
-	    _.each(objeto,function(item){
-		    	
-		    	if (item.tipoIngreso == 'EFECTIVO')
-		      	item.tipoIngreso = 'EFVO.';
-		      else if (item.tipoIngreso == 'Nota de Credito')		
-		      	item.tipoIngreso = 'NC.';
-		      else if (item.tipoIngreso == 'FICHA DE DEPOSITO')		
-		      	item.tipoIngreso = 'F DEP.';		
-		      else if (item.tipoIngreso == 'TRANSFERENCIA')		
-		      	item.tipoIngreso = 'TRANSF.';
-		      else if (item.tipoIngreso == 'TARJETA DE CREDITO/DEBITO')		
-		      	item.tipoIngreso = 'TC/D.';
-		      else if (item.tipoIngreso == 'REFINANCIAMIENTO')		
-		      	item.tipoIngreso = 'REF.';		
-		      else if (item.tipoIngreso == 'CHEQUE')		
-		      	item.tipoIngreso = 'CH.';	
-		      	
-		      if (item.descripcion == "Recibo") 
-		      {
-		      	item.movimiento = "R";
-		      }
-		      else if (item.descripcion == "Cargo Moratorio")
-		      {
-		      	item.movimiento = "CM";
-		      	//sumaCargosM += Number(parseFloat(item.totalPago).toFixed(2));
-		      }
-		      else if (item.descripcion == "Vale") 
-		      {
-		      	item.movimiento = "V";
-		      }	
-		    
-		    	suma += item.pagoCapital
-		        sumaInter += item.pagoInteres
-		        sumaIva += item.pagoIva
-		        sumaSeguro += item.pagoSeguro;
-		        totalcobranza += parseFloat(item.totalPago);
-		        
-		    	item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY");
-		    	item.fechaDeposito = moment(item.fechaDeposito).format("DD-MM-YYYY");
-		    	item.totalPago = parseFloat(item.totalPago).toFixed(2);
-		    	item.totalPago = formatCurrency(item.totalPago)
-		    	item.pagoInteres = parseFloat(item.pagoInteres).toFixed(2);
-		    	item.pagoInteres = formatCurrency(item.pagoInteres)
-		    	item.pagoCapital = parseFloat(item.pagoCapital).toFixed(2);
-		    	item.pagoCapital = formatCurrency(item.pagoCapital);
-		    	item.pagoIva = parseFloat(item.pagoIva).toFixed(2);
-		    	item.pagoIva = formatCurrency(item.pagoIva);
-	    });
+    _.each(objeto,function(item){
+	    	
+	    	if (item.tipoIngreso == 'EFECTIVO')
+	      	item.tipoIngreso = 'EFVO.';
+	      else if (item.tipoIngreso == 'Nota de Credito')		
+	      	item.tipoIngreso = 'NC.';
+	      else if (item.tipoIngreso == 'FICHA DE DEPOSITO')		
+	      	item.tipoIngreso = 'F DEP.';		
+	      else if (item.tipoIngreso == 'TRANSFERENCIA')		
+	      	item.tipoIngreso = 'TRANSF.';
+	      else if (item.tipoIngreso == 'TARJETA DE CREDITO/DEBITO')		
+	      	item.tipoIngreso = 'TC/D.';
+	      else if (item.tipoIngreso == 'REFINANCIAMIENTO')		
+	      	item.tipoIngreso = 'REF.';		
+	      else if (item.tipoIngreso == 'CHEQUE')		
+	      	item.tipoIngreso = 'CH.';	
+	      	
+	      if (item.descripcion == "Recibo") 
+	      {
+	      	item.movimiento = "R";
+	      }
+	      else if (item.descripcion == "Cargo Moratorio")
+	      {
+	      	item.movimiento = "CM";
+	      }
+	      else if (item.descripcion == "Vale") 
+	      {
+	      	item.movimiento = "V";
+	      }	
 	    
+	    	/*
+suma += item.pagoCapital
+	      sumaInter += item.pagoInteres
+	      sumaIva += item.pagoIva
+	      sumaSeguro += item.pagoSeguro;
+	      totalcobranza += parseFloat(item.totalPago);
+*/
+	        
+	    	item.fechaPago 			= moment(item.fechaPago).format("DD-MM-YYYY");
+	    	item.fechaDeposito 	= moment(item.fechaDeposito).format("DD-MM-YYYY");
+	    	item.totalPago 			= parseFloat(item.totalPago).toFixed(2);
+	    	item.totalPago 			= formatCurrency(item.totalPago)
+	    	item.pagoInteres 		= parseFloat(item.pagoInteres).toFixed(2);
+	    	item.pagoInteres 		= formatCurrency(item.pagoInteres)
+	    	item.pagoCapital 		= parseFloat(item.pagoCapital).toFixed(2);
+	    	item.pagoCapital 		= formatCurrency(item.pagoCapital);
+	    	item.pagoIva 				= parseFloat(item.pagoIva).toFixed(2);
+	    	item.pagoIva 				= formatCurrency(item.pagoIva);
+    });
+	    
+   	var dia = fecha.getDate()
+    var mes = fecha.getMonth()+1
+    var anio = fecha.getFullYear()
+    if (Number(dia) < 10) {
+    	dia = "0" + dia;
+    }
+    if (Number(mes) < 10) {
+    	mes = "0" + mes;
+    }
+    fecha = dia+ "-" + mes + "-" + anio
 
-	 		    
- 		   var dia = fecha.getDate()
- 		    var mes = fecha.getMonth()+1
- 		    var anio = fecha.getFullYear()
- 		    if (Number(dia) < 10) {
- 		    	dia = "0" + dia;
- 		    }
- 		    if (Number(mes) < 10) {
- 		    	mes = "0" + mes;
- 		    }
- 		    fecha = dia+ "-" + mes + "-" + anio
+    var dia2 = fechaInicial.getDate()
+    var mes2 = fechaInicial.getMonth()+1
+    var anio2 = fechaInicial.getFullYear()
+    if (Number(dia2) < 10) {
+    	dia2 = "0" + dia2;
+    }
+    if (Number(mes2) < 10) {
+    	mes2 = "0" + mes2;
+    }
+    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
 
- 		    var dia2 = fechaInicial.getDate()
- 		    var mes2 = fechaInicial.getMonth()+1
- 		    var anio2 = fechaInicial.getFullYear()
- 		    if (Number(dia2) < 10) {
- 		    	dia2 = "0" + dia2;
- 		    }
- 		    if (Number(mes2) < 10) {
- 		    	mes2 = "0" + mes2;
- 		    }
- 		    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
+    var dia3 = fechaFinal.getDate()
+    var mes3 = fechaFinal.getMonth()+1
+    var anio3 = fechaFinal.getFullYear()
+    if (Number(dia3) < 10) {
+    	dia3 = "0" + dia3;
+    }
+    if (Number(mes3) < 10) {
+    	mes3 = "0" + mes3;
+    }
+    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
+    //totalcobranza = suma + sumaIva + sumaInter
 
- 		    var dia3 = fechaFinal.getDate()
- 		    var mes3 = fechaFinal.getMonth()+1
- 		    var anio3 = fechaFinal.getFullYear()
- 		    if (Number(dia3) < 10) {
- 		    	dia3 = "0" + dia3;
- 		    }
- 		    if (Number(mes3) < 10) {
- 		    	mes3 = "0" + mes3;
- 		    }
- 		    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
- 		    //totalcobranza = suma + sumaIva + sumaInter
- 		    
-        parseFloat(suma).toFixed(2);
- 		    suma = formatCurrency(suma)
- 		    parseFloat(sumaInter).toFixed(2);
- 		    sumaInter = formatCurrency(sumaInter)
- 		    parseFloat(sumaIva).toFixed(2);
- 		    sumaIva = formatCurrency(sumaIva)
- 		    parseFloat(sumaSeguro).toFixed(2);
- 		    sumaSeguro = formatCurrency(sumaSeguro);
- 		    parseFloat(totalcobranza).toFixed(2);
- 		    totalcobranza = formatCurrency(totalcobranza);
+		/*
+parseFloat(suma).toFixed(2);
+    suma = formatCurrency(suma)
+    parseFloat(sumaInter).toFixed(2);
+    sumaInter = formatCurrency(sumaInter)
+    parseFloat(sumaIva).toFixed(2);
+    sumaIva = formatCurrency(sumaIva)
+    parseFloat(sumaSeguro).toFixed(2);
+    sumaSeguro = formatCurrency(sumaSeguro);
+    parseFloat(totalcobranza).toFixed(2);
+    totalcobranza = formatCurrency(totalcobranza);
+*/
+		
+		totalCapital 							= formatCurrency(parseFloat(totalCapital).toFixed(2));
+    totalInteres 							= formatCurrency(parseFloat(totalInteres).toFixed(2));
+    totalIva		 							= formatCurrency(parseFloat(totalIva).toFixed(2));
+    totalSeguro 							= formatCurrency(parseFloat(totalSeguro).toFixed(2));
+    totalSeguroDistribuidor 	= formatCurrency(parseFloat(totalSeguroDistribuidor).toFixed(2));
+    totalBonificaciones 			= formatCurrency(parseFloat(totalBonificaciones).toFixed(2));
+    totalCargosMoratorios 		= formatCurrency(parseFloat(totalCargosMoratorios).toFixed(2));
+    totalCobranza 						= formatCurrency(parseFloat(totalCobranza).toFixed(2));
+		
+		var sucursal = Sucursales.findOne(Meteor.user().profile.sucursal_id);
 		
 		doc.setData({				
-			            item: 		 objeto,
-						fecha:       fecha,
-						inicial:     fechaInicial,
-						final:       fechaFinal,
-						sumaCapital:    suma,
-						sumaIntereses:  sumaInter,
-						sumaIva:        sumaIva,
-						totalSeguro:    sumaSeguro,
-						totalCobranza:  totalcobranza,
-													
-				});
+		            item										: objeto,
+		            sucursal								: sucursal.nombreSucursal,
+								fecha										: fecha,
+								inicial									: fechaInicial,
+								final										: fechaFinal,
+								sumaCapital							: totalCapital,
+								sumaIntereses						: totalInteres,
+								sumaIva									: totalIva,
+								totalSeguro							: totalSeguro,
+								totalSeguroDistribuidor	: totalSeguroDistribuidor,
+								totalBonificaciones			: totalBonificaciones,
+								totalCargosM						: totalCargosMoratorios,
+								totalCobranza						: totalCobranza,
+		});
 								
 		doc.render();
  
 		var buf = doc.getZip()
              		 .generate({type:"nodebuffer"});
-             		 
-		//fs.writeFileSync(produccionSalida+"ReporteBancosSalida.docx",buf);
-		
+
 		var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "ReporteBancosSalida" + templateType;
-				
-		//Pasar a base64
-		// read binary data
-    //var bitmap = fs.readFileSync(produccionSalida+"ReporteBancosSalida.docx");
-    
-    // convert binary data to base64 encoded string
-    //return new Buffer(bitmap).toString('base64');
     
     fs.writeFileSync(rutaOutput, buf);
     
@@ -1066,6 +1158,168 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
     return res.wait();
 		
   },
+																									
+	
+	ReportesSeguroDistribuidores: function (objeto,inicial,final, totalSeguroDistribuidor)
+	{
+	
+		var fs = require('fs');
+    var Docxtemplater = require('docxtemplater');
+		var JSZip = require('jszip');
+		var meteor_root = require('fs').realpathSync( process.cwd() + '/../' );
+		
+		var unoconv = require('better-unoconv');
+    var future = require('fibers/future');
+		
+		if(Meteor.isDevelopment){
+      var path = require('path');
+      var publicPath = path.resolve('.').split('.meteor')[0];
+      var produccion = publicPath + "public/plantillas/";
+      var produccionSalida = publicPath + "public/generados/";
+    }
+		else{						 
+      var publicPath = '/var/www/cremio/bundle/programs/web.browser/app/';
+      var produccion = publicPath + "/plantillas/";
+      var produccionSalida = "/home/cremio/archivos/";
+    }
+		
+		var templateType = 'pdf';
+		var res = new future();
+				 
+		var content = fs
+    	   .readFileSync(produccion+"ReporteSeguroDistribuidores.docx", "binary");
+		var zip = new JSZip(content);
+		var doc=new Docxtemplater()
+								.loadZip(zip).setOptions({nullGetter: function(part) 
+								{
+									if (!part.module) {
+										return "";
+									}
+									if (part.module === "rawxml") {
+										return "";
+									}
+									return "";
+								}});
+								
+		const formatCurrency = require('format-currency')
+		var fecha = new Date();
+		var f = fecha;
+		var fechaInicial = inicial
+		var fechaFinal = final
+
+		   
+    _.each(objeto,function(item){
+	    	
+	    	if (item.tipoIngreso == 'EFECTIVO')
+	      	item.tipoIngreso = 'EFVO.';
+	      else if (item.tipoIngreso == 'Nota de Credito')		
+	      	item.tipoIngreso = 'NC.';
+	      else if (item.tipoIngreso == 'FICHA DE DEPOSITO')		
+	      	item.tipoIngreso = 'F DEP.';		
+	      else if (item.tipoIngreso == 'TRANSFERENCIA')		
+	      	item.tipoIngreso = 'TRANSF.';
+	      else if (item.tipoIngreso == 'TARJETA DE CREDITO/DEBITO')		
+	      	item.tipoIngreso = 'TC/D.';
+	      else if (item.tipoIngreso == 'REFINANCIAMIENTO')		
+	      	item.tipoIngreso = 'REF.';		
+	      else if (item.tipoIngreso == 'CHEQUE')		
+	      	item.tipoIngreso = 'CH.';	
+	      	
+	      if (item.descripcion == "Recibo") 
+	      {
+	      	item.movimiento = "R";
+	      }
+	      else if (item.descripcion == "Cargo Moratorio")
+	      {
+	      	item.movimiento = "CM";
+	      }
+	      else if (item.descripcion == "Vale") 
+	      {
+	      	item.movimiento = "V";
+	      }	
+	    
+	        
+	    	item.fechaPago 			= moment(item.fechaPago).format("DD-MM-YYYY");
+	    	item.fechaDeposito 	= moment(item.fechaDeposito).format("DD-MM-YYYY");
+	    	item.totalPago 			= parseFloat(item.totalPago).toFixed(2);
+	    	item.totalPago 			= formatCurrency(item.totalPago)
+	    	item.pagoInteres 		= parseFloat(item.pagoInteres).toFixed(2);
+	    	item.pagoInteres 		= formatCurrency(item.pagoInteres)
+	    	item.pagoCapital 		= parseFloat(item.pagoCapital).toFixed(2);
+	    	item.pagoCapital 		= formatCurrency(item.pagoCapital);
+	    	item.pagoIva 				= parseFloat(item.pagoIva).toFixed(2);
+	    	item.pagoIva 				= formatCurrency(item.pagoIva);
+    });
+	    
+   	var dia = fecha.getDate()
+    var mes = fecha.getMonth()+1
+    var anio = fecha.getFullYear()
+    if (Number(dia) < 10) {
+    	dia = "0" + dia;
+    }
+    if (Number(mes) < 10) {
+    	mes = "0" + mes;
+    }
+    fecha = dia+ "-" + mes + "-" + anio
+
+    var dia2 = fechaInicial.getDate()
+    var mes2 = fechaInicial.getMonth()+1
+    var anio2 = fechaInicial.getFullYear()
+    if (Number(dia2) < 10) {
+    	dia2 = "0" + dia2;
+    }
+    if (Number(mes2) < 10) {
+    	mes2 = "0" + mes2;
+    }
+    fechaInicial = dia2+ "-" + mes2 + "-" + anio2
+
+    var dia3 = fechaFinal.getDate()
+    var mes3 = fechaFinal.getMonth()+1
+    var anio3 = fechaFinal.getFullYear()
+    if (Number(dia3) < 10) {
+    	dia3 = "0" + dia3;
+    }
+    if (Number(mes3) < 10) {
+    	mes3 = "0" + mes3;
+    }
+    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
+    //totalcobranza = suma + sumaIva + sumaInter
+		
+    totalSeguroDistribuidor 	= formatCurrency(parseFloat(totalSeguroDistribuidor).toFixed(2));
+		var sucursal = Sucursales.findOne(Meteor.user().profile.sucursal_id);
+		
+		doc.setData({				
+		            item										: objeto,
+		            sucursal								: sucursal.nombreSucursal,
+								fecha										: fecha,
+								inicial									: fechaInicial,
+								final										: fechaFinal,
+								totalSeguroDistribuidor	: totalSeguroDistribuidor,
+		});
+								
+		doc.render();
+ 
+		var buf = doc.getZip()
+             		 .generate({type:"nodebuffer"});
+
+		var rutaOutput = (Meteor.isDevelopment ? publicPath + "public/generados/" : produccionSalida) + "ReporteBancosSalida" + templateType;
+    
+    fs.writeFileSync(rutaOutput, buf);
+    
+    unoconv.convert(rutaOutput, 'pdf', function(err, result) {
+        if(!err){
+          fs.unlink(rutaOutput);
+          res['return']({ uri: 'data:application/pdf;base64,' + result.toString('base64'), nombre: "ReporteBancosSalida" + '.pdf' });
+        }else{
+          res['return']({err: err});
+          console.log("Error al convertir pdf:", err);
+        }
+     });
+
+    return res.wait();
+		
+  },
+	
   ReporteCarteraVencida: function (objeto, tipo) {
 	
 		var fs = require('fs');
@@ -1173,8 +1427,11 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
     }
     fecha = dia+ "-" + mes + "-" + anio;
 		
+		var sucursal = Sucursales.findOne(Meteor.user().profile.sucursal_id);
+		
 	  doc.setData({				
 	            items									:	objeto,
+	            sucursal							: sucursal.nombreSucursal,
 							fecha									: fecha,
 							hora									:	hora,
 							sumaTotal							: sumaTotal,
@@ -1332,9 +1589,12 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 	    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
 	    	
 	 		var hora = moment(new Date()).format("hh:mm:ss a");
+	 		
+	 		var sucursal = Sucursales.findOne(Meteor.user().profile.sucursal_id);
 	 				
 			doc.setData({				
 							items				: objeto,
+							sucursal		: sucursal.nombreSucursal,
 							fecha				: fecha,
 							hora				: hora,
 							inicial			: fechaInicial,
@@ -1477,9 +1737,12 @@ var bitmap = fs.readFileSync(produccionSalida+"reporteDiarioCobranzaSalida.docx"
 	    fechaFinal = dia3+ "-" + mes3 + "-" + anio3
 			
 			var hora = moment(new Date()).format("hh:mm:ss a");
+			
+			var sucursal = Sucursales.findOne(Meteor.user().profile.sucursal_id);
 		
 			doc.setData({				
 								items				: objeto,
+								sucursal		: sucursal.nombreSucursal,
 								fecha				: fecha,
 								hora				: hora,
 								inicial			: fechaInicial,

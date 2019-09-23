@@ -67,6 +67,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	rc.editarNota = false;
 	
+	rc.cliente_id = $stateParams.objeto_id;
+	
 	this.subscribe('cajas',()=>{
 		return [{}];
 	});
@@ -163,7 +165,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			}	
 		},
 		creditosAprobados : () =>{
-			var creditos = Creditos.find({estatus:2}, {sort:{fechaSolicito:1}}).fetch();			
+			var creditos = Creditos.find({cliente_id: rc.cliente_id, estatus:2}, {sort:{fechaSolicito:1}}).fetch();			
 			if(creditos != undefined){
 				_.each(creditos, function(credito){	
 					 credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
@@ -180,7 +182,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return Creditos.find({estatus: {$in: [3,6]}});
 		},
 		creditosPendientes : () =>{
-			var creditos = Creditos.find({estatus:{$in:[0,1]} }, {sort:{fechaSolicito:1}}).fetch();
+			var creditos = Creditos.find({cliente_id: rc.cliente_id, estatus:{$in:[0,1]} }, {sort:{fechaSolicito:1}}).fetch();
 			
 			if(creditos != undefined){
 				_.each(creditos, function(credito){				
@@ -524,9 +526,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			var creditos = Creditos.find({estatus: {$in: [4,5]}}, {sort : {fechaSolicito: -1}}).fetch();
 			if(creditos != undefined){
 				
-				_.each(creditos, function(c){
-						c.tipoCredito = TiposCredito.findOne(c.tipoCredito_id).nombre;
-						
+				_.each(creditos, function(c)
+				{
+						var tc = TiposCredito.findOne(c.tipoCredito_id);
+						if (tc != undefined)
+							 c.tipoCredito = tc.nombre;
+							 
 						if (c.avales_ids.length > 0)
 								c.tieneAval = "Si";
 						else
@@ -688,6 +693,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
                                                    parentesco       : referenciaPersonal.parentesco,
                                                    direccion        : result.direccion,
                                                    telefono         : result.telefono,
+                                                   ciudad		        : result.ciudad,
+                                                   estado     	    : result.estado,
                                                    tiempo           : referenciaPersonal.tiempoConocerlo,
                                                    num              : referenciaPersonal.num,
                                                    nombreCompleto		:	result.nombreCompleto
@@ -795,7 +802,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			$("#cancelaCredito").modal('hide');
 	};
 	this.cancelarSeleccion = function(aprobado){
-			 console.log(aprobado);	
+			 //console.log(aprobado);	
 			 rc.cancelacion = aprobado;
 			 rc.motivo = "";
 	};

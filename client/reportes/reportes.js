@@ -2,8 +2,8 @@ angular.module("creditoMio")
 .controller("ReportesCtrl", ReportesCtrl);
  function ReportesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams){
  	
- 	let rc = $reactive(this).attach($scope);
- 	window.rc = rc;
+ 	rc = $reactive(this).attach($scope);
+	window.rc = rc;
  	  
   this.fechaInicial = new Date();
   this.fechaInicial.setHours(0,0,0,0);
@@ -36,6 +36,7 @@ angular.module("creditoMio")
 	rc.numeroCreditos 					= 0;
 	rc.numeroVales 							= 0;
 	
+	rc.totalSeguro = 0;
   
   var FI, FF;
   rc.cliente = {};
@@ -79,39 +80,46 @@ angular.module("creditoMio")
 		return [{}]
 	});
 
+/*
   this.subscribe('movimientosCaja', () => {
      return [{ createdAt:  { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}]
   });
+*/
 
+/*
 	this.subscribe('creditos', () => {
 		return [{fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lte : rc.getReactively("fechaFinal")}}];
 	});
+*/
 	
+/*
 	this.subscribe('pagos', () => {
 		return [{estatus:1},{ fechaPago:  { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}];
 	});
-
-/*
-	this.subscribe('cajas',()=>{
-		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""}]
-	});
 */
+
 	this.subscribe('cuentas',()=>{
 		return [{estatus : 1}]});
 
   this.subscribe('cajas', () => {
     return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "" }]
   });
+
   this.subscribe('tiposIngreso', () => {
     return [{}]
   });
 
+/*
   this.subscribe('cuentas', () => {
     return [{}]
   });
+*/
+
+/*
   this.subscribe('movimientosCaja', () => {
     return [{caja_id: this.getReactively('caja._id'), createdAt: {$gte: this.getReactively('caja.ultimaApertura')} }]
   });
+*/
 	
 	this.helpers({
 
@@ -232,6 +240,10 @@ angular.module("creditoMio")
 						
 						loading(false);
 						$scope.$apply();
+				}
+				else
+				{
+					loading(false);
 				}
 		});
 			
@@ -373,18 +385,16 @@ angular.module("creditoMio")
 			rc.sumaCargoMoratorio = 0;
 	    
 	    rc.planPagos = [];
-			
+			//console.log("Ir al Server:", new Date());
 			loading(true);
-			Meteor.call("getBancos", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id,function(error, result){
+			Meteor.apply("getBancos", [this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id],function(error, result){
 					if  (result)
 					{
 							rc.planPagos 							= result.cobranza;
 							rc.sumaSeguroDistribuidor = result.seguroDistribuidor;
 							rc.sumaBonificaciones 		= result.bonificaciones;
-							//console.log(result)
 							
 							_.each(rc.planPagos, function(plan){
-								
 								if (plan.tipoCuenta == "Banco")
 								{							
 									if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
@@ -401,15 +411,11 @@ angular.module("creditoMio")
 								
 									plan.totalPago = Number(parseFloat(plan.totalPago - plan.bonificacion)).toFixed(2); 
 									
-									
+									rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
+																		
 									if (plan.descripcion == "Cargo Moratorio")
 											rc.sumaCargoMoratorio += Number(parseFloat(plan.totalPago).toFixed(2));
-	
-									/*
-if (plan.tipoIngreso != 'Nota de Credito')
-											rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
-*/
-									
+
 									if (plan.tipoCredito == "creditoP")
 											rc.sumaCreditos += Number(parseFloat(plan.totalPago).toFixed(2));		
 									else if (plan.tipoCredito == "vale"){
@@ -417,13 +423,40 @@ if (plan.tipoIngreso != 'Nota de Credito')
 											plan.descripcion = "Vale";
 									}
 								}
-
-									
 							});
-							console.log(rc.sumaVales);
+							//console.log(rc.sumaVales);
 							loading(false);
 							$scope.$apply();
 					}
+					else
+							loading(false);
+			});
+		
+	};
+	
+	this.seguroDestribuidores = function(){
+
+			var usuario = Meteor.user();
+					
+	    rc.fechaInicial.setHours(0,0,0,0);
+			rc.fechaFinal.setHours(23,59,59,999);
+			
+			rc.sumaSeguroDistribuidor = 0;
+	    rc.arregloSeguroDistribuidor = [];
+	    
+			loading(true);
+			Meteor.apply("getSeguroDistribuidores", [this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id],function(error, result){
+					if  (result)
+					{
+							console.log(result)
+							rc.sumaSeguroDistribuidor 		= result.seguroDistribuidor;
+							rc.arregloSeguroDistribuidor 	= result.seguroDistribuidorCobranza;
+							
+							loading(false);
+							$scope.$apply();
+					}
+					else
+							loading(false);
 			});
 		
 	};
@@ -840,7 +873,15 @@ this.guardarNotaCobranza=function(nota){
 		var sumaIva = 0
 
 	 	loading(true);	
-		Meteor.call('ReporteCobranza', objeto, rc.arregloOtrasSucursales, rc.fechaInicial,rc.fechaFinal, rc.arregloTiposIngresosobjetos ,function(error, response) {
+		Meteor.call('ReporteCobranza', objeto, rc.arregloOtrasSucursales, rc.fechaInicial,rc.fechaFinal, rc.arregloTiposIngresosobjetos, 
+																																																		 rc.sumaCapital,
+																																																		 rc.sumaInteres,
+																																																		 rc.sumaIva,
+																																																		 rc.sumaSeguro,
+																																																		 rc.sumaSeguroDistribuidor,
+																																																		 rc.sumaBonificaciones,
+																																																		 rc.sumaCargoMoratorio,
+																																																		 (rc.totalCobranza + rc.sumaSeguroDistribuidor),function(error, response) {
 		   if(error)
 		   {
 		    	console.log('ERROR :', error);
@@ -855,7 +896,39 @@ this.guardarNotaCobranza=function(nota){
 		});
 		
 	}
-	
+	this.imprimirReporteBancos = function(objeto){
+				
+			
+			if (objeto.length == 0)
+			{
+					toastr.warning("No hay registros por imprimir");
+					return;
+			}
+				
+			 loading(true);
+	    //console.log("objeto",objeto)
+		   Meteor.call('ReportesBanco', objeto,rc.fechaInicial,rc.fechaFinal,  rc.sumaCapital,
+																																					 rc.sumaInteres,
+																																					 rc.sumaIva,
+																																					 rc.sumaSeguro,
+																																					 rc.sumaSeguroDistribuidor,
+																																					 rc.sumaBonificaciones,
+																																					 rc.sumaCargoMoratorio,
+																																					 (rc.totalCobranza + rc.sumaSeguroDistribuidor), function(error, response) {
+
+		   if(error)
+		   {
+			  	loading(false); 
+					console.log('ERROR :', error);
+					return;
+		   }
+		   else
+		   {
+			   		downloadFile(response);	
+			   		loading(false);
+		   }
+		});
+	};
 	this.imprimirReporteCreditos = function(objeto){
 						
 		if (objeto == undefined || objeto.length == 0)
@@ -865,7 +938,12 @@ this.guardarNotaCobranza=function(nota){
 		}
         		   
 		loading(true);	
-		Meteor.call('ReporteCreditos', objeto, rc.fechaInicial, rc.fechaFinal, rc.totalSolicitadoVales, rc.totalPagarVales, rc.totalSolicitadoCreditos, rc.totalPagarCreditos, rc.numeroCreditos, rc.numeroVales ,function(error, response) {
+		Meteor.call('ReporteCreditos', objeto, rc.fechaInicial, rc.fechaFinal, rc.totalSolicitadoVales, 
+																																					 rc.totalPagarVales, 
+																																					 rc.totalSolicitadoCreditos, 
+																																					 rc.totalPagarCreditos, 
+																																					 rc.numeroCreditos, 
+																																					 rc.numeroVales ,function(error, response) {
 
 
 		   if(error)
@@ -978,55 +1056,7 @@ this.guardarNotaCobranza=function(nota){
 		});
 		
 	};
-	this.imprimirReporteBancos = function(objeto){
-				
-			//console.log(objeto)	
-				
-			 loading(true);
-	    //console.log("objeto",objeto)
-		   Meteor.call('ReportesBanco', objeto,rc.fechaInicial,rc.fechaFinal,  function(error, response) {
-
-		   if(error)
-		   {
-		    console.log('ERROR :', error);
-		    return;
-		   }
-		   else
-		   {
-			   		downloadFile(response);	
-			   		loading(false);
-		 				/*
-function b64toBlob(b64Data, contentType, sliceSize) {
-							  contentType = contentType || '';
-							  sliceSize = sliceSize || 512;							
-							  var byteCharacters = atob(b64Data);
-							  var byteArrays = [];
-							  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-							    var slice = byteCharacters.slice(offset, offset + sliceSize);
-							    var byteNumbers = new Array(slice.length);
-							    for (var i = 0; i < slice.length; i++) {
-							      byteNumbers[i] = slice.charCodeAt(i);
-							    }							
-							    var byteArray = new Uint8Array(byteNumbers);
-							    byteArrays.push(byteArray);
-							  }
-							  var blob = new Blob(byteArrays, {type: contentType});
-							  return blob;
-						}
-						var blob = b64toBlob(response, "application/docx");
-					  var url = window.URL.createObjectURL(blob);
-					  
-					  //console.log(url);
-					  var dlnk = document.getElementById('dwnldLnk');
-
-				    dlnk.download = "ReporteBancos.docx"; 
-						dlnk.href = url;
-						dlnk.click();		    
-					  window.URL.revokeObjectURL(url);
-*/
-		   }
-		});
-	};
+	
 	this.imprimirReporteCarteraVencida = function(objeto){
 		//console.log(objeto)
 		

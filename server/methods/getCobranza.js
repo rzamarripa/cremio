@@ -17,8 +17,14 @@ Meteor.methods({
 			_.each(planPagos, function(planPago){
 				var classPago = "";
 					
-					if (planPago.descripcion == "Cargo Moratorio")	
-						 classPago = "text-danger";	
+					if (planPago.descripcion == "Cargo Moratorio")
+					{
+							classPago = "text-danger";	
+							planPago.orden = 2;
+					}
+					else
+							planPago.orden = 1;
+					
 					
 										
 					if (planPago.importeRegular != 0 )
@@ -93,42 +99,77 @@ Meteor.methods({
 			  	return comision;			  	
 		  };
 						
-			var planPagos = {};
+			var planPagos = {}; //importeRegular: {$gt:0},
 			
  			if (op == 0)
-					var planPagos = PlanPagos.find({sucursal_id: sucursal_id,fechaLimite: {$lte: fechaFinal}, tipoCredito: "vale", importeRegular: {$gt:0}, estatus: { $in: [0,2] }}).fetch();
+					var planPagos = PlanPagos.find({sucursal_id		: sucursal_id, 
+																					fechaLimite		: {$lte: fechaFinal}, 
+																					tipoCredito		: {$in:["vale","creditoPersonalDistribuidor"]}, 
+																					importeRegular: {$gt:0}, 
+																					estatus				: {$in: [0,2] }}).fetch();
 			else if (op == 1)
-					var planPagos = PlanPagos.find({sucursal_id: sucursal_id,fechaLimite: {$lte: fechaFinal}, tipoCredito: "vale", importeRegular: {$gt:0}, estatus:{$in: [0,2]}},{sort : {fechaLimite : 1, credito_id: 1, numeroPago: 1}}).fetch();
+					var planPagos = PlanPagos.find({sucursal_id		: sucursal_id,
+																					fechaLimite		: {$lte: fechaFinal}, 
+																					tipoCredito		: {$in:["vale","creditoPersonalDistribuidor"]}, 
+																					importeRegular: {$gt:0}, 
+																					estatus				:{$in: [0,2]}}, {sort : {fechaLimite : 1, credito_id: 1, numeroPago: 1}}).fetch();
 			else
-					//var planPagos = PlanPagos.find({fechaLimite: {$gte: fechaInicial, $lte: fechaFinal}, tipoCredito: "vale", estatus: { $in: [0,2] }}).fetch();
-					var planPagos = PlanPagos.find({sucursal_id: sucursal_id,fechaLimite: {$lte: fechaFinal}, tipoCredito: "vale", importeRegular: {$gt:0}, estatus:{$in: [0,2]}},{sort : {fechaLimite : 1, credito_id: 1, numeroPago: 1}}).fetch();
-			
-			
+					var planPagos = PlanPagos.find({sucursal_id		: sucursal_id,
+																					fechaLimite		: {$lte: fechaFinal}, 
+																					tipoCredito		: {$in:["vale","creditoPersonalDistribuidor"]}, 
+																					importeRegular: {$gt:0}, 
+																					estatus				:{$in: [0,2]}},{sort : {fechaLimite : 1, credito_id: 1, numeroPago: 1}}).fetch();
+						
 			var configuraciones = Configuraciones.findOne();
 			
-			var arreglo = {};
+			var arreglo 				= {};
+			var arregloCortes 	= {};
+			var arregloSeguros 	= {};
 								
 			var hoy = new Date();
 			var fechaActual = moment();
+		
 			
 			_.each(planPagos, function(planPago){
+				
 				var classPago = "";
 										
 					var credito = Creditos.findOne(planPago.credito_id);
-					var distribuidor = Meteor.users.findOne({_id: credito.cliente_id},{fields: {"profile.numeroCliente":1, "profile.nombreCompleto":1}});
+					var distribuidor = Meteor.users.findOne({_id: credito.cliente_id},{fields: {"profile.numeroCliente"		: 1, 
+																																											"profile.nombreCompleto"	: 1, 
+																																											"profile.calle"						: 1, 
+																																											"profile.numero"					: 1,
+																																											"profile.colonia_id" 			: 1,
+																																											"profile.municipio_id" 		: 1,
+																																											"profile.estado_id"				: 1,
+																																											"profile.particular"			: 1,
+																																											"profile.celular"					: 1,
+																																											"profile.telefonoOficina"	: 1}});
 					
-					planPago.numeroPagos = credito.numeroPagos;					
-					planPago.beneficiario = credito.beneficiario_id != undefined ? Beneficiarios.findOne(credito.beneficiario_id).nombreCompleto : "";
+					var colonia = Colonias.findOne({_id: distribuidor.profile.colonia_id});
+					distribuidor.profile.colonia = colonia.nombre;
 					
-					var comision = calculaBonificacion(planPago.fechaLimite);
-	        //planPago.bonificacion = Number(parseFloat(((planPago.capital + planPago.interes) * (comision / 100))).toFixed(2));
-	        planPago.bonificacion = 0;
-	        
-	        if (planPago.importeRegular == planPago.cargo)
-					{	
-	        		//planPago.bonificacion = Number(parseFloat(((planPago.importeRegular) * (comision / 100))).toFixed(2));
-	        		planPago.bonificacion = Number(parseFloat(((planPago.capital + planPago.interes) * (comision / 100))).toFixed(2));
-	        }		
+					var municipio = Municipios.findOne({_id: distribuidor.profile.municipio_id});
+					distribuidor.profile.municipio = municipio.nombre;
+					
+					var estado = Estados.findOne({_id: distribuidor.profile.estado_id});
+					distribuidor.profile.estado = estado.nombre;
+					
+					planPago.numeroPagos = credito.numeroPagos;			
+					
+					if (credito.tipo == "vale")
+					{
+							var comision = calculaBonificacion(planPago.fechaLimite);
+							planPago.beneficiario = credito.beneficiario_id != undefined ? Beneficiarios.findOne(credito.beneficiario_id).nombreCompleto : "";
+							planPago.bonificacion = 0;
+							planPago.bonificacion = Number(parseFloat(((planPago.capital + planPago.interes) * (comision / 100))).toFixed(2));
+							
+					}
+					else if (credito.tipo == "creditoPersonalDistribuidor")
+					{
+							planPago.beneficiario = "CRÉDITO PERSONAL";
+							planPago.bonificacion = 0;
+					}
 	        
 	        planPago.adeudoInicial					= credito.adeudoInicial;
 	        planPago.saldoActual						= credito.saldoActual;
@@ -139,68 +180,209 @@ Meteor.methods({
 	 			 			arreglo[credito.cliente_id] 									= {};
 	 			 			arreglo[credito.cliente_id].credito 		 			= credito;
 					 		arreglo[credito.cliente_id].distribuidor 			= distribuidor;
+					 		arreglo[credito.cliente_id].nombreCompleto 		= distribuidor.profile.nombreCompleto;
+					 		arreglo[credito.cliente_id].numero				 		= distribuidor.profile.numeroCliente;
 					 		arreglo[credito.cliente_id].importe 					= 0.00;
+					 		arreglo[credito.cliente_id].importeCreditoP 	= 0.00;
 					 		arreglo[credito.cliente_id].cargosMoratorios 	= 0.00;
 					 		arreglo[credito.cliente_id].bonificacion		 	= 0.00;
+					 		arreglo[credito.cliente_id].seguro					 	= 0.00;
 					 		
-					 		//Revisar si ya pago el seguro----------------------
-				 			var fecha = new Date(fechaInicial);
-
-							var mes 	= fecha.getMonth() + 1;
-							var dia 	= fecha.getDate();
-							var anio 	= fecha.getFullYear();
-							var quincena = 0;
-														
-							if (dia <= 15)
-									quincena = mes * 2 - 1;
-							else
-									quincena = mes * 2;		
-									
-							var pagosSeguro = PagosSeguro.find({distribuidor_id: credito.cliente_id, anio: anio, quincena: quincena});
-									
-							if (pagosSeguro.count() > 0)
-							{
-									arreglo[credito.cliente_id].seguro					 	= 0.00;
-							}
-							else
-							{
-									var config = Configuraciones.findOne();
-									if (config != undefined)
-							 			 arreglo[credito.cliente_id].seguro					 	= config.seguro;		
-							}
+					 		arreglo[credito.cliente_id].bonificacion		 			= planPago.bonificacion;
 					 		
-					 		
-					 		//arreglo[credito.cliente_id].seguro					 	= 0.00;
-					 		//arreglo[credito.cliente_id].seguro					 	= configuraciones.seguro;
-					 		
-					 		arreglo[credito.cliente_id].bonificacion		 	= planPago.bonificacion;					 		
-					 		if (planPago.descripcion == "Recibo")
+					 		if (planPago.descripcion == "Recibo" && planPago.tipoCredito == 'vale')
 					 				arreglo[credito.cliente_id].importe 					= planPago.importeRegular;
+					 		if (planPago.descripcion == "Recibo" && planPago.tipoCredito == 'creditoPersonalDistribuidor')		
+					 				arreglo[credito.cliente_id].importeCreditoP 	= planPago.importeRegular;
 					 		else if (planPago.descripcion == "Cargo Moratorio")
- 					 				arreglo[credito.cliente_id].cargosMoratorios	= planPago.importeRegular;
+					 		{
+						 			arreglo[credito.cliente_id].cargosMoratorios	= planPago.importeRegular;
+						 			arreglo[credito.cliente_id].classPago					= "text-danger";	
+					 		}
+ 					 				
 					 		
+					 		//Meterlo al arreglo y luego al arregloCortes
+					 		arreglo[credito.cliente_id].arreglo = {};
+							
+							var numeroCorte = 0;
+							var fechaCorteInicio = "";
+							var fechaCorteFin = "";
+							if (planPago.fechaLimite.getDate() >= 16)
+							{	
+									numeroCorte = planPago.fechaLimite.getMonth() * 2;									
+									fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear(), planPago.fechaLimite.getMonth() -1, 22);
+									fechaCorteFin		 = new Date(planPago.fechaLimite.getFullYear(), planPago.fechaLimite.getMonth(), 06);
+							}	 
+							else	
+							{
+									var m = planPago.fechaLimite.getMonth();
+									if (m == 0)
+									{
+											numeroCorte = 12 * 2 - 1;							
+											fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear(), 11, 07);	
+											fechaCorteFin 	 = new Date(planPago.fechaLimite.getFullYear(), 11, 21);
+									}
+									else
+									{
+											numeroCorte = planPago.fechaLimite.getMonth() * 2 - 1;							
+											fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear(), planPago.fechaLimite.getMonth() - 1, 07);	
+											fechaCorteFin 	 = new Date(planPago.fechaLimite.getFullYear(), planPago.fechaLimite.getMonth() - 1, 21);
+									}
+							}
+														
+							if ( arreglo[credito.cliente_id].arreglo[numeroCorte] == undefined )
+							{
+									
+									//Revisar si ya pago el seguro----------------------
+									
+									var seguro			= 0;
+									var pagosSeguro = PagosSeguro.find({distribuidor_id: credito.cliente_id, corte: numeroCorte, estatus: 1});
+									
+									if (pagosSeguro.count() > 0)
+											seguro = 0;
+									else
+											seguro = configuraciones.seguro;	
+											
+							 		//---------------------------------------------------
+									arreglo[credito.cliente_id].arreglo[numeroCorte] = {};
+									
+									arreglo[credito.cliente_id].arreglo[numeroCorte].seguro 					=	seguro;
+									
+									arreglo[credito.cliente_id].seguro 																+= seguro;
+									
+									arreglo[credito.cliente_id].arreglo[numeroCorte].numeroCorte 			= numeroCorte;	
+									arreglo[credito.cliente_id].arreglo[numeroCorte].fechaCorteInicio = fechaCorteInicio;
+									arreglo[credito.cliente_id].arreglo[numeroCorte].fechaCorteFin 		= fechaCorteFin;
+									arreglo[credito.cliente_id].arreglo[numeroCorte].fechaPago	 			= planPago.fechaLimite;
+									arreglo[credito.cliente_id].arreglo[numeroCorte].importe 					=	0;
+									arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios =	0;
+									
+									if (planPago.descripcion == 'Recibo')
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].importe 				 = planPago.importeRegular;
+									else
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios = planPago.importeRegular;
+
+									arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion 		   = Number(planPago.bonificacion);
+									
+									//arreglo[numeroCorte].fechaCorte = fechaCorte;
+									arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos 	= [];
+									arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos.push(planPago);
+							}
+							else
+							{
+									if (planPago.descripcion == 'Recibo')
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].importe 				 += planPago.importeRegular;
+									else
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios += planPago.importeRegular;
+
+									arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion 			 += Number(planPago.bonificacion);
+									arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos.push(planPago);
+							}
+					 		
+					 		//---------------------------------------------------
 					 		arreglo[credito.cliente_id].planPagos 				= [];
 					 		arreglo[credito.cliente_id].planPagos.push(planPago);
 		 			}
 		 			else
 		 			{
-				 			
-				 			if (planPago.descripcion == "Recibo")
+
+				 			if (planPago.descripcion == "Recibo" && planPago.tipoCredito == 'vale')
 					 				arreglo[credito.cliente_id].importe 					+= planPago.importeRegular;
-					 		else if (planPago.descripcion == "Cargo Moratorio")		
-					 				arreglo[credito.cliente_id].cargosMoratorios	+= planPago.importeRegular;
+					 		if (planPago.descripcion == "Recibo" && planPago.tipoCredito == 'creditoPersonalDistribuidor')		
+					 				arreglo[credito.cliente_id].importeCreditoP 	+= planPago.importeRegular;
+					 		else if (planPago.descripcion == "Cargo Moratorio")
+ 					 		{
+						 			arreglo[credito.cliente_id].cargosMoratorios	+= planPago.importeRegular;
+						 			arreglo[credito.cliente_id].classPago					= "text-danger";	
+					 		}
+				 			
 				 			
 				 			arreglo[credito.cliente_id].bonificacion		 			+= planPago.bonificacion;
-				 			//arreglo[credito.cliente_id].importe += planPago.importeRegular;
+				 										
+							var numeroCorte = 0;
+							var fechaCorteInicio = "";
+							var fechaCorteFin = "";
+							if (planPago.fechaLimite.getDate() >= 16)
+							{	
+									numeroCorte = planPago.fechaLimite.getMonth() * 2;									
+									fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear(), planPago.fechaLimite.getMonth() -1, 22);
+									fechaCorteFin		 = new Date(planPago.fechaLimite.getFullYear(), planPago.fechaLimite.getMonth(), 06);
+							}	 
+							else	
+							{
+									var m = planPago.fechaLimite.getMonth();
+									if (m == 0)
+									{
+											numeroCorte = 12 * 2 - 1;							
+											fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear(), 11, 07);	
+											fechaCorteFin 	 = new Date(planPago.fechaLimite.getFullYear(), 11, 21);
+									}
+									else
+									{
+											numeroCorte = planPago.fechaLimite.getMonth() * 2 - 1;							
+											fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear(), planPago.fechaLimite.getMonth() - 1, 07);	
+											fechaCorteFin 	 = new Date(planPago.fechaLimite.getFullYear(), planPago.fechaLimite.getMonth() - 1, 21);
+									}
+
+							}
+							
+							if ( arreglo[credito.cliente_id].arreglo[numeroCorte] == undefined )
+							{
+									
+									var seguro			= 0;
+									var pagosSeguro = PagosSeguro.find({distribuidor_id: credito.cliente_id, corte: numeroCorte, estatus: 1});
+									
+									if (pagosSeguro.count() > 0)
+											seguro = 0;
+									else
+											seguro = configuraciones.seguro;	
+									
+									
+									arreglo[credito.cliente_id].arreglo[numeroCorte] = {};
+									
+									arreglo[credito.cliente_id].arreglo[numeroCorte].seguro 					= seguro;
+									arreglo[credito.cliente_id].seguro 																+= seguro;
+									
+									arreglo[credito.cliente_id].arreglo[numeroCorte].numeroCorte 			= numeroCorte;	
+									arreglo[credito.cliente_id].arreglo[numeroCorte].fechaCorteInicio = fechaCorteInicio;
+									arreglo[credito.cliente_id].arreglo[numeroCorte].fechaCorteFin 		= fechaCorteFin;
+									arreglo[credito.cliente_id].arreglo[numeroCorte].fechaPago	 			= planPago.fechaLimite;
+									arreglo[credito.cliente_id].arreglo[numeroCorte].importe 					=	0;
+									arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios =	0;
+									
+									if (planPago.descripcion == 'Recibo')
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].importe 				 = planPago.importeRegular;
+									else
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios = planPago.importeRegular;
+
+									arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion 		   = Number(planPago.bonificacion);
+									
+									//arreglo[numeroCorte].fechaCorte = fechaCorte;
+									arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos 	= [];
+									arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos.push(planPago);
+							}
+							else
+							{
+									if (planPago.descripcion == 'Recibo')
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].importe 				 += planPago.importeRegular;
+									else
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios += planPago.importeRegular;
+
+									arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion 			 += Number(planPago.bonificacion);
+									arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos.push(planPago);
+							}
+					 		
+					 		//---------------------------------------------------				 			
+				 			
 				 			arreglo[credito.cliente_id].planPagos.push(planPago);
 		 			}
 	 				
 			});
-						
+			
 			return _.toArray(arreglo);
-			//return arreglo;
 	},
   getPlanPagosDistribuidorTickets: function (fechaInicial, fechaFinal, distribuidor_id) {
+			
 			
 			function calculaBonificacion(fechaLimite){
 	  	
@@ -255,8 +437,12 @@ Meteor.methods({
 			
 			var planPagos = {};
 						
-			var planPagos = PlanPagos.find({fechaLimite: {$lte: fechaFinal}, tipoCredito: "vale", importeRegular: {$gt:0}, estatus:{$in: [0,2]}},{sort : {fechaLimite : 1}}).fetch();
-			
+			var planPagos = PlanPagos.find({ cliente_id : distribuidor_id, 
+																			 fechaLimite: {$lte: fechaFinal}, 
+																			 tipoCredito: "vale", 
+																			 //importeRegular: {$gt:0}, 
+																			 estatus:{$in: [0,2]}}, {sort : {fechaLimite : 1}}).fetch();
+						
 			var configuraciones = Configuraciones.findOne();
 			
 			var arreglo = {};
@@ -933,5 +1119,6 @@ Meteor.methods({
 		
   },
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
+
 });	

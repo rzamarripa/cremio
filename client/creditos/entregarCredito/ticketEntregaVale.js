@@ -19,11 +19,13 @@ function ticketEntregaValeCtrl($scope, $meteor, $reactive,  $state, $stateParams
 	
 	rc.sucursal = {};
 	
+/*
 	if (Meteor.user() != undefined){
 		rc.sucursal_id 		= Meteor.user() != undefined  && Meteor.user().profile.sucursal_id;
 		Meteor.call("getSucursal", Meteor.user().profile.sucursal_id,  function(error,result){
      	if (result){
       		rc.sucursal = result;
+      		$scope.$apply();
       }
       else
       {
@@ -31,6 +33,7 @@ function ticketEntregaValeCtrl($scope, $meteor, $reactive,  $state, $stateParams
       }
 		});	
 	}
+*/
 	
 		
 	this.subscribe('creditos',()=>{
@@ -88,15 +91,30 @@ function ticketEntregaValeCtrl($scope, $meteor, $reactive,  $state, $stateParams
 				$scope.$apply();
 			});
 			
-			rc.subscribe('cajeroId',()=>{
+			rc.subscribe('cajero',()=>{
 				return[{
-					id: Meteor.userId()
+					_id: rc.credito.usuario_id
 				}]
 			},
 			{
 				onReady:()=>{
-					rc.cajero = Meteor.users.findOne(Meteor.userId());
-					rc.cajero = rc.cajero? rc.cajero:{};
+					var cajero = Meteor.users.findOne(rc.credito.usuario_id); 
+					//console.log("Caj:", cajero);					
+					rc.cajero = cajero;
+					
+				}
+			});
+			
+			rc.subscribe('sucursales',()=>{
+				return[{
+					_id: rc.credito.sucursal_id
+				}]
+			},
+			{
+				onReady:()=>{
+					rc.sucursal = Sucursales.findOne(rc.credito.sucursal_id);
+					rc.sucursal = rc.sucursal? rc.sucursal:{};
+					//console.log(rc.sucursal);
 				}
 			});
 			

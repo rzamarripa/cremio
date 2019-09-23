@@ -4,8 +4,7 @@ angular
 function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
 
 	let rc = $reactive(this).attach($scope);
-	
-	window = rc;
+	window.rc = rc;
 	
 	rc.fechaInicial = new Date();
   rc.fechaInicial.setHours(0,0,0,0);
@@ -28,8 +27,8 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 
 	
 	this.subscribe('creditos',()=>{
-			return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", 
-						  requiereVerificacion : true , 
+			return [{ //sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", 
+						  requiereVerificacion : true, 
 						  estatus: 0}]
 	},{
 		onReady:()=>{
@@ -128,7 +127,13 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	
 	//Aunque diga cliente es para los verificadores
 	this.subscribe('cliente',()=>{
-			return [{"profile.sucursal_id"		: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", 
+			return [{//"profile.sucursal_id"		: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", 
+						   "profile.estaVerificado" : false }]	
+	});
+	
+	//Prospectos de Distribuidores
+	this.subscribe('prospectosDistribuidor',()=>{
+			return [{//"profile.sucursal_id"		: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", 
 						   "profile.estaVerificado" : false }]	
 	});	
 	
@@ -136,21 +141,21 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 	this.subscribe('verificaciones',()=>{
 		  var FI = new Date(rc.getReactively("fechaInicial"));
 		  FI.setHours(23,59,59,999);	
-			
-			return [{ sucursal_id				: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+			return [{ //sucursal_id				: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
 								//usuarioVerifico 	: Meteor.user() != undefined ? Meteor.userId():"", 
 								fechaVerificacion : { $gte : rc.getReactively("fechaInicial"), $lte : FI}}]
 	});
 	
 	this.helpers({
 		creditos : () => {
-			rc.creditos = Creditos.find({},{ sort : {fechaSolicito : -1 }}).fetch();
+			rc.creditos = Creditos.find({tipo: "creditoP"},{ sort : {fechaSolicito : -1 }}).fetch();
 		  if (rc.creditos != undefined)
 		  {
 			  _.each(rc.creditos, function(credito){
-	
+							credito.verificacionesHechas = 0;
+							
 							var cliente = {};
-
+								
 							Meteor.apply('getUsuario', [credito.cliente_id], function(error, result) {
 							   if(error)
 							   {
@@ -165,8 +170,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 											$scope.$apply();
 								 }
 							});							
-							/*
-							Meteor.apply('getVerificacionesCredito', [credito._id], function(error, result) {
+							Meteor.apply('getNumeroVerificacionesCredito', [credito._id], function(error, result) {
 							   if(error)
 							   {
 								    console.log('ERROR :', error);
@@ -174,14 +178,10 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 							   }
 							   if(result)
 							   {	
-									 		_.each(result, function(v){
-										 			v.nombreCliente = credito.nombreCliente;
-										 			//rc.verificacionesHechas.push(v);
-									 		});
-									 		//$scope.$apply();
+									 		credito.verificacionesHechas = result;
+									 		$scope.$apply();
 								 }
 							});
-*/
 					})
 		  }
 			return rc.creditos;			 
@@ -200,7 +200,6 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 				if (v.tipoVerificacion == 'vecino' && v.verificacionPersona == 2)
 						v.tipoVerificacionTabla = 'Vecino Aval';
 						
-				
 			});
 			
 			
@@ -225,26 +224,195 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 			return ver;
 		},
 		distribuidores :() =>{
-			return Meteor.users.find({roles: ["Distribuidor"]}, {sort: {"profile.fechaVerificacion": -1}});			
+			var dis = Meteor.users.find({roles: ["Distribuidor"]}, {sort: {"profile.fechaVerificacion": -1}}).fetch();
+			
+			if (dis != undefined)
+			{
+					_.each(dis, function(d){
+							d.verificacionesHechas = 0;
+							
+							Meteor.apply('getNumeroVerificacionesDistribuidor', [d._id], function(error, result) {
+							   if(error)
+							   {
+								    console.log('ERROR :', error);
+								    return;
+							   }
+							   if(result)
+							   {	
+									 		d.verificacionesHechas = result;
+									 		$scope.$apply();
+								 }
+							});				
+							
+					});
+					
+					return dis;	
+			}
 		},		
+		prospectosDistribuidores :() =>{
+			var dis = ProspectosDistribuidor.find({}, {sort: {"profile.fechaVerificacion": -1}}).fetch();
+			
+			if (dis != undefined)
+			{
+					_.each(dis, function(d){
+							d.verificacionesHechas = 0;
+							
+							Meteor.apply('getNumeroVerificacionesProspectoDistribuidor', [d._id], function(error, result) {
+							   if(error)
+							   {
+								    console.log('ERROR :', error);
+								    return;
+							   }
+							   if(result)
+							   {	
+									 		d.verificacionesHechas = result;
+									 		$scope.$apply();
+								 }
+							});				
+							
+					});
+					
+					return dis;	
+			}
+		},
 	});	 
 					  
-  this.mostrarEvaluacion = function(id)
+  this.mostrarEvaluacion = function(id, numVer)
 	{	
-			rc.objeto.indicacion = "";
-			rc.objeto.evaluacion = "";
-			rc.creditoSeleccionado = id;
-			rc.distribuidorSeleccionado = "";
-			$("#modalEvaluarVerificacion").modal('show');	
+			if (numVer == 0)
+			{
+					toastr.warning('No tiene ninguna verficación');	
+					return;
+			}
+			
+			rc.Cliente = 0;
+			rc.Aval 	 = 0;
+			
+			var credito = Creditos.findOne(id);
+			var numeroVerificaciones = 0;
+				if (credito.requiereVerificacion == true && (credito.requiereVerificacionAval == undefined || credito.requiereVerificacionAval == false))
+						 numeroVerificaciones = 1;
+					else		 
+						numeroVerificaciones = 2;
+			
+			var ban = true;
+			Meteor.call('getVerificacionesCredito', id, function(error, result) {
+				   if(error)
+				   {
+					    console.log('ERROR :', error);
+					    return;
+				   }
+				   if(result)
+				   {	
+						 		_.each(result, function(v){
+
+							 			if (v.tipoVerificacion == "Cliente")
+							 					rc.Cliente +=  1;
+							 			if (v.tipoVerificacion == "Aval")
+							 					rc.Aval += 1;		
+						 		});
+						 		
+						 		
+						 		//console.log("Cli:", rc.Cliente);
+						 		//console.log("Ava:", rc.Aval);
+						 		//console.log("NV:", numeroVerificaciones);
+						 		
+						 		credito.requiereVerificacionAval = credito.requiereVerificacionAval == undefined ? false : credito.requiereVerificacionAval;
+						 		
+						 		//console.log("Aval R:", credito.requiereVerificacionAval);
+						 		
+						 		if ( credito.requiereVerificacionAval == false && rc.Cliente < numeroVerificaciones)
+						 		{
+								 				toastr.warning('El cliente no tiene las suficientes verificaciones para finalizar la verficación');	
+								 				return;	 
+						 		}
+						 		else if ( credito.requiereVerificacionAval == true && (rc.Cliente + rc.Aval) < numeroVerificaciones)
+						 		{
+								 				toastr.warning('El cliente y aval no tiene las suficientes verificaciones para finalizar la verficación');	
+								 				return;	 
+						 		}
+						 		else
+						 		{
+							 			rc.objeto.indicacion = "";
+										rc.objeto.evaluacion = "";
+										rc.creditoSeleccionado = id;
+										rc.distribuidorSeleccionado = "";
+										$("#modalEvaluarVerificacion").modal('show');			 		
+						 		}
+						 		
+					 }
+			});
+			
 	}	
 	
-	this.mostrarEvaluacionD = function(id)
+	this.mostrarEvaluacionD = function(id, numVer)
 	{	
+			if (numVer == 0)
+			{
+					toastr.warning('No tiene ninguna verficación');	
+					return;
+			}
+			
+			rc.Cliente = 0;
+			rc.Aval 	 = 0;
+			
+			var numeroVerificaciones = 2;
+			var distribuidorRequiereVerificacionAval = Meteor.users.findOne(id);
+			
+			Meteor.call('getVerificacionesDistribuidor', id, function(error, result) {
+				   if(error)
+				   {
+					    console.log('ERROR :', error);
+					    return;
+				   }
+				   if(result)
+				   {		
+							  _.each(result, function(v){
+										console.log(v.tipoVerificacion);
+							 			if (v.tipoVerificacion == "Distribuidor")
+							 					rc.Cliente +=  1;
+							 			if (v.tipoVerificacion == "Aval")
+							 					rc.Aval += 1;		
+						 		});
+							  
+							  
+						 		console.log("Cli:", rc.Cliente);
+						 		console.log("Ava:", rc.Aval);
+						 		console.log("NV:", numeroVerificaciones);
+						 		
+							  
+								if ((rc.Cliente + rc.Aval) < numeroVerificaciones || rc.Aval == 0)
+						 		{
+								 				toastr.warning('El Distribuidor no tiene las suficientes verificaciones para finalizar la verficación');	
+								 				return;	 
+						 		}
+						 		else
+						 		{
+							 			rc.objeto.indicacion = "";
+										rc.objeto.evaluacion = "";
+										rc.creditoSeleccionado = "";
+										rc.distribuidorSeleccionado = id;
+										$("#modalEvaluarVerificacionD").modal('show');			 		
+						 		}
+			
+					}
+					
+			});		
+			
+/*
+			
+			
+			
+			
+			
+			
 			rc.objeto.indicacion = "";
 			rc.objeto.evaluacion = "";
 			rc.creditoSeleccionado = "";
 			rc.distribuidorSeleccionado = id;
 			$("#modalEvaluarVerificacionD").modal('show');	
+*/
+
 	}	
   
   this.finalizarVerificacion = function(objeto)
@@ -254,15 +422,20 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 					return;	
 			if (objeto.evaluacion == undefined || objeto.indicacion == undefined)
 					return;		
+					
 			if (objeto.evaluacion == "" || objeto.indicacion == "")
 			{
 					toastr.error('faltan datos por llenar.');	
 					return;	
 			}
-			//Validar que el credito tengo las dos verifiaciones antes de guardar la verificación
-			
+				
 			if (rc.creditoSeleccionado != "")
 			{
+					Creditos.update({_id:rc.creditoSeleccionado}, {$set: {estatus: 1, verificacionEstatus: objeto.evaluacion, indicacion: objeto.indicacion}});
+					$("#modalEvaluarVerificacion").modal('hide');
+					toastr.success('Evaluado');	
+					/*
+
 					var credito = Creditos.findOne(rc.creditoSeleccionado);
 					var numeroVerificaciones = 0;
 					
@@ -313,16 +486,30 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 					});		 	
 					
 					$("#modalEvaluarVerificacion").modal('hide');
+*/
 			}
 			
 			if (rc.distribuidorSeleccionado != "")
 			{
+					Meteor.call('finalizarVerificacionDistribuidor', rc.distribuidorSeleccionado, objeto, function(error, result) {
+						   if(error)
+						   {
+							    console.log('ERROR :', error);
+							    return;
+						   }
+						   if (result)
+						   {
+							   	$("#modalEvaluarVerificacionD").modal('hide');
+								 	toastr.success('Evaluado');	
+						   }
+					});
+					
+					/*
+
 					rc.conVecino = 0;
 					rc.conSolicitanteAval = 0;
 
 					var numeroVerificaciones;
-					
-					
 					
 					Meteor.call('getVerificacionesDistribuidor', rc.distribuidorSeleccionado, function(error, result) {
 						   if(error)
@@ -381,10 +568,46 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 					
 				
 					$("#modalEvaluarVerificacionD").modal('hide');
+*/
 			}
 			
 			
 	};
+	
+	this.cancelarVerificacionCredito = function(id, nombre)
+	{
+			
+			customConfirm('¿Estás seguro de Cancelar la verificación ' + nombre + '?', function() {
+
+						Meteor.call('cancelarVerificacionCredito', id, function(error, result) {
+							   if(error)
+							   {
+								    console.log('ERROR :', error);
+								    return;
+							   }
+						});
+					
+					toastr.success("Se cancelo la verificación correctamente.");	
+			});
+			
+	};
   
+  this.cancelarVerificacionDistribuidor = function(id, nombre)
+	{
+			
+			customConfirm('¿Estás seguro de Cancelar la verificación al distribuidor ' + nombre + '?', function() {
+
+						Meteor.call('cancelarVerificacionDistribuidor', id, function(error, result) {
+							   if(error)
+							   {
+								    console.log('ERROR :', error);
+								    return;
+							   }
+						});
+					
+					toastr.success("Se cancelo la verificación al distribuidor correctamente.");	
+			});
+			
+	};
    
 };

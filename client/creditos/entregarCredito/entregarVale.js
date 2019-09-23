@@ -14,10 +14,16 @@ angular.module("creditoMio")
 	
 	rc.cliente = {};
 	rc.cliente._id = "" ;
-	rc.datosCliente = ""
+	rc.datosCliente = "";
+	rc.primerAbono = "";
 	
 	rc.estatusFecha ;
+	
 	rc.tipoIngreso = {};
+	
+	this.subscribe("diasInhabiles", ()=>{
+    return [{estatus : true}]
+  });
 	
 	this.subscribe('tiposIngreso',()=>{
 		return [{
@@ -108,6 +114,29 @@ angular.module("creditoMio")
 			{		
 					
 					var usuario = Meteor.users.findOne(Meteor.userId());
+					
+					//Revisar dia inhabil para buscar la próximo Fecha
+			  	verificarDiaInhabil = function(fecha){
+							var diaFecha = fecha.isoWeekday();
+							var diaInhabiles = DiasInhabiles.find({tipo: "DIA", estatus: true}).fetch();
+							var ban = false;
+							_.each(diaInhabiles, function(dia){
+									if (Number(dia.dia) === diaFecha)
+									{
+										 ban = true;	
+										 return ban;							 
+									}	 
+							})
+							var fechaBuscar = new Date(fecha);
+							
+							var fechaInhabil = DiasInhabiles.findOne({tipo: "FECHA", fecha: fechaBuscar, estatus: true});
+							if (fechaInhabil != undefined)
+							{
+								 ban = true;
+								 return ban;	
+							}
+							return ban;
+					};
 		
 					if (usuario.roles[0] == "Cajero")
 							rc.estatusFecha = true;
@@ -115,25 +144,70 @@ angular.module("creditoMio")
 							rc.estatusFecha = false;
 					
 					rc.cliente._id = c.cliente_id;
+					
 					if (c.folio)
 						  this.verDiaPago = false;
 
 					var fecha = new Date();
 					var n = fecha.getDate();
 										
-					if (n >= 5 && n < 20)
+					if (n >= 7 && n < 22)
 					{
-							rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth()  + 1,1,0,0,0,0);
+							rc.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth()  + 1,1,0,0,0,0);
+							rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);
+							//console.log("1:", rc.primerAbono);
+							//console.log("1:", rc.objeto.primerAbono);
 					}
 					else 
 					{
 							
-							if (n < 5 )
+							if (n < 7 )
+							{
+									rc.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
 									rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
-							else if (n >= 20)
-							   	rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);								
+									//console.log("2:", rc.primerAbono);
+									//console.log("2:", rc.objeto.primerAbono);
+							}
+									
+							else if (n >= 22)
+							{
+									//rc.objeto.fechaPrimerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);
+									rc.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);
+									rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);							
+									//console.log("3:", rc.primerAbono);
+									//console.log("3:", rc.objeto.primerAbono);
+							}
+							   	
 					}
 					
+					var validaFecha = true;
+				  var fechaValidar = moment(rc.primerAbono);
+				  while(validaFecha)
+				  {		
+							validaFecha = verificarDiaInhabil(fechaValidar);
+							if (validaFecha == true)
+										fechaValidar = fechaValidar.add(1, 'days');					 
+				  }
+				  			  
+				  rc.primerAbono = new Date(fechaValidar);
+				  rc.primerAbono.setHours(0,0,0,0);
+					
+					////--------------------
+/*
+					if (n >= 22)
+					{
+							rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);		
+					}
+					else if (n <= 7) 
+					{
+							rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),1,0,0,0,0);
+					}
+					else if (n > 7 && n < 22)		
+					{
+							rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
+					}
+*/
+					//console.log("Objeto:", rc.objeto.primerAbono);
 					
 					Meteor.call('getBeneficiario', c.beneficiario_id, function(error, result) {           
 				          if (result)
@@ -164,12 +238,14 @@ angular.module("creditoMio")
 			return 0;
 			
 		rc.suma = 0;
+		
 	/*
 	_.each(this.objeto.cuenta,function(cuenta){ 
 			if(cuenta && cuenta.saldo && cuenta.saldo>0)
 				rc.suma += cuenta.saldo;
 		})
 */
+	
 		_.each(this.objeto.caja,function(caja){ 
 			if(caja && caja.saldo && caja.saldo>0)
 				rc.suma += caja.saldo;
@@ -318,7 +394,6 @@ Meteor.call ("validarCreditosSaldoEnMultas",rc.credito.cliente_id,function(error
 
 	}
 	
-	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/*
@@ -381,6 +456,7 @@ this.fechaPago = function(diaSeleccionado, periodoPago)
 	
 	this.generarCredito = function(){
 		
+		$( "#generar" ).prop( "disabled", true );
 		
 		/*
 if (rc.folioVale == undefined || rc.folioVale == "")
@@ -416,12 +492,15 @@ if (rc.folioVale == undefined || rc.folioVale == "")
 			folio								: rc.folioVale
 		};
 				
-		//console.log(this.credito);
-		
 		Meteor.apply('generarCredito', [credito, $stateParams.credito_id], function(error, result){
 			if(result == "hecho"){
 				this.avales = [];
 				this.verDiaPago = false;
+				$( "#generar" ).prop( "disabled", false );
+			}
+			if (error)
+			{
+				$( "#generar" ).prop( "disabled", false );
 			}
 			$scope.$apply();
 		});
@@ -429,7 +508,7 @@ if (rc.folioVale == undefined || rc.folioVale == "")
 	
 	this.imprimirDocumento = function(credito){
 		credito.tipoCredito = TiposCredito.findOne(credito.tipoCredito_id)
-    console.log(credito, "credito")
+    //console.log(credito, "credito")
 			// if (credito.tipoCredito.tipoInteres == "Simple") {
 			
 			Meteor.call('imprimirDocumentos', $stateParams.credito_id, function(error, response) {
@@ -743,10 +822,10 @@ if (rc.folioVale == undefined || rc.folioVale == "")
 	this.validaCredenciales = function(credenciales)
 	{
 			var usuario = Meteor.users.findOne(Meteor.userId());
-	    Meteor.call('validarCredenciales', credenciales, usuario.profile.sucursal_id , function(err, result) {
+	    Meteor.call('validarCredenciales', credenciales, function(err, result) {
 	      if (result) {
 		      
-		      console.log("VER:", result);
+		      //console.log("VER:", result);
 	        rc.estatusFecha = false;
 	        $scope.$apply();
 	        $("#modalActivarFecha").modal('hide');

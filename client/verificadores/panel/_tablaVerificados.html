@@ -28,9 +28,9 @@
 	    <td class="text-center">{{$index + 1}}</td>
 	    <td>{{verificacion.numeroCliente}}</td>
 	    <td>{{verificacion.nombreCliente}}</td>
-	     <td>{{verificacion.verificado}}</td>
+	    <td>{{verificacion.entrevistado}}</td>
 	    <td class="text-center">{{verificacion.fechaVerificacion | date:"dd-MM-yyyy" }} </td>
-	    <td class="text-center">{{verificacion.tipoVerificacion}}</td>
+	    <td class="text-center">{{verificacion.rolVerificacion}}</td>
 	    <td class="text-center">{{verificacion.tipo}}</td>
 	    <td>
 		    	<div class="text-center">
@@ -40,12 +40,22 @@
 						    <span class="sr-only">Toggle Dropdown</span>
 						  </button>
 						  <ul class="dropdown-menu dropdown-menu-right text-left">
+							  <li>
+						    		<a ui-sref="root.verificacion({ id: verificacion.credito_id, 
+							    																  verificacion_id: verificacion._id, 
+								    																tipo: (verificacion.tipo == 'Crédito Personal'?'CP':'V'),
+									    															persona: (verificacion.tipoVerificacion == 'Aval' ? 2 : 1)})"><i class="fa fa-pencil"></i> Editar / Ver</a>
+						    </li>
+<!--
 						    <li ng-if ="verificacion.tipoVerificacion == 'vecino'">
 						    		<a ui-sref="root.verificacionVecino({id: verificacion.credito_id, verificacion_id: verificacion._id, tipo: (verificacion.tipo == 'Crédito Personal'?'CP':'V')})"><i class="fa fa-pencil"></i> Editar / Ver</a>
 						    </li>
+-->
+<!--
 						    <li ng-if ="verificacion.tipoVerificacion == 'solicitante o aval'">
 						    		<a ui-sref="root.verificacion({id: verificacion.credito_id, verificacion_id: verificacion._id, tipo: (verificacion.tipo == 'Crédito Personal'?'CP':'V')})"><i class="fa fa-pencil"></i> Editar / Ver</a>
 						    </li>
+-->
 						  </ul>
 						</div>
 			    </div>

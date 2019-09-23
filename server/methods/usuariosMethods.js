@@ -39,7 +39,6 @@ Meteor.methods({
 	  else if (rol == "Distribuidor")
 	  {
 		  	sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
-		  	//console.log(sucursal)
 				
 				var numero;// = usuario.profile.numeroDistribuidor;
 				
@@ -59,15 +58,48 @@ Meteor.methods({
 	  		var dia  = usuario.profile.fechaNacimiento.getDate();
 				var anio = usuario.profile.fechaNacimiento.getFullYear();
 				
-				var pwd = dia.toString() + anio.toString();
-				//console.log(pwd); 
-	  		
-	  		usuario.password = pwd;
-	  		//console.log(usuario.username);
+				if (dia < 10)
+						dia = "0"+dia;
+				
+				var pwd = dia.toString().trim() + anio.toString().trim();
+	  		usuario.password = pwd.toString();
 	  		sucursal.folioDistribuidor = numero;
 	  		usuario.profile.numeroCliente = usuario.username;
+	  			  		
+	  }
+	  else if (rol == "Promotora")
+	  {
+		  	sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
+
+				
+				var numero;// = usuario.profile.numeroDistribuidor;
+				
+		 	  numero = sucursal.folioPromotora + 1;
+								
+				if (numero < 10)
+					 usuario.username = sucursal.clave + '-P000' + numero;
+				else if (numero < 100)
+	  			 usuario.username = sucursal.clave + '-P00' + numero;
+	  		else if (numero < 1000)
+	  			 usuario.username = sucursal.clave + '-P0' + numero;	 
+	  		else
+	  			 usuario.username = sucursal.clave + '-P' + numero;
+	  			 	  			 	 
+	  		//usuario.contrasena = Math.random().toString(36).substring(2,7);
+	  		var dia  = usuario.profile.fechaNacimiento.getDate();
+				var anio = usuario.profile.fechaNacimiento.getFullYear();
+				
+				if (dia < 10)
+						dia = "0"+dia;
 	  		
-	  		
+	  		var pwd = dia.toString().trim() + anio.toString().trim();
+	  		usuario.password = pwd.toString();
+	  		usuario.password = pwd;
+	  		sucursal.folioPromotora = numero;
+	  		usuario.profile.numeroCliente = usuario.username;	  		
+
+	  		//console.log(pwd);
+	  		//console.log(usuario.username);
 	  }
 		
 		//Crea al Usuario
@@ -79,11 +111,12 @@ Meteor.methods({
 		
 		Roles.addUsersToRoles(usuario_id, rol, grupo);		
 
-		if (rol == "Cliente" || rol == "Distribuidor")
+		if (rol == "Cliente" || rol == "Distribuidor" || rol == "Promotora")
 		{
 				Sucursales.update({_id: sucursal._id},
 													{$set:{	folioCliente 			: sucursal.folioCliente, 
-															 		folioDistribuidor : sucursal.folioDistribuidor}});
+															 		folioDistribuidor : sucursal.folioDistribuidor,
+															 		folioPromotora 		: sucursal.folioPromotora}});
 				
 				/*
 				Meteor.call('sendEmail',
@@ -260,6 +293,8 @@ Meteor.methods({
 										RP.telefono 	= referenciaPersonal.telefono;
 										RP.direccion 	= referenciaPersonal.direccion;
 										RP.celular	 	= referenciaPersonal.celular;
+										RP.ciudad		 	= referenciaPersonal.ciudad;
+										RP.estado		 	= referenciaPersonal.estado;
 										
 										_.each(RP.clientes, function(cliente){
 												if (cliente.cliente_id == user._id)
@@ -404,6 +439,55 @@ if (referenciaPersonal.buscarPersona_id)
 		}
 		
 	},
+	getUsuarioVerificacion: function (usuario) {	
+
+		if (usuario != undefined)
+		{
+				var user = Meteor.users.findOne({"_id" : usuario}, {fields: { "profile.nombreCompleto" 		: 1, 
+																																		  "profile.calle" 				 		: 1,
+																																		  "profile.numero"				 		: 1,
+																																		  "profile.codigoPostal"	 		: 1,
+																																		  "profile.colonia_id"		 		: 1,
+																																		  "profile.ciudad_id"			 		: 1,
+																																		  "profile.particular"		 		: 1,
+																																		  "profile.celular"			   		: 1,
+																																		  "profile.tiempoResidencia"	: 1
+																																		}});
+																																		
+				var colonia = Colonias.findOne({_id: user.profile.colonia_id});
+				user.profile.colonia = colonia.nombre;
+				var ciudad = Ciudades.findOne({_id: user.profile.ciudad_id});
+				user.profile.ciudad = ciudad.nombre;
+																																		
+				if (user != undefined)
+					 return user.profile;	
+		}
+		
+	},
+	getAvalVerificacion: function (usuario) {	
+		if (usuario != undefined)
+		{
+				var user = Avales.findOne({"_id" : usuario}, {fields: { "profile.nombreCompleto" 		: 1, 
+																															  "profile.calle" 				 		: 1,
+																															  "profile.numero"				 		: 1,
+																															  "profile.codigoPostal"	 		: 1,
+																															  "profile.colonia_id"		 		: 1,
+																															  "profile.ciudad_id"			 		: 1,
+																															  "profile.particular"		 		: 1,
+																															  "profile.celular"			   		: 1,
+																															  "profile.tiempoResidencia"	: 1
+																															}});
+																																		
+				var colonia = Colonias.findOne({_id: user.profile.colonia_id});
+				user.profile.colonia = colonia.nombre;
+				var ciudad = Ciudades.findOne({_id: user.profile.ciudad_id});
+				user.profile.ciudad = ciudad.nombre;
+																																		
+				if (user != undefined)
+					 return user.profile;	
+		}
+		
+	},
 	getClienteDistribuidor: function (id) {	
 	  var user = Meteor.users.findOne({"_id" : id} );
 	  
@@ -535,9 +619,9 @@ if (referenciaPersonal.buscarPersona_id)
 
 	  return personas;
 	},
-	validarCredenciales: function(usuario, sucursal_id) {
+	validarCredenciales: function(usuario) {
     
-    var u = Meteor.users.findOne({username: usuario.username, roles: {$in : ['Gerente','Supervisor']}, "profile.sucursal_id": sucursal_id});
+    var u = Meteor.users.findOne({username: usuario.username, roles: {$in : ['Gerente','Supervisor']} });
     
     ban = false;
 		if (u != undefined)
@@ -556,7 +640,16 @@ if (referenciaPersonal.buscarPersona_id)
 	},
 	getUsuarioId: function (id) {	
  	  
-	  var user = Meteor.users.findOne({_id : id}, {fields: { "profile.nombreCompleto":1, "profile.nombre":1, "profile.numeroCliente": 1 }});
+	  var user 			= Meteor.users.findOne({_id : id}, {fields: { "profile.nombreCompleto":1, "profile.nombre":1, "profile.numeroCliente": 1 ,
+		  																													"profile.calle": 1, "profile.colonia_id": 1, "profile.ciudad_id": 1
+	  }});
+
+	  
+	  var colonia 	= Colonias.findOne(user.profile.colonia_id);
+	  var ciudad 		= Ciudades.findOne(user.profile.ciudad_id);
+	  
+	  user.profile.colonia 	= colonia != undefined ? colonia.nombre : "";
+	  user.profile.ciudad = ciudad.nombre;
 	  
 		return user;
 	},
@@ -645,5 +738,41 @@ if (referenciaPersonal.buscarPersona_id)
 			"profile.sucursal_id": sucursal_id
 		}});
 	
+	},
+	getPeople: function (idReferencia) {
+			
+			var persona = Meteor.users.findOne({_id: idReferencia}, {fields: {"profile.documentos" : 0}});
+				_.each(persona, function(objeto){
+						objeto.nacionalidadCliente = Nacionalidades.findOne(objeto.nacionalidad_id);
+						objeto.coloniaCliente = Colonias.findOne(objeto.colonia_id);
+						objeto.estadoCliente = Estados.findOne(objeto.estado_id);
+						objeto.municipioCliente = Municipios.findOne(objeto.municipio_id);
+						objeto.paisCliente = Paises.findOne(objeto.pais_id);
+						objeto.ocupacionCliente = Ocupaciones.findOne(objeto.ocupacion_id);
+						objeto.ciudadCliente = Ciudades.findOne(objeto.ciudad_id);
+						objeto.sucursales = Sucursales.findOne(objeto.sucursal_id);
+						objeto.estadoCivilCliente = EstadoCivil.findOne(objeto.estadoCivil_id);
+						objeto.empresa = Empresas.findOne(objeto.empresa_id);
+						
+
+						if (objeto.empresa != undefined)
+						{
+							 objeto.paisEmpresa = Paises.findOne(objeto.empresa.pais_id);
+							 objeto.estadoEmpresa = Estados.findOne(objeto.empresa.estado_id);
+							 objeto.municipioEmpresa = Municipios.findOne(objeto.empresa.municipio_id);
+							 objeto.ciudadEmpresa = Ciudades.findOne(objeto.empresa.ciudad_id);	 
+							 objeto.coloniaEmpresa = Colonias.findOne(objeto.empresa.colonia_id);	 		 
+						}	 						
+						
+						_.each(objeto.referenciasPersonales_ids, function(r){
+								
+								var ref = ReferenciasPersonales.findOne(r.referenciaPersonal_id);
+								r.telefono = ref.telefono;
+						});
+						
+	  		});
+				//console.log(persona,"termina")				
+				//console.log("esta es la referencia",referencia)
+			return persona;
 	},
 });

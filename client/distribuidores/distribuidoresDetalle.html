@@ -6,22 +6,25 @@
 				<div class="col-sm-12 col-md-12 col-lg-12">
 					<div class="well well-light well-sm no-margin no-padding">
 						<div class="row">
-							<div class="col-sm-3">
+							<div class="col-sm-2">
 									<img style="max-width:200px;" src="{{dis.objeto.profile.foto}}" >
 							</div>
-							<div class="col-sm-9">
+							<div class="col-sm-10">
 								<div class="row">
-									<a ng-click="dis.CreditoSolicitar(dis.objeto._id)" class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px; margin-right: 18px;">
-										<i class="fa fa-plus"></i> Nuevo Vale
+									<a ng-click="dis.CreditoSolicitar(dis.objeto._id, 1)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] != 'Distribuidor'" style="margin: 5px; margin-right: 18px;">
+										<i class="fa fa-plus"></i> Credito P.
+									</a>
+									<a ng-click="dis.CreditoSolicitar(dis.objeto._id, 0)" class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px; margin-right: 18px;">
+										<i class="fa fa-plus"></i> Vale
 									</a>&nbsp;
 									<a	ng-click="dis.mostrarNotaCredito(dis.objeto._id)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px;">
-										<i class="fa fa-plus"></i> N. Nota de Crédito
+										<i class="fa fa-plus"></i> N. de Crédito
 									</a>&nbsp;
 									<a ng-click="dis.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px;">
-										<i class="fa fa-plus"></i> N. Nota de Cliente
+										<i class="fa fa-plus"></i> N. de Cliente
 									</a>&nbsp;
 									<a ng-click="dis.crearCargoMoratorio(credito)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px">
-										 <i class="fa fa-plus"></i> N. Cargo Moratorio
+										 <i class="fa fa-plus"></i> C. Moratorio
 									</a>&nbsp;	
 									<a ui-sref="root.pagarVale({objeto_id : dis.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero' && dis.estatusCaja == true" style="margin: 5px;">
 										<i class="fa fa-plus"></i> Nuevo Pago
@@ -48,8 +51,9 @@
 											<a href="" ng-click="dis.imprimirContrato()" class="btn btn-info" ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-print"></i> Contrato </a>
 											<a href="" ng-click="dis.imprimirTablaAmortizacion()" class="btn btn-info" ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-print"></i> Tabla Amortización</a>
 										</h5>
-										<h6>Limite Crédito: {{dis.objeto.profile.limiteCredito | currency}}</h6>
-										<h6>Saldo  Crédito: {{dis.objeto.profile.saldoCredito | currency}}</h6>
+										<h6>Límite Crédito     : {{dis.objeto.profile.limiteCredito | currency}}</h6>
+										<h6>Saldo  Crédito     : {{dis.objeto.profile.saldoCredito | currency}}</h6>
+<!-- 										<h6>Saldo  Crédito Per.:  {{dis.saldoCreditoPersonal | currency}}</h6> -->
 								</div>		
 							</div>
 							<div class="col-sm-12">				
@@ -59,7 +63,7 @@
 
 									<ul id="myTab3" class="nav nav-tabs tabs-pull-right bordered" style="font-size: 13px;">
 										<li class="active">
-											<a href="#creditosActivos" data-toggle="tab" ng-click="dis.creditosActivos()" ><span class="badge bg-color-blue txt-color-white pull-right">{{dis.creditos.length}}</span>Vales Activos</a>
+											<a href="#creditosActivos" data-toggle="tab" ng-click="dis.creditosActivos()" ><span class="badge bg-color-blue txt-color-white pull-right">{{dis.creditos.length}}</span>Activos</a>
 											
 										</li>
 										<li class="pull-right" ng-if="currentUser.roles[0] != 'Distribuidor'">
@@ -72,7 +76,7 @@
 											<a href="#solicitudes" ng-click="dis.solicitudesCreditos()" data-toggle="tab"><span class="badge bg-color-yellow txt-color-white pull-right">{{dis.creditosPendientes.length}}</span>Solicitudes </a>
 										</li>
 										<li class="pull-right">
-											<a href="#aprobados" ng-click="dis.creAprobados()" data-toggle="tab"><span class="badge bg-color-green txt-color-white pull-right">{{dis.creditosAprobados.length}}</span>Vales Aprobados</a>
+											<a href="#aprobados" ng-click="dis.creAprobados()" data-toggle="tab"><span class="badge bg-color-green txt-color-white pull-right">{{dis.creditosAprobados.length}}</span>Aprobados</a>
 										</li>
 										<li class="pull-right">
 											<a href="#rechazados" ng-click="dis.creRechazados()" data-toggle="tab"><span class="badge bg-color-red txt-color-white pull-right" style="padding-right: 12px;padding-left: 12px ">{{dis.creditosCancelados.length}}</span>Solicitudes Rechazadas</a>
@@ -195,7 +199,7 @@
 																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.seguro - pago.pagoSeguro | currency}}</td>
 																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.bonificacion | currency}}</td>
 																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.cargo | currency}}</td>
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular | currency}}</td>
+																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular -pago.bonificacion | currency}}</td>
 																												</tr>
 																											</tbody>
 																									</table>           	
@@ -557,29 +561,29 @@
 													        	<div class="row">
 																<div class="col-sm-4" > 					    
 																	<label>Nombre *</label>
-																	<input name="nombreConyuge" type="text" class="form-control" placeholder="Nombre" ng-model="dis.objeto.profile.nombreConyuge"  capitalize>
+																	<input name="nombreConyuge" type="text" class="form-control" placeholder="Nombre" ng-model="dis.objeto.profile.nombreConyuge" disabled  capitalize>
 																</div>
 																<div class="col-sm-4" >					    
 																	<label>Celular *</label>
-																	<input name="celularConyuge" type="text" class="form-control" placeholder="Celular" ng-model="dis.objeto.profile.celularConyuge"  capitalize>
+																	<input name="celularConyuge" type="text" class="form-control" placeholder="Celular" ng-model="dis.objeto.profile.celularConyuge" disabled  capitalize>
 																</div>
 																<div class="col-sm-4" >					    
 																	<label>Empresa *</label>
-																	<input name="empresaConyuge" type="text" class="form-control" placeholder="Empresa Conyuge" ng-model="dis.objeto.profile.empresaConyuge"  capitalize>
+																	<input name="empresaConyuge" type="text" class="form-control" placeholder="Empresa Conyuge" ng-model="dis.objeto.profile.empresaConyuge" disabled capitalize>
 																</div>
 															</div>
 															<div class="row">
 																<div class="col-sm-4" >					    
 																	<label>Dirección Empresa*</label>
-																	<input name="direccionEmpresa" type="text" class="form-control" placeholder="Dirección Empresa" ng-model="dis.objeto.profile.direccionEmpresa"  capitalize>
+																	<input name="direccionEmpresa" type="text" class="form-control" placeholder="Dirección Empresa" ng-model="dis.objeto.profile.direccionEmpresa"   disabled capitalize>
 																</div>
 																<div class="col-sm-4" >					    
 																	<label>Teléfono del trabajo *</label>
-																	<input name="telefonoConyugeTrabajo" type="text" class="form-control" placeholder="Teléfono trabajo" ng-model="dis.objeto.profile.telefonoConyugeTrabajo"  capitalize >
+																	<input name="telefonoConyugeTrabajo" type="text" class="form-control" placeholder="Teléfono trabajo" ng-model="dis.objeto.profile.telefonoConyugeTrabajo" disabled  capitalize >
 																</div>
 																<div class="col-sm-4" >					    
 																	<label>Puesto *</label>
-																	<input name="puestoConyuge" type="text" class="form-control" placeholder="Puesto" ng-model="dis.objeto.profile.puestoConyuge"  capitalize>
+																	<input name="puestoConyuge" type="text" class="form-control" placeholder="Puesto" ng-model="dis.objeto.profile.puestoConyuge" disabled capitalize>
 																</div>
 																
 															</div>
@@ -627,23 +631,31 @@
 																									<tr>
 																										<th width="5%">Número</th>
 																										<th width="20%">Nombre</th>
+																										<th width="30%">Dirección - Ciudad - Estado</th>
+																										<th width="10%">Telefono</th>
 																										<th width="5%">Parentesco</th>
 																										<th width="10%">Tiempo</th>
 																									</tr>
 																								</thead>
-																								<tbody>
-																									<tr ng-repeat="p in dis.referenciasPersonales" ng-show="!dis.objeto._id">
+																								<tbody>																					<!--  ng-show="!dis.objeto._id" -->
+																									<tr ng-repeat="p in dis.referenciasPersonales">
 																										<td>{{p.num}}</td>
 																										<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}} </td>
+																										<td>{{p.direccion}} {{p.ciudad}} {{p.estado}}</td>
+																										<td>{{p.telefono}}</td>
 																										<td>{{p.parentesco}}</td>
 																										<td>{{p.tiempo}}</td>
 																									</tr>
+<!--
 																									<tr ng-repeat="p in dis.objeto.profile.referenciasPersonales_ids" ng-show="dis.objeto._id">
 																										<td>{{p.num}}</td>
 																										<td>{{p.nombreCompleto}}</td>
+																										<td>{{p.direccion}} {{p.ciudad}} {{p.estado}}</td>
+																										<td>{{p.telefono}}</td>
 																										<td>{{p.parentesco}}</td>
 																										<td>{{p.tiempoConocerlo}}</td>
 																									</tr>
+-->
 																								</tbody>
 																							</table>
 																						</div>	
@@ -773,20 +785,22 @@
 									<div class="tab-pane fade" id="historialCrediticio" ng-show="dis.masInfoCredito" ng-if="currentUser.roles[0] != 'Distribuidor'">
 										<p>
 											<div class="tab-pane">
-												<div class="col-sm-12">
-													<div class="well">
-														<div class="row">
-															
+												<div class="row">
+													<div class="col-sm-12">
 															<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
 		<header role="heading">
 																	<ul id="widget-tab-2" class="nav nav-tabs pull-left">
 															
 																		<li class="active">
-																			<a data-toggle="tab" href="#hrC1" aria-expanded="false"> Historial Pagos</a>
+																			<a data-toggle="tab" href="#hrC1" aria-expanded="false"> Pagos</a>
 																		</li>
 																		
 																		<li class="">
-																			<a data-toggle="tab" href="#hrC2" aria-expanded="false"> Historial Vales</a>
+																			<a data-toggle="tab" href="#hrC2" aria-expanded="false"> Vales</a>
+																		</li>
+																		
+																		<li class="">
+																			<a data-toggle="tab" href="#hrC3" aria-expanded="false"> Créditos</a>
 																		</li>
 															
 																	</ul>	
@@ -876,6 +890,7 @@
 																											<table class="table table-striped table-bordered table-condensed font-xs">
 																												<thead class="thead">
 																													<tr>
+																														<th class="text-center" width="5%">No.</th>
 																														<th class="text-center" width="7%">Vale No.</th>
 																														<th class="text-center" width="25%">Beneficiario</th>
 																														<th class="text-center" width="10%">Fecha de Solicitud</th>
@@ -888,7 +903,8 @@
 																													</tr>
 																												</thead>
 																												<tbody>
-																													<tr ng-repeat="credito in objeto.creditosHistorial">								
+																													<tr ng-repeat="credito in objeto.creditosHistorial">	
+																														<td class="text-center">{{$index + 1}}</td>								
 																														<td class="text-center">{{credito.folio}}</td>	
 																														<td class="text-left">{{credito.beneficiario.nombreCompleto}}</td>
 																														<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
@@ -922,35 +938,85 @@
 																					    
 																						</tbody>
 																				</table>
+	
+																			</div>
+																			
+																			<div class="tab-pane fade" id="hrC3">
 																					
-																					<!--
-<table class="table table-striped table-bordered table-condensed font-xs">
-																						<thead class="thead">
+																					<table id="recCP" class="table table-hover border-collapse" >
+																						<thead>
 																							<tr>
-																								<th class="text-center" width="7%">Vale No.</th>
-																								<th class="text-center" width="20%">Beneficiario</th>
-																								<th class="text-center" width="15%">Fecha Solicitud</th>
-																								<th class="text-center" width="15%">Fecha Entrega</th>
-																								<th class="text-center" width="10%">Capital Solicitado</th>
-																								<th class="text-center" width="10%">Adeudo Inicial</th>
-																								<th class="text-center" width="10%">Saldo Actual</th>
-																								<th class="text-danger text-center" width="10%">Saldo C.M.</th>
+																								<th width="10%"><div class="text-center">No. Corte</div></th>
+																								<th width="15%"><div class="text-center">Fecha Corte</div></th>
+																								<th width="10%"><div class="text-center">Capital Solicitado</div></th>
+																								<th width="10%"><div class="text-center">Adeudo adeudoInicial</div></th>
+																								<th width="10%"><div class="text-center">Saldo Actual</div></th>
+																								<th width="10%"><div class="text-center">Cargos Moratorios</div></th>
 																							</tr>
 																						</thead>
 																						<tbody>
-																							<tr ng-repeat="credito in dis.historialCreditos">	
-																								<td class="text-center">{{credito.folio}}</td>	
-																								<td class="text-left">{{credito.beneficiario.nombreCompleto}}</td>	
-																								<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
-																								<td class="text-center">{{credito.fechaEntrega |  date:"dd-MM-yyyy" }}</td>
-																								<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
-																								<td class="text-right">{{credito.adeudoInicial | currency}}</td>
-																								<td class="text-right">{{credito.saldoActual | currency}}</td>
-																								<td class="text-danger text-right">{{credito.saldoMultas | currency}}</td>
-																							</tr>
-																						</tbody>
-																					</table>	
+																					    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in dis.creditoPCortes">
+																						    <td class="text-center" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
+																						    <td class="text-center" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
+																							    																																				{{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
+																						    <td class="text-right" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.capitalSolicitado | currency}}</td>
+																						    <td class="text-right" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.adeudoInicial | currency}}</td>
+																						    <td class="text-right" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.saldoActual | currency}}</td>
+																						    <td class="text-right" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
+																					    </tr>
+																					    
+																					    <tr ng-repeat-end ng-if="dis.isSelectedCreditoP($index + 1) && dis.banCP">
+																			            
+																			            	<td colspan="12">
+																											<table class="table table-striped table-bordered table-condensed font-xs">
+																												<thead class="thead">
+																													<tr>
+																														<th class="text-center" width="5%">No.</th>
+																														<th class="text-center" width="7%">Cre. No.</th>
+																														<th class="text-center" width="10%">Fecha de Solicitud</th>
+																														<th class="text-center" width="10%">Fecha Entrega</th>
+																														<th class="text-center" width="10%">Capital Solicitado</th>
+																														<th class="text-center" width="10%">Adeudo Inicial</th>
+																														<th class="text-center" width="10%" >Saldo Actual</th>
+																														<th class="text-center" width="10%">Saldo C.M.</th>
+																														<!-- <th class="text-center" width="5%">Contrato</th> -->
+																													</tr>
+																												</thead>
+																												<tbody>
+																													<tr ng-repeat="credito in objeto.creditosHistorial">	
+																														<td class="text-center">{{$index + 1}}</td>								
+																														<td class="text-center">{{credito.folio}}</td>	
+																														<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
+																														<td class="text-center">{{credito.fechaEntrega | date:"dd-MM-yyyy"}}</td>
+																														<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
+																														<td class="text-right">{{credito.adeudoInicial | currency}}</td>
+																														<td class="text-right">{{credito.saldoActual | currency}}</td>
+																														<td class="text-danger text-right">{{credito.saldoMultas | currency}}</td>
+																														<!--
+<td>
+																													    <div class="text-center">
+																														    <div class="btn-group">
+																																  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																																    <span class="caret"></span>
+																																    <span class="sr-only">Toggle Dropdown</span>
+																																  </button>
+																																  <ul class="dropdown-menu dropdown-menu-right text-left">
+																																    <li><a href="#" ng-click="dis.imprimirVale(credito._id)"> Descargar</a></li>
+																																  </ul>
+																																</div>
+																													    </div>				    
+																												    </td>
 -->
+																													</tr>
+																												</tbody>
+																										</table>           	
+																				           	
+																			            </td>
+	
+																			        </tr>
+																					    
+																						</tbody>
+																				</table>
 	
 																			</div>
 																			
@@ -970,86 +1036,8 @@
 																<!-- end widget div -->
 																
 															</div>
-																
-														</div>	
+														
 													</div>	
-													<!--
-					<table class="table table-striped table-bordered table-condensed font-xs">
-														<thead class="thead">
-															<tr>
-																<th class="text-center" width="7%">Vale No.</th>
-																<th class="text-center" width="15%">Fecha Solicitud</th>
-																<th class="text-center" width="15%">Fecha Entrega</th>
-																<th class="text-center" width="15%">Capital Solicitado</th>
-																<th class="text-center" width="15%">Adeudo Inicial</th>
-																<th class="text-center" width="20%">Saldo Actual</th>
-																<th class="text-center" width="10%">Acciones</th>
-																<th ng-show="dis.openModal"></th>
-															</tr>
-														</thead>
-														<tbody>
-															<tr ng-repeat="credito in dis.historialCreditos">
-																	
-																<td class="text-center">{{credito.folio}}</td>	
-																<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
-																<td class="text-center">{{credito.fechaEntrega |  date:"dd-MM-yyyy" }}</td>
-																<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
-																<td >{{credito.adeudoInicial | currency}}</td>
-																<td >{{credito.saldoActual | currency}}</td>
-																<td>
-																	<div class="text-center">
-																			<button type="button" class="btn btn-link" ng-click="dis.verPagos(credito)">Ver Pagos</button>
-																	</div>						
-																</td>
-											
-															
-															<td ng-show="dis.openModal" >
-												  		<div class="modal fade" id="modalpagos"	class="modal fade bs-example-modal-lg" tabindex="-1" 	role="dialog" aria-labelledby="myLargeModalLabel">
-												    <div class="modal-content">
-															<div class="modal-header">
-																<h4 class="modal-title">Pagos</h4>
-															</div>
-															<div class="modal-body">
-															 <div>
-																  <table class="table table-striped table-bordered table-condensed font-xs">
-																		<thead class="thead">
-																			<tr>
-																				<th class="text-center" width="7%">Recibo No.</th>
-																				<th class="text-center" width="10%">Movimiento</th>
-																				<th class="text-center" width="10%">Fecha</th>
-																				<th class="text-center" width="10%">Cargo</th>
-																				<th class="text-center" width="10%">Abono</th>
-																				<th class="text-center" width="20%">Saldo</th>
-																				<th class="text-center" width="20%">Nota de credito</th>
-																				<th class="text-center" width="20%">Saldo actualizado</th>
-																			</tr>
-																		</thead>
-																		<tbody>
-																			<tr  ng-repeat="credito in dis.historial" 
-																			ng-class="(credito.tipoPar == 'par') ? 'active in' : (credito.tipoPar == 'impar') ? 'info': 'success'">
-																				<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
-																				<td class="text-center">{{credito.movimiento}}</td>	
-																				<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
-																				<td class="text-center">{{credito.cargo | currency}}</td>
-																				<td class="text-right">{{credito.pago | currency}}</td>
-																				<td >{{credito.saldo | currency}}</td>
-																				<td >0</td>
-																				<td >{{credito.saldoActualizado}}</td>
-																			</tr>
-																		</tbody>
-																	</table>
-															 </div>
-															</div>
-															<div class="modal-footer">
-															    <button ng-click="dis.cerrarModal()" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-															 </div>
-														</div>
-												  </div>
-															</td>
-															</tr>
-														</tbody>
-													</table>	
-					-->
 												</div>
 											</div>
 										</p>
@@ -1074,7 +1062,8 @@
 																		<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="pendiente in dis.creditosPendientes">
 																			<div class="panel panel-{{pendiente.estatusClase}}">
 																				<div class="panel-heading">
-																					<h3 class="panel-title">Vales</h3>
+																					<h3 class="panel-title" ng-if = "pendiente.tipo == 'vale'">Vales</h3>
+																					<h3 class="panel-title" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">Crédito P.</h3>
 																				</div>
 																				<div class="panel-body no-padding text-align-center">
 																					<div class="the-price">
@@ -1093,13 +1082,25 @@
 																					</div>
 																				</div>
 																				
-																				<div class="panel-footer no-padding">						
-																					<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'">Editar</a>
+																				<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">				
+																					<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id, op: 0})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'">Editar</a>
 																				</div>
-																				<div class="panel-footer no-padding">
+																				
+																				<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">						
+																					<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id, op: 1})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'">Editar</a>
+																				</div>
+																				
+																				<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">
 																					<a ng-click ="dis.mostrarModalValidaBeneficiario(pendiente.beneficiario.nombreCompleto, pendiente)" class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">Autorizar</a>
 																				</div>
 																				
+																				<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">
+																					<input class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Vale" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(pendiente)" />
+																				</div>
+																				
+																				<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">
+																					<input class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Crédito" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(pendiente)" />
+																				</div>
 																			</div>
 																		</div>
 																		
@@ -1115,61 +1116,6 @@
 													</article>
 										</p>
 									</div>
-									<!-- <div class="tab-pane fade" id="notasCredito" ng-show="dis.notasCre">
-										<p>
-									   <div class="tab-pane">
-									   		<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-														<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-															
-															<header role="heading">
-																<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-																<h2>Notas de Crédito</h2>
-																<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
-															</header>
-												
-															<div class="no-padding" role="content">
-																<div class="widget-body">
-																			<div class="row	padding-10 ">
-																				<div class="col-xs-12 col-sm-12 col-md-8 col-lg-12">
-																					<table class="table table-striped table-bordered table-condensed font-xs">
-																							<thead class="thead">
-																								<tr>
-																								
-																									<th class="text-center" width="5%">No.</th>
-																									<th class="text-center" width="15%">Tipo de Nota de Crédito</th>
-																									<th class="text-center" width="20%">Causa</th>
-																									<th class="text-center" width="10%">Fecha Creación</th>
-																									<th class="text-center" width="10%">Fecha Vigencia</th>
-																									<th class="text-center" width="5%">Importe</th>
-																									<th class="text-center" width="5%">Saldo</th>
-																									<th class="text-center" width="5%">Estatus</th>
-																									
-																									
-																							
-																								</tr>
-																							</thead>
-																							<tbody>
-																								<tr ng-repeat="(index,nota) in dis.notasCredito">
-																									<td>{{index+1}}</td>
-																									<td>{{nota.aplica}}</td>
-																									<td>{{nota.causa}}</td>
-																									<td style="text-align: center">{{nota.createdAt | date:'dd/MM/yyyy'}}</td>
-																									<td style="text-align: center">{{nota.vigencia | date:'dd/MM/yyyy'}}</td>
-																									<td style="text-align: right">{{nota.importe | currency}}</td>
-																									<td style="text-align: right">{{nota.saldo | currency}}</td>
-																									<td>{{nota.estatus==1? 'Vigente': nota.estatus==2? 'Caducadas':nota.estatus==1?'Vigente':'Aplicada'}}</td>
-																								</tr>
-																							</tbody>
-																					</table>
-																				</div>
-																			</div>					
-																</div>
-															</div>
-														</div>	
-												</article>
-									   </div>
-										</p>
-									</div> -->
 									<div class="tab-pane fade" id="aprobados" ng-show="dis.creditoApro">
 										<p>
 												<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
@@ -1196,7 +1142,8 @@
 																		<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="aprobado in dis.creditosAprobados">
 																			<div class="panel panel-blueDark">
 																				<div class="panel-heading">
-																					<h3 class="panel-title">Vale</h3>
+																					<h3 class="panel-title" style="text-align: center" ng-if = "aprobado.tipo == 'vale'">Vales</h3>
+																					<h3 class="panel-title" style="text-align: center" ng-if = "aprobado.tipo == 'creditoPersonalDistribuidor'">Crédito P.</h3>
 																				</div>
 																				<div class="panel-body no-padding text-align-center">
 																					<div class="the-price">
@@ -1210,11 +1157,32 @@
 																						
 																					</div>
 																				</div>
-																				<div class="panel-footer no-padding">						
-									<a ui-sref="root.entregarVale({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar Vale </a>
-																					<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Vale" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(aprobado)" />
-																					<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'"  ng-show ="aprobado.folio == undefined ">Editar Vale</a>
+																				<div class="panel-footer no-padding" ng-if = "aprobado.tipo == 'vale'">						
+																					<a ui-sref="root.entregarVale({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar</a>
 																				</div>
+																				
+																				<div class="panel-footer no-padding" ng-if = "aprobado.tipo == 'creditoPersonalDistribuidor'">						
+																					<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar</a>
+																				</div>
+																				
+																				<div class="panel-footer no-padding" ng-if = "aprobado.tipo == 'vale'">
+																					<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Vale" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(aprobado)" />
+																				</div>	
+																				
+																				<div class="panel-footer no-padding" ng-if = "aprobado.tipo == 'vale'">				
+																					<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id, op: 0})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'" ng-show ="aprobado.folio == undefined ">Editar</a>
+																				</div>
+																				
+																				<div class="panel-footer no-padding" ng-if = "aprobado.tipo == 'creditoPersonalDistribuidor'">						
+																					<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id, op: 1})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'" ng-show ="aprobado.folio == undefined ">Editar</a>
+																				</div>
+																				
+																				<!--
+<div class="panel-footer no-padding">
+																					<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'"  ng-show ="aprobado.folio == undefined ">Editar</a>
+																				</div>	
+-->
+																				
 																			</div>
 																		</div>
 																		
@@ -1685,7 +1653,7 @@
 																					<td class="text-right">{{pp.pagoIva | currency}}</td>
 																					<td class="text-right">{{pp.pagoSeguro | currency}}</td>
 																					<td class="text-right">{{pp.bonificacion | currency}}</td>
-																					<td class="text-right">{{pp.totalPago | currency}}</td>
+																					<td class="text-right">{{pp.totalPago - pp.bonificacion | currency}}</td>
 																					<td><a href=# ng-click = "dis.verHistorial(pp)">Histórico</a></td>
 																				</tr>
 																			</tbody>

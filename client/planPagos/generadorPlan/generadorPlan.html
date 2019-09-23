@@ -2,15 +2,21 @@
 <div class="row" ng-show="ge.cliente.profile != undefined">
 	<div class="col-sm-12">
 		<div class="well">	
-			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-10">
 				<h2 class="alge-title txt-color-blueDark" ng-if="ge.cliente.roles[0] == 'Cliente'">
 					<i class="fa fa-list fa-fw "></i>
 						Solicitud de Crédito - <span>{{ge.cliente.profile.nombreCompleto}}</span> 
 				</h2>
-				<h2 class="alge-title txt-color-blueDark" ng-if="ge.cliente.roles[0] == 'Distribuidor'">
+				<h2 class="alge-title txt-color-blueDark" ng-if="ge.cliente.roles[0] == 'Distribuidor' && ge.op != 1">
 					<i class="fa fa-list fa-fw "></i>
 						Solicitud de Vale - <span>{{ge.cliente.profile.nombreCompleto}}</span>
+				</h2>    
+				
+				<h2 class="alge-title txt-color-blueDark" ng-if="ge.cliente.roles[0] == 'Distribuidor' && ge.op == 1">
+					<i class="fa fa-list fa-fw "></i>
+						Solicitud de Crédito Dist. - <span>{{ge.cliente.profile.nombreCompleto}}</span>
 				</h2>
+				
 			</div>
 			<a style="margin: 5px;" ng-if="ge.cliente.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
 			<a style="margin: 5px;" ng-show="ge.cliente.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : ge.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
@@ -23,12 +29,14 @@
 					  			<div class="alert alert-info">
 					  			  <p><i class="fa-fw fa fa-info"></i> Para 
 						  			 <strong ng-if="ge.cliente.roles[0] == 'Cliente'">crear un nuevo crédito</strong>
-						  			 <strong ng-if="ge.cliente.roles[0] == 'Distribuidor'">crear un nuevo vale</strong>
+						  			 <strong ng-if="ge.cliente.roles[0] == 'Distribuidor' && ge.op != 1">crear un nuevo vale</strong>
+						  			 <strong ng-if="ge.cliente.roles[0] == 'Distribuidor' && ge.op == 1">crear un nuevo crédito</strong>
 						  			  es importante que pongamos la información correcta. <strong>(Revisar bien los datos.)
 						  			</p>
 					  			</div>
 					  		</div>
 					  	</div>
+					  	<!-- Cliente Credito Personal -->
 					    <div class="row">
 						    <div class="col-sm-4" valida ng-if="ge.cliente.roles == 'Cliente'">
 						    	<label>Tipo de crédito *</label>
@@ -49,17 +57,32 @@
 						    	</select>
 					    	</div>
 					    </div>
-					    
-					    <div class="row" ng-if="ge.cliente.roles[0] == 'Distribuidor'">
+					    <!-- Distribuidor Credito Personal -->
+<!--
+					    <div class="row">
+						    <div class="col-sm-4" valida ng-if="currentUser.roles[0] != 'Distribuidor' && ge.op == 1">
+						    	<label>Tipo de crédito *</label>
+						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="ge.credito.tipoCredito_id" required="">
+							    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in ge.tiposCredito">{{tipoCredito.nombre}}</option>
+						    	</select>
+					    	</div>
+					    	<div class="col-sm-4" valida  ng-if="currentUser.roles[0] != 'Distribuidor' && ge.op == 1">
+							    <label>Tasa %*</label>
+						    	<input id="tasa" name="tasa" min="0" type="number" class="form-control" ng-model="ge.credito.tasa" required>
+						    </div>
+					    </div>
+-->
+					    <!-- Distribuidor Vale -->
+					    <div class="row" ng-if="ge.cliente.roles[0] == 'Distribuidor' && ge.op != 1">
 						    	<div class="col-sm-6">
 												<div ng-include=" 'client/planPagos/generadorPlan/_buscarBeneficiario.html' "></div>
 							    </div>
-							    <div class="col-sm-2" ng-if = "currentUser.roles[0] != 'Distribuidor'">					
+							    <div class="col-sm-2" ng-if = "currentUser.roles[0] != 'Distribuidor' && ge.op != 1">					
 								    <a ng-click="ge.mostrarModalBeneficiario(1)" class="btn txt-color-white bg-color-teal btn-sm" >
 											<i class="fa fa-plus"></i> Beneficiario
 										</a>
 							    </div>
-							    <div class="col-sm-2" ng-if = "currentUser.roles[0] != 'Distribuidor'">					
+							    <div class="col-sm-2" ng-if = "currentUser.roles[0] != 'Distribuidor' && ge.op != 1">	
 								    <a ng-click="ge.mostrarModalBeneficiario(2)" class="btn txt-color-white bg-color-teal btn-sm" ng-show = "ge.beneficiario.nombreCompleto != undefined" >
 											<i class="fa fa-pencil"></i> Editar
 										</a>
@@ -67,7 +90,7 @@
 							    
 					    </div>
 					    
-					    <div class="row" ng-if="ge.cliente.roles[0] == 'Distribuidor'">					    	
+					    <div class="row" ng-if="ge.cliente.roles[0] == 'Distribuidor' && ge.op != 1">					    	
 						    	<div class="col-sm-6">
 							    	<label>Nombre del Beneficiado</label>
 							    	<input name="beneficiado" type="text" class="form-control" ng-model="ge.beneficiario.nombreCompleto" disabled="true">					    	
@@ -79,7 +102,13 @@
 						    	<label>Capital Solicitado *</label>
 						    	<input id="capitalSolicitado" name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" ng-model="ge.credito.capitalSolicitado" required="">
 					    	</div>
-					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
+					    	
+					    	<div class="col-sm-3" valida ng-if="currentUser.roles[0] != 'Distribuidor' && ge.op == 1">
+						    	<label>Capital Solicitado *</label>
+						    	<input id="capitalSolicitado" name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" ng-model="ge.credito.capitalSolicitado" required="">
+					    	</div>
+					    	
+					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor' && ge.op != 1">
 						    	<label>Capital Solicitado *</label>
 						    	<select name="capitalSolicitadoCreditoNuevoV" class="form-control" ng-model="ge.credito.capitalSolicitado" placeholder="Capital Solicitado" required="">
 							    	<option value="1000">1000</option>
@@ -99,9 +128,17 @@
 						    	<label>Duración (Meses) *</label>
 						    	<input id="meses" name="duracionMesesCreditoNuevo" min="1" max="48" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ge.credito.duracionMeses" required="">
 					    	</div>
+					    	
+<!--
+					    	<div class="col-sm-3" valida ng-if="currentUser.roles[0] != 'Distribuidor' && ge.op == 1">					    
+						    	<label>Duración (Meses) *</label>
+						    	<input id="meses" name="duracionMesesCreditoNuevo" min="1" max="48" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ge.credito.duracionMeses" required="">
+					    	</div>
+-->
+					    	
 					    	<div class="col-sm-3" valida ng-if="ge.cliente.roles == 'Distribuidor'">
 						    	<label>Duración (Meses) *</label>
-						    	<select name="duracionMesesCreditoNuevo" class="form-control" ng-model="ge.credito.duracionMeses" required="">
+						    	<select name="duracionMesesCreditoNuevo" class="form-control" ng-model="ge.credito.duracionMeses" ng-change="ge.calculaNumeroPagos()" required="">
 							    	<option value="3">3</option>
 							    	<option value="4">4</option>
 							    	<option value="5">5</option>
@@ -110,11 +147,15 @@
 							    	<option value="8">8</option>
 						    	</select>
 					    	</div>
-					    	<div class="col-sm-3">					    
+								<div class="col-sm-2" ng-if="ge.cliente.roles == 'Distribuidor' && ge.op != 1">		    
+						    	<label>Número de Pagos</label>
+						    	<input style="text-align: center" type="number" min="0" class="form-control" ng-model="ge.numeroPagos" ng-disabled = "true">
+					    	</div>
+					    	<div class="col-sm-2">					    
 						    	<label>Con Seguro</label>
 						    	<input name="conSeguro" type="checkbox" min="0" class="form-control" ng-model="ge.credito.conSeguro" ng-disabled = "currentUser.roles[0] == 'Distribuidor'">
 					    	</div>	
-					    	<div class="col-sm-3" ng-if = "ge.credito.conSeguro" valida>
+					    	<div class="col-sm-2" ng-if = "ge.credito.conSeguro" valida>
 							    <label>Importe seguro *</label>
 						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ge.credito.seguro" ng-disabled = "currentUser.roles[0] == 'Distribuidor'" required >
 						    </div>		

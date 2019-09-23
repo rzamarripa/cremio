@@ -146,6 +146,12 @@
 <!-- 							<i class="fa fa-lg fa-thumbs-o-up"></i>  -->
 									<span class="hidden-mobile hidden-tablet"> Vales 
 					</li>
+					
+					<li class="">
+						<a data-toggle="tab" href="#hr4" aria-expanded="false"> 
+<!-- 							<i class="fa fa-lg fa-thumbs-o-up"></i>  -->
+									<span class="hidden-mobile hidden-tablet"> Créditos Distribuidores 
+					</li>
 
 				</ul>	
 				
@@ -277,6 +283,45 @@
 											    <td><div class="pull-right">{{objeto.capitalSolicitado | currency}}</div></td>
 											    <td><div class="pull-right">{{objeto.adeudoInicial | currency }}</div></td> 	
 											    <td><div class="pull-left">{{objeto.cajero}}</div></td>	
+											    <td><div class="pull-left">{{objeto.entregaCredito}}</div></td>	
+										    </tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+						</div>
+						
+						<div class="tab-pane fade" id="hr4">
+								<div class="row">
+									<div class="col-sm-12" >
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+												  <th width="3%"><div class="text-center">No.</div></th>
+													<th width="8%"><div class="text-center"># Cliente</div></th>
+													<th><div class="text-center">Nombre</div></th>
+													<th><div class="text-center">Pagaré</div></th>
+													<th width="15%"> <div class="text-center">Fecha y Hora</div></th>
+													<th><div class="text-center">Recibos</div></th>
+													<th><div class="text-center">Garantia</div></th>
+													<th><div class="text-center">Solicitado</div></th>
+													<th><div class="text-center">A pagar</div></th>
+													<th><div class="text-center">Cajero</div></th>
+													<th><div class="text-center">Tipo Entrega</div></th>
+												</tr>
+											</thead>
+											<tbody style="font-size: small">
+										    <tr ng-repeat="objeto in re.creditosEntregados" ng-if = "objeto.tipo == 'creditoPersonalDistribuidor' ">
+										    	<td><div class="text-center">{{$index + 1}}</div></td>
+										    	<td><div class="text-center">{{objeto.numeroCliente}}</div></td>
+											    <td><div class="text-left">{{objeto.nombreCompleto}}</div></td>
+											    <td><div class="text-center">{{objeto.folio}}</div></td>
+											    <td><div class="text-center">{{objeto.fechaEntrega  | date:"dd-MM-yyyy"}} - {{objeto.fechaEntrega  | date:'H:mm:ss'}}</div></td>
+											    <td><div class="text-center">{{objeto.numeroPagos}}</div></td>
+											    <td><div class="text-center">{{objeto.estatusGarantia}}</div></td>
+											    <td><div class="pull-right">{{objeto.capitalSolicitado | currency}}</div></td>
+											    <td><div class="pull-right">{{objeto.adeudoInicial | currency }}</div></td> 	
+											    <td><div class="pull-left">{{objeto.cajero}}</div></td>
 											    <td><div class="pull-left">{{objeto.entregaCredito}}</div></td>	
 										    </tr>
 											</tbody>

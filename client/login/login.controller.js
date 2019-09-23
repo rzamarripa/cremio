@@ -29,6 +29,7 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 		        else
 		        {
 			        	//Revisar que no sea domingo
+			        	
 			        	var fecha = new Date();
 			        	var n = fecha.getDay()
 			        	if (n == 0)
@@ -37,6 +38,7 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 			              $state.go('anon.logout');
 			              return;
 			        	}
+			        	$state.go('root.home'); 
 			        	
 			        	Meteor.call("getHorario", Meteor.user().profile.sucursal_id,  function(error,result){
 			            if(error){

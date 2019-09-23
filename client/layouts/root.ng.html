@@ -33,7 +33,7 @@
     
     <form class="header-search pull-right">
 	    <div class="form-group" style="width: 800px; margin-top: 9px;">
-				<div ng-include=" 'client/layouts/_buscarCliente.html' " ng-show = "currentUser.roles[0] != 'Distribuidor' && currentUser.username != 'admin'" ></div>
+				<div ng-include=" 'client/layouts/_buscarCliente.html' " ng-show = "currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora' && currentUser.username != 'admin'" ></div>
 	    </div>	    
 		</form>
   </div>

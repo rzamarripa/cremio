@@ -35,9 +35,15 @@ function TicketDistribuidorCtrl($scope, $meteor, $reactive,  $state, $stateParam
 			
 			
 			rc.fecha = new Date($stateParams.anio, $stateParams.mes, $stateParams.dia);
+
+			rc.fechaC = new Date($stateParams.anioC, $stateParams.mesC - 1, $stateParams.diaC);
+			rc.fechaC.setHours(0,0,0,0);
+			rc.fechaCF = new Date(rc.fechaC);
+			rc.fechaCF.setHours(23,59,59,999);
 			
 			var n = rc.fecha.getDate();
 			var fechaInicial = "";
+			//var fechaInicial = new Date(rc.fecha);
 			
 			if (n < 15) 
 			{
@@ -48,21 +54,29 @@ function TicketDistribuidorCtrl($scope, $meteor, $reactive,  $state, $stateParam
 					fechaInicial = new Date(rc.fecha.getFullYear(),rc.fecha.getMonth() + 1,15,0,0,0,0);
 			}
 		
-			
 			fechaInicial.setHours(0,0,0,0);
-			
 			var fechaFinal = new Date(fechaInicial.getTime());
 			fechaFinal.setHours(23,59,59,999);
 			
-			//console.log("FI:", fechaInicial);
-			//console.log("FF:", fechaFinal);
+/*
 			
+			console.log("FI:", fechaInicial);
+			console.log("FF:", fechaFinal);
+			console.log("FC:", rc.fechaC);
+*/
+
 			rc.planPagos = [];
 			Meteor.call('getPlanPagosDistribuidorTickets',fechaInicial, fechaFinal, $stateParams.distribuidor_id, function(error, result){           					
 					if (result)
 					{
 							//console.log(result);
-							rc.planPagos = result;
+							//console.log(rc.fechaC);
+							//Solo Pintar los del ultimo Corte
+							_.each(result, function(pp){
+									if (pp.fechaLimite > rc.fechaC && pp.fechaLimite < rc.fechaCF)		
+										 rc.planPagos.push(pp);
+							});
+														
 							$scope.$apply();
 					}
 		

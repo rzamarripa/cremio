@@ -257,8 +257,7 @@ angular.module("creditoMio")
 			//rc.sucursal_id 	= Meteor.user().profile.sucursal_id;
 	  	$("#modalSucursal").modal('hide');
 	  	//$state.go('root.home');	
-	  	
-	  	console.log(Meteor.users.find().fetch());	
+	  	//console.log(Meteor.users.find().fetch());	
 	}
 	
 	

@@ -1,3 +1,267 @@
+<!--
+<div class="col-sm-12">
+	<div class="well">
+-->
+<div class="row">
+	<div class="col-sm-12">
+		<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
+	<header role="heading">
+				<ul id="widget-tab-2" class="nav nav-tabs pull-left">
+		
+					<li class="active">
+						<a data-toggle="tab" href="#hrC1" aria-expanded="false"> Pagos</a>
+					</li>
+					
+					<li class="">
+						<a data-toggle="tab" href="#hrC2" aria-expanded="false"> Vales</a>
+					</li>
+					
+					<li class="">
+						<a data-toggle="tab" href="#hrC3" aria-expanded="false"> Créditos</a>
+					</li>
+		
+				</ul>	
+				
+			<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+		
+			<!-- widget div-->
+			<div role="content">
+				
+				<!-- widget edit box -->
+				<div class="jarviswidget-editbox">
+					<!-- This area used as dropdown edit box -->
+					
+				</div>
+				<!-- end widget edit box -->
+				
+				<!-- widget content -->
+				<div class="widget-body no-padding">
+		
+					<!-- widget body text-->
+					
+					<div class="tab-content padding-10">
+						
+						<div class="tab-pane fade active in" id="hrC1">
+							
+								<table class="table table-striped table-bordered table-condensed font-xs">
+									<thead class="thead">
+										<tr>
+											<th class="text-center" width="5%">No.</th>
+											<th class="text-center" width="10%">Folio Pago</th>	
+											<th class="text-center" width="15%">Fecha Pago</th>
+											<th class="text-center" width="15%">Importe</th>
+											<th class="text-center" width="15%">Bonificado</th>
+											<th class="text-center" width="15%">Total</th>
+											<th class="text-center" width="20%">Pagado</th>
+											<th class="text-center" width="10%">Acciones</th>
+											<th ng-show="cobv.openModal"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="pago in cobv.pagos">
+											<td class="text-center">{{$index + 1}}</td>		
+											<td class="text-center">{{pago.folioPago}}</td>	
+											<td class="text-center">{{pago.fechaPago | date:"dd-MM-yyyy"}}</td>
+											<td class="text-right">{{pago.liquidacion | currency}}</td>
+											<td class="text-right">{{pago.bonificacion | currency}}</td>
+											<td class="text-right">{{pago.totalPago | currency}}</td>
+											<td class="text-right">{{pago.pago | currency}}</td>
+											<td>
+												<div class="text-center">
+														<button type="button" class="btn btn-xs btn-link" ng-click="cobv.verPagos(pago)">Ver Pago</button>
+												</div>						
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							
+						</div>
+						
+						<div class="tab-pane fade" id="hrC2">
+								
+								<table id="recC" class="table table-hover border-collapse" >
+									<thead>
+										<tr>
+											<th width="10%"><div class="text-center">No. Corte</div></th>
+											<th width="15%"><div class="text-center">Fecha Corte</div></th>
+											<th width="10%"><div class="text-center">Capital Solicitado</div></th>
+											<th width="10%"><div class="text-center">Adeudo adeudoInicial</div></th>
+											<th width="10%"><div class="text-center">Saldo Actual</div></th>
+											<th width="10%"><div class="text-center">Cargos Moratorios</div></th>
+										</tr>
+									</thead>
+									<tbody>
+								    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in cobv.creditoCortes">
+									    <td class="text-center" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
+									    <td class="text-center" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
+										    																																				{{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
+									    <td class="text-right" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.capitalSolicitado | currency}}</td>
+									    <td class="text-right" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.adeudoInicial | currency}}</td>
+									    <td class="text-right" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.saldoActual | currency}}</td>
+									    <td class="text-right" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
+								    </tr>
+								    
+								    <tr ng-repeat-end ng-if="cobv.isSelectedCredito($index + 1) && cobv.banC">
+						            
+						            	<td colspan="12">
+														<table class="table table-striped table-bordered table-condensed font-xs">
+															<thead class="thead">
+																<tr>
+																	<th class="text-center" width="5%">No.</th>
+																	<th class="text-center" width="7%">Vale No.</th>
+																	<th class="text-center" width="25%">Beneficiario</th>
+																	<th class="text-center" width="10%">Fecha de Solicitud</th>
+																	<th class="text-center" width="10%">Fecha Entrega</th>
+																	<th class="text-center" width="10%">Capital Solicitado</th>
+																	<th class="text-center" width="10%">Adeudo Inicial</th>
+																	<th class="text-center" width="10%" >Saldo Actual</th>
+																	<th class="text-center" width="10%">Saldo C.M.</th>
+																	<th class="text-center" width="5%">Tickets</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-repeat="credito in objeto.creditosHistorial">								
+																	<td class="text-center">{{$index + 1}}</td>	
+																	<td class="text-center">{{credito.folio}}</td>	
+																	<td class="text-left">{{credito.beneficiario.nombreCompleto}}</td>
+																	<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
+																	<td class="text-center">{{credito.fechaEntrega | date:"dd-MM-yyyy"}}</td>
+																	<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
+																	<td class="text-right">{{credito.adeudoInicial | currency}}</td>
+																	<td class="text-right">{{credito.saldoActual | currency}}</td>
+																	<td class="text-danger text-right">{{credito.saldoMultas | currency}}</td>
+																	<td>
+																    <div class="text-center">
+																	    <div class="btn-group">
+																			  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																			    <span class="caret"></span>
+																			    <span class="sr-only">Toggle Dropdown</span>
+																			  </button>
+																			  <ul class="dropdown-menu dropdown-menu-right text-left">
+																			    <li><a href="#" ng-click="cobv.imprimirPagare(credito._id)"> Pagaré</a></li>
+																			    <li><a href="#" ng-click="cobv.imprimirAmortizacion(credito._id)"> Tabla Amortización</a></li>
+																			    <li><a href="#" ng-click="cobv.imprimirVale(credito._id)"> Vale</a></li>
+																			  </ul>
+																			</div>
+																    </div>				    
+															    </td>
+																</tr>
+															</tbody>
+													</table>           	
+							           	
+						            </td>
+	
+						        </tr>
+								    
+									</tbody>
+							</table>
+	
+						</div>
+						
+						<div class="tab-pane fade" id="hrC3">
+								
+								<table id="recCP" class="table table-hover border-collapse" >
+									<thead>
+										<tr>
+											<th width="10%"><div class="text-center">No. Corte</div></th>
+											<th width="15%"><div class="text-center">Fecha Corte</div></th>
+											<th width="10%"><div class="text-center">Capital Solicitado</div></th>
+											<th width="10%"><div class="text-center">Adeudo adeudoInicial</div></th>
+											<th width="10%"><div class="text-center">Saldo Actual</div></th>
+											<th width="10%"><div class="text-center">Cargos Moratorios</div></th>
+										</tr>
+									</thead>
+									<tbody>
+								    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in cobv.creditoPCortes">
+									    <td class="text-center" ng-click="cobv.selCorteCreditoP(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
+									    <td class="text-center" ng-click="cobv.selCorteCreditoP(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
+										    																																				{{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
+									    <td class="text-right" ng-click="cobv.selCorteCreditoP(objeto,$index + 1)">{{objeto.capitalSolicitado | currency}}</td>
+									    <td class="text-right" ng-click="cobv.selCorteCreditoP(objeto,$index + 1)">{{objeto.adeudoInicial | currency}}</td>
+									    <td class="text-right" ng-click="cobv.selCorteCreditoP(objeto,$index + 1)">{{objeto.saldoActual | currency}}</td>
+									    <td class="text-right" ng-click="cobv.selCorteCreditoP(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
+								    </tr>
+								    
+								    <tr ng-repeat-end ng-if="cobv.isSelectedCreditoP($index + 1) && cobv.banCP">
+						            
+						            	<td colspan="12">
+														<table class="table table-striped table-bordered table-condensed font-xs">
+															<thead class="thead">
+																<tr>
+																	<th class="text-center" width="5%">No.</th>
+																	<th class="text-center" width="7%">Cre. No.</th>
+																	<th class="text-center" width="10%">Fecha de Solicitud</th>
+																	<th class="text-center" width="10%">Fecha Entrega</th>
+																	<th class="text-center" width="10%">Capital Solicitado</th>
+																	<th class="text-center" width="10%">Adeudo Inicial</th>
+																	<th class="text-center" width="10%" >Saldo Actual</th>
+																	<th class="text-center" width="10%">Saldo C.M.</th>
+																	<!-- <th class="text-center" width="5%">Contrato</th> -->
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-repeat="credito in objeto.creditosHistorial">		
+																	<td class="text-center">{{$index + 1}}</td>							
+																	<td class="text-center">{{credito.folio}}</td>	
+																	<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
+																	<td class="text-center">{{credito.fechaEntrega | date:"dd-MM-yyyy"}}</td>
+																	<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
+																	<td class="text-right">{{credito.adeudoInicial | currency}}</td>
+																	<td class="text-right">{{credito.saldoActual | currency}}</td>
+																	<td class="text-danger text-right">{{credito.saldoMultas | currency}}</td>
+																	<!--
+																	<td>
+																    <div class="text-center">
+																	    <div class="btn-group">
+																			  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																			    <span class="caret"></span>
+																			    <span class="sr-only">Toggle Dropdown</span>
+																			  </button>
+																			  <ul class="dropdown-menu dropdown-menu-right text-left">
+																			    <li><a href="#" ng-click="dis.imprimirVale(credito._id)"> Descargar</a></li>
+																			  </ul>
+																			</div>
+																    </div>				    
+															    </td>
+	-->
+																</tr>
+															</tbody>
+													</table>           	
+							           	
+						            </td>
+	
+						        </tr>
+								    
+									</tbody>
+							</table>
+	
+						</div>
+						
+					</div>
+					<!-- end widget body text-->
+					
+					<!-- widget footer -->
+					<div class="widget-footer text-right">
+						
+					</div>
+					<!-- end widget footer -->
+					
+				</div>
+				<!-- end widget content -->
+				
+			</div>
+			<!-- end widget div -->
+			
+		</div>
+	</div>
+</div>	
+
+<!--
+	</div>	
+</div>
+-->
+
+<!--
 <div class="row"><br/>
 	<div class="col-sm-12">	
 		<table class="table table-striped table-bordered table-condensed font-xs">
@@ -27,6 +291,7 @@
 		</table>
 	</div>
 </div>
+-->
 
 
 

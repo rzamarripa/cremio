@@ -24,14 +24,15 @@ angular.module("creditoMio")
 	rc.sucursal_id	= "";
 	rc.sucursales 	= [];
 	
-	rc.vales 			= 0;
-	rc.prospectos = 0;
+	rc.vales 						= 0;
+	rc.valesAcreditados = 0;
+	rc.prospectos 			= 0;
 	
 	//this.caja = {};
 	//this.nombreCliente = "";
 	var user = Meteor.users.findOne();
 	
-	if (user.username != "admin")
+	if (user != undefined && user.username != "admin")
 	{
 		
 			this.subscribe('sucursales', () => {
@@ -42,7 +43,7 @@ angular.module("creditoMio")
 		 		if (user.username != "admin" && user.roles[0] != "Distribuidor")
 					 return [{sucursal_id :	 Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
 					 					tipo 				: "vale",
-					 					estatus			: 1 }]
+					 					estatus			: {$in: [1,2]} }]
 			});
 			
 			this.subscribe('prospectos', () => {
@@ -186,6 +187,11 @@ angular.module("creditoMio")
 					return Creditos.find({sucursal_id :	 Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
 											 					tipo 				: "vale",
 											 					estatus			: 1 }).count();
+				},
+				valesAcreditados : () =>{
+					return Creditos.find({sucursal_id :	 Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+											 					tipo 				: "vale",
+											 					estatus			: 2 }).count();
 				},
 				prospectos : () =>{
 					return Prospectos.find({sucursal_id :	 Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",

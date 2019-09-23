@@ -1053,42 +1053,6 @@ angular.module("creditoMio")
 			 		loading(false);
 			 }
 			 		
-			 
-			/*
- function b64toBlob(b64Data, contentType, sliceSize) {
-          contentType = contentType || '';
-          sliceSize = sliceSize || 512;
-          var byteCharacters = atob(b64Data);
-          var byteArrays = [];
-          for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-            var slice = byteCharacters.slice(offset, offset + sliceSize);
-        
-            var byteNumbers = new Array(slice.length);
-            for (var i = 0; i < slice.length; i++) {
-              byteNumbers[i] = slice.charCodeAt(i);
-            }
-        
-            var byteArray = new Uint8Array(byteNumbers);
-        
-            byteArrays.push(byteArray);
-          }
-            
-          var blob = new Blob(byteArrays, {type: contentType});
-          return blob;
-          }
-              
-          var blob = b64toBlob(response, "application/docx");
-          var url = window.URL.createObjectURL(blob);
-          var dlnk = document.getElementById('dwnldLnk');
-
-           dlnk.download = "RECIBOS.docx"; 
-          dlnk.href = url;
-          dlnk.click();       
-          window.URL.revokeObjectURL(url);
-   
-      }
-*/
-    
     });
     rc.recibo = [];
     
@@ -1113,11 +1077,11 @@ angular.module("creditoMio")
   this.funcionOrdenar = function() {
     
       if (this.valorOrdenar == "Folio")
-          return ['credito.folio','numeroPago'];
+          return ['credito.folio','numeroPago','orden'];
       if (this.valorOrdenar == "Fecha")
-          return ['fechaLimite'];
+          return ['fechaLimite','numeroPago','orden'];
       if (this.valorOrdenar == "Cliente")
-          return ['cliente.profile.nombreCompleto', 'credito.folio', 'numeroPago'];    
+          return ['cliente.profile.nombreCompleto', 'credito.folio', 'numeroPago','orden'];    
   }
 
   this.aparecerCheck = function() {

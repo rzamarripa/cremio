@@ -10,7 +10,7 @@ angular.module("creditoMio")
   this.buscar.nombre = "";
   window.rc = rc;
   
-   this.subscribe('supervisor', () => {
+  this.subscribe('supervisor', () => {
 		return [{"profile.sucursal_id": Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",roles:"Supervisor"}]; });
   
   this.helpers({

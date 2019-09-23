@@ -83,12 +83,11 @@ rc.planPagos = PlanPagos.find({}).fetch();
 			rc.fechaLetra = formatDate(rc.fecha);
 			
 			Meteor.call('getUsuarioId', rc.credito.cliente_id, function(error, result){
-				//if(result){
-					//console.log(result);
+				if(result){
 					rc.distribuidor = result;
 					//console.log(rc.distribuidor.nombreCompleto);
 					$scope.$apply();	
-				//}
+				}
 			});
 			
 			this.subscribe('beneficiarios',()=>{
@@ -102,10 +101,15 @@ rc.planPagos = PlanPagos.find({}).fetch();
 				}
 			});
 			
-			Meteor.call('getUsuarioId', rc.credito.cliente_id ,function(err, res){
+			/*
+Meteor.call('getUsuarioId', rc.credito.cliente_id ,function(err, res){
 				rc.distribuidor = res;
+				//console.log(rc.distribuidor);
 				$scope.$apply();
 			});
+*/
+			
+			
 			
 			rc.subscribe('cajeroId',()=>{
 				return[{
@@ -275,9 +279,8 @@ rc.planPagos = PlanPagos.find({}).fetch();
 		          return Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
 		  };	
 			
-			
 			var valores = (rc.credito.adeudoInicial).toString().split('.');
-
+			
 /*
 			console.log(valores);
 			console.log(valores[0]);
@@ -285,8 +288,13 @@ rc.planPagos = PlanPagos.find({}).fetch();
 */
 			
 			rc.centavos = valores[1];
-			if (Number(rc.centavos) < 9)
+
+			if (rc.centavos == undefined)
+				 rc.centavos =  "00";
+			else if (Number(rc.centavos) < 9)
 					rc.centavos =  rc.centavos + "0";
+
+
 			
 			rc.letra = NumeroALetras(valores[0]);
 			

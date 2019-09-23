@@ -120,10 +120,8 @@ angular.module("creditoMio")
 
 	this.der = function()
   {
-	  	if (rc.arreglo.length > 0)
-	  	{
+	  	if (rc.arreglo.length == rc.avance)
 			  	rc.numeroPagina += rc.avance;
-	  	}	
 	}
 	
 };

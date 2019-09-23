@@ -6,8 +6,9 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	let rc = $reactive(this).attach($scope);
 	window.rc = rc;
 
-	this.tablaAmort = false;
+	
 
+	this.tablaAmort = false;
 	this.nuevoBotonPago = true;
 	this.action = false;
 	this.actionAval = true;
@@ -46,8 +47,9 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 	this.personas_ids = [];
 	
 	rc.editarBeneficiario = false;
-	
-	//rc.avalesH = [];
+
+	rc.op = $stateParams.op;
+	//console.log($stateParams.op);
 	
 	rc.ocupacion = "";
 	
@@ -214,8 +216,9 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 				return;	
 		}
 		
-		if (rc.cliente.roles == "Distribuidor") {
-			this.credito.periodoPago = "Quincenal"
+		if (rc.cliente.roles == "Distribuidor") 
+		{
+				this.credito.periodoPago = "Quincenal"
 		}
 		if(rc.credito.requiereVerificacion == true)
 			rc.credito.estatus = 0;
@@ -227,51 +230,80 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 				
 		var fechaPrimerAbono = new Date();
 	
-		if (rc.cliente.roles == "Distribuidor") {
-				
-				var configuracion = Configuraciones.findOne();
-				
-				_.each(configuracion.arregloTasa, function(elemento){
-
-						if (rc.credito.capitalSolicitado == elemento.cantidad){
-								
-								switch(rc.credito.duracionMeses){
-									case "3": rc.credito.tasa = elemento.seis; break;
-									case "4": rc.credito.tasa = elemento.ocho; break;
-									case "5": rc.credito.tasa = elemento.diez; break;
-									case "6": rc.credito.tasa = elemento.doce; break;
-									case "7": rc.credito.tasa = elemento.catorce; break;
-									case "8": rc.credito.tasa = elemento.dieciseis; break;
-								}										
-						}	
+		if (rc.cliente.roles == "Distribuidor") 
+		{
 						
-				});
+			this.credito.periodoPago = "Quincenal";
+	  	
+	  	if (rc.op == 1)
+	  	{
+		  		rc.credito.tipo = "creditoPersonalDistribuidor";
+		  		
+					var configuracion = Configuraciones.findOne();
+					rc.credito.tasa = configuracion.tasaCreditoDistribuidor;
+
+		  		_.each(rc.tiposCredito, function(tc){
+								if (tc.tipoInteres == "Simple")
+										rc.credito.tipoCredito_id = tc._id;
+					});
+					
+					if (rc.credito.capitalSolicitado > configuracion.limiteCreditoDistribuidor)
+					{
+							toastr.warning("Rebasa el límite de crédito para Distribuidores");
+							return;
+					}
+					
+	  	}		
+			else
+			{
+					
+					rc.credito.tipo = "vale";
+					var configuracion = Configuraciones.findOne();
+	
+					_.each(configuracion.arregloTasa, function(elemento){
+							
+							if (rc.credito.capitalSolicitado == elemento.cantidad){
+										
+									switch(rc.credito.duracionMeses){
+										case "3": rc.credito.tasa = elemento.seis; break;
+										case "4": rc.credito.tasa = elemento.ocho; break;
+										case "5": rc.credito.tasa = elemento.diez; break;
+										case "6": rc.credito.tasa = elemento.doce; break;
+										case "7": rc.credito.tasa = elemento.catorce; break;
+										case "8": rc.credito.tasa = elemento.dieciseis; break;
+									}										
+							}	
+					});
+					
+					if (rc.credito.tasa == 0)
+					{
+							toastr.warning("No se puede hacer un vale con tasa 0, revise la tabla de amortización");
+							return;
+					}
+					
+					_.each(rc.tiposCredito, function(tc){
+								if (tc.tipoInteres == "Simple")
+										rc.credito.tipoCredito_id = tc._id;
+					});
+			}	
 				
-				if (rc.credito.tasa == 0)
-				{
-						toastr.warning("No se puede hacer un vale con tasa 0");
-						return;
-				}
-				
-				_.each(rc.tiposCredito, function(tc){
-						if (tc.tipoInteres == "Simple")
-								rc.credito.tipoCredito_id = tc._id;
-				});
-				
-				var n = fechaPrimerAbono.getDate();
-				if (n >= 5 && n < 20)
-				{
-						fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),1,0,0,0,0);		
-				}
-				else 
-				{
-						if (n < 5)
-								fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),16,0,0,0,0);
-						else if (n >= 20)
-						   	fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth() + 1,16,0,0,0,0);								
-				}
-			
-		}else if (rc.cliente.roles == "Cliente") {
+			var fechaPrimerAbono = new Date();
+			var n = fechaPrimerAbono.getDate();
+			if (n >= 5 && n < 20)
+			{
+					fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),1,0,0,0,0);		
+			}
+			else 
+			{
+					if (n < 5)
+							fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),16,0,0,0,0);
+					else if (n >= 20)
+					   	fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth() + 1,16,0,0,0,0);								
+			}
+						
+		}
+		else if (rc.cliente.roles == "Cliente") 
+		{
 				rc.credito.tasa = rc.credito.tasa;
 		}
 
@@ -291,7 +323,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			estatus 								: 1,
 			requiereVerificacion		: rc.credito.requiereVerificacion,
 			turno 									: rc.credito.turno,
-			sucursal_id 						: Meteor.user().profile.sucursal_id,
+			sucursal_id 						: rc.cliente.profile.sucursal_id,
 			fechaVerificacion				: rc.credito.fechaVerificacion,
 			turno										: rc.credito.turno,
 			tasa 										: rc.credito.tasa,
@@ -366,60 +398,84 @@ _.each(result,function (pago) {
   		  return;
 		}	
 		
-		
+		//Validar la tasa a los Clientes y Distribuidores
 		var usuario = Meteor.users.findOne(Meteor.userId());
-		if (usuario.roles[0] == "Cajero" && (rc.credito.tasa < usuario.profile.tasaMinima || rc.credito.tasa > usuario.profile.tasaMaxima) && rc.cliente.roles != "Distribuidor")
+		if (usuario.roles[0] == "Cajero" && (rc.credito.tasa < usuario.profile.tasaMinima || rc.credito.tasa > usuario.profile.tasaMaxima) && rc.cliente.roles == "Distribuidor")
 		{
 				toastr.warning('La tasa no es válida. debe ser entre ' + usuario.profile.tasaMinima + " y " +  usuario.profile.tasaMaxima);
 				return;	
 		}
 		
-		if (rc.cliente.roles == "Distribuidor") {
-			this.credito.periodoPago = "Quincenal";
-			
+		if (rc.cliente.roles == "Distribuidor" && rc.op == 0) {
 			if (rc.beneficiario == undefined || rc.beneficiario.nombreCompleto == undefined)
 			{
 					toastr.error("Seleccione un beneficiario.");
 					return;					
 			}
-			
 		}
 
-		loading(true);
-  	if (rc.cliente.roles == "Distribuidor") {
+		
+  	if (rc.cliente.roles == "Distribuidor") 
+  	{
+
+	  	//loading(true);
+	  	this.credito.periodoPago = "Quincenal";
 	  	
-			var configuracion = Configuraciones.findOne();
-	
-			_.each(configuracion.arregloTasa, function(elemento){
+	  	if (rc.op == 1)
+	  	{
+		  		rc.credito.tipo = "creditoPersonalDistribuidor";
+		  		
+					var configuracion = Configuraciones.findOne();
+					rc.credito.tasa = configuracion.tasaCreditoDistribuidor;
+
+		  		_.each(rc.tiposCredito, function(tc){
+								if (tc.tipoInteres == "Simple")
+										rc.credito.tipoCredito_id = tc._id;
+					});
 					
-					if (rc.credito.capitalSolicitado == elemento.cantidad){
-								
-							switch(rc.credito.duracionMeses){
-								case "3": rc.credito.tasa = elemento.seis; break;
-								case "4": rc.credito.tasa = elemento.ocho; break;
-								case "5": rc.credito.tasa = elemento.diez; break;
-								case "6": rc.credito.tasa = elemento.doce; break;
-								case "7": rc.credito.tasa = elemento.catorce; break;
-								case "8": rc.credito.tasa = elemento.dieciseis; break;
-							}										
-					}	
-			});
-			
-			rc.credito.tipo = "vale";
-			
-			if (rc.credito.tasa == 0)
+					if (rc.credito.capitalSolicitado > configuracion.limiteCreditoDistribuidor)
+					{
+							toastr.warning("Rebasa el límite de crédito para Distribuidores");
+							return;
+					}
+					
+	  	}		
+			else
 			{
-					toastr.warning("No se puede hacer un vale con tasa 0");
-					return;
-			}
-			
-			_.each(rc.tiposCredito, function(tc){
-						if (tc.tipoInteres == "Simple")
-								rc.credito.tipoCredito_id = tc._id;
-			});
+					
+					rc.credito.tipo = "vale";
+					var configuracion = Configuraciones.findOne();
+	
+					_.each(configuracion.arregloTasa, function(elemento){
+							
+							if (rc.credito.capitalSolicitado == elemento.cantidad){
+										
+									switch(rc.credito.duracionMeses){
+										case "3": rc.credito.tasa = elemento.seis; break;
+										case "4": rc.credito.tasa = elemento.ocho; break;
+										case "5": rc.credito.tasa = elemento.diez; break;
+										case "6": rc.credito.tasa = elemento.doce; break;
+										case "7": rc.credito.tasa = elemento.catorce; break;
+										case "8": rc.credito.tasa = elemento.dieciseis; break;
+									}										
+							}	
+					});
+					
+					//rc.credito.tipo = "vale";
+					
+					if (rc.credito.tasa == 0)
+					{
+							toastr.warning("No se puede hacer un vale con tasa 0, revise la tabla de amortización");
+							return;
+					}
+					
+					_.each(rc.tiposCredito, function(tc){
+								if (tc.tipoInteres == "Simple")
+										rc.credito.tipoCredito_id = tc._id;
+					});
+			}	
 			
 			//rc.credito.tipoCredito_id = rc.tiposCredito[0]._id;
-			
 			var fechaPrimerAbono = new Date();
 			var n = fechaPrimerAbono.getDate();
 			if (n >= 5 && n < 20)
@@ -436,7 +492,9 @@ _.each(result,function (pago) {
 			
 			rc.credito.primerAbono = fechaPrimerAbono;
 
-		}else if (rc.cliente.roles == "Cliente") {
+		}
+		else if (rc.cliente.roles == "Cliente") 
+		{
 
 			rc.credito.tipo = "creditoP";
 			rc.credito.tasa = rc.credito.tasa;
@@ -459,7 +517,6 @@ _.each(result,function (pago) {
 			estatus 									: 1,
 			requiereVerificacion			: rc.credito.requiereVerificacion,
 			requiereVerificacionAval	: rc.credito.requiereVerificacionAval,
-			//sucursal_id 							: Meteor.user().profile.sucursal_id,
 			sucursal_id 							: rc.cliente.profile.sucursal_id,
 			fechaVerificacion					: rc.credito.fechaVerificacion,
 			turno 										: rc.credito.turno,
@@ -471,34 +528,17 @@ _.each(result,function (pago) {
 			beneficiario_id 					: rc.beneficiario._id
 		};
 
-		if (rc.cliente.roles == "Distribuidor") {
-
-			rc.credito.tipo = "vale"
-			//rc.credito.tipoCredito_id = rc.tiposCredito[0]._id ///No me gusta
-			
-			_.each(rc.tiposCredito, function(tc){
-						if (tc.tipoInteres == "Simple")
-								rc.credito.tipoCredito_id = tc._id;
-			});
-
-			credito.estatus = 1;
-		}
-		else if (rc.cliente.roles == 'Cliente') {
-
-			rc.credito.tipo = "creditoP";
-			
+		if (rc.cliente.roles == 'Cliente') {
 			credito.avales = angular.copy(rc.avales);
-		
-			//Duda se guardan los dos???
-			
+			//Duda se guardan los dos???			
 			if (rc.credito.tipoGarantia == "mobiliaria")
 					credito.garantias = angular.copy(rc.garantias);
 			else
 					credito.garantias = angular.copy(rc.garantiasGeneral);
-				
 		}
 
 		//Cambie el metodo	
+		//console.log(rc.credito);
 		
 		Meteor.apply('generarCreditoPeticion', [credito], function(error, result){
 			if(result == "hecho"){
@@ -1084,7 +1124,7 @@ _.each(result,function (pago) {
 	this.validaCredenciales = function(credenciales)
 	{
 			var usuario = Meteor.users.findOne(Meteor.userId());
-	    Meteor.call('validarCredenciales', credenciales, usuario.profile.sucursal_id , function(err, result) {
+	    Meteor.call('validarCredenciales', credenciales, function(err, result) {
 	      if (result) {
 	        
 	        	//var usuario = Meteor.users.findOne(Meteor.userId());
@@ -1460,6 +1500,11 @@ var usuario = Meteor.users.findOne(Meteor.userId());
 	this.AgregarBeneficiario = function(objeto)
 	{
 		rc.beneficiario = objeto;
+	};
+	
+	this.calculaNumeroPagos = function()
+	{
+		rc.numeroPagos = rc.credito.duracionMeses * 2;
 	};
 	
 	$(document).ready(function() {

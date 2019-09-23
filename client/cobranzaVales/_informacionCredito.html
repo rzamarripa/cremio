@@ -1,5 +1,74 @@
 <div class="row">
 	<div class="col-sm-12">
+		<table id="rec" class="table table-hover border-collapse" >
+				<thead>
+					<tr>
+						<th width="10%"><div class="text-center">No. Corte</div></th>
+						<th width="15%"><div class="text-center">Fecha Corte</div></th>
+						<th width="15%"><div class="text-center">Fecha Pago</div></th>
+						<th width="10%"><div class="text-center">Importe</div></th>
+						<th width="10%"><div class="text-center">Cargos Moratorios</div></th>
+						<th width="10%"><div class="text-center">Bonificación</div></th>
+						<th width="10%"><div class="text-center">Total</div></th>
+					</tr>
+				</thead>
+				<tbody>
+			    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in cobv.arregloCortes" ng-class="objeto.classPago">
+				    <td class="text-center" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
+				    <td class="text-center" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
+					    																																 {{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
+				    <td class="text-center" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</td>
+				    <td class="text-right" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.importe | currency}}</td>
+				    <td class="text-right" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
+				    <td class="text-right" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
+				    <td class="text-right" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}</td>
+			    </tr>
+			    
+			    <tr ng-repeat-end ng-if="cobv.isSelectedCorte($index + 1) && cobv.banV">
+	            <td colspan="12">
+									<table class="table table-striped table-bordered table-condensed font-xs">
+										<thead class="thead">
+											<tr>
+												<th class="text-center" width="5%">No.</th>
+												<th class="text-center" width="20%">Beneficiario</th>
+												<th class="text-center" width="10%">Fecha de Pago</th>
+												<th class="text-center" width="10%">N. Pago</th>
+												<th class="text-center" width="10%">Capital</th>
+												<th class="text-center" width="10%">Interés</th>
+												<th class="text-center" width="5%">IVA</th>
+												<th class="text-center" width="10%">Seguro</th>
+												<th class="text-center" width="10%">Bonif.</th>
+												<th class="text-center" width="15%">Pago</th>
+												<th class="text-center" width="10%">Saldo</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="pago in objeto.planPagos">								
+												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
+												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-left' : 'text-left'">{{pago.beneficiario}}</td>
+												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
+												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.capital - pago.pagoCapital | currency}}</td>
+												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.interes - pago.pagoInteres | currency}}</td>
+												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.iva - pago.pagoIva | currency}}</td>
+												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.seguro - pago.pagoSeguro | currency}}</td>
+												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.bonificacion | currency}}</td>
+												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.cargo | currency}}</td>
+												<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular - pago.bonificacion | currency}}</td>
+											</tr>
+										</tbody>
+								</table>           	
+		           	
+	            </td>
+	        </tr>
+				</tbody>
+		</table>
+	</div>
+</div>
+
+<!--
+<div class="row">
+	<div class="col-sm-12">
 		<div class="row"><br/>
 			<div class="col-sm-12">
 				
@@ -43,3 +112,4 @@
 		</div>
 	</div>
 </div>
+-->

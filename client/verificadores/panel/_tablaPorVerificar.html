@@ -2,22 +2,22 @@
 <table class="table table-bordered">
 	<thead>
 		<tr>
-			<th class="text-center" width="5%">No.</th>
-			<th class="text-center" width="10%"><div class="text-center">No. Cliente</div></th>
-			<th ><div class="text-center">Nombre del Cliente</div></th>
-			<th ><div class="text-center">Aval</div></th>
-			<th ><div class="text-center">Capital Solicitado</div></th>
-			<th class="text-center" width="10%"><div class="text-center">Fecha Solicitud</div></th>
-			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
+			<th class="text-center" width="3%">No.</th>
+			<th class="text-center" width="11%"><div class="text-center">No. Cliente</div></th>
+			<th class="text-left" width="20%"><div class="text-center">Nombre del Cliente</div></th>
+			<th class="text-left" width="20%"><div class="text-center">Aval</div></th>
+			<th class="text-center" width="8%"><div class="text-center">Capital Solicitado</div></th>
+			<th class="text-center" width="8%"><div class="text-center">Fecha Solicitud</div></th>
+			<th class="text-center" width="8%"><div class="text-center">Fecha Verificación</div></th>
 			<th class="text-center" width="5%"><div class="text-center">Turno</div></th>
 			<th class="text-center" width="5%"><div class="text-center">Verificar</div></th>
-			<th class="text-center" width="5%"><div class="text-center">Acción</div></th>
+			<th class="text-center" width="8%"><div class="text-center">Acción</div></th>
 		</tr>
 	</thead>
 	<tbody>
     <tr ng-repeat="credito in pver.creditos">
 	    <td class="text-center">{{$index + 1}}</td>
-	    <td>{{credito.numeroCliente}}</td>
+	    <td>{{credito.numeroCliente}}  <span class="badge bg-color-blue txt-color-white pull-right">{{credito.verificacionesHechas}}</span> </td>
 	    <td>{{credito.nombreCliente}}</td>
 	    <td>{{credito.avales_ids[0].nombreCompleto}}</td>
 	    <td class="text-right">{{credito.capitalSolicitado | currency}}</td>
@@ -33,16 +33,18 @@
 						  </button>
 						  <ul class="dropdown-menu text-left">
 						    <li><a ui-sref="root.verificacion({id : credito._id, verificacion_id: '-1', tipo: 'CP', persona:1})">Solicitante</a></li>
-						    <li><a ui-sref="root.verificacionVecino({id : credito._id, verificacion_id: '-1', tipo: 'CP', persona:1})">Vecino</a></li>
 						    <li ng-if = "credito.requiereVerificacionAval"><a ui-sref="root.verificacion({id : credito._id, verificacion_id: '-1', tipo: 'CP', persona:2})">Aval</a></li>
-						    <li ng-if = "credito.requiereVerificacionAval"><a ui-sref="root.verificacionVecino({id : credito._id, verificacion_id: '-1', tipo: 'CP', persona:2})">Vecino Aval</a></li>
+<!-- 						    <li><a ui-sref="root.verificacionVecino({id : credito._id, verificacion_id: '-1', tipo: 'CP', persona:1})">Vecino</a></li> -->
+<!-- 						    <li ng-if = "credito.requiereVerificacionAval"><a ui-sref="root.verificacion({id : credito._id, verificacion_id: '-1', tipo: 'CP', persona:2})">Aval</a></li> -->
+<!-- 						    <li ng-if = "credito.requiereVerificacionAval"><a ui-sref="root.verificacionVecino({id : credito._id, verificacion_id: '-1', tipo: 'CP', persona:2})">Vecino Aval</a></li> -->
 						  </ul>
 						</div>
 			    </div>				    
 			</td>
 <!-- 	    <td ng-show="currentUser.roles[0] != 'Cajero'" class="text-center"> Se lo quite para ver --> 
 			<td class="text-center">
-		    	<button type="button" class="btn btn-xs btn-primary" ng-click="pver.mostrarEvaluacion(credito._id)">Evaluar</button>
+		    	<button type="button" class="btn btn-xs btn-primary" ng-click="pver.mostrarEvaluacion(credito._id, credito.verificacionesHechas)"><i class="fa fa-check"></i></button>
+		    	<button type="button" class="btn btn-xs btn-danger" ng-click="pver.cancelarVerificacionCredito(credito._id, credito.nombreCliente)"><i class="fa fa-times"></i></button>
 	    </td>
     </tr>
 	</tbody>

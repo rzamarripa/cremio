@@ -18,7 +18,6 @@
 												<span class="semi-bold">{{pagV.objeto.profile.apellidoPaterno}} {{pagV.objeto.profile.apellidoMaterno}}</span>
 										<small> (Distribuidor)</small></h1>
 									</div>
-										
 								</div>
 								<!-- <div class="row">
 									<div class="col-sm-12">
@@ -535,18 +534,6 @@
 <!-- Tabla para mostrar los pagos -->
 <div class="well">
 		<div class="row">
-				<!--
-<div class="col-sm-2">
-				    <label>Ordenar</label>
-				    <select name="ordenar" ng-model="pagV.valorOrdenar" ng-change="pagV.funcionOrdenar()" data-placeholder="Ordenar" class="form-control input-sm" >
-						    <option value=""></option>
-						    <option value="Folio">Folio</option>
-						    <option value="Fecha">Fecha</option>
-						    <option value="Recibo">Recibo</option>
-						</select>
-		  	</div>
--->
-
 	    	<div class="col-sm-2">
 					<br >
 					<label class="checkbox-inline">
@@ -590,8 +577,7 @@
 				</div>									  	
 		</div>	
 		<div class="row">
-			
-			
+						
 			<div class="col-sm-9">
 				<table id="rec" class="table table-hover border-collapse" >
 						<thead>
@@ -621,11 +607,14 @@
 											<table class="table table-bordered table-condensed font-xs">
 												<thead class="thead">
 													<tr>
-														<th class="text-center" width="3%"></th>
-														<!-- <th class="text-center" width="3%">No.</th> -->
+														<th class="text-center" width="3%">
+															<a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarTodos(objeto)" 
+																 class="btn btn-xs btn-{{objeto.pagoSeleccionado == true ? 'warning' : 'success'}}"> 
+																{{objeto.pagoSeleccionado == true ? '-' : '+'}}
+															</a>
+														</th>
 														<th class="text-center" width="3%">Folio</th>
 														<th class="text-center" width="20%">Beneficiario</th>
-														<!-- <th class="text-center" width="5%">Movimiento</th> -->
 														<th class="text-center" width="20%">Fecha de Pago</th>
 														<th class="text-center" width="5%">Recibo</th>
 														<th class="text-center" width="5%">Capital</th>
@@ -639,11 +628,11 @@
 												</thead>
 												<tbody>
 													<tr ng-class="pago.color" ng-repeat="pago in objeto.planPagos | orderBy: pagV.funcionOrdenar()" ng-if="pago.verCargo">
-														<td ><a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago, objeto)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
-														<!-- <td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	 -->
+														<td >
+																<a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago, objeto)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> 
+														</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.beneficiario.nombreCompleto}}</td>
-														<!-- <td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.movimiento }}</td> -->
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pagV.getnumeroPagos(pago.credito_id)}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.capital  | currency}}</td>
@@ -656,54 +645,12 @@
 													</tr>
 												</tbody>
 											</table>
-				           	
 			            </td>
 			        </tr>
 						</tbody>
 				</table>
 			</div>
-			
-			
-			<!--
 
-			<div class="col-sm-9">
-				<table class="table table-bordered table-condensed font-xs">
-					<thead class="thead">
-						<tr>
-							<th class="text-center" width="3%"></th>
-							<th class="text-center" width="3%">Folio</th>
-							<th class="text-center" width="20%">Beneficiario</th>
-							<th class="text-center" width="20%">Fecha de Pago</th>
-							<th class="text-center" width="5%">Recibo</th>
-							<th class="text-center" width="5%">Capital</th>
-							<th class="text-center" width="5%">Interés</th>
-							<th class="text-center" width="5%">Seguro</th>
-							<th class="text-center" width="5%">IVA</th>
-							<th class="text-center" width="7%">Bonf.</th>
-							<th class="text-center" width="5%">Saldo</th>
-							<th class="text-center" width="5%">Pago</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-class="pago.color" ng-repeat="pago in pagV.planPagosViejo | orderBy: pagV.funcionOrdenar()" ng-if="pago.verCargo">
-							<td ><a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.beneficiario.nombreCompleto}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pagV.getnumeroPagos(pago.credito_id)}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.capital  | currency}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.interes  | currency}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.bonificacion  | currency}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
-							<td ><input style="width: 80px" min="0" type="number" ng-change="pagV.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
-						</tr>
-					</tbody>
-				</table>	
-			</div>
-			
--->
 			<div class="col-sm-3 pull-right">
 				<table class="table" style="font-size: larger">
 					<tbody>
@@ -840,5 +787,6 @@
      
   </div>
 </div>
+
 
 

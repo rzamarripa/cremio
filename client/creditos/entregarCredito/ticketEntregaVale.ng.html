@@ -12,7 +12,7 @@
 						MAAR-661007-BF5<br>
 						{{tktEV.sucursal.telefono1}}
 					</address>
-					<strong>----------------------------------------------------------------</strong>
+					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
 					<div class="row">
 						<div class="col-sm-12" style="font-size: small; text-align: left">
 							<span>Cliente: {{tktEV.beneficiario.nombreCompleto}}</span>
@@ -26,8 +26,8 @@
 							<span>Fecha: {{tktEV.credito.fechaEntrega | date: 'dd/MM/yyyy'}} {{tktEV.credito.fechaEntrega | date:'H:mm:ss'}} Hrs.</span>
 						</div>
 					</div>	
-					<strong>----------------------------------------------------------------</strong>
-					<table style="font-size: smaller;width: 100%">
+					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
+					<table style="font-size: smaller;width: 50%; margin-left:auto; margin-right:auto;">
 						<tbody>
 							<tr>
 								<th style="text-align: center;width: 30%">Abono</th>
@@ -54,8 +54,6 @@
 						<div class="col-sm-12" style="font-size: small; text-align: justify">
 							<span>Realizar el pago a: {{tktEV.distribuidor.profile.nombreCompleto}}</span>
 						</div>
-						<br><br><br>
-						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
 					</div>						
 					<br><br><br>
 					<div class="row">
@@ -67,6 +65,18 @@
 					<div class="row">
 						<div class="col-sm-12" style="font-size: small; text-align: center">
 							<span>{{tktEV.beneficiario.nombreCompleto}}</span>
+						</div>
+					</div>
+					<br><br><br>
+					<div class="row">
+						<div class="col-sm-12" style="font-size: small; text-align: left">
+							<span>Nombre y Firma: </span>
+						</div>
+						<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;">
+					</div>
+					<div class="row">
+						<div class="col-sm-12" style="font-size: small; text-align: center">
+							<span>{{tktEV.distribuidor.profile.nombreCompleto}}</span>
 						</div>
 					</div>
 					<br><br><br>

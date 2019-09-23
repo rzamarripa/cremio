@@ -1,0 +1,113 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-10">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Reportes de Seguro de Distribuidores
+		</h1>
+	</div>
+</div>	
+<!--
+	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+		<ul id="sparks" class="">
+			<li class="sparks-info">
+				<h5>Total Capital <span class="txt-color-green" style="text-align: right">{{re.sumaCapital | currency}}</span></h5>
+			</li>	
+			<li class="sparks-info">
+				<h5>Total Intereses <span class="txt-color-red" style="text-align: right">{{re.sumaInteres | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5>total IVA <span class="txt-color-blue" style="text-align: right">{{re.sumaIva | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5>total Seguro <span class="txt-color-yellow" style="text-align: right">{{re.sumaSeguro | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Total Cobranza <span class="txt-color-gray" style="text-align: right">{{re.totalCobranza | currency}}</span></h5>
+			</li>	
+		</ul>
+	</div>
+-->
+<div class="row">	
+	<div class="col-sm-12">
+		<ul id="sparks">
+<!--
+			<li class="sparks-info">
+				<h5>Capital <span class="txt-color-green" style="text-align: left">{{re.sumaCapital | currency}}</span></h5>
+			</li>	
+			<li class="sparks-info">
+				<h5>Intereses <span class="txt-color-red" style="text-align: left">{{re.sumaInteres | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5>IVA <span class="txt-color-blue" style="text-align: left">{{re.sumaIva | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5>Seguro <span class="txt-color-yellow" style="text-align: left">{{re.sumaSeguro | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Seguro Distribuidor <span class="txt-color-yellow" style="text-align: left">{{re.sumaSeguroDistribuidor | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Bonificaciones <span class="txt-color-green" style="text-align: left">{{re.sumaBonificaciones | currency}}</span></h5>	
+			</li>
+			<li class="sparks-info">
+				<h5>Cargos Moratorios <span class="txt-color-purple" style="text-align: left">{{re.sumaCargoMoratorio | currency}}</span></h5>	
+			</li>
+-->
+			<li class="sparks-info">
+				<h5>Total <span class="txt-color-gray" style="text-align: left">{{re.sumaSeguroDistribuidor | currency}}</span></h5>
+			</li>	
+		</ul>
+	</div>
+</div>
+
+<div class="well">
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="fecha">Fecha Inicial:</label>
+				<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaInicial"/>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="fecha">Fecha Final:</label>
+				<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="re.fechaFinal"/>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<br>
+			<input type="button" class="btn btn-primary" ng-click="re.seguroDestribuidores()" value="Buscar" />
+<!-- 			<input type="button" class="btn btn-primary" ng-click="re.imprimirReporteBancos(re.planPagos)" value="Imprimir" /> -->
+		</div>	
+	</div>	
+</div>
+
+
+<div class="row">
+	<div class="col-sm-12" >
+			<table class="table table-condensed table-bordered">
+				<thead>
+					<tr>
+					  <th style="text-align: center; width: 3%"><div class="text-center">No.</div></th>
+						<th width="12%"><div class="text-center">Fecha - Hora</div></th>
+						<th><div class="text-center">Distribuidor</div></th>
+						<th><div class="text-center">Nombre</div></th>
+						<th><div class="text-center">Importe</div></th>
+						<th><div class="text-center">Cajero</div></th>
+						<th><div class="text-center">Tipo Ingreso</div></th>
+					</tr>
+				</thead>
+				<tbody style="font-size: smaller">
+			    <tr ng-repeat="objeto in re.arregloSeguroDistribuidor">
+			    	<td style="text-align: center">{{$index + 1}}</td>
+				    <td><div class="text-center">{{objeto.fechaPago  | date:"dd-MM-yyyy"}} - {{objeto.fechaPago  | date:'H:mm:ss'}}</div></td>
+				    <td><div class="text-center">{{objeto.numeroCliente}}</div></td>
+				    <td><div class="text-left">{{objeto.nombreCompleto}}</div></td>
+				    <td><div class="pull-right">{{objeto.seguro | currency}}</div></td> 
+				    <td><div class="pull-left">{{objeto.cajero}}</div></td>
+				    <td><div class="pull-left">{{objeto.tipoIngreso}}</div></td>
+			    </tr>
+				</tbody>
+			</table>
+		</div>
+	</div>

@@ -62,8 +62,7 @@ angular.module("creditoMio")
 		  return foto;
 	  }
   };
-  
-  
+    
   this.convertir = function(tipo, objeto) {
 	  
 	  if (tipo == "Aval")

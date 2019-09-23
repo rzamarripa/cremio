@@ -16,9 +16,9 @@ angular.module("creditoMio")
 	  
     
   this.helpers({
-		arreglo : () => {
+		arregloVal : () => {
 
-				var creditos = Creditos.find({}, {sort: {fechaSolicito: -1}}).fetch();
+				var creditos = Creditos.find({sucursal_id: Meteor.user().profile.sucursal_id ,tipo: 'vale', estatus : 1 }, {sort: {fechaSolicito: -1}}).fetch();
 				
 				_.each(creditos, function(c){
 						Meteor.call("getUsuarioId", c.cliente_id, function(e,r){								

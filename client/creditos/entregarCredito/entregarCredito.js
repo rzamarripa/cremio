@@ -18,7 +18,12 @@ angular.module("creditoMio")
 	
 	rc.tipoIngreso = {};
 	rc.estatusFecha ;
-		
+	rc.clienteNombre = "";
+	
+	this.subscribe("diasInhabiles", ()=>{
+    return [{estatus : true}]
+  });
+	
 	this.subscribe('tiposIngreso',()=>{
 		return [{
 			estatus : true
@@ -107,13 +112,35 @@ angular.module("creditoMio")
 			{		
 				
 					var usuario = Meteor.users.findOne(Meteor.userId());
-		
+					
+					//Revisar dia inhabil para buscar la próximo Fecha
+			  	verificarDiaInhabil = function(fecha){
+							var diaFecha = fecha.isoWeekday();
+							var diaInhabiles = DiasInhabiles.find({tipo: "DIA", estatus: true}).fetch();
+							var ban = false;
+							_.each(diaInhabiles, function(dia){
+									if (Number(dia.dia) === diaFecha)
+									{
+										 ban = true;	
+										 return ban;							 
+									}	 
+							})
+							var fechaBuscar = new Date(fecha);
+							
+							var fechaInhabil = DiasInhabiles.findOne({tipo: "FECHA", fecha: fechaBuscar, estatus: true});
+							if (fechaInhabil != undefined)
+							{
+								 ban = true;
+								 return ban;	
+							}
+							return ban;
+					};
+					
 					if (usuario.roles[0] == "Cajero")
 							rc.estatusFecha = true;
 					else	
 							rc.estatusFecha = false;
 							
-				
 					//El 0 es SI----
 					c.avisoPrivacidad = 0;
 					c.publicidad 			= 0;
@@ -122,43 +149,103 @@ angular.module("creditoMio")
 					rc.cliente._id = c.cliente_id;
 					if (c.folio)
 						  this.verDiaPago = false;
-
-					if (c.periodoPago == "Quincenal")
+					
+					if (c.tipo == "creditoPersonalDistribuidor")
 					{
-							var fecha;
-							var date = new Date();
-							var check = moment(date, 'YYYY/MM/DD');
-							var numeroDia   = check.format('D');
-							var numeroMes   = check.format('MM');
-							var numeroAnio   = check.format('YYYY');
-							
-							if (numeroDia <= 8)
+							var fecha = new Date();
+							var n = fecha.getDate();
+												
+							if (n >= 7 && n < 22)
 							{
-									var f = numeroMes + "/16/" + numeroAnio;							
-									fecha = new Date(f);
+									rc.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth()  + 1,1,0,0,0,0);
+									rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);
+									//console.log("1:", rc.primerAbono);
+									//console.log("1:", rc.objeto.primerAbono);
 							}
-							else if (numeroDia > 8 && numeroDia <= 22)
+							else 
 							{
-									fecha = new Date(date.getFullYear(),date.getMonth() + 1,1,0,0,0,0);	
-							}		
-							else
-							{
-									fecha = new Date(date.getFullYear(),date.getMonth() + 1,16,0,0,0,0);	
 									
-							}					
-							this.objeto.primerAbono = fecha;						
-					}
-					else if (c.periodoPago == "Mensual")
-					{
-							rc.estatusFecha = false;
+									if (n < 7 )
+									{
+											rc.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
+											rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
+											//console.log("2:", rc.primerAbono);
+											//console.log("2:", rc.objeto.primerAbono);
+									}
+											
+									else if (n >= 22)
+									{
+											//rc.objeto.fechaPrimerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);
+											rc.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);
+											rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);							
+											//console.log("3:", rc.primerAbono);
+											//console.log("3:", rc.objeto.primerAbono);
+									}
+									   	
+							}
 							
-							var fecha;
-							var date = new Date();
-							fecha = new Date(date.getFullYear(),date.getMonth() + 1,1,0,0,0,0);	
-						  this.objeto.primerAbono = fecha;
-						 											    
-					    
+							var validaFecha = true;
+						  var fechaValidar = moment(rc.primerAbono);
+						  while(validaFecha)
+						  {		
+									validaFecha = verificarDiaInhabil(fechaValidar);
+									if (validaFecha == true)
+												fechaValidar = fechaValidar.add(1, 'days');					 
+						  }
+						  			  
+						  rc.primerAbono = new Date(fechaValidar);
+						  rc.primerAbono.setHours(0,0,0,0);
+							
 					}
+					else
+					{
+							if (c.periodoPago == "Quincenal")
+							{
+									var fecha;
+									var date = new Date();
+									var check = moment(date, 'YYYY/MM/DD');
+									var numeroDia   = check.format('D');
+									var numeroMes   = check.format('MM');
+									var numeroAnio   = check.format('YYYY');
+									
+									if (numeroDia <= 8)
+									{
+											var f = numeroMes + "/16/" + numeroAnio;							
+											fecha = new Date(f);
+									}
+									else if (numeroDia > 8 && numeroDia <= 22)
+									{
+											fecha = new Date(date.getFullYear(),date.getMonth() + 1,1,0,0,0,0);	
+									}		
+									else
+									{
+											fecha = new Date(date.getFullYear(),date.getMonth() + 1,16,0,0,0,0);	
+											
+									}					
+									this.objeto.primerAbono = fecha;						
+							}
+							else if (c.periodoPago == "Mensual")
+							{
+									rc.estatusFecha = false;
+									
+									var fecha;
+									var date = new Date();
+									fecha = new Date(date.getFullYear(),date.getMonth() + 1,1,0,0,0,0);	
+								  this.objeto.primerAbono = fecha;
+								 											    
+							    
+							}							
+					}
+					
+					Meteor.call('getUsuarioId', c.cliente_id, function(error, result) {           
+				          if (result)
+				          {
+				          		rc.clienteNombre = result.profile.nombreCompleto;
+				          		$scope.$apply();
+									}
+				  });
+					
+					console.log(c);
 			}	
 		
 			return c;
@@ -252,13 +339,12 @@ angular.module("creditoMio")
 									return
 								}
 								toastr.success('Operacion Realizada.');
-								if (rc.credito.vale) {
-								$state.go("root.distribuidoresDetalle",{objeto_id : rc.credito.cliente_id});
-
-								}else{
+								
+								if (rc.credito.tipo == "creditoPersonalDistribuidor") {
+									$state.go("root.distribuidoresDetalle",{objeto_id : rc.credito.cliente_id});
+								}
+								else{
     							$state.go("root.clienteDetalle",{objeto_id : rc.credito.cliente_id});
-
-
 								}
 								rc.objeto = {}; 
 								$('.collapse').collapse('hide');

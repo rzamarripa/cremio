@@ -10,6 +10,7 @@ Meteor.publish("buscarCajeros",function(options){
 });
 
 Meteor.publish("cajero",function(params){
+	//console.log(params);	
   return Meteor.users.find(params);
 });
 
@@ -18,5 +19,7 @@ Meteor.publish("allCajeros",function(params){
 })
 
 Meteor.publish("cajeroId",function(options){
+	//console.log(options);	
   return Meteor.users.find({_id:options.id,roles : ["Cajero"]});
+  
 });

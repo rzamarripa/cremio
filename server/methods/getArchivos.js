@@ -15,42 +15,6 @@ Meteor.methods({
 			//console.log("esta es la referencia",referencia)
 			return referencia;
 	},
-	getPeople: function (idReferencia) {
-			
-			var persona = Meteor.users.findOne({_id: idReferencia}, {fields: {"profile.documentos" : 0}});
-				_.each(persona, function(objeto){
-						objeto.nacionalidadCliente = Nacionalidades.findOne(objeto.nacionalidad_id);
-						objeto.coloniaCliente = Colonias.findOne(objeto.colonia_id);
-						objeto.estadoCliente = Estados.findOne(objeto.estado_id);
-						objeto.municipioCliente = Municipios.findOne(objeto.municipio_id);
-						objeto.paisCliente = Paises.findOne(objeto.pais_id);
-						objeto.ocupacionCliente = Ocupaciones.findOne(objeto.ocupacion_id);
-						objeto.ciudadCliente = Ciudades.findOne(objeto.ciudad_id);
-						objeto.sucursales = Sucursales.findOne(objeto.sucursal_id);
-						objeto.estadoCivilCliente = EstadoCivil.findOne(objeto.estadoCivil_id);
-						objeto.empresa = Empresas.findOne(objeto.empresa_id);
-						
-
-						if (objeto.empresa != undefined)
-						{
-							 objeto.paisEmpresa = Paises.findOne(objeto.empresa.pais_id);
-							 objeto.estadoEmpresa = Estados.findOne(objeto.empresa.estado_id);
-							 objeto.municipioEmpresa = Municipios.findOne(objeto.empresa.municipio_id);
-							 objeto.ciudadEmpresa = Ciudades.findOne(objeto.empresa.ciudad_id);	 
-							 objeto.coloniaEmpresa = Colonias.findOne(objeto.empresa.colonia_id);	 		 
-						}	 						
-						
-						_.each(objeto.referenciasPersonales_ids, function(r){
-								
-								var ref = ReferenciasPersonales.findOne(r.referenciaPersonal_id);
-								r.telefono = ref.telefono;
-						});
-						
-	  		});
-				//console.log(persona,"termina")				
-				//console.log("esta es la referencia",referencia)
-			return persona;
-	},
  	obAvales: function (idReferencia) {
 			var aval = Avales.findOne(idReferencia);
 			//console.log(aval,"avales server")
@@ -2053,7 +2017,7 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 		  var monthIndex = date.getMonth();
 		  var year = date.getFullYear();
 	
-		  return day + ' ' + 'DE' + ' '  + monthNames[monthIndex] + ' ' + ' DEL'  + ' ' + year;
+		  return day + ' ' + 'DE' + ' '  + monthNames[monthIndex] + ' DEL'  + ' ' + year;
 		}
 		
 		
@@ -2084,95 +2048,61 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 		var user = Meteor.users.findOne(distribuidor_id);
 		cliente.nombreCompleto = user.profile.nombreCompleto;
 		var nacionalidad = Nacionalidades.findOne(user.profile.nacionalidad_id);
-  	cliente.nacionalidad = nacionalidad.nombre;
-  	var colonia = Colonias.findOne(user.profile.colonia_id);
-  	cliente.colonia = colonia.nombre;
-  	cliente.calle = user.profile.calle;
-  	cliente.numero = user.profile.numero;
-  	cliente.codigoPostal = user.profile.codigoPostal;
-  	var ciudad = Ciudades.findOne(user.profile.ciudad_id);
-  	cliente.ciudad = ciudad.nombre;  	
-  	var estado = Estados.findOne(user.profile.estado_id);
-  	cliente.estado = estado.nombre;
-  	cliente.celular = user.profile.celular;
-  	cliente.rfc = user.profile.rfc;
+	  	cliente.nacionalidad = nacionalidad.nombre;
+	  	var colonia = Colonias.findOne(user.profile.colonia_id);
+	  	cliente.colonia = colonia.nombre;
+	  	cliente.calle = user.profile.calle;
+	  	cliente.numero = user.profile.numero;
+	  	cliente.codigoPostal = user.profile.codigoPostal;
+	  	var ciudad = Ciudades.findOne(user.profile.ciudad_id);
+	  	cliente.ciudad = ciudad.nombre;  	
+	  	var estado = Estados.findOne(user.profile.estado_id);
+	  	cliente.estado = estado.nombre;
+	  	cliente.celular = user.profile.celular;
+	  	cliente.rfc = user.profile.rfc;
 		cliente.correo = user.profile.correo;
-  	cliente.numeroDistribuidor = user.profile.numeroDistribuidor;
-  	//Distribuidor***********************************************************
+	  	cliente.numeroDistribuidor = user.profile.numeroDistribuidor;
   	
-  	//Aval*******************************************************************
-  	var aval = {};
-  	
-  	var avalTemp = Avales.findOne({_id: user.profile.avales_ids[0]._id});
-  	aval.nombreCompleto = avalTemp.profile.nombreCompleto;
+	  	//Distribuidor***********************************************************
+	  	
+	  	//Aval*******************************************************************
+	  	var aval = {};
+	  	
+	  	var avalTemp = Avales.findOne({_id: user.profile.avales_ids[0]._id});
+	  	aval.nombreCompleto = avalTemp.profile.nombreCompleto;
 		nacionalidad = Nacionalidades.findOne(avalTemp.profile.nacionalidad_id);
-  	aval.nacionalidad = nacionalidad.nombre
-  	colonia = Colonias.findOne(avalTemp.profile.colonia_id);
-  	aval.colonia = colonia.nombre;
-  	aval.calle = avalTemp.profile.calle;
-  	aval.numero = avalTemp.profile.numero;
-  	aval.codigoPostal = avalTemp.profile.codigoPostal;
-  	ciudad = Ciudades.findOne(avalTemp.profile.ciudad_id);
-  	aval.ciudad = ciudad.nombre;  	
-  	estado = Estados.findOne(avalTemp.profile.estado_id);
-  	aval.estado = estado.nombre;
-  	aval.celular = avalTemp.profile.celular;
-  	aval.rfc = avalTemp.profile.rfc;
+	  	aval.nacionalidad = nacionalidad.nombre
+	  	colonia = Colonias.findOne(avalTemp.profile.colonia_id);
+	  	aval.colonia = colonia.nombre;
+	  	aval.calle = avalTemp.profile.calle;
+	  	aval.numero = avalTemp.profile.numero;
+	  	aval.codigoPostal = avalTemp.profile.codigoPostal;
+	  	ciudad = Ciudades.findOne(avalTemp.profile.ciudad_id);
+	  	aval.ciudad = ciudad.nombre;  	
+	  	estado = Estados.findOne(avalTemp.profile.estado_id);
+	  	aval.estado = estado.nombre;
+	  	aval.celular = avalTemp.profile.celular;
+	  	aval.rfc = avalTemp.profile.rfc;
 		aval.correo = avalTemp.profile.correo;
-  	//Aval*******************************************************************
+	  	//Aval*******************************************************************
   	
-  	var montoCredito = formatCurrency(user.profile.limiteCredito);
-  	
-  	var valoresCS = (montoCredito).toString().split('.');
+	  	var montoCredito = formatCurrency(user.profile.limiteCredito);
+	  	
+	  	var valoresCS = (montoCredito).toString().split('.');
 		var centavosCS = valoresCS[1];
 		var letra = NumeroALetras(valoresCS[0].replace(',',''));
-  	var fecha = new Date();
+	  	var fecha = new Date();
 		var fechaLetra = formatDia(fecha);
   	
 		var year = fecha.getFullYear();
 		var month = fecha.getMonth();
 		var day = fecha.getDate();
-		var vigencia = new Date(year + 1, month, day)
- 	
-  	var fechaVigencia = formatDia(vigencia);
+		var vigencia = new Date(year + 1, month, day)	 	
+	  	var fechaVigencia = formatDia(vigencia);
 
-
-/*
-    var autorizacionProveedorSi = contrato.avisoPrivacidad;
-    var autorizacionProveedorNo = "";
-    if (autorizacionProveedorSi == 0) {
-    	autorizacionProveedorSi = "X"
-    }else{
-    	autorizacionProveedorNo = "X"
-    }
-    var autorizacionPublicidadSi = contrato.publicidad;
-    var autorizacionPublicidadNo = "";
-    if (autorizacionPublicidadSi == "0") {
-    	autorizacionPublicidadSi = "X"
-    }else{
-    	autorizacionPublicidadNo = "X"
-    }
-    //console.log(autorizacionProveedorSi,"contrato")
-    function sumarDias(fecha){
-			fecha.setDate(fecha.getDate() + 1);
-			return fecha;
-		}
-		var fechaFiniquitoVigencia = sumarDias(vigencia.fechaLimite)
-
-		var vigenciaMasUnDia = formatDate(vigenciaFecha);
-		  
-
-		var diaV = vigencia.fechaLimite.getDate()
-    var mesV = vigencia.fechaLimite.getMonth()+1
-    var anioV = vigencia.fechaLimite.getFullYear()
-    if (Number(diaV) < 10) {
-    	diaV = "0" + diaV;
-    }
-    if (Number(mesV) < 10) {
-    	mesV = "0" + mesV;
-    }
-    vigencia.fechaLimite = diaV+ "-" + mesV + "-" + anioV
-*/
+	  	vigencia = new Date(year, month + 2, day);
+	  	
+	  	var fechaVencePagare = formatDia(vigencia);
   		
 		var fs = require('fs');
     	var Docxtemplater = require('docxtemplater');
@@ -2194,19 +2124,13 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 		}});
 
 		doc.setData({ fecha											: fechaLetra,
-									cliente										: cliente,
+									cliente									: cliente,
 									letra 										: letra,
 									montoCredito							: montoCredito,
 									centavosCS								: centavosCS,
 									aval											: aval,
-									vigencia 									: fechaVigencia//,
-/*
-									autorizacionProveedorSi 	: autorizacionProveedorSi,
-									autorizacionProveedorNo 	: autorizacionProveedorNo,
-									autorizacionPublicidadSi 	: autorizacionPublicidadSi,
-									autorizacionPublicidadNo 	: autorizacionPublicidadNo,
-*/
-											
+									vigencia 								: fechaVigencia,
+									fechaVencePagare 				: fechaVencePagare//,
 		});
 		doc.render();
  
@@ -2683,30 +2607,54 @@ console.log(credito.adeudoInicial);
 
  		var res = new future();
  		var rutaOutput = "";
+ 		var nombreSalida = "";
  		
  		if (op == 1)
- 				rutaOutput = produccion + "AVISODECOBRO.pdf";
+ 		{
+	 			rutaOutput = produccion + "AVISODECOBRO.pdf";
+	 			nombreSalida = "AvisoCobro";
+ 		}
  		else if (op == 2)
- 				rutaOutput = produccion + "CESIONDERECHOSPRENDARIOS.pdf";
+ 		{
+	 			rutaOutput = produccion + "CESIONDERECHOSPRENDARIOS.pdf";
+	 			nombreSalida = "CesionPrendarios";
+ 		}
  		else if (op == 3)
- 				rutaOutput = produccion + "FormatoSol.pdf";
+ 		{
+	 			rutaOutput = produccion + "FormatoSol.pdf";
+	 			nombreSalida = "SolicitudCredito";
+ 		}
  		else if (op == 4)
- 		    rutaOutput = produccion + "FormatoSolVales.pdf";
+ 		{
+	 			rutaOutput = produccion + "FormatoSolVales.pdf";
+	 			nombreSalida = "SolicitudDistribuidor";
+ 		}
  		else if (op == 6)
- 		    rutaOutput = produccion + "VERIFICACIONCREDITOMIO.pdf";
+ 		{
+	 			rutaOutput = produccion + "VERIFICACIONCREDITOMIO.pdf";
+	 			nombreSalida = "VerficacionCredito";
+ 		}
+ 		    
  		else if (op == 7)
- 		    rutaOutput = produccion + "VERIFICACIONBIGVALE.pdf";
+ 		{
+	 			rutaOutput = produccion + "VERIFICACIONBIGVALE.pdf";
+	 			nombreSalida = "VerficacionDistribuidor";
+ 		}
+ 		    
  		else if (op == 8)
- 		    rutaOutput = produccion + "ManualDistribuidor.pdf";      
+ 		{
+	 			rutaOutput = produccion + "ManualDistribuidor.pdf";
+	 			nombreSalida = "ManualDistribuidor";
+ 		}
  		else if (op == 9)
- 		    rutaOutput = produccion + "InformacionDistribuidor.pdf";    
- 		    
- 		    
- 		    	
+ 		{
+	 			rutaOutput = produccion + "InformacionDistribuidor.pdf";
+	 			nombreSalida = "InformacionDistribuidor";
+ 		}
  		
     //var rutaOutput =  produccion + (op == 3 ? "FormatoSol.pdf" : "FormatoSolVales.pdf");
     var bitmap = fs.readFileSync(rutaOutput);
-    res['return']({ uri: 'data:application/pdf;base64,' + bitmap.toString('base64'), nombre: "FormatoSol" + '.pdf' });
+    res['return']({ uri: 'data:application/pdf;base64,' + bitmap.toString('base64'), nombre: nombreSalida + '.pdf' });
     return res.wait();
 		
   }, 

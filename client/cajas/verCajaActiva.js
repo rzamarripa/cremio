@@ -17,11 +17,11 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
   this.fechaFin = moment().subtract(1, 'month').endOf('month').toDate();
   this.totalResumen = 0;
   this.nuevoTraspaso = { tipo: 'desde_cuenta' }
-  
     
   this.subscribe('cajas', () => {
-    return [{ }]
+    return [{ sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""}]
   });
+  
   this.subscribe('tiposIngreso', () => {
     return [{}]
   });

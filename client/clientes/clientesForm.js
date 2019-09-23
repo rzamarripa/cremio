@@ -238,6 +238,8 @@ this.subscribe('empresas',()=>{
 	                                                             direccion        : result.direccion,
 	                                                             telefono         : result.telefono,
 	                                                             celular         	: result.celular,
+	                                                             ciudad         	: result.ciudad,
+	                                                             estado         	: result.estado,
 	                                                             parentesco       : referenciaPersonal.parentesco,
 	                                                             tiempoConocerlo	: referenciaPersonal.tiempoConocerlo,
 	                                                             num              : referenciaPersonal.num,
@@ -510,7 +512,7 @@ objetoEditar : () => {
       
       objeto.profile.estatus = true;
       objeto.profile.documentos = rc.documents;
-      //objeto.profile.foto = rc.pic;
+
       objeto.profile.usuarioInserto = Meteor.userId();
       objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
       objeto.profile.fechaCreacion = new Date();
@@ -696,21 +698,22 @@ this.nuevo = true;
               });
   };
     
- /*
-*/
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
   
   this.AgregarReferencia = function(a){
 	  
-    this.referenciaPersonal.nombre = a.nombre;
+    this.referenciaPersonal.nombre 					= a.nombre;
     this.referenciaPersonal.apellidoPaterno = a.apellidoPaterno;
     this.referenciaPersonal.apellidoMaterno = a.apellidoMaterno;
-    this.referenciaPersonal.direccion = a.direccion;
-    this.referenciaPersonal.telefono = a.telefono;
-    this.referenciaPersonal.celular = a.celular;
+    this.referenciaPersonal.direccion 			= a.direccion;
+    this.referenciaPersonal.telefono 				= a.telefono;
+    this.referenciaPersonal.celular 				= a.celular;
+    this.referenciaPersonal.ciudad 					= a.ciudad;
+    this.referenciaPersonal.estado 					= a.estado;
     this.referenciaPersonal.tiempoConocerlo = a.tiempoConocerlo;
-    this.referenciaPersonal.nombreCompleto = a.nombreCompleto;
+    this.referenciaPersonal.nombreCompleto 	= a.nombreCompleto;
+    
     this.referenciaPersonal._id = a._id;
     this.buscar.nombre = "";
   };
@@ -736,13 +739,15 @@ this.nuevo = true;
       _.each(this.referenciasPersonales, function(rp){
               if (rp.num == p.num)
               {
-                  rp.nombre = p.nombre;
-                  rp.apellidoPaterno = p.apellidoPaterno;
-                  rp.apellidoMaterno = p.apellidoMaterno;    
-                  rp.direccion = p.direccion;
-                  rp.telefono = p.telefono;
-                  rp.celular = p.celular;
-                  rp.parentesco = p.parentesco;
+                  rp.nombre 					= p.nombre;
+                  rp.apellidoPaterno 	= p.apellidoPaterno;
+                  rp.apellidoMaterno 	= p.apellidoMaterno;    
+                  rp.direccion 				= p.direccion;
+                  rp.telefono 				= p.telefono;
+                  rp.celular 					= p.celular;
+                  rp.ciudad 					= p.ciudad;
+                  rp.estado 					= p.estado;
+                  rp.parentesco 			= p.parentesco;
                   rp.tiempoConocerlo = p.tiempoConocerlo;
                   if (rp.estatus == "G")
                   		rp.estatus = "A"; 
@@ -763,24 +768,31 @@ this.nuevo = true;
   
   this.borrarReferencia = function()
   {
-      this.referenciaPersonal.nombre = "";
-      this.referenciaPersonal.apellidoPaterno = "";
-      this.referenciaPersonal.apellidoMaterno = "";
-      this.referenciaPersonal.direccion = "";
-      this.referenciaPersonal.telefono = "";
-      this.referenciaPersonal.celular = "";
-      this.referenciaPersonal.parentesco = "";
-      this.referenciaPersonal.tiempoConocerlo = "";
-      delete this.referenciaPersonal["_id"];
+	      this.referenciaPersonal.nombre = "";
+	      this.referenciaPersonal.apellidoPaterno = "";
+	      this.referenciaPersonal.apellidoMaterno = "";
+	      this.referenciaPersonal.direccion = "";
+	      this.referenciaPersonal.telefono = "";
+	      this.referenciaPersonal.celular = "";
+	      this.referenciaPersonal.ciudad = "";
+	      this.referenciaPersonal.estado = "";
+	      this.referenciaPersonal.parentesco = "";
+	      this.referenciaPersonal.tiempoConocerlo = "";
+	      delete this.referenciaPersonal["_id"];
   };
   
   this.quitarReferencia = function(numero)
   {
-      pos = functiontofindIndexByKeyValue(this.referenciasPersonales, "num", numero);
-      this.referenciasPersonales.splice(pos, 1);
-      if (this.referenciasPersonales.length == 0) this.con = 0;
-      //reorganiza el consecutivo     
-      functiontoOrginiceNum(this.referenciasPersonales, "num");
+	  	var rp = this.referenciasPersonales;
+      customConfirm('¿Estás seguro de  quitar la referencia?', function() {
+		      pos = functiontofindIndexByKeyValue(rp, "num", numero);
+		      rp.splice(pos, 1);
+		      if (rp.length == 0) this.con = 0;
+		      //reorganiza el consecutivo     
+		      functiontoOrginiceNum(rp, "num");
+					this.referenciasPersonales = rp;
+					$scope.$apply();
+	    });  
   };
   
   this.editarReferencia = function(p)
@@ -793,7 +805,8 @@ this.nuevo = true;
       this.referenciaPersonal.celular 				= p.celular;
       this.referenciaPersonal.parentesco 			= p.parentesco;
       this.referenciaPersonal.tiempoConocerlo = p.tiempoConocerlo;
-      
+      this.referenciaPersonal.ciudad 					= p.ciudad;
+      this.referenciaPersonal.estado 					= p.estado;
       
       this.num = p.num;
       this.actionReferencia = false;
@@ -817,7 +830,6 @@ this.nuevo = true;
       $("#modalreferenciaPersonal").modal('hide');
   };
   
-
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   this.borrarDoc = function($index)
   {

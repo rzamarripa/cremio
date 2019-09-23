@@ -48,6 +48,8 @@ function GenerarNotaCredito($scope, $meteor, $reactive, $state, toastr, $statePa
 
 	this.guardar = function(objeto,form)
 	{
+			var tipo = this.objeto.roles;
+											
 			if(form.$invalid){
 						toastr.error('Error al guardar los datos.');
 						return;
@@ -60,13 +62,18 @@ function GenerarNotaCredito($scope, $meteor, $reactive, $state, toastr, $statePa
 					toastr.error('Error al guardar los datos.');
 					return
 				}
-				toastr.success('Actualizado correctamente.');
-				rc.objeto = {}; 
-				$('.collapse').collapse('hide');
-				rc.nuevo = true;
-				//form.$setPristine();
-				//form.$setUntouched();
-				$state.go("root.clienteDetalle",{objeto_id : $stateParams.objeto_id});
+				if (result)
+				{								
+						toastr.success('Actualizado correctamente.');
+						if (tipo == "Distribuidor") {
+							$state.go("root.distribuidoresDetalle",{objeto_id : $stateParams.objeto_id});
+						}
+						if (tipo == "Cliente") {
+							$state.go("root.clienteDetalle",{objeto_id : $stateParams.objeto_id});
+						}
+						rc.objeto = {};						
+				}
+				
 			});	
 		
 	};
