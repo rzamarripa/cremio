@@ -1,18 +1,28 @@
 <h3>Verificación {{ver.tipoVerificacion}} - {{ver.tipoClienteDistribuidor}}</h3>
 <form name="form" class="form-horizontal" role="form" novalidate>
+
 		<div class="well">
-			<div class="row">
-				<div class="col-sm-12">
-						<label><strong>Nombre: </strong></label>
-						<span>{{ver.objeto.cliente.nombreCompleto}}</span>
-				</div>	
-			</div>		
-			<div class="row">
-						<div class="col-sm-12">
-						<label><strong>Domicilio: </strong></label>
-						<span>{{ver.objeto.cliente.calle}} #{{ver.objeto.cliente.numero}}, CP: {{ver.objeto.cliente.codigoPostal}}, Col. {{ver.objeto.cliente.colonia}} {{ver.objeto.cliente.ciudad}} 				</span>
-				</div>	
-			</div>
+			<div class="col-sm-12 col-md-12 col-lg-12">
+						<div class="col-sm-3 pull-right">
+								<img style="max-width:200px;" src="{{ver.objeto.cliente.foto}}" >
+						</div>
+						
+						<div class="col-sm-9">
+							<div class="row">
+									<label><strong>Nombre: </strong></label>
+									<span>{{ver.objeto.cliente.nombreCompleto}}</span>
+							</div>	
+							<div class="row">
+									<label><strong>Domicilio: </strong></label>
+									<span>{{ver.objeto.cliente.calle}} #{{ver.objeto.cliente.numero}}, CP: {{ver.objeto.cliente.codigoPostal}}, Col. {{ver.objeto.cliente.colonia}} {{ver.objeto.cliente.ciudad}} 				</span>
+							</div>
+							<div class="row">
+									<label><strong>Señas Particulares: </strong></label>
+									<span>{{ver.objeto.cliente.senasParticulares}}</span>
+							</div>	
+						</div>
+			</div>	
+					
 			<div class="row">
 					<div class="col-sm-2" valida>
 							<label>Entrevistado</label>
@@ -97,17 +107,17 @@
 													<option value="NO">No</option>
 												</select>												
 										</div>	
-										<div class="col-sm-3" valida> 					    
+										<div class="col-sm-3" ng-if = "ver.objeto.trabaja == 'SI'" valida> 					    
 								    	<label>Antigüedad</label>
 								    	<input name="antiguedad" type="text" class="form-control" placeholder="Antigüedad" ng-model="ver.objeto.antiguedad" required="" capitalize>
 							    	</div>
-							    	<div class="col-sm-7">					    
+							    	<div class="col-sm-7" ng-if = "ver.objeto.trabaja == 'SI'">					    
 								    	<label>¿Dónde trabaja?</label>
 								    	<input name="dondeTrabaja" type="text" class="form-control" placeholder="Donde Trabaja" ng-model="ver.objeto.dondeTrabaja" capitalize>
 									  </div>
 								</div> 
 								<br>
-								<div class="row">
+								<div class="row" ng-if = "ver.objeto.trabaja == 'SI'">
 										<div class="col-sm-8">					    
 								    	<label>Puesto </label>
 								    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ver.objeto.puesto" capitalize>
@@ -175,7 +185,7 @@
 								    	<input name="telefonoConyuge" type="text" class="form-control" placeholder="Cantidad" ng-model="ver.objeto.telefonoConyuge" required="" capitalize>
 									  </div>
 									  <div class="col-sm-2" valida ng-if = "ver.objeto.estadoCivil == 'CASADO(A)'">					    
-								    	<label>Trabaja conyuge *</label>
+								    	<label>Trabaja cónyuge *</label>
 								    	<select name="trabajaConyuge" ng-model="ver.objeto.trabajaConyuge" data-placeholder="Seleccione" class="form-control" required>
 													<option value="SI">Si</option>
 													<option value="NO">No</option>
@@ -230,25 +240,25 @@
 													<tr>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.serviciosTelefono">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.serviciosTelefono">
 																  <span>Teléfono</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.casaHabitaciones">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.casaHabitaciones">
 																  <span>Habitaciones</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.mennajeEstufa">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeEstufa">
 																  <span>Estufa</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.mennajeTV">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeTV">
 																  <span>TV</span>
 															</label>
 														</td>
@@ -256,25 +266,25 @@
 													<tr>	
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.serviciosCablevision">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.serviciosCablevision">
 																  <span>Cablevisión</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.casaNiveles">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.casaNiveles">
 																  <span>Niveles</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.mennajeRefrigerador">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeRefrigerador">
 																  <span>Refrigerador</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.mennajePCLaptop">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajePCLaptop">
 																  <span>PC/Laptop</span>
 															</label>
 														</td>
@@ -282,25 +292,25 @@
 													<tr>	
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.serviciosInternet">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.serviciosInternet">
 																  <span>Internet</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.casaCochera">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.casaCochera">
 																  <span>Cochera</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.mennajeSala">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeSala">
 																  <span>Sala</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.mennajeDVD">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeDVD">
 																  <span>DVD</span>
 															</label>
 														</td>
@@ -308,25 +318,25 @@
 													<tr>	
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.serviciosSkyDish">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.serviciosSkyDish">
 																  <span>Sky / Dish</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.casaVehiculos">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.casaVehiculos">
 																  <span>Vehículos</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.mennajeAireAcondicionado">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeAireAcondicionado">
 																  <span>Aire Aconndicionado</span>
 															</label>
 														</td>
 														<td style="width: 25%">
 															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "par.objeto.mennajeStereo">
+																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeStereo">
 																  <span>Stereo</span>
 															</label>
 														</td>
@@ -720,6 +730,44 @@
 				    	<input name="ine" type="text" class="form-control" placeholder="INE" ng-model="ver.objeto.INE" required="" capitalize>
 			    	</div>
 		    </div>
+		</div>
+		<div class="well">
+				<div class="row">
+			    	<div class="col-sm-12">
+								<table class="table table-bordered" style="width: 100%">
+									<thead>
+										<tr>
+											<th style="width: 15%;text-align: center">EVALUACIÓN DEL PROSPECTO</th>
+											<th style="width: 15%;text-align: center">¿QUÉ TANTO LO RECOMIENDA?</th>	
+											<th style="width: 10%;text-align: center">
+													<label class="radio-inline">
+														<input type="radio" name="evaluacionPropecto" ng-model = "ver.objeto.evaluacionProspecto" value="ALTAMENTE">
+														ALTAMENTE
+													</label>
+											</th>
+											<th style="width: 10%;text-align: center">
+													<label class="radio-inline">
+														<input type="radio" name="evaluacionPropecto" ng-model = "ver.objeto.evaluacionProspecto" value="CONCOSIDERACIONES">
+														CON COSIDERACIONES
+													</label>
+											</th>
+											<th style="width: 10%;text-align: center">
+													<label class="radio-inline">
+														<input type="radio" name="evaluacionPropecto" ng-model = "ver.objeto.evaluacionProspecto" value="NOLORECOMIENDO">
+														NO LO RECOMIENDO
+													</label>
+											</th>
+										</tr>
+									</thead>
+								</table>		
+							</div>
+		    </div>
+		    <div class="row">
+			   		<div class="col-sm-12">
+				   		<label>FORTALEZAS / DEBILIDADES / COMENTARIOS</label>
+					    <input name="comentarios" type="text" class="form-control" placeholder="COMENTARIOS" ng-model="ver.objeto.comentarios" capitalize>
+			   		</div>
+		    </div>  
 		</div>	
 		<div class="well" ng-show="ver.firmar">
 			<div class="row">
@@ -730,6 +778,7 @@
 				</div>
 			</div>
 		</div>
+		
 		
 		<div class="well" ng-show="!ver.firmar">
 			<div class="row">
@@ -744,7 +793,7 @@
 		    <div class="row">
 					<div class="col-sm-12">
 						<input type="submit" ng-click="ver.guardar(ver.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="ver.action" valida-form formulario="form">
-						<input type="submit" ng-click="ver.actualizar(ver.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="ver.actualizarNo && currentUser.roles[0] != 'Cajero'" valida-form formulario="form">
+						<input type="submit" ng-click="ver.actualizar(ver.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!ver.action && currentUser.roles[0] != 'Cajero'" valida-form formulario="form">
 						<input type="button" ng-click="ver.clearCanvas()" value="Limpiar" class="btn btn-warning pull-right" ng-show="ver.firmar">
 						
 						<input type="button" ng-click="ver.activaFirma()" value="Activa Firma" class="btn btn-success pull-right" ng-show="!ver.firmar && currentUser.roles[0] != 'Cajero'">

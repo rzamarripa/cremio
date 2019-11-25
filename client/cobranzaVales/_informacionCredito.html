@@ -10,6 +10,7 @@
 						<th width="10%"><div class="text-center">Cargos Moratorios</div></th>
 						<th width="10%"><div class="text-center">Bonificación</div></th>
 						<th width="10%"><div class="text-center">Total</div></th>
+						<th width="5%"><div class="text-center"></div></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -22,6 +23,9 @@
 				    <td class="text-right" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
 				    <td class="text-right" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
 				    <td class="text-right" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}</td>
+				    <td>
+					    <a href="#" ng-click="cobv.imprimirTicketsVales(objeto)" class="btn btn-xs btn-labeled btn-info"><i class="fa fa-print"></i></a>
+				    </td>
 			    </tr>
 			    
 			    <tr ng-repeat-end ng-if="cobv.isSelectedCorte($index + 1) && cobv.banV">

@@ -445,7 +445,7 @@ angular.module("creditoMio")
 			tasa								: this.credito.tasa,
 			conSeguro 					: this.credito.conSeguro,
 			seguro							: this.credito.seguro,
-			tipo								:	this.credito.tipo
+			tipo								:	"creditoP"
 		};
 				
 		credito.avales = angular.copy(this.avales);
@@ -567,7 +567,8 @@ angular.module("creditoMio")
 				turno										: this.credito.turno,
 				tasa										: this.credito.tasa,
 				conSeguro 							: this.credito.conSeguro,
-				seguro									: this.credito.seguro
+				seguro									: this.credito.seguro,
+				tipo										:	"creditoP"
 			};
 
 			Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){
@@ -648,7 +649,7 @@ angular.module("creditoMio")
 								  //console.log(url);
 								//  CONTRATO SIMPLE ////////////////////////////////////////////////////
 								  if (_.isEmpty(contrato.garantias) && _.isEmpty(contrato.avales_ids)) {
-								  console.log("INTERES","INTERES:",contrato.tipoInteres.tipoInteres)
+								  //console.log("INTERES","INTERES:",contrato.tipoInteres.tipoInteres)
 								   if (contrato.tipoInteres.tipoInteres == "Simple") {
 								  var dlnk = document.getElementById('dwnldLnk');
 							    dlnk.download = "CONTRATOINTERES.docx"; 
@@ -675,7 +676,7 @@ angular.module("creditoMio")
 								///////CONTRATO SOLIDARIO//////////////////////////////////////////
 		
 								if (contrato.avales_ids.length > 0 && _.isEmpty(contrato.garantias)) {
-									 console.log("OBLIGADO SOLIDARIO","INTERES:",contrato.tipoInteres.tipoInteres);
+									 //console.log("OBLIGADO SOLIDARIO","INTERES:",contrato.tipoInteres.tipoInteres);
 									 if (contrato.tipoInteres.tipoInteres == "Simple") {
 									var dlnk = document.getElementById('dwnldLnk');
 							    dlnk.download = "CONTRATOOBLIGADOSOLIDARIO.docx"; 
@@ -700,7 +701,7 @@ angular.module("creditoMio")
 		
 								}
 									if (contrato.garantias && contrato.tipoGarantia == "general") {
-										console.log("HIPOTECARIO","INTERES:",contrato.tipoInteres.tipoInteres)
+										//console.log("HIPOTECARIO","INTERES:",contrato.tipoInteres.tipoInteres)
 										if (contrato.tipoInteres.tipoInteres == "Simple") {
 									var dlnk = document.getElementById('dwnldLnk');
 							    dlnk.download = "CONTRATOHIPOTECARIO.docx"; 
@@ -725,7 +726,7 @@ angular.module("creditoMio")
 		
 								}
 									if (contrato.garantias && contrato.tipoGarantia == "mobiliaria") {
-										console.log("PRENDARIA","INTERES:",contrato.tipoInteres.tipoInteres)
+										//console.log("PRENDARIA","INTERES:",contrato.tipoInteres.tipoInteres)
 										if (contrato.tipoInteres.tipoInteres == "Simple") {
 									var dlnk = document.getElementById('dwnldLnk');
 							    dlnk.download = "CONTRATOGARANTIAPRENDARIA.docx"; 

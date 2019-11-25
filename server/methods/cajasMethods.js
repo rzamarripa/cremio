@@ -240,6 +240,10 @@ Meteor.methods({
 	  if (caja.usuario_id == "")
 		  	throw new Meteor.Error(500, 'Al abrir ventanilla, No tiene asignado un Cajero', ' ');
 	  
+				
+    if (caja.estadoCaja == "Abierta" )
+    		throw new Meteor.Error(500, 'La Caja ya esta abierta', ' ');
+    
     
 		caja.estadoCaja = "Abierta";
     var cajaid = caja._id;
@@ -255,17 +259,17 @@ Meteor.methods({
     
     _.each(caja.cuenta, function(cuenta, cuentaid) {
       var movimiento = {
-        tipoMovimiento: "Saldo Inicial",
-        origen: "Apertura de Caja",
-        origen_id: cajaid,
-        caja_id: cajaid,
-        cuenta_id: cuentaid,
-        monto: cuenta.saldo,
-        sucursal_id: user.profile.sucursal_id,
-        createdAt: new Date(),
-        createdBy: user._id,
-        updated: false,
-        estatus: 1
+        tipoMovimiento	: "Saldo Inicial",
+        origen					: "Apertura de Caja",
+        origen_id				: cajaid,
+        caja_id					: cajaid,
+        cuenta_id				: cuentaid,
+        monto						: cuenta.saldo,
+        sucursal_id			: user.profile.sucursal_id,
+        createdAt				: new Date(),
+        createdBy				: user._id,
+        updated					: false,
+        estatus					: 1
       }
       MovimientosCajas.insert(movimiento);
     })
@@ -811,5 +815,4 @@ Meteor.methods({
 	  			return true;
 	  	return false;		
 	},  
-     
 });

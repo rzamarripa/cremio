@@ -330,21 +330,23 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 		        
 						if (pago.fechaLimite < rc.fechaLimite)		        
 						{
+								pago.pagoSeleccionado = false;
+								
 								pago.importepagado 	= Number(parseFloat(pago.importeRegular).toFixed(2));
-								pago.pagoSeleccionado = true;	
+									
 								
 								if (pago.descripcion == "Recibo")
 				        {
-									 rc.pago.totalPago += Number(parseFloat(pago.importeRegular).toFixed(2));
+									 //rc.pago.totalPago += Number(parseFloat(pago.importeRegular).toFixed(2));
 								}	
 								
-								rc.pago.bonificacion += Number(parseFloat(pago.bonificacion).toFixed(2));
+								//rc.pago.bonificacion += Number(parseFloat(pago.bonificacion).toFixed(2));
 								
-								rc.numeroPagosSeleccionados += 1;
+								//rc.numeroPagosSeleccionados += 1;
 								
 								if (pago.descripcion == "Cargo Moratorio")
 				        {
-				        		rc.pago.cargosMoratorios +=  pago.importeRegular;
+				        		//rc.pago.cargosMoratorios +=  pago.importeRegular;
 				        }
 								
 						}
@@ -386,7 +388,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 						var fechaCorteFin 		= "";
 						
 						var numeroCorte = 0;
-						if (pago.fechaLimite.getDate() >= 16)
+						if (pago.fechaLimite.getDate() >= 15)
 						{	
 								numeroCorte = pago.fechaLimite.getMonth() * 2;									
 								fechaCorteInicio = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() -1, 22);
@@ -409,7 +411,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 								arreglo[numeroCorte].fechaPago	 			= pago.fechaLimite;
 								arreglo[numeroCorte].importe 					=	0;
 								arreglo[numeroCorte].cargosMoratorios =	0;
-								arreglo[numeroCorte].pagoSeleccionado =	true;
+								arreglo[numeroCorte].pagoSeleccionado =	false;
 								
 								if (pago.descripcion == 'Recibo')
 									 arreglo[numeroCorte].importe 				 = pago.importeRegular;
@@ -466,7 +468,9 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 		      //Verificar si ya los pago el seguro
 					rc.arregloPagosSeguro = _.toArray(arregloSeguro);
 					//console.log(rc.arregloPagosSeguro);
-					//console.log(rc.distribuidor_id);
+
+				/*
+	//Le puse comentario al seguro
 					if (rc.arregloPagosSeguro.length > 0 && rc.distribuidor_id != undefined)
 					{
 							Meteor.call ("getPagosSeguro", rc.distribuidor_id, rc.arregloPagosSeguro,function(error,result){			
@@ -485,6 +489,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 		      }
 		      else
 		      			rc.pago.aPagar = Number(parseFloat(rc.pago.totalPago - rc.pago.bonificacion + rc.pago.cargosMoratorios + rc.pago.seguro).toFixed(2));
+*/
 
 		      rc.arregloCortes = _.toArray(arreglo);		      
 		      pp = $filter('orderBy')(pp, 'fechaLimite');
@@ -601,7 +606,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 		_.each(objeto.planPagos, function(p){
 			
 				p.pagoSeleccionado 			= !objeto.pagoSeleccionado;
-								
+												
 				if (p.pagoSeleccionado)
 				{
 						p.importepagado = Number(parseFloat(p.importeRegular).toFixed(2));						
@@ -619,7 +624,11 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 								else					 
 									 comision = calculaBonificacion(p.fechaLimite, configuraciones.arregloComisiones);											
 								
-								p.bonificacion = parseFloat(((capital + interes) * (comision / 100))).toFixed(2);	 
+								if (p.tipoCredito == "vale")								
+								   p.bonificacion = round(Number((capital + interes) * (comision / 100)).toFixed(3),2);
+								else
+									 p.bonificacion = 0;
+									 	   
 						}
 						else
 								p.bonificacion = 0;									
@@ -630,8 +639,10 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 						p.bonificacion 	= 0;
 						p.importepagado = 0;
 				}
-				
-				objeto.bonificacion += Number(parseFloat(p.bonificacion).toFixed(2));
+
+				//console.log(p.bonificacion);	
+				objeto.bonificacion += round(Number(p.bonificacion).toFixed(3),2);
+
 		});
 		
 		objeto.pagoSeleccionado = !objeto.pagoSeleccionado;
@@ -672,6 +683,9 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 						
 				i++;
     });
+		
+		//Preguntar si hay anterirores para seleccionar todos los cortes pasados
+		
 		
     rc.pago.totalPago = Number(parseFloat(rc.pago.totalPago).toFixed(2));
     rc.pago.aPagar =  Number(parseFloat(rc.pago.totalPago - rc.pago.bonificacion + rc.pago.cargosMoratorios + rc.pago.seguro).toFixed(2));	
@@ -732,7 +746,10 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 												else					 
 													 comision = calculaBonificacion(p.fechaLimite, configuraciones.arregloComisiones);											
 												
-												p.bonificacion = parseFloat(((capital + interes) * (comision / 100))).toFixed(2);	 
+												if (p.tipoCredito == "vale")
+														p.bonificacion = parseFloat(((capital + interes) * (comision / 100))).toFixed(2);	 
+												else
+														p.bonificacion = 0;		
 										}
 										else
 												p.bonificacion = 0;		
@@ -781,8 +798,12 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 												 		comision = Number(rc.descuento); 	
 												 	else					 
 											 	 		comision = calculaBonificacion(p.fechaLimite, configuraciones.arregloComisiones);
-											 	 		
-											 	 	p.bonificacion = parseFloat(((capital + interes) * (comision / 100))).toFixed(2);	 
+											 	 	
+											 	 	if (p.tipoCredito == "vale")
+														p.bonificacion = parseFloat(((capital + interes) * (comision / 100))).toFixed(2);	 
+												else
+														p.bonificacion = 0;			
+											 	 	
 						    			}
 											else
 													p.bonificacion = 0;
@@ -1460,7 +1481,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 					pago.verCargo = true;
 					
 					var numeroCorte = 0;
-					if (pago.fechaLimite.getDate() >= 16)
+					if (pago.fechaLimite.getDate() >= 15)
 					{	
 							numeroCorte = pago.fechaLimite.getMonth() * 2;									
 							var fechaCorteInicio = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() -1, 22);
@@ -2093,5 +2114,8 @@ if (pago.descripcion == "Recibo")
 	  	
   };
 	
+	function round(value, decimals) {
+	  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+	}
 	
 };

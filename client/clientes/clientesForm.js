@@ -225,12 +225,22 @@ this.subscribe('empresas',()=>{
 								
 								if (estadoCivilSeleccionado)
 										rc.estadoCivilSeleccionado = estadoCivilSeleccionado;
+										
 								
-								_.each(rc.objeto.profile.referenciasPersonales_ids,function(referenciaPersonal){
+								Meteor.call('getReferenciaPersonales', rc.objeto.profile.referenciasPersonales_ids, rc.objeto._id, function(error, result) {           
+						        if (result)
+						        {
+						        	rc.referenciasPersonales = result;
+						        	$scope.$apply();
+						 				}
+								});		
+								
+								/*
+_.each(rc.objeto.profile.referenciasPersonales_ids,function(referenciaPersonal){
 	                    Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
 	                          if (result)
 	                          {
-		                          	//console.log(result);
+		                          	console.log(result);
 	                              rc.referenciasPersonales.push({_id 							: referenciaPersonal.referenciaPersonal_id,
 	                                                             nombre           : result.nombre,
 	                                                             apellidoPaterno  : result.apellidoPaterno,
@@ -252,6 +262,7 @@ this.subscribe('empresas',()=>{
 	                    }); 
 	              });   
 								$scope.$apply();	
+*/
  									
  								//getdocumentos
 	              Meteor.call('getDocumentosClientes', rc.objeto_id, function(error,result){
@@ -574,6 +585,10 @@ if (rc.documents != undefined && rc.documents.length > 0){
     delete objeto.profile.repeatPassword;
     
     
+    //console.log("boton Actualizar:", this.referenciasPersonales)
+    
+//    return;
+    
     _.each(objeto.profile.documentos, function(d){	    
 	    delete d.$$hashKey;
     })
@@ -714,7 +729,9 @@ this.nuevo = true;
     this.referenciaPersonal.tiempoConocerlo = a.tiempoConocerlo;
     this.referenciaPersonal.nombreCompleto 	= a.nombreCompleto;
     
-    this.referenciaPersonal._id = a._id;
+    this.referenciaPersonal._id 						= a._id;
+    
+    console.log(this.referenciaPersonal);
     this.buscar.nombre = "";
   };
   
@@ -726,7 +743,7 @@ this.nuevo = true;
 	      	toastr.warning('Favor de completar los datos en referencias personales.');
           return;
       }		
-      
+            
       this.referenciaPersonal.num = this.referenciasPersonales.length + 1;
       this.referenciaPersonal.estatus = "N";
       this.referenciasPersonales.push(this.referenciaPersonal); 
@@ -791,7 +808,15 @@ this.nuevo = true;
 		      //reorganiza el consecutivo     
 		      functiontoOrginiceNum(rp, "num");
 					this.referenciasPersonales = rp;
-					$scope.$apply();
+															
+					//Eliminar del arreglo en la bd 
+					Meteor.call('updateReferenciasPersonales', rc.objeto._id, rc.objeto.profile.numeroCliente , this.referenciasPersonales, function(error,result){
+							if (result)
+				    	{
+			 						$scope.$apply();
+				    	}	    
+			    });
+					
 	    });  
   };
   

@@ -144,20 +144,38 @@ angular.module("creditoMio")
 		  		Creditos.update({_id : id}, { $set : {estatus : 2}});
 			  else
 				{
+						
 						var dis = Meteor.users.findOne(id);		
-						if (_.isEmpty(dis.profile.avales_ids))    
-			      {
-			          toastr.warning("Se debe agregar el Aval antes de autorizarlo.");
-			          return;
-			      }						
-		
-						Meteor.call('autorizaoRechazaDistribuidor', id, 1, "", function(error, result) {
-								   if(error)
-								   {
-									    console.log('ERROR :', error);
-									    return;
-								   }
-						});
+						
+						if (dis.profile.sinAval == "SI")
+						{
+							
+								Meteor.call('autorizaoRechazaDistribuidor', id, 1, "", function(error, result) {
+										   if(error)
+										   {
+											    console.log('ERROR :', error);
+											    return;
+										   }
+								});
+									
+						}
+						else
+						{
+								if (_.isEmpty(dis.profile.avales_ids))    
+					      {
+					          toastr.warning("Se debe agregar el Aval antes de autorizarlo.");
+					          return;
+					      }
+					      
+					      Meteor.call('autorizaoRechazaDistribuidor', id, 1, "", function(error, result) {
+										   if(error)
+										   {
+											    console.log('ERROR :', error);
+											    return;
+										   }
+								});								
+						}
+								
 				}	
 				toastr.success("Se autorizó correctamente.");	
 		});

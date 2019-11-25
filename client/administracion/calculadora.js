@@ -70,6 +70,7 @@ function calculadoraCtrl($scope, $meteor, $reactive,  $state, $stateParams, toas
 			sucursal_id 					: Meteor.user().profile.sucursal_id,
 			fechaVerificacion			: this.credito.fechaVerificacion,
 			turno									: this.credito.turno,
+			tipo									: "creditoP",
 			tasa									: this.credito.tasa,
 			conSeguro 						: this.credito.conSeguro,
 			seguro								: this.credito.seguro,

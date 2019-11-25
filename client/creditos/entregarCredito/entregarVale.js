@@ -155,29 +155,20 @@ angular.module("creditoMio")
 					{
 							rc.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth()  + 1,1,0,0,0,0);
 							rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);
-							//console.log("1:", rc.primerAbono);
-							//console.log("1:", rc.objeto.primerAbono);
 					}
 					else 
 					{
-							
 							if (n < 7 )
 							{
 									rc.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
 									rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
-									//console.log("2:", rc.primerAbono);
-									//console.log("2:", rc.objeto.primerAbono);
 							}
 									
 							else if (n >= 22)
 							{
-									//rc.objeto.fechaPrimerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);
 									rc.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);
 									rc.objeto.primerAbono = new Date(fecha.getFullYear(),fecha.getMonth() + 1,16,0,0,0,0);							
-									//console.log("3:", rc.primerAbono);
-									//console.log("3:", rc.objeto.primerAbono);
 							}
-							   	
 					}
 					
 					var validaFecha = true;
@@ -488,7 +479,7 @@ if (rc.folioVale == undefined || rc.folioVale == "")
 			tasa								: this.credito.tasa,
 			conSeguro 					: this.credito.conSeguro,
 			seguro							: this.credito.seguro,
-			tipo								:	this.credito.tipo,
+			tipo								:	"vale",
 			folio								: rc.folioVale
 		};
 				

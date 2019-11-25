@@ -121,9 +121,9 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
   });
 =======
 */
+
 		}	
 	});
-	
 	
 	//Aunque diga cliente es para los verificadores
 	this.subscribe('cliente',()=>{
@@ -356,7 +356,7 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 			rc.Cliente = 0;
 			rc.Aval 	 = 0;
 			
-			var numeroVerificaciones = 2;
+			var numeroVerificaciones;
 			var distribuidorRequiereVerificacionAval = Meteor.users.findOne(id);
 			
 			Meteor.call('getVerificacionesDistribuidor', id, function(error, result) {
@@ -367,33 +367,59 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 				   }
 				   if(result)
 				   {		
-							  _.each(result, function(v){
-										console.log(v.tipoVerificacion);
-							 			if (v.tipoVerificacion == "Distribuidor")
-							 					rc.Cliente +=  1;
-							 			if (v.tipoVerificacion == "Aval")
-							 					rc.Aval += 1;		
-						 		});
-							  
-							  
-						 		console.log("Cli:", rc.Cliente);
-						 		console.log("Ava:", rc.Aval);
-						 		console.log("NV:", numeroVerificaciones);
-						 		
-							  
-								if ((rc.Cliente + rc.Aval) < numeroVerificaciones || rc.Aval == 0)
-						 		{
-								 				toastr.warning('El Distribuidor no tiene las suficientes verificaciones para finalizar la verficación');	
-								 				return;	 
-						 		}
-						 		else
-						 		{
-							 			rc.objeto.indicacion = "";
-										rc.objeto.evaluacion = "";
-										rc.creditoSeleccionado = "";
-										rc.distribuidorSeleccionado = id;
-										$("#modalEvaluarVerificacionD").modal('show');			 		
-						 		}
+					   	if (distribuidorRequiereVerificacionAval.profile.sinAval == 'SI')
+					   	{
+						   		numeroVerificaciones = 1;
+						   		
+						   		_.each(result, function(v)
+								  {
+
+								 			if (v.tipoVerificacion == "Distribuidor")
+								 					rc.Cliente +=  1;
+							 		});
+								  								  
+									if (rc.Cliente < numeroVerificaciones)
+							 		{
+									 				toastr.warning('El Distribuidor no tiene las suficientes verificaciones para finalizar la verficación');	
+									 				return;	 
+							 		}
+							 		else
+							 		{
+								 			rc.objeto.indicacion = "";
+											rc.objeto.evaluacion = "";
+											rc.creditoSeleccionado = "";
+											rc.distribuidorSeleccionado = id;
+											$("#modalEvaluarVerificacionD").modal('show');			 		
+							 		}
+						   	
+					   	}
+					    else
+					    {						
+						    	numeroVerificaciones = 2;
+						    	   	
+								  _.each(result, function(v)
+								  {
+											//console.log(v.tipoVerificacion);
+								 			if (v.tipoVerificacion == "Distribuidor")
+								 					rc.Cliente +=  1;
+								 			if (v.tipoVerificacion == "Aval")
+								 					rc.Aval += 1;		
+							 		});
+								  
+									if ((rc.Cliente + rc.Aval) < numeroVerificaciones || rc.Aval == 0)
+							 		{
+									 				toastr.warning('El Distribuidor no tiene las suficientes verificaciones para finalizar la verficación');	
+									 				return;	 
+							 		}
+							 		else
+							 		{
+								 			rc.objeto.indicacion = "";
+											rc.objeto.evaluacion = "";
+											rc.creditoSeleccionado = "";
+											rc.distribuidorSeleccionado = id;
+											$("#modalEvaluarVerificacionD").modal('show');			 		
+							 		}
+						 	}	
 			
 					}
 					
@@ -609,5 +635,127 @@ function panelVerificadorCtrl($scope, $meteor, $reactive,  $state, $stateParams,
 			});
 			
 	};
+	
+	rc.imprimirVerificacion = function(objeto)
+	{
+   		//console.log(objeto);
+   		
+   		Meteor.call('getUsuario', objeto.usuarioVerifico, function(error, result) {
+				   if(error)
+				   {
+					    console.log('ERROR :', error);
+					    return;
+				   }
+				   if(result)
+				   {	
+							  
+								objeto.verifico = result.nombreCompleto;
+								
+								objeto.domicilio 	= objeto.cliente.calle + ", #" + objeto.cliente.numero + " COL. " + objeto.cliente.colonia + ", " + objeto.cliente.ciudad; 
+   		
+					   		objeto.ste				= objeto.serviciosTelefono == true ? "SI" : "";
+					   		objeto.sca				= objeto.serviciosCablevision == true ? "SI" : "";
+					   		objeto.sin				= objeto.serviciosInternet == true ? "SI" : "";
+					   		objeto.ssd				= objeto.serviciosSkyDish == true ? "SI" : "";
+					   		
+					   		objeto.cha				= objeto.casaHabitaciones == true ? "SI" : "";
+					   		objeto.cni				= objeto.casaNiveles == true ? "SI" : "";
+					   		objeto.cco				= objeto.casaCochera == true ? "SI" : "";
+					   		objeto.cve				= objeto.casaVehiculos == true ? "SI" : "";
+					   		
+					   		objeto.mes				= objeto.mennajeEstufa == true ? "SI" : "";
+					   		objeto.mre				= objeto.mennajeRefrigerador == true ? "SI" : "";
+					   		objeto.msa				= objeto.mennajeSala == true ? "SI" : "";
+					   		objeto.mac				= objeto.mennajeAireAcondicionado == true ? "SI" : "";
+					   		
+					   		objeto.mtv				= objeto.mennajeTV == true ? "SI" : "";
+					   		objeto.mpc				= objeto.mennajePCLaptop == true ? "SI" : "";
+					   		objeto.mdv				= objeto.mennajeDVD == true ? "SI" : "";
+					   		objeto.mst				= objeto.mennajeStereo == true ? "SI" : "";
+					   		
+					   		objeto.tipoVivienda == "Bajo" ? objeto.tb = "SI" : "";
+					   		objeto.tipoVivienda == "Medio" ? objeto.tm = "SI" : "";
+					   		objeto.tipoVivienda == "MedioAlto" ? objeto.ta = "SI" : "";
+					   		objeto.tipoVivienda == "InteresSocial" ? objeto.ti = "SI" : "";
+					   		objeto.tipoVivienda == "Residencial" ? objeto.tr = "SI" : "";
+					   		
+					   		objeto.sp = ""; 
+					   		objeto.spValor = ""; 
+					   		objeto.spNombre = "";
+					   		objeto.sr = "";
+					   		objeto.spa = ""; 
+					   		objeto.spPago = ""; 
+					   		objeto.spMedio = "";
+					   		objeto.so = "";
+					   		
+					   		if (objeto.situacionVivienda == "Propia")
+					   		{
+						   		 	objeto.sp = "SI"; objeto.spValor = objeto.valorPropia; objeto.spNombre = objeto.aNombreDePropia;
+						   	}	  
+						   																			
+					   		if (objeto.situacionVivienda == "Renta")
+					   		{
+						   			objeto.sr = "SI"; 
+						   	}
+					   		if (objeto.situacionVivienda == "Pagandola")
+					   		{
+						   			objeto.spa = "SI"; objeto.spPago = objeto.valorPagandola; objeto.spMedio = objeto.medioPagandola;
+						   	}	 	
+						   	if (objeto.situacionVivienda == "Otra")
+					   		{
+						   			objeto.so = "SI"; 
+						   	}
+					   		
+					   		if (objeto.casaDelVecino == "PROPIA")
+					   		{
+						   		 objeto.esPropia 	= "SI";
+						   		 objeto.esRentada = ""; 
+						   	}
+						   	else
+						   	{
+							   	 objeto.esPropia 	= "";
+						   		 objeto.esRentada = "SI";
+						   	}	 
+						   	
+						   	if (objeto.evaluacionProspecto == "ALTAMENTE")
+						   			objeto.vA = "X";
+						   	else if (objeto.evaluacionProspecto == "CONCOSIDERACIONES")		
+						   			objeto.vC = "X";
+						   	else if (objeto.evaluacionProspecto == "NOLORECOMIENDO")		
+						   			objeto.vN = "X";		
+						   	
+						   	objeto.d = objeto.fechaVerificacion.getDate();
+						   	objeto.m = objeto.fechaVerificacion.getMonth() + 1;
+						   	objeto.a = objeto.fechaVerificacion.getFullYear();
+						   	
+						   	objeto.hora = moment(new Date(objeto.fechaVerificacion)).format("hh:mm:ss a");
+					   		
+					   		var nombreReporte = "";
+					   		if (objeto.tipo == "Crédito Personal")
+					   			 	nombreReporte = "Verificacion"
+					   		else
+					   				nombreReporte = "VerificacionVale"
+					   		   		
+					   		loading(true);
+								Meteor.call('report', {
+						      templateNombre: nombreReporte,
+						      reportNombre: 'VerificacionOut',
+						      type: 'pdf',  
+						      datos: objeto,
+							    }, function(err, file) {
+							      if(!err){
+								      loading(false);
+								        downloadFile(file);											        											        
+								      }else{
+							        toastr.warning("Error al generar el reporte");
+							        loading(false);
+							      }
+							  });	
+							
+
+					 }
+			});
+			
+	}
    
 };

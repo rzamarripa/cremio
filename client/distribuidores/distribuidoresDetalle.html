@@ -6,10 +6,10 @@
 				<div class="col-sm-12 col-md-12 col-lg-12">
 					<div class="well well-light well-sm no-margin no-padding">
 						<div class="row">
-							<div class="col-sm-2">
+							<div class="col-sm-3">
 									<img style="max-width:200px;" src="{{dis.objeto.profile.foto}}" >
 							</div>
-							<div class="col-sm-10">
+							<div class="col-sm-9">
 								<div class="row">
 									<a ng-click="dis.CreditoSolicitar(dis.objeto._id, 1)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] != 'Distribuidor'" style="margin: 5px; margin-right: 18px;">
 										<i class="fa fa-plus"></i> Credito P.
@@ -50,10 +50,11 @@
 										<h5>{{dis.objeto.profile.numeroCliente}} 
 											<a href="" ng-click="dis.imprimirContrato()" class="btn btn-info" ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-print"></i> Contrato </a>
 											<a href="" ng-click="dis.imprimirTablaAmortizacion()" class="btn btn-info" ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-print"></i> Tabla Amortización</a>
+												
+												<strong>(Miembro desde - {{dis.objeto.createdAt | date:"dd-MM-yyyy"}})</strong>
 										</h5>
 										<h6>Límite Crédito     : {{dis.objeto.profile.limiteCredito | currency}}</h6>
 										<h6>Saldo  Crédito     : {{dis.objeto.profile.saldoCredito | currency}}</h6>
-<!-- 										<h6>Saldo  Crédito Per.:  {{dis.saldoCreditoPersonal | currency}}</h6> -->
 								</div>		
 							</div>
 							<div class="col-sm-12">				
@@ -159,14 +160,28 @@
 																					</thead>
 																					<tbody>
 																				    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in dis.arregloCortes" ng-class="objeto.classPago">
-																					    <td class="text-center" ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
-																					    <td class="text-center" ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
-																						    																																 {{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
-																					    <td class="text-center" ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</td>
-																					    <td class="text-right" ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.importe | currency}}</td>
-																					    <td class="text-right" ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
-																					    <td class="text-right" ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
-																					    <td class="text-right" ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}</td>
+																					    <td class="text-center" 
+																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
+																					    <td class="text-center"
+																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
+																								    																				 {{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
+																					    <td class="text-center"
+																						    	ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" 
+																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</td>
+																					    <td class="text-right" 
+																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.importe | currency}}</td>
+																					    <td class="text-right" 
+																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
+																					    <td class="text-right" 
+																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
+																					    <td class="text-right" 
+																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}</td>
 																				    </tr>
 																				    
 																				    <tr ng-repeat-end ng-if="dis.isSelected($index + 1) && dis.ban">
@@ -832,10 +847,12 @@
 																								<th class="text-center" width="5%">No.</th>
 																								<th class="text-center" width="10%">Folio Pago</th>	
 																								<th class="text-center" width="15%">Fecha Pago</th>
-																								<th class="text-center" width="15%">Importe</th>
-																								<th class="text-center" width="15%">Bonificado</th>
-																								<th class="text-center" width="15%">Total</th>
-																								<th class="text-center" width="20%">Pagado</th>
+																								<th class="text-center" width="10%">Importe</th>
+																								<th class="text-center" width="10%">Bonificado</th>
+																								<th class="text-center" width="10%">Total</th>
+																								<th class="text-center" width="10%">Pagado</th>
+																								<th class="text-center" width="10%">Tipo Ingreso</th>
+																								<th class="text-center" width="10%">Cajero</th>
 																								<th class="text-center" width="10%">Acciones</th>
 																								<th ng-show="dis.openModal"></th>
 																							</tr>
@@ -843,12 +860,19 @@
 																						<tbody>
 																							<tr ng-repeat="pago in dis.pagos">
 																								<td class="text-center">{{$index + 1}}</td>		
-																								<td class="text-center">{{pago.folioPago}}</td>	
+																								<td class="text-center">
+																									{{pago.folioPago}}<br>
+																									<span style="font-size: xx-small>" ng-repeat = "corte in pago.cortes">
+																										|<strong>{{corte.numeroCorte}}</strong>|
+																									</span>
+																								</td>	
 																								<td class="text-center">{{pago.fechaPago | date:"dd-MM-yyyy"}}</td>
 																								<td class="text-right">{{pago.liquidacion | currency}}</td>
 																								<td class="text-right">{{pago.bonificacion | currency}}</td>
 																								<td class="text-right">{{pago.totalPago | currency}}</td>
 																								<td class="text-right">{{pago.pago | currency}}</td>
+																								<td class="text-center">{{pago.tipoIngreso}}</td>
+																								<td class="text-center">{{pago.cajero}}</td>	
 																								<td>
 																									<div class="text-center">
 																											<button type="button" class="btn btn-xs btn-link" ng-click="dis.verPagos(pago)">Ver Pago</button>
@@ -1592,7 +1616,10 @@
     <div class="modal-content">
 	    	<div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="myModalLabel">Folio pago: {{dis.pago.folioPago}}, Total = {{dis.pago.pago | currency}}, Seguro: {{dis.pago.seguro | currency}}</h4>
+		        <h4 class="modal-title" id="myModalLabel">Folio pago: {{dis.pago.folioPago}}, 
+			        																				Total : {{dis.pago.pago | currency}}, 
+			        																				Seguro: {{dis.pago.seguro | currency}}
+			      </h4>
 		    </div>
 				<div class="modal-body">
 							<form name="form2" novalidate>
@@ -1713,7 +1740,6 @@
      
   </div>
 </div> 
-
 
 <div class="modal fade" id="modalpagosHistorico"	class="modal fade bs-example-modal-lg" tabindex="-1" 	role="dialog" aria-labelledby="myLargeModalLabel">
 	<div class="modal-dialog modal-lg" role="document">

@@ -629,7 +629,10 @@
 												<tbody>
 													<tr ng-class="pago.color" ng-repeat="pago in objeto.planPagos | orderBy: pagV.funcionOrdenar()" ng-if="pago.verCargo">
 														<td >
-																<a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago, objeto)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> 
+<!-- 																 -->
+																<a ng-model="pago.pagoSeleccionado" ng-click="pagV.seleccionarPago(pago, objeto)" 
+																																		class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" 
+																																		ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> 
 														</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
 														<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.beneficiario.nombreCompleto}}</td>

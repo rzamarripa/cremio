@@ -162,8 +162,8 @@ Meteor.methods({
 							var comision = calculaBonificacion(planPago.fechaLimite);
 							planPago.beneficiario = credito.beneficiario_id != undefined ? Beneficiarios.findOne(credito.beneficiario_id).nombreCompleto : "";
 							planPago.bonificacion = 0;
-							planPago.bonificacion = Number(parseFloat(((planPago.capital + planPago.interes) * (comision / 100))).toFixed(2));
-							
+							planPago.bonificacion = round(Number(parseFloat(((planPago.capital + planPago.interes) * (comision / 100))).toFixed(3)),2);
+
 					}
 					else if (credito.tipo == "creditoPersonalDistribuidor")
 					{
@@ -207,7 +207,7 @@ Meteor.methods({
 							var numeroCorte = 0;
 							var fechaCorteInicio = "";
 							var fechaCorteFin = "";
-							if (planPago.fechaLimite.getDate() >= 16)
+							if (planPago.fechaLimite.getDate() >= 15)
 							{	
 									numeroCorte = planPago.fechaLimite.getMonth() * 2;									
 									fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear(), planPago.fechaLimite.getMonth() -1, 22);
@@ -271,11 +271,11 @@ Meteor.methods({
 							else
 							{
 									if (planPago.descripcion == 'Recibo')
-										 arreglo[credito.cliente_id].arreglo[numeroCorte].importe 				 += planPago.importeRegular;
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].importe 				 += round(Number(planPago.importeRegular).toFixed(3),2);
 									else
-										 arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios += planPago.importeRegular;
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios += round(Number(planPago.importeRegular).toFixed(3),2);
 
-									arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion 			 += Number(planPago.bonificacion);
+									arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion 			 += round(Number(planPago.bonificacion).toFixed(3),2);
 									arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos.push(planPago);
 							}
 					 		
@@ -287,22 +287,22 @@ Meteor.methods({
 		 			{
 
 				 			if (planPago.descripcion == "Recibo" && planPago.tipoCredito == 'vale')
-					 				arreglo[credito.cliente_id].importe 					+= planPago.importeRegular;
+					 				arreglo[credito.cliente_id].importe 					+= round(Number(planPago.importeRegular).toFixed(3),2);
 					 		if (planPago.descripcion == "Recibo" && planPago.tipoCredito == 'creditoPersonalDistribuidor')		
-					 				arreglo[credito.cliente_id].importeCreditoP 	+= planPago.importeRegular;
+					 				arreglo[credito.cliente_id].importeCreditoP 	+= round(Number(planPago.importeRegular).toFixed(3),2);
 					 		else if (planPago.descripcion == "Cargo Moratorio")
  					 		{
-						 			arreglo[credito.cliente_id].cargosMoratorios	+= planPago.importeRegular;
+						 			arreglo[credito.cliente_id].cargosMoratorios	+= round(Number(planPago.importeRegular).toFixed(3),2);
 						 			arreglo[credito.cliente_id].classPago					= "text-danger";	
 					 		}
 				 			
 				 			
-				 			arreglo[credito.cliente_id].bonificacion		 			+= planPago.bonificacion;
+				 			arreglo[credito.cliente_id].bonificacion		 			+= round(Number(planPago.bonificacion).toFixed(3),2);
 				 										
 							var numeroCorte = 0;
 							var fechaCorteInicio = "";
 							var fechaCorteFin = "";
-							if (planPago.fechaLimite.getDate() >= 16)
+							if (planPago.fechaLimite.getDate() >= 15)
 							{	
 									numeroCorte = planPago.fechaLimite.getMonth() * 2;									
 									fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear(), planPago.fechaLimite.getMonth() -1, 22);
@@ -351,11 +351,11 @@ Meteor.methods({
 									arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios =	0;
 									
 									if (planPago.descripcion == 'Recibo')
-										 arreglo[credito.cliente_id].arreglo[numeroCorte].importe 				 = planPago.importeRegular;
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].importe 				 = round(Number(planPago.importeRegular).toFixed(3),2);
 									else
-										 arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios = planPago.importeRegular;
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios = round(Number(planPago.importeRegular).toFixed(3),2);
 
-									arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion 		   = Number(planPago.bonificacion);
+									arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion 		   = round(Number(planPago.bonificacion).toFixed(3),2);
 									
 									//arreglo[numeroCorte].fechaCorte = fechaCorte;
 									arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos 	= [];
@@ -364,11 +364,11 @@ Meteor.methods({
 							else
 							{
 									if (planPago.descripcion == 'Recibo')
-										 arreglo[credito.cliente_id].arreglo[numeroCorte].importe 				 += planPago.importeRegular;
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].importe 				 += round(Number(planPago.importeRegular).toFixed(3),2);
 									else
-										 arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios += planPago.importeRegular;
+										 arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios += round(Number(planPago.importeRegular).toFixed(3),2);
 
-									arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion 			 += Number(planPago.bonificacion);
+									arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion 			 += round(Number(planPago.bonificacion).toFixed(3),2);
 									arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos.push(planPago);
 							}
 					 		
@@ -440,7 +440,6 @@ Meteor.methods({
 			var planPagos = PlanPagos.find({ cliente_id : distribuidor_id, 
 																			 fechaLimite: {$lte: fechaFinal}, 
 																			 tipoCredito: "vale", 
-																			 //importeRegular: {$gt:0}, 
 																			 estatus:{$in: [0,2]}}, {sort : {fechaLimite : 1}}).fetch();
 						
 			var configuraciones = Configuraciones.findOne();
@@ -1121,4 +1120,8 @@ Meteor.methods({
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-});	
+});
+
+function round(value, decimals) {
+	  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}	

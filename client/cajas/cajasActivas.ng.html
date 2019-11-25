@@ -33,7 +33,7 @@
             <tr ng-repeat="objeto in caaj.cajas">
               <td>{{objeto.nombre}}</td>
               <td>{{caaj.getCajero(objeto)}}</td>
-              <td style="text-align: center">{{objeto.updatedAt | date:"dd-MM-yyyy"}}</td>
+              <td style="text-align: center">{{objeto.ultimaApertura | date:"dd-MM-yyyy"}}</td>
               <td>
                 <div class="text-center">
                   <a class="btn btn-primary btn-xs btn-mini" ng-click="caaj.verCaja(objeto)">

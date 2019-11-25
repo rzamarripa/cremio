@@ -1,5 +1,6 @@
 <!-- Tabla de Visitados Analistas -->
-<table class="table table-bordered">
+<div class="table-responsive">
+	<table class="table table-bordered">
 	<thead>
 		<tr>
 			<th class="text-center" width="5%">No.</th>
@@ -23,7 +24,7 @@
 	    <td class="text-right">{{distribuidor.profile.limiteCredito | currency}}</td>
 	    <td class="text-center">{{distribuidor.createdAt | date: "dd/MM/yyyy"}} </td>
 	    <td class="text-center">{{distribuidor.profile.fechaVerificacion | date: "dd/MM/yyyy"}} </td>
-	    <td class="text-center">{{distribuidor.profile.turno}}</td>
+	    <td class="text-center">{{distribuidor.profile.turno}} {{distribuidor.profile.hora | date:'H:mm'}}</td>
 	    <td>
 			    <div class="text-center">
 				    <div class="btn-group">
@@ -47,7 +48,7 @@
     </tr>
 	</tbody>
 </table>
-
+</div>
 <!-- Modal para cargos Moratorios -->
 
 <div id="modalEvaluarVerificacionD" class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">

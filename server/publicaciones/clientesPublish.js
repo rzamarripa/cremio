@@ -85,7 +85,8 @@ Meteor.publish("distribuidores",function(options){
 																							"profile.estaVerificado"			: 1,
 																							"profile.estatusCredito"			: 1,
 																							"profile.indicacion"					: 1,
-																							"profile.avales_ids"					: 1, }});
+																							"profile.avales_ids"					: 1,
+																							"profile.sinAval"					 		: 1 }});
 });
 
 

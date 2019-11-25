@@ -33,14 +33,14 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	if ($stateParams.verificacion_id == "-1")
 	{
 		 rc.action = true;
-		 rc.actualizarNo = false;
+		 //rc.actualizarNo = false;
 		 rc.firmar = true;
 	}	 
 	else
 	{
 		 rc.action = false;
 		 rc.firmar = false;
-		 rc.actualizarNo = true;
+		 //rc.actualizarNo = true;
 	}
 	
 	if ($stateParams.verificacion_id != "-1")
@@ -254,18 +254,18 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		        return;
 		  }
 		  
+		  //console.log(obj);
+		  
 			if (rc.firmar)
 			{
 					var dataUrl = canvas.toDataURL();			
 					obj.firma 	= dataUrl;
 			}
 			
-			if ($stateParams.tipo == "CP")
+			if (obj.tipo == "creditoP") 
 			{
 
-				obj.cliente_id = rc.credito.cliente_id;
-				obj.credito_id = $stateParams.id;
-				obj.tipo 			= "Crédito Personal";
+				obj.tipo = "Crédito Personal";
 				
 				if (this.objeto.tipoGarantia == "mobiliaria")
 						obj.garantias = angular.copy(this.garantias);
@@ -285,9 +285,9 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 						Creditos.update({_id: $stateParams.id}, {$set:{garantias: angular.copy(this.garantiasGeneral), tipoGarantia: "general"}})
 				
 			}
-			else if ($stateParams.tipo == "V")	
+			else //if ($stateParams.tipo == "V")	
 			{
-				obj.cliente_id = $stateParams.id;
+				//obj.cliente_id = $stateParams.id;
 				obj.tipo 			= "Distribuidor";
 			}
 			
@@ -299,10 +299,7 @@ function VerificacionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	
 			toastr.success('Actulizado correctamente.');
 			this.objeto = {}; 
-			$('.collapse').collapse('hide');
-			this.nuevo = true;
-			form.$setPristine();
-	    form.$setUntouched();
+			//this.nuevo = true;
 	    $state.go('root.panelVerificador');
 			
 	}
@@ -751,6 +748,7 @@ this.insertarGarantia = function(tipo)
     	rc.firmar = true;
     	
 	}
+	
 	
 	
 	

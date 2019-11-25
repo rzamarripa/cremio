@@ -1,4 +1,4 @@
-<div class="col-sm-3 pull-right">
+<div class="col-sm-2 pull-right">
 	<div class="input-group">
 		<span class="input-group-btn">
 			<select name="sucursal" class="form-control select2" placeholder="Seleccione" ng-model="ro.sucursal_id" required>
@@ -7,24 +7,29 @@
 		</span>
 	</div>
 </div>
-<div class="col-sm-8 pull-right">
+
+<div class="col-sm-3 pull-right">	
+	<div class="input-group">	
+		<a class="btn btn-default btn-sm" ng-show="!ro.porNumero" ng-click="ro.cambiarNombre()" style="height: 32px;" type="button">Número</a>
+		<a class="btn btn-default btn-sm" ng-show="ro.porNumero" ng-click="ro.cambiarNumero()" style="height: 32px;" type="button">Nombre</a>
+		<a class="btn btn-default btn-sm" ng-show="!ro.porCliente" ng-click="ro.cambiarDistribuidor()" style="height: 32px;" type="button">Cliente</a>
+		<a class="btn btn-default btn-sm" ng-show="ro.porCliente" ng-click="ro.cambiarCliente()" style="height: 32px;" type="button">Distribuidor</a> 		
+	</div>	
+</div>	
+
+<div class="col-sm-5 pull-right">
 	<div class="input-group">
 		<input type="text" class="form-control" placeholder="Escribe el nombre" ng-show="ro.porNumero" ng-model="ro.buscar.nombre" capitalize>
 		<input type="text" class="form-control" placeholder="Escribe el número" ng-show="!ro.porNumero" ng-model="ro.buscar.numeroCliente " capitalize>
 		<span class="input-group-btn">
-			<button class="btn btn-default" type="button" style="height: 34px;">
+			<button class="btn btn-default" type="button" style="height: 32px;">
 				<i class="fa fa-search"></i>
-			</button>&nbsp;
-			<a class="btn btn-default" ng-show="ro.porNumero" ng-click="ro.cambiarNumero()" style="height: 34px;" type="button">Nombre</a> 
-			<a class="btn btn-default" ng-show="!ro.porNumero" ng-click="ro.cambiarNombre()" style="height: 34px;" type="button">Número</a>
-			
-			<a class="btn btn-default" ng-show="!ro.porCliente" ng-click="ro.cambiarDistribuidor()" style="height: 34px;" type="button">Cliente</a> 
-			<a class="btn btn-default" ng-show="ro.porCliente" ng-click="ro.cambiarCliente()" style="height: 34px;" type="button">Distribuidor</a>
-			
+			</button>
 		</span>
 	</div>
 </div>
-<div class="col-md-3" style="margin-top: -25px; margin-left: -70px; padding-left: -10px;">
+
+<div class="col-sm-3" style="margin-top: 10px; margin-left: -70px; padding-left: -10px;">
 			<span> <i class="fa fa-money"></i> <b class="badge bounceIn animated">{{ro.valesAcreditados}}</b> </span>
 			<span> <i class="fa fa-ticket"></i> <b class="badge bounceIn animated">{{ro.vales}}</b> </span>
 			<span> <i class="fa fa-user"></i> <b class="badge bounceIn animated">{{ro.prospectos}}</b> </span>

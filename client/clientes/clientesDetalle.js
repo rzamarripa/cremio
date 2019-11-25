@@ -118,7 +118,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			estatus : true
 		}]
 	});
-			
+	
 	this.helpers({
 		creditos : () => {
 			var creditos = Creditos.find({estatus:4}, {sort:{fechaSolicito:1}}).fetch();
@@ -412,6 +412,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			rc.pagos_ids = [];
 			
 			_.each(rc.getReactively("planPagosHistorial"), function(planPago, index){
+				
+				
 									
 				var sa 			 	= 0;
 				var cargoCM 	= 0;
@@ -447,7 +449,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			  		
 				if (planPago.pagos.length > 0)
 				{
-						
+
 					_.each(planPago.pagos,function (pago) {
 						 if (pago.estatus != 3)
 								rc.pagos_ids.push(pago.pago_id);
@@ -466,6 +468,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 								 if (ti != undefined)
 		 							 formaPago = ti.nombre;
 							}
+							
+							console.log(formaPago);
 							
 							if (planPago.descripcion == 'Recibo')
 							{
@@ -493,6 +497,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 														importe 					: planPago.importeRegular,
 														pagos 						: planPago.pagos,
 														notaCredito				: formaPago == 'Nota de Credito' ? pago.totalPago : 0,
+														tipoIngreso				: formaPago,
 														saldoActualizado	: 0
 					  	});
 					  }	
@@ -673,10 +678,23 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		});
 		
 		rc.referenciasPersonales = [];
+		
+		Meteor.call('getReferenciaPersonales', cliente.profile.referenciasPersonales_ids, rc.objeto._id, function(error, result) {           
+        if (result)
+        {
+        	rc.referenciasPersonales = result;
+        	$scope.$apply();
+ 				}
+		});
+
 					
-		//console.log(cli.profile.referenciasPersonales_ids);
-    _.each(cliente.profile.referenciasPersonales_ids,function(referenciaPersonal){
-      		//console.log("RP ARRay:",referenciaPersonal);
+		//console.log(cliente.profile.referenciasPersonales_ids);
+    
+   /*
+ _.each(cliente.profile.referenciasPersonales_ids,function(referenciaPersonal){
+      		
+      		console.log("RP ARRay:",referenciaPersonal);
+          
           Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
                 if (result)
                 {
@@ -684,8 +702,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
                 	if (result.apellidoMaterno == null) {
                 		result.apellidoMaterno = ""
                 	}
-                    //Recorrer las relaciones 
-                    
+                    //Recorrer las relaciones                     
                     rc.referenciasPersonales.push({//buscarPersona_id : referenciaPersonal.referenciaPersonal_id,
                                                    nombre           : result.nombre,
                                                    apellidoPaterno  : result.apellidoPaterno,
@@ -708,7 +725,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 										}
                 }
           }); 
+          //$scope.$apply();
+          
     });
+*/
+    
+    //console.log(rc.referenciasPersonales);
 
 	};
 	this.creditosActivos = function(){
@@ -1434,8 +1456,10 @@ if(estatus == 0){
 						fechaVerificacion				: contrato.fechaVerificacion,
 						turno										: contrato.turno,
 						tasa										: contrato.tasa,
+						tipo 										: "creditoP",
 						conSeguro 							: contrato.conSeguro,
-						seguro									: contrato.seguro
+						seguro									: contrato.seguro,
+						
 					};
 					
 					Meteor.call("generarPlanPagos",_credito,rc.cliente,function(error,result){

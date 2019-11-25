@@ -485,7 +485,7 @@ this.subscribe("pagosSeguro", () => {
 							var numeroCorte = 0;
 							var fechaCorteInicio = "";
 							var fechaCorteFin = "";
-							if (pp.fechaLimite.getDate() >= 16)
+							if (pp.fechaLimite.getDate() >= 15)
 							{	
 									numeroCorte = pp.fechaLimite.getMonth() * 2;									
 									fechaCorteInicio = new Date(pp.fechaLimite.getFullYear(), pp.fechaLimite.getMonth() -1, 22);
@@ -1104,7 +1104,7 @@ if(rc.getReactively("historialCreditos") && rc.creditos.length > 0 && planPagos.
 		var clienteTemp = Meteor.users.findOne({_id : cliente._id});
 		this.cliente.password = clienteTemp.password;
 		this.cliente.repeatPassword = clienteTemp.password;
-		console.log(this.cliente.password)
+		//console.log(this.cliente.password)
 		//document.getElementById("contra").value = this.cliente.password;
 
 		if(form.$invalid){
@@ -1152,7 +1152,7 @@ if(rc.getReactively("historialCreditos") && rc.creditos.length > 0 && planPagos.
 	          Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
 	                if (result)
 	                {
-	                  console.log("RP:",result);
+	                  //console.log("RP:",result);
 	                	if (result.apellidoMaterno == null) {
 	                		result.apellidoMaterno = ""
 	                	}
@@ -1180,6 +1180,7 @@ if(rc.getReactively("historialCreditos") && rc.creditos.length > 0 && planPagos.
       
       
   };
+	
 	this.creditosActivos = function(){
 		this.creditoAc = !this.creditoAc;
 		this.solicitudesCre = false;
@@ -1189,6 +1190,7 @@ if(rc.getReactively("historialCreditos") && rc.creditos.length > 0 && planPagos.
 		this.creditoApro = false
 		this.creditosRechazados = false;
 	}
+	
 	this.solicitudesCreditos = function(){
 		this.solicitudesCre= !this.solicitudesCre;
 		this.creditoAc = false;
@@ -1198,6 +1200,7 @@ if(rc.getReactively("historialCreditos") && rc.creditos.length > 0 && planPagos.
 		this.creditoApro = false
 		this.creditosRechazados = false;
 	}
+	
 	this.notasCreditos = function(){
 		this.notasCre= !this.notasCre;
 		this.creditoAc = false;
@@ -1207,6 +1210,7 @@ if(rc.getReactively("historialCreditos") && rc.creditos.length > 0 && planPagos.
 		this.creditoApro = false
 		this.creditosRechazados = false;
 	}
+	
 	this.getPagos = function(){
 		this.masInfoCredito = !this.masInfoCredito;
 		this.creditoAc = false;
@@ -1237,6 +1241,7 @@ if(rc.getReactively("historialCreditos") && rc.creditos.length > 0 && planPagos.
 		});
 
 	}
+	
 	this.creAprobados = function(){
 		this.creditoApro = !this.creditoApro;
 		this.masInfoCredito = false;
@@ -1247,6 +1252,7 @@ if(rc.getReactively("historialCreditos") && rc.creditos.length > 0 && planPagos.
 		this.creditosRechazados = false
 
 	}
+	
 	this.creRechazados = function(){
 		this.creditoApro = false;
 		this.masInfoCredito = false;
@@ -1258,10 +1264,12 @@ if(rc.getReactively("historialCreditos") && rc.creditos.length > 0 && planPagos.
 
 
 	}
+	
 	this.getNombreTipoNotaCredito = function (tipo_id) {
 		var tipo = TiposNotasCredito.findOne(tipo_id);
 		return tipo? tipo.nombre:"";
 	}
+	
 	this.obtenerEstatus = function(cobro){
 		if(cobro.estatus == 1)
 			return "bg-color-green txt-color-white";
@@ -1399,7 +1407,7 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 		_.each(pago.planPagos, function(pp)
 		{
 				var numeroCorte = 0;
-				if (pp.fechaLimite.getDate() >= 16)
+				if (pp.fechaLimite.getDate() >= 15)
 				{	
 						numeroCorte = pp.fechaLimite.getMonth() * 2;									
 						var fechaCorteInicio = new Date(pp.fechaLimite.getFullYear(), pp.fechaLimite.getMonth() -1, 22);
@@ -1586,7 +1594,7 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 		if (this.objeto)
 			this.objeto.profile.foto = imagen;
 		    this.imagenes.push({archivo:imagen})
-		    console.log(this.imagenes)
+		    //console.log(this.imagenes)
 
 						
 	}
@@ -1972,17 +1980,17 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 	  Meteor.call('numeroALetras',credito.capitalSolicitado, function(error, result){           					
 				if (result)
 				{
-					console.log("result",result)
-						rc.cantidad = result
+					//console.log("result",result)
+					rc.cantidad = result
 				}
-				console.log("cantidad",rc.cantidad)
+				//console.log("cantidad",rc.cantidad)
 
 		});
 	};
 	
 	this.getAvales= function(credito)
 	{
-				console.log(credito.avales_ids[0].aval_id)
+				//console.log(credito.avales_ids[0].aval_id)
 				rc.avalpapu = credito.avales_ids[0].aval_id
 		    Meteor.call('obAvales',rc.avalpapu, function(error, result){           					
 					if (result)
@@ -1990,7 +1998,7 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 						//console.log("result",result)
 							rc.avalesCliente = result.profile
 					}
-					console.log("avales",rc.avalesCliente)
+					//console.log("avales",rc.avalesCliente)
 
 			});
 		};
@@ -2554,7 +2562,7 @@ var fecha = new Date();
 				  	planPago.fechaLimite.setHours(1,0,0,0);
 				  	cargoCM = Number(planPago.importeRegular + planPago.pago);
 			  }
-				console.log(planPago.descripcion);
+				//console.log(planPago.descripcion);
 				
 				arreglo.push({saldo							: rc.saldo,
 											numeroPago  			: planPago.numeroPago,

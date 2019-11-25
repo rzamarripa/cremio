@@ -30,11 +30,16 @@ angular.module("creditoMio")
 	
 	rc.totalSolicitadoVales 		= 0;
 	rc.totalPagarVales 					= 0;
+	rc.numeroVales 							= 0;
+	
 	rc.totalSolicitadoCreditos	= 0;
 	rc.totalPagarCreditos			 	= 0;
-	
 	rc.numeroCreditos 					= 0;
-	rc.numeroVales 							= 0;
+	
+	rc.totalSolicitadoCreditosD	= 0;
+	rc.totalPagarCreditosD			= 0;
+	rc.numeroCreditosD 					= 0;
+	
 	
 	rc.totalSeguro = 0;
   
@@ -80,24 +85,6 @@ angular.module("creditoMio")
 		return [{}]
 	});
 
-/*
-  this.subscribe('movimientosCaja', () => {
-     return [{ createdAt:  { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}]
-  });
-*/
-
-/*
-	this.subscribe('creditos', () => {
-		return [{fechaSolicito : { $gte : rc.getReactively("fechaInicial"), $lte : rc.getReactively("fechaFinal")}}];
-	});
-*/
-	
-/*
-	this.subscribe('pagos', () => {
-		return [{estatus:1},{ fechaPago:  { $gte : this.getReactively("fechaInicial"), $lte : this.getReactively("fechaFinal")}}];
-	});
-*/
-
 	this.subscribe('cuentas',()=>{
 		return [{estatus : 1}]});
 
@@ -108,18 +95,6 @@ angular.module("creditoMio")
   this.subscribe('tiposIngreso', () => {
     return [{}]
   });
-
-/*
-  this.subscribe('cuentas', () => {
-    return [{}]
-  });
-*/
-
-/*
-  this.subscribe('movimientosCaja', () => {
-    return [{caja_id: this.getReactively('caja._id'), createdAt: {$gte: this.getReactively('caja.ultimaApertura')} }]
-  });
-*/
 	
 	this.helpers({
 
@@ -166,76 +141,96 @@ angular.module("creditoMio")
 		Meteor.call("getCobranzaDiaria", this.fechaInicial, this.fechaFinal, usuario.profile.sucursal_id, function(error, result){
 				if  (result)
 				{
-						
-						rc.planPagoOriginal 					= result.cobranza;
-						rc.planPagos 									= result.cobranza;		
-						rc.arregloSeguroDistribuidor	= result.seguroDistribuidorCobranza;
-						rc.arregloOtrasSucursales			= _.toArray(result.otrasSucursales)
-						
-						rc.sumaSeguroDistribuidor 		= result.seguroDistribuidor;
-						rc.sumaBonificaciones 				= result.bonificaciones;
-						rc.sumaOtrasSucursales				= result.sumaOtrasSucursales;
-						
-						
-						_.each(rc.planPagos, function(plan){
-							
- 								if (plan.tipoIngreso != 'Nota de Credito')
- 								{
- 								
-		 								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
-										rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
-										if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
-										rc.sumaSeguro += Number(parseFloat(plan.pagoSeguro).toFixed(2));
-										if (plan.pagoIva == undefined) plan.pagoIva = 0;
-										rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
-										if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
-										rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
-										
-										if (plan.bonificacion == undefined)
-												plan.bonificacion = 0;
-										
-										plan.totalPago = Number(parseFloat(plan.totalPago - plan.bonificacion)).toFixed(2); 
-										
-										
-										if (plan.descripcion == "Cargo Moratorio")
-												rc.sumaCargoMoratorio += Number(parseFloat(plan.totalPago).toFixed(2));
-		
-										//if (plan.tipoIngreso != 'Nota de Credito')
-										rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
-										
-										if (plan.tipoCredito == "creditoP" && plan.tipoIngreso != 'Nota de Credito')
-												rc.sumaCreditos += Number(parseFloat(plan.totalPago).toFixed(2));		
-										else if (plan.tipoCredito == "vale" && plan.tipoIngreso != 'Nota de Credito' ){
-												rc.sumaVales += Number(parseFloat(plan.totalPago).toFixed(2));
-										}
-										
-										if (plan.descripcion == "Cargo Moratorio")
-												plan.descripcion = "C. Moratorio";
-										else if (plan.tipoCredito == "vale")
-												plan.descripcion = "Vale";
-																																		
-								}		
+						//console.log(result);
+						if (result.bandera == undefined)
+						{
+								rc.planPagoOriginal 					= result.cobranza;
+								rc.planPagos 									= result.cobranza;		
+								rc.arregloSeguroDistribuidor	= result.seguroDistribuidorCobranza;
+								rc.arregloOtrasSucursales			= _.toArray(result.otrasSucursales)
 								
-								if (rc.arregloTiposIngresos[plan.tipoIngreso] == undefined)
-										rc.arregloTiposIngresos[plan.tipoIngreso] = Number(parseFloat(plan.totalPago).toFixed(2));
-								else
-									rc.arregloTiposIngresos[plan.tipoIngreso] += Number(parseFloat(plan.totalPago).toFixed(2));
- 								
-						});
-						
-						_.each(rc.arregloSeguroDistribuidor, function(seguro){
-							
-											if (rc.arregloTiposIngresos[seguro.tipoIngreso] == undefined)
-												rc.arregloTiposIngresos[seguro.tipoIngreso] = Number(parseFloat(seguro.seguro).toFixed(2));
-											else
-												rc.arregloTiposIngresos[seguro.tipoIngreso] += Number(parseFloat(seguro.seguro).toFixed(2));
-
-						});
+								rc.sumaSeguroDistribuidor 		= result.seguroDistribuidor;
+								rc.sumaBonificaciones 				= result.bonificaciones;
+								rc.sumaOtrasSucursales				= result.sumaOtrasSucursales;
+								
+								
+								_.each(rc.planPagos, function(plan){
+									
+		 								if (plan.tipoIngreso != 'Nota de Credito')
+		 								{
+		 								
+				 								if (plan.pagoInteres == undefined) plan.pagoInteres = 0;
+												rc.sumaInteres += Number(parseFloat(plan.pagoInteres).toFixed(2));
+												if (plan.pagoSeguro == undefined) plan.pagoSeguro = 0;
+												rc.sumaSeguro += Number(parseFloat(plan.pagoSeguro).toFixed(2));
+												if (plan.pagoIva == undefined) plan.pagoIva = 0;
+												rc.sumaIva += Number(parseFloat(plan.pagoIva).toFixed(2));
+												if (plan.pagoCapital == undefined) plan.pagoCapital = 0;
+												rc.sumaCapital += Number(parseFloat(plan.pagoCapital).toFixed(2));
+												
+												if (plan.bonificacion == undefined)
+														plan.bonificacion = 0;
+												
+												plan.totalPago = Number(parseFloat(plan.totalPago - plan.bonificacion)).toFixed(2); 
+												
+												
+												if (plan.descripcion == "Cargo Moratorio")
+														rc.sumaCargoMoratorio += Number(parseFloat(plan.totalPago).toFixed(2));
+				
+												//if (plan.tipoIngreso != 'Nota de Credito')
+												rc.totalCobranza += Number(parseFloat(plan.totalPago).toFixed(2));
+												
+												if (plan.tipoCredito == "creditoP" && plan.tipoIngreso != 'Nota de Credito')
+														rc.sumaCreditos += Number(parseFloat(plan.totalPago).toFixed(2));		
+												else if (plan.tipoCredito == "vale" && plan.tipoIngreso != 'Nota de Credito' ){
+														rc.sumaVales += Number(parseFloat(plan.totalPago).toFixed(2));
+												}
+												
+												if (plan.descripcion == "Cargo Moratorio")
+														plan.descripcion = "C. Moratorio";
+												else if (plan.tipoCredito == "vale")
+														plan.descripcion = "Vale";
+																																				
+										}		
 										
-						for (var key in rc.arregloTiposIngresos) {
-						  rc.arregloTiposIngresosobjetos.push({tipoPago: key, total: rc.arregloTiposIngresos[key]})
-						}
+										if (rc.arregloTiposIngresos[plan.tipoIngreso] == undefined)
+												rc.arregloTiposIngresos[plan.tipoIngreso] = Number(parseFloat(plan.totalPago).toFixed(2));
+										else
+											rc.arregloTiposIngresos[plan.tipoIngreso] += Number(parseFloat(plan.totalPago).toFixed(2));
+		 								
+								});
+								
+								_.each(rc.arregloSeguroDistribuidor, function(seguro){
+									
+													if (rc.arregloTiposIngresos[seguro.tipoIngreso] == undefined)
+														rc.arregloTiposIngresos[seguro.tipoIngreso] = Number(parseFloat(seguro.seguro).toFixed(2));
+													else
+														rc.arregloTiposIngresos[seguro.tipoIngreso] += Number(parseFloat(seguro.seguro).toFixed(2));
+		
+								});
+												
+								for (var key in rc.arregloTiposIngresos) {
+								  rc.arregloTiposIngresosobjetos.push({tipoPago: key, total: rc.arregloTiposIngresos[key]})
+								}
 
+							
+						}
+						else
+						{
+								
+								alert("Revisar el folio de pago " + result.folio + " del cajero :" + result.cajero);
+								
+								/*
+								customConfirm('Revisar el folio de pago ' + result.folio, function() {
+										
+										
+										
+								});
+*/
+								
+						}
+						
+						
 						//console.log(rc.arregloSeguroDistribuidor);
 						
 						loading(false);
@@ -265,11 +260,15 @@ angular.module("creditoMio")
 		
 		rc.totalSolicitadoVales 		= 0;
 		rc.totalPagarVales 					= 0;
+		rc.numeroVales 							= 0;
+		
 		rc.totalSolicitadoCreditos	= 0;
 		rc.totalPagarCreditos			 	= 0;
-		
 		rc.numeroCreditos 					= 0;
-		rc.numeroVales 							= 0;
+		
+		rc.totalSolicitadoCreditosD	= 0;
+		rc.totalPagarCreditosD			= 0;
+		rc.numeroCreditosD 					= 0;
     
     rc.creditosEntregados = [];
     
@@ -299,6 +298,16 @@ angular.module("creditoMio")
 									rc.totalPagarVales += Number(parseFloat(credito.adeudoInicial).toFixed(2));
 									
 							}
+							else if (credito.tipo == "creditoPersonalDistribuidor")
+							{
+									rc.numeroCreditosD += 1;
+									
+									if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
+									rc.totalSolicitadoCreditosD += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+									if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
+									rc.totalPagarCreditosD += Number(parseFloat(credito.adeudoInicial).toFixed(2));
+							}
+							
 							
 						});
 						loading(false);
@@ -356,6 +365,15 @@ angular.module("creditoMio")
 									if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
 									rc.totalPagarVales += Number(parseFloat(credito.adeudoInicial).toFixed(2));
 									
+							}
+							else if (credito.tipo == "creditoPersonalDistribuidor")
+							{
+									rc.numeroCreditosD += 1;
+									
+									if (credito.capitalSolicitado == undefined) plan.capitalSolicitado = 0;
+									rc.totalSolicitadoCreditosD += Number(parseFloat(credito.capitalSolicitado).toFixed(2));
+									if (credito.adeudoInicial == undefined) plan.adeudoInicial = 0;
+									rc.totalPagarCreditosD += Number(parseFloat(credito.adeudoInicial).toFixed(2));
 							}
 							
 							
@@ -936,14 +954,23 @@ this.guardarNotaCobranza=function(nota){
 				toastr.warning("No hay registros por imprimir");
 				return;
 		}
+		
+		var totales = {};
+		
+		totales.totalSolicitadoVales 			= rc.totalSolicitadoVales;
+		totales.totalPagarVales 					= rc.totalPagarVales;
+		totales.numeroVales 							= rc.numeroVales;
+		
+		totales.totalSolicitadoCreditos 	= rc.totalSolicitadoCreditos;
+		totales.totalPagarCreditos	 			= rc.totalPagarCreditos;
+		totales.numeroCreditos 						= rc.numeroCreditos;
+				
+		totales.totalSolicitadoCreditosD 	= rc.totalSolicitadoCreditosD;
+		totales.totalPagarCreditosD		 		= rc.totalPagarCreditosD;
+		totales.numeroCreditosD 					= rc.numeroCreditosD;
         		   
 		loading(true);	
-		Meteor.call('ReporteCreditos', objeto, rc.fechaInicial, rc.fechaFinal, rc.totalSolicitadoVales, 
-																																					 rc.totalPagarVales, 
-																																					 rc.totalSolicitadoCreditos, 
-																																					 rc.totalPagarCreditos, 
-																																					 rc.numeroCreditos, 
-																																					 rc.numeroVales ,function(error, response) {
+		Meteor.call('ReporteCreditos', objeto, rc.fechaInicial, rc.fechaFinal, totales, function(error, response) {
 
 
 		   if(error)
@@ -969,10 +996,25 @@ this.guardarNotaCobranza=function(nota){
 				toastr.warning("No hay registros por imprimir");
 				return;
 		}
+		
+		
+		var totales = {};
+		
+		totales.totalSolicitadoVales 			= rc.totalSolicitadoVales;
+		totales.totalPagarVales 					= rc.totalPagarVales;
+		totales.numeroVales 							= rc.numeroVales;
+		
+		totales.totalSolicitadoCreditos 	= rc.totalSolicitadoCreditos;
+		totales.totalPagarCreditos	 			= rc.totalPagarCreditos;
+		totales.numeroCreditos 						= rc.numeroCreditos;
+				
+		totales.totalSolicitadoCreditosD 	= rc.totalSolicitadoCreditosD;
+		totales.totalPagarCreditosD		 		= rc.totalPagarCreditosD;
+		totales.numeroCreditosD 					= rc.numeroCreditosD;
 			
 	   	    		  
 		loading(true);	
-		Meteor.call('ReporteCreditosLiquidados', objeto, rc.fechaInicial, rc.fechaFinal, rc.totalSolicitadoVales, rc.totalPagarVales, rc.totalSolicitadoCreditos, rc.totalPagarCreditos, rc.numeroCreditos, rc.numeroVales ,function(error, response) {
+		Meteor.call('ReporteCreditosLiquidados', objeto, rc.fechaInicial, rc.fechaFinal, totales,function(error, response) {
 
 
 		   if(error)

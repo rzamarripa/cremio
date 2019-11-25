@@ -750,14 +750,20 @@
 			</div>
 			<div class="well">
 				<div class="row">
-							<div class="col-sm-4" valida>				    
+							<div class="col-sm-3" valida>				    
 								<label>Límite de Crédito</label>
 								<input name="lCredito" type="number" class="form-control" placeholder="Limite credito" ng-model="dis.objeto.profile.limiteCredito" required="" >
-		<!-- 						<input type="submit" ng-click="dis.actualizarForm(dis.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!dis.action" valida-form formulario="form"> -->
 							</div>
+				    	<div class="col-sm-2">
+					    	<br>
+					    	<a ng-click="dis.cambiarEstatus(dis.objeto.profile.estatus)" class="btn btn-{{dis.estatusClase}}">
+										 {{dis.objeto.profile.estatus == true ? 'Activo': 'Inactivo'}}
+								</a>
+				    	</div>	
+				</div>
+				<div class="row">
 							<div class="col-sm-3" valida>
 					    	<label>Fecha Verificación *</label>
-					    	<!-- <input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="dis.objeto.profile.fechaVerificacion" required="" /> -->
 					    	<input name="fechaVerificacion" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="dis.objeto.profile.fechaVerificacion" required="">
 				    	</div>
 							<div class="col-sm-2" valida>
@@ -768,12 +774,28 @@
 					    	</select>
 				    	</div>
 				    	<div class="col-sm-2">
+					    	<label>Hora </label>	
+					    	<input id="hora" name="hora" type="time" class="form-control" ng-model="dis.objeto.profile.hora">	
+				    	</div>
+				    	<div class="col-sm-2" ng-if="!dis.action">
 					    	<br>
-					    	<a ng-click="dis.cambiarEstatus(dis.objeto.profile.estatus)" class="btn btn-{{dis.estatusClase}}">
-										 {{dis.objeto.profile.estatus == true ? 'Activo': 'Inactivo'}}
+					    	<a ng-click="dis.cambiarEstatusVerificacion(dis.objeto.profile.estaVerificado)" class="btn btn-{{dis.estatusClaseVerificacion}}">
+										 {{dis.objeto.profile.estaVerificado == true ? 'Verificado': 'No Verificado'}}
 								</a>
-				    	</div>	
-				</div>
+				    	</div>
+				</div>	
+				<div class="row">
+							<div class="col-sm-3" valida>
+					    	<label>Verificación Sin Aval *</label>
+					    	<select name="verificacionSinAval" class="form-control" ng-model="dis.objeto.profile.sinAval" required="">
+						    	<option value="SI">SI</option>
+						    	<option value="NO">NO</option>
+					    	</select>
+				    	</div>
+						
+				</div>	
+			</div>
+			<div class="well">
 				<div class="row">
 						<div class="col-sm-12">
 							<input type="submit" ng-click="dis.guardar(dis.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="dis.action" valida-form formulario="form">

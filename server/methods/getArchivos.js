@@ -2651,6 +2651,11 @@ console.log(credito.adeudoInicial);
 	 			rutaOutput = produccion + "InformacionDistribuidor.pdf";
 	 			nombreSalida = "InformacionDistribuidor";
  		}
+ 		else if (op == 10)
+ 		{
+	 			rutaOutput = produccion + "AVISODECOBROVALE.pdf";
+	 			nombreSalida = "AvisoCobroVale";
+ 		}
  		
     //var rutaOutput =  produccion + (op == 3 ? "FormatoSol.pdf" : "FormatoSolVales.pdf");
     var bitmap = fs.readFileSync(rutaOutput);

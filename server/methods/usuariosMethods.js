@@ -131,15 +131,19 @@ Meteor.methods({
 		var user = Meteor.users.findOne({_id: usuario_id});
 		user.profile.referenciasPersonales_ids = [];
 		
-		_.each(usuario.profile.referenciasPersonales, function(referenciaPersonal){
-				if (referenciaPersonal.estatus == "N") referenciaPersonal.estatus = "G";
-				    user.profile.referenciasPersonales_ids.push({num										: referenciaPersonal.num, 
-					    																					 numeroCliente					: user.profile.numeroCliente,
-					    																					 referenciaPersonal_id	: referenciaPersonal._id, 
-					    																					 nombreCompleto					: referenciaPersonal.nombreCompleto,
-					    																					 parentesco							: referenciaPersonal.parentesco, 
-					    																					 tiempoConocerlo				: referenciaPersonal.tiempoConocerlo, 
-					    																					 estatus								: referenciaPersonal.estatus});
+		_.each(usuario.profile.referenciasPersonales, function(referenciaPersonal)
+		{
+				if (referenciaPersonal.estatus == "N") 
+						referenciaPersonal.estatus = "G";
+
+		    user.profile.referenciasPersonales_ids.push({num										: referenciaPersonal.num, 
+			    																					 numeroCliente					: user.profile.numeroCliente,
+			    																					 referenciaPersonal_id	: referenciaPersonal._id, 
+			    																					 //_id										: referenciaPersonal._id, 
+			    																					 nombreCompleto					: referenciaPersonal.nombreCompleto,
+			    																					 parentesco							: referenciaPersonal.parentesco, 
+			    																					 tiempoConocerlo				: referenciaPersonal.tiempoConocerlo, 
+			    																					 estatus								: referenciaPersonal.estatus});
 				
 				//Agregar un arrar de la info del cliente en el AVAl
 				var RP = ReferenciasPersonales.findOne(referenciaPersonal._id);
@@ -204,62 +208,22 @@ Meteor.methods({
 	},
 	updateUsuario: function (usuario, referenciasPersonales, rol, cambiarPassword) {
 		
+		
+		
 	  var user = Meteor.users.findOne({_id : usuario._id});		
 		user.profile = usuario.profile;
-		
-		/*
-
-		if (rol == "Cliente")
-		{
-				
-				sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
-
-				var numero = parseInt(usuario.profile.numeroCliente);
-
-				if (isNaN(numero) == false) //es Número
-				{
-
-					if (numero < 10)
-						 usuario.profile.numeroCliente = sucursal.clave + '-C000' + numero.toString();
-					else if (numero < 100)
-		  			 usuario.profile.numeroCliente = sucursal.clave + '-C00' + numero.toString();
-		  		else if (numero < 1000)
-		  			 usuario.profile.numeroCliente = sucursal.clave + '-C0' + numero.toString();	 
-		  		else
-		  			 usuario.profile.numeroCliente = sucursal.clave + '-C' + numero.toString();
-					
-				}
-				
-	  		
-	  } 
-	  else if (rol == "Distribuidor")
-	  {
-		  	sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
-				
-				var numero = parseInt(usuario.profile.numeroDistribuidor);
-								
-				if (numero < 10)
-					 usuario.profile.numeroCliente = sucursal.clave + '-D000' + numero.toString();
-				else if (numero < 100)
-	  			 usuario.profile.numeroCliente = sucursal.clave + '-D00' + numero.toString();
-	  		else if (numero < 1000)
-	  			 usuario.profile.numeroCliente = sucursal.clave + '-D0' + numero.toString();	 
-	  		else
-	  			 usuario.profile.numeroCliente = sucursal.clave + '-D' + numero.toString();
-	  		
-	  }
-		
-*/
-		
-		
+						
 		_.each(referenciasPersonales, function(referenciaPersonal){
-			
-				
-				if (referenciaPersonal.estatus == "N"){					
+							
+				if (referenciaPersonal.estatus == "N")
+				{	
+						console.log(referenciaPersonal);
+						
 						referenciaPersonal.estatus = "G";
 						user.profile.referenciasPersonales_ids.push({num										: referenciaPersonal.num, 
 					    																					 numeroCliente					: user.profile.numeroCliente,
 					    																					 referenciaPersonal_id	: referenciaPersonal._id, 
+					    																					 // _id										: referenciaPersonal._id, 
 					    																					 nombreCompleto					: referenciaPersonal.nombreCompleto,
 					    																					 parentesco							: referenciaPersonal.parentesco, 
 					    																					 tiempoConocerlo				: referenciaPersonal.tiempoConocerlo,
@@ -278,7 +242,8 @@ Meteor.methods({
 						ReferenciasPersonales.update({_id: idTemp}, {$set: RP});
 						
 				} 
-				else if (referenciaPersonal.estatus == "A"){
+				else if (referenciaPersonal.estatus == "A")
+				{
 						//Buscar referenciasPersonales_ids y actualizarlo						
 						_.each(user.profile.referenciasPersonales_ids, function(referenciaPersonal_ids){
 								if (referenciaPersonal_ids.num == referenciaPersonal.num)
@@ -415,6 +380,30 @@ if (referenciaPersonal.buscarPersona_id)
 		return true;		
 				
 	},
+	updateReferenciasPersonales: function (usuario_id, numeroCliente, referenciasPersonales_ids ) {
+		
+		var referenciasPersonales = [];
+				
+		_.each(referenciasPersonales_ids, function(referenciaPersonal){
+							
+						referenciaPersonal.estatus = "G";
+						referenciasPersonales.push({num										: referenciaPersonal.num, 
+																			 numeroCliente					: numeroCliente,
+																			 referenciaPersonal_id	: referenciaPersonal._id, 
+																			 nombreCompleto					: referenciaPersonal.nombreCompleto,
+																			 parentesco							: referenciaPersonal.parentesco, 
+																			 tiempoConocerlo				: referenciaPersonal.tiempoConocerlo
+																			 });
+							
+		});
+		
+    
+	  Meteor.users.update({ _id  : usuario_id }, 
+	  										{ $set : { "profile.referenciasPersonales_ids": referenciasPersonales } });
+		
+		return true;		
+				
+	},
 	updateGerenteSucursal: function (usuario, rol) {
 		//console.log(usuario)
 		var user = Meteor.users.findOne({username : usuario.username});			
@@ -434,14 +423,15 @@ if (referenciaPersonal.buscarPersona_id)
 		if (usuario != undefined)
 		{
 				var user = Meteor.users.findOne({"_id" : usuario}, {fields: {"profile.nombreCompleto":1, "profile.nombre":1, "profile.numeroCliente": 1}});
+				//console.log(user);
 				if (user != undefined)
 					 return user.profile;	
 		}
 		
 	},
 	getUsuarioVerificacion: function (usuario) {	
-
-		if (usuario != undefined)
+		
+		if (usuario != undefined || usuario != "")
 		{
 				var user = Meteor.users.findOne({"_id" : usuario}, {fields: { "profile.nombreCompleto" 		: 1, 
 																																		  "profile.calle" 				 		: 1,
@@ -451,16 +441,28 @@ if (referenciaPersonal.buscarPersona_id)
 																																		  "profile.ciudad_id"			 		: 1,
 																																		  "profile.particular"		 		: 1,
 																																		  "profile.celular"			   		: 1,
-																																		  "profile.tiempoResidencia"	: 1
+																																		  "profile.tiempoResidencia"	: 1,
+																																		  "profile.foto"							: 1,
+																																		  "profile.senasParticulares"	: 1
+				
 																																		}});
-																																		
-				var colonia = Colonias.findOne({_id: user.profile.colonia_id});
-				user.profile.colonia = colonia.nombre;
-				var ciudad = Ciudades.findOne({_id: user.profile.ciudad_id});
-				user.profile.ciudad = ciudad.nombre;
-																																		
 				if (user != undefined)
-					 return user.profile;	
+				{
+						if (user.profile.colonia_id != undefined)
+						{
+								var colonia = Colonias.findOne({_id: user.profile.colonia_id});
+								user.profile.colonia = colonia.nombre;	
+						}																														
+						
+						if (user.profile.ciudad_id != undefined)
+						{
+								var ciudad = Ciudades.findOne({_id: user.profile.ciudad_id});
+								user.profile.ciudad = ciudad.nombre;	
+						}			
+						
+						return user.profile;	
+				}
+					 
 		}
 		
 	},
@@ -475,6 +477,8 @@ if (referenciaPersonal.buscarPersona_id)
 																															  "profile.ciudad_id"			 		: 1,
 																															  "profile.particular"		 		: 1,
 																															  "profile.celular"			   		: 1,
+																															  "profile.foto"							: 1,
+																																"profile.senasParticulares"	: 1,
 																															  "profile.tiempoResidencia"	: 1
 																															}});
 																																		
@@ -522,6 +526,40 @@ if (referenciaPersonal.buscarPersona_id)
 	  var RP = ReferenciasPersonales.findOne({_id : id});
 		return RP;
 	},
+	getReferenciaPersonales: function (referenciasPersonales_ids, cliente_id) {	
+			
+			var referenciasPersonales = [];
+			
+			_.each(referenciasPersonales_ids,function(referenciaPersonal){
+
+						var RP = ReferenciasPersonales.findOne({_id : referenciaPersonal.referenciaPersonal_id});
+						//console.log(RP);
+						if (RP.apellidoMaterno == undefined || RP.apellidoMaterno == "") 
+						{
+                		RP.apellidoMaterno = ""
+            }
+            //Recorrer las relaciones                     
+            referenciasPersonales.push({ _id							: RP._id,
+                                         nombre           : RP.nombre,
+                                         apellidoPaterno  : RP.apellidoPaterno,
+                                         apellidoMaterno  : RP.apellidoMaterno,
+                                         parentesco       : referenciaPersonal.parentesco,
+                                         direccion        : RP.direccion,
+                                         telefono         : RP.telefono,
+                                         celular	        : RP.celular,
+                                         ciudad		        : RP.ciudad,
+                                         estado     	    : RP.estado,
+                                         tiempoConocerlo  : referenciaPersonal.tiempoConocerlo,
+                                         num              : referenciaPersonal.num,
+                                         nombreCompleto		:	RP.nombreCompleto,
+                                         cliente_id       : cliente_id,
+	                                       estatus          : referenciaPersonal.estatus
+            });
+			});	
+			
+			return referenciasPersonales;
+	},
+	
 	getPersonas: function (nombre) {	//Se hizo para la validacion de Clientes, Avales y Referencias Personales
 	  var personas = {};
 	  personas.clientes = [];
@@ -704,12 +742,15 @@ if (referenciaPersonal.buscarPersona_id)
 		 return documentos;
 	},
 	getDocumentosClientes: function (cliente_id) {	
-				 
+			
 		 var documentos = DocumentosClientes.find({cliente_id: cliente_id}, {fields: { "imagen": 0 }}).fetch();
 		 
 		 _.each(documentos, function(documento){
-			 	var doc = Documentos.findOne(documento.documento_id);
-			 	documento.nombre = doc.nombre;
+			 	var doc = Documentos.findOne({_id: documento.documento_id});
+			 	if (doc != undefined)
+			 	{
+						documento.nombre = doc.nombre; 	
+			 	}
 		 });
 		 
 		 return documentos;

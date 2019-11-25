@@ -154,6 +154,7 @@ Meteor.methods({
 				requiereVerificacion			: credito.requiereVerificacion,
 				requiereVerificacionAval	: credito.requiereVerificacionAval,
 				turno 										: credito.turno,
+				hora											: credito.hora,
 				sucursal_id 							: credito.sucursal_id,
 				fechaVerificacion					: credito.fechaVerificacion,
 				tipoGarantia 							: credito.tipoGarantia,

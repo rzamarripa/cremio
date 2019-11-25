@@ -573,6 +573,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				rc.credito.tasa = rc.credito.tasa;
 	
 			}
+			
 	
 			var credito = {
 				cliente_id 								: rc.cliente._id,
@@ -593,6 +594,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				sucursal_id 							: rc.cliente.profile.sucursal_id,
 				fechaVerificacion					: rc.credito.fechaVerificacion,
 				turno 										: rc.credito.turno,
+				hora 											: rc.credito.hora,
 				tipoGarantia 							: rc.credito.tipoGarantia,
 				tasa											: rc.credito.tasa,
 				conSeguro 								: rc.credito.conSeguro,
@@ -600,7 +602,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 				tipo 											: rc.credito.tipo,
 				beneficiario_id 					: rc.beneficiario._id
 			};
-	
+			
 			if (rc.cliente.roles == 'Cliente') 
 			{
 	
@@ -1242,6 +1244,7 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 		document.getElementById('capitalSolicitadoCreditoNuevo').onwheel = function(){ return false; }
 		document.getElementById('tasa').onwheel = function(){ return false; }
 		document.getElementById('meses').onwheel = function(){ return false; }
+		document.getElementById('hora').onwheel = function(){ return false; }
 
 	});
 	

@@ -287,7 +287,8 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 					});
 			}	
 				
-			var fechaPrimerAbono = new Date();
+			/*
+var fechaPrimerAbono = new Date();
 			var n = fechaPrimerAbono.getDate();
 			if (n >= 5 && n < 20)
 			{
@@ -300,10 +301,33 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 					else if (n >= 20)
 					   	fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth() + 1,16,0,0,0,0);								
 			}
+*/
+			
+			var fechaPrimerAbono = new Date();
+			var n = fechaPrimerAbono.getDate();
+								
+			if (n >= 7 && n < 22)
+			{
+					fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth() + 1,1,0,0,0,0);
+			}
+			else 
+			{
+					if (n < 7 )
+					{
+							fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth(),16,0,0,0,0);
+					}
+							
+					else if (n >= 22)
+					{
+							fechaPrimerAbono = new Date(fechaPrimerAbono.getFullYear(),fechaPrimerAbono.getMonth() + 1,16,0,0,0,0);
+					}
+			}
+			
 						
 		}
 		else if (rc.cliente.roles == "Cliente") 
 		{
+				rc.credito.tipo = "creditoP";
 				rc.credito.tasa = rc.credito.tasa;
 		}
 
@@ -327,6 +351,7 @@ function GeneradorPlanCtrl($scope, $meteor, $reactive,  $state, $stateParams, to
 			fechaVerificacion				: rc.credito.fechaVerificacion,
 			turno										: rc.credito.turno,
 			tasa 										: rc.credito.tasa,
+			tipo 										: rc.credito.tipo,
 			conSeguro 							: rc.credito.conSeguro,
 			seguro									: rc.credito.seguro
 		};  
@@ -520,6 +545,7 @@ _.each(result,function (pago) {
 			sucursal_id 							: rc.cliente.profile.sucursal_id,
 			fechaVerificacion					: rc.credito.fechaVerificacion,
 			turno 										: rc.credito.turno,
+			hora 											: rc.credito.hora,
 			tipoGarantia 							: rc.credito.tipoGarantia,
 			tasa											: rc.credito.tasa,
 			conSeguro 								: rc.credito.conSeguro,

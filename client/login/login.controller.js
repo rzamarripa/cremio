@@ -38,7 +38,6 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 			              $state.go('anon.logout');
 			              return;
 			        	}
-			        	$state.go('root.home'); 
 			        	
 			        	Meteor.call("getHorario", Meteor.user().profile.sucursal_id,  function(error,result){
 			            if(error){
@@ -58,6 +57,9 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 			              $state.go('anon.logout');
 			            }
 			          });
+			          
+			          //$state.go('root.home'); 
+			          
 		        }	
 	        }
 	        else{

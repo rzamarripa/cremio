@@ -23,6 +23,7 @@ angular.module("creditoMio")
   rc.folio = "";
   rc.imagen = "";
   rc.estatusClase = "";
+  rc.estatusClaseVerificacion = "";
   
   $(".js-example-basic-single").select2();
     
@@ -272,7 +273,12 @@ this.subscribe('empresas',()=>{
 								if (rc.objeto.profile.estatus)
 										rc.estatusClase = "success";
 								else
-										rc.estatusClase = "danger";		
+										rc.estatusClase = "danger";
+										
+								if (rc.objeto.profile.estaVerificado)
+										rc.estatusClaseVerificacion = "success";
+								else
+										rc.estatusClaseVerificacion = "danger";				
  								
  								//getdocumentos
 	              Meteor.call('getDocumentosClientes', rc.objeto_id, function(error,result){
@@ -827,6 +833,7 @@ if (this.action)
   
   this.borrarReferencia = function()
   {
+      
       this.referenciaPersonal.nombre = "";
       this.referenciaPersonal.apellidoPaterno = "";
       this.referenciaPersonal.apellidoMaterno = "";
@@ -850,6 +857,15 @@ if (this.action)
 		      //reorganiza el consecutivo     
 		      functiontoOrginiceNum(rp, "num");
 					this.referenciasPersonales = rp;
+																				
+					//Eliminar del arreglo en la bd 
+					Meteor.call('updateReferenciasPersonales', rc.objeto._id, rc.objeto.profile.numeroCliente , this.referenciasPersonales, function(error,result){
+							if (result)
+				    	{
+			 						$scope.$apply();
+				    	}	    
+			    });
+					
 					$scope.$apply();
 	    });
   };
@@ -1332,6 +1348,12 @@ if (this.action)
   {
     	rc.objeto.profile.estatus = !estatus;
     	rc.objeto.profile.estatus == true ? rc.estatusClase = "success" : rc.estatusClase = "danger";
+  };
+  
+  this.cambiarEstatusVerificacion = function(estatus)
+  {
+    	rc.objeto.profile.estaVerificado = !estatus;
+    	rc.objeto.profile.estaVerificado == true ? rc.estatusClaseVerificacion = "success" : rc.estatusClaseVerificacion = "danger";
   };
   
 };

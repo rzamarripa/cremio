@@ -1,5 +1,5 @@
 <!-- Tabla de Visitados Analistas -->
-<div class="well">
+<!-- <div class="well"> -->
 	<div class="row">
 		<div class="col-sm-3">
 			<div class="form-group">
@@ -9,8 +9,10 @@
 			</div>
 		</div>
 	</div>		
-</div>
-<table class="table table-bordered">
+<!-- </div> -->
+
+<div class="table-responsive">
+	<table class="table table-bordered">
 	<thead>
 		<tr>
 			<th class="text-center" width="5%">No.</th>
@@ -20,7 +22,7 @@
 			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
 			<th><div class="text-center">Tipo Verificación</div></th>
 			<th><div class="text-center">Tipo </div></th>
-			<th class="text-center" width="5%"><div class="text-center">Acción</div></th>
+			<th class="text-center" width="8%"><div class="text-center">Acción</div></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -33,6 +35,15 @@
 	    <td class="text-center">{{verificacion.rolVerificacion}}</td>
 	    <td class="text-center">{{verificacion.tipo}}</td>
 	    <td>
+		    	
+		    	<a href="#" ui-sref="root.verificacion({ id: verificacion.credito_id, 
+							    																  verificacion_id: verificacion._id, 
+								    																tipo: (verificacion.tipo == 'Crédito Personal'?'CP':'V'),
+									    															persona: (verificacion.tipoVerificacion == 'Aval' ? 2 : 1)})" 
+									    class="btn btn-xs btn-labeled btn-info"><i class="fa fa-pencil"></i></a>
+		    	<a href="#" ng-click="pver.imprimirVerificacion(verificacion)" class="btn btn-xs btn-labeled btn-info"><i class="fa fa-print"></i></a>
+		    	
+<!--
 		    	<div class="text-center">
 				    <div class="btn-group">
 						  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -46,21 +57,18 @@
 								    																tipo: (verificacion.tipo == 'Crédito Personal'?'CP':'V'),
 									    															persona: (verificacion.tipoVerificacion == 'Aval' ? 2 : 1)})"><i class="fa fa-pencil"></i> Editar / Ver</a>
 						    </li>
-<!--
-						    <li ng-if ="verificacion.tipoVerificacion == 'vecino'">
-						    		<a ui-sref="root.verificacionVecino({id: verificacion.credito_id, verificacion_id: verificacion._id, tipo: (verificacion.tipo == 'Crédito Personal'?'CP':'V')})"><i class="fa fa-pencil"></i> Editar / Ver</a>
+						    <li>
+						    		<a href="#" ng-click="pver.imprimirVerificacion(verificacion)"><i class="fa fa-print"></i> Imprimir</a>
 						    </li>
--->
-<!--
-						    <li ng-if ="verificacion.tipoVerificacion == 'solicitante o aval'">
-						    		<a ui-sref="root.verificacion({id: verificacion.credito_id, verificacion_id: verificacion._id, tipo: (verificacion.tipo == 'Crédito Personal'?'CP':'V')})"><i class="fa fa-pencil"></i> Editar / Ver</a>
-						    </li>
--->
 						  </ul>
 						</div>
 			    </div>
+-->
 	    </td>
     </tr>
 	</tbody>
 </table>
+</div>	
+
+
 		

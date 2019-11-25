@@ -280,7 +280,6 @@ angular.module("creditoMio")
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  
   this.calcularSemana = function(w, y) 
   {
       var ini, fin;
@@ -830,7 +829,7 @@ this.AsignaFecha = function(op)
 		{
 		
 				var numeroCorte = 0;
-				if (pp.fechaLimite.getDate() >= 16)
+				if (pp.fechaLimite.getDate() >= 15)
 				{	
 						numeroCorte = pp.fechaLimite.getMonth() * 2;									
 						var fechaCorteInicio = new Date(pp.fechaLimite.getFullYear(), pp.fechaLimite.getMonth() -1, 22);
@@ -1758,8 +1757,10 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 			    var sumaBonificacion  	= 0;
 			    var cargosMoratorios 		= 0;
 			    var creditosPersonales 	= 0;
-
-			    //console.log(objeto);
+			    
+			    var configuracion = Configuraciones.findOne();
+					var arregloComisiones = configuracion.arregloComisiones;
+					var arregloBonificaciones = [0,0,0,0,0];
 			    
 			    _.each(objeto.planPagos, function(pp){
 				    	var pago = {};
@@ -1779,19 +1780,31 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 						    	
 						    	pago.impReg							= '$' + Number(pp.importeRegular).format(2);
 						    	
-						    	datos.aLiberar				 += Number(parseFloat(pp.capital).toFixed(2));
+						    	datos.aLiberar				 += round(Number(parseFloat(pp.capital).toFixed(3)),2);
 									
 									if (pp.movimiento == "Recibo")
 									{
 											//NO SUMAR iva y Seguro
 											if (pp.bonificacion > 0)
 											{
-													sumaBonificacion	+= Number(parseFloat(pp.capital + pp.interes).toFixed(2));
-													sumaConComision		+= Number(parseFloat(pp.importeRegular).toFixed(2));
+													sumaBonificacion	+= round(Number(parseFloat(pp.capital + pp.interes).toFixed(3)),2);
+																										
+													for (i = 1; i <= 5 ; i++)
+													{	
+															_.each(arregloComisiones, function(c){
+												    			if (c.numero == i + 1)
+												    			{
+													    				arregloBonificaciones[i - 1] += round(Number(parseFloat((pp.capital + pp.interes) * (c.porcentaje/100))).toFixed(3),2);
+													    				arregloBonificaciones[i - 1] = round(Number(arregloBonificaciones[i - 1]).toFixed(3),2);
+												    			}						    			
+											    		});
+													}			
+													
+													sumaConComision		+= round(Number(parseFloat(pp.importeRegular).toFixed(3)),2);
 											}
 												  
 											else 
-												 sumaSinComision		+= Number(parseFloat(pp.importeRegular).toFixed(2));				
+												 sumaSinComision		+= round(Number(parseFloat(pp.importeRegular).toFixed(3)),2);				
 											pago.tipo = "V";
 											
 									}
@@ -1804,10 +1817,10 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 								    	if (pp.numeroPago == pp.numeroPagos)	 	
 								    			datos.valesUltimoPago++;
 											
-											datos.prestamos				 += Number(parseFloat(pp.adeudoInicial).toFixed(2));
-								    	datos.saldoAnterior		 += Number(parseFloat(pp.saldoActual).toFixed(2));
-								    	datos.pagoVigente			 += Number(parseFloat(pp.importeRegular).toFixed(2));
-								    	datos.saldoActual			 += Number(parseFloat(pp.saldoActual - pp.importeRegular).toFixed(2));
+											datos.prestamos				 += round(Number(parseFloat(pp.adeudoInicial).toFixed(3)),2);
+								    	datos.saldoAnterior		 += round(Number(parseFloat(pp.saldoActual).toFixed(3)),2);
+								    	datos.pagoVigente			 += round(Number(parseFloat(pp.importeRegular).toFixed(3)),2);
+								    	datos.saldoActual			 += round(Number(parseFloat(pp.saldoActual - pp.importeRegular).toFixed(3)),2);
 								    	datos.planPagos.push(pago);
 									}
 										 
@@ -1818,7 +1831,7 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 							}
 							else if (pp.beneficiario == "CRÉDITO PERSONAL")
 							{
-									creditosPersonales+= Number(parseFloat(pp.importeRegular).toFixed(2));
+									creditosPersonales+= round(Number(parseFloat(pp.importeRegular).toFixed(3)),2);
 							}
 			    });
 			   
@@ -1834,8 +1847,8 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 					var dia = rc.fechaInicial.getDate();
 					var mes = rc.fechaInicial.getMonth();
 					
-					var configuracion = Configuraciones.findOne();
-					var arregloComisiones = configuracion.arregloComisiones;
+					//var configuracion = Configuraciones.findOne();
+					//var arregloComisiones = configuracion.arregloComisiones;
 			    
 			    datos.comisiones = [];
 			    
@@ -1858,42 +1871,12 @@ Meteor.call('getListaCobranza', toPrint, function(error, response) {
 							    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, c.valor1);
 						    			}						    			
 					    		});
-					    		
-					    		/*
-if (i == 1)
-					    		{
-					    				comisiones.porcentaje 	= 15;
-					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 3);
-					    				
-					    		}		
-					    		else if (i == 2)
-					    		{
-					    				comisiones.porcentaje 	= 14;
-					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 4);
-					    				//comisiones.totalGral 		= sumaConComision;
-					    		}
-					    		else if (i == 3)
-					    		{
-					    				comisiones.porcentaje 	= 13;
-					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 5);
-					    				//comisiones.totalGral 		= sumaConComision;
-					    		}
-					    		else if (i == 4)
-					    		{
-					    				comisiones.porcentaje 	= 9;
-					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 6);
-					    				//comisiones.totalGral 		= sumaConComision;
-					    		}
-					    		else if (i == 5)
-					    		{
-					    				comisiones.porcentaje 	= 7;
-					    				comisiones.diaDepositar = new Date(rc.fechaInicial.getFullYear(),mes, 7);
-					    				//comisiones.totalGral 		= sumaConComision;
-					    		}
-*/
-					    		
+					    							    		
 					    		comisiones.totalGral 					= sumaConComision;
-					    		comisiones.comision 					= Number(parseFloat(sumaBonificacion * (comisiones.porcentaje/100)).toFixed(2));
+					    		//comisiones.comision 					= round(Number(parseFloat(sumaBonificacion * (comisiones.porcentaje/100)).toFixed(2)),2);
+					    		
+					    		comisiones.comision 					= arregloBonificaciones[i - 1];
+					    		
 					    		comisiones.comision 					= '$ ' + Number(comisiones.comision).format(2);
 					    		comisiones.totalConComision 	= '$ ' + Number(parseFloat(sumaConComision).toFixed(2)).format(2);
 					    		comisiones.totalSinComision		= '$ ' + Number(sumaSinComision).format(2);
@@ -1901,9 +1884,10 @@ if (i == 1)
 					    		comisiones.cargosMoratorios 	= '$ ' + Number(parseFloat(cargosMoratorios).toFixed(2));
 					    		comisiones.creditosPersonales	= '$' + Number(creditosPersonales).format(2);
 					    		
+					    		comisiones.aPagar 					= '$ ' + round(Number(parseFloat(sumaConComision + sumaSinComision + objeto.seguro + cargosMoratorios + creditosPersonales
+					    																													 - arregloBonificaciones[i - 1] ).toFixed(3)),2).format(2);
 					    		
-					    		comisiones.aPagar 					= '$ ' + Number(parseFloat(sumaConComision + sumaSinComision + objeto.seguro + cargosMoratorios + creditosPersonales
-					    																													 - (sumaBonificacion * (comisiones.porcentaje/100) )).toFixed(2)).format(2);
+					    		//round(Number(parseFloat(total).toFixed(3)),2); 
 					    		
 					    		comisiones.porcentaje				= comisiones.porcentaje + '%';
 									
@@ -1928,16 +1912,18 @@ if (i == 1)
 					    		});
 					    		
 					    		comisiones.totalGral 					= sumaConComision;
-					    		comisiones.comision 					= Number(parseFloat(sumaBonificacion * (comisiones.porcentaje/100)));
+					    		//comisiones.comision 					= Number(parseFloat(sumaBonificacion * (comisiones.porcentaje/100)));
+					    		comisiones.comision 					= arregloBonificaciones[i - 1];
 					    		comisiones.comision 					= '$ ' + Number(comisiones.comision).format(2);
 					    		comisiones.totalConComision 	= '$ ' + Number(parseFloat(sumaConComision).toFixed(2)).format(2);
 					    		comisiones.totalSinComision		= '$ ' + Number(sumaSinComision).format(2);
 					    		comisiones.seguro							= '$ ' + Number(objeto.seguro).format(2);
 					    		comisiones.cargosMoratorios 	= '$ ' + Number(parseFloat(cargosMoratorios).toFixed(2)).format(2);
-					    		comisiones.creditosPersonales	= '$' + Number(creditosPersonales).format(2);
+					    		comisiones.creditosPersonales	= '$'  + Number(creditosPersonales).format(2);
  					    		
-					    		comisiones.aPagar 						= '$ ' + Number(parseFloat(sumaConComision + sumaSinComision + objeto.seguro + cargosMoratorios + creditosPersonales
-					    																													 - (sumaBonificacion * (comisiones.porcentaje/100) )).toFixed(2)).format(2);
+ 					    		
+					    		comisiones.aPagar 						= '$ ' + round(Number(parseFloat(sumaConComision + sumaSinComision + objeto.seguro + cargosMoratorios + creditosPersonales
+					    																													 - arregloBonificaciones[i - 1] ).toFixed(3)),2).format(2);
 					    		
 					    		comisiones.porcentaje					= comisiones.porcentaje + '%';
 									
@@ -1946,6 +1932,7 @@ if (i == 1)
 				    	} 
 				    	
 			    }
+			    
 			    
 					loading(true);
 					Meteor.call('report', {
@@ -2247,6 +2234,8 @@ if (i == 1)
   this.imprimirVales = function(objeto)
   {
 			
+			//console.log(objeto);
+			
 			var numCorteMayor = 0;
 			var fechaPago = "";
 			_.each(objeto.arreglo, function(corte){
@@ -2257,15 +2246,6 @@ if (i == 1)
 					}	
 			});
 			
-			//var fechaPago = objeto.arreglo[objeto.arreglo.length - 1].fechaPago;
-			
-			//console.log(numCorteMayor);
-			//console.log(fechaPago);
-			//console.log(objeto);
-			
-			//return;
-			
-							
       var dia  = rc.fechaInicial.getDate();
       var mes  = rc.fechaInicial.getMonth();
       var anio = rc.fechaInicial.getFullYear();
@@ -2273,14 +2253,44 @@ if (i == 1)
       var diaC  = fechaPago.getDate();
       var mesC  = fechaPago.getMonth() + 1;
       var anioC = fechaPago.getFullYear();
-      
-      //console.log("DisT:", objeto.distribuidor._id);
-      //console.log("Fecha:", dia, mes, anio);
-      
-      
-      //return;
-      
+            
       var url = $state.href("anon.ticketValesDistribuidor", { distribuidor_id: objeto.distribuidor._id, dia: dia, mes: mes, anio: anio, diaC: diaC, mesC: mesC, anioC: anioC }, { newTab: true });
+		  window.open(url, '_blank');
+      
+  }
+  
+  this.imprimirTicketsVales = function(objeto)
+  {
+			
+			//console.log(objeto);
+			
+			var distribuidorId = objeto.planPagos[0].cliente_id;
+			
+			//console.log(distribuidorId);
+			
+			var fechaPago = new Date(objeto.fechaPago);
+			
+/*
+			var numCorteMayor = 0;
+			var fechaPago = "";
+			_.each(objeto.arreglo, function(corte){
+					if (corte.numeroCorte >  numCorteMayor)
+					{
+							fechaPago = corte.fechaPago;
+							numCorteMayor = corte.numeroCorte;
+					}	
+			});
+*/
+			
+      var dia  = rc.fechaInicial.getDate();
+      var mes  = rc.fechaInicial.getMonth();
+      var anio = rc.fechaInicial.getFullYear();
+      
+      var diaC  = fechaPago.getDate();
+      var mesC  = fechaPago.getMonth() + 1;
+      var anioC = fechaPago.getFullYear();
+            
+      var url = $state.href("anon.ticketValesDistribuidor", { distribuidor_id: distribuidorId, dia: dia, mes: mes, anio: anio, diaC: diaC, mesC: mesC, anioC: anioC }, { newTab: true });
 		  window.open(url, '_blank');
       
   }

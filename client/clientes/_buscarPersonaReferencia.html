@@ -15,11 +15,11 @@
 				<div class="user well" title="{{persona.nombreCompleto}}" ng-repeat="persona in cli.referenciasPersonalesHelper" style="width: 100%">
 					<div class="row">
 						<div class="col-sm-12">
-							<a href="javascript:void(0);"> {{persona.nombreCompleto}}</a> 
+							<a href="javascript:void(0);" ng-click="cli.AgregarReferencia(persona);cli.buscando = false"> {{persona.nombreCompleto}}</a> 
 
 							<a href="javascript:void(0);"> {{persona.tipoPersona}}</a> 
 							
-							<a href="javascript:void(0);" ng-click="cli.AgregarReferencia(persona);cli.buscando = false"> Agregar</a>
+<!-- 							<a href="javascript:void(0);" ng-click="cli.AgregarReferencia(persona);cli.buscando = false"> Agregar</a> -->
 							
 							<div class="btn-group btn-xs btn-group-justified">
 								<a href="javascript:void(0);" class="btn btn-default" ng-repeat="relacion in persona.relaciones"><span ng-show="relacion.tipoPersona=='Aval'">{{relacion.credito}}</span>
