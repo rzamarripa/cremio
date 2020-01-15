@@ -3,16 +3,16 @@
 	<table class="table table-bordered">
 	<thead>
 		<tr>
-			<th class="text-center" width="5%">No.</th>
+			<th class="text-center" width="3%">No.</th>
 			<th class="text-center" width="10%"><div class="text-center">No. Dist.</div></th>
 			<th class="text-left" width="20%"><div class="text-center">Nombre del Distribuidor</div></th>
 			<th class="text-left" width="20%"><div class="text-center">Aval</div></th>
 			<th class="text-center" width="8%"><div class="text-center">Límite Solicitado</div></th>
-			<th class="text-center" width="10%"><div class="text-center">Fecha Solicitud</div></th>
-			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
+			<th class="text-center" width="8%"><div class="text-center">Fecha Solicitud</div></th>
+			<th class="text-center" width="8%"><div class="text-center">Fecha Verificación</div></th>
 			<th class="text-center" width="5%"><div class="text-center">Turno</div></th>
-			<th class="text-center" width="5%"><div class="text-center">Verificar</div></th>
-			<th class="text-center" width="8%"><div class="text-center">Acción</div></th>
+			<th class="text-center" width="8%"><div class="text-center">Verificar</div></th>
+			<th class="text-center" width="9%"><div class="text-center">Acción</div></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -26,6 +26,12 @@
 	    <td class="text-center">{{distribuidor.profile.fechaVerificacion | date: "dd/MM/yyyy"}} </td>
 	    <td class="text-center">{{distribuidor.profile.turno}} {{distribuidor.profile.hora | date:'H:mm'}}</td>
 	    <td>
+		    	<a class="btn btn-xs btn-primary" ui-sref="root.verificacion({id : distribuidor._id, verificacion_id: '-1', tipo: 'V', persona:1})"><i class="fa fa-user"></i></a>
+		    	<a ng-if = "distribuidor.profile.avales_ids.length > 0 " 
+			    	 class="btn btn-xs btn-primary" ui-sref="root.verificacion({id : distribuidor._id, verificacion_id: '-1', tipo: 'V', persona:2})"><i class="fa fa-group"></i>
+			    </a>
+<!--
+		    	
 			    <div class="text-center">
 				    <div class="btn-group">
 						  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -40,6 +46,7 @@
 						  </ul>
 						</div>
 			    </div>				    
+-->
 			</td>
 	    <td class="text-center">
 		    	<button type="button" class="btn btn-xs btn-primary" ng-click="pver.mostrarEvaluacionD(distribuidor._id, distribuidor.verificacionesHechas)"><i class="fa fa-check"></i></button>

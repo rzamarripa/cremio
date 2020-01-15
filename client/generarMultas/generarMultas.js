@@ -132,6 +132,20 @@ angular.module("creditoMio")
             }
       }); 
 	};
+	
+	this.crearBitacoraLimiteCredito = function(form)
+	{
+			if(form.$invalid){
+		        toastr.error('Error .');
+		        return;
+		  }
+			Meteor.call('crearBitacoraLC', function(error, result){       
+            if (result)
+            {
+	            	toastr.success("Bitacora Creada");
+            }
+      }); 
+	};
 
 	
 };

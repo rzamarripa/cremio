@@ -1,0 +1,174 @@
+<div class="tab-pane">
+	<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+			<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+				<header role="heading">
+					<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+					<h2>Vales Activos</h2>
+					<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+				</header>
+				<div class="no-padding" role="content">
+					<div class="widget-body">
+						<!-- content -->
+								<div class="row	padding-10 ">
+									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+											<div class="table-responsive">
+												<table class="table table-striped table-bordered table-condensed font-xs">
+													<thead class="thead">
+														<tr>
+															<th class="text-center" width="5%">No.</th>	
+															<th class="text-center" width="5%">Crédito</th>
+															<th class="text-center" width="10%">Tipo</th>
+															<th class="text-center" width="5%">Tasa</th>
+															<th class="text-center" width="2%">Aval</th>
+															<th class="text-center" width="10%">Fecha Solicitud</th>
+															<th class="text-center" width="10%">Fecha Entrega</th>
+															<th class="text-center" width="10%">Capital Solicitado</th>
+															<th class="text-center" width="10%">Adeudo Inicial</th>
+															<th class="text-center" width="10%">Saldo Actual</th>
+															<th class="text-danger text-center" width="10%">Saldo C.M.</th>
+															<th class="text-center" width="8%">Acciones</th>
+															<th ng-show="dis.openModal"></th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr ng-repeat="credito in dis.historialCreditos">
+															
+															<td class="text-center">{{$index + 1}}</td>	
+															<td class="text-center">{{credito.folio}}</td>	
+															<td class="text-left">{{credito.tipoCredito}}</td>	
+															<td class="text-center">{{credito.tasa}}%</td>
+															<td class="text-center">{{credito.tieneAval}}</td>	
+															<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
+															<td class="text-center">{{credito.fechaEntrega |  date:"dd-MM-yyyy" }}</td>
+															<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
+															<td class="text-right">{{credito.adeudoInicial | currency}}</td>
+															<td class="text-right">{{credito.saldoActual | currency}}</td>
+															<td class="text-danger text-right">{{credito.saldoMultas | currency}}</td>
+															<td>
+																<div class="text-center">
+																		<button type="button" class="btn btn-xs btn-link" ng-click="dis.verPagos(credito)">Ver Pagos</button>
+																</div>						
+															</td>
+															<!-- modal -->
+															<!-- (////////////////////////////////////////////////////////////////////////) -->
+															<td ng-show="dis.openModal" >
+												  			<div class="modal fade" id="modalpagos"	class="modal fade bs-example-modal-lg" tabindex="-1" 	role="dialog" aria-labelledby="myLargeModalLabel">
+													  			<div class="modal-dialog modal-lg" role="document">
+													    			<div class="modal-content">
+																			<div class="modal-header">
+																				<h4 class="modal-title">Movimientos en Cuenta</h4>
+																			</div>
+																			<div class="modal-body">
+																				<div class="table-responsive">
+																					<table class="table table-striped table-bordered table-condensed">
+																							<thead class="thead">
+																								<tr>
+																									<th class="text-center" width="7%">Recibo No.</th>
+																									<th class="text-center" width="20%">Movimiento</th>
+																									<th class="text-center" width="10%">Fecha</th>
+																									<th class="text-center" width="10%">Cargo</th>
+																									<th class="text-center" width="10%">Abono</th>
+																									<th class="text-center" width="10%">Saldo</th>
+																									<th class="text-center" width="15%">Nota de crédito</th>
+																									<th class="text-center" width="10%">Saldo Recibo</th>
+																									<th class="text-center" width="10%">FP</th>
+																									
+																								</tr>
+																							</thead>
+																							<tbody style="font-size: x-small">
+																								<tr  ng-repeat="credito in dis.historial" 
+																								ng-class="(credito.numeroPago % 2 == 0 ) ? 'active in' : 'info' ">
+																									<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{credito.cantidad}}</td>	
+																									<td class="text-center">{{credito.movimiento}}</td>	
+																									<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
+																									<td class="text-right">{{credito.cargo | currency}}</td>
+																									<td class="text-right">{{credito.pago | currency}}</td>
+																									<td class="text-right">{{credito.saldo | currency}}</td>
+																									<td class="text-right">{{credito.notaCredito | currency}}</td>
+																									<td class="text-right">{{credito.saldoActualizado | currency}}</td>
+																									<td class="text-right" >{{credito.tipoIngreso}}</td>
+																								</tr>
+																							</tbody>
+																						</table>
+																				</div>
+																				<div class="row">	
+																					<div class="col-sm-6">
+																						<table class="table">
+																							<tbody>
+																								<tr>
+																									<td>	
+																										Deuda Inicial 
+																									</td>
+																									<td style="text-align: right">
+																										{{dis.credito.adeudoInicial | currency}}
+																									</td>		
+																								</tr>		
+																								<tr>
+																									<td>	
+																										Total cargos moratorios generadas 
+																									</td>
+																									<td style="text-align: right">
+																										{{dis.saldoMultas | currency}}
+																									</td>
+																								</tr>
+																								<tr>
+																									<td>	
+																										Abonos recibidos 
+																									</td>
+																									<td style="text-align: right">
+																										{{dis.abonosRecibos | currency}}
+																									</td>
+																								</tr>	
+																								<tr>
+																									<td>	
+																										Abono cargos moratorios 
+																									</td>
+																									<td style="text-align: right">
+																										{{dis.abonosCargorMoratorios | currency}}
+																									</td>
+																								</tr>
+																								<tr>
+																									<td>	
+																										Nota de Créditos 
+																									</td>
+																									<td style="text-align: right">
+																										{{dis.sumaNotaCredito | currency}}
+																									</td>
+																								</tr>
+																								<tr>
+																									<td>	
+																										Saldo general 
+																									</td>
+																									<td style="text-align: right">
+																										{{dis.saldoGeneral | currency}}
+																									</td>
+																								</tr>
+																							</tbody>	
+																						</table>	
+																					</div>		
+																				</div>	
+																					
+																			</div>
+																			<div class="modal-footer">
+																			    <button ng-click="dis.imprimirHistorial(dis.historial,dis.objeto,dis.credito, dis.saldoMultas, dis.abonosRecibos, dis.abonosCargorMoratorios, dis.saldo)" type="button" class="btn btn-success" >Imprimir Tabla</button>
+																			    <button ng-click="dis.cerrarModal()" type="button" class="btn btn-info left-panel" data-dismiss="modal">Cerrar</button>
+																			 </div>
+																		</div>
+													  			</div>	
+																</div>
+															</td>
+														</tr>
+													</tbody>
+												</table>	
+											</div>	
+									</div>
+								</div>
+						<!-- end content -->
+					</div>
+				</div>
+			<!-- end widget -->
+			</div>
+	</article>
+	
+						
+</div>	

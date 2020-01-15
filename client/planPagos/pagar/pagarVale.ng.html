@@ -593,13 +593,13 @@
 						</thead>
 						<tbody>
 					    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in pagV.arregloCortes" ng-class="objeto.classPago">
-						    <td class="text-center" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
-						    <td class="text-center" style="font-size: smaller" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - {{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
-						    <td class="text-center" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</td>
-						    <td class="text-right" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.importe | currency}}</td>
-						    <td class="text-right" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
-						    <td class="text-right" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
-						    <td class="text-right" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}</td>
+						    <td class="text-center" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
+						    <td class="text-center" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" style="font-size: smaller" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - {{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
+						    <td class="text-center" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</td>
+						    <td class="text-right" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.importe | currency}}</td>
+						    <td class="text-right" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
+						    <td class="text-right" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
+						    <td class="text-right" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="pagV.selCorte(objeto,$index + 1)">{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}</td>
 					    </tr>
 					    
 					    <tr ng-repeat-end ng-if="pagV.isSelected($index + 1) && pagV.ban">

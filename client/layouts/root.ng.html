@@ -1,44 +1,59 @@
 <header id="header" style="height: 55px;">
-	<div class="pull-right" style="width: 100%">
-    <div id="hide-menu" class="btn-header pull-right">
-      <span>
-        <a toggle-menu title="Collapse Menu">
-          <i class="fa fa-reorder"></i>
-        </a>
-      </span>
-    </div>
-<!--     <div id="logo-group"> -->
+	
+			<div class="pull-right" style="width: 100%">
+		    <div id="hide-menu" class="btn-header pull-right">
+		      <span>
+		        <a toggle-menu title="Collapse Menu">
+		          <i class="fa fa-reorder"></i>
+		        </a>
+		      </span>
+		    </div>
+		    <div class="btn-header pull-right">
+			      <span>
+			        <a ui-sref="anon.logout" title="Cerrar Sesión">
+			          <i class="fa fa-sign-{{ro.isLoggedIn() ? 'out' : 'in'}}"></i>
+			        </a>
+			      </span>
+			  </div>
+		    
+		    <div class="header-search pull-right hidden-xs hidden-sm ng-pristine ng-valid">
+			    <form class="header-search pull-right">
+				    <div class="form-group" style="width: 800px; margin-top: 9px;">
+							<div ng-include=" 'client/layouts/_buscarCliente.html' " ng-show = "currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora' && currentUser.username != 'admin'" ></div>
+				    </div>	    
+					</form>
+					
+					
+				</div>
+				
+				<div id="logo-group" class="header-search pull-left hidden-xs hidden-sm ng-pristine ng-valid">
+					<span > <img src="img/logoCremio.png" alt="SmartAdmin" style="margin-top: -5px; margin-right: 15px; width: 100px;height: 60px;"> </span>
+					<span> <img src="img/LogoBigVale.jpg" alt="SmartAdmin" style="margin-top: -5px;width: 120px;height: 55px;"> </span>
+				</div>		
+				
+			</div>	
 
-    <span > <img src="img/logoCremio.png" alt="SmartAdmin" style="margin-top: -5px; margin-right: 15px; width: 100px;height: 60px;"> </span>
-    <span> <img src="img/LogoBigVale.jpg" alt="SmartAdmin" style="margin-top: -5px;width: 120px;height: 55px;"> </span>
-
-<!--   	</div> -->
-		
-		
-    <div class="btn-header pull-right">
-      <span>
-        <a ui-sref="anon.logout" title="Cerrar Sesión">
-          <i class="fa fa-sign-{{ro.isLoggedIn() ? 'out' : 'in'}}"></i>
-        </a>
-      </span>
-    </div>
-
+			
 <!--
-    <div id="fullscreen" class="btn-header transparent pull-right">
-      <span>
-        <a full-screen title="Full Screen">
-          <i class="fa fa-arrows-alt"></i>
-        </a>
-      </span>
-    </div>
+			<div class="header-search pull-right hidden-xs hidden-sm ng-pristine ng-valid">
+		    <form class="header-search pull-right">
+			    <div class="form-group" style="width: 600px; margin-top: 9px;">
+						<div ng-include=" 'client/layouts/_buscarCliente.html' " ng-show = "currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora' && currentUser.username != 'admin'" ></div>
+			    </div>	    
+				</form>
+			</div>  
 -->
-    
-    <form class="header-search pull-right">
-	    <div class="form-group" style="width: 800px; margin-top: 9px;">
-				<div ng-include=" 'client/layouts/_buscarCliente.html' " ng-show = "currentUser.roles[0] != 'Distribuidor' && currentUser.roles[0] != 'Promotora' && currentUser.username != 'admin'" ></div>
-	    </div>	    
-		</form>
-  </div>
+<!--
+	    <div class="btn-header pull-right">
+	      <span>
+	        <a ui-sref="anon.logout" title="Cerrar Sesión">
+	          <i class="fa fa-sign-{{ro.isLoggedIn() ? 'out' : 'in'}}"></i>
+	        </a>
+	      </span>
+	    </div>
+-->
+	
+	</div>	
 </header>
 
 <aside id="left-panel">

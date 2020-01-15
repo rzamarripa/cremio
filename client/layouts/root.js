@@ -86,11 +86,6 @@ angular.module("creditoMio")
 					if (sucursal == undefined) return;
 					
 					var clave = sucursal.clave;
-					
-					//console.log(clave);
-					//var clave = rc.getReactively("sucursal.clave");
-		
-					//armar el numero
 					var numero = parseInt(rc.nc);
 		
 					if (isNaN(numero) == false) //es Número
@@ -118,7 +113,6 @@ angular.module("creditoMio")
 			  		}	 
 		
 					}			
-					
 					
 					if(rc.getReactively("buscar.numeroCliente").length > 0 )
 					{

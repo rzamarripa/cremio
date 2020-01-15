@@ -2,25 +2,18 @@ Meteor.methods({
 
   getReferencias: function (idReferencia) {
 			var referencia = Personas.findOne(idReferencia);
-			//console.log("esta es la referencia",referencia)
 			return referencia;
 	},
 	getReferenciasP: function (idReferencia) {
 			var referencia = ReferenciasPersonales.findOne(idReferencia);
-			//console.log("esta es la referencia",referencia)
 			return referencia;
 	},
 	getDocs: function (idReferencia) {
 			var referencia = Documentos.findOne(idReferencia);
-			//console.log("esta es la referencia",referencia)
 			return referencia;
 	},
  	obAvales: function (idReferencia) {
 			var aval = Avales.findOne(idReferencia);
-			//console.log(aval,"avales server")
-			
-			
-				
 					aval.profile.nacionalidadAval = Nacionalidades.findOne(aval.profile.nacionalidad_id);
 					aval.profile.nacionalidad = aval.profile.nacionalidadAval.nombre
 					aval.profile.coloniaAval = Colonias.findOne(aval.profile.colonia_id);
@@ -35,10 +28,6 @@ Meteor.methods({
 					aval.profile.ciudad = aval.profile.ciudadAval.nombre
 					aval.profile.sucursalesAval = Sucursales.findOne(aval.profile.sucursal_id);
 					aval.profile.sucursal = aval.profile.sucursalesAval.nombre
-					
-
-				
-				
 			return aval;
 	},
  	findSomeShit: function (collection, find, findOne){
@@ -47,7 +36,7 @@ Meteor.methods({
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   getFicha: function (objeto,referencia, tipo) {
-  	//console.log(objeto.referencias,"FICHA")
+
   	if (objeto.numeroDistribuidor) {
   		objeto.numeroCliente = objeto.numeroDistribuidor
   	}
@@ -256,7 +245,7 @@ Meteor.methods({
 				
   },
   getFichaDistribuidor: function (objeto,referencia, tipo) {
-  	//console.log(objeto.referencias,"FICHA")
+
   	if (objeto.numeroDistribuidor) {
   		objeto.numeroCliente = objeto.numeroDistribuidor
   	}
@@ -501,7 +490,6 @@ Meteor.methods({
 				return "";
 		}});
 		
-		//console.log(id);
 		var aval = Avales.findOne(id);
 		
 		var objeto = aval.profile;
@@ -667,7 +655,6 @@ var referencia ≈ [];
 
   getRecibos: function (objeto, tipo) {
 	
-		//console.log(objeto,"planPagos")
 		const formatCurrency = require('format-currency')
 		var fs = require('fs');
     var Docxtemplater = require('docxtemplater');
@@ -768,9 +755,7 @@ var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
     return res.wait();
 		
   },
-  getCreditoReporte: function (objeto,credito,avales,total) {
-    	//console.log(total,"total")
-	
+  getCreditoReporte: function (objeto,credito,avales,total) {	
 		var fs = require('fs');
     var Docxtemplater = require('docxtemplater');
 		var JSZip = require('jszip');
@@ -818,8 +803,6 @@ var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
 	 	const formatCurrency = require('format-currency')
 	 	 	_.each(objeto,function(item){
 	 	 		
-	 	 		//console.log(item,"Credito")
-	 	 		
 	 	 		//item.fechaLimite = item.fechaLimite.getDate()+'-'+(item.fechaLimite.getMonth()+1)+'-'+item.fechaLimite.getFullYear();
 	 	 		 //if (item.fechaLimite.length < 2) item.fechaLimite = '0' + item.fechaLimite;
 	 	 		   item.cargo = parseFloat(item.cargo.toFixed(2).toLocaleString())
@@ -851,9 +834,6 @@ var bitmap = fs.readFileSync(produccionSalida+"RECIBOSSalida.docx");
 	 	 		    	mes = "0" + mes;
 	 	 		    }
 	 	 		    item.fechaLimite = dia+ "-" + mes + "-" + anio
-
-	 	 		    //console.log(dia,"el dia",mes,"el mes",item.fechaLimite,"la fecha")
-
 	 	 	});
 	 	 	credito.capitalSolicitado.toLocaleString()
 	 	 	var length = objeto.length
@@ -1390,7 +1370,6 @@ if (pp.sumatoria) {pp.sumatoria = parseFloat(pp.sumatoria.toFixed(2))}
 				
 				return diaSemana;		
 		}
-
 		
     var fechaVigencia = formatDate(vigenciaFecha);
     contrato.capitalSolicitado = formatCurrency(contrato.capitalSolicitado);
@@ -2331,13 +2310,6 @@ fs.writeFileSync(produccionSalida+"LISTACOBRANZASalida.docx",buf);
 		});
 		
 		//Totales
-		/*
-console.log(credito.adeudoInicial);
-		console.log(saldoMultas);
-		console.log(abonosRecibos);
-		console.log(abonosCargorMoratorios);
-		console.log(saldo);
-*/
 		credito.adeudoInicial 		= parseFloat(credito.adeudoInicial.toFixed(2));
 		credito.totalSaldo 				= parseFloat(credito.adeudoInicial - abonosRecibos).toFixed(2);
 		credito.saldoMultas 			= parseFloat(saldoMultas - abonosCargorMoratorios).toFixed(2);
@@ -2696,15 +2668,6 @@ console.log(credito.adeudoInicial);
 		var ancho = 400;
 		var largo	= 600;
 		
-		/*
-if (nombre == 'CREDENCIAL DE ELECTOR REVERSO' || nombre == 'CREDENCIAL DE ELECTOR ANVERSO')
-		{
-				ancho = 100;
-				largo	= 200;
-				console.log("aqui")
-		}
-*/
-		
 		opts.getSize=function(img,tagValue, tagName) {
 		    return [ancho,largo];
 		}
@@ -2726,7 +2689,7 @@ if (nombre == 'CREDENCIAL DE ELECTOR REVERSO' || nombre == 'CREDENCIAL DE ELECTO
 			}
 			return "";
 		}});
-								//console.log(imagen,"IMAGEN MORRO")
+					//console.log(imagen,"IMAGEN MORRO")
 
 					var f = String(imagen);
 					//if (data:image/jpeg;base64) {}

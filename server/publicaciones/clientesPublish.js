@@ -22,6 +22,28 @@ Meteor.publish("buscarClientes",function(options){
 			}
 });
 
+Meteor.publish("buscarClientesNumero",function(options){
+	if (options != undefined)	
+			if(options.where.numeroCliente.length > 0){
+				let selector = {
+			  	"profile.numeroCliente": {$in: options.where.numeroCliente},
+			  	roles : {$in : ["Cliente", "Distribuidor"]}
+				}				
+				return Meteor.users.find(selector, { fields: {roles: 1,
+																											"profile.nombreCompleto"			: 1, 
+																											"profile.nombre"							: 1, 
+																											"profile.apellidoPaterno"			: 1, 
+																											"profile.apellidoMaterno"			: 1,
+																											"profile.particular"					: 1,
+																											"profile.celular"							: 1, 
+																											"profile.sexo"								: 1, 
+																											"profile.foto"								: 1,
+																											"profile.numeroCliente"				: 1,
+																											"profile.esAval"							: 1,
+																											"profile.sucursal_id"					: 1,
+																											roles													: 1 }}, options.options);	
+			}
+});
 
 Meteor.publish("buscarRootClientesDistribuidores",function(options){
 	if (options != undefined)

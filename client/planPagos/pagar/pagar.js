@@ -62,26 +62,6 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
   this.subscribe('pagos', () => {
     return [{ estatus: true }];
   });
-/*
-  this.subscribe('ocupaciones', () => {
-    return [{ estatus: true }];
-  });
-  this.subscribe('nacionalidades', () => {
-    return [{ estatus: true }];
-  });
-  this.subscribe('estadoCivil', () => {
-    return [{ estatus: true }];
-  });
-  this.subscribe('estados', () => {
-    return [{ estatus: true }];
-  });
-  this.subscribe('paises', () => {
-    return [{ estatus: true }];
-  });
-  this.subscribe('empresas', () => {
-    return [{ estatus: true }];
-  });
-*/
 
   this.subscribe('personas', () => {
     return [{}];
@@ -447,7 +427,9 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		  	toastr.warning("No hay nada que cobrar");
 		  	return;
 	  }
-	  
+
+	  $( "#cobrar" ).prop( "disabled", true );
+
 	  //Validar que sea completo el crédito a pagar    
 	  var tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id);
 	  if (tipoIngreso.nombre == "REFINANCIAMIENTO")
@@ -465,6 +447,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		  	if (CM > 0)
 		  	{
 			  	 toastr.warning("No es posible refinanciar con cargos moratorios");	
+			  	 $( "#cobrar" ).prop( "disabled", false );
 			  	 return;
 		  	}
 		  	
@@ -475,6 +458,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		  	if (rc.creditosAutorizados.length == 0)
 		  	{
 			  		toastr.warning("No existen créditos autorizados para liquidar los pagos");
+			  		$( "#cobrar" ).prop( "disabled", false );
 						return;
 		  	}
 				
@@ -491,12 +475,12 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		    if (!ban)
 		  	{
 			  		toastr.warning("El cliente no tiene al menos un crédito autorizado que pueda liquidar el crédito actual");
+			  		$( "#cobrar" ).prop( "disabled", false );
 						return;
 		  	}
 		  	rc.pagoR = pago;
 		  	//Abrir el modal de los creditos
 		  	$("#modalRefinanciamiento").modal('show');
-		  	
 		  	
 	  }
 	  else
@@ -510,6 +494,7 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 						if (nc.length == 0)
 						{
 								toastr.warning("El cliente no tiene notas de credito por aplicar");
+								$( "#cobrar" ).prop( "disabled", false );
 								return;					
 						}
 										
@@ -535,17 +520,18 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 				    
 				    if (fechaProximoPago == "Invalid Date")
 								fechaProximoPago = "";
-						
-				    	    
+										    	    
 				    if (nc.aplica == "RECIBO" &&  sePagaraCargo == true)
 				    {
 					    	toastr.warning("La nota de crédito es solo para recibos");
+					    	$( "#cobrar" ).prop( "disabled", false );
 								return;
 				    }
 				    
 				    if (nc.aplica == "CARGO MORATORIO" && sePagaraRecibo == true)
 				    {
 					    	toastr.warning("La nota de crédito es solo para cargos moratorios");
+					    	$( "#cobrar" ).prop( "disabled", false );
 								return;
 				    }					
 				}
@@ -589,9 +575,13 @@ function PagarPlanPagosCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
 		      if (!success) {
 			      
 		        toastr.error('Error al guardar.', success);
+		        $( "#cobrar" ).prop( "disabled", false );
 		        return;
 		      }
 		      loading(false);
+		      
+		      $( "#cobrar" ).prop( "disabled", false );
+		      
 		      toastr.success('Guardado correctamente.');
 		      rc.pago = {};
 		      rc.pago.totalPago = 0;
@@ -728,6 +718,7 @@ if(pago.descripcion=="Cargo Moratorio")
 	    																	cantidadEntregar, function(error, success) {
 	      if (!success) {
 	        toastr.error('Error al guardar.');
+	        $( "#cobrar" ).prop( "disabled", false );
 	        return;
 	      }
 	      //console.log("Entro a actualizar ");
@@ -738,6 +729,8 @@ if(pago.descripcion=="Cargo Moratorio")
 	      Creditos.update({_id: rc.creditoRefinanciar._id}, {$set: {esRefinanciado: true, refinanciar: rc.creditoRefinanciar.refinanciar}});
 	      
 	      toastr.success('Guardado correctamente.');
+	      $( "#cobrar" ).prop( "disabled", false );
+	      
 	      rc.pago = {};
 	      rc.pago.totalPago = 0;
 	      rc.pago.totalito = 0

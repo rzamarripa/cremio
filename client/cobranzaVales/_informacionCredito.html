@@ -15,14 +15,14 @@
 				</thead>
 				<tbody>
 			    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in cobv.arregloCortes" ng-class="objeto.classPago">
-				    <td class="text-center" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
-				    <td class="text-center" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
+				    <td class="text-center" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
+				    <td class="text-center" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
 					    																																 {{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
-				    <td class="text-center" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</td>
-				    <td class="text-right" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.importe | currency}}</td>
-				    <td class="text-right" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
-				    <td class="text-right" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
-				    <td class="text-right" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}</td>
+				    <td class="text-center" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</td>
+				    <td class="text-right" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.importe | currency}}</td>
+				    <td class="text-right" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
+				    <td class="text-right" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
+				    <td class="text-right" ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" ng-click="cobv.selCorte(objeto,$index + 1)">{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}</td>
 				    <td>
 					    <a href="#" ng-click="cobv.imprimirTicketsVales(objeto)" class="btn btn-xs btn-labeled btn-info"><i class="fa fa-print"></i></a>
 				    </td>

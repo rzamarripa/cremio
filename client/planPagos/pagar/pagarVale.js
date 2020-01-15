@@ -393,13 +393,22 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 								numeroCorte = pago.fechaLimite.getMonth() * 2;									
 								fechaCorteInicio = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() -1, 22);
 								fechaCorteFin		 = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth(), 06);	
-									
 						}	 
 						else	
 						{
-								numeroCorte = pago.fechaLimite.getMonth() * 2 - 1;
-								fechaCorteInicio = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() -1, 07);	
-								fechaCorteFin 	 = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() -1, 21);
+								var m = pago.fechaLimite.getMonth();
+								if (m == 0)
+								{
+										numeroCorte = 12 * 2 - 1;							
+										fechaCorteInicio = new Date(pago.fechaLimite.getFullYear(), 11, 07);	
+										fechaCorteFin 	 = new Date(pago.fechaLimite.getFullYear(), 11, 21);
+								}
+								else
+								{
+										numeroCorte = pago.fechaLimite.getMonth() * 2 - 1;							
+										fechaCorteInicio = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() - 1, 07);	
+										fechaCorteFin 	 = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() - 1, 21);
+								}							
 						}
 						
 						if (arreglo[numeroCorte] == undefined )
@@ -639,7 +648,6 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 						p.bonificacion 	= 0;
 						p.importepagado = 0;
 				}
-
 				//console.log(p.bonificacion);	
 				objeto.bonificacion += round(Number(p.bonificacion).toFixed(3),2);
 
@@ -674,7 +682,6 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 									sel.pagoSeleccionado = false;	
 		    });
 				if (corte.pagoSeleccionado){
-						
 						rc.pago.seguro 									+= rc.arregloPagosSeguro[i].seguro;
 						rc.arregloPagosSeguro[i].pagado = true;
 				}
@@ -686,9 +693,8 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 		
 		//Preguntar si hay anterirores para seleccionar todos los cortes pasados
 		
-		
     rc.pago.totalPago = Number(parseFloat(rc.pago.totalPago).toFixed(2));
-    rc.pago.aPagar =  Number(parseFloat(rc.pago.totalPago - rc.pago.bonificacion + rc.pago.cargosMoratorios + rc.pago.seguro).toFixed(2));	
+    rc.pago.aPagar 		=  Number(parseFloat(rc.pago.totalPago - rc.pago.bonificacion + rc.pago.cargosMoratorios + rc.pago.seguro).toFixed(2));	
 	}
 
 	//Este es la columna + -
@@ -763,19 +769,13 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 			    	
 			    	if (ban)
 			    	{
-				    	
-			    	
 			    			_.each(objeto.planPagos, function(p){
 				    				p.bonificacion = 0;
 				    		});	
-				    		
-				    		
 				    		var selSe 			= rc.arregloPagosSeguro.find(x => x.numeroCorte === objeto.numeroCorte);
 				    		//rc.pago.seguro 		-= selSe.seguro;
 								selSe.pagado 		= false;
-								
-								console.log("NO:", selSe);
-				    		
+								//console.log("NO:", selSe);				    		
 				    }		
 						else
 						{							
@@ -1255,11 +1255,13 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 	          	pago.verCargo = !pago.verCargo;
           }	
           
-          if (pago.pagoSeleccionado == true && pago.verCargo == false){
+          /*
+if (pago.pagoSeleccionado == true && pago.verCargo == false){
           		pago.pagoSeleccionado = false;
           		rc.pago.totalPago = rc.pago.totalPago - Number(parseFloat(pago.importepagado).toFixed(2));
 							pago.importepagado	= 0;
           }
+*/
           
 					if (pago.verCargo == true)
 					{
@@ -1309,7 +1311,8 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 			
 			rc.ocultarMultas = false;
 			
-			var arreglo = {};
+			var arreglo 			= {};
+			var arregloSeguro = {};
 			
 			if (valor){
 					rc.planPagosViejo = PlanPagos.find({importeRegular: {$gt: 0}},{sort : {fechaLimite : 1}}).fetch();
@@ -1419,14 +1422,6 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 							pago.beneficiario = {};
 							pago.beneficiario.nombreCompleto = "CRÉDITO PERSONAL";
 					}
-	        /*
-
-	        
-	        var comision = 0;
-	      	comision = calculaBonificacion(pago.fechaLimite, configuraciones.arregloComisiones);
-	      	pago.bonificacion = parseFloat(((pago.capital + pago.interes) * (comision / 100))).toFixed(2);
-	      	
-*/
 
 	        pago.saldo 					= Number(parseFloat(pago.importeRegular).toFixed(2));	        
 	        
@@ -1484,15 +1479,24 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 					if (pago.fechaLimite.getDate() >= 15)
 					{	
 							numeroCorte = pago.fechaLimite.getMonth() * 2;									
-							var fechaCorteInicio = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() -1, 22);
-							var fechaCorteFin		 = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth(), 06);	
-								
+							fechaCorteInicio = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() -1, 22);
+							fechaCorteFin		 = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth(), 06);	
 					}	 
 					else	
 					{
-							numeroCorte = pago.fechaLimite.getMonth() * 2 - 1;
-							var fechaCorteInicio = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() -1, 07);	
-							var fechaCorteFin 	 = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() -1, 21);
+							var m = pago.fechaLimite.getMonth();
+							if (m == 0)
+							{
+									numeroCorte = 12 * 2 - 1;							
+									fechaCorteInicio = new Date(pago.fechaLimite.getFullYear(), 11, 07);	
+									fechaCorteFin 	 = new Date(pago.fechaLimite.getFullYear(), 11, 21);
+							}
+							else
+							{
+									numeroCorte = pago.fechaLimite.getMonth() * 2 - 1;							
+									fechaCorteInicio = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() - 1, 07);	
+									fechaCorteFin 	 = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth() - 1, 21);
+							}							
 					}
 					
 					if (arreglo[numeroCorte] == undefined )
@@ -1512,7 +1516,6 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 
 							arreglo[numeroCorte].bonificacion 		   = Number(pago.bonificacion);
 							
-							//arreglo[numeroCorte].fechaCorte = fechaCorte;
 							arreglo[numeroCorte].planPagos 	= [];
 							arreglo[numeroCorte].planPagos.push(pago);
 					}
@@ -1527,11 +1530,37 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 							
 							arreglo[numeroCorte].planPagos.push(pago);
 					}
+					
+					//Arreglo Seguro Pagos Seguro
+					if (arregloSeguro[numeroCorte] == undefined )
+					{
+							arregloSeguro[numeroCorte] = {};
+							arregloSeguro[numeroCorte].numeroCorte 			= numeroCorte;
+							arregloSeguro[numeroCorte].anio	 						= pago.fechaLimite.getFullYear();
+							arregloSeguro[numeroCorte].fechaCorteInicio	= fechaCorteInicio;
+							arregloSeguro[numeroCorte].fechaCorteFin		= fechaCorteFin;
+							arregloSeguro[numeroCorte].seguro						= 0;
+							arregloSeguro[numeroCorte].pagado						= true;
+							
+							Meteor.call ("getPagoSeguro", rc.distribuidor_id, pago.fechaLimite.getFullYear(), numeroCorte,function(error,result){			
+									if (error){
+										 toastr.error('Error al obtener pagos: ', error.details);
+										 return
+									}
+									if (result)
+									{
+										  arregloSeguro[numeroCorte].seguro		= result;
+										  $scope.$apply();
+									}
+							});
+					}
 
 					
 			});
+			rc.arregloPagosSeguro = _.toArray(arregloSeguro);
+			rc.arregloCortes 			= _.toArray(arreglo);
 			
-			rc.arregloCortes = _.toArray(arreglo);
+			
 			rc.total = rc.subtotal + rc.cargosMoratorios;
 			rc.pago.aPagar =  Number(parseFloat(rc.pago.totalPago - rc.pago.bonificacion  + rc.pago.cargosMoratorios + rc.pago.seguro).toFixed(2));
 

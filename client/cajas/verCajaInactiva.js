@@ -70,14 +70,8 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 					        var todos_id = _.pluck(rc.cajaInactiva.movimientosCaja, "origen_id"); 
 					        rc.pagos_id = _.uniq(todos_id);
 					        
-						      //console.log("Carga:", Pagos.find().count());						        	
-
-					        
 					        _.each(rc.cajaInactiva.movimientosCaja, function(mov) {						        	
 						      
-						      	
-						        	console.log(mov);
-						        	
 						        	if (mov.origen == "Pago de Cliente" || mov.origen == "Pago de Distribuidor" || mov.origen == "Cancelación de pago")  
 						        	{
 							        		
@@ -88,7 +82,6 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 												  		if (result)
 															{
 																var p = result;
-																console.log(p);
 																Meteor.apply('getUsuario', [p.usuario_id], function(err, result) {
 														      if (err) {
 														        toastr.warning('Error al consultar los datos');
@@ -125,7 +118,6 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 												      
 												      if (result) {
 												        credito = result;
-												        //console.log(credito);
 												        if (credito != undefined)
 																{
 																	
@@ -134,7 +126,6 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
 															        toastr.warning('Error al consultar los datos');
 															      } else {
 															        var u = result;
-															        console.log(result);
 															        mov.numeroCliente = u.numeroCliente != undefined ? u.numeroCliente : u.numeroDistribuidor;
 																			mov.nombreCliente = u.nombreCompleto;
 																			$scope.$apply();
@@ -203,143 +194,6 @@ function verCajaInactivaCtrl($scope, $meteor, $reactive, $state, $stateParams, t
     cajeros: () => {
       return Meteor.users.find({ roles: ["Cajero"] });
     },
-/*
-    movimientosCaja: () => {
-      var ret = [];
-      var caj = Cajas.findOne({ _id: $stateParams.caja_id });  
-      //console.log(caj);    
-      //console.log("Caj:", this.getReactively('caja._id'));
-      
-      
-      if (rc.getReactively('caja._id')) {
-        var movimientos = MovimientosCajas.find({
-        $or: [
-	        { tipoMovimiento: 'Saldo Inicial'},
-          { tipoMovimiento: 'Pago' },
-          { tipoMovimiento: 'Retiro' },
-          { tipoMovimiento: 'Cancelación'}
-        ]
-      }, {sort: {createdAt: -1} }).fetch();
-      	
-      	//console.log("MoV:", movimientos);
-      	
-        var cj = Cajas.findOne(rc.caja._id);
-        var pagos_id = [];
-        _.each(movimientos, function(mov) {
-	        //console.log(mov);
-          var d = {};
-          
-          if (mov.origen == "Pago de Sistema") {
-	          	
-	          	pagos_id.push(mov.origen_id);
-	          	var p = Pagos.findOne(mov.origen_id);
-	          	if(p != undefined)
-	          	{
-		          		d.nombreCliente = p.usuario_id;
-		          }	
-	          	d.numeroCliente = "S/N";
-          }
-          
-          //console.log(mov.origen);
-          if (mov.origen == "Pago de Cliente" || mov.origen == "Pago de Distribuidor" || mov.origen == "Cancelación de pago") {
-            	pagos_id.push(mov.origen_id);
-							var p = Pagos.findOne(mov.origen_id);
-							if (p != undefined)
-							{
-								Meteor.apply('getUsuario', [p.usuario_id], function(err, result) {
-						      if (err) {						        
-						        d.nombreCliente = p.usuario_id;
-						        d.numeroCliente = "S/N";
-						        
-						      } else {
-						        var u = result;
-						        console.log(result);
-						        d.numeroCliente = u.numeroCliente != undefined ? u.numeroCliente : u.numeroDistribuidor;
-										d.nombreCliente = u.nombreCompleto;
-										$scope.$apply();
-						      }
-						    });
-							}
-							if (mov.origen == "Cancelación de pago")
-							{
-									d.clase = "bg-color-pinkDark";
-							}
-          }
-          
-          if (mov.origen == "Entrega de Credito" || mov.origen == "Entrega de Vale" || mov.origen == "Cancelación de Ent. de Crédito") {
-         
-	          	Meteor.apply('getCredito', [mov.origen_id], function(err, result) {
-						      if (err) {
-						        toastr.warning('Error al consultar los datos');
-						      } else {
-						        var credito = result;
-						        if (credito != undefined)
-										{
-							        Meteor.apply('getUsuario', [credito.cliente_id], function(err, result) {
-									      if (err) {
-									        toastr.warning('Error al consultar los datos');
-									      } else {
-									        var u = result;
-									        d.numeroCliente = u.numeroCliente;
-													d.nombreCliente = u.nombreCompleto;
-													$scope.$apply();
-									      }
-									    });
-									  }  
-									  if (mov.origen == "Cancelación de pago")
-											 d.clase = "bg-color-pinkDark";
-						      }
-						  });	
-						  if (mov.origen == "Cancelación de Ent. de Crédito")
-							   d.clase = "bg-color-pinkDark";
-							d.credito_id				= mov.origen_id;
-							d.movimientoCaja_id = mov._id;
-	          
-	        } 
-          
-          d.createdAt = mov.createdAt;
-          d.tipoMovimiento = mov.tipoMovimiento;
-          d.origen = mov.origen;
-                    
-          c = Cuentas.findOne(cj.cuenta[mov.cuenta_id].cuenta_id);
-         
-          if (c) {
-            d.cuenta = c.nombre;
-          }
-          d.monto = mov.monto;
-          d.pago = Pagos.findOne(mov.origen_id);
-          
-          //d.pago_id = mov.origen_id;
-          if (d.pago) {
-            d.multas 				= 0;
-            d.capital 			= 0;
-            d.intereses 		= 0;
-            d.iva 					= 0;
-            d.seguro 				= 0;
-            d.bonificacion 	= d.pago.bonificacion == undefined ? 0 : -d.pago.bonificacion;
-            d.seguroDis 		= d.pago.seguro == undefined ? 0 : d.pago.seguro;
-
-            if (d.pago.tipoIngreso_id != undefined)
-              d.tipoIngreso = TiposIngreso.findOne(d.pago.tipoIngreso_id);
-
-            _.each(d.pago.planPagos, function(plan) {
-              if (plan.descripcion == "Cargo Moratorio") {
-                d.multas += plan.totalPago;
-              }
-              d.capital += plan.pagoCapital;
-              d.intereses += plan.pagoInteres;
-              d.iva += plan.pagoIva;
-              d.seguro += plan.pagoSeguro;
-            });
-          }
-          ret.push(d)
-        });
-        rc.pagos_id = pagos_id;
-      }
-			
-      return ret
-    },
-*/
     traspasos: () => {
       var traspasos = Traspasos.find({}, { sort: { createdAt: -1 } }).fetch();
       _.each(traspasos, function(traspaso) {

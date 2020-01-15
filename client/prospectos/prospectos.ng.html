@@ -272,7 +272,7 @@
 					<tr>
 					<th width="5%"><div class="text-center">No.</div></th>
 						<th width="35%"><div class="text-center">Nombre</div></th>
-						<th width="30%"><div class="text-center">Motivo</div></th>
+						<th width="30%" ng-if = "currentUser.roles[0] != 'Distribuidor'"><div class="text-center">Motivo</div></th>
 						<th width="10%"><div class="text-center">Fecha</div></th>
 						<th width="10%">
 							<div class="text-center">
@@ -290,7 +290,7 @@
 			    <tr ng-repeat="objeto in pros.arreglo">
 			    <td>{{$index + 1 + pros.numeroPagina}} </td>
 				    <td>{{objeto.nombreCompleto}}</td>
-				    <td>{{objeto.motivo}}</td>
+				    <td ng-if = "currentUser.roles[0] != 'Distribuidor'">{{objeto.motivo}}</td>
 				    <td>{{objeto.fecha | date: "dd/MM/yyyy"}}</td>
 				    <td>
 					    <div class="text-center">

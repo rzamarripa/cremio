@@ -1,3 +1,4 @@
+
 <div class="row">
 	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-12">
 		<h1 class="alge-title txt-color-blueDark">
@@ -6,28 +7,44 @@
 		</h1>
 	</div>
 </div>
-<div class="row">
-	<div class="col-sm-8">
-			<a href="./clientesForm" class="btn btn-default btn-primary">
-					<i class="fa fa-plus"></i> Nuevo Cliente
-			</a>
-			<a href="./distribuidoresForm" class="btn btn-default btn-primary">
-				<i class="fa fa-plus"></i> Nuevo Distribuidor
-			</a>
+
+<div class="well">
+	<div class="row">
+		<div class="col-sm-6">
+				<a href="./clientesForm" class="btn btn-default btn-primary">
+						<i class="fa fa-plus"></i> Nuevo Cliente
+				</a>
+				<a href="./distribuidoresForm" class="btn btn-default btn-primary">
+					<i class="fa fa-plus"></i> Nuevo Distribuidor
+				</a>
+		</div>	
 	</div>	
 	<br>
-	<div class="col-sm-12">
-			<input class="form-control" type="text" placeholder="Buscar..." ng-model="lcli.buscar.nombre" capitalize> 
+	<div class="row">
+		<div class="col-sm-6">
+				<input class="form-control" type="text" placeholder="Buscar..." ng-model="lcli.buscar.nombre" capitalize> 
+		</div>
+		<div class="col-sm-1">
+			<label class="radio-inline">
+				<input type="radio" name="tipo" ng-model = "lcli.tipoBusqueda" value="numero">
+					Número	
+			</label>
+		</div>
+		<div class="col-sm-1">
+			<label class="radio-inline">
+				<input type="radio" name="tipo" ng-model = "lcli.tipoBusqueda" value="nombre">
+					Nombre	
+			</label>
+		</div>				
 	</div>
-</div>
+</div>		
 <div class="row">
 	<div class="col-lg-3" ng-repeat="cliente in lcli.clientes">
       <div class="contact-box center-version">
           <a ng-if="cliente.roles == 'Cliente'" href="/clientes/{{cliente._id}}" style="text-decoration: none;">
               <img alt="image" class="img-circle" ng-src="{{lcli.tieneFoto(cliente.profile.sexo, cliente.profile.foto)}}">
               <p class="lead font-xs text-center"><strong>{{cliente.profile.nombre}} <br/> {{cliente.profile.apellidoPaterno}} {{cliente.profile.apellidoMaterno}}</strong></p>
-              <div class="font-bold">{{cliente.username}}</div>
-              
+              <div class="font-bold">{{cliente.username}}</div>              
               <address class="font-xs">
                   <strong ng-if="cliente.roles[0] == 'Cliente'">Cliente <br></strong>
 	                <strong ng-if="cliente.roles[0] == 'Distribuidor'">Distribuidor <br></strong>

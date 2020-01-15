@@ -92,13 +92,19 @@
 									</thead>
 									<tbody>
 								    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in cobv.creditoCortes">
-									    <td class="text-center" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
-									    <td class="text-center" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
-										    																																				{{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
-									    <td class="text-right" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.capitalSolicitado | currency}}</td>
-									    <td class="text-right" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.adeudoInicial | currency}}</td>
-									    <td class="text-right" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.saldoActual | currency}}</td>
-									    <td class="text-right" ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
+									    <td class="text-center" 
+										    	ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
+									    <td class="text-center" 
+											    ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
+										    																										 {{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
+									    <td class="text-right" 
+										    	ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.capitalSolicitado | currency}}</td>
+									    <td class="text-right"
+											    ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.adeudoInicial | currency}}</td>
+									    <td class="text-right"
+											    ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.saldoActual | currency}}</td>
+									    <td class="text-right" 
+											    ng-click="cobv.selCorteCredito(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
 								    </tr>
 								    
 								    <tr ng-repeat-end ng-if="cobv.isSelectedCredito($index + 1) && cobv.banC">
@@ -121,7 +127,7 @@
 															</thead>
 															<tbody>
 																<tr ng-repeat="credito in objeto.creditosHistorial">								
-																	<td class="text-center">{{$index + 1}}</td>	
+																	<td class="text-center" >{{$index + 1}}</td>	
 																	<td class="text-center">{{credito.folio}}</td>	
 																	<td class="text-left">{{credito.beneficiario.nombreCompleto}}</td>
 																	<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>

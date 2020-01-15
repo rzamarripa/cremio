@@ -542,14 +542,13 @@ objetoEditar : () => {
 
 			
 							
-			objeto.profile.estaVerificado = false;
-			objeto.profile.estatusCredito = 0;
-			objeto.profile.estatusVerificacion = 0;
-      objeto.profile.estatusProspecto = 1;
-      objeto.profile.estatus = true;
-      objeto.profile.saldoCredito = objeto.profile.limiteCredito;
-      objeto.profile.limiteCredito = 25000;
-      
+			objeto.profile.estaVerificado 			= false;
+			objeto.profile.estatusCredito 			= 0;
+			objeto.profile.estatusVerificacion 	= 0;
+      objeto.profile.estatusProspecto 		= 1;
+      objeto.profile.estatus 							= true;
+      objeto.profile.saldoCredito 				= objeto.profile.limiteCredito;
+      objeto.profile.limiteCredito 				= 25000;
       
       objeto.profile.promotora_id	= Meteor.userId();
       objeto.profile.usuarioInserto = Meteor.userId();

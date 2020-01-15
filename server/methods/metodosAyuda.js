@@ -26,7 +26,7 @@ Meteor.methods({
         actual = fechaFea.year(anio).month(0).day(1).hour(fecha.getHours()).minute(fecha.getMinutes());
         entrada = moment(sucursal.horaEntrada).year(anio).month(0).day(1);
         salida = moment(sucursal.horaSalida).year(anio).month(0).day(1);
-        return !actual.isBefore(entrada) && actual.isBefore(salida)
+        return !actual.isBefore(entrada) && actual.isBefore(salida);
 	},
 	
 	//Quitar
@@ -50,6 +50,20 @@ Meteor.methods({
 		});
 
 			
+	},
+	
+	crearBitacoraLC: function () {
+			
+			Meteor.users.find({roles: ["Distribuidor"]}).forEach(function(d){
+						
+			   		BitacoraLimitesCredito.insert({distribuidor_id    : d._id,
+			                                    limiteCredito       : d.profile.limiteCredito,
+			                                    movimiento          : "Inicio",
+			                                    fecha               : d.createdAt,
+			                                    usuario_id          : "j2xov326GzXCqXSPM"});
+			});
+			
+			return true;
 	},
 	
 	getEmpresa: function (id) {

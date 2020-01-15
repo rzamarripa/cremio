@@ -26,8 +26,11 @@
 									<a ng-click="dis.crearCargoMoratorio(credito)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px">
 										 <i class="fa fa-plus"></i> C. Moratorio
 									</a>&nbsp;	
+									<a ui-sref="root.pagarValeLiquidar({objeto_id : dis.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero' && dis.estatusCaja == true" style="margin: 5px;">
+										<i class="fa fa-plus"></i> Liquidar V/C
+									</a>&nbsp;
 									<a ui-sref="root.pagarVale({objeto_id : dis.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero' && dis.estatusCaja == true" style="margin: 5px;">
-										<i class="fa fa-plus"></i> Nuevo Pago
+										<i class="fa fa-plus"></i> N. Pago
 									</a>&nbsp;
 									<a ng-click="dis.generarFicha(dis.objeto,dis.objeto._id)" class="btn btn-primary" ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-download" ></i> Ficha</a>
 									<a	ui-sref="root.editarDistribuidores({objeto_id : dis.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px;">
@@ -50,10 +53,14 @@
 										<h5>{{dis.objeto.profile.numeroCliente}} 
 											<a href="" ng-click="dis.imprimirContrato()" class="btn btn-info" ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-print"></i> Contrato </a>
 											<a href="" ng-click="dis.imprimirTablaAmortizacion()" class="btn btn-info" ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-print"></i> Tabla Amortización</a>
-												
 												<strong>(Miembro desde - {{dis.objeto.createdAt | date:"dd-MM-yyyy"}})</strong>
 										</h5>
-										<h6>Límite Crédito     : {{dis.objeto.profile.limiteCredito | currency}}</h6>
+										<h6 ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">
+												<a href="#" ng-click="dis.modalLimiteCredito()">Límite Crédito</a>    : {{dis.objeto.profile.limiteCredito | currency}}
+										</h6>
+										<h6 ng-if="currentUser.roles[0] == 'Distribuidor' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador'">
+												Límite Crédito	   : {{dis.objeto.profile.limiteCredito | currency}}
+										</h6>
 										<h6>Saldo  Crédito     : {{dis.objeto.profile.saldoCredito | currency}}</h6>
 								</div>		
 							</div>
@@ -61,12 +68,20 @@
 
 								<div class="widget-body">
 									<hr class="simple">
-
 									<ul id="myTab3" class="nav nav-tabs tabs-pull-right bordered" style="font-size: 13px;">
+										
 										<li class="active">
-											<a href="#creditosActivos" data-toggle="tab" ng-click="dis.creditosActivos()" ><span class="badge bg-color-blue txt-color-white pull-right">{{dis.creditos.length}}</span>Activos</a>
-											
+											<a href="#creditosActivos" data-toggle="tab" ng-click="dis.creditosActivos()" >
+												<span class="badge bg-color-blue txt-color-white pull-right">{{dis.creditos.length}}</span>Activos
+											</a>
 										</li>
+<!--
+										<li>
+											<a href="#valesActivos" data-toggle="tab">
+												<span class="badge bg-color-blue txt-color-white pull-right">{{dis.creditos.length}}</span>Vales Activos
+											</a>
+										</li>
+-->
 										<li class="pull-right" ng-if="currentUser.roles[0] != 'Distribuidor'">
 											<a href="#informacionCliente" data-toggle="tab" ng-click="dis.masInformacion(dis.objeto)">Información Distribuidor</a>
 										</li>
@@ -83,7 +98,7 @@
 											<a href="#rechazados" ng-click="dis.creRechazados()" data-toggle="tab"><span class="badge bg-color-red txt-color-white pull-right" style="padding-right: 12px;padding-left: 12px ">{{dis.creditosCancelados.length}}</span>Solicitudes Rechazadas</a>
 										</li>
 									</ul>
-
+									
 									<div class="tab-pane fade in active" id="creditosActivos" ng-show="dis.creditoAc"> 
 										<p>
 											<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
@@ -196,7 +211,7 @@
 																													<th class="text-center" width="10%" ng-if = "currentUser.roles[0] != 'Distribuidor'">Capital</th>
 																													<th class="text-center" width="10%" ng-if = "currentUser.roles[0] != 'Distribuidor'">Interés</th>
 																													<th class="text-center" width="5%" ng-if = "currentUser.roles[0] != 'Distribuidor'">IVA</th>
-																													<th class="text-center" width="10%">Seguro</th>
+																													<th class="text-center" width="10%" ng-if = "currentUser.roles[0] != 'Distribuidor'">Seguro</th>
 																													<th class="text-center" width="10%">Bonif.</th>
 																													<th class="text-center" width="15%">Pago</th>
 																													<th class="text-center" width="10%">Saldo</th>
@@ -211,7 +226,7 @@
 																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'" ng-if = "currentUser.roles[0] != 'Distribuidor'">{{pago.capital - pago.pagoCapital | currency}}</td>
 																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'" ng-if = "currentUser.roles[0] != 'Distribuidor'">{{pago.interes - pago.pagoInteres | currency}}</td>
 																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'" ng-if = "currentUser.roles[0] != 'Distribuidor'">{{pago.iva - pago.pagoIva | currency}}</td>
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.seguro - pago.pagoSeguro | currency}}</td>
+																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'" ng-if = "currentUser.roles[0] != 'Distribuidor'">{{pago.seguro - pago.pagoSeguro | currency}}</td>
 																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.bonificacion | currency}}</td>
 																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.cargo | currency}}</td>
 																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular -pago.bonificacion | currency}}</td>
@@ -308,6 +323,13 @@
 											</article>
 										</p>
 									</div>
+<!--
+									<div class="tab-pane fade" id="valesActivos"> 
+										<p>
+											<div ng-include = " 'client/distribuidores/_detalleValesActivos.html' "></div>
+										</p>	
+									</div>
+-->
 									<div class="tab-pane fade" id="informacionCliente" ng-show="dis.masInfo" ng-if="currentUser.roles[0] != 'Distribuidor'">
 										<p>
 											<div class="col-sm-12">
@@ -793,7 +815,6 @@
 												    	</div>
 													</div>
 												</div>
-												</div>	
 											</div>
 										</p>
 									</div>
@@ -1069,75 +1090,74 @@
 									<div class="tab-pane fade" id="solicitudes" ng-show="dis.solicitudesCre">
 										<p>
 									   	<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-														<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-															
-															<header role="heading">
-																<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-																<h2>Solicitudes de Vales</h2>
-												
-															<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-															<!-- widget div-->
-															<div class="no-padding" role="content">
-																<!-- widget edit box -->
-																<div class="widget-body">
-																	<!-- content -->
-																	<div class="row ">
-																		<br/>
-																		<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="pendiente in dis.creditosPendientes">
-																			<div class="panel panel-{{pendiente.estatusClase}}">
-																				<div class="panel-heading">
-																					<h3 class="panel-title" ng-if = "pendiente.tipo == 'vale'">Vales</h3>
-																					<h3 class="panel-title" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">Crédito P.</h3>
-																				</div>
-																				<div class="panel-body no-padding text-align-center">
-																					<div class="the-price">
-																						<h1>
-																							{{pendiente.capitalSolicitado|currency}}
-																						</h1>
-																						<h2>
-																							{{pendiente.duracionMeses}}
-																							<span class="subscript">/meses</span>
-																						</h2>
-																						<small>
-																							{{pendiente.beneficiado}}
-																						</small><br>
-																						<small>Fecha: {{pendiente.fechaSolicito | date:'dd/MM/yyyy'}}</small><br>
-																						<small>{{pendiente.beneficiario.nombreCompleto}}</small><br>
-																					</div>
-																				</div>
-																				
-																				<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">				
-																					<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id, op: 0})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'">Editar</a>
-																				</div>
-																				
-																				<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">						
-																					<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id, op: 1})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'">Editar</a>
-																				</div>
-																				
-																				<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">
-																					<a ng-click ="dis.mostrarModalValidaBeneficiario(pendiente.beneficiario.nombreCompleto, pendiente)" class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">Autorizar</a>
-																				</div>
-																				
-																				<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">
-																					<input class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Vale" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(pendiente)" />
-																				</div>
-																				
-																				<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">
-																					<input class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Crédito" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(pendiente)" />
-																				</div>
+												<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
+													
+													<header role="heading">
+														<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+														<h2>Solicitudes de Vales</h2>
+										
+													<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+													<!-- widget div-->
+													<div class="no-padding" role="content">
+														<!-- widget edit box -->
+														<div class="widget-body">
+															<!-- content -->
+															<div class="row ">
+																<br/>
+																<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="pendiente in dis.creditosPendientes">
+																	<div class="panel panel-{{pendiente.estatusClase}}">
+																		<div class="panel-heading">
+																			<h3 class="panel-title" ng-if = "pendiente.tipo == 'vale'">Vales</h3>
+																			<h3 class="panel-title" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">Crédito P.</h3>
+																		</div>
+																		<div class="panel-body no-padding text-align-center">
+																			<div class="the-price">
+																				<h1>
+																					{{pendiente.capitalSolicitado|currency}}
+																				</h1>
+																				<h2>
+																					{{pendiente.duracionMeses}}
+																					<span class="subscript">/meses</span>
+																				</h2>
+																				<small>
+																					{{pendiente.beneficiado}}
+																				</small><br>
+																				<small>Fecha: {{pendiente.fechaSolicito | date:'dd/MM/yyyy'}}</small><br>
+																				<small>{{pendiente.beneficiario.nombreCompleto}}</small><br>
 																			</div>
 																		</div>
 																		
+																		<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">				
+																			<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id, op: 0})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'">Editar</a>
+																		</div>
+																		
+																		<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">						
+																			<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id, op: 1})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'">Editar</a>
+																		</div>
+																		
+																		<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">
+																			<a ng-click ="dis.mostrarModalValidaBeneficiario(pendiente.beneficiario.nombreCompleto, pendiente)" class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">Autorizar</a>
+																		</div>
+																		
+																		<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">
+																			<input class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Vale" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(pendiente)" />
+																		</div>
+																		
+																		<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">
+																			<input class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Crédito" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(pendiente)" />
+																		</div>
 																	</div>
-																	<!-- end content -->
 																</div>
-												
+																
 															</div>
-															<!-- end widget div -->
+															<!-- end content -->
 														</div>
-														<!-- end widget -->
-												
-													</article>
+										
+													</div>
+													<!-- end widget div -->
+												</div>
+												<!-- end widget -->
+											</article>
 										</p>
 									</div>
 									<div class="tab-pane fade" id="aprobados" ng-show="dis.creditoApro">
@@ -1266,7 +1286,7 @@
 															</div>
 														<!-- end widget -->
 														</div>
-											</article>
+												</article>
 									   </div>
 										</p>
 									</div>
@@ -1837,6 +1857,53 @@
 			<div class="modal-footer">
 			    <button ng-click="dis.imprimirHistorial(dis.historial,dis.objeto,dis.credito)" type="button" class="btn btn-success" >Imprimir Tabla</button>
 			    <button ng-click="dis.cerrarModal()" type="button" class="btn btn-info left-panel" data-dismiss="modal">Cerrar</button>
+			 </div>
+		</div>
+	</div>	
+e</div>
+
+<div class="modal fade" id="modalLimiteCredito"	class="modal fade bs-example-modal-lg" tabindex="-1" 	role="dialog" aria-labelledby="myLargeModalLabel">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Bitácora de Límite de Crédito</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-sm-3">
+						<label>Límite de Crédito</label>
+						<input name="lCredito" type="number" min="0" class="form-control" placeholder="Limite credito" ng-model="dis.oldLimiteCredito" required="" >
+					</div>			
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-sm-12">						
+						<table class="table table-striped table-bordered table-condensed">
+							<thead class="thead">
+								<tr>
+									<th class="text-center" width="7%">No.</th>
+									<th class="text-center" width="20%">Límite Crédito</th>
+									<th class="text-center" width="10%">Movimiento</th>
+									<th class="text-center" width="10%">Fecha</th>
+									<th class="text-center" width="10%">Usuario</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr  ng-repeat="objeto in dis.bitacoraLimiteCredito">
+									<td class="text-center">{{$index + 1}}</td>
+									<td class="text-center">{{objeto.limiteCredito | currency}}</td>
+									<td class="text-center">{{objeto.movimiento}}</td>
+									<td class="text-center">{{objeto.fecha | date:"dd-MM-yyyy"}}</td>
+									<td class="text-center">{{objeto.usuario}}</td>
+								</tr>
+							</tbody>
+						</table>	
+					</div>	
+				</div>
+			</div>
+			<div class="modal-footer">
+			    <button ng-click="dis.actualizarLimiteCredito(dis.objeto)" type="button" class="btn btn-success" >Actualizar</button>
+			    <button type="button" class="btn btn-info left-panel" data-dismiss="modal">Cerrar</button>
 			 </div>
 		</div>
 	</div>	
