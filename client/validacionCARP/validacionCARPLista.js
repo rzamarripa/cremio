@@ -1,64 +1,75 @@
 angular.module("creditoMio")
-.controller("validacionCARPCtrl", validacionCARPCtrl);
- function validacionCARPCtrl($scope, $meteor, $reactive, $state, toastr){
- 	
- 	let rc = $reactive(this).attach($scope);
+	.controller("validacionCARPCtrl", validacionCARPCtrl);
+function validacionCARPCtrl($scope, $meteor, $reactive, $state, toastr) {
 
-  this.objeto = {}; 
-  this.buscar = {};
-  this.buscar.nombre = "";
-  
-  rc.personas = [];
-  
-  window.rc = rc;
-  	
-	this.buscarPersona = function(nombre){
-			if(nombre.length > 4){
-					Meteor.call('getPersonas', nombre, function(error, result) {           
-	          if (result)
-	          {
-	              //console.log("Personas:", result);
-								rc.personas = [];
-								_.each(result.clientes, function(cliente){
-										cliente.tipoPersona = "cliente"; 
-										rc.personas.push(cliente);
-								});
-								_.each(result.distribuidores, function(distribuidor){
-									  distribuidor.tipoPersona = "distribuidor";
-										rc.personas.push(distribuidor);
-								});
-								_.each(result.avales, function(aval){
-										aval.tipoPersona = "aval";
-										rc.personas.push(aval);
-								});
-								_.each(result.referenciasPersonales, function(referenciaPersonal){
-										referenciaPersonal.tipoPersona = "referenciaPersonal";
-										rc.personas.push(referenciaPersonal);
-								});
-								
-	              $scope.$apply();
-	          }
-	        
-					}); 	
-			} else { rc.personas = [];}
+	let rc = $reactive(this).attach($scope);
+
+	this.objeto = {};
+	this.buscar = {};
+	this.buscar.nombre = "";
+
+	rc.personas = [];
+
+	window.rc = rc;
+
+	this.buscarPersona = function (nombre) {
+		if (nombre.length > 4) {
+			Meteor.call('getPersonas', nombre, function (error, result) {
+				if (result) {
+					//console.log("Personas:", result);
+					rc.personas = [];
+					_.each(result.clientes, function (cliente) {
+						cliente.tipoPersona = "Cliente";
+						cliente.nombre = cliente.profile.nombreCompleto;
+						rc.personas.push(cliente);
+					});
+					_.each(result.distribuidores, function (distribuidor) {
+						distribuidor.tipoPersona = "Distribuidor";
+						distribuidor.nombre = distribuidor.profile.nombreCompleto;
+						rc.personas.push(distribuidor);
+					});
+					_.each(result.avales, function (aval) {
+						aval.tipoPersona = "Aval";
+						aval.nombre = aval.profile.nombreCompleto;
+						rc.personas.push(aval);
+					});
+					_.each(result.referenciasPersonales, function (referenciaPersonal) {
+						referenciaPersonal.tipoPersona = "Referencia Personal";
+						referenciaPersonal.nombre = referenciaPersonal.nombreCompleto;
+						rc.personas.push(referenciaPersonal);
+					});
+					_.each(result.beneficiarios, function (beneficiario) {
+						beneficiario.tipoPersona = "Beneficiario";
+						beneficiario.nombre = beneficiario.nombreCompleto;
+						rc.personas.push(beneficiario);
+					});
+					_.each(result.prospectosVales, function (prospecto) {
+						prospecto.tipoPersona = "Prospecto Vale";
+						prospecto.nombre = prospecto.nombreCompleto;
+						rc.personas.push(prospecto);
+					});
+
+					$scope.$apply();
+				}
+
+			});
+		} else { rc.personas = []; }
 
 	}
-	
-	this.tieneFoto = function(sexo, foto){
-		
-	  if(foto === undefined){
-		  if(sexo === "MASCULINO")
-			  return "img/badmenprofile.png";
-			else if(sexo === "FEMENINO"){
+
+	this.tieneFoto = function (sexo, foto) {
+
+		if (foto === undefined || foto === "") {
+			if (sexo === "MASCULINO")
+				return "img/badmenprofile.png";
+			else if (sexo === "FEMENINO") {
 				return "img/badgirlprofile.png";
-			}else{
-				//console.log(foto);		
+			} else {
 				return "img/badprofile.png";
 			}
-			  
-	  }else{
-		  return foto;
-	  }
-  };
-  
+		} else {
+			return foto;
+		}
+	};
+
 };

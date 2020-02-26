@@ -6,18 +6,22 @@
 					<div class="well ">
 						<div class="row">
 							<div class="col-sm-2">
-										<img style="max-width:130px;" src="{{pvpp.objeto.profile.foto}}" >
-									</div>
+								<img style="max-width:130px;" src="{{pvpp.objeto.profile.foto}}">
+							</div>
 							<div class="col-sm-10">
 								<div class="row">
-									<a style="margin: 5px;" ng-if="pvpp.objeto.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id : pvpp.objeto._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;						
+									<a style="margin: 5px;" ng-if="pvpp.objeto.roles == 'Cliente'"
+										ui-sref="root.clienteDetalle({objeto_id : pvpp.objeto._id})"
+										class="btn txt-color-white bg-color-teal btn-sm pull-right"><i
+											class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
 									<div class="col-sm-8">
-										<h1>{{pvpp.objeto.profile.numeroCliente}} {{pvpp.objeto.profile.nombre}} 
-											<span class="semi-bold">{{pvpp.objeto.profile.apellidoPaterno}} {{pvpp.objeto.profile.apellidoMaterno}}</span>
-										<small> (Cliente)</small></h1>
+										<h1>{{pvpp.objeto.profile.numeroCliente}} {{pvpp.objeto.profile.nombre}}
+											<span class="semi-bold">{{pvpp.objeto.profile.apellidoPaterno}}
+												{{pvpp.objeto.profile.apellidoMaterno}}</span>
+											<small> (Cliente)</small></h1>
 									</div>
 								</div>
-							</div>													
+							</div>
 						</div>
 					</div>
 				</div>
@@ -26,151 +30,193 @@
 	</div>
 </div>
 
-<div  class="well">
-		<div class="row">
-				<div class="col-sm-2">
-				    <label>Ordenar por:</label>
-				    <select name="ordenar" ng-model="pvpp.valorOrdenar" ng-change="pvpp.funcionOrdenar()" data-placeholder="Ordenar" class="form-control" >
-						    <option value=""></option>
-						    <option value="Folio">Folio</option>
-						    <option value="Fecha">Fecha</option>
-						    <option value="Recibo">Recibo</option>
-						</select>
-		  	</div>
-		  	<div class="col-sm-2">					    
-		    	<label>Ocultar Multas</label>
-		    	<input name="ocultarMultas" type="checkbox" class="form-control" ng-click="pvpp.ocultar()" ng-model="pvpp.ocultarMultas">
-	    	</div>
-		  	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
-						<ul id="sparks" class="">
-							<li class="sparks-info">
-								<h5 style="text-align: center"> Subtotal <span class="txt-color-green" style="text-align: right">{{pvpp.subtotal | currency}}</span></h5>
-							</li>	
-							<li class="sparks-info">
-								<h5 style="text-align: center"> Total Cargos Moratorios <span class="txt-color-red" style="text-align: right">{{pvpp.cargosMoratorios | currency}}</span></h5>
-							</li>	
-							<li class="sparks-info">
-								<h5 style="text-align: center"> Total <span class="txt-color-green" style="text-align: right">{{pvpp.total | currency}}</span></h5>
-							</li>	
-						</ul>
-				</div>									  	
-		</div>	
-		<div class="row"><br/>
-			
-			<div class="col-sm-9">
-				<table class="table table-bordered table-condensed font-xs">
-					<thead class="thead">
-						<tr>
-							<th class="text-center" width="5%"></th>
-							<th class="text-center" width="5%">No.</th>
-							<th class="text-center" width="5%">Folio Crédito</th>
-							<th class="text-center" width="10%">Movimiento</th>
-							<th class="text-center" width="20%">Fecha de Pago</th>
-							<th class="text-center" width="5%">Recibo</th>
-							<th class="text-center" width="10%">Capital</th>
-							<th class="text-center" width="5%">Interés</th>
-							<th class="text-center" width="10%">Seguro</th>
-							<th class="text-center" width="5%">IVA</th>
-							<th class="text-center" width="10%">Saldo</th>
-							<th class="text-center" width="5%">Pago</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-class="pago.color" ng-repeat="pago in pvpp.planPagosViejo | orderBy: pvpp.funcionOrdenar()" ng-if="pago.verCargo">
-
-							<td ><a ng-model="pago.pagoSeleccionado" ng-click="pvpp.seleccionarPago(pago)" class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}" ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
-
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{ $index + 1 }}</td>	
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.credito.folio}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.movimiento }}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">{{pago.numeroPago || pago.numeroPagoMulta}} - {{pvpp.getnumeroPagos(pago.credito_id)}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.capital  | currency}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.interes  | currency}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.seguro  | currency}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.iva  | currency}}</td>
-							<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">{{pago.importeRegular  | currency}}</td>
-							<td ><input style="width: 80px" min="0" type="number" ng-change="pvpp.seleccionarMontoPago(pago)" ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
-						</tr>
-					</tbody>
-				</table>	
-			</div>
-
-			<div class="col-sm-3 pull-right" valida>
-				<h4>Total a pagar: {{pvpp.pago.totalPago | currency }}</h4>
-				<br/>
-				<caption>Forma de Pago: </caption> 
-				<select name="TipoIngreso" class="form-control select2" placeholder="Seleccione" ng-model="pvpp.pago.tipoIngreso_id" ng-change = "pvpp.seleccionTipoIngreso(pvpp.pago.tipoIngreso_id)" required>
-					<option ng-repeat="tipo in pvpp.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
-				</select>
-				<br/>
-				<caption>Paga con: </caption> <input id="cobro" min="0" type="number" class="form-control" placeholder="Pagar" ng-model="pvpp.pago.pagar" required="true">
-				<br/>
-				<h4>Cambio: {{pvpp.pago.pagar - pvpp.pago.totalPago | currency }}</h4>
-				<br/>
-				
-				<div class="form-group" ng-if = "pvpp.tipoIngresoSeleccionado.tipoCuenta == 'Banco'">
-						<label for="fecha">Fecha Deposito:</label>
-						<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="pvpp.pago.fechaDeposito"/>
-				</div>
-				<div class="form-group" ng-if = "pvpp.tipoIngresoSeleccionado.tipoCuenta == 'Banco'">
-						<label>Referencia:</label>
-						<input name="referencia" type="text"  class="form-control"  ng-model="pvpp.pago.referencia"/>
-				</div>
-				<br/>
-				<button id="cobrar" class="btn btn-primary pull-left" ng-click="pvpp.guardarPago(pvpp.pago,pvpp.credito)">Hacer Cobro</button>
-			</div>
+<div class="well">
+	<div class="row">
+		<div class="col-sm-2">
+			<label>Ordenar por:</label>
+			<select name="ordenar" ng-model="pvpp.valorOrdenar" ng-change="pvpp.funcionOrdenar()"
+				data-placeholder="Ordenar" class="form-control">
+				<option value=""></option>
+				<option value="Folio">Folio</option>
+				<option value="Fecha">Fecha</option>
+				<option value="Recibo">Recibo</option>
+			</select>
 		</div>
-</div>									
+		<div class="col-sm-2">
+			<label>Ocultar Multas</label>
+			<input name="ocultarMultas" type="checkbox" class="form-control" ng-click="pvpp.ocultar()"
+				ng-model="pvpp.ocultarMultas">
+		</div>
+		<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+			<ul id="sparks" class="">
+				<li class="sparks-info">
+					<h5 style="text-align: center"> Subtotal <span class="txt-color-green"
+							style="text-align: right">{{pvpp.subtotal | currency}}</span></h5>
+				</li>
+				<li class="sparks-info">
+					<h5 style="text-align: center"> Total Cargos Moratorios <span class="txt-color-red"
+							style="text-align: right">{{pvpp.cargosMoratorios | currency}}</span></h5>
+				</li>
+				<li class="sparks-info">
+					<h5 style="text-align: center"> Total <span class="txt-color-green"
+							style="text-align: right">{{pvpp.total | currency}}</span></h5>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="row"><br />
+
+		<div class="col-sm-9">
+			<table class="table table-bordered table-condensed font-xs">
+				<thead class="thead">
+					<tr>
+						<th class="text-center" width="5%"></th>
+						<th class="text-center" width="5%">No.</th>
+						<th class="text-center" width="5%">Folio Crédito</th>
+						<th class="text-center" width="10%">Movimiento</th>
+						<th class="text-center" width="20%">Fecha de Pago</th>
+						<th class="text-center" width="5%">Recibo</th>
+						<th class="text-center" width="10%">Capital</th>
+						<th class="text-center" width="5%">Interés</th>
+						<th class="text-center" width="10%">Seguro</th>
+						<th class="text-center" width="5%">IVA</th>
+						<th class="text-center" width="10%">Saldo</th>
+						<th class="text-center" width="5%">Pago</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-class="pago.color" ng-repeat="pago in pvpp.planPagosViejo | orderBy: pvpp.funcionOrdenar()"
+						ng-if="pago.verCargo">
+
+						<td><a ng-model="pago.pagoSeleccionado" ng-click="pvpp.seleccionarPago(pago)"
+								class="btn btn-xs btn-{{pago.pagoSeleccionado == true ? 'warning' : 'success'}}"
+								ng-if="pago.estatus != 1"> {{pago.pagoSeleccionado == true ? '-' : '+'}}</a> </td>
+
+						<td
+							ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">
+							{{ $index + 1 }}</td>
+						<td
+							ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">
+							{{pago.credito.folio}}</td>
+						<td ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-danger' : ''">{{pago.movimiento }}
+						</td>
+						<td
+							ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">
+							{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
+						<td
+							ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-center text-danger' : 'text-center'">
+							{{pago.numeroPago || pago.numeroPagoMulta}} - {{pvpp.getnumeroPagos(pago.credito_id)}}</td>
+						<td
+							ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">
+							{{pago.capital  | currency}}</td>
+						<td
+							ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">
+							{{pago.interes  | currency}}</td>
+						<td
+							ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">
+							{{pago.seguro  | currency}}</td>
+						<td
+							ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">
+							{{pago.iva  | currency}}</td>
+						<td
+							ng-class="(pago.descripcion == 'Cargo Moratorio') ? 'text-right text-danger' : 'text-right'">
+							{{pago.importeRegular  | currency}}</td>
+						<td><input style="width: 80px" min="0" type="number" ng-change="pvpp.seleccionarMontoPago(pago)"
+								ng-model="pago.importepagado" ng-if="pago.estatus != 1"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="col-sm-3 pull-right" valida>
+			<h4>Total a pagar: {{pvpp.pago.totalPago | currency }}</h4>
+			<br />
+			<caption>Forma de Pago: </caption>
+			<select name="TipoIngreso" class="form-control select2" placeholder="Seleccione"
+				ng-model="pvpp.pago.tipoIngreso_id" ng-change="pvpp.seleccionTipoIngreso(pvpp.pago.tipoIngreso_id)"
+				required>
+				<option ng-repeat="tipo in pvpp.tiposIngreso" value="{{tipo._id}}">{{tipo.nombre}}</option>
+			</select>
+			<br />
+			<caption>Paga con: </caption> <input id="cobro" min="0" type="number" class="form-control"
+				placeholder="Pagar" ng-model="pvpp.pago.pagar" required="true">
+			<br />
+			<h4>Cambio: {{pvpp.pago.pagar - pvpp.pago.totalPago | currency }}</h4>
+			<br />
+
+			<div class="form-group" ng-if="pvpp.tipoIngresoSeleccionado.tipoCuenta == 'Banco'">
+				<label for="fecha">Fecha Deposito:</label>
+				<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" view="date" max-view="year"
+					min-view="date" ng-model="pvpp.pago.fechaDeposito" />
+			</div>
+			<div class="form-group" ng-if="pvpp.tipoIngresoSeleccionado.tipoCuenta == 'Banco'">
+				<label>Referencia:</label>
+				<input name="referencia" type="text" class="form-control" ng-model="pvpp.pago.referencia" />
+			</div>
+			<br />
+			<button id="cobrar" class="btn btn-primary pull-left"
+				ng-click="pvpp.guardarPago(pvpp.pago,pvpp.credito)">Hacer Cobro</button>
+		</div>
+	</div>
+</div>
 
 <!-- ////////////////////////////////////////////////////////////////////////////////////////// -->
-<div id="modalRefinanciamiento" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-	  <div class="modal-dialog modal-lg" role="document">
-	    <div id="imagenDiv" class="modal-content">
+<div id="modalRefinanciamiento" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+	aria-labelledby="myLargeModalLabel">
+	<div class="modal-dialog modal-lg" role="document">
+		<div id="imagenDiv" class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Refinanciamiento del crédito</h4>
 			</div>
 			<div class="widget-body">
 				<form name="form2" novalidate>
-					<div class="well">	    
-				    <div class="row">
-				    	<div class="col-sm-12">
-								<table id="mainTable" class="table table-striped table-bordered table-condensed font-xs">
-										<thead class="thead">
-											<tr>
-												<th class="text-center" width="5%">Número</th>
-												<th class="text-center" width="10%">Solicitado</th>
-												<th class="text-center" width="15%">Fecha de Solicitud </th>
-												<th class="text-center" width="5%">Acción</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr ng-repeat="credito in pvpp.creditosAutorizados" ng-class="($index == selectedRow) ?'text-info':''">
-												<td style="text-align: center" ng-class="($index == pvpp.selectedRow)?'text-success':''">{{$index + 1}}</td>
-												<td style="text-align: right" ng-class="($index == pvpp.selectedRow)?'text-success':''">{{credito.capitalSolicitado | currency}}</td>
-												<td style="text-align: center" ng-class="($index == pvpp.selectedRow)?'text-success':''">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
-												<td style="text-align: center" ng-class="($index == pvpp.selectedRow)?'text-success':''">
-														<a ng-click="pvpp.marcarRefinanciamiento(credito, $index)" class="btn txt-color-white bg-color-green btn-sm pull-center" style="margin: 5px;">
-															<i class="fa fa-check"></i>
-														</a>
-												</td>	
-											</tr>
-										</tbody>
+					<div class="well">
+						<div class="row">
+							<div class="col-sm-12">
+								<table id="mainTable"
+									class="table table-striped table-bordered table-condensed font-xs">
+									<thead class="thead">
+										<tr>
+											<th class="text-center" width="5%">Número</th>
+											<th class="text-center" width="10%">Solicitado</th>
+											<th class="text-center" width="15%">Fecha de Solicitud </th>
+											<th class="text-center" width="5%">Acción</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="credito in pvpp.creditosAutorizados"
+											ng-class="($index == selectedRow) ?'text-info':''">
+											<td style="text-align: center"
+												ng-class="($index == pvpp.selectedRow)?'text-success':''">{{$index + 1}}
+											</td>
+											<td style="text-align: right"
+												ng-class="($index == pvpp.selectedRow)?'text-success':''">
+												{{credito.capitalSolicitado | currency}}</td>
+											<td style="text-align: center"
+												ng-class="($index == pvpp.selectedRow)?'text-success':''">
+												{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
+											<td style="text-align: center"
+												ng-class="($index == pvpp.selectedRow)?'text-success':''">
+												<a ng-click="pvpp.marcarRefinanciamiento(credito, $index)"
+													class="btn txt-color-white bg-color-green btn-sm pull-center"
+													style="margin: 5px;">
+													<i class="fa fa-check"></i>
+												</a>
+											</td>
+										</tr>
+									</tbody>
 								</table>
-								</div>
-				    </div>
+							</div>
+						</div>
 					</div>
 				</form>
-  </div>
-					<div class="modal-footer">
-          <button type="button" ng-click="pvpp.guardarRefinanciamiento()" class="btn btn-success">Guardar</button>
-          <button type="button" ng-click="pvpp.cerrarRefinanciamiento()" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        </div>
-	    </div>
-	  </div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" ng-click="pvpp.guardarRefinanciamiento()" class="btn btn-success">Guardar</button>
+				<button type="button" ng-click="pvpp.cerrarRefinanciamiento()" class="btn btn-default"
+					data-dismiss="modal">Cerrar</button>
+			</div>
+		</div>
+	</div>
 
 </div>
-
-
-
-

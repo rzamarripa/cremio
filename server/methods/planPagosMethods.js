@@ -468,7 +468,7 @@ contador ++;
 
 		return plan;
 	},
-	
+
 	actualizarMultas: function () {
 
 		var ahora = new Date();
@@ -537,14 +537,13 @@ contador ++;
 		});
 
 	},
-	
+
 	actualizarMultasVales: function () {
 
 		var ahora = new Date();
 		ahora = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
 		var mfecha = moment(ahora);
 
-		//console.log(ahora);
 		var pagos = PlanPagos.find({
 			$and: [
 				{
@@ -554,9 +553,18 @@ contador ++;
 					]
 				},
 				{
-					tipoCredito: "vale",
-					importeRegular: { $gte: 0 },
-					descripcion: "Cargo Moratorio"
+					$or: [
+						{
+							tipoCredito: "vale",
+							importeRegular: { $gte: 0 },
+							descripcion: "Cargo Moratorio"
+						},
+						{
+							tipoCredito: "creditoPersonalDistribuidor",
+							importeRegular: { $gte: 0 },
+							descripcion: "Cargo Moratorio"
+						}
+					]
 				},
 				{
 					fechaLimite: { $lt: ahora }
@@ -564,7 +572,6 @@ contador ++;
 			]
 		}).fetch();
 
-		//console.log("Actualizar Multas: ",pagos);
 
 		_.each(pagos, function (pago) {
 			try {
@@ -613,13 +620,12 @@ contador ++;
 		});
 
 	},
-	
+
 	generarMultas: function () {
 		var ahora = new Date();
 		ahora = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
 
 		//ahora.setHours(13,0,0,0);
-
 		//console.log(ahora);
 
 		var pagos = PlanPagos.find({
@@ -722,7 +728,7 @@ contador ++;
 		});
 
 	},
-	
+
 	generarMultasVales: function () {
 		var ahora = new Date();
 		ahora = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
@@ -738,17 +744,25 @@ contador ++;
 					]
 				},
 				{
-					multada: 0,
-					descripcion: "Recibo",
-					tipoCredito: "vale",
-					importeRegular: { $gte: 0 },
-					fechaLimite: { $lt: ahora }
+					$or: [
+						{
+							multada: 0,
+							descripcion: "Recibo",
+							tipoCredito: "vale",
+							importeRegular: { $gte: 0 },
+							fechaLimite: { $lt: ahora }
+						},
+						{
+							multada: 0,
+							descripcion: "Recibo",
+							tipoCredito: "creditoPersonalDistribuidor",
+							importeRegular: { $gte: 0 },
+							fechaLimite: { $lt: ahora }
+						}
+					]
 				}
 			]
 		}).fetch();
-
-		//console.log("PGO Vales: ",pagos);
-		//return;
 
 		_.each(pagos, function (pago) {
 			try {
@@ -756,36 +770,41 @@ contador ++;
 				var generarMulta = false;
 
 				var fecha1 = moment(ahora);
-				var fecha2 = moment(pago.fechaLimite);
+				var fecha2 = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth(), pago.fechaLimite.getDate());
 
-				var dia1 = fecha1.format('D')
-				var dia2 = fecha2.format('D')
+				var dia1 = fecha1.format('D');
+				var dia2 = fecha2.getDate();
 
+				if (dia2 == 15) {
+					var dias = fecha1.diff(fecha2, 'days');
+					if (dias >= 7)
+						generarMulta = true;
+				}
 				if (dia2 == 16) {
 					var dias = fecha1.diff(fecha2, 'days');
-					if (dias >= 5)
+					if (dias >= 6)
 						generarMulta = true;
 				}
 				else if (dia2 == 17) {
 					var dias = fecha1.diff(fecha2, 'days');
-					if (dias >= 4)
+					if (dias >= 5)
 						generarMulta = true;
 				}
 				else if (dia2 == 1) {
 					var dias = fecha1.diff(fecha2, 'days');
-					if (dias >= 5)
+					if (dias >= 6)
 						generarMulta = true;
 				}
 				else if (dia2 == 2) {
 					var dias = fecha1.diff(fecha2, 'days');
-					if (dias >= 4)
+					if (dias >= 5)
 						generarMulta = true;
 				}
 
 				//console.log(fecha1.diff(fecha2, 'days'), ' dias de diferencia');
 
 				if (generarMulta) {
-					var credito = Creditos.findOne(pago.credito_id);
+					//var credito = Creditos.findOne(pago.credito_id);
 					if (pago.descripcion == "Recibo" && pago.multada != 1) {
 						var mfecha = moment(ahora);
 						limite = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth(), pago.fechaLimite.getDate());
@@ -795,55 +814,13 @@ contador ++;
 
 						//Define la Multa
 						var credito = Creditos.findOne(pago.credito_id);
-						var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
+						//var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
 
 						//saldoreciboVencido
 						var reciboVencido = PlanPagos.findOne({ _id: pago._id });
 						porcentaje = 1;
 						multas = round(Number(parseFloat(reciboVencido.importeRegular * (porcentaje / 100)).toFixed(3)), 2);
 						//Number(parseFloat(reciboVencido.importeRegular * (porcentaje / 100)).toFixed(2)); 
-
-						/*
-if (tipoCredito.calculo == "importeSolicitado")
-						{
-								multas = Number(parseFloat(credito.capitalSolicitado * (tipoCredito.importe / 100)).toFixed(2)); 
-								//multas = Math.round(multas * 100) / 100;
-										
-						}
-						else if (tipoCredito.calculo == "importereciboVencido")
-						{
-								var reciboVencido = PlanPagos.findOne({_id : pago._id});
-								
-								var porcentaje;
-								if (credito.periodoPago == "Semanal")
-										porcentaje = 2;
-								else if (credito.periodoPago == "Quincenal")
-										porcentaje = 4;
-								else if (credito.periodoPago == "Mensual")				
-										porcentaje = 8;
-										
-								multas = Number(parseFloat(reciboVencido.cargo * (porcentaje / 100)).toFixed(2)); 
-								//multas = Math.round(multas * 100) / 100;
-							
-						}	
-						else if (tipoCredito.calculo == "saldoreciboVencido")
-						{	
-											
-								var reciboVencido = PlanPagos.findOne({_id : pago._id});
-						
-								var porcentaje;
-								if (credito.periodoPago == "Semanal")
-										porcentaje = 2;
-								else if (credito.periodoPago == "Quincenal")
-										porcentaje = 4;
-								else if (credito.periodoPago == "Mensual")				
-										porcentaje = 8;
-										
-								multas = Number(parseFloat(reciboVencido.importeRegular * (porcentaje / 100)).toFixed(2)); 
-								//multas = Math.round(multas * 100) / 100;
-								
-						}
-*/
 
 						var multa = {
 							semana: mfecha.isoWeek(),
@@ -899,7 +876,162 @@ if (tipoCredito.calculo == "importeSolicitado")
 		});
 
 	},
-	
+
+	//Proceso que genera manualmente cargos por distribuidor
+	generarMultasValesDistribuidor: function (id) {
+		var ahora = new Date();
+		ahora = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+
+		//Revisar cuales son las fechas a Consultar
+
+		var pagos = PlanPagos.find({
+			cliente_id: id,
+			$and: [
+				{
+					$or: [
+						{ estatus: 0 },
+						{ estatus: 2 }
+					]
+				},
+				{
+					$or: [
+						{
+							multada: 0,
+							descripcion: "Recibo",
+							tipoCredito: "vale",
+							importeRegular: { $gte: 0 },
+							fechaLimite: { $lt: ahora }
+						},
+						{
+							multada: 0,
+							descripcion: "Recibo",
+							tipoCredito: "creditoPersonalDistribuidor",
+							importeRegular: { $gte: 0 },
+							fechaLimite: { $lt: ahora }
+						}
+					]
+				}
+			]
+		}).fetch();
+
+		_.each(pagos, function (pago) {
+			try {
+
+				var generarMulta = false;
+
+				var fecha1 = moment(ahora);
+				var fecha2 = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth(), pago.fechaLimite.getDate());
+
+				var dia1 = fecha1.format('D');
+				var dia2 = fecha2.getDate();
+
+
+				if (dia2 == 15) {
+					var dias = fecha1.diff(fecha2, 'days');
+					if (dias >= 7)
+						generarMulta = true;
+				}
+				if (dia2 == 16) {
+					var dias = fecha1.diff(fecha2, 'days');
+					if (dias >= 6)
+						generarMulta = true;
+				}
+				else if (dia2 == 17) {
+					var dias = fecha1.diff(fecha2, 'days');
+					if (dias >= 5)
+						generarMulta = true;
+				}
+				else if (dia2 == 1) {
+					var dias = fecha1.diff(fecha2, 'days');
+					if (dias >= 6)
+						generarMulta = true;
+				}
+				else if (dia2 == 2) {
+					var dias = fecha1.diff(fecha2, 'days');
+					if (dias >= 5)
+						generarMulta = true;
+				}
+
+				if (generarMulta) {
+					//var credito = Creditos.findOne(pago.credito_id);
+					if (pago.descripcion == "Recibo" && pago.multada != 1) {
+
+						var mfecha = moment(ahora);
+						limite = new Date(pago.fechaLimite.getFullYear(), pago.fechaLimite.getMonth(), pago.fechaLimite.getDate());
+						var diasTotal = mfecha.diff(limite, "days");
+						diasTotal = diasTotal - 5;
+
+						var multas = 0;
+
+						//Define la Multa
+						var credito = Creditos.findOne(pago.credito_id);
+						//var tipoCredito = TiposCredito.findOne(credito.tipoCredito_id);
+
+						//saldoreciboVencido
+						var reciboVencido = PlanPagos.findOne({ _id: pago._id });
+						porcentaje = 1;
+						multas = round(Number(parseFloat(reciboVencido.importeRegular * (porcentaje / 100)).toFixed(3)), 2);
+
+						multas = round(Number(parseFloat(multas * diasTotal).toFixed(3)), 2);
+
+						//console.log(pago.tipoCredito + " " + pago.fechaLimite + " " + diasTotal + " " + generarMulta + " " + multas);
+
+						var multa = {
+							semana: mfecha.isoWeek(),
+							fechaLimite: pago.fechaLimite,
+							diaSemana: mfecha.weekday(),
+							tipoPlan: pago.tipoPlan,
+							tipoCredito: pago.tipoCredito,
+							numeroPago: pago.numeroPago,
+							importeRegular: multas,
+							cliente_id: pago.cliente_id,
+							fechaPago: undefined,
+							semanaPago: undefined,
+							diaPago: undefined,
+							iva: 0,
+							interes: 0,
+							seguro: 0,
+							capital: 0,
+							pago: 0,
+							estatus: 0,
+							multada: 0,
+							multa: 0,
+							multa_id: undefined,
+							planPago_id: pago._id,
+							tiempoPago: 0,
+							modificada: false,
+							pagos: [],
+							descripcion: "Cargo Moratorio",
+							ultimaModificacion: ahora,
+							credito_id: credito._id,
+							mes: mfecha.get('month') + 1,
+							anio: mfecha.get('year'),
+							cargo: multas,
+							movimiento: "Cargo Moratorio",
+							sucursal_id: pago.sucursal_id,
+							tipoCargoMoratorio: 1, //Automatica,
+							beneficiario_id: pago.beneficiario_id
+						};
+
+						var multa_id = PlanPagos.insert(multa);
+						PlanPagos.update({ _id: pago._id }, { $set: { multada: 1, multa_id: multa_id } })
+
+						credito.saldoMultas += multas;
+						credito.saldoMultas = round(Number(parseFloat(credito.saldoMultas).toFixed(3)), 2);
+						Creditos.update({ _id: credito._id }, { $set: { saldoMultas: credito.saldoMultas } })
+
+					}
+				}
+
+
+			} catch (e) {
+				console.log(e);
+				console.log(e.stack);
+			}
+		});
+
+	},
+
 	actualizarMultasRestarUnDia: function () {
 
 		var ahora = new Date();
@@ -974,7 +1106,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 
 		return true;
 	},
-	
+
 	actualizarMultasValesRestarUnDia: function () {
 
 		var ahora = new Date();
@@ -1489,7 +1621,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 		return pago_id;
 
 	},
-	
+
 	pagoParcialVale: function (pagos, abono, bonificacion, seguro, totalVales, totalPago, tipoIngresoId, pusuario_id, ocultaMulta, subtotal, cargosMoratorios, total, fechaProximoPago, fechaDeposito, arregloPagosSeguro) {
 		var ahora = new Date();
 		ahora = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
@@ -1539,7 +1671,6 @@ if (tipoCredito.calculo == "importeSolicitado")
 		//Guardar Pago de Seguro 
 		//tengo que meter un pago en relación a las fechas de pago que vienen en el plan de Pagos
 
-
 		if (seguro > 0) {
 			var fecha = new Date();
 
@@ -1575,9 +1706,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 					arregloPS.push(pagoSeguro_id);
 				}
 			});
-
 		}
-
 		//----------------------
 
 		//corregir---*********
@@ -1917,6 +2046,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 		//Actualizar el Credito SaldoActual--------------------------------------------------
 		idCreditos = _.uniq(idCreditos);
 		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus del credito
+
 		_.each(idCreditos, function (c) {
 			var pp = PlanPagos.find({ credito_id: c }).fetch();
 
@@ -1942,9 +2072,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 			if (ban) {
 				var fecha = new Date();
 				Creditos.update({ _id: c }, { $set: { estatus: 5, fechaLiquidacion: fecha, saldoActual: 0, saldoMultas: 0 } });
-				var credito = Creditos.findOne({_id: c});
-				//console.log(c);
-				//console.log(credito);
+				var credito = Creditos.findOne({ _id: c });
 				if (credito.tipo == "vale") {
 					//Actualizar en 0 saldo de Beneficiario--------
 					Beneficiarios.update({ _id: credito.beneficiario_id }, { $set: { saldoActual: 0, saldoActualVales: 0 } });
@@ -1994,7 +2122,7 @@ if (tipoCredito.calculo == "importeSolicitado")
 		return pago_id;
 
 	},
-	
+
 	pagoOtroSistema: function (pagos, abono, totalPago, tipoIngresoId, pusuario_id, subtotal, cargosMoratorios, total, fechaDeposito) {
 
 
@@ -2107,11 +2235,11 @@ if (tipoCredito.calculo == "importeSolicitado")
 	getPago: function (pago_id) {
 		return Pagos.findOne(pago_id);
 	},
-	
+
 	getPagosByCliente: function (cliente_id) {
 		return Pagos.findOne(pago_id);
 	},
-	
+
 	getPagosDistribuidor: function (distribuidor_id) {
 		var pagos = Pagos.find({ usuario_id: distribuidor_id, estatus: 1 }, { sort: { fechaPago: -1 } }).fetch();
 		_.each(pagos, function (pago) {
@@ -2397,13 +2525,16 @@ if (tipoCredito.calculo == "importeSolicitado")
 	},
 	//Regresa Uno solo por corte
 	getPagoSeguro: function (distribuidor_id, anio, numeroCorte) {
+
 		var configuraciones = Configuraciones.findOne();
 		var seguro = configuraciones.seguro;
 		var sumaSeguros = 0;
 
-		var pagosSeguro = PagosSeguro.findOne({ distribuidor_id: distribuidor_id, anio: anio, numeroCorte: numeroCorte, estatus: 1 });
-		if (pagosSeguro == undefined)
+		var pagosSeguro = PagosSeguro.find({ distribuidor_id: distribuidor_id, anio: anio, numeroCorte: numeroCorte, estatus: 1 }).fetch();
+
+		if (pagosSeguro.length == 0) {
 			sumaSeguros = seguro;
+		}
 
 		return sumaSeguros;
 	},

@@ -112,30 +112,7 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 	this.subscribe("ocupaciones", () => {
 		return [{}]
 	});
-	/*
-	
-	  this.subscribe("paises", ()=>{
-		return [{}]
-	  });
-	  this.subscribe("estados", ()=>{
-		return [{}]
-	  });
-	  this.subscribe("municipios", ()=>{
-		return [{}]
-	  });
-	  this.subscribe("ciudades", ()=>{
-		return [{}]
-	  });
-	
-	  this.subscribe("colonias", ()=>{
-		return [{}]
-	  });
-	
-	  this.subscribe("empresas", ()=>{
-		return [{}]
-	  });   
-	  
-	*/
+
 	this.subscribe('tiposIngreso', () => {
 		return [{}]
 	});
@@ -188,26 +165,28 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 			var fecha = rc.getReactively("fechaInicial");
 			if (fecha != undefined) {
 
+				/*
 				//Revisar dia inhabil para buscar la próximo Fecha
-				verificarDiaInhabil = function (fecha) {
-					var diaFecha = fecha.isoWeekday();
-					var diaInhabiles = DiasInhabiles.find({ tipo: "DIA", estatus: true }).fetch();
-					var ban = false;
-					_.each(diaInhabiles, function (dia) {
-						if (Number(dia.dia) === diaFecha) {
-							ban = true;
-							return ban;
-						}
-					})
-					var fechaBuscar = new Date(fecha);
+				// verificarDiaInhabil = function (fecha) {
+				// 	var diaFecha = fecha.isoWeekday();
+				// 	var diaInhabiles = DiasInhabiles.find({ tipo: "DIA", estatus: true }).fetch();
+				// 	var ban = false;
+				// 	_.each(diaInhabiles, function (dia) {
+				// 		if (Number(dia.dia) === diaFecha) {
+				// 			ban = true;
+				// 			return ban;
+				// 		}
+				// 	})
+				// 	var fechaBuscar = new Date(fecha);
 
-					var fechaInhabil = DiasInhabiles.findOne({ tipo: "FECHA", fecha: fechaBuscar, estatus: true });
-					if (fechaInhabil != undefined) {
-						ban = true;
-						return ban;
-					}
-					return ban;
-				};
+				// 	var fechaInhabil = DiasInhabiles.findOne({ tipo: "FECHA", fecha: fechaBuscar, estatus: true });
+				// 	if (fechaInhabil != undefined) {
+				// 		ban = true;
+				// 		return ban;
+				// 	}
+				// 	return ban;
+				// };
+				*/
 
 				var n = fecha.getDate();
 				var fechaLimite = "";
@@ -239,9 +218,6 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 				FI = fechaLimite;
 				FF = this.fechaFinal;
 				rc.verRecibos = true;
-
-				//console.log(FI);
-				//console.log(FF);
 
 				loading(true);
 				Meteor.call('getCobranzaVales', FI, FF, 1, Meteor.user().profile.sucursal_id, function (error, result) {
@@ -289,153 +265,144 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 		FF.setHours(23, 59, 59, 999);
 	}
 
-	/*
-  this.AsignaFecha = function(op)
-	{ 
-			
-		this.selected_numero = 0;
-		this.ban = false;
-	    
-		if (op == 0) //Vencimiento Hoy
-		{
-			FI = new Date();
-			FI.setHours(0,0,0,0);
-			FF = new Date(FI.getTime() - (1 * 24 * 3600 * 1000));
-			FF.setHours(23,59,59,999);
-			rc.verRecibos = false;
-		    
-		} 
-		else if (op == 1) //Día
-		{
-				  var fecha = rc.getReactively("fechaInicial");
-					  var n = fecha.getDate();
-					  var fechaLimite = "";
-				  	
-					  if (n >= 22)
-					  {
-							  fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,1,0,0,0,0);		
-					  }
-					  else if (n < 7) 
-					  {
-							  fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),1,0,0,0,0);
-					  }
-					  else if (n >= 7 && n < 22)		
-					  {
-							  fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),16,0,0,0,0);
-					  }
-								  	
-					  var validaFecha = true;
-					var fechaValidar = moment(fechaLimite);
-					while(validaFecha)
-					{		
-							  validaFecha = verificarDiaInhabil(fechaValidar);
-							  if (validaFecha == true)
-										  fechaValidar = fechaValidar.add(1, 'days');					 
-					}
-								    
-					fechaLimite = new Date(fechaValidar);
-					fechaLimite.setHours(0,0,0,0);
-  	
-				  this.fechaFinal = new Date(fechaLimite.getTime());
-				  this.fechaFinal.setHours(23,59,59,999);
-  	
-				  FI = fechaLimite;
-				  FF = this.fechaFinal;
-				  rc.verRecibos = true;
-				  	
-					  if (n < 15) 
-					  {
-							  fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth(),30,0,0,0,0);
-					  }
-					  else //if (n >= 5 && n < 20)		
-					  {
-							  fechaLimite = new Date(fecha.getFullYear(),fecha.getMonth() + 1,15,0,0,0,0);
-					  }
-				  	
-  
-				  	
-					  fechaLimite.setHours(0,0,0,0);
-				    
-				  this.fechaFinal = new Date(fechaLimite.getTime());
-				  this.fechaFinal.setHours(23,59,59,999);
-				  FI = fechaLimite;
-				  FF = this.fechaFinal;	      
-		    
-		    
-		} 
-		else if (op == 2) //Semana
-		{         
-		    
-			FI = new Date();
-			FI.setHours(0,0,0,0);
-			FF = new Date(FI.getTime());
-			FF.setHours(23,59,59,999);
-		    
-			var semana = moment().isoWeek();
-			var anio = FI.getFullYear();
-			this.calcularSemana(semana, anio);
-			rc.verRecibos = false;
-			//console.log("FI:", FI);
-			//console.log("FF:", FF);
-		  
-		}
-		else if (op == 3) //Mes
-		{
-		  
-			FI = new Date();
-			FI.setHours(0,0,0,0);
-			var anio = FI.getFullYear();
-			var mes = FI.getMonth();
-			//console.log(mes);
-			this.calcularMes(mes,anio);
-			rc.verRecibos = false;
-			//console.log("FI:", FI);
-			//console.log("FF:", FF);
-		  
-		}
-		else if (op == 4) //Siguiente Mes
-		{
-			FI = new Date();
-			var anio = FI.getFullYear();
-			var mes = FI.getMonth();
-			if (mes == 11) 
-			{
-				mes = 0;
-				anio = anio + 1; 
-			}
-			else
-				mes = mes + 1;  
-		    
-			this.calcularMes(mes,anio);
-			rc.verRecibos = false;
-			//console.log("FI:", FI);
-			//console.log("FF:", FF);
-		}
-			  
-		loading(true);
-		Meteor.call('getCobranzaVales', FI, FF, op, Meteor.user().profile.sucursal_id, function(error, result) {           
-			if (result)
-			{
-			    
-				rc.cobranza = result;
-				rc.totalVales 							= 0;
-							  rc.totalCreditosPersonales	= 0;
-							  rc.totalCargosMoratorios 		= 0;
-						  	
-				_.each(rc.cobranza,function(c){                    
-					  rc.totalVales 							+= c.importe;
-										  rc.totalCreditosPersonales	+= c.importeCreditoP;
-										  rc.totalCargosMoratorios 		+= c.cargosMoratorios;
-				});
-  
-				$scope.$apply();
-				loading(false);
-			}
-		}); 
-	    
-	    
-	}
-  */
+
+	// this.AsignaFecha = function (op) {
+
+	// 	this.selected_numero = 0;
+	// 	this.ban = false;
+
+	// 	if (op == 0) //Vencimiento Hoy
+	// 	{
+	// 		FI = new Date();
+	// 		FI.setHours(0, 0, 0, 0);
+	// 		FF = new Date(FI.getTime() - (1 * 24 * 3600 * 1000));
+	// 		FF.setHours(23, 59, 59, 999);
+	// 		rc.verRecibos = false;
+
+	// 	}
+	// 	else if (op == 1) //Día
+	// 	{
+	// 		var fecha = rc.getReactively("fechaInicial");
+	// 		var n = fecha.getDate();
+	// 		var fechaLimite = "";
+
+	// 		if (n >= 22) {
+	// 			fechaLimite = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 1, 0, 0, 0, 0);
+	// 		}
+	// 		else if (n < 7) {
+	// 			fechaLimite = new Date(fecha.getFullYear(), fecha.getMonth(), 1, 0, 0, 0, 0);
+	// 		}
+	// 		else if (n >= 7 && n < 22) {
+	// 			fechaLimite = new Date(fecha.getFullYear(), fecha.getMonth(), 16, 0, 0, 0, 0);
+	// 		}
+
+	// 		var validaFecha = true;
+	// 		var fechaValidar = moment(fechaLimite);
+	// 		while (validaFecha) {
+	// 			validaFecha = verificarDiaInhabil(fechaValidar);
+	// 			if (validaFecha == true)
+	// 				fechaValidar = fechaValidar.add(1, 'days');
+	// 		}
+
+	// 		fechaLimite = new Date(fechaValidar);
+	// 		fechaLimite.setHours(0, 0, 0, 0);
+
+	// 		this.fechaFinal = new Date(fechaLimite.getTime());
+	// 		this.fechaFinal.setHours(23, 59, 59, 999);
+
+	// 		FI = fechaLimite;
+	// 		FF = this.fechaFinal;
+	// 		rc.verRecibos = true;
+
+	// 		if (n < 15) {
+	// 			fechaLimite = new Date(fecha.getFullYear(), fecha.getMonth(), 30, 0, 0, 0, 0);
+	// 		}
+	// 		else //if (n >= 5 && n < 20)		
+	// 		{
+	// 			fechaLimite = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 15, 0, 0, 0, 0);
+	// 		}
+
+
+
+	// 		fechaLimite.setHours(0, 0, 0, 0);
+
+	// 		this.fechaFinal = new Date(fechaLimite.getTime());
+	// 		this.fechaFinal.setHours(23, 59, 59, 999);
+	// 		FI = fechaLimite;
+	// 		FF = this.fechaFinal;
+
+
+	// 	}
+	// 	else if (op == 2) //Semana
+	// 	{
+
+	// 		FI = new Date();
+	// 		FI.setHours(0, 0, 0, 0);
+	// 		FF = new Date(FI.getTime());
+	// 		FF.setHours(23, 59, 59, 999);
+
+	// 		var semana = moment().isoWeek();
+	// 		var anio = FI.getFullYear();
+	// 		this.calcularSemana(semana, anio);
+	// 		rc.verRecibos = false;
+	// 		//console.log("FI:", FI);
+	// 		//console.log("FF:", FF);
+
+	// 	}
+	// 	else if (op == 3) //Mes
+	// 	{
+
+	// 		FI = new Date();
+	// 		FI.setHours(0, 0, 0, 0);
+	// 		var anio = FI.getFullYear();
+	// 		var mes = FI.getMonth();
+	// 		//console.log(mes);
+	// 		this.calcularMes(mes, anio);
+	// 		rc.verRecibos = false;
+	// 		//console.log("FI:", FI);
+	// 		//console.log("FF:", FF);
+
+	// 	}
+	// 	else if (op == 4) //Siguiente Mes
+	// 	{
+	// 		FI = new Date();
+	// 		var anio = FI.getFullYear();
+	// 		var mes = FI.getMonth();
+	// 		if (mes == 11) {
+	// 			mes = 0;
+	// 			anio = anio + 1;
+	// 		}
+	// 		else
+	// 			mes = mes + 1;
+
+	// 		this.calcularMes(mes, anio);
+	// 		rc.verRecibos = false;
+	// 		//console.log("FI:", FI);
+	// 		//console.log("FF:", FF);
+	// 	}
+
+	// 	loading(true);
+	// 	Meteor.call('getCobranzaVales', FI, FF, op, Meteor.user().profile.sucursal_id, function (error, result) {
+	// 		if (result) {
+
+	// 			rc.cobranza = result;
+	// 			rc.totalVales = 0;
+	// 			rc.totalCreditosPersonales = 0;
+	// 			rc.totalCargosMoratorios = 0;
+
+	// 			_.each(rc.cobranza, function (c) {
+	// 				rc.totalVales += c.importe;
+	// 				rc.totalCreditosPersonales += c.importeCreditoP;
+	// 				rc.totalCargosMoratorios += c.cargosMoratorios;
+	// 			});
+
+	// 			$scope.$apply();
+	// 			loading(false);
+	// 		}
+	// 	});
+
+
+	// }
 
 	//----------------------------------------
 
@@ -449,16 +416,16 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 		//console.log(rc.arregloCortes);
 
 		//ordenar ArregloCortes
-		rc.arregloCortes.sort(function (a, b) {
-			if (a.numeroCorte < b.numeroCorte) {
-				return 1;
-			}
-			if (a.numeroCorte > b.numeroCorte) {
-				return -1;
-			}
-			// a must be equal to b
-			return 0;
-		});
+		// rc.arregloCortes.sort(function (a, b) {
+		// 	if (a.numeroCorte < b.numeroCorte) {
+		// 		return 1;
+		// 	}
+		// 	if (a.numeroCorte > b.numeroCorte) {
+		// 		return -1;
+		// 	}
+		// 	// a must be equal to b
+		// 	return 0;
+		// });
 
 		Meteor.call('getPeople', objeto.distribuidor._id, function (error, result) {
 			if (result) {
@@ -784,7 +751,7 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 	}
 
 	this.verPagos = function (pago) {
-
+		console.log(pago);
 		rc.pagoPlanPago = pago.planPagos;
 		rc.pago = pago;
 		//console.log(pago);
@@ -803,19 +770,14 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 				var m = pp.fechaLimite.getMonth();
 				if (m == 0) {
 					numeroCorte = 12 * 2 - 1;
-					var fechaCorteInicio = new Date(pp.fechaLimite.getFullYear(), 11, 07);
-					var fechaCorteFin = new Date(pp.fechaLimite.getFullYear(), 11, 21);
+					var fechaCorteInicio = new Date(pp.fechaLimite.getFullYear() - 1, 11, 07);
+					var fechaCorteFin = new Date(pp.fechaLimite.getFullYear() - 1, 11, 21);
 				}
 				else {
 					numeroCorte = pp.fechaLimite.getMonth() * 2 - 1;
 					var fechaCorteInicio = new Date(pp.fechaLimite.getFullYear(), pp.fechaLimite.getMonth() - 1, 07);
 					var fechaCorteFin = new Date(pp.fechaLimite.getFullYear(), pp.fechaLimite.getMonth() - 1, 21);
 				}
-				/*
-										numeroCorte = pp.fechaLimite.getMonth() * 2 - 1;
-										var fechaCorteInicio = new Date(pp.fechaLimite.getFullYear(), pp.fechaLimite.getMonth() -1, 07);	
-										var fechaCorteFin 	 = new Date(pp.fechaLimite.getFullYear(), pp.fechaLimite.getMonth() -1, 21);
-				*/
 			}
 
 			if (arreglo[numeroCorte] == undefined) {
@@ -1117,6 +1079,7 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 
 
 	}
+
 	this.guardarNotaCliente = function (nota, form) {
 		//console.log(nota);
 		if (form.$invalid) {
@@ -1137,6 +1100,7 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 		$('#modalCliente').modal('hide');
 		toastr.success('Guardado correctamente.');
 	}
+
 	this.cambioEstatusRespuesta = function () {
 		this.respuestaNotaCLiente = !this.respuestaNotaCLiente;
 
@@ -1155,6 +1119,7 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 		$("#modalCuenta").modal();
 
 	}
+
 	this.guardarNotaCuenta = function (nota, form) {
 		//console.log(nota);      
 
@@ -1590,14 +1555,13 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 	};
 
 	this.imprimirEstadoCuenta = function (objeto) {
-		//console.log(objeto);    
 		Meteor.call('getPeople', objeto.distribuidor._id, function (error, result) {
 			if (result) {
 
-				//console.log(objeto);
-
 				var cortes = _.toArray(objeto.arreglo);
-				var corte = cortes[cortes.length - 1];
+
+				//var corte = cortes[cortes.length - 1];
+				var corte;
 
 				Number.prototype.format = function (n, x) {
 					var re = '(\\d)(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
@@ -1623,13 +1587,22 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 					fechaCorteFin = new Date(fecha.getFullYear(), mes, 21);
 				}
 
+				//var numeroCorte = corte.numeroCorte;
+				//console.log("Ini 2:", fechaCorteInicio.getTime());
+				_.each(cortes, function (c) {
+					//console.log("Ini 1:", c.fechaCorteInicio.getTime());
+					if (new Date(c.fechaCorteInicio).getTime() == new Date(fechaCorteInicio).getTime()) {
+						numeroCorte = c.numeroCorte;
+						corte = c;
+					}
+				});
 
-				var numeroCorte = corte.numeroCorte;
 
 				/*
-									console.log(fechaCorteInicio);
-									console.log(fechaCorteFin);
-									console.log(numeroCorte);
+								console.log(fechaCorteInicio);
+								console.log(fechaCorteFin);
+								console.log(numeroCorte);
+				
 				*/
 
 				objeto.cliente = result;
@@ -1897,9 +1870,129 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 		});
 	};
 
+	this.imprimirRelacionCobro = function (objeto) {
+
+
+		var distribuidor_id = objeto.planPagos[0].cliente_id;
+
+		Meteor.call('getPeople', distribuidor_id, function (error, result) {
+			if (result) {
+
+
+				Number.prototype.format = function (n, x) {
+					var re = '(\\d)(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+					return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$1,');
+				};
+
+				objeto.cliente = result;
+
+				var datos = {};
+
+				datos.fechaCorteInicio = objeto.fechaCorteInicio;
+				datos.fechaCorteFin = objeto.fechaCorteFin;
+				datos.numeroCorte = objeto.numeroCorte;
+
+				datos.distribuidor = objeto.cliente.profile.nombreCompleto;
+				datos.numeroDistribuidor = objeto.cliente.profile.numeroCliente;
+				datos.direccion = objeto.cliente.profile.calle +
+					' #' + objeto.cliente.profile.numero +
+					' Col.' + objeto.cliente.profile.coloniaCliente.nombre +
+					' CP:' + objeto.cliente.profile.codigoPostal;
+
+				datos.telefonos = objeto.cliente.profile.celular + ' y ' + objeto.cliente.profile.particular;
+
+				datos.limiteCredito = '$' + Number(objeto.cliente.profile.limiteCredito).format(2);
+				datos.disponible = '$' + Number(objeto.cliente.profile.limiteCredito - (objeto.cliente.profile.limiteCredito - objeto.cliente.profile.saldoCredito)).format(2);
+				datos.saldo = '$' + Number(objeto.cliente.profile.limiteCredito - objeto.cliente.profile.saldoCredito).format(2);
+
+				datos.aLiberar = 0;
+
+				datos.planPagos = [];
+
+				datos.prestamos = 0;
+				datos.saldoAnterior = 0;
+				datos.pagoVigente = 0;
+				datos.saldoActual = 0;
+
+				datos.valesAlCorte = 0;//objeto.planPagos.length;
+				datos.nuevosVales = 0;
+				datos.valesUltimoPago = 0;
+
+				datos.fechaCreacion = objeto.cliente.profile.fechaCreacion;
+
+				var sumaImporte = 0;
+				var sumaCM = 0;
+
+				_.each(objeto.planPagos, function (pp) {
+					var pago = {};
+
+					pago.beneficiario = pp.beneficiario;
+					pago.folio = pp.folio;
+					pago.fechaLimite = pp.fechaLimite;
+					pago.numeroPagos = pp.numeroPago.toString() + "-" + pp.numeroPagos.toString();
+
+					pago.adeudoInicial = '$' + Number(pp.adeudoInicial).format(2);
+					pago.saldoAnterior = '$' + Number(pp.saldoActual).format(2);
+					pago.saldoActual = '$' + Number(parseFloat(pp.saldoActual - pp.importeRegular).toFixed(2)).format(2);
+					pago.descripcion = pp.descripcion;
+
+					if (pp.descripcion == "Cargo Moratorio")
+						sumaCM += round(Number(parseFloat(pp.importeRegular).toFixed(3)), 2);
+					else
+						sumaImporte += round(Number(parseFloat(pp.importeRegular).toFixed(3)), 2);
+
+					pago.impReg = '$' + Number(pp.importeRegular).format(2);
+
+					datos.aLiberar += round(Number(parseFloat(pp.capital).toFixed(3)), 2);
+
+					if (pp.fechaLimite >= objeto.fechaCorteFin) {
+						datos.valesAlCorte++;
+						if (pp.numeroPago == 1)
+							datos.nuevosVales++;
+						if (pp.numeroPago == pp.numeroPagos)
+							datos.valesUltimoPago++;
+
+						datos.prestamos += round(Number(parseFloat(pp.adeudoInicial).toFixed(3)), 2);
+						datos.saldoAnterior += round(Number(parseFloat(pp.saldoActual).toFixed(3)), 2);
+						datos.pagoVigente += round(Number(parseFloat(pp.importeRegular).toFixed(3)), 2);
+						datos.saldoActual += round(Number(parseFloat(pp.saldoActual - pp.importeRegular).toFixed(3)), 2);
+						datos.planPagos.push(pago);
+					}
+
+				});
+
+				datos.aLiberar = '$' + Number(datos.aLiberar).format(2);
+				datos.prestamos = '$' + Number(datos.prestamos).format(2);
+				datos.saldoAnterior = '$' + Number(datos.saldoAnterior).format(2);
+				datos.pagoVigente = '$' + Number(datos.pagoVigente).format(2);
+				datos.saldoActual = '$' + Number(datos.saldoActual).format(2);
+
+				datos.sumaImporte = '$' + Number(sumaImporte).format(2);
+				datos.sumaCM = '$' + Number(sumaCM).format(2);
+
+				loading(true);
+				Meteor.call('report', {
+					templateNombre: "RelacionCobro",
+					reportNombre: "RC-" + objeto.cliente.profile.numeroCliente,
+					type: 'pdf',
+					datos: datos,
+				}, function (err, file) {
+					if (!err) {
+						loading(false);
+						$("#modalVerListado").modal('hide');
+						downloadFile(file);
+					} else {
+						toastr.warning("Error al generar el reporte");
+						loading(false);
+					}
+				});
+
+
+			}
+		});
+	};
+
 	this.imprimirCargosMoratorios = function (objeto) {
-		console.log(objeto);
-		return;
 
 		Meteor.call('getPeople', objeto.distribuidor._id, function (error, result) {
 			if (result) {
@@ -2157,21 +2250,23 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 	this.imprimirVales = function (objeto) {
 
 		var numCorteMayor = 0;
-		var fechaPago = "";
-		
+		var fechaPago = 0;
+
 		_.each(objeto.arreglo, function (corte) {
-			if (corte.numeroCorte >= numCorteMayor) {
+			if (corte.fechaPago.getTime() >= fechaPago) {
 				fechaPago = corte.fechaPago;
-				console.log(fechaPago);
 				numCorteMayor = corte.numeroCorte;
 			}
 		});
+		//console.log(fechaPago);
 
 		var dia = rc.fechaInicial.getDate();
 		var mes = rc.fechaInicial.getMonth();
 		var anio = rc.fechaInicial.getFullYear();
 
 		var diaC = fechaPago.getDate();
+		if (diaC >= 15)
+			diaC = 15;
 		var mesC = fechaPago.getMonth() + 1;
 		var anioC = fechaPago.getFullYear();
 
@@ -2182,31 +2277,17 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 
 	this.imprimirTicketsVales = function (objeto) {
 
-		console.log(objeto);
-
 		var distribuidorId = objeto.planPagos[0].cliente_id;
-
-		//console.log(distribuidorId);
-
 		var fechaPago = new Date(objeto.fechaPago);
-
-		/*
-					var numCorteMayor = 0;
-					var fechaPago = "";
-					_.each(objeto.arreglo, function(corte){
-							if (corte.numeroCorte >  numCorteMayor)
-							{
-									fechaPago = corte.fechaPago;
-									numCorteMayor = corte.numeroCorte;
-							}	
-					});
-		*/
 
 		var dia = rc.fechaInicial.getDate();
 		var mes = rc.fechaInicial.getMonth();
 		var anio = rc.fechaInicial.getFullYear();
 
 		var diaC = fechaPago.getDate();
+		if (diaC >= 15)
+			diaC = 15;
+
 		var mesC = fechaPago.getMonth() + 1;
 		var anioC = fechaPago.getFullYear();
 

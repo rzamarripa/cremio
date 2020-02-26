@@ -2,187 +2,236 @@
 	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 		<h1 class="alge-title txt-color-blueDark">
 			<i class="fa fa-list fa-fw "></i>
-				Cobranza
+			Cobranza
 		</h1>
 	</div>
 	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
-				<ul id="sparks" class="">
-					<li class="sparks-info">
-						<h5> Total Recibos <span class="txt-color-green" style="text-align: right">{{cob.totalRecibos | currency}}</span></h5>
-					</li>
-					<li class="sparks-info">
-						<h5> Total C. Moratorio <span class="txt-color-red" style="text-align: right">{{cob.totalMultas | currency}}</span></h5>
-					</li>	
-					<li class="sparks-info">
-						<h5> Recibos Seleccionados <span class="txt-color-green" style="text-align: right">{{cob.seleccionadoRecibos | currency}}</span></h5>
-					</li>	
-					<li class="sparks-info">
-						<h5> Cargos Seleccionados <span class="txt-color-red" style="text-align: right">{{cob.seleccionadoMultas | currency}}</span></h5>
-					</li>	
-				</ul>
+		<ul id="sparks" class="">
+			<li class="sparks-info">
+				<h5> Total Recibos <span class="txt-color-green"
+						style="text-align: right">{{cob.totalRecibos | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5> Total C. Moratorio <span class="txt-color-red"
+						style="text-align: right">{{cob.totalMultas | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5> Recibos Seleccionados <span class="txt-color-green"
+						style="text-align: right">{{cob.seleccionadoRecibos | currency}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5> Cargos Seleccionados <span class="txt-color-red"
+						style="text-align: right">{{cob.seleccionadoMultas | currency}}</span></h5>
+			</li>
+		</ul>
 	</div>
 </div>
 <br>
 <div class="well">
 	<div class="row">
 		<div class="col-sm-9">
-			<a class="btn btn-primary"  ng-click="cob.AsignaFecha(0);" style="width: 130px"><i class="fa fa-table"></i> Vencido Hoy</a>	
-			<a class="btn btn-primary" ng-click="cob.AsignaFecha(1);" style="width: 130px"><i class="fa fa-table"></i> Día</a>
-			<a class="btn btn-primary" ng-click="cob.AsignaFecha(2);" style="width: 130px"><i class="fa fa-table"></i> Semana</a>
-			<a class="btn btn-primary" ng-click="cob.AsignaFecha(3);" style="width: 130px"><i class="fa fa-table"></i> Mes</a>
-			<a class="btn btn-primary" ng-click="cob.AsignaFecha(4);" style="width: 130px"><i class="fa fa-table"></i> Siguiente Mes</a>
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(0);" style="width: 130px"><i class="fa fa-table"></i>
+				Vencido Hoy</a>
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(1);" style="width: 130px"><i class="fa fa-table"></i>
+				Día</a>
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(2);" style="width: 130px"><i class="fa fa-table"></i>
+				Semana</a>
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(3);" style="width: 130px"><i class="fa fa-table"></i>
+				Mes</a>
+			<a class="btn btn-primary" ng-click="cob.AsignaFecha(4);" style="width: 130px"><i class="fa fa-table"></i>
+				Siguiente Mes</a>
 
-		</div>	
+		</div>
 		<div class="col-sm-3">
 			<form class="form-inline">
 				<div class="form-group">
 					<label for="fecha">Fecha:</label>
-					<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" ng-model="cob.fechaInicial" />
+					<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control"
+						ng-model="cob.fechaInicial" />
 				</div>
 			</form>
 		</div>
-	</div>	
+	</div>
 	<br />
 	<div class="row">
 		<div class="col-sm-2">
-		    <select name="ordenar" ng-model="cob.valorOrdenar" ng-change="cob.funcionOrdenar()" data-placeholder="Ordenar" class="form-control" >
-				    <option value=""></option>
-				    <option value="Folio">Folio</option>
-				    <option value="Fecha">Fecha</option>
-				    <option value="Cliente">Cliente</option>
-				</select>
-  	</div>
+			<select name="ordenar" ng-model="cob.valorOrdenar" ng-change="cob.funcionOrdenar()"
+				data-placeholder="Ordenar" class="form-control">
+				<option value=""></option>
+				<option value="Folio">Folio</option>
+				<option value="Fecha">Fecha</option>
+				<option value="Cliente">Cliente</option>
+			</select>
+		</div>
 		<div class="col-sm-6">
 			<div class="input-group input-group-md">
-		      <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
-		      <div class="icon-addon addon-md">
-		          <input type="text" placeholder="..." class="form-control" ng-model="cob.buscar.nombreCompleto" capitalize>
-		          <label for="email" class="glyphicon glyphicon-search" rel="tooltip" title="" data-original-title="email"></label>
-		      </div>
-		  </div>
+				<span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+				<div class="icon-addon addon-md">
+					<input type="text" placeholder="..." class="form-control" ng-model="cob.buscar.nombreCompleto"
+						capitalize>
+					<label for="email" class="glyphicon glyphicon-search" rel="tooltip" title=""
+						data-original-title="email"></label>
+				</div>
+			</div>
 		</div>
 		<div class="col-sm-4">
-			<a class="btn btn-default pull-right"  ng-click="cob.imprimirRecibos(cob.cobranza)" style="width: 130px">Imprimir Recibos</a>&nbsp;
-			<a class="btn btn-default pull-right"  ng-click="cob.imprimirListas(cob.cobranza)" style="width: 130px">Imprimir Lista</a>
-		</div>	
+			<a class="btn btn-default pull-right" ng-click="cob.imprimirRecibos(cob.cobranza)"
+				style="width: 130px">Imprimir Recibos</a>&nbsp;
+			<a class="btn btn-default pull-right" ng-click="cob.imprimirListas(cob.cobranza)"
+				style="width: 130px">Imprimir Lista</a>
+		</div>
 	</div>
 </div>
 
-<div class="row">	
+<div class="row">
 	<div class="col-sm-12">
-		<table id="rec" class="table table-hover border-collapse" >
+		<table id="rec" class="table table-hover border-collapse">
 			<thead>
 				<tr>
 					<th width="2%" style="margin: 0px; border: 0px; padding: 0px">
-						<input id="todos" type="checkbox" class="form-control" ng-checked="false" ng-click="cob.cambiar()" style="margin: 0px; border: 0px; padding: 0px"/>
+						<input id="todos" type="checkbox" class="form-control" ng-checked="false"
+							ng-click="cob.cambiar()" style="margin: 0px; border: 0px; padding: 0px" />
 					</th>
 					<th width="5%">No.</th>
-					<th width="5%"><div class="text-center">Crédito</div></th>
-					<th width="5%"><div class="text-center">Recibo</div></th>
-					<th width="10%"><div class="text-center">Tipo</div></th>
-					<th width="10%"><div class="text-center">Fecha</div></th>
-					<th width="10%"><div class="text-center">No. Cliente</div></th>
-					<th width="35%"><div class="text-center">Cliente</div></th>
-					<th width="10%"><div class="text-center">Importe</div></th>
-					<th width="10%"><div class="text-center">Saldo</div></th>
+					<th width="5%">
+						<div class="text-center">Crédito</div>
+					</th>
+					<th width="5%">
+						<div class="text-center">Recibo</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">Tipo</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">Fecha</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">No. Cliente</div>
+					</th>
+					<th width="35%">
+						<div class="text-center">Cliente</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">Importe</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">Saldo</div>
+					</th>
 				</tr>
 			</thead>
 			<tbody>
-		    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in cob.cobranza | orderBy: cob.funcionOrdenar() | filter: cob.buscar" ng-class="objeto.classPago">
-			    <td style="margin: 0px; border: 0px; padding: 0px">
-				    <input type="checkbox" class="form-control" 
-				    											 ng-model="objeto.imprimir" 
-				    											 ng-click="cob.sumarSeleccionados(objeto)"
-				    											 ng-change="cob.Selecionar(objeto)" value="objeto.imprimir" style="margin: 0px; border: 0px; padding: 0px" /> 
-			    </td>
-			    <td ng-click="cob.selCredito(objeto, $index + 1)">{{ $index + 1 }}</td>
-			    <td class="text-center" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.credito.folio}}</td>
-			    <td ng-click="cob.selCredito(objeto,$index + 1)">
-				    <span style="font-size: smaller">{{objeto.numeroPago}} - {{objeto.numeroPagos}} </span>
-				  </td>
-				  <td class="text-center" style="font-size: smaller" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.descripcion}}</td>
-				  <td class="text-center" style="font-size: small" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.fechaLimite | date:'dd-MM-yyyy'}}</td>
-				  <td class="text-center" style="font-size: smaller" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.cliente.profile.numeroCliente}}</td>
-			    <td ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.cliente.profile.nombreCompleto}}</td>
-			    <td class="text-right" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.cargo | currency}}</td>
-			    <td class="text-right" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.importeRegular | currency}}</td>
-		    </tr>
-		    
-		    <tr ng-repeat-end ng-if="cob.isSelected($index + 1) && cob.ban">
-            <td colspan="12">
-	           	<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
-										<header role="heading">
-										
-										<ul id="widget-tab-1" class="nav nav-tabs pull-left">
-								
-											<li class="active">
-								
-												<a data-toggle="tab" href="#hr1" aria-expanded="true"> <i class="fa fa-lg fa-info"></i> <span class="hidden-mobile hidden-tablet"> Datos del cliente	</span> </a>
-											</li>
-								
-											<li class="" ng-click="cob.selCredito2(objeto)">
-												<a data-toggle="tab" href="#hr2" aria-expanded="false"> <i class="fa fa-lg fa-credit-card"></i> <span class="hidden-mobile hidden-tablet"> Historial crediticio </span></a>
-											</li>
-											
-											<li class="">
-												<a data-toggle="tab" href="#hr3" aria-expanded="false"> <i class="fa fa-lg fa-info-circle"></i> <span class="hidden-mobile hidden-tablet"> Datos del crédito </span></a>
-											</li>
-											
-											<li class="">
-												<a data-toggle="tab" href="#hr4" aria-expanded="false"> <i class="fa fa-lg fa-list"></i> <span class="hidden-mobile hidden-tablet"> Historial de cobranza </span></a>
-											</li>
-																						
-										</ul>	
-										
-									<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-								
-									<!-- widget div-->
-									<div role="content">
-										
-										<!-- widget edit box -->
-										<div class="jarviswidget-editbox">
-											<!-- This area used as dropdown edit box -->
-											
-										</div>
-										<!-- end widget edit box -->
-										
-										<!-- widget content -->
-										<div class="widget-body no-padding">
-								
-											<!-- widget body text-->
-											
-											<div class="tab-content padding-10">
-												<div class="tab-pane fade active in" id="hr1">
-													<div ng-include="'client/cobranza/_informacionCliente.html'"></div>
-												</div>
-												<div class="tab-pane fade" id="hr2">
-													<div ng-include="'client/cobranza/_historialCrediticio.html'"></div>
-												</div>
-												<div class="tab-pane fade" id="hr3">
-													<div ng-include="'client/cobranza/_informacionCredito.html'"></div>
-												</div>
-												<div class="tab-pane fade" id="hr4">
-													<div ng-include="'client/cobranza/_historialCobranza.html'"></div>
-												</div>
+				<tr style='cursor: pointer;  padding-bottom: 1em;'
+					ng-repeat-start="objeto in cob.cobranza | orderBy: cob.funcionOrdenar() | filter: cob.buscar"
+					ng-class="objeto.classPago">
+					<td style="margin: 0px; border: 0px; padding: 0px">
+						<input type="checkbox" class="form-control" ng-model="objeto.imprimir"
+							ng-click="cob.sumarSeleccionados(objeto)" ng-change="cob.Selecionar(objeto)"
+							value="objeto.imprimir" style="margin: 0px; border: 0px; padding: 0px" />
+					</td>
+					<td ng-click="cob.selCredito(objeto, $index + 1)">{{ $index + 1 }}</td>
+					<td class="text-center" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.credito.folio}}</td>
+					<td ng-click="cob.selCredito(objeto,$index + 1)">
+						<span style="font-size: smaller">{{objeto.numeroPago}} - {{objeto.numeroPagos}} </span>
+					</td>
+					<td class="text-center" style="font-size: smaller" ng-click="cob.selCredito(objeto,$index + 1)">
+						{{objeto.descripcion}}</td>
+					<td class="text-center" style="font-size: small" ng-click="cob.selCredito(objeto,$index + 1)">
+						{{objeto.fechaLimite | date:'dd-MM-yyyy'}}</td>
+					<td class="text-center" style="font-size: smaller" ng-click="cob.selCredito(objeto,$index + 1)">
+						{{objeto.cliente.profile.numeroCliente}}</td>
+					<td ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.cliente.profile.nombreCompleto}}</td>
+					<td class="text-right" ng-click="cob.selCredito(objeto,$index + 1)">{{objeto.cargo | currency}}</td>
+					<td class="text-right" ng-click="cob.selCredito(objeto,$index + 1)">
+						{{objeto.importeRegular | currency}}</td>
+				</tr>
 
-											</div>
-											
-											<!-- end widget body text-->
-											
-											<!-- widget footer -->
-											<div class="widget-footer text-right">
-											</div>
-											<!-- end widget footer -->
-											
+				<tr ng-repeat-end ng-if="cob.isSelected($index + 1) && cob.ban">
+					<td colspan="12">
+						<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false"
+							data-widget-editbutton="false" data-widget-togglebutton="false"
+							data-widget-deletebutton="false" data-widget-fullscreenbutton="false"
+							data-widget-custombutton="false" role="widget">
+							<header role="heading">
+
+								<ul id="widget-tab-1" class="nav nav-tabs pull-left">
+
+									<li class="active">
+
+										<a data-toggle="tab" href="#hr1" aria-expanded="true"> <i
+												class="fa fa-lg fa-info"></i> <span class="hidden-mobile hidden-tablet">
+												Datos del cliente </span> </a>
+									</li>
+
+									<li class="" ng-click="cob.selCredito2(objeto)">
+										<a data-toggle="tab" href="#hr2" aria-expanded="false"> <i
+												class="fa fa-lg fa-credit-card"></i> <span
+												class="hidden-mobile hidden-tablet"> Historial crediticio </span></a>
+									</li>
+
+									<li class="">
+										<a data-toggle="tab" href="#hr3" aria-expanded="false"> <i
+												class="fa fa-lg fa-info-circle"></i> <span
+												class="hidden-mobile hidden-tablet"> Datos del crédito </span></a>
+									</li>
+
+									<li class="">
+										<a data-toggle="tab" href="#hr4" aria-expanded="false"> <i
+												class="fa fa-lg fa-list"></i> <span class="hidden-mobile hidden-tablet">
+												Historial de cobranza </span></a>
+									</li>
+
+								</ul>
+
+								<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+							</header>
+
+							<!-- widget div-->
+							<div role="content">
+
+								<!-- widget edit box -->
+								<div class="jarviswidget-editbox">
+									<!-- This area used as dropdown edit box -->
+
+								</div>
+								<!-- end widget edit box -->
+
+								<!-- widget content -->
+								<div class="widget-body no-padding">
+
+									<!-- widget body text-->
+
+									<div class="tab-content padding-10">
+										<div class="tab-pane fade active in" id="hr1">
+											<div ng-include="'client/cobranza/_informacionCliente.html'"></div>
 										</div>
-										<!-- end widget content -->
-										
+										<div class="tab-pane fade" id="hr2">
+											<div ng-include="'client/cobranza/_historialCrediticio.html'"></div>
+										</div>
+										<div class="tab-pane fade" id="hr3">
+											<div ng-include="'client/cobranza/_informacionCredito.html'"></div>
+										</div>
+										<div class="tab-pane fade" id="hr4">
+											<div ng-include="'client/cobranza/_historialCobranza.html'"></div>
+										</div>
+
 									</div>
-									<!-- end widget div -->
-									
-								</div>	            
-            </td>
-        </tr>
+
+									<!-- end widget body text-->
+
+									<!-- widget footer -->
+									<div class="widget-footer text-right">
+									</div>
+									<!-- end widget footer -->
+
+								</div>
+								<!-- end widget content -->
+
+							</div>
+							<!-- end widget div -->
+
+						</div>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
@@ -190,127 +239,140 @@
 
 <!-- /////////////////////////MODAL NOTA COBRANZA ////////////////////////// -->
 <div class="container">
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-  <!-- Modal content-->
-      <div class="modal-content">
-	      <form name="formNotaCobranza" novalidate>
-	        <div class="modal-header">
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	          <h4 class="modal-title">Nota de cobranza</h4>
-	        </div>
-	        <div class="modal-body" >
-	          <h6>Información relacionada con el crédito</h6><br/>
-	          <p>Cliente: <strong>{{cob.notaCobranza.cliente}}</strong></p>
-	          <p>Crédito: <strong>{{cob.notaCobranza.folioCredito}}</strong></p>
-	          <p>Recibo: <strong>{{cob.notaCobranza.recibo}}</strong></p>
-	          <p>Multa: <strong>Pendiente</strong></p>
-	        </div>
-	        <div class="modal-footer">
-		        <div class="col-sm-12" valida>
-		        	<label class="pull-left">Título de la nota</label>
-		        	<input name="titulo"  type="text" class="form-control" placeholder="Nombre" ng-model="cob.notaCobranza.titulo" required="" capitalize>
-		        </div>
-		        <div class="col-sm-12" valida>
-		        	<label class="pull-left">Nota</label>
-		        	<textarea name="nota" type="text" class="form-control" placeholder="Escribe la nota aqui" ng-model="cob.notaCobranza.descripcion" required="" capitalize>
-		        	</textarea>
-		        </div>	
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<form name="formNotaCobranza" novalidate>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Nota de cobranza</h4>
 					</div>
-	        <div class="modal-footer">
-		        <input type="submit" ng-click="cob.guardarNotaCobranza(cob.notaCobranza, formNotaCobranza)" value="Guardar" class="btn btn-success" valida-form formulario="formNotaCobranza">
-	          <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-	        </div>
-	      </form> 
-      </div>
-      
-    </div>
-  </div>
-</div>				  
+					<div class="modal-body">
+						<h6>Información relacionada con el crédito</h6><br />
+						<p>Cliente: <strong>{{cob.notaCobranza.cliente}}</strong></p>
+						<p>Crédito: <strong>{{cob.notaCobranza.folioCredito}}</strong></p>
+						<p>Recibo: <strong>{{cob.notaCobranza.recibo}}</strong></p>
+						<p>Multa: <strong>Pendiente</strong></p>
+					</div>
+					<div class="modal-footer">
+						<div class="col-sm-12" valida>
+							<label class="pull-left">Título de la nota</label>
+							<input name="titulo" type="text" class="form-control" placeholder="Nombre"
+								ng-model="cob.notaCobranza.titulo" required="" capitalize>
+						</div>
+						<div class="col-sm-12" valida>
+							<label class="pull-left">Nota</label>
+							<textarea name="nota" type="text" class="form-control" placeholder="Escribe la nota aqui"
+								ng-model="cob.notaCobranza.descripcion" required="" capitalize>
+		        	</textarea>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" ng-click="cob.guardarNotaCobranza(cob.notaCobranza, formNotaCobranza)"
+							value="Guardar" class="btn btn-success" valida-form formulario="formNotaCobranza">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
 <!--     //////////////////////////////////////////////////////////// -->
 <!-- /////////////////////////MODAL NOTA CLIENTE //////////////////////////////////////// -->
 <div class="container">
-      <!-- Modal -->
-	  <div class="modal fade" id="modalCliente" role="dialog">
-	    <div class="modal-dialog">
-    <!-- Modal content-->
-	      <div class="modal-content">
-		      <form name="formNotaCliente" novalidate>
-		        <div class="modal-header">
-		          <button type="button" class="close" data-dismiss="modal">&times;</button>
-		          <h4 class="modal-title">Nota para el cliente</h4>
-		        </div>
-		        <div class="modal-body" >
-							<h6>Información relacionada con el crédito</h6><br/>
-		          <p>Cliente: <strong>{{cob.notaCobranza.cliente}}</strong></p>
-		          <p>Crédito: <strong>{{cob.notaCobranza.folioCredito}}</strong></p>
-		          <p>Recibo: <strong>{{cob.notaCobranza.recibo}}</strong></p>
-		          <p>Multa: <strong>Pendiente</strong></p>
-		        </div>
-			      <div class="modal-footer">
-				      <label ng-if="cuenta" class="checkbox-inline pull-left"><input  type="checkbox"   ng-click="cob.cambioEstatusRespuesta()" > Requiere respuesta</label>
-				      <div class="col-sm-12" valida>
-			  				<label class="pull-left">Título de la nota</label>
-			        	<input name="tituloCliente" type="text" class="form-control" placeholder="Título" ng-model="cob.notaCobranza.titulo" required="" capitalize>
-				      </div>	
-				      <div class="col-sm-12" valida>
-			        	<label class="pull-left">nota</label>
-			        	<textarea name="descripcion" type="text" class="form-control" placeholder="Escribe la nota aqui" ng-model="cob.notaCobranza.descripcion" required="" capitalize>
-			        	</textarea>
-				      </div>		
+	<!-- Modal -->
+	<div class="modal fade" id="modalCliente" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<form name="formNotaCliente" novalidate>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Nota para el cliente</h4>
+					</div>
+					<div class="modal-body">
+						<h6>Información relacionada con el crédito</h6><br />
+						<p>Cliente: <strong>{{cob.notaCobranza.cliente}}</strong></p>
+						<p>Crédito: <strong>{{cob.notaCobranza.folioCredito}}</strong></p>
+						<p>Recibo: <strong>{{cob.notaCobranza.recibo}}</strong></p>
+						<p>Multa: <strong>Pendiente</strong></p>
+					</div>
+					<div class="modal-footer">
+						<label ng-if="cuenta" class="checkbox-inline pull-left"><input type="checkbox"
+								ng-click="cob.cambioEstatusRespuesta()"> Requiere respuesta</label>
+						<div class="col-sm-12" valida>
+							<label class="pull-left">Título de la nota</label>
+							<input name="tituloCliente" type="text" class="form-control" placeholder="Título"
+								ng-model="cob.notaCobranza.titulo" required="" capitalize>
 						</div>
-		        <div class="modal-footer">
-					  	<input type="submit" ng-click="cob.guardarNotaCliente(cob.notaCobranza, formNotaCliente)" value="Guardar" class="btn btn-success" valida-form formulario="formNotaCliente">
-		          <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-		        </div>
-		      </form>  
-	      </div>
-	    </div>
-	  </div>
-	 </div>
+						<div class="col-sm-12" valida>
+							<label class="pull-left">nota</label>
+							<textarea name="descripcion" type="text" class="form-control"
+								placeholder="Escribe la nota aqui" ng-model="cob.notaCobranza.descripcion" required=""
+								capitalize>
+			        	</textarea>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" ng-click="cob.guardarNotaCliente(cob.notaCobranza, formNotaCliente)"
+							value="Guardar" class="btn btn-success" valida-form formulario="formNotaCliente">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 <!--////////////////////////////////////////////////////////////////////////////////////// -->
 <!-- /////////////////////////MODAL NOTA PARA LA CUENTA //////////////////////////////////////// -->
 <div class="container">
-      <!-- Modal -->
-	  <div class="modal fade" id="modalCuenta" role="dialog">
-	    <div class="modal-dialog">
-    <!-- Modal content-->
-	      <div class="modal-content">
-		      <form name="formNotaCuenta" novalidate>
-		        <div class="modal-header">
-		          <button type="button" class="close" data-dismiss="modal">&times;</button>
-		          <h4 class="modal-title">Nota para la cuenta</h4>
-		        </div>
-		        <div class="modal-body" >
-							<h6>Información relacionada con el crédito</h6><br/>
-		          <p>Cliente: <strong>{{cob.notaCobranza.cliente}}</strong></p>
-		          <p>Crédito: <strong>{{cob.notaCobranza.folioCredito}}</strong></p>
-		          <p>Recibo: <strong>{{cob.notaCobranza.recibo}}</strong></p>
-		          <p>Multa: <strong>Pendiente</strong></p>
-		        </div>
-		        <div class="modal-footer">
-		      	  <label class="checkbox-inline pull-left"><input  type="checkbox"   ng-click="cob.cambioEstatusRespuesta()"/> Requiere respuesta</label>
-		      	  <br/><br/>
-		      	  <div class="col-sm-12" valida>
-								<label class="pull-left">Título de la nota</label>
-			        	<input name="tiutloCuenta"  type="text" class="form-control" placeholder="Nombre" ng-model="cob.notaCobranza.titulo" required="" capitalize >
-		      	  </div>
-		      	  <div class="col-sm-12" valida>
-			        	<label class="pull-left">nota</label>
-			        	<textarea name="notaCuenta" type="text" class="form-control" placeholder="Escribe la nota aqui" ng-model="cob.notaCobranza.descripcion" required="" capitalize >	
-		        	</textarea>
-		      	  </div>
+	<!-- Modal -->
+	<div class="modal fade" id="modalCuenta" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<form name="formNotaCuenta" novalidate>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Nota para la cuenta</h4>
+					</div>
+					<div class="modal-body">
+						<h6>Información relacionada con el crédito</h6><br />
+						<p>Cliente: <strong>{{cob.notaCobranza.cliente}}</strong></p>
+						<p>Crédito: <strong>{{cob.notaCobranza.folioCredito}}</strong></p>
+						<p>Recibo: <strong>{{cob.notaCobranza.recibo}}</strong></p>
+						<p>Multa: <strong>Pendiente</strong></p>
+					</div>
+					<div class="modal-footer">
+						<label class="checkbox-inline pull-left"><input type="checkbox"
+								ng-click="cob.cambioEstatusRespuesta()" /> Requiere respuesta</label>
+						<br /><br />
+						<div class="col-sm-12" valida>
+							<label class="pull-left">Título de la nota</label>
+							<input name="tiutloCuenta" type="text" class="form-control" placeholder="Nombre"
+								ng-model="cob.notaCobranza.titulo" required="" capitalize>
 						</div>
-		        <div class="modal-footer">
-							<input type="submit" ng-click="cob.guardarNotaCuenta(cob.notaCobranza, formNotaCuenta)" value="Guardar" class="btn btn-success" valida-form formulario="formNotaCuenta">
-		          <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-		        </div>
-		      </form>  
-	      </div>
-	    </div>
-	  </div>
-	 </div>
+						<div class="col-sm-12" valida>
+							<label class="pull-left">nota</label>
+							<textarea name="notaCuenta" type="text" class="form-control"
+								placeholder="Escribe la nota aqui" ng-model="cob.notaCobranza.descripcion" required=""
+								capitalize>
+		        	</textarea>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" ng-click="cob.guardarNotaCuenta(cob.notaCobranza, formNotaCuenta)"
+							value="Guardar" class="btn btn-success" valida-form formulario="formNotaCuenta">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 <!--////////////////////////////////////////////////////////////////////////////////////// -->
 
-<a id='dwnldLnk' href="#" download='archivo.docx' style="display:none;" hidden="true"></a>   
+<a id='dwnldLnk' href="#" download='archivo.docx' style="display:none;" hidden="true"></a>

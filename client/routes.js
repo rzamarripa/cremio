@@ -469,7 +469,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 								return 'UNAUTHORIZED';
 							}
 						});
-					}, 200);
+					}, 400);
 				}]
 			}
 		})

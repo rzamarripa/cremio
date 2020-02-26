@@ -2,409 +2,519 @@
 	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-3">
 		<h1 class="alge-title txt-color-blueDark">
 			<i class="fa fa-list fa-fw "></i>
-				Cobranza Vales
+			Cobranza Vales
 		</h1>
 	</div>
 	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-9">
-						<ul id="sparks" class="">
-							<li class="sparks-info">
-								<h5> Vales Sel. <span class="txt-color-green" style="text-align: right">{{cobv.seleccionadoVales | currency}}</span></h5>
-								<li class="sparks-info">
-								<h5> Créditos P. Sel. <span class="txt-color-green" style="text-align: right">{{cobv.seleccionadoCreditosPersonales | currency}}</span></h5>
-							<li class="sparks-info">
-								<h5> Cargos Mor. Sel. <span class="txt-color-red" style="text-align: right">{{cobv.seleccionadoCargosMoratorios | currency}}</span></h5>
-							<li class="sparks-info">
-								<h5> Total Vales<span class="txt-color-green" style="text-align: right">{{cobv.totalVales | currency}}</span></h5>
-								<li class="sparks-info">
-								<h5> Total Créditos P.<span class="txt-color-green" style="text-align: right">{{cobv.totalCreditosPersonales | currency}}</span></h5>
-							<li class="sparks-info">
-								<h5> Total C. Mor. <span class="txt-color-red" style="text-align: right">{{cobv.totalCargosMoratorios | currency}}</span></h5>	
-						</ul>
-		</div>
+		<ul id="sparks" class="">
+			<li class="sparks-info">
+				<h5> Vales Sel. <span class="txt-color-green"
+						style="text-align: right">{{cobv.seleccionadoVales | currency}}</span></h5>
+			<li class="sparks-info">
+				<h5> Créditos P. Sel. <span class="txt-color-green"
+						style="text-align: right">{{cobv.seleccionadoCreditosPersonales | currency}}</span></h5>
+			<li class="sparks-info">
+				<h5> Cargos Mor. Sel. <span class="txt-color-red"
+						style="text-align: right">{{cobv.seleccionadoCargosMoratorios | currency}}</span></h5>
+			<li class="sparks-info">
+				<h5> Total Vales<span class="txt-color-green"
+						style="text-align: right">{{cobv.totalVales | currency}}</span></h5>
+			<li class="sparks-info">
+				<h5> Total Créditos P.<span class="txt-color-green"
+						style="text-align: right">{{cobv.totalCreditosPersonales | currency}}</span></h5>
+			<li class="sparks-info">
+				<h5> Total C. Mor. <span class="txt-color-red"
+						style="text-align: right">{{cobv.totalCargosMoratorios | currency}}</span></h5>
+		</ul>
+	</div>
 </div>
 <br>
 <div class="well">
 	<div class="row">
+		<div class="col-sm-9">
+			<!-- <a class="btn btn-primary" ng-click="cobv.AsignaFecha(0);" style="width: 130px"><i class="fa fa-table"></i>
+				Vencido Hoy</a>
+			<a class="btn btn-primary" ng-click="cobv.AsignaFecha(1);" style="width: 130px"><i class="fa fa-table"></i>
+				Día</a>
+			<a class="btn btn-primary" ng-click="cobv.AsignaFecha(2);" style="width: 130px"><i class="fa fa-table"></i>
+				Semana</a>
+			<a class="btn btn-primary" ng-click="cobv.AsignaFecha(3);" style="width: 130px"><i class="fa fa-table"></i>
+				Mes</a>
+			<a class="btn btn-primary" ng-click="cobv.AsignaFecha(2);" style="width: 130px"><i class="fa fa-table"></i>
+				Siguiente Mes</a>
+			<a class="btn btn-primary" ng-click="cobv.AsignaFecha(3);" style="width: 130px"><i class="fa fa-table"></i>
+				Dos Meses</a> -->
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-sm-2">
-				<label for="fecha">Ordenar:</label>	
-		    <select name="ordenar" ng-model="cobv.valorOrdenar" ng-change="cobv.funcionOrdenar()" data-placeholder="Ordenar" class="form-control" >
-				    <option value="Nombre">Nombre</option>
-				    <option value="Numero">Número</option>
-				</select>
-  	</div>
-  	<div class="col-sm-5">
-	  	<label for="fecha">Nombre distribuidor:</label>	
+			<label for="fecha">Ordenar:</label>
+			<select name="ordenar" ng-model="cobv.valorOrdenar" ng-change="cobv.funcionOrdenar()"
+				data-placeholder="Ordenar" class="form-control">
+				<option value="Nombre">Nombre</option>
+				<option value="Numero">Número</option>
+			</select>
+		</div>
+		<div class="col-sm-5">
+			<label for="fecha">Nombre distribuidor:</label>
 			<div class="input-group input-group-md">
-		      <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
-		      <div class="icon-addon addon-md">
-		          <input type="text" placeholder="..." class="form-control" ng-model="cobv.buscar.nombreCompleto" capitalize>
-		          <label for="email" class="glyphicon glyphicon-search" rel="tooltip" title="" data-original-title="email"></label>
-		      </div>
-		  </div>
+				<span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+				<div class="icon-addon addon-md">
+					<input type="text" placeholder="..." class="form-control" ng-model="cobv.buscar.nombreCompleto"
+						capitalize>
+					<label for="email" class="glyphicon glyphicon-search" rel="tooltip" title=""
+						data-original-title="email"></label>
+				</div>
+			</div>
 		</div>
 		<div class="col-sm-3">
 			<form class="form-inline">
 				<div class="form-group">
-						<label for="fecha">Fecha:</label>
-						<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control" ng-model="cobv.fechaInicial" />
-					</div>
+					<label for="fecha">Fecha:</label> <br>
+					<input name="fecha" type="date" format="dd-MM-yyyy" class="form-control"
+						ng-model="cobv.fechaInicial" />
+				</div>
 			</form>
-		</div>	
+		</div>
 		<div class="col-sm-1">
-				<br>
-		    <a class="btn btn-primary"  ng-click="cobv.imprimirRecibosVales()">Imprimir</a>
-		</div>	
+			<br>
+			<a class="btn btn-primary" ng-click="cobv.imprimirRecibosVales()">Imprimir</a>
+		</div>
 	</div>
-	
+
 </div>
- <div class="row">	
+<div class="row">
 	<div class="col-sm-12">
-		<table id="rec" class="table table-hover border-collapse" >
+		<table id="rec" class="table table-hover border-collapse">
 			<thead>
 				<tr>
 					<th width="2%" style="margin: 0px; border: 0px; padding: 0px">
-						<input id="todos" type="checkbox" class="form-control" ng-checked="false" ng-click="cobv.cambiar()" style="margin: 0px; border: 0px; padding: 0px"/>
+						<input id="todos" type="checkbox" class="form-control" ng-checked="false"
+							ng-click="cobv.cambiar()" style="margin: 0px; border: 0px; padding: 0px" />
 					</th>
 					<th width="5%">No.</th>
-					<th width="10%"><div class="text-center">No. Dist.</div></th>
-					<th width="25%"><div class="text-center">Distribuidor</div></th>
-					<th width="1%"><div class="text-center">Vales</div></th>
-					<th width="10%"><div class="text-center">Créditos P.</div></th>
-					<th width="10%"><div class="text-center">C. Mor.</div></th>
-					<th width="10%"><div class="text-center">Bonificación</div></th>
-					<th width="8%"><div class="text-center">Seguro</div></th>
-					<th width="10%"><div class="text-center">Total</div></th>
-					<th width="10%"><div class="text-center">Acción</div></th>
+					<th width="10%">
+						<div class="text-center">No. Dist.</div>
+					</th>
+					<th width="25%">
+						<div class="text-center">Distribuidor</div>
+					</th>
+					<th width="1%">
+						<div class="text-center">Vales</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">Créditos P.</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">C. Mor.</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">Bonificación</div>
+					</th>
+					<th width="8%">
+						<div class="text-center">Seguro</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">Total</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">Acción</div>
+					</th>
 				</tr>
 			</thead>
 			<tbody>
-		    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in cobv.cobranza | orderBy: cobv.funcionOrdenar() | filter: cobv.buscar" ng-class="objeto.classPago">
-			    <td style="margin: 0px; border: 0px; padding: 0px">
-				    <input type="checkbox" class="form-control" 
-				    											 ng-model="objeto.imprimir" 
-				    											 ng-click="cobv.sumarSeleccionados(objeto)"
-				    											 ng-change="cobv.Selecionar(objeto)" value="objeto.imprimir" style="margin: 0px; border: 0px; padding: 0px" /> 
-			    </td>
-			    <td ng-click="cobv.selCredito(objeto, $index + 1)">{{ $index + 1 }}</td>
-				  <td class="text-center" style="font-size: smaller" ng-click="cobv.selCredito(objeto,$index + 1)">{{objeto.distribuidor.profile.numeroCliente}}</td>
-			    <td ng-click="cobv.selCredito(objeto,$index + 1)" style="font-size: small">{{objeto.distribuidor.profile.nombreCompleto}}</td>
-			    <td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">{{objeto.importe | currency}}</td>
-			    <td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">{{objeto.importeCreditoP | currency}}</td>
-			    <td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
-			    <td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
-			    <td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">{{objeto.seguro | currency}}</td>
-			    <td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">{{objeto.importe + objeto.importeCreditoP + objeto.cargosMoratorios + objeto.seguro - objeto.bonificacion  | currency}}</td>
-			    <td class="text-left" style="padding: 0px">
-				    <a href="#" ng-click="cobv.imprimirEstadoCuenta(objeto)" class="btn btn-xs btn-labeled btn-info"><i class="fa fa-print"></i></a>
-				    <a href="#" ng-click="cobv.imprimirVales(objeto)" class="btn btn-xs btn-labeled btn-info"><i class="fa fa-file-text-o"></i></a>
-			    </td>
-		    </tr>
-		    
-		    <tr ng-repeat-end ng-if="cobv.isSelected($index + 1) && cobv.ban">
-            <td colspan="12">
-	           	<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
-										<header role="heading">
-										
-										<ul id="widget-tab-1" class="nav nav-tabs pull-left">
-								
-											<li class="active">
-								
-												<a data-toggle="tab" href="#hr1" aria-expanded="true"> <i class="fa fa-lg fa-info"></i> <span class="hidden-mobile hidden-tablet"> Datos del distribuidor	</span> </a>
-											</li>
-								
-											<li class="" ng-click="cobv.getPagos(objeto)">
-												<a data-toggle="tab" href="#hr2" aria-expanded="false"> <i class="fa fa-lg fa-credit-card"></i> <span class="hidden-mobile hidden-tablet"> Historial de vales </span></a>
-											</li>
-											
-											<li class="">
-												<a data-toggle="tab" href="#hr3" aria-expanded="false"> <i class="fa fa-lg fa-info-circle"></i> <span class="hidden-mobile hidden-tablet"> Datos vales </span></a>
-											</li>
-											
-											<li class="">
-												<a data-toggle="tab" href="#hr4" aria-expanded="false"> <i class="fa fa-lg fa-list"></i> <span class="hidden-mobile hidden-tablet"> Historial de cobranza </span></a>
-											</li>
-																						
-										</ul>	
-										
-									<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-								
-									<!-- widget div-->
-									<div role="content">
-										
-										<!-- widget edit box -->
-										<div class="jarviswidget-editbox">
-											<!-- This area used as dropdown edit box -->
-											
-										</div>
-										<!-- end widget edit box -->
-										
-										<!-- widget content -->
-										<div class="widget-body no-padding">
-								
-											<!-- widget body text-->
-											
-											<div class="tab-content padding-10">
-												<div class="tab-pane fade active in" id="hr1">
-													<div ng-include="'client/cobranzaVales/_informacionCliente.html'"></div>
-												</div>
-												<div class="tab-pane fade" id="hr2">
-													<div ng-include="'client/cobranzaVales/_historialCrediticio.html'"></div>
-												</div>
-												<div class="tab-pane fade" id="hr3">
-													<div ng-include="'client/cobranzaVales/_informacionCredito.html'"></div>
-												</div>
-												<div class="tab-pane fade" id="hr4">
-													<div ng-include="'client/cobranzaVales/_historialCobranza.html'"></div>
-												</div>
+				<tr style='cursor: pointer;  padding-bottom: 1em;'
+					ng-repeat-start="objeto in cobv.cobranza | orderBy: cobv.funcionOrdenar() | filter: cobv.buscar"
+					ng-class="objeto.classPago">
+					<td style="margin: 0px; border: 0px; padding: 0px">
+						<input type="checkbox" class="form-control" ng-model="objeto.imprimir"
+							ng-click="cobv.sumarSeleccionados(objeto)" ng-change="cobv.Selecionar(objeto)"
+							value="objeto.imprimir" style="margin: 0px; border: 0px; padding: 0px" />
+					</td>
+					<td ng-click="cobv.selCredito(objeto, $index + 1)">{{ $index + 1 }}</td>
+					<td class="text-center" style="font-size: smaller" ng-click="cobv.selCredito(objeto,$index + 1)">
+						{{objeto.distribuidor.profile.numeroCliente}}</td>
+					<td ng-click="cobv.selCredito(objeto,$index + 1)" style="font-size: small">
+						{{objeto.distribuidor.profile.nombreCompleto}}</td>
+					<td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">{{objeto.importe | currency}}
+					</td>
+					<td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">
+						{{objeto.importeCreditoP | currency}}</td>
+					<td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">
+						{{objeto.cargosMoratorios | currency}}</td>
+					<td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">
+						{{objeto.bonificacion | currency}}</td>
+					<td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">{{objeto.seguro | currency}}
+					</td>
+					<td class="text-right" ng-click="cobv.selCredito(objeto,$index + 1)">
+						{{objeto.importe + objeto.importeCreditoP + objeto.cargosMoratorios + objeto.seguro - objeto.bonificacion  | currency}}
+					</td>
+					<td class="text-left" style="padding: 0px">
+						<a href="#" ng-click="cobv.imprimirEstadoCuenta(objeto)"
+							class="btn btn-xs btn-labeled btn-info"><i class="fa fa-print"></i></a>
+						<a href="#" ng-click="cobv.imprimirVales(objeto)" class="btn btn-xs btn-labeled btn-info"><i
+								class="fa fa-file-text-o"></i></a>
+					</td>
+				</tr>
 
-											</div>
-											
-											<!-- end widget body text-->
-											
-											<!-- widget footer -->
-											<div class="widget-footer text-right">
-											</div>
-											<!-- end widget footer -->
-											
+				<tr ng-repeat-end ng-if="cobv.isSelected($index + 1) && cobv.ban">
+					<td colspan="12">
+						<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false"
+							data-widget-editbutton="false" data-widget-togglebutton="false"
+							data-widget-deletebutton="false" data-widget-fullscreenbutton="false"
+							data-widget-custombutton="false" role="widget">
+							<header role="heading">
+
+								<ul id="widget-tab-1" class="nav nav-tabs pull-left">
+
+									<li class="active">
+
+										<a data-toggle="tab" href="#hr1" aria-expanded="true"> <i
+												class="fa fa-lg fa-info"></i> <span class="hidden-mobile hidden-tablet">
+												Datos del distribuidor </span> </a>
+									</li>
+
+									<li class="" ng-click="cobv.getPagos(objeto)">
+										<a data-toggle="tab" href="#hr2" aria-expanded="false"> <i
+												class="fa fa-lg fa-credit-card"></i> <span
+												class="hidden-mobile hidden-tablet"> Historial de vales </span></a>
+									</li>
+
+									<li class="">
+										<a data-toggle="tab" href="#hr3" aria-expanded="false"> <i
+												class="fa fa-lg fa-info-circle"></i> <span
+												class="hidden-mobile hidden-tablet"> Datos vales </span></a>
+									</li>
+
+									<li class="">
+										<a data-toggle="tab" href="#hr4" aria-expanded="false"> <i
+												class="fa fa-lg fa-list"></i> <span class="hidden-mobile hidden-tablet">
+												Historial de cobranza </span></a>
+									</li>
+
+								</ul>
+
+								<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+							</header>
+
+							<!-- widget div-->
+							<div role="content">
+
+								<!-- widget edit box -->
+								<div class="jarviswidget-editbox">
+									<!-- This area used as dropdown edit box -->
+
+								</div>
+								<!-- end widget edit box -->
+
+								<!-- widget content -->
+								<div class="widget-body no-padding">
+
+									<!-- widget body text-->
+
+									<div class="tab-content padding-10">
+										<div class="tab-pane fade active in" id="hr1">
+											<div ng-include="'client/cobranzaVales/_informacionCliente.html'"></div>
 										</div>
-										<!-- end widget content -->
-										
+										<div class="tab-pane fade" id="hr2">
+											<div ng-include="'client/cobranzaVales/_historialCrediticio.html'"></div>
+										</div>
+										<div class="tab-pane fade" id="hr3">
+											<div ng-include="'client/cobranzaVales/_informacionCredito.html'"></div>
+										</div>
+										<div class="tab-pane fade" id="hr4">
+											<div ng-include="'client/cobranzaVales/_historialCobranza.html'"></div>
+										</div>
+
 									</div>
-									<!-- end widget div -->
-									
-								</div>	            
-            </td>
-        </tr>
-		    
+
+									<!-- end widget body text-->
+
+									<!-- widget footer -->
+									<div class="widget-footer text-right">
+									</div>
+									<!-- end widget footer -->
+
+								</div>
+								<!-- end widget content -->
+
+							</div>
+							<!-- end widget div -->
+
+						</div>
+					</td>
+				</tr>
+
 			</tbody>
 		</table>
 	</div>
 </div>
 
 
-  <!-- /////////////////////////MODAL NOTA COBRANZA ////////////////////////// -->
-  <div class="container">
-    <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-  <!-- Modal content-->
-      <div class="modal-content">
-	      <form name="formNotaCobranza" novalidate>
-	        <div class="modal-header">
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	          <h4 class="modal-title">Nota de cobranza</h4>
-	        </div>
-	        <div class="modal-body" >
-	          <h6>Información relacionada con el Distribuidor</h6><br/>
-	          <p>Distribuidor: <strong>{{cobv.notaCobranza.cliente}}</strong></p>
-	          <!--
+<!-- /////////////////////////MODAL NOTA COBRANZA ////////////////////////// -->
+<div class="container">
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<form name="formNotaCobranza" novalidate>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Nota de cobranza</h4>
+					</div>
+					<div class="modal-body">
+						<h6>Información relacionada con el Distribuidor</h6><br />
+						<p>Distribuidor: <strong>{{cobv.notaCobranza.cliente}}</strong></p>
+						<!--
 <p>Crédito: <strong>{{cobv.notaCobranza.folioCredito}}</strong></p>
 	          <p>Recibo: <strong>{{cobv.notaCobranza.recibo}}</strong></p>
 	          <p>Multa: <strong>Pendiente</strong></p>
 -->
-	        </div>
-	        <div class="modal-footer">
-		        <div class="col-sm-12" valida>
-		        	<label class="pull-left">Título de la nota</label>
-		        	<input name="titulo"  type="text" class="form-control" placeholder="Nombre" ng-model="cobv.notaCobranza.titulo" required="" capitalize>
-		        </div>
-		        <div class="col-sm-12" valida>
-		        	<label class="pull-left">Nota</label>
-		        	<textarea name="nota" type="text" class="form-control" placeholder="Escribe la nota aqui" ng-model="cobv.notaCobranza.descripcion" required="" capitalize>
-		        	</textarea>
-		        </div>	
 					</div>
-	        <div class="modal-footer">
-		        <input type="submit" ng-click="cobv.guardarNotaCobranza(cobv.notaCobranza, formNotaCobranza)" value="Guardar" class="btn btn-success" valida-form formulario="formNotaCobranza">
-	          <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-	        </div>
-	      </form> 
-      </div>
-      
-    </div>
-  </div>
- </div>
-	<!--     //////////////////////////////////////////////////////////// -->
+					<div class="modal-footer">
+						<div class="col-sm-12" valida>
+							<label class="pull-left">Título de la nota</label>
+							<input name="titulo" type="text" class="form-control" placeholder="Nombre"
+								ng-model="cobv.notaCobranza.titulo" required="" capitalize>
+						</div>
+						<div class="col-sm-12" valida>
+							<label class="pull-left">Nota</label>
+							<textarea name="nota" type="text" class="form-control" placeholder="Escribe la nota aqui"
+								ng-model="cobv.notaCobranza.descripcion" required="" capitalize>
+		        	</textarea>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" ng-click="cobv.guardarNotaCobranza(cobv.notaCobranza, formNotaCobranza)"
+							value="Guardar" class="btn btn-success" valida-form formulario="formNotaCobranza">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
 
-	<!-- /////////////////////////MODAL NOTA CLIENTE //////////////////////////////////////// -->
-	<div class="container">
-	      <!-- Modal -->
-		  <div class="modal fade" id="modalCliente" role="dialog">
-		    <div class="modal-dialog">
-	    <!-- Modal content-->
-		      <div class="modal-content">
-			      <form name="formNotaCliente" novalidate>
-			        <div class="modal-header">
-			          <button type="button" class="close" data-dismiss="modal">&times;</button>
-			          <h4 class="modal-title">Nota para el cliente</h4>
-			        </div>
-			        <div class="modal-body" >
-								<h6>Información relacionada con el Distribuidor</h6><br/>
-			          <p>Distribuidor: <strong>{{cobv.notaCobranza.cliente}}</strong></p>
-<!--
+		</div>
+	</div>
+</div>
+<!--     //////////////////////////////////////////////////////////// -->
+
+<!-- /////////////////////////MODAL NOTA CLIENTE //////////////////////////////////////// -->
+<div class="container">
+	<!-- Modal -->
+	<div class="modal fade" id="modalCliente" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<form name="formNotaCliente" novalidate>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Nota para el cliente</h4>
+					</div>
+					<div class="modal-body">
+						<h6>Información relacionada con el Distribuidor</h6><br />
+						<p>Distribuidor: <strong>{{cobv.notaCobranza.cliente}}</strong></p>
+						<!--
 			          <p>Crédito: <strong>{{cobv.notaCobranza.folioCredito}}</strong></p>
 			          <p>Recibo: <strong>{{cobv.notaCobranza.recibo}}</strong></p>
 			          <p>Multa: <strong>Pendiente</strong></p>
 -->
-			        </div>
-				      <div class="modal-footer">
-					      <label ng-if="cuenta" class="checkbox-inline pull-left"><input  type="checkbox"   ng-click="cobv.cambioEstatusRespuesta()" > Requiere respuesta</label>
-					      <div class="col-sm-12" valida>
-				  				<label class="pull-left">Título de la nota</label>
-				        	<input name="tituloCliente" type="text" class="form-control" placeholder="Título" ng-model="cobv.notaCobranza.titulo" required="" capitalize>
-					      </div>	
-					      <div class="col-sm-12" valida>
-				        	<label class="pull-left">nota</label>
-				        	<textarea name="descripcion" type="text" class="form-control" placeholder="Escribe la nota aqui" ng-model="cobv.notaCobranza.descripcion" required="" capitalize>
+					</div>
+					<div class="modal-footer">
+						<label ng-if="cuenta" class="checkbox-inline pull-left"><input type="checkbox"
+								ng-click="cobv.cambioEstatusRespuesta()"> Requiere respuesta</label>
+						<div class="col-sm-12" valida>
+							<label class="pull-left">Título de la nota</label>
+							<input name="tituloCliente" type="text" class="form-control" placeholder="Título"
+								ng-model="cobv.notaCobranza.titulo" required="" capitalize>
+						</div>
+						<div class="col-sm-12" valida>
+							<label class="pull-left">nota</label>
+							<textarea name="descripcion" type="text" class="form-control"
+								placeholder="Escribe la nota aqui" ng-model="cobv.notaCobranza.descripcion" required=""
+								capitalize>
 				        	</textarea>
-					      </div>		
-							</div>
-			        <div class="modal-footer">
-						  	<input type="submit" ng-click="cobv.guardarNotaCliente(cobv.notaCobranza, formNotaCliente)" value="Guardar" class="btn btn-success" valida-form formulario="formNotaCliente">
-			          <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-			        </div>
-			      </form>  
-		      </div>
-		    </div>
-		  </div>
-		 </div>
-	<!--////////////////////////////////////////////////////////////////////////////////////// -->
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" ng-click="cobv.guardarNotaCliente(cobv.notaCobranza, formNotaCliente)"
+							value="Guardar" class="btn btn-success" valida-form formulario="formNotaCliente">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!--////////////////////////////////////////////////////////////////////////////////////// -->
 
-	<!-- /////////////////////////MODAL NOTA PARA LA CUENTA //////////////////////////////////////// -->
-	<div class="container">
-	      <!-- Modal -->
-		  <div class="modal fade" id="modalCuenta" role="dialog">
-		    <div class="modal-dialog">
-	    <!-- Modal content-->
-		      <div class="modal-content">
-			      <form name="formNotaCuenta" novalidate>
-			        <div class="modal-header">
-			          <button type="button" class="close" data-dismiss="modal">&times;</button>
-			          <h4 class="modal-title">Nota para la cuenta</h4>
-			        </div>
-			        <div class="modal-body" >
-								<h6>Información relacionada con el Distribuidor</h6><br/>
-			          <p>Distribuidor: <strong>{{cobv.notaCobranza.cliente}}</strong></p>
-<!--
+<!-- /////////////////////////MODAL NOTA PARA LA CUENTA //////////////////////////////////////// -->
+<div class="container">
+	<!-- Modal -->
+	<div class="modal fade" id="modalCuenta" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<form name="formNotaCuenta" novalidate>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Nota para la cuenta</h4>
+					</div>
+					<div class="modal-body">
+						<h6>Información relacionada con el Distribuidor</h6><br />
+						<p>Distribuidor: <strong>{{cobv.notaCobranza.cliente}}</strong></p>
+						<!--
 			          <p>Crédito: <strong>{{cobv.notaCobranza.folioCredito}}</strong></p>
 			          <p>Recibo: <strong>{{cobv.notaCobranza.recibo}}</strong></p>
 			          <p>Multa: <strong>Pendiente</strong></p>
 -->
-			        </div>
-			        <div class="modal-footer">
-			      	  <label class="checkbox-inline pull-left"><input  type="checkbox"   ng-click="cobv.cambioEstatusRespuesta()"/> Requiere respuesta</label>
-			      	  <br/><br/>
-			      	  <div class="col-sm-12" valida>
-									<label class="pull-left">Título de la nota</label>
-				        	<input name="tiutloCuenta"  type="text" class="form-control" placeholder="Nombre" ng-model="cobv.notaCobranza.titulo" required="" capitalize >
-			      	  </div>
-			      	  <div class="col-sm-12" valida>
-				        	<label class="pull-left">nota</label>
-				        	<textarea name="notaCuenta" type="text" class="form-control" placeholder="Escribe la nota aqui" ng-model="cobv.notaCobranza.descripcion" required="" capitalize >	
+					</div>
+					<div class="modal-footer">
+						<label class="checkbox-inline pull-left"><input type="checkbox"
+								ng-click="cobv.cambioEstatusRespuesta()" /> Requiere respuesta</label>
+						<br /><br />
+						<div class="col-sm-12" valida>
+							<label class="pull-left">Título de la nota</label>
+							<input name="tiutloCuenta" type="text" class="form-control" placeholder="Nombre"
+								ng-model="cobv.notaCobranza.titulo" required="" capitalize>
+						</div>
+						<div class="col-sm-12" valida>
+							<label class="pull-left">nota</label>
+							<textarea name="notaCuenta" type="text" class="form-control"
+								placeholder="Escribe la nota aqui" ng-model="cobv.notaCobranza.descripcion" required=""
+								capitalize>
 			        	</textarea>
-			      	  </div>
-							</div>
-			        <div class="modal-footer">
-								<input type="submit" ng-click="cobv.guardarNotaCuenta(cobv.notaCobranza, formNotaCuenta)" value="Guardar" class="btn btn-success" valida-form formulario="formNotaCuenta">
-			          <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-			        </div>
-			      </form>  
-		      </div>
-		    </div>
-		  </div>
-		 </div>
-	<!--////////////////////////////////////////////////////////////////////////////////////// -->
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" ng-click="cobv.guardarNotaCuenta(cobv.notaCobranza, formNotaCuenta)"
+							value="Guardar" class="btn btn-success" valida-form formulario="formNotaCuenta">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!--////////////////////////////////////////////////////////////////////////////////////// -->
 
 
-<div id="modalPagos" class="modal fade bs-cargos-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-	    	<div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="myModalLabel">Folio pago: {{cobv.pago.folioPago}}, Total = {{cobv.pago.pago | currency}}, Seguro: {{cobv.pago.seguro | currency}}</h4>
-		    </div>
-				<div class="modal-body">
-							<form name="form2" novalidate>
-									<div class="well">
-										<div class="row">
-											
-											<table id="recP" class="table table-hover border-collapse" >
-													<thead>
-														<tr>
-															<th width="10%"><div class="text-center">No. Corte</div></th>
-															<th width="15%"><div class="text-center">Fecha Corte</div></th>
-															<th width="10%"><div class="text-center">Importe</div></th>
-															<th width="10%"><div class="text-center">Cargos Moratorios</div></th>
-															<th width="10%"><div class="text-center">Bonificación</div></th>
-															<th width="10%"><div class="text-center">Total</div></th>
-														</tr>
-													</thead>
-													<tbody>
-												    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in cobv.pagosCortes">
-													    <td class="text-center" ng-click="cobv.selCortePagos(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
-													    <td class="text-center" ng-click="cobv.selCortePagos(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
-														    																																				{{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
-													    <td class="text-right" ng-click="cobv.selCortePagos(objeto,$index + 1)">{{objeto.importe | currency}}</td>
-													    <td class="text-right" ng-click="cobv.selCortePagos(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
-													    <td class="text-right" ng-click="cobv.selCortePagos(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
-													    <td class="text-right" ng-click="cobv.selCortePagos(objeto,$index + 1)">{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}</td>
-												    </tr>
-												    
-												    <tr ng-repeat-end ng-if="cobv.isSelectedPago($index + 1) && cobv.banP">
-										            
-										            	<td colspan="12">
-																		<table class="table table-striped table-bordered table-condensed font-xs">
-																			<thead class="thead">
-																				<tr>
-																					<th class="text-center" width="5%">F. Vale</th>
-																					<th class="text-center" width="15%">Beneficiario</th>
-																					<th class="text-center" width="10%">Fecha</th>
-																					<th class="text-center" width="8%"># Pago</th>
-																					<th class="text-center" width="5%">Mov.</th>
-																					<th class="text-center" width="5%">Capital</th>
-																					<th class="text-center" width="5%">Intereses</th>
-																					<th class="text-center" width="5%">IVA</th>
-																					<th class="text-center" width="5%">Seguro</th>
-																					<th class="text-center" width="5%">Bonif.</th>
-																					<th class="text-center" width="5%">Total</th>
-																					<th class="text-center" width="5%">Acción</th>
-																				</tr>
-																			</thead>
-																			<tbody>
-																				<tr ng-repeat="pp in objeto.planPagos">								
-																					<td class="text-center">{{pp.folioCredito}}</td>
-																					<td class="text-left">{{pp.beneficiario}}</td>
-																					<td class="text-center">{{pp.fechaLimite | date: "dd-MM-yyyy"}}</td>	
-																					<td class="text-center">{{pp.numeroPago}} - {{pp.numeroPagos}}</td>
-																					<td class="text-center">{{pp.descripcion  == 'Recibo' ? 'Vale' : 'CM'}} </td>
-																					<td class="text-right">{{pp.pagoCapital | currency}}</td>
-																					<td class="text-right">{{pp.pagoInteres | currency}}</td>
-																					<td class="text-right">{{pp.pagoIva | currency}}</td>
-																					<td class="text-right">{{pp.pagoSeguro | currency}}</td>
-																					<td class="text-right">{{pp.bonificacion | currency}}</td>
-																					<td class="text-right">{{pp.totalPago - pp.bonificacion | currency}}</td>
-																					<td><a href=# ng-click = "cobv.verHistorial(pp)">Histórico</a></td>
-																				</tr>
-																			</tbody>
-																	</table>           	
-											           	
-										            </td>
-	
-										        </tr>
-												    
-													</tbody>
+<div id="modalPagos" class="modal fade bs-cargos-modal-lg" tabindex="-1" role="dialog"
+	aria-labelledby="myLargeModalLabel">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Folio pago: {{cobv.pago.folioPago}}, Total =
+					{{cobv.pago.pago | currency}}, Seguro: {{cobv.pago.seguro | currency}}</h4>
+			</div>
+			<div class="modal-body">
+				<form name="form2" novalidate>
+					<div class="well">
+						<div class="row">
+
+							<table id="recP" class="table table-hover border-collapse">
+								<thead>
+									<tr>
+										<th width="10%">
+											<div class="text-center">No. Corte</div>
+										</th>
+										<th width="15%">
+											<div class="text-center">Fecha Corte</div>
+										</th>
+										<th width="10%">
+											<div class="text-center">Importe</div>
+										</th>
+										<th width="10%">
+											<div class="text-center">Cargos Moratorios</div>
+										</th>
+										<th width="10%">
+											<div class="text-center">Bonificación</div>
+										</th>
+										<th width="10%">
+											<div class="text-center">Total</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr style='cursor: pointer;  padding-bottom: 1em;'
+										ng-repeat-start="objeto in cobv.pagosCortes">
+										<td class="text-center" ng-click="cobv.selCortePagos(objeto,$index + 1)">
+											{{objeto.numeroCorte}}</td>
+										<td class="text-center" ng-click="cobv.selCortePagos(objeto,$index + 1)">
+											{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} -
+											{{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
+										<td class="text-right" ng-click="cobv.selCortePagos(objeto,$index + 1)">
+											{{objeto.importe | currency}}</td>
+										<td class="text-right" ng-click="cobv.selCortePagos(objeto,$index + 1)">
+											{{objeto.cargosMoratorios | currency}}</td>
+										<td class="text-right" ng-click="cobv.selCortePagos(objeto,$index + 1)">
+											{{objeto.bonificacion | currency}}</td>
+										<td class="text-right" ng-click="cobv.selCortePagos(objeto,$index + 1)">
+											{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}
+										</td>
+									</tr>
+
+									<tr ng-repeat-end ng-if="cobv.isSelectedPago($index + 1) && cobv.banP">
+
+										<td colspan="12">
+											<table class="table table-striped table-bordered table-condensed font-xs">
+												<thead class="thead">
+													<tr>
+														<th class="text-center" width="5%">F. Vale</th>
+														<th class="text-center" width="15%">Beneficiario</th>
+														<th class="text-center" width="10%">Fecha</th>
+														<th class="text-center" width="8%"># Pago</th>
+														<th class="text-center" width="5%">Mov.</th>
+														<th class="text-center" width="5%">Capital</th>
+														<th class="text-center" width="5%">Intereses</th>
+														<th class="text-center" width="5%">IVA</th>
+														<th class="text-center" width="5%">Seguro</th>
+														<th class="text-center" width="5%">Bonif.</th>
+														<th class="text-center" width="5%">Total</th>
+														<th class="text-center" width="5%">Acción</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat="pp in objeto.planPagos">
+														<td class="text-center">{{pp.folioCredito}}</td>
+														<td class="text-left">{{pp.beneficiario}}</td>
+														<td class="text-center">{{pp.fechaLimite | date: "dd-MM-yyyy"}}
+														</td>
+														<td class="text-center">{{pp.numeroPago}} - {{pp.numeroPagos}}
+														</td>
+														<td class="text-center">
+															{{pp.descripcion  == 'Recibo' ? 'Vale' : 'CM'}} </td>
+														<td class="text-right">{{pp.pagoCapital | currency}}</td>
+														<td class="text-right">{{pp.pagoInteres | currency}}</td>
+														<td class="text-right">{{pp.pagoIva | currency}}</td>
+														<td class="text-right">{{pp.pagoSeguro | currency}}</td>
+														<td class="text-right">{{pp.bonificacion | currency}}</td>
+														<td class="text-right">
+															{{pp.totalPago - pp.bonificacion | currency}}</td>
+														<td><a href=# ng-click="cobv.verHistorial(pp)">Histórico</a>
+														</td>
+													</tr>
+												</tbody>
 											</table>
-										</div>	
-									</div>
-							</form>
-	      </div>	
-	      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-		     </div>
-     </div>
-     
-  </div>
-</div> 
+
+										</td>
+
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+			</div>
+		</div>
+
+	</div>
+</div>
 <!--
 <div id="modalPagos" class="modal fade bs-cargos-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -462,105 +572,110 @@
 </div> 
 -->
 
-<div class="modal fade" id="modalpagosHistorico"	class="modal fade bs-example-modal-lg" tabindex="-1" 	role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade" id="modalpagosHistorico" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+	aria-labelledby="myLargeModalLabel">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">Beneficiario : {{cobv.pagoDis.beneficiario}} - Folio : {{cobv.credito.folio}}</h4>
+				<h4 class="modal-title">Beneficiario : {{cobv.pagoDis.beneficiario}} - Folio : {{cobv.credito.folio}}
+				</h4>
 			</div>
 			<div class="modal-body">
 				<table class="table table-striped table-bordered table-condensed" style="font-size: small">
-						<thead class="thead">
-							<tr>
-								<th class="text-center" width="7%">Recibo No.</th>
-								<th class="text-center" width="20%">Movimiento</th>
-								<th class="text-center" width="10%">Fecha</th>
-								<th class="text-center" width="10%">Cargo</th>
-								<th class="text-center" width="10%">Abono</th>
-								<th class="text-center" width="10%">Saldo</th>
-								<th class="text-center" width="15%">Nota de crédito</th>
-								<th class="text-center" width="10%">Saldo actualizado</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr  ng-repeat="credito in cobv.historial" 
+					<thead class="thead">
+						<tr>
+							<th class="text-center" width="7%">Recibo No.</th>
+							<th class="text-center" width="20%">Movimiento</th>
+							<th class="text-center" width="10%">Fecha</th>
+							<th class="text-center" width="10%">Cargo</th>
+							<th class="text-center" width="10%">Abono</th>
+							<th class="text-center" width="10%">Saldo</th>
+							<th class="text-center" width="15%">Nota de crédito</th>
+							<th class="text-center" width="10%">Saldo actualizado</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="credito in cobv.historial"
 							ng-class="(credito.numeroPago % 2 == 0 ) ? 'active in' : 'info' ">
-								<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} - {{cobv.credito.numeroPagos}}</td>	
-								<td class="text-center">{{credito.movimiento}}</td>	
-								<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
-								<td class="text-right">{{credito.cargo | currency}}</td>
-								<td class="text-right">{{credito.pago | currency}}</td>
-								<td class="text-right">{{credito.saldo | currency}}</td>
-								<td class="text-right">{{credito.notaCredito | currency}}</td>
-								<td class="text-right">{{credito.saldoActualizado | currency}}</td>
-							</tr>
-						</tbody>
-					</table>
-					
-				<div class="row">	
+							<td class="text-center">{{credito.numeroPago || credito.numeroPagoMulta}} -
+								{{cobv.credito.numeroPagos}}</td>
+							<td class="text-center">{{credito.movimiento}}</td>
+							<td class="text-center">{{credito.fecha | date:"dd-MM-yyyy"}}</td>
+							<td class="text-right">{{credito.cargo | currency}}</td>
+							<td class="text-right">{{credito.pago | currency}}</td>
+							<td class="text-right">{{credito.saldo | currency}}</td>
+							<td class="text-right">{{credito.notaCredito | currency}}</td>
+							<td class="text-right">{{credito.saldoActualizado | currency}}</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="row">
 					<div class="col-sm-6">
 						<table class="table">
 							<tbody>
 								<tr>
-									<td>	
-										Deuda Inicial 
+									<td>
+										Deuda Inicial
 									</td>
 									<td style="text-align: right">
 										{{cobv.credito.adeudoInicial | currency}}
-									</td>		
-								</tr>		
+									</td>
+								</tr>
 								<tr>
-									<td>	
-										Total cargos moratorios generadas 
+									<td>
+										Total cargos moratorios generadas
 									</td>
 									<td style="text-align: right">
 										{{cobv.saldoMultas | currency}}
 									</td>
 								</tr>
 								<tr>
-									<td>	
-										Abonos recibidos 
+									<td>
+										Abonos recibidos
 									</td>
 									<td style="text-align: right">
 										{{cobv.abonosRecibos | currency}}
 									</td>
-								</tr>	
+								</tr>
 								<tr>
-									<td>	
-										Abono cargos moratorios 
+									<td>
+										Abono cargos moratorios
 									</td>
 									<td style="text-align: right">
 										{{cobv.abonosCargorMoratorios | currency}}
 									</td>
 								</tr>
 								<tr>
-									<td>	
-										Nota de Créditos 
+									<td>
+										Nota de Créditos
 									</td>
 									<td style="text-align: right">
 										{{cobv.sumaNotaCredito | currency}}
 									</td>
 								</tr>
 								<tr>
-									<td>	
-										Saldo general 
+									<td>
+										Saldo general
 									</td>
 									<td style="text-align: right">
 										{{cobv.saldo | currency}}
 									</td>
 								</tr>
-							</tbody>	
-						</table>	
-					</div>		
-				</div>	
-					
+							</tbody>
+						</table>
+					</div>
+				</div>
+
 			</div>
 			<div class="modal-footer">
-			    <button ng-click="cobv.imprimirHistorial(cobv.historial,cobv.objeto,cobv.credito)" type="button" class="btn btn-success" >Imprimir Tabla</button>
-			    <button ng-click="cobv.cerrarModal()" type="button" class="btn btn-info left-panel" data-dismiss="modal">Cerrar</button>
-			 </div>
+				<button ng-click="cobv.imprimirHistorial(cobv.historial,cobv.objeto,cobv.credito)" type="button"
+					class="btn btn-success">Imprimir Tabla</button>
+				<button ng-click="cobv.cerrarModal()" type="button" class="btn btn-info left-panel"
+					data-dismiss="modal">Cerrar</button>
+			</div>
 		</div>
-	</div>	
+	</div>
 </div>
 
-<a id='dwnldLnk' href="#" download='archivo.docx' style="display:none;" hidden="true"></a>   
+<a id='dwnldLnk' href="#" download='archivo.docx' style="display:none;" hidden="true"></a>

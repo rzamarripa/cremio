@@ -571,12 +571,16 @@ if (referenciaPersonal.buscarPersona_id)
 
 		return referenciasPersonales;
 	},
-	getPersonas: function (nombre) {	//Se hizo para la validacion de Clientes, Avales y Referencias Personales
+	getPersonas: function (nombre) {	//Se hizo para la validacion de Clientes, Avales y Referencias Personales, Distribuidores
 		var personas = {};
 		personas.clientes = [];
 		personas.distribuidores = [];
 		personas.avales = [];
 		personas.referenciasPersonales = [];
+		personas.beneficiarios = [];
+		personas.prospectosVales = [];
+
+
 		personas.clientes = Meteor.users.find({ "profile.nombreCompleto": { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' }, roles: ["Cliente"] },
 			{ fields: { "profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, roles: 1 } },
 			{ sort: { "profile.nombreCompleto": 1 } }, { "profile.nombreCompleto": 1, "profile.referenciasPersonales_ids": 1 }).fetch();
@@ -592,6 +596,21 @@ if (referenciaPersonal.buscarPersona_id)
 		personas.referenciasPersonales = ReferenciasPersonales.find({ nombreCompleto: { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' } },
 			{ fields: { nombreCompleto: 1, clientes: 1 } },
 			{ sort: { nombreCompleto: 1 } }).fetch();
+
+		personas.beneficiarios = Beneficiarios.find({ nombreCompleto: { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' } },
+			{ fields: { nombreCompleto: 1, distribuidor: 1 } },
+			{ sort: { nombreCompleto: 1 } }).fetch();
+
+		personas.prospectosVales = Prospectos.find({ nombreCompleto: { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' } },
+			{ fields: { nombreCompleto: 1, distribuidor_id: 1 } },
+			{ sort: { nombreCompleto: 1 } }).fetch();
+
+		_.each(personas.prospectosVales, function (p) {
+			var distribuidor = Meteor.users.findOne({ _id: p.distribuidor_id },
+				{ fields: { "profile.nombreCompleto": 1, } });
+			p.distribuidor = distribuidor;
+		});
+
 		return personas;
 	},
 	getPersonasDeudas: function (nombre) {	//Se hizo para la validacion de Clientes, Avales y Referencias Personales
@@ -695,7 +714,7 @@ if (referenciaPersonal.buscarPersona_id)
 		var user = Meteor.users.findOne({ _id: id }, {
 			fields: {
 				"profile.nombreCompleto": 1, "profile.nombre": 1, "profile.numeroCliente": 1,
-				"profile.calle": 1, "profile.colonia_id": 1, "profile.ciudad_id": 1
+				"profile.calle": 1, "profile.numero": 1, "profile.colonia_id": 1, "profile.ciudad_id": 1
 			}
 		});
 

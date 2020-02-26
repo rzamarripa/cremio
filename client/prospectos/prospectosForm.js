@@ -49,40 +49,47 @@ function ProspectosFormCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		var apMaterno = objeto.apellidoMaterno != undefined ? objeto.apellidoMaterno.trim() : "";
 		objeto.nombreCompleto = nombre + apPaterno + apMaterno;
 
+		objeto.nombre = getCleanedString(objeto.nombre)
+		objeto.apellidoPaterno = getCleanedString(objeto.apellidoPaterno)
+		objeto.apellidoMaterno = getCleanedString(objeto.apellidoMaterno)
+		objeto.nombreCompleto = getCleanedString(objeto.nombreCompleto);
+
 		objeto.saldoActualVales = 0;	//Saldo con Capital, Intereses, IVA y Seguro
 		objeto.saldoActual = 0;  //Saldo solo Capital
 
 		objeto.fecha = new Date();
 
-		Prospectos.insert(objeto);
-		toastr.success('Guardado correctamente.');
+		// Prospectos.insert(objeto);
+		// toastr.success('Guardado correctamente.');
 
-		if (Meteor.user().roles == "Distribuidor")
-			$state.go("root.prospectos");
-		else
-			$state.go("root.prospectosLista");
+		// if (Meteor.user().roles == "Distribuidor")
+		// 	$state.go("root.prospectos");
+		// else
+		// 	$state.go("root.prospectosLista");
 
-		this.objeto = {};
-		this.nuevo = true;
+		// this.objeto = {};
+		// this.nuevo = true;
 
 		//Validar que no exista el nombre del pospecto
-		// Meteor.call('getValidaBeneficiario', objeto.nombreCompleto, function (e, r) {
-		// 	if (!r.estatus) {
+		Meteor.call('getValidaProspecto', objeto.nombreCompleto, function (e, r) {
+			if (!r) {
+				Prospectos.insert(objeto);
+				toastr.success('Guardado correctamente.');
 
-		// 	}
-		// 	else {
-		// 		Prospectos.insert(objeto);
-		// 		toastr.success('Guardado correctamente.');
+				if (Meteor.user().roles == "Distribuidor")
+					$state.go("root.prospectos");
+				else
+					$state.go("root.prospectosLista");
 
-		// 		if (Meteor.user().roles == "Distribuidor")
-		// 			$state.go("root.prospectos");
-		// 		else
-		// 			$state.go("root.prospectosLista");
-
-		// 		this.objeto = {};
-		// 		this.nuevo = true;
-		// 	}
-		// });
+				this.objeto = {};
+				this.nuevo = true;
+			}
+			else if (r) {
+				customDialog('El Prospecto ya esta dado de alta', function () {
+				});
+				return;
+			}
+		});
 
 	};
 
@@ -96,6 +103,11 @@ function ProspectosFormCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		var apPaterno = objeto.apellidoPaterno != undefined ? objeto.apellidoPaterno + " " : "";
 		var apMaterno = objeto.apellidoMaterno != undefined ? objeto.apellidoMaterno : "";
 		objeto.nombreCompleto = nombre + apPaterno + apMaterno;
+
+		objeto.nombre = getCleanedString(objeto.nombre)
+		objeto.apellidoPaterno = getCleanedString(objeto.apellidoPaterno)
+		objeto.apellidoMaterno = getCleanedString(objeto.apellidoMaterno)
+		objeto.nombreCompleto = getCleanedString(objeto.nombreCompleto);
 
 		var idTemp = objeto._id;
 		delete objeto._id;

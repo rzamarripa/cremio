@@ -1,4 +1,3 @@
-
 <div class="row">
 	<div class="col-sm-12">
 		<div class="">
@@ -7,75 +6,115 @@
 					<div class="well well-light well-sm no-margin no-padding">
 						<div class="row">
 							<div class="col-sm-3">
-									<img style="max-width:200px;" src="{{dis.objeto.profile.foto}}" >
+								<img style="max-width:200px;" src="{{dis.objeto.profile.foto}}">
 							</div>
 							<div class="col-sm-9">
 								<div class="row">
-									<a ng-click="dis.CreditoSolicitar(dis.objeto._id, 1)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] != 'Distribuidor'" style="margin: 5px; margin-right: 18px;">
+									<a ng-click="dis.CreditoSolicitar(dis.objeto._id, 1)"
+										class="btn txt-color-white bg-color-teal btn-sm pull-right"
+										ng-if="currentUser.roles[0] != 'Distribuidor'"
+										style="margin: 5px; margin-right: 18px;">
 										<i class="fa fa-plus"></i> Credito P.
 									</a>
-									<a ng-click="dis.CreditoSolicitar(dis.objeto._id, 0)" class="btn txt-color-white bg-color-teal btn-sm pull-right" style="margin: 5px; margin-right: 18px;">
+									<a ng-click="dis.CreditoSolicitar(dis.objeto._id, 0)"
+										class="btn txt-color-white bg-color-teal btn-sm pull-right"
+										style="margin: 5px; margin-right: 18px;">
 										<i class="fa fa-plus"></i> Vale
 									</a>&nbsp;
-									<a	ng-click="dis.mostrarNotaCredito(dis.objeto._id)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px;">
+									<a ng-click="dis.mostrarNotaCredito(dis.objeto._id)"
+										class="btn txt-color-white bg-color-teal btn-sm pull-right"
+										ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px;">
 										<i class="fa fa-plus"></i> N. de Crédito
 									</a>&nbsp;
-									<a ng-click="dis.mostrarNotaCliente()" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px;">
+									<a ng-click="dis.mostrarNotaCliente()"
+										class="btn txt-color-white bg-color-teal btn-sm pull-right"
+										ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'"
+										style="margin: 5px;">
 										<i class="fa fa-plus"></i> N. de Cliente
 									</a>&nbsp;
-									<a ng-click="dis.crearCargoMoratorio(credito)" class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px">
-										 <i class="fa fa-plus"></i> C. Moratorio
-									</a>&nbsp;	
-									<a ui-sref="root.pagarValeLiquidar({objeto_id : dis.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero' && dis.estatusCaja == true" style="margin: 5px;">
+									<a ng-click="dis.crearCargoMoratorio(credito)"
+										class="btn txt-color-white bg-color-teal btn-sm pull-right"
+										ng-if="currentUser.roles[0] == 'Gerente'" style="margin: 5px">
+										<i class="fa fa-plus"></i> C. Moratorio
+									</a>&nbsp;
+									<a ui-sref="root.pagarValeLiquidar({objeto_id : dis.objeto._id})"
+										class="btn txt-color-white bg-color-teal btn-sm pull-right"
+										ng-if="currentUser.roles[0] == 'Cajero' && dis.estatusCaja == true"
+										style="margin: 5px;">
 										<i class="fa fa-plus"></i> Liquidar V/C
 									</a>&nbsp;
-									<a ui-sref="root.pagarVale({objeto_id : dis.objeto._id})"  class="btn txt-color-white bg-color-teal btn-sm pull-right" ng-if="currentUser.roles[0] == 'Cajero' && dis.estatusCaja == true" style="margin: 5px;">
+									<a ui-sref="root.pagarVale({objeto_id : dis.objeto._id})"
+										class="btn txt-color-white bg-color-teal btn-sm pull-right"
+										ng-if="currentUser.roles[0] == 'Cajero' && dis.estatusCaja == true"
+										style="margin: 5px;">
 										<i class="fa fa-plus"></i> N. Pago
 									</a>&nbsp;
-									<a ng-click="dis.generarFicha(dis.objeto,dis.objeto._id)" class="btn btn-primary" ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-download" ></i> Ficha</a>
-									<a	ui-sref="root.editarDistribuidores({objeto_id : dis.objeto._id})" class="btn txt-color-white bg-color-pinkDark btn-sm " ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'" style="margin: 5px;">
-		 									<i class="fa fa-pencil" ></i> Modificar
-	 								</a>&nbsp;
+									<a ng-click="dis.generarFicha(dis.objeto,dis.objeto._id)" class="btn btn-primary"
+										ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-download"></i>
+										Ficha</a>
+									<a ui-sref="root.editarDistribuidores({objeto_id : dis.objeto._id})"
+										class="btn txt-color-white bg-color-pinkDark btn-sm "
+										ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'"
+										style="margin: 5px;">
+										<i class="fa fa-pencil"></i> Modificar
+									</a>&nbsp;
 								</div>
 								<div class="row">
-										<h1>{{dis.objeto.profile.nombre}} 
-											<span class="semi-bold">{{dis.objeto.profile.apellidoPaterno}} {{dis.objeto.profile.apellidoMaterno}} ({{dis.edad}} años)</span>
-											<span ng-if="dis.objeto.profile.estatusCredito == undefined || dis.objeto.profile.estatusCredito == 0" class="label label-warning">
-											  <span style="font-size: smaller">No Verificado</span>
-											</span>
-											<span ng-if="dis.objeto.profile.estatusCredito == 1" class="label label-success">
-											  <span style="font-size: smaller">Acreditado</span>
-											</span>
-											<span ng-if="dis.objeto.profile.estatusCredito == 2" class="label label-danger">
-											  <span style="font-size: smaller">No Acreditado</span>
-											</span>
-										</h1>
-										<h5>{{dis.objeto.profile.numeroCliente}} 
-											<a href="" ng-click="dis.imprimirContrato()" class="btn btn-info" ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-print"></i> Contrato </a>
-											<a href="" ng-click="dis.imprimirTablaAmortizacion()" class="btn btn-info" ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-print"></i> Tabla Amortización</a>
-												<strong>(Miembro desde - {{dis.objeto.createdAt | date:"dd-MM-yyyy"}})</strong>
-										</h5>
-										<h6 ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">
-												<a href="#" ng-click="dis.modalLimiteCredito()">Límite Crédito</a>    : {{dis.objeto.profile.limiteCredito | currency}}
-										</h6>
-										<h6 ng-if="currentUser.roles[0] == 'Distribuidor' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador'">
-												Límite Crédito	   : {{dis.objeto.profile.limiteCredito | currency}}
-										</h6>
-										<h6>Saldo  Crédito     : {{dis.objeto.profile.saldoCredito | currency}}</h6>
-								</div>		
+									<h1>{{dis.objeto.profile.nombre}}
+										<span class="semi-bold">{{dis.objeto.profile.apellidoPaterno}}
+											{{dis.objeto.profile.apellidoMaterno}} ({{dis.edad}} años)</span>
+										<span
+											ng-if="dis.objeto.profile.estatusCredito == undefined || dis.objeto.profile.estatusCredito == 0"
+											class="label label-warning">
+											<span style="font-size: smaller">No Verificado</span>
+										</span>
+										<span ng-if="dis.objeto.profile.estatusCredito == 1"
+											class="label label-success">
+											<span style="font-size: smaller">Acreditado</span>
+										</span>
+										<span ng-if="dis.objeto.profile.estatusCredito == 2" class="label label-danger">
+											<span style="font-size: smaller">No Acreditado</span>
+										</span>
+									</h1>
+									<h5>{{dis.objeto.profile.numeroCliente}}
+										<a href="" ng-click="dis.imprimirContrato()" class="btn btn-info"
+											ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-print"></i>
+											Contrato </a>
+										<a href="" ng-click="dis.imprimirTablaAmortizacion()" class="btn btn-info"
+											ng-if="currentUser.roles[0] != 'Distribuidor'"><i class="fa fa-print"></i>
+											Tabla Amortización</a>
+										<strong ng-if="dis.objeto.profile.fechaPrimerVale != ''">(Miembro desde -
+											{{dis.objeto.profile.fechaPrimerVale | date:"dd-MM-yyyy"}})</strong>
+										<strong ng-if="dis.objeto.profile.fechaPrimerVale == ''">Por Emitir el primer
+											Vale </strong>
+									</h5>
+									<h6
+										ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">
+										<a href="#" ng-click="dis.modalLimiteCredito()">Límite Crédito</a> :
+										{{dis.objeto.profile.limiteCredito | currency}}
+									</h6>
+									<h6
+										ng-if="currentUser.roles[0] == 'Distribuidor' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Verificador'">
+										Límite Crédito : {{dis.objeto.profile.limiteCredito | currency}}
+									</h6>
+									<h6>Saldo Crédito : {{dis.objeto.profile.saldoCredito | currency}}</h6>
+								</div>
 							</div>
-							<div class="col-sm-12">				
+							<div class="col-sm-12">
 
 								<div class="widget-body">
 									<hr class="simple">
-									<ul id="myTab3" class="nav nav-tabs tabs-pull-right bordered" style="font-size: 13px;">
-										
+									<ul id="myTab3" class="nav nav-tabs tabs-pull-right bordered"
+										style="font-size: 13px;">
+
 										<li class="active">
-											<a href="#creditosActivos" data-toggle="tab" ng-click="dis.creditosActivos()" >
-												<span class="badge bg-color-blue txt-color-white pull-right">{{dis.creditos.length}}</span>Activos
+											<a href="#creditosActivos" data-toggle="tab"
+												ng-click="dis.creditosActivos()">
+												<span
+													class="badge bg-color-blue txt-color-white pull-right">{{dis.creditos.length}}</span>Activos
 											</a>
 										</li>
-<!--
+										<!--
 										<li>
 											<a href="#valesActivos" data-toggle="tab">
 												<span class="badge bg-color-blue txt-color-white pull-right">{{dis.creditos.length}}</span>Vales Activos
@@ -83,164 +122,315 @@
 										</li>
 -->
 										<li class="pull-right" ng-if="currentUser.roles[0] != 'Distribuidor'">
-											<a href="#informacionCliente" data-toggle="tab" ng-click="dis.masInformacion(dis.objeto)">Información Distribuidor</a>
+											<a href="#informacionCliente" data-toggle="tab"
+												ng-click="dis.masInformacion(dis.objeto)">Información Distribuidor</a>
 										</li>
 										<li class="pull-right" ng-if="currentUser.roles[0] != 'Distribuidor'">
-											<a href="#historialCrediticio" ng-click="dis.getPagos()"  data-toggle="tab">Historial</a>
+											<a href="#historialCrediticio" ng-click="dis.getPagos()"
+												data-toggle="tab">Historial</a>
 										</li>
 										<li class="pull-right">
-											<a href="#solicitudes" ng-click="dis.solicitudesCreditos()" data-toggle="tab"><span class="badge bg-color-yellow txt-color-white pull-right">{{dis.creditosPendientes.length}}</span>Solicitudes </a>
+											<a href="#solicitudes" ng-click="dis.solicitudesCreditos()"
+												data-toggle="tab"><span
+													class="badge bg-color-yellow txt-color-white pull-right">{{dis.creditosPendientes.length}}</span>Solicitudes
+											</a>
 										</li>
 										<li class="pull-right">
-											<a href="#aprobados" ng-click="dis.creAprobados()" data-toggle="tab"><span class="badge bg-color-green txt-color-white pull-right">{{dis.creditosAprobados.length}}</span>Aprobados</a>
+											<a href="#aprobados" ng-click="dis.creAprobados()" data-toggle="tab"><span
+													class="badge bg-color-green txt-color-white pull-right">{{dis.creditosAprobados.length}}</span>Aprobados</a>
 										</li>
 										<li class="pull-right">
-											<a href="#rechazados" ng-click="dis.creRechazados()" data-toggle="tab"><span class="badge bg-color-red txt-color-white pull-right" style="padding-right: 12px;padding-left: 12px ">{{dis.creditosCancelados.length}}</span>Solicitudes Rechazadas</a>
+											<a href="#rechazados" ng-click="dis.creRechazados()" data-toggle="tab"><span
+													class="badge bg-color-red txt-color-white pull-right"
+													style="padding-right: 12px;padding-left: 12px ">{{dis.creditosCancelados.length}}</span>Solicitudes
+												Rechazadas</a>
 										</li>
 									</ul>
-									
-									<div class="tab-pane fade in active" id="creditosActivos" ng-show="dis.creditoAc"> 
+
+									<div class="tab-pane fade in active" id="creditosActivos" ng-show="dis.creditoAc">
 										<p>
 											<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-														<!-- new widget -->
-												<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-													
+												<!-- new widget -->
+												<div class="jarviswidget jarviswidget-sortable" id="wid-id-0"
+													data-widget-togglebutton="false" data-widget-editbutton="false"
+													data-widget-fullscreenbutton="false" data-widget-colorbutton="false"
+													data-widget-deletebutton="false" role="widget">
+
 													<header role="heading">
-														<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-															<h2>Vales Activos</h2>
-														<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+														<span class="widget-icon"> <i
+																class="glyphicon glyphicon-stats txt-color-darken"></i>
+														</span>
+														<h2>Vales Activos</h2>
+														<div class="col-sm-1">
+															<a ng-click="dis.imprimirEstadoCuenta()"
+																class="btn btn-primary btn-xs ng-scope"
+																ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'"
+																style="margin: 5px;">
+																<i class="fa fa-print"></i> Edo Cuenta</a>
+														</div>
+														<!-- <div class="col-sm-1">
+															<a ng-click="dis.imprimirEstadoCuentaDetallado()"
+																class="btn btn-primary btn-xs ng-scope"
+																ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'"
+																style="margin: 5px;">
+																<i class="fa fa-print"></i> Edo Cuenta Detallado</a>
+														</div> -->
+
 													</header>
-													<div class="no-padding" role="content">													
+													<div class="no-padding" role="content">
 														<div class="jarviswidget-editbox">
 														</div>
-									
+
 														<div class="widget-body">
 															<!-- content -->
 															<div id="myTabContent" class="tab-content">
 																<div class="well">
 																	<!-- Beficiario -->
 																	<div class="row">
-																		<div class="col-sm-2" ng-if = "currentUser.roles[0] != 'Distribuidor'">
-																			<br >
+																		<div class="col-sm-2"
+																			ng-if="currentUser.roles[0] != 'Distribuidor'">
+																			<br>
 																			<label class="checkbox-inline">
-																				  <input name="mostrarTodos" type="checkbox" class="checkbox style-0" ng-model = "dis.mostrarPP" ng-click = "dis.mostrarTodos(dis.mostrarPP)">
-																				  <span> Mostrar Todos</span>
+																				<input name="mostrarTodos"
+																					type="checkbox"
+																					class="checkbox style-0"
+																					ng-model="dis.mostrarPP"
+																					ng-click="dis.mostrarTodos(dis.mostrarPP)">
+																				<span> Mostrar Todos</span>
 																			</label>
 																		</div>
-																			
+
 																		<div class="col-sm-2">
 																			<label>Importe</label>
 																			<br />
-																			<h4><span>{{dis.importe | currency}}</span></h4>
-																		</div>	
-																		<div class="col-sm-2">	
+																			<h4><span>{{dis.importe | currency}}</span>
+																			</h4>
+																		</div>
+																		<div class="col-sm-2">
 																			<label>Cargos Moratorios </label>
 																			<br />
-																			<h4><span>{{dis.cargosMoratorios | currency}}</span></h4>
+																			<h4><span>{{dis.cargosMoratorios | currency}}</span>
+																			</h4>
 																		</div>
-																		
-																		<div class="col-sm-2">	
+
+																		<div class="col-sm-2">
 																			<label>Bonificación </label>
 																			<br />
-																			<h4><span>{{dis.bonificacion | currency}}</span></h4>
+																			<h4><span>{{dis.bonificacion | currency}}</span>
+																			</h4>
 																		</div>
-																		
-																		<div class="col-sm-2">	
+
+																		<div class="col-sm-2">
 																			<label>Seguro </label>
 																			<br />
-																			<h4><span>{{dis.seguro | currency}}</span></h4>
+																			<h4><span>{{dis.seguro | currency}}</span>
+																			</h4>
 																		</div>
-																		
-																		<div class="col-sm-2">	
+
+																		<div class="col-sm-2">
 																			<label>Total </label>
 																			<br />
-																			<h4><span>{{dis.importe + dis.cargosMoratorios - dis.bonificacion + dis.seguro | currency}}</span></h4>
-																		</div>																		
+																			<h4><span>{{dis.importe + dis.cargosMoratorios - dis.bonificacion + dis.seguro | currency}}</span>
+																			</h4>
+																		</div>
 																	</div>
 																	<br />
 																	<!-- Detalle -->
 																	<div class="row">
 																		<div class="col-sm-12">
-																			<table id="rec" class="table table-hover border-collapse" >
-																					<thead>
-																						<tr>
-																							<th width="10%"><div class="text-center">No. Corte</div></th>
-																							<th width="15%"><div class="text-center">Fecha Corte</div></th>
-																							<th width="15%"><div class="text-center">Fecha Pago</div></th>
-																							<th width="10%"><div class="text-center">Importe</div></th>
-																							<th width="10%"><div class="text-center">Cargos Moratorios</div></th>
-																							<th width="10%"><div class="text-center">Bonificación</div></th>
-																							<th width="10%"><div class="text-center">Total</div></th>
-																						</tr>
-																					</thead>
-																					<tbody>
-																				    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in dis.arregloCortes" ng-class="objeto.classPago">
-																					    <td class="text-center" 
-																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
-																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
-																					    <td class="text-center"
-																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
-																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
-																								    																				 {{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
-																					    <td class="text-center"
-																						    	ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'" 
-																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.fechaPago | date:"dd-MM-yyyy"}}</td>
-																					    <td class="text-right" 
-																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
-																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.importe | currency}}</td>
-																					    <td class="text-right" 
-																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
-																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
-																					    <td class="text-right" 
-																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
-																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.bonificacion | currency}}</td>
-																					    <td class="text-right" 
-																						      ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
-																							    ng-click="dis.selCorte(objeto,$index + 1)">{{objeto.importe + objeto.cargosMoratorios - objeto.bonificacion | currency}}</td>
-																				    </tr>
-																				    
-																				    <tr ng-repeat-end ng-if="dis.isSelected($index + 1) && dis.ban">
-																		            <td colspan="12">
-																										<table class="table table-striped table-bordered table-condensed font-xs">
-																											<thead class="thead">
-																												<tr>
-																													<th class="text-center" width="5%">No.</th>
-																													<th class="text-center" width="20%">Beneficiario</th>
-																													<th class="text-center" width="10%">Fecha de Pago</th>
-																													<th class="text-center" width="10%">N. Pago</th>
-																													<th class="text-center" width="10%" ng-if = "currentUser.roles[0] != 'Distribuidor'">Capital</th>
-																													<th class="text-center" width="10%" ng-if = "currentUser.roles[0] != 'Distribuidor'">Interés</th>
-																													<th class="text-center" width="5%" ng-if = "currentUser.roles[0] != 'Distribuidor'">IVA</th>
-																													<th class="text-center" width="10%" ng-if = "currentUser.roles[0] != 'Distribuidor'">Seguro</th>
-																													<th class="text-center" width="10%">Bonif.</th>
-																													<th class="text-center" width="15%">Pago</th>
-																													<th class="text-center" width="10%">Saldo</th>
-																												</tr>
-																											</thead>
-																											<tbody>
-																												<tr ng-repeat="pago in objeto.planPagos">								
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{$index + 1}}</td>	
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-left' : 'text-left'">{{pago.beneficiario.nombreCompleto}}</td>
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.fechaLimite | date:"dd-MM-yyyy"}}</td>
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.numeroPago}} - {{pago.numeroPagos}}</td>
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'" ng-if = "currentUser.roles[0] != 'Distribuidor'">{{pago.capital - pago.pagoCapital | currency}}</td>
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'" ng-if = "currentUser.roles[0] != 'Distribuidor'">{{pago.interes - pago.pagoInteres | currency}}</td>
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'" ng-if = "currentUser.roles[0] != 'Distribuidor'">{{pago.iva - pago.pagoIva | currency}}</td>
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'" ng-if = "currentUser.roles[0] != 'Distribuidor'">{{pago.seguro - pago.pagoSeguro | currency}}</td>
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.bonificacion | currency}}</td>
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.cargo | currency}}</td>
-																													<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">{{pago.importeRegular -pago.bonificacion | currency}}</td>
-																												</tr>
-																											</tbody>
-																									</table>           	
-																			           	
-																		            </td>
-																		        </tr>
-																					</tbody>
+																			<table id="rec"
+																				class="table table-hover border-collapse">
+																				<thead>
+																					<tr>
+																						<th width="10%">
+																							<div class="text-center">No.
+																								Corte</div>
+																						</th>
+																						<th width="15%">
+																							<div class="text-center">
+																								Fecha Corte</div>
+																						</th>
+																						<th width="15%">
+																							<div class="text-center">
+																								Fecha Pago</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Seguro</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Importe</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Cargos Moratorios</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Bonificación</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Total</div>
+																						</th>
+																					</tr>
+																				</thead>
+																				<tbody>
+																					<tr style='cursor: pointer;  padding-bottom: 1em;'
+																						ng-repeat-start="objeto in dis.arregloCortes | orderBy: ['fechaPago']"
+																						ng-class="objeto.classPago">
+																						<td class="text-center"
+																							ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							ng-click="dis.selCorte(objeto,$index + 1)">
+																							{{objeto.numeroCorte}}</td>
+																						<td class="text-center"
+																							ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							ng-click="dis.selCorte(objeto,$index + 1)">
+																							{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}}
+																							-
+																							{{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}
+																						</td>
+																						<td class="text-center"
+																							ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							ng-click="dis.selCorte(objeto,$index + 1)">
+																							{{objeto.fechaPago | date:"dd-MM-yyyy"}}
+																						</td>
+																						<td class="text-right"
+																							ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							ng-click="dis.selCorte(objeto,$index + 1)">
+																							{{objeto.seguro | currency}}
+																						</td>
+																						<td class="text-right"
+																							ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							ng-click="dis.selCorte(objeto,$index + 1)">
+																							{{objeto.importe | currency}}
+																						</td>
+																						<td class="text-right"
+																							ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							ng-click="dis.selCorte(objeto,$index + 1)">
+																							{{objeto.cargosMoratorios | currency}}
+																						</td>
+																						<td class="text-right"
+																							ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							ng-click="dis.selCorte(objeto,$index + 1)">
+																							{{objeto.bonificacion | currency}}
+																						</td>
+																						<td class="text-right"
+																							ng-class="objeto.importe == 0 ? 'text-danger' : 'text-center'"
+																							ng-click="dis.selCorte(objeto,$index + 1)">
+																							{{objeto.importe + objeto.seguro + objeto.cargosMoratorios - objeto.bonificacion | currency}}
+																						</td>
+																					</tr>
+
+																					<tr ng-repeat-end
+																						ng-if="dis.isSelected($index + 1) && dis.ban">
+																						<td colspan="12">
+																							<table
+																								class="table table-striped table-bordered table-condensed font-xs">
+																								<thead class="thead">
+																									<tr>
+																										<th class="text-center"
+																											width="5%">
+																											No.</th>
+																										<th class="text-center"
+																											width="20%">
+																											Beneficiario
+																										</th>
+																										<th class="text-center"
+																											width="10%">
+																											Fecha de
+																											Pago</th>
+																										<th class="text-center"
+																											width="10%">
+																											N. Pago</th>
+																										<th class="text-center"
+																											width="10%"
+																											ng-if="currentUser.roles[0] != 'Distribuidor'">
+																											Capital</th>
+																										<th class="text-center"
+																											width="10%"
+																											ng-if="currentUser.roles[0] != 'Distribuidor'">
+																											Interés</th>
+																										<th class="text-center"
+																											width="5%"
+																											ng-if="currentUser.roles[0] != 'Distribuidor'">
+																											IVA</th>
+																										<th class="text-center"
+																											width="10%"
+																											ng-if="currentUser.roles[0] != 'Distribuidor'">
+																											Seguro</th>
+																										<th class="text-center"
+																											width="10%">
+																											Bonif.</th>
+																										<th class="text-center"
+																											width="15%">
+																											Pago</th>
+																										<th class="text-center"
+																											width="10%">
+																											Saldo</th>
+																									</tr>
+																								</thead>
+																								<tbody>
+																									<tr
+																										ng-repeat="pago in objeto.planPagos | orderBy: ['beneficiario.nombreCompleto', 'orden']">
+																										<td
+																											ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																											{{$index + 1}}
+																										</td>
+																										<td
+																											ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-left' : 'text-left'">
+																											{{pago.beneficiario.nombreCompleto}}
+																										</td>
+																										<td
+																											ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																											{{pago.fechaLimite | date:"dd-MM-yyyy"}}
+																										</td>
+																										<td
+																											ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																											{{pago.numeroPago}}
+																											-
+																											{{pago.numeroPagos}}
+																										</td>
+																										<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'"
+																											ng-if="currentUser.roles[0] != 'Distribuidor'">
+																											{{pago.capital - pago.pagoCapital | currency}}
+																										</td>
+																										<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'"
+																											ng-if="currentUser.roles[0] != 'Distribuidor'">
+																											{{pago.interes - pago.pagoInteres | currency}}
+																										</td>
+																										<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'"
+																											ng-if="currentUser.roles[0] != 'Distribuidor'">
+																											{{pago.iva - pago.pagoIva | currency}}
+																										</td>
+																										<td ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'"
+																											ng-if="currentUser.roles[0] != 'Distribuidor'">
+																											{{pago.seguro - pago.pagoSeguro | currency}}
+																										</td>
+																										<td
+																											ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																											{{pago.bonificacion | currency}}
+																										</td>
+																										<td
+																											ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																											{{pago.cargo | currency}}
+																										</td>
+																										<td
+																											ng-class="pago.descripcion == 'Cargo Moratorio' ? 'text-danger text-center' : 'text-center'">
+																											{{pago.importeRegular -pago.bonificacion | currency}}
+																										</td>
+																									</tr>
+																								</tbody>
+																							</table>
+
+																						</td>
+																					</tr>
+																				</tbody>
 																			</table>
 																		</div>
-																	</div>	
-																</div>																	
+																	</div>
+																</div>
 																<!--
 			<div class="tab-pane fade padding-10 no-padding-bottom {{($index == 0 ? 'active in' : '')}}" id="s{{$index +1}}" ng-repeat="credito in dis.creditos track by $index">
 																	<div class="row">
@@ -314,376 +504,578 @@
 																</div>
 			-->
 															</div>
-													  </div>
-															<!-- end content -->
-												  </div>
+														</div>
+														<!-- end content -->
+													</div>
 													<!-- end widget div -->
 												</div>
-														<!-- end widget -->
+												<!-- end widget -->
 											</article>
 										</p>
 									</div>
-<!--
+									<!--
 									<div class="tab-pane fade" id="valesActivos"> 
 										<p>
 											<div ng-include = " 'client/distribuidores/_detalleValesActivos.html' "></div>
 										</p>	
 									</div>
 -->
-									<div class="tab-pane fade" id="informacionCliente" ng-show="dis.masInfo" ng-if="currentUser.roles[0] != 'Distribuidor'">
+									<div class="tab-pane fade" id="informacionCliente" ng-show="dis.masInfo"
+										ng-if="currentUser.roles[0] != 'Distribuidor'">
 										<p>
 											<div class="col-sm-12">
-												<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-												  <div class="panel panel-default">
-												    <div class="panel-heading" role="heading" id="headingOne">
-												      <h4 class="panel-title">
-												        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#href1" aria-expanded="false" aria-controls="href1">
-												          Información del Distribuidor
-												        </a>
-												      </h4>
-												    </div>
-												      <div class="panel-body">    
-															    <div class="row">
-															    	<div class="col-sm-3" > 					    
-																    	<label>Nombre (s)</label>
-																    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="dis.objeto.profile.nombre" disabled="">
-															    	</div>
-															    	<div class="col-sm-3" >					    
-																    	<label>Apellido Paterno</label>
-																    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="dis.objeto.profile.apellidoPaterno" disabled="">
-															    	</div>
-															    	<div class="col-sm-3">					    
-																    	<label>Apellido Materno</label>
-																    	<input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="dis.objeto.profile.apellidoMaterno" disabled="">
-															    	</div>
-															    	<div class="col-sm-3">					    
-																    	<label>Número distribuidor</label>
-																    	<input name="numeroCliente" type="text" class="form-control" placeholder="Número de distribuidor" ng-model="dis.objeto.profile.numeroCliente" disabled="">
-															    	</div>
-															    </div>
-															    <div class="row">
-																    <div class="col-sm-6">
-																			<br/>
-																			<div class="well padding-10">
-																				<table class="table">
-																					<thead>
-																						<tr>
-																							<th>Documento</th>
-																							<th>Ver</th>
-																							<th>Imprimir</th>
-																						</tr>	
-																					</thead>
-																					<tbody>
-																						<tr ng-repeat="item in dis.documentos">
-																							<td>{{item.nombre}}</td>
-																						  <td><a  ng-click="dis.modalDoc(item._id)"> <i class="fa fa-eye"></a></td>
-																							<td><a ng-click="dis.imprimirDoc(item._id)"> <i class="fa fa-print"></i></a></td>
-																						</tr>	
-																					</tbody>	
-																				</table>	
-																			</div>
-																		</div>
-															    </div>
-												      </div>
-												  </div>
-												  <div class="panel panel-default">
-												    <div class="panel-heading" role="tab" id="headingTwo">
-												      <h4 class="panel-title">
-												        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href2" aria-expanded="false" aria-controls="href2">
-												          Información de contacto
-												        </a>
-												      </h4>
-												    </div>
-												      <div class="panel-body">
-												        	<div class="row">
-																    	<div class="col-sm-4" valida> 					    
-																	    	<label>Particular</label>
-																	    	<input name="telefonoParticular" type="text" class="form-control" placeholder="Teléfono Particular" ng-model="dis.objeto.profile.particular" disabled="">
-																    	</div>
-																    	<div class="col-sm-4" valida> 					    
-																	    	<label>Teléfono Oficina</label>
-																	    	<input name="telefonoOficina" type="text" class="form-control" placeholder="Teléfono" ng-model="dis.objeto.profile.telefonoOficina" disabled="">
-																    	</div>
-																    	<div class="col-sm-4" valida>					    
-																	    	<label>Celular</label>
-																	    	<input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="dis.objeto.profile.celular" disabled="">
-																    	</div>
-																    </div>
-																    <div class="row">
-																	    <div class="col-sm-3">					    
-																	    	<label>Teléfono Alternativo</label>
-																	    	<input name="otroTelefono" type="text" class="form-control" placeholder="Otro Alternativo" ng-model="dis.objeto.profile.telefonoAlternativo" disabled="">
-																    	</div>	  
-																    	<div class="col-sm-3">					    
-																	    	<label>Dueño</label>
-																	    	<input name="otroTelefono" type="text" class="form-control" placeholder="Dueño" ng-model="dis.objeto.profile.duenoAlternativo" disabled="">
-																    	</div>
-																    	<div class="col-sm-3">					    
-																	    	<label>Parentesco</label>
-																	    	<input name="otroTelefono" type="text" class="form-control" placeholder="Parentesco" ng-model="dis.objeto.profile.parentescoAlternativo" disabled="">
-																    	</div>
-																    	<div class="col-sm-3">					    
-																	    	<label>Correo</label>
-																	    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="dis.objeto.profile.correo" disabled="">
-																    	</div>  
-																  </div>
-												      </div>
-												  </div>
-												  <div class="panel panel-default">
-												    <div class="panel-heading" role="tab" id="headingThree">
-												      <h4 class="panel-title">
-												        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href3" aria-expanded="false" aria-controls="href3">
-												          Particulares
-												        </a>
-												      </h4>
-												    </div>
-												      <div class="panel-body">
-												        	<div class="row">
-																		<div class="col-sm-3">
-																						<label for="estadocivil">Sexo</label>
-																						<input name="Sexo" type="text" class="form-control" placeholder="Sexo" ng-model="dis.objeto.profile.sexo" disabled="">
-																					</div>
-															    	<div class="col-sm-3">
-																			<label for="estadocivil">Estado Civil </label>
-																			<input name="estadoCivil" type="text" class="form-control" placeholder="Estado Civil" ng-model="dis.objeto.profile.estadoCivil.nombre" disabled="">
-																		</div>
-																			
-															    	<div class="col-sm-3">					    
-																    	<label>Fecha Nacimiento </label>
-																    	<input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="dis.objeto.profile.fechaNacimiento" disabled="">
-															    	</div>	
-																		
-																		<div class="col-sm-3">
-																			<label for="nacionalidad">Nacionalidad</label>
-																			<input name="nacionalidad" type="text" class="form-control" placeholder="Nacionalidad" ng-model="dis.objeto.profile.nacionalidad.nombre" disabled="">
-																		</div>			
-															    </div>
-															    <div class="row">
-																    <div class="col-sm-3">
-																			<label for="ocupacion">Ocupación </label>
-																			<input name="ocupacion" type="text" class="form-control" placeholder="Ocupacion" ng-model="dis.objeto.profile.ocupacion.nombre" disabled="">
-																		</div>		
-															    	<div class="col-sm-3">					    
-																    	<label>CURP</label>
-																    	<input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="dis.objeto.profile.curp" disabled>
-															    	</div>
-															      <div class="col-sm-3">					    
-																    	<label>Lugar de Nacimiento</label>
-																    	<input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="dis.objeto.profile.lugarNacimiento" disabled>
-															    	</div>	
-															    </div>		
-												      </div>
-												  </div>
-												  <div class="panel panel-default">
-													    <div class="panel-heading" role="tab" id="headingFour">
-													      <h4 class="panel-title">
-													        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href4" aria-expanded="false" aria-controls="href4">
-													          Dirección
-													        </a>
-													      </h4>
-													    </div>
-													      <div class="panel-body">
-													        	<div class="row">
-																		    <div class="col-sm-6" >					    
-																		    	<label>Calle </label>
-																		    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="dis.objeto.profile.calle" disabled="">
-																	    	</div>
-																	    	<div class="col-sm-3" >					    
-																		    	<label>Numero </label>
-																		    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="dis.objeto.profile.numero" disabled="">
-																	    	</div>
-																	    	<div class="col-sm-3" >					    
-																		    	<label>CP </label>
-																		    	<input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="dis.objeto.profile.codigoPostal" disabled="">
-																	    	</div>
-																	    </div>
-																	    <div class="row">
-																		    <div class="col-sm-3" >
-																						<label >Pais </label>
-																						<input name="dirPais" type="text" class="form-control" placeholder="Pais" ng-model="dis.objeto.profile.pais.nombre" disabled>
-																				</div>
-																			  <div class="col-sm-3" >
-																						<label for="seccion_id">Estado </label>
-																						<input name="dirEstado" type="text" class="form-control" placeholder="Estado" ng-model="dis.objeto.profile.estado.nombre" disabled>
-																				</div>	
-																				<div class="col-sm-3" >
-																						<label >Municipio </label>
-																						<input name="dirMunicipio" type="text" class="form-control" placeholder="Municipio" ng-model="dis.objeto.profile.municipio.nombre" disabled>
-																				</div>
-																				<div class="col-sm-3" >
-																						<label for="seccion_id">Ciudad </label>
-																						<input name="dirCiudad" type="text" class="form-control" placeholder="Ciudad" ng-model="dis.objeto.profile.ciudad.nombre" disabled>
-																				</div>	
-																	    </div>
-																	    <div class="row">
-																		    <div class="col-sm-3" >
-																						<label for="seccion_id">Colonia </label>
-																						<input name="dirColonia" type="text" class="form-control" placeholder="Colonia" ng-model="dis.objeto.profile.colonia.nombre" disabled>
-																				</div>
-																				<div class="col-sm-3">					    
-																		    	<label>Tiempo Residencia</label>
-																		    	<input name="tiempo" type="text" class="form-control" placeholder="Tiempo" ng-model="dis.objeto.profile.tiempoResdencia" disabled>
-																	    	</div>
-																	    	<div class="col-sm-2">					    
-																		    	<label>Renta</label>
-																		    	<input name="rentaMes" type="checkbox" class="form-control" ng-model="dis.objeto.profile.renta" disabled>
-																	    	</div>
-																	    	<div class="col-sm-3" ng-if="dis.objeto.profile.renta">					    
-																		    	<label>Renta Mes </label>
-																		    	<input name="tiempo" type="number" min="0" class="form-control" placeholder="Renta Mes" ng-model="dis.objeto.profile.rentaMes" disabled>
-																	    	</div>
-																				<div class="col-sm-12">					    
-																		    	<label>Señas Particulares</label>
-																		    	<input name="senias" type="text" class="form-control" placeholder="Señas" ng-model="dis.objeto.profile.senasParticulares" disabled>
-																	    	</div>
-																	    </div>	
-													      </div>
+												<div class="panel-group" id="accordion" role="tablist"
+													aria-multiselectable="true">
+													<div class="panel panel-default">
+														<div class="panel-heading" role="heading" id="headingOne">
+															<h4 class="panel-title">
+																<a role="button" data-toggle="collapse"
+																	data-parent="#accordion" href="#href1"
+																	aria-expanded="false" aria-controls="href1">
+																	Información del Distribuidor
+																</a>
+															</h4>
+														</div>
+														<div class="panel-body">
+															<div class="row">
+																<div class="col-sm-3">
+																	<label>Nombre (s)</label>
+																	<input name="nombre" type="text"
+																		class="form-control" placeholder="Nombre"
+																		ng-model="dis.objeto.profile.nombre"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label>Apellido Paterno</label>
+																	<input name="apellidoPaterno" type="text"
+																		class="form-control"
+																		placeholder="Apellido Paterno"
+																		ng-model="dis.objeto.profile.apellidoPaterno"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label>Apellido Materno</label>
+																	<input name="apellidoMaterno" type="text"
+																		class="form-control"
+																		placeholder="Apellido Materno"
+																		ng-model="dis.objeto.profile.apellidoMaterno"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label>Número distribuidor</label>
+																	<input name="numeroCliente" type="text"
+																		class="form-control"
+																		placeholder="Número de distribuidor"
+																		ng-model="dis.objeto.profile.numeroCliente"
+																		disabled="">
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-sm-6">
+																	<br />
+																	<div class="well padding-10">
+																		<table class="table">
+																			<thead>
+																				<tr>
+																					<th>Documento</th>
+																					<th>Ver</th>
+																					<th>Imprimir</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr ng-repeat="item in dis.documentos">
+																					<td>{{item.nombre}}</td>
+																					<td><a
+																							ng-click="dis.modalDoc(item._id)">
+																							<i class="fa fa-eye"></a>
+																					</td>
+																					<td><a
+																							ng-click="dis.imprimirDoc(item._id)">
+																							<i
+																								class="fa fa-print"></i></a>
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</div>
 													</div>
 													<div class="panel panel-default">
-													    <div class="panel-heading" role="tab" id="headingFive">
-													      <h4 class="panel-title">
-													        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href5" aria-expanded="false" aria-controls="href5">
-													          Ingresos Mensuales
-													        </a>
-													      </h4>
-													    </div>
-													      <div class="panel-body">
-													        	<div class="row">
-																    	<div class="col-sm-3" > 					    
-																	    	<label>Ingresos Personales</label>
-																	    	<input name="ingresosPersonales" type="text" class="form-control" placeholder="Ingresos Personales" ng-model="dis.objeto.profile.ingresosPersonales" disabled>
-																    	</div>
-																    	<div class="col-sm-3" >					    
-																	    	<label>Ingresos Conyuge</label>
-																	    	<input name="ingresosConyuge" type="text" class="form-control" placeholder="Ingresos Conyuge" ng-model="dis.objeto.profile.ingresosConyuge" disabled>
-																    	</div>
-																    	<div class="col-sm-3">					    
-																	    	<label>Otros Ingresos</label>
-																	    	<input name="otrosIngresos" type="text" class="form-control" placeholder="Otros Ingresos" ng-model="dis.objeto.profile.otrosIngresos" disabled>
-																    	</div>	  
-																    	<div class="col-sm-3">					    
-																	    	<label>Total Ingresos</label>
-																	    	<input name="totalIngresos" type="text" class="form-control" placeholder="Total Ingresos" ng-model="dis.objeto.profile.totalIngresos" disabled>
-																    	</div>  				    	    
-																    </div>
-																    <div class="row">
-																    	<div class="col-sm-3" > 					    
-																	    	<label>Gastos Fijos</label>
-																	    	<input name="gastosFijos" type="text" class="form-control" placeholder="Gastos Fijos" ng-model="dis.objeto.profile.gastosFijos" disabled>
-																    	</div>
-																    	<div class="col-sm-3" >					    
-																	    	<label>Gastos Eventuales</label>
-																	    	<input name="gastosEventuales" type="text" class="form-control" placeholder="Gastos Eventuales" ng-model="dis.objeto.profile.gastosEventuales" disabled>
-																    	</div>
-																    	<div class="col-sm-3">					    
-																	    	<label>Total Gastos</label>
-																	    	<input name="totalGastos" type="text" class="form-control" placeholder="Total Gastos" ng-model="dis.objeto.profile.totalGastos" disabled>
-																    	</div>	  
-																    	<div class="col-sm-3">					    
-																	    	<label>Resultado Neto</label>
-																	    	<input name="resultadoNeto" type="text" class="form-control" placeholder="Resultado Neto" ng-model="dis.objeto.profile.resultadoNeto" disabled>
-																    	</div>  				    	    
-																    </div>
-													      </div>
-													</div>				
-													<div class="panel panel-default" ng-if="dis.estadoCivilSeleccionado.nombre == 'CASADO (A)'">
-													    <div class="panel-heading" role="tab" id="headingSix">
-													      <h4 class="panel-title">
-													        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href6" aria-expanded="false" aria-controls="href6">
-													          Información del Cónyuge
-													        </a>
-													      </h4>
-													    </div>
-													      <div class="panel-body">
-													        	<div class="row">
-																<div class="col-sm-4" > 					    
-																	<label>Nombre *</label>
-																	<input name="nombreConyuge" type="text" class="form-control" placeholder="Nombre" ng-model="dis.objeto.profile.nombreConyuge" disabled  capitalize>
+														<div class="panel-heading" role="tab" id="headingTwo">
+															<h4 class="panel-title">
+																<a class="collapsed" role="button"
+																	data-toggle="collapse" data-parent="#accordion"
+																	href="#href2" aria-expanded="false"
+																	aria-controls="href2">
+																	Información de contacto
+																</a>
+															</h4>
+														</div>
+														<div class="panel-body">
+															<div class="row">
+																<div class="col-sm-4" valida>
+																	<label>Particular</label>
+																	<input name="telefonoParticular" type="text"
+																		class="form-control"
+																		placeholder="Teléfono Particular"
+																		ng-model="dis.objeto.profile.particular"
+																		disabled="">
 																</div>
-																<div class="col-sm-4" >					    
-																	<label>Celular *</label>
-																	<input name="celularConyuge" type="text" class="form-control" placeholder="Celular" ng-model="dis.objeto.profile.celularConyuge" disabled  capitalize>
+																<div class="col-sm-4" valida>
+																	<label>Teléfono Oficina</label>
+																	<input name="telefonoOficina" type="text"
+																		class="form-control" placeholder="Teléfono"
+																		ng-model="dis.objeto.profile.telefonoOficina"
+																		disabled="">
 																</div>
-																<div class="col-sm-4" >					    
-																	<label>Empresa *</label>
-																	<input name="empresaConyuge" type="text" class="form-control" placeholder="Empresa Conyuge" ng-model="dis.objeto.profile.empresaConyuge" disabled capitalize>
+																<div class="col-sm-4" valida>
+																	<label>Celular</label>
+																	<input name="celular" type="text"
+																		class="form-control" placeholder="Celular"
+																		ng-model="dis.objeto.profile.celular"
+																		disabled="">
 																</div>
 															</div>
 															<div class="row">
-																<div class="col-sm-4" >					    
-																	<label>Dirección Empresa*</label>
-																	<input name="direccionEmpresa" type="text" class="form-control" placeholder="Dirección Empresa" ng-model="dis.objeto.profile.direccionEmpresa"   disabled capitalize>
+																<div class="col-sm-3">
+																	<label>Teléfono Alternativo</label>
+																	<input name="otroTelefono" type="text"
+																		class="form-control"
+																		placeholder="Otro Alternativo"
+																		ng-model="dis.objeto.profile.telefonoAlternativo"
+																		disabled="">
 																</div>
-																<div class="col-sm-4" >					    
-																	<label>Teléfono del trabajo *</label>
-																	<input name="telefonoConyugeTrabajo" type="text" class="form-control" placeholder="Teléfono trabajo" ng-model="dis.objeto.profile.telefonoConyugeTrabajo" disabled  capitalize >
+																<div class="col-sm-3">
+																	<label>Dueño</label>
+																	<input name="otroTelefono" type="text"
+																		class="form-control" placeholder="Dueño"
+																		ng-model="dis.objeto.profile.duenoAlternativo"
+																		disabled="">
 																</div>
-																<div class="col-sm-4" >					    
-																	<label>Puesto *</label>
-																	<input name="puestoConyuge" type="text" class="form-control" placeholder="Puesto" ng-model="dis.objeto.profile.puestoConyuge" disabled capitalize>
+																<div class="col-sm-3">
+																	<label>Parentesco</label>
+																	<input name="otroTelefono" type="text"
+																		class="form-control" placeholder="Parentesco"
+																		ng-model="dis.objeto.profile.parentescoAlternativo"
+																		disabled="">
 																</div>
-																
+																<div class="col-sm-3">
+																	<label>Correo</label>
+																	<input name="correo" type="text"
+																		class="form-control" placeholder="Correo"
+																		ng-model="dis.objeto.profile.correo"
+																		disabled="">
+																</div>
 															</div>
-															<div class="row">
-																
-																<div class="col-sm-12" >					    
-																	<label>Nombre, puesto y teléfono jefe inmediato *</label>
-																	<input name="datosjefeInmediato" type="text" class="form-control" placeholder="Datos Jefe Inmediato" ng-model="dis.objeto.profile.datosjefeInmediato"  capitalize>
-																</div>
-															</div>
-													      
-													    </div>
-													</div>      
+														</div>
+													</div>
 													<div class="panel panel-default">
-													    <div class="panel-heading" role="tab" id="headingSeven">
-													      <h4 class="panel-title">
-													        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href7" aria-expanded="false" aria-controls="href7">
-													          Referencias Personales y Avales
-													        </a>
-													      </h4>
-													    </div>
-												      <div class="panel-body">
-													      <div role="content">
-																	<!-- Start widget content -->
-																	<div class="widget-body">
-																		<hr class="simple">
-																		<ul id="myTab1" class="nav nav-tabs bordered">
-																			<li class="active">
-																				<a href="#s1" data-toggle="tab">Referencias Personales</a>
-																			</li>
-																			<li>
-																				<a href="#s2" data-toggle="tab"> Avales</a>
-																			</li>
-																			<li class="pull-right">
-																				<a href="javascript:void(0);">
-																				<div class="sparkline txt-color-pinkDark text-align-right" data-sparkline-height="18px" data-sparkline-width="90px" data-sparkline-barwidth="7"><canvas width="52" height="18" style="display: inline-block; width: 52px; height: 18px; vertical-align: top;"></canvas></div> </a>
-																			</li>
-																		</ul>
-																		<div id="myTabContent1" class="tab-content padding-10">
-																			<div class="tab-pane fade in active" id="s1">
-																					<div class="row">
-																						<div class="col-sm-12">
-																							<table class="table table-bordered">
-																								<thead>
-																									<tr>
-																										<th width="5%">Número</th>
-																										<th width="20%">Nombre</th>
-																										<th width="30%">Dirección - Ciudad - Estado</th>
-																										<th width="10%">Telefono</th>
-																										<th width="5%">Parentesco</th>
-																										<th width="10%">Tiempo</th>
-																									</tr>
-																								</thead>
-																								<tbody>																					<!--  ng-show="!dis.objeto._id" -->
-																									<tr ng-repeat="p in dis.referenciasPersonales">
-																										<td>{{p.num}}</td>
-																										<td>{{p.nombre}} {{p.apellidoPaterno}} {{p.apellidoMaterno}} </td>
-																										<td>{{p.direccion}} {{p.ciudad}} {{p.estado}}</td>
-																										<td>{{p.telefono}}</td>
-																										<td>{{p.parentesco}}</td>
-																										<td>{{p.tiempo}}</td>
-																									</tr>
-<!--
+														<div class="panel-heading" role="tab" id="headingThree">
+															<h4 class="panel-title">
+																<a class="collapsed" role="button"
+																	data-toggle="collapse" data-parent="#accordion"
+																	href="#href3" aria-expanded="false"
+																	aria-controls="href3">
+																	Particulares
+																</a>
+															</h4>
+														</div>
+														<div class="panel-body">
+															<div class="row">
+																<div class="col-sm-3">
+																	<label for="estadocivil">Sexo</label>
+																	<input name="Sexo" type="text" class="form-control"
+																		placeholder="Sexo"
+																		ng-model="dis.objeto.profile.sexo" disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label for="estadocivil">Estado Civil </label>
+																	<input name="estadoCivil" type="text"
+																		class="form-control" placeholder="Estado Civil"
+																		ng-model="dis.objeto.profile.estadoCivil.nombre"
+																		disabled="">
+																</div>
+
+																<div class="col-sm-3">
+																	<label>Fecha Nacimiento </label>
+																	<input name="fechaNacimiento" type="date"
+																		format="dd/MM/yyyy" class="form-control"
+																		placeholder="Fecha"
+																		ng-model="dis.objeto.profile.fechaNacimiento"
+																		disabled="">
+																</div>
+
+																<div class="col-sm-3">
+																	<label for="nacionalidad">Nacionalidad</label>
+																	<input name="nacionalidad" type="text"
+																		class="form-control" placeholder="Nacionalidad"
+																		ng-model="dis.objeto.profile.nacionalidad.nombre"
+																		disabled="">
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-sm-3">
+																	<label for="ocupacion">Ocupación </label>
+																	<input name="ocupacion" type="text"
+																		class="form-control" placeholder="Ocupacion"
+																		ng-model="dis.objeto.profile.ocupacion.nombre"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label>CURP</label>
+																	<input name="curp" type="text" class="form-control"
+																		placeholder="CURP"
+																		ng-model="dis.objeto.profile.curp" disabled>
+																</div>
+																<div class="col-sm-3">
+																	<label>Lugar de Nacimiento</label>
+																	<input name="lugarNacimiento" type="text"
+																		class="form-control"
+																		placeholder="Lugar de Nacimiento"
+																		ng-model="dis.objeto.profile.lugarNacimiento"
+																		disabled>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="panel panel-default">
+														<div class="panel-heading" role="tab" id="headingFour">
+															<h4 class="panel-title">
+																<a class="collapsed" role="button"
+																	data-toggle="collapse" data-parent="#accordion"
+																	href="#href4" aria-expanded="false"
+																	aria-controls="href4">
+																	Dirección
+																</a>
+															</h4>
+														</div>
+														<div class="panel-body">
+															<div class="row">
+																<div class="col-sm-6">
+																	<label>Calle </label>
+																	<input name="calle" type="text" class="form-control"
+																		placeholder="Calle"
+																		ng-model="dis.objeto.profile.calle" disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label>Numero </label>
+																	<input name="numero" type="text"
+																		class="form-control" placeholder="Número"
+																		ng-model="dis.objeto.profile.numero"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label>CP </label>
+																	<input name="cp" type="number" min="0"
+																		class="form-control" placeholder="Código Postal"
+																		ng-model="dis.objeto.profile.codigoPostal"
+																		disabled="">
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-sm-3">
+																	<label>Pais </label>
+																	<input name="dirPais" type="text"
+																		class="form-control" placeholder="Pais"
+																		ng-model="dis.objeto.profile.pais.nombre"
+																		disabled>
+																</div>
+																<div class="col-sm-3">
+																	<label for="seccion_id">Estado </label>
+																	<input name="dirEstado" type="text"
+																		class="form-control" placeholder="Estado"
+																		ng-model="dis.objeto.profile.estado.nombre"
+																		disabled>
+																</div>
+																<div class="col-sm-3">
+																	<label>Municipio </label>
+																	<input name="dirMunicipio" type="text"
+																		class="form-control" placeholder="Municipio"
+																		ng-model="dis.objeto.profile.municipio.nombre"
+																		disabled>
+																</div>
+																<div class="col-sm-3">
+																	<label for="seccion_id">Ciudad </label>
+																	<input name="dirCiudad" type="text"
+																		class="form-control" placeholder="Ciudad"
+																		ng-model="dis.objeto.profile.ciudad.nombre"
+																		disabled>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-sm-3">
+																	<label for="seccion_id">Colonia </label>
+																	<input name="dirColonia" type="text"
+																		class="form-control" placeholder="Colonia"
+																		ng-model="dis.objeto.profile.colonia.nombre"
+																		disabled>
+																</div>
+																<div class="col-sm-3">
+																	<label>Tiempo Residencia</label>
+																	<input name="tiempo" type="text"
+																		class="form-control" placeholder="Tiempo"
+																		ng-model="dis.objeto.profile.tiempoResdencia"
+																		disabled>
+																</div>
+																<div class="col-sm-2">
+																	<label>Renta</label>
+																	<input name="rentaMes" type="checkbox"
+																		class="form-control"
+																		ng-model="dis.objeto.profile.renta" disabled>
+																</div>
+																<div class="col-sm-3" ng-if="dis.objeto.profile.renta">
+																	<label>Renta Mes </label>
+																	<input name="tiempo" type="number" min="0"
+																		class="form-control" placeholder="Renta Mes"
+																		ng-model="dis.objeto.profile.rentaMes" disabled>
+																</div>
+																<div class="col-sm-12">
+																	<label>Señas Particulares</label>
+																	<input name="senias" type="text"
+																		class="form-control" placeholder="Señas"
+																		ng-model="dis.objeto.profile.senasParticulares"
+																		disabled>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="panel panel-default">
+														<div class="panel-heading" role="tab" id="headingFive">
+															<h4 class="panel-title">
+																<a class="collapsed" role="button"
+																	data-toggle="collapse" data-parent="#accordion"
+																	href="#href5" aria-expanded="false"
+																	aria-controls="href5">
+																	Ingresos Mensuales
+																</a>
+															</h4>
+														</div>
+														<div class="panel-body">
+															<div class="row">
+																<div class="col-sm-3">
+																	<label>Ingresos Personales</label>
+																	<input name="ingresosPersonales" type="text"
+																		class="form-control"
+																		placeholder="Ingresos Personales"
+																		ng-model="dis.objeto.profile.ingresosPersonales"
+																		disabled>
+																</div>
+																<div class="col-sm-3">
+																	<label>Ingresos Conyuge</label>
+																	<input name="ingresosConyuge" type="text"
+																		class="form-control"
+																		placeholder="Ingresos Conyuge"
+																		ng-model="dis.objeto.profile.ingresosConyuge"
+																		disabled>
+																</div>
+																<div class="col-sm-3">
+																	<label>Otros Ingresos</label>
+																	<input name="otrosIngresos" type="text"
+																		class="form-control"
+																		placeholder="Otros Ingresos"
+																		ng-model="dis.objeto.profile.otrosIngresos"
+																		disabled>
+																</div>
+																<div class="col-sm-3">
+																	<label>Total Ingresos</label>
+																	<input name="totalIngresos" type="text"
+																		class="form-control"
+																		placeholder="Total Ingresos"
+																		ng-model="dis.objeto.profile.totalIngresos"
+																		disabled>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-sm-3">
+																	<label>Gastos Fijos</label>
+																	<input name="gastosFijos" type="text"
+																		class="form-control" placeholder="Gastos Fijos"
+																		ng-model="dis.objeto.profile.gastosFijos"
+																		disabled>
+																</div>
+																<div class="col-sm-3">
+																	<label>Gastos Eventuales</label>
+																	<input name="gastosEventuales" type="text"
+																		class="form-control"
+																		placeholder="Gastos Eventuales"
+																		ng-model="dis.objeto.profile.gastosEventuales"
+																		disabled>
+																</div>
+																<div class="col-sm-3">
+																	<label>Total Gastos</label>
+																	<input name="totalGastos" type="text"
+																		class="form-control" placeholder="Total Gastos"
+																		ng-model="dis.objeto.profile.totalGastos"
+																		disabled>
+																</div>
+																<div class="col-sm-3">
+																	<label>Resultado Neto</label>
+																	<input name="resultadoNeto" type="text"
+																		class="form-control"
+																		placeholder="Resultado Neto"
+																		ng-model="dis.objeto.profile.resultadoNeto"
+																		disabled>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="panel panel-default"
+														ng-if="dis.estadoCivilSeleccionado.nombre == 'CASADO (A)'">
+														<div class="panel-heading" role="tab" id="headingSix">
+															<h4 class="panel-title">
+																<a class="collapsed" role="button"
+																	data-toggle="collapse" data-parent="#accordion"
+																	href="#href6" aria-expanded="false"
+																	aria-controls="href6">
+																	Información del Cónyuge
+																</a>
+															</h4>
+														</div>
+														<div class="panel-body">
+															<div class="row">
+																<div class="col-sm-4">
+																	<label>Nombre *</label>
+																	<input name="nombreConyuge" type="text"
+																		class="form-control" placeholder="Nombre"
+																		ng-model="dis.objeto.profile.nombreConyuge"
+																		disabled capitalize>
+																</div>
+																<div class="col-sm-4">
+																	<label>Celular *</label>
+																	<input name="celularConyuge" type="text"
+																		class="form-control" placeholder="Celular"
+																		ng-model="dis.objeto.profile.celularConyuge"
+																		disabled capitalize>
+																</div>
+																<div class="col-sm-4">
+																	<label>Empresa *</label>
+																	<input name="empresaConyuge" type="text"
+																		class="form-control"
+																		placeholder="Empresa Conyuge"
+																		ng-model="dis.objeto.profile.empresaConyuge"
+																		disabled capitalize>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-sm-4">
+																	<label>Dirección Empresa*</label>
+																	<input name="direccionEmpresa" type="text"
+																		class="form-control"
+																		placeholder="Dirección Empresa"
+																		ng-model="dis.objeto.profile.direccionEmpresa"
+																		disabled capitalize>
+																</div>
+																<div class="col-sm-4">
+																	<label>Teléfono del trabajo *</label>
+																	<input name="telefonoConyugeTrabajo" type="text"
+																		class="form-control"
+																		placeholder="Teléfono trabajo"
+																		ng-model="dis.objeto.profile.telefonoConyugeTrabajo"
+																		disabled capitalize>
+																</div>
+																<div class="col-sm-4">
+																	<label>Puesto *</label>
+																	<input name="puestoConyuge" type="text"
+																		class="form-control" placeholder="Puesto"
+																		ng-model="dis.objeto.profile.puestoConyuge"
+																		disabled capitalize>
+																</div>
+
+															</div>
+															<div class="row">
+
+																<div class="col-sm-12">
+																	<label>Nombre, puesto y teléfono jefe inmediato
+																		*</label>
+																	<input name="datosjefeInmediato" type="text"
+																		class="form-control"
+																		placeholder="Datos Jefe Inmediato"
+																		ng-model="dis.objeto.profile.datosjefeInmediato"
+																		capitalize>
+																</div>
+															</div>
+
+														</div>
+													</div>
+													<div class="panel panel-default">
+														<div class="panel-heading" role="tab" id="headingSeven">
+															<h4 class="panel-title">
+																<a class="collapsed" role="button"
+																	data-toggle="collapse" data-parent="#accordion"
+																	href="#href7" aria-expanded="false"
+																	aria-controls="href7">
+																	Referencias Personales y Avales
+																</a>
+															</h4>
+														</div>
+														<div class="panel-body">
+															<div role="content">
+																<!-- Start widget content -->
+																<div class="widget-body">
+																	<hr class="simple">
+																	<ul id="myTab1" class="nav nav-tabs bordered">
+																		<li class="active">
+																			<a href="#s1" data-toggle="tab">Referencias
+																				Personales</a>
+																		</li>
+																		<li>
+																			<a href="#s2" data-toggle="tab"> Avales</a>
+																		</li>
+																		<li class="pull-right">
+																			<a href="javascript:void(0);">
+																				<div class="sparkline txt-color-pinkDark text-align-right"
+																					data-sparkline-height="18px"
+																					data-sparkline-width="90px"
+																					data-sparkline-barwidth="7"><canvas
+																						width="52" height="18"
+																						style="display: inline-block; width: 52px; height: 18px; vertical-align: top;"></canvas>
+																				</div>
+																			</a>
+																		</li>
+																	</ul>
+																	<div id="myTabContent1"
+																		class="tab-content padding-10">
+																		<div class="tab-pane fade in active" id="s1">
+																			<div class="row">
+																				<div class="col-sm-12">
+																					<table class="table table-bordered">
+																						<thead>
+																							<tr>
+																								<th width="5%">Número
+																								</th>
+																								<th width="20%">Nombre
+																								</th>
+																								<th width="30%">
+																									Dirección - Ciudad -
+																									Estado</th>
+																								<th width="10%">Telefono
+																								</th>
+																								<th width="5%">
+																									Parentesco</th>
+																								<th width="10%">Tiempo
+																								</th>
+																							</tr>
+																						</thead>
+																						<tbody>
+																							<!--  ng-show="!dis.objeto._id" -->
+																							<tr
+																								ng-repeat="p in dis.referenciasPersonales">
+																								<td>{{p.num}}</td>
+																								<td>{{p.nombre}}
+																									{{p.apellidoPaterno}}
+																									{{p.apellidoMaterno}}
+																								</td>
+																								<td>{{p.direccion}}
+																									{{p.ciudad}}
+																									{{p.estado}}</td>
+																								<td>{{p.telefono}}</td>
+																								<td>{{p.parentesco}}
+																								</td>
+																								<td>{{p.tiempo}}</td>
+																							</tr>
+																							<!--
 																									<tr ng-repeat="p in dis.objeto.profile.referenciasPersonales_ids" ng-show="dis.objeto._id">
 																										<td>{{p.num}}</td>
 																										<td>{{p.nombreCompleto}}</td>
@@ -693,351 +1085,672 @@
 																										<td>{{p.tiempoConocerlo}}</td>
 																									</tr>
 -->
-																								</tbody>
-																							</table>
-																						</div>	
-																					</div>
-																			</div>
-																			<div class="tab-pane fade" id="s2">
-																					<div class="row">
-																						<div class="col-sm-12">
-																							<table class="table table-bordered">
-																								<thead>
-																									<tr>
-																										<th width="5%">Número</th>
-																										<th width="15%">Nombre</th>
-																										<th width="10%">Parentesco</th>
-																										<th width="10%">Tiempo Conocerlo</th>
-																									</tr>
-																								</thead>
-																								<tbody>
-																									<tr ng-repeat="aval in dis.avales" ng-show="!dis.objeto._id">
-																										<td>{{aval.num}}</td>
-																										<td>{{aval.nombre}}</td>
-																										<td>{{aval.parentesco}}</td>
-																										<td>{{aval.tiempoConocerlo}}</td>
-																									</tr>
-																									<tr ng-repeat="aval in dis.objeto.profile.avales_ids" ng-show="dis.objeto._id">
-																										<td>{{aval.num}}</td>
-																										<td>{{aval.nombre}}</td>
-																										<td>{{aval.parentesco}}</td>
-																										<td>{{aval.tiempoConocerlo}}</td>
-																									</tr>
-																								</tbody>
-																							</table>
-																						</div>
-																					</div>
-																					
+																						</tbody>
+																					</table>
+																				</div>
 																			</div>
 																		</div>
+																		<div class="tab-pane fade" id="s2">
+																			<div class="row">
+																				<div class="col-sm-12">
+																					<table class="table table-bordered">
+																						<thead>
+																							<tr>
+																								<th width="5%">Número
+																								</th>
+																								<th width="15%">Nombre
+																								</th>
+																								<th width="10%">
+																									Parentesco</th>
+																								<th width="10%">Tiempo
+																									Conocerlo</th>
+																							</tr>
+																						</thead>
+																						<tbody>
+																							<tr ng-repeat="aval in dis.avales"
+																								ng-show="!dis.objeto._id">
+																								<td>{{aval.num}}</td>
+																								<td>{{aval.nombre}}</td>
+																								<td>{{aval.parentesco}}
+																								</td>
+																								<td>{{aval.tiempoConocerlo}}
+																								</td>
+																							</tr>
+																							<tr ng-repeat="aval in dis.objeto.profile.avales_ids"
+																								ng-show="dis.objeto._id">
+																								<td>{{aval.num}}</td>
+																								<td>{{aval.nombre}}</td>
+																								<td>{{aval.parentesco}}
+																								</td>
+																								<td>{{aval.tiempoConocerlo}}
+																								</td>
+																							</tr>
+																						</tbody>
+																					</table>
+																				</div>
+																			</div>
+
+																		</div>
 																	</div>
-																	<!-- end widget content -->
 																</div>
-												      </div>
-													</div>									
+																<!-- end widget content -->
+															</div>
+														</div>
+													</div>
 													<div class="panel panel-default">
-													    <div class="panel-heading" role="tab" id="headingEight">
-													      <h4 class="panel-title">
-													        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#href8" aria-expanded="false" aria-controls="href8">
-													          Empresa
-													        </a>
-													      </h4>
-													    </div>
-												      <div class="panel-body">
-												        	<div class="row">
-																    	<div class="col-sm-6" > 					    
-																	    	<label>Nombre</label>
-																	    	<input name="nombreEmpresa" type="text" class="form-control" placeholder="Nombre" ng-model="dis.objeto.profile.empresa.nombre" disabled>
-																    	</div>
-																    	<div class="col-sm-6" >					    
-																	    	<label>Razón Social</label>
-																	    	<input name="razonsocial" type="text" class="form-control" placeholder="Razón Social" ng-model="dis.objeto.profile.empresa.razonSocial" disabled>
-																    	</div>
-																    	<div class="col-sm-4" >					    
-																	    	<label>Calle</label>
-																	    	<input name="calleEmpresa" type="text" class="form-control" placeholder="Calle" ng-model="dis.objeto.profile.empresa.calle" disabled="" >
-																    	</div>	  
-																    	<div class="col-sm-2" >					    
-																	    	<label>Número </label>
-																	    	<input name="numeroEmpresa" type="text" class="form-control" placeholder="Número" ng-model="dis.objeto.profile.empresa.numero" disabled="" >
-																    	</div>  				    	    
-																    	<div class="col-sm-6" >					    
-																	    	<label>Colonia </label>
-																	    	<input name="coloniaEmpresa" type="text" class="form-control" placeholder="Colonia" ng-model="dis.objeto.profile.empresa.colonia" disabled="">
-																    	</div>
-																    </div>
-															    <div class="row">
-																    <div class="col-sm-3" >					    
-																    	<label>Teléfono </label>
-																    	<input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="dis.objeto.profile.telefonoEmpresa" disabled="">
-															    	</div>
-															    	<div class="col-sm-3" >					    
-																    	<label>Código Postal </label>
-																    	<input name="codigopostal" type="text" class="form-control" placeholder="Código Postal" ng-model="dis.objeto.profile.empresa.codigoPostal" disabled="">
-															    	</div>
-															    	<div class="col-sm-3" >					    
-																    	<label>Tiempo Laborando </label>
-																    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="dis.objeto.profile.tiempoLaborando" disabled="">
-															    	</div>
-															    	<div class="col-sm-3" >					    
-																    	<label>Puesto </label>
-																    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="dis.objeto.profile.puesto" disabled="">
-															    	</div>
-															    </div>  
-															    <div class="row">
-															    	<div class="col-sm-3" >					    
-																    	<label>Departamento </label>
-																    	<input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="dis.objeto.profile.departamento" disabled="">
-															    	</div>
-															    	<div class="col-sm-3" >					    
-																    	<label>Jefe Inmediato </label>
-																    	<input name="jefeinmediato" type="text" class="form-control" placeholder="Jefe Inmediato" ng-model="dis.objeto.profile.jefeInmediato" disabled="">
-															    	</div>
-																	</div>
-																	<div class="row" >
-																		<div class="col-sm-3" >
-																				<label >Pais </label>
-																				<input name="dirPaisEmpresa" type="text" class="form-control" placeholder="Pais" ng-model="dis.objeto.profile.empresa.paisEmpresa" disabled="">
-																		</div>
-																	  <div class="col-sm-3" >
-																				<label for="seccion_id">Estado </label>
-																				<input name="dirEstadoEmpresa" type="text" class="form-control" placeholder="Estado" ng-model="dis.objeto.profile.empresa.estadoEmpresa" disabled="">
-																		</div>	
-																		<div class="col-sm-3" >
-																				<label >Municipio </label>
-																				<input name="dirMunicipioEmpresa" type="text" class="form-control" placeholder="Municipio" ng-model="dis.objeto.profile.empresa.municipioEmpresa" disabled="">
-																		</div>
-																		<div class="col-sm-3" >
-																				<label for="seccion_id">Ciudad </label>
-																				<input name="dirCiudadEmpresa" type="text" class="form-control" placeholder="Ciudad" value="{{dis.objeto.profile.empresa.ciudadEmpresa}}" disabled="">
-																		</div>
-																	</div>	
-												    	</div>
+														<div class="panel-heading" role="tab" id="headingEight">
+															<h4 class="panel-title">
+																<a class="collapsed" role="button"
+																	data-toggle="collapse" data-parent="#accordion"
+																	href="#href8" aria-expanded="false"
+																	aria-controls="href8">
+																	Empresa
+																</a>
+															</h4>
+														</div>
+														<div class="panel-body">
+															<div class="row">
+																<div class="col-sm-6">
+																	<label>Nombre</label>
+																	<input name="nombreEmpresa" type="text"
+																		class="form-control" placeholder="Nombre"
+																		ng-model="dis.objeto.profile.empresa.nombre"
+																		disabled>
+																</div>
+																<div class="col-sm-6">
+																	<label>Razón Social</label>
+																	<input name="razonsocial" type="text"
+																		class="form-control" placeholder="Razón Social"
+																		ng-model="dis.objeto.profile.empresa.razonSocial"
+																		disabled>
+																</div>
+																<div class="col-sm-4">
+																	<label>Calle</label>
+																	<input name="calleEmpresa" type="text"
+																		class="form-control" placeholder="Calle"
+																		ng-model="dis.objeto.profile.empresa.calle"
+																		disabled="">
+																</div>
+																<div class="col-sm-2">
+																	<label>Número </label>
+																	<input name="numeroEmpresa" type="text"
+																		class="form-control" placeholder="Número"
+																		ng-model="dis.objeto.profile.empresa.numero"
+																		disabled="">
+																</div>
+																<div class="col-sm-6">
+																	<label>Colonia </label>
+																	<input name="coloniaEmpresa" type="text"
+																		class="form-control" placeholder="Colonia"
+																		ng-model="dis.objeto.profile.empresa.colonia"
+																		disabled="">
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-sm-3">
+																	<label>Teléfono </label>
+																	<input name="telefono" type="text"
+																		class="form-control" placeholder="Teléfono"
+																		ng-model="dis.objeto.profile.telefonoEmpresa"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label>Código Postal </label>
+																	<input name="codigopostal" type="text"
+																		class="form-control" placeholder="Código Postal"
+																		ng-model="dis.objeto.profile.empresa.codigoPostal"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label>Tiempo Laborando </label>
+																	<input name="tiempoLaborando" type="text"
+																		class="form-control"
+																		placeholder="Tiempo Laborando"
+																		ng-model="dis.objeto.profile.tiempoLaborando"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label>Puesto </label>
+																	<input name="puesto" type="text"
+																		class="form-control" placeholder="Puesto"
+																		ng-model="dis.objeto.profile.puesto"
+																		disabled="">
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-sm-3">
+																	<label>Departamento </label>
+																	<input name="departamento" type="text"
+																		class="form-control" placeholder="Departamento"
+																		ng-model="dis.objeto.profile.departamento"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label>Jefe Inmediato </label>
+																	<input name="jefeinmediato" type="text"
+																		class="form-control"
+																		placeholder="Jefe Inmediato"
+																		ng-model="dis.objeto.profile.jefeInmediato"
+																		disabled="">
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-sm-3">
+																	<label>Pais </label>
+																	<input name="dirPaisEmpresa" type="text"
+																		class="form-control" placeholder="Pais"
+																		ng-model="dis.objeto.profile.empresa.paisEmpresa"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label for="seccion_id">Estado </label>
+																	<input name="dirEstadoEmpresa" type="text"
+																		class="form-control" placeholder="Estado"
+																		ng-model="dis.objeto.profile.empresa.estadoEmpresa"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label>Municipio </label>
+																	<input name="dirMunicipioEmpresa" type="text"
+																		class="form-control" placeholder="Municipio"
+																		ng-model="dis.objeto.profile.empresa.municipioEmpresa"
+																		disabled="">
+																</div>
+																<div class="col-sm-3">
+																	<label for="seccion_id">Ciudad </label>
+																	<input name="dirCiudadEmpresa" type="text"
+																		class="form-control" placeholder="Ciudad"
+																		value="{{dis.objeto.profile.empresa.ciudadEmpresa}}"
+																		disabled="">
+																</div>
+															</div>
+														</div>
 													</div>
 												</div>
 											</div>
 										</p>
 									</div>
-									<div class="tab-pane fade" id="historialCrediticio" ng-show="dis.masInfoCredito" ng-if="currentUser.roles[0] != 'Distribuidor'">
+									<div class="tab-pane fade" id="historialCrediticio" ng-show="dis.masInfoCredito"
+										ng-if="currentUser.roles[0] != 'Distribuidor'">
 										<p>
 											<div class="tab-pane">
 												<div class="row">
 													<div class="col-sm-12">
-															<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
-		<header role="heading">
-																	<ul id="widget-tab-2" class="nav nav-tabs pull-left">
-															
-																		<li class="active">
-																			<a data-toggle="tab" href="#hrC1" aria-expanded="false"> Pagos</a>
-																		</li>
-																		
-																		<li class="">
-																			<a data-toggle="tab" href="#hrC2" aria-expanded="false"> Vales</a>
-																		</li>
-																		
-																		<li class="">
-																			<a data-toggle="tab" href="#hrC3" aria-expanded="false"> Créditos</a>
-																		</li>
-															
-																	</ul>	
-																	
-																<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-															
-																<!-- widget div-->
-																<div role="content">
-																	
-																	<!-- widget edit box -->
-																	<div class="jarviswidget-editbox">
-																		<!-- This area used as dropdown edit box -->
-																		
-																	</div>
-																	<!-- end widget edit box -->
-																	
-																	<!-- widget content -->
-																	<div class="widget-body no-padding">
-															
-																		<!-- widget body text-->
-																		
-																		<div class="tab-content padding-10">
-																			
-																			<div class="tab-pane fade active in" id="hrC1">
-																				
-																					<table class="table table-striped table-bordered table-condensed font-xs">
-																						<thead class="thead">
-																							<tr>
-																								<th class="text-center" width="5%">No.</th>
-																								<th class="text-center" width="10%">Folio Pago</th>	
-																								<th class="text-center" width="15%">Fecha Pago</th>
-																								<th class="text-center" width="10%">Importe</th>
-																								<th class="text-center" width="10%">Bonificado</th>
-																								<th class="text-center" width="10%">Total</th>
-																								<th class="text-center" width="10%">Pagado</th>
-																								<th class="text-center" width="10%">Tipo Ingreso</th>
-																								<th class="text-center" width="10%">Cajero</th>
-																								<th class="text-center" width="10%">Acciones</th>
-																								<th ng-show="dis.openModal"></th>
-																							</tr>
-																						</thead>
-																						<tbody>
-																							<tr ng-repeat="pago in dis.pagos">
-																								<td class="text-center">{{$index + 1}}</td>		
-																								<td class="text-center">
-																									{{pago.folioPago}}<br>
-																									<span style="font-size: xx-small>" ng-repeat = "corte in pago.cortes">
-																										|<strong>{{corte.numeroCorte}}</strong>|
-																									</span>
-																								</td>	
-																								<td class="text-center">{{pago.fechaPago | date:"dd-MM-yyyy"}}</td>
-																								<td class="text-right">{{pago.liquidacion | currency}}</td>
-																								<td class="text-right">{{pago.bonificacion | currency}}</td>
-																								<td class="text-right">{{pago.totalPago | currency}}</td>
-																								<td class="text-right">{{pago.pago | currency}}</td>
-																								<td class="text-center">{{pago.tipoIngreso}}</td>
-																								<td class="text-center">{{pago.cajero}}</td>	
-																								<td>
-																									<div class="text-center">
-																											<button type="button" class="btn btn-xs btn-link" ng-click="dis.verPagos(pago)">Ver Pago</button>
-																									</div>						
-																								</td>
-																							</tr>
-																						</tbody>
-																					</table>
-																				
+														<div class="jarviswidget jarviswidget-sortable" id="wid-id-11"
+															data-widget-colorbutton="false"
+															data-widget-editbutton="false"
+															data-widget-togglebutton="false"
+															data-widget-deletebutton="false"
+															data-widget-fullscreenbutton="false"
+															data-widget-custombutton="false" role="widget">
+															<header role="heading">
+																<ul id="widget-tab-2" class="nav nav-tabs pull-left">
+
+																	<li class="active">
+																		<a data-toggle="tab" href="#hrC1"
+																			aria-expanded="false"> Pagos</a>
+																	</li>
+
+																	<li class="">
+																		<a data-toggle="tab" href="#hrC2"
+																			aria-expanded="false"> Vales</a>
+																	</li>
+
+																	<li class="">
+																		<a data-toggle="tab" href="#hrC3"
+																			aria-expanded="false"> Créditos</a>
+																	</li>
+
+																</ul>
+
+																<span class="jarviswidget-loader"><i
+																		class="fa fa-refresh fa-spin"></i></span>
+															</header>
+
+															<!-- widget div-->
+															<div role="content">
+
+																<!-- widget edit box -->
+																<div class="jarviswidget-editbox">
+																	<!-- This area used as dropdown edit box -->
+
+																</div>
+																<!-- end widget edit box -->
+
+																<!-- widget content -->
+																<div class="widget-body no-padding">
+
+																	<!-- widget body text-->
+
+																	<div class="tab-content padding-10">
+
+																		<div class="tab-pane fade active in" id="hrC1">
+																			<table
+																				class="table table-striped table-bordered table-condensed font-xs">
+																				<thead class="thead">
+																					<tr>
+																						<th class="text-center"
+																							width="5%">No.</th>
+																						<th class="text-center"
+																							width="10%">Folio Pago</th>
+																						<th class="text-center"
+																							width="15%">Fecha Pago</th>
+																						<th class="text-center"
+																							width="10%">Importe</th>
+																						<th class="text-center"
+																							width="10%">Bonificado</th>
+																						<th class="text-center"
+																							width="10%">Total</th>
+																						<th class="text-center"
+																							width="10%">Pagó Con</th>
+																						<th class="text-center"
+																							width="10%">Tipo Ingreso
+																						</th>
+																						<th class="text-center"
+																							width="10%">Cajero</th>
+																						<th class="text-center"
+																							width="10%">Acciones</th>
+																						<th ng-show="dis.openModal">
+																						</th>
+																					</tr>
+																				</thead>
+																				<tbody>
+																					<tr ng-repeat="pago in dis.pagos">
+																						<td class="text-center">
+																							{{$index + 1}}</td>
+																						<td class="text-center">
+																							{{pago.folioPago}}<br>
+																							<span
+																								style="font-size: xx-small>"
+																								ng-repeat="corte in pago.cortes">
+																								|<strong>{{corte.numeroCorte}}</strong>|
+																							</span>
+																						</td>
+																						<td class="text-center">
+																							{{pago.fechaPago | date:"dd-MM-yyyy"}}
+																						</td>
+																						<td class="text-right">
+																							{{pago.liquidacion | currency}}
+																						</td>
+																						<td class="text-right">
+																							{{pago.bonificacion | currency}}
+																						</td>
+																						<td class="text-right">
+																							{{pago.totalPago | currency}}
+																						</td>
+																						<td class="text-right">
+																							{{pago.pago | currency}}
+																						</td>
+																						<td class="text-center">
+																							{{pago.tipoIngreso}}</td>
+																						<td class="text-center">
+																							{{pago.cajero}}</td>
+																						<td>
+																							<div class="text-center">
+																								<button type="button"
+																									class="btn btn-xs btn-link"
+																									ng-click="dis.verPagos(pago)">Ver
+																									Pago</button>
+																							</div>
+																						</td>
+																					</tr>
+																				</tbody>
+																			</table>
+
+																		</div>
+
+																		<div class="tab-pane fade" id="hrC2">
+																			<div class="row">
+																				<div class="col-sm-2">
+																					<a ng-click="dis.imprimirValesEntregados()"
+																						class="btn btn-primary"
+																						ng-if="currentUser.roles[0] != 'Distribuidor'"><i
+																							class="fa fa-print"></i>
+																					</a>
+																				</div>
 																			</div>
-																			
-																			<div class="tab-pane fade" id="hrC2">
-																					
-																					<table id="recC" class="table table-hover border-collapse" >
-																						<thead>
-																							<tr>
-																								<th width="10%"><div class="text-center">No. Corte</div></th>
-																								<th width="15%"><div class="text-center">Fecha Corte</div></th>
-																								<th width="10%"><div class="text-center">Capital Solicitado</div></th>
-																								<th width="10%"><div class="text-center">Adeudo adeudoInicial</div></th>
-																								<th width="10%"><div class="text-center">Saldo Actual</div></th>
-																								<th width="10%"><div class="text-center">Cargos Moratorios</div></th>
-																							</tr>
-																						</thead>
-																						<tbody>
-																					    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in dis.creditoCortes">
-																						    <td class="text-center" ng-click="dis.selCorteCredito(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
-																						    <td class="text-center" ng-click="dis.selCorteCredito(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
-																							    																																				{{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
-																						    <td class="text-right" ng-click="dis.selCorteCredito(objeto,$index + 1)">{{objeto.capitalSolicitado | currency}}</td>
-																						    <td class="text-right" ng-click="dis.selCorteCredito(objeto,$index + 1)">{{objeto.adeudoInicial | currency}}</td>
-																						    <td class="text-right" ng-click="dis.selCorteCredito(objeto,$index + 1)">{{objeto.saldoActual | currency}}</td>
-																						    <td class="text-right" ng-click="dis.selCorteCredito(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
-																					    </tr>
-																					    
-																					    <tr ng-repeat-end ng-if="dis.isSelectedCredito($index + 1) && dis.banC">
-																			            
-																			            	<td colspan="12">
-																											<table class="table table-striped table-bordered table-condensed font-xs">
-																												<thead class="thead">
-																													<tr>
-																														<th class="text-center" width="5%">No.</th>
-																														<th class="text-center" width="7%">Vale No.</th>
-																														<th class="text-center" width="25%">Beneficiario</th>
-																														<th class="text-center" width="10%">Fecha de Solicitud</th>
-																														<th class="text-center" width="10%">Fecha Entrega</th>
-																														<th class="text-center" width="10%">Capital Solicitado</th>
-																														<th class="text-center" width="10%">Adeudo Inicial</th>
-																														<th class="text-center" width="10%" >Saldo Actual</th>
-																														<th class="text-center" width="10%">Saldo C.M.</th>
-																														<th class="text-center" width="5%">Tickets</th>
-																													</tr>
-																												</thead>
-																												<tbody>
-																													<tr ng-repeat="credito in objeto.creditosHistorial">	
-																														<td class="text-center">{{$index + 1}}</td>								
-																														<td class="text-center">{{credito.folio}}</td>	
-																														<td class="text-left">{{credito.beneficiario.nombreCompleto}}</td>
-																														<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
-																														<td class="text-center">{{credito.fechaEntrega | date:"dd-MM-yyyy"}}</td>
-																														<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
-																														<td class="text-right">{{credito.adeudoInicial | currency}}</td>
-																														<td class="text-right">{{credito.saldoActual | currency}}</td>
-																														<td class="text-danger text-right">{{credito.saldoMultas | currency}}</td>
-																														<td>
-																													    <div class="text-center">
-																														    <div class="btn-group">
-																																  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																																    <span class="caret"></span>
-																																    <span class="sr-only">Toggle Dropdown</span>
-																																  </button>
-																																  <ul class="dropdown-menu dropdown-menu-right text-left">
-																																    <li><a href="#" ng-click="dis.imprimirPagare(credito._id)"> Pagaré</a></li>
-																																    <li><a href="#" ng-click="dis.imprimirAmortizacion(credito._id)"> Tabla Amortización</a></li>
-																																    <li><a href="#" ng-click="dis.imprimirVale(credito._id)"> Vale</a></li>
-																																  </ul>
-																																</div>
-																													    </div>				    
-																												    </td>
-																													</tr>
-																												</tbody>
-																										</table>           	
-																				           	
-																			            </td>
-	
-																			        </tr>
-																					    
-																						</tbody>
-																				</table>
-	
-																			</div>
-																			
-																			<div class="tab-pane fade" id="hrC3">
-																					
-																					<table id="recCP" class="table table-hover border-collapse" >
-																						<thead>
-																							<tr>
-																								<th width="10%"><div class="text-center">No. Corte</div></th>
-																								<th width="15%"><div class="text-center">Fecha Corte</div></th>
-																								<th width="10%"><div class="text-center">Capital Solicitado</div></th>
-																								<th width="10%"><div class="text-center">Adeudo adeudoInicial</div></th>
-																								<th width="10%"><div class="text-center">Saldo Actual</div></th>
-																								<th width="10%"><div class="text-center">Cargos Moratorios</div></th>
-																							</tr>
-																						</thead>
-																						<tbody>
-																					    <tr style='cursor: pointer;  padding-bottom: 1em;' ng-repeat-start="objeto in dis.creditoPCortes">
-																						    <td class="text-center" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.numeroCorte}}</td>
-																						    <td class="text-center" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}} - 
-																							    																																				{{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}</td>
-																						    <td class="text-right" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.capitalSolicitado | currency}}</td>
-																						    <td class="text-right" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.adeudoInicial | currency}}</td>
-																						    <td class="text-right" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.saldoActual | currency}}</td>
-																						    <td class="text-right" ng-click="dis.selCorteCreditoP(objeto,$index + 1)">{{objeto.cargosMoratorios | currency}}</td>
-																					    </tr>
-																					    
-																					    <tr ng-repeat-end ng-if="dis.isSelectedCreditoP($index + 1) && dis.banCP">
-																			            
-																			            	<td colspan="12">
-																											<table class="table table-striped table-bordered table-condensed font-xs">
-																												<thead class="thead">
-																													<tr>
-																														<th class="text-center" width="5%">No.</th>
-																														<th class="text-center" width="7%">Cre. No.</th>
-																														<th class="text-center" width="10%">Fecha de Solicitud</th>
-																														<th class="text-center" width="10%">Fecha Entrega</th>
-																														<th class="text-center" width="10%">Capital Solicitado</th>
-																														<th class="text-center" width="10%">Adeudo Inicial</th>
-																														<th class="text-center" width="10%" >Saldo Actual</th>
-																														<th class="text-center" width="10%">Saldo C.M.</th>
-																														<!-- <th class="text-center" width="5%">Contrato</th> -->
-																													</tr>
-																												</thead>
-																												<tbody>
-																													<tr ng-repeat="credito in objeto.creditosHistorial">	
-																														<td class="text-center">{{$index + 1}}</td>								
-																														<td class="text-center">{{credito.folio}}</td>	
-																														<td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
-																														<td class="text-center">{{credito.fechaEntrega | date:"dd-MM-yyyy"}}</td>
-																														<td class="text-right">{{credito.capitalSolicitado | currency}}</td>
-																														<td class="text-right">{{credito.adeudoInicial | currency}}</td>
-																														<td class="text-right">{{credito.saldoActual | currency}}</td>
-																														<td class="text-danger text-right">{{credito.saldoMultas | currency}}</td>
-																														<!--
+																			<table id="recC"
+																				class="table table-hover border-collapse">
+																				<thead>
+																					<tr>
+																						<th width="10%">
+																							<div class="text-center">No.
+																								Corte</div>
+																						</th>
+																						<th width="15%">
+																							<div class="text-center">
+																								Fecha Corte</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Capital Solicitado</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Adeudo Inicial
+																							</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Saldo Actual</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Cargos Moratorios</div>
+																						</th>
+																					</tr>
+																				</thead>
+																				<tbody>
+																					<tr style='cursor: pointer;  padding-bottom: 1em;'
+																						ng-repeat-start="objeto in dis.creditoCortes">
+																						<td class="text-center"
+																							ng-click="dis.selCorteCredito(objeto,$index + 1)">
+																							{{objeto.numeroCorte}}</td>
+																						<td class="text-center"
+																							ng-click="dis.selCorteCredito(objeto,$index + 1)">
+																							{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}}
+																							-
+																							{{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}
+																						</td>
+																						<td class="text-right"
+																							ng-click="dis.selCorteCredito(objeto,$index + 1)">
+																							{{objeto.capitalSolicitado | currency}}
+																						</td>
+																						<td class="text-right"
+																							ng-click="dis.selCorteCredito(objeto,$index + 1)">
+																							{{objeto.adeudoInicial | currency}}
+																						</td>
+																						<td class="text-right"
+																							ng-click="dis.selCorteCredito(objeto,$index + 1)">
+																							{{objeto.saldoActual | currency}}
+																						</td>
+																						<td class="text-right"
+																							ng-click="dis.selCorteCredito(objeto,$index + 1)">
+																							{{objeto.cargosMoratorios | currency}}
+																						</td>
+																					</tr>
+
+																					<tr ng-repeat-end
+																						ng-if="dis.isSelectedCredito($index + 1) && dis.banC">
+
+																						<td colspan="12">
+																							<table
+																								class="table table-striped table-bordered table-condensed font-xs">
+																								<thead class="thead">
+																									<tr>
+																										<th class="text-center"
+																											width="5%">
+																											No.</th>
+																										<th class="text-center"
+																											width="7%">
+																											Vale No.
+																										</th>
+																										<th class="text-center"
+																											width="25%">
+																											Beneficiario
+																										</th>
+																										<th class="text-center"
+																											width="10%">
+																											Fecha de
+																											Solicitud
+																										</th>
+																										<th class="text-center"
+																											width="10%">
+																											Fecha
+																											Entrega</th>
+																										<th class="text-center"
+																											width="10%">
+																											Capital
+																											Solicitado
+																										</th>
+																										<th class="text-center"
+																											width="10%">
+																											Adeudo
+																											Inicial</th>
+																										<th class="text-center"
+																											width="10%">
+																											Saldo Actual
+																										</th>
+																										<th class="text-center"
+																											width="10%">
+																											Saldo C.M.
+																										</th>
+																										<th class="text-center"
+																											width="5%">
+																											Tickets</th>
+																									</tr>
+																								</thead>
+																								<tbody>
+																									<tr
+																										ng-repeat="credito in objeto.creditosHistorial">
+																										<td
+																											class="text-center">
+																											{{$index + 1}}
+																										</td>
+																										<td
+																											class="text-center">
+																											{{credito.folio}}
+																										</td>
+																										<td
+																											class="text-left">
+																											{{credito.beneficiario.nombreCompleto}}
+																										</td>
+																										<td
+																											class="text-center">
+																											{{credito.fechaSolicito | date:"dd-MM-yyyy"}}
+																										</td>
+																										<td
+																											class="text-center">
+																											{{credito.fechaEntrega | date:"dd-MM-yyyy"}}
+																										</td>
+																										<td
+																											class="text-right">
+																											{{credito.capitalSolicitado | currency}}
+																										</td>
+																										<td
+																											class="text-right">
+																											{{credito.adeudoInicial | currency}}
+																										</td>
+																										<td
+																											class="text-right">
+																											{{credito.saldoActual | currency}}
+																										</td>
+																										<td
+																											class="text-danger text-right">
+																											{{credito.saldoMultas | currency}}
+																										</td>
+																										<td>
+																											<div
+																												class="text-center">
+																												<div
+																													class="btn-group">
+																													<button
+																														type="button"
+																														class="btn btn-xs btn-primary dropdown-toggle"
+																														data-toggle="dropdown"
+																														aria-haspopup="true"
+																														aria-expanded="false">
+																														<span
+																															class="caret"></span>
+																														<span
+																															class="sr-only">Toggle
+																															Dropdown</span>
+																													</button>
+																													<ul
+																														class="dropdown-menu dropdown-menu-right text-left">
+																														<li><a href="#"
+																																ng-click="dis.imprimirPagare(credito._id)">
+																																Pagaré</a>
+																														</li>
+																														<li><a href="#"
+																																ng-click="dis.imprimirAmortizacion(credito._id)">
+																																Tabla
+																																Amortización</a>
+																														</li>
+																														<li><a href="#"
+																																ng-click="dis.imprimirVale(credito._id)">
+																																Vale</a>
+																														</li>
+																													</ul>
+																												</div>
+																											</div>
+																										</td>
+																									</tr>
+																								</tbody>
+																							</table>
+
+																						</td>
+
+																					</tr>
+
+																				</tbody>
+																			</table>
+
+																		</div>
+
+																		<div class="tab-pane fade" id="hrC3">
+
+																			<table id="recCP"
+																				class="table table-hover border-collapse">
+																				<thead>
+																					<tr>
+																						<th width="10%">
+																							<div class="text-center">No.
+																								Corte</div>
+																						</th>
+																						<th width="15%">
+																							<div class="text-center">
+																								Fecha Corte</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Capital Solicitado</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Adeudo adeudoInicial
+																							</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Saldo Actual</div>
+																						</th>
+																						<th width="10%">
+																							<div class="text-center">
+																								Cargos Moratorios</div>
+																						</th>
+																					</tr>
+																				</thead>
+																				<tbody>
+																					<tr style='cursor: pointer;  padding-bottom: 1em;'
+																						ng-repeat-start="objeto in dis.creditoPCortes">
+																						<td class="text-center"
+																							ng-click="dis.selCorteCreditoP(objeto,$index + 1)">
+																							{{objeto.numeroCorte}}</td>
+																						<td class="text-center"
+																							ng-click="dis.selCorteCreditoP(objeto,$index + 1)">
+																							{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}}
+																							-
+																							{{objeto.fechaCorteFin | date:"dd-MM-yyyy"}}
+																						</td>
+																						<td class="text-right"
+																							ng-click="dis.selCorteCreditoP(objeto,$index + 1)">
+																							{{objeto.capitalSolicitado | currency}}
+																						</td>
+																						<td class="text-right"
+																							ng-click="dis.selCorteCreditoP(objeto,$index + 1)">
+																							{{objeto.adeudoInicial | currency}}
+																						</td>
+																						<td class="text-right"
+																							ng-click="dis.selCorteCreditoP(objeto,$index + 1)">
+																							{{objeto.saldoActual | currency}}
+																						</td>
+																						<td class="text-right"
+																							ng-click="dis.selCorteCreditoP(objeto,$index + 1)">
+																							{{objeto.cargosMoratorios | currency}}
+																						</td>
+																					</tr>
+
+																					<tr ng-repeat-end
+																						ng-if="dis.isSelectedCreditoP($index + 1) && dis.banCP">
+
+																						<td colspan="12">
+																							<table
+																								class="table table-striped table-bordered table-condensed font-xs">
+																								<thead class="thead">
+																									<tr>
+																										<th class="text-center"
+																											width="5%">
+																											No.</th>
+																										<th class="text-center"
+																											width="7%">
+																											Cre. No.
+																										</th>
+																										<th class="text-center"
+																											width="10%">
+																											Fecha de
+																											Solicitud
+																										</th>
+																										<th class="text-center"
+																											width="10%">
+																											Fecha
+																											Entrega</th>
+																										<th class="text-center"
+																											width="10%">
+																											Capital
+																											Solicitado
+																										</th>
+																										<th class="text-center"
+																											width="10%">
+																											Adeudo
+																											Inicial</th>
+																										<th class="text-center"
+																											width="10%">
+																											Saldo Actual
+																										</th>
+																										<th class="text-center"
+																											width="10%">
+																											Saldo C.M.
+																										</th>
+																										<!-- <th class="text-center" width="5%">Contrato</th> -->
+																									</tr>
+																								</thead>
+																								<tbody>
+																									<tr
+																										ng-repeat="credito in objeto.creditosHistorial">
+																										<td
+																											class="text-center">
+																											{{$index + 1}}
+																										</td>
+																										<td
+																											class="text-center">
+																											{{credito.folio}}
+																										</td>
+																										<td
+																											class="text-center">
+																											{{credito.fechaSolicito | date:"dd-MM-yyyy"}}
+																										</td>
+																										<td
+																											class="text-center">
+																											{{credito.fechaEntrega | date:"dd-MM-yyyy"}}
+																										</td>
+																										<td
+																											class="text-right">
+																											{{credito.capitalSolicitado | currency}}
+																										</td>
+																										<td
+																											class="text-right">
+																											{{credito.adeudoInicial | currency}}
+																										</td>
+																										<td
+																											class="text-right">
+																											{{credito.saldoActual | currency}}
+																										</td>
+																										<td
+																											class="text-danger text-right">
+																											{{credito.saldoMultas | currency}}
+																										</td>
+																										<!--
 <td>
 																													    <div class="text-center">
 																														    <div class="btn-group">
@@ -1052,107 +1765,150 @@
 																													    </div>				    
 																												    </td>
 -->
-																													</tr>
-																												</tbody>
-																										</table>           	
-																				           	
-																			            </td>
-	
-																			        </tr>
-																					    
-																						</tbody>
-																				</table>
-	
-																			</div>
-																			
+																									</tr>
+																								</tbody>
+																							</table>
+
+																						</td>
+
+																					</tr>
+
+																				</tbody>
+																			</table>
+
 																		</div>
-																		<!-- end widget body text-->
-																		
-																		<!-- widget footer -->
-																		<div class="widget-footer text-right">
-																			
-																		</div>
-																		<!-- end widget footer -->
-																		
+
 																	</div>
-																	<!-- end widget content -->
-																	
+																	<!-- end widget body text-->
+
+																	<!-- widget footer -->
+																	<div class="widget-footer text-right">
+
+																	</div>
+																	<!-- end widget footer -->
+
 																</div>
-																<!-- end widget div -->
-																
+																<!-- end widget content -->
+
 															</div>
-														
-													</div>	
+															<!-- end widget div -->
+
+														</div>
+
+													</div>
 												</div>
 											</div>
 										</p>
 									</div>
 									<div class="tab-pane fade" id="solicitudes" ng-show="dis.solicitudesCre">
 										<p>
-									   	<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-												<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-													
+											<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+												<div class="jarviswidget jarviswidget-sortable" id="wid-id-0"
+													data-widget-togglebutton="false" data-widget-editbutton="false"
+													data-widget-fullscreenbutton="false" data-widget-colorbutton="false"
+													data-widget-deletebutton="false" role="widget">
+
 													<header role="heading">
-														<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+														<span class="widget-icon"> <i
+																class="glyphicon glyphicon-stats txt-color-darken"></i>
+														</span>
 														<h2>Solicitudes de Vales</h2>
-										
-													<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+
+														<span class="jarviswidget-loader"><i
+																class="fa fa-refresh fa-spin"></i></span>
+													</header>
 													<!-- widget div-->
 													<div class="no-padding" role="content">
 														<!-- widget edit box -->
 														<div class="widget-body">
 															<!-- content -->
 															<div class="row ">
-																<br/>
-																<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="pendiente in dis.creditosPendientes">
+																<br />
+																<div class="col-xs-12 col-sm-4 col-md-2"
+																	ng-repeat="pendiente in dis.creditosPendientes">
 																	<div class="panel panel-{{pendiente.estatusClase}}">
 																		<div class="panel-heading">
-																			<h3 class="panel-title" ng-if = "pendiente.tipo == 'vale'">Vales</h3>
-																			<h3 class="panel-title" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">Crédito P.</h3>
+																			<h3 class="panel-title"
+																				ng-if="pendiente.tipo == 'vale'">Vales
+																			</h3>
+																			<h3 class="panel-title"
+																				ng-if="pendiente.tipo == 'creditoPersonalDistribuidor'">
+																				Crédito P.</h3>
 																		</div>
-																		<div class="panel-body no-padding text-align-center">
+																		<div
+																			class="panel-body no-padding text-align-center">
 																			<div class="the-price">
 																				<h1>
 																					{{pendiente.capitalSolicitado|currency}}
 																				</h1>
 																				<h2>
 																					{{pendiente.duracionMeses}}
-																					<span class="subscript">/meses</span>
+																					<span
+																						class="subscript">/meses</span>
 																				</h2>
 																				<small>
 																					{{pendiente.beneficiado}}
 																				</small><br>
-																				<small>Fecha: {{pendiente.fechaSolicito | date:'dd/MM/yyyy'}}</small><br>
+																				<small>Fecha:
+																					{{pendiente.fechaSolicito | date:'dd/MM/yyyy'}}</small><br>
 																				<small>{{pendiente.beneficiario.nombreCompleto}}</small><br>
 																			</div>
 																		</div>
-																		
-																		<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">				
-																			<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id, op: 0})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'">Editar</a>
+
+																		<div class="panel-footer no-padding"
+																			ng-if="pendiente.tipo == 'vale'">
+																			<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id, op: 0})"
+																				class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block"
+																				role="button"
+																				ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'">Editar</a>
 																		</div>
-																		
-																		<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">						
-																			<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id, op: 1})"  class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'">Editar</a>
+
+																		<div class="panel-footer no-padding"
+																			ng-if="pendiente.tipo == 'creditoPersonalDistribuidor'">
+																			<a ui-sref="root.actualizarPlan({objeto_id:pendiente.cliente_id, credito_id: pendiente._id, op: 1})"
+																				class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block"
+																				role="button"
+																				ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'">Editar</a>
 																		</div>
-																		
-																		<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">
-																			<a ng-click ="dis.mostrarModalValidaBeneficiario(pendiente.beneficiario.nombreCompleto, pendiente)" class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">Autorizar</a>
+
+																		<div class="panel-footer no-padding"
+																			ng-if="pendiente.tipo == 'vale'">
+																			<a ng-click="dis.mostrarModalValidaBeneficiario(pendiente.beneficiario.nombreCompleto, pendiente)"
+																				class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block"
+																				role="button"
+																				ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor'">Autorizar</a>
 																		</div>
-																		
-																		<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'vale'">
-																			<input class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Vale" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(pendiente)" />
+
+																		<div class="panel-footer no-padding"
+																			ng-if="pendiente.tipo == 'vale'">
+																			<input
+																				class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block"
+																				type="button" data-toggle="modal"
+																				data-id="123"
+																				data-target=".bs-cancelacion-modal-lg"
+																				value="Cancelar Vale"
+																				ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Cajero'"
+																				ng-click="dis.cancelarSeleccion(pendiente)" />
 																		</div>
-																		
-																		<div class="panel-footer no-padding" ng-if = "pendiente.tipo == 'creditoPersonalDistribuidor'">
-																			<input class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Crédito" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(pendiente)" />
+
+																		<div class="panel-footer no-padding"
+																			ng-if="pendiente.tipo == 'creditoPersonalDistribuidor'">
+																			<input
+																				class="btn btn-{{pendiente.estatusClase}} txt-color-white btn-block"
+																				type="button" data-toggle="modal"
+																				data-id="123"
+																				data-target=".bs-cancelacion-modal-lg"
+																				value="Cancelar Crédito"
+																				ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Cajero'"
+																				ng-click="dis.cancelarSeleccion(pendiente)" />
 																		</div>
 																	</div>
 																</div>
-																
+
 															</div>
 															<!-- end content -->
 														</div>
-										
+
 													</div>
 													<!-- end widget div -->
 												</div>
@@ -1162,176 +1918,251 @@
 									</div>
 									<div class="tab-pane fade" id="aprobados" ng-show="dis.creditoApro">
 										<p>
-												<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-											
-														<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-															
-															<header role="heading">
-																<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-																<h2>Vales Aprobados</h2>
-																<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
-															</header>
-												
-															<!-- widget div-->
-															<div class="no-padding" role="content">
-																<!-- widget edit box -->
-															
-																<!-- end widget edit box -->
-												
-																<div class="widget-body">
-																	<!-- content -->
-																							
-																	<div class="row ">
-																		<br/>
-																		<div class="col-xs-12 col-sm-4 col-md-2" ng-repeat="aprobado in dis.creditosAprobados">
-																			<div class="panel panel-blueDark">
-																				<div class="panel-heading">
-																					<h3 class="panel-title" style="text-align: center" ng-if = "aprobado.tipo == 'vale'">Vales</h3>
-																					<h3 class="panel-title" style="text-align: center" ng-if = "aprobado.tipo == 'creditoPersonalDistribuidor'">Crédito P.</h3>
-																				</div>
-																				<div class="panel-body no-padding text-align-center">
-																					<div class="the-price">
-																						<h2>{{aprobado.capitalSolicitado|currency}}</h2>
-																						<h3>
-																							{{aprobado.duracionMeses}}
-																							<span class="subscript">/meses</span>
-																						</h3>
-																						<small style="font-size: x-small">{{aprobado.beneficiario.nombreCompleto}}</small>
-																						<small>Fecha: {{aprobado.fechaSolicito.getUTCDate() +"/"+ (aprobado.fechaSolicito.getUTCMonth()+1) +"/"+ aprobado.fechaSolicito.getUTCFullYear()}}</small>
-																						
-																					</div>
-																				</div>
-																				<div class="panel-footer no-padding" ng-if = "aprobado.tipo == 'vale'">						
-																					<a ui-sref="root.entregarVale({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar</a>
-																				</div>
-																				
-																				<div class="panel-footer no-padding" ng-if = "aprobado.tipo == 'creditoPersonalDistribuidor'">						
-																					<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Cajero'">Entregar</a>
-																				</div>
-																				
-																				<div class="panel-footer no-padding" ng-if = "aprobado.tipo == 'vale'">
-																					<input class="btn bg-color-blueDark txt-color-white btn-block" type="button" data-toggle="modal" data-id="123" data-target=".bs-cancelacion-modal-lg" value="Cancelar Vale" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'" ng-click="dis.cancelarSeleccion(aprobado)" />
-																				</div>	
-																				
-																				<div class="panel-footer no-padding" ng-if = "aprobado.tipo == 'vale'">				
-																					<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id, op: 0})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'" ng-show ="aprobado.folio == undefined ">Editar</a>
-																				</div>
-																				
-																				<div class="panel-footer no-padding" ng-if = "aprobado.tipo == 'creditoPersonalDistribuidor'">						
-																					<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id, op: 1})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'" ng-show ="aprobado.folio == undefined ">Editar</a>
-																				</div>
-																				
-																				<!--
+											<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+
+												<div class="jarviswidget jarviswidget-sortable" id="wid-id-0"
+													data-widget-togglebutton="false" data-widget-editbutton="false"
+													data-widget-fullscreenbutton="false" data-widget-colorbutton="false"
+													data-widget-deletebutton="false" role="widget">
+
+													<header role="heading">
+														<span class="widget-icon"> <i
+																class="glyphicon glyphicon-stats txt-color-darken"></i>
+														</span>
+														<h2>Vales Aprobados</h2>
+														<span class="jarviswidget-loader"><i
+																class="fa fa-refresh fa-spin"></i></span>
+													</header>
+
+													<!-- widget div-->
+													<div class="no-padding" role="content">
+														<!-- widget edit box -->
+
+														<!-- end widget edit box -->
+
+														<div class="widget-body">
+															<!-- content -->
+
+															<div class="row ">
+																<br />
+																<div class="col-xs-12 col-sm-4 col-md-2"
+																	ng-repeat="aprobado in dis.creditosAprobados">
+																	<div class="panel panel-blueDark">
+																		<div class="panel-heading">
+																			<h3 class="panel-title"
+																				style="text-align: center"
+																				ng-if="aprobado.tipo == 'vale'">Vales
+																			</h3>
+																			<h3 class="panel-title"
+																				style="text-align: center"
+																				ng-if="aprobado.tipo == 'creditoPersonalDistribuidor'">
+																				Crédito P.</h3>
+																		</div>
+																		<div
+																			class="panel-body no-padding text-align-center">
+																			<div class="the-price">
+																				<h2>{{aprobado.capitalSolicitado|currency}}
+																				</h2>
+																				<h3>
+																					{{aprobado.duracionMeses}}
+																					<span
+																						class="subscript">/meses</span>
+																				</h3>
+																				<small
+																					style="font-size: x-small">{{aprobado.beneficiario.nombreCompleto}}</small>
+																				<small>Fecha:
+																					{{aprobado.fechaSolicito.getUTCDate() +"/"+ (aprobado.fechaSolicito.getUTCMonth()+1) +"/"+ aprobado.fechaSolicito.getUTCFullYear()}}</small>
+
+																			</div>
+																		</div>
+																		<div class="panel-footer no-padding"
+																			ng-if="aprobado.tipo == 'vale'">
+																			<a ui-sref="root.entregarVale({credito_id : aprobado._id})"
+																				class="btn bg-color-blueDark txt-color-white btn-block"
+																				role="button"
+																				ng-if="currentUser.roles[0] == 'Cajero'">Entregar</a>
+																		</div>
+
+																		<div class="panel-footer no-padding"
+																			ng-if="aprobado.tipo == 'creditoPersonalDistribuidor'">
+																			<a ui-sref="root.entregarCredito({credito_id : aprobado._id})"
+																				class="btn bg-color-blueDark txt-color-white btn-block"
+																				role="button"
+																				ng-if="currentUser.roles[0] == 'Cajero'">Entregar</a>
+																		</div>
+
+																		<div class="panel-footer no-padding"
+																			ng-if="aprobado.tipo == 'vale'">
+																			<input
+																				class="btn bg-color-blueDark txt-color-white btn-block"
+																				type="button" data-toggle="modal"
+																				data-id="123"
+																				data-target=".bs-cancelacion-modal-lg"
+																				value="Cancelar Vale"
+																				ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero'"
+																				ng-click="dis.cancelarSeleccion(aprobado)" />
+																		</div>
+
+																		<div class="panel-footer no-padding"
+																			ng-if="aprobado.tipo == 'vale'">
+																			<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id, op: 0})"
+																				class="btn bg-color-blueDark txt-color-white btn-block"
+																				role="button"
+																				ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'"
+																				ng-show="aprobado.folio == undefined ">Editar</a>
+																		</div>
+
+																		<div class="panel-footer no-padding"
+																			ng-if="aprobado.tipo == 'creditoPersonalDistribuidor'">
+																			<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id, op: 1})"
+																				class="btn bg-color-blueDark txt-color-white btn-block"
+																				role="button"
+																				ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor' || currentUser.roles[0] == 'Distribuidor'"
+																				ng-show="aprobado.folio == undefined ">Editar</a>
+																		</div>
+
+																		<!--
 <div class="panel-footer no-padding">
 																					<a ui-sref="root.actualizarPlan({objeto_id:aprobado.cliente_id, credito_id: aprobado._id})"  class="btn bg-color-blueDark txt-color-white btn-block" role="button" ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Cajero' || currentUser.roles[0] == 'Supervisor'"  ng-show ="aprobado.folio == undefined ">Editar</a>
 																				</div>	
 -->
-																				
-																			</div>
-																		</div>
-																		
+
 																	</div>
-																	<!-- end content -->
 																</div>
-												
+
 															</div>
-															<!-- end widget div -->
+															<!-- end content -->
 														</div>
-														<!-- end widget -->
-												
-												</article>
+
+													</div>
+													<!-- end widget div -->
+												</div>
+												<!-- end widget -->
+
+											</article>
 										</p>
 									</div>
 									<div class="tab-pane fade" id="rechazados" ng-show="dis.creditosRechazados">
 										<p>
-									   	<div class="tab-pane">
-									   		<article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-														<div class="jarviswidget jarviswidget-sortable" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" role="widget">
-															<header role="heading">
-																<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-																<h2>Vales Rechazados</h2>
-																<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
-															</header>
-															<div class="no-padding" role="content">
-																<div class="widget-body">
-																	<!-- content -->
-																			<div class="row	padding-10 ">
-																				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-																					<table class="table table-striped table-bordered table-condensed font-xs">
-																							<thead class="thead">
-																								<tr>
-																									<th class="text-center" width="5%">No.</th>
-																									<th class="text-center" width="20%">Beneficiario</th>
-																									<th class="text-center" width="10%">Capital Solicitado</th>
-																									<th class="text-center" width="15%">Fecha Solicito</th>
-																									<th class="text-center" width="30%">Motivo</th>
-																									<th class="text-center" width="15%">Acciones</th>
-																								</tr>
-																							</thead>
-																							<tbody>
-																								<tr ng-repeat="credito in dis.creditosCancelados track by $index">
-																									<td class="text-center">{{$index+1}}</td>
-																									<td class="text-center">{{credito.beneficiario.nombreCompleto}}</td>
-																									<td class="text-center">{{credito.capitalSolicitado | currency}}</td>
-																									<td class="text-center">{{credito.fechaSolicito | date:'dd-MM-yyyy'}}</td>
-																									<td class="text-center">{{credito.motivo}}</td>
-																									<td class="text-center"><a href="" ng-click="dis.recuperarCredito(credito._id)" ng-if="currentUser.roles[0] != 'Distribuidor'" class="btn btn-success btn-sm" >Recuperar</a></td>
-																								</tr>
-																							</tbody>
-																					</table>
-																				</div>
-																			</div>
-																	<!-- end content -->
+											<div class="tab-pane">
+												<article
+													class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+													<div class="jarviswidget jarviswidget-sortable" id="wid-id-0"
+														data-widget-togglebutton="false" data-widget-editbutton="false"
+														data-widget-fullscreenbutton="false"
+														data-widget-colorbutton="false" data-widget-deletebutton="false"
+														role="widget">
+														<header role="heading">
+															<span class="widget-icon"> <i
+																	class="glyphicon glyphicon-stats txt-color-darken"></i>
+															</span>
+															<h2>Vales Rechazados</h2>
+															<span class="jarviswidget-loader"><i
+																	class="fa fa-refresh fa-spin"></i></span>
+														</header>
+														<div class="no-padding" role="content">
+															<div class="widget-body">
+																<!-- content -->
+																<div class="row	padding-10 ">
+																	<div
+																		class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+																		<table
+																			class="table table-striped table-bordered table-condensed font-xs">
+																			<thead class="thead">
+																				<tr>
+																					<th class="text-center" width="5%">
+																						No.</th>
+																					<th class="text-center" width="20%">
+																						Beneficiario</th>
+																					<th class="text-center" width="10%">
+																						Capital Solicitado</th>
+																					<th class="text-center" width="15%">
+																						Fecha Solicito</th>
+																					<th class="text-center" width="30%">
+																						Motivo</th>
+																					<th class="text-center" width="15%">
+																						Acciones</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr
+																					ng-repeat="credito in dis.creditosCancelados track by $index">
+																					<td class="text-center">{{$index+1}}
+																					</td>
+																					<td class="text-center">
+																						{{credito.beneficiario.nombreCompleto}}
+																					</td>
+																					<td class="text-center">
+																						{{credito.capitalSolicitado | currency}}
+																					</td>
+																					<td class="text-center">
+																						{{credito.fechaSolicito | date:'dd-MM-yyyy'}}
+																					</td>
+																					<td class="text-center">
+																						{{credito.motivo}}</td>
+																					<td class="text-center"><a href=""
+																							ng-click="dis.recuperarCredito(credito._id)"
+																							ng-if="currentUser.roles[0] != 'Distribuidor'"
+																							class="btn btn-success btn-sm">Recuperar</a>
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																	</div>
 																</div>
+																<!-- end content -->
 															</div>
-														<!-- end widget -->
 														</div>
+														<!-- end widget -->
+													</div>
 												</article>
-									   </div>
+											</div>
 										</p>
 									</div>
 								</div>
 
 							</div>
 						</div>
-					</div>													
+					</div>
 				</div>
 			</div>
 		</div>
-		<br/>
+		<br />
 	</div>
 </div>
 
 
-<div id="myModalVerDocumento" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div id="myModalVerDocumento" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+	aria-labelledby="myLargeModalLabel">
 	<div class="modal-dialog modal-lg" role="document">
 		<div id="imagenDiv" class="modal-content">
 		</div>
-  </div>
+	</div>
 </div>
 
 <!-- /////////////////////////MODAL NOTA CUENTA ////////////////////////// -->
-<div class="modal fade" id="myModal"	data-backdrop="static" role="dialog">
-				<div class="modal-dialog">
-			<!-- Modal content-->
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title">Responder Nota</h4>
-							Título: <strong>{{dis.notaCuenta1.titulo}}</strong>
-						</div>
-						<div class="modal-body">
-							<h6>Información de la nota</h6>
-<!-- 							<p>{{dis.notaCuenta1.descripcion}} </p>  -->
-							<p ng-if = "!dis.editarNota">{{dis.notaCuenta1.descripcion}}</p>
-						  <textarea type="text" rows="4" class="form-control" ng-model="dis.notaCuenta1.descripcion" ng-if = "dis.editarNota" ></textarea>
-							<p>Por: <strong>{{dis.notaCuenta1.nombreCompleto}}</strong></p>
-							<p>Fecha: <strong>{{dis.notaCuenta1.fecha | date:'dd-MM-yyyy'}}, {{dis.notaCuenta1.hora}}</strong></p>
-						</div>
-						<div class="modal-footer">
-							<div class="row">
-								<div class="col-sm-12" ng-if="dis.notaCuenta1.respuesta == true">
-									<label class="pull-left">Respuesta:</label>
-									<textarea type="text" class="form-control" ng-model="dis.notaCuenta1.respuestaNota" >
+<div class="modal fade" id="myModal" data-backdrop="static" role="dialog">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Responder Nota</h4>
+				Título: <strong>{{dis.notaCuenta1.titulo}}</strong>
+			</div>
+			<div class="modal-body">
+				<h6>Información de la nota</h6>
+				<!-- 							<p>{{dis.notaCuenta1.descripcion}} </p>  -->
+				<p ng-if="!dis.editarNota">{{dis.notaCuenta1.descripcion}}</p>
+				<textarea type="text" rows="4" class="form-control" ng-model="dis.notaCuenta1.descripcion"
+					ng-if="dis.editarNota"></textarea>
+				<p>Por: <strong>{{dis.notaCuenta1.nombreCompleto}}</strong></p>
+				<p>Fecha: <strong>{{dis.notaCuenta1.fecha | date:'dd-MM-yyyy'}}, {{dis.notaCuenta1.hora}}</strong></p>
+			</div>
+			<div class="modal-footer">
+				<div class="row">
+					<div class="col-sm-12" ng-if="dis.notaCuenta1.respuesta == true">
+						<label class="pull-left">Respuesta:</label>
+						<textarea type="text" class="form-control" ng-model="dis.notaCuenta1.respuestaNota">
 								</div>
 								<div class="col-sm-12 "><br/>
 									<button type="button" ng-click="dis.contestarNota(dis.notaCuenta1._id)" class="btn btn-success" ng-show="dis.notaCuenta1.respuesta">Contestar</button>
@@ -1362,72 +2193,82 @@
 							<h6>Información de la nota</h6>
 						  <p ng-if = "!dis.editarNota">{{dis.notaPerfil.descripcion}}</p>
 						  <textarea type="text" rows="4" class="form-control" ng-model="dis.notaPerfil.descripcion" ng-if = "dis.editarNota" ></textarea>
-						  <p>Fecha: {{dis.notaPerfil.fecha | date:'dd-MM-yyyy'}}, {{dis.notaPerfil.hora}} </p>
-						</div>
-						<div class="modal-footer">
-	    				    <button type="button" class="btn btn-warning pull-left" ng-click="dis.quitarNota(dis.notaPerfil._id)" data-dismiss="modal">Quitar</button>
-	    				    <button type="button" class="btn btn-info" ng-click="dis.editarNotaModal(true)" ng-if = "!dis.editarNota">Editar</button>
-	    				    <button type="button" class="btn btn-danger" ng-click="dis.editarNotaModal(false)" ng-if = "dis.editarNota">Cancelar</button>
-	    				    <button type="button" class="btn btn-success" ng-click="dis.actualizarNota(dis.notaPerfil)" ng-if = "dis.editarNota">Actualizar</button>
-	    				    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-     				 </div>
+						<p>Fecha: {{dis.notaPerfil.fecha | date:'dd-MM-yyyy'}}, {{dis.notaPerfil.hora}} </p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-warning pull-left"
+							ng-click="dis.quitarNota(dis.notaPerfil._id)" data-dismiss="modal">Quitar</button>
+						<button type="button" class="btn btn-info" ng-click="dis.editarNotaModal(true)"
+							ng-if="!dis.editarNota">Editar</button>
+						<button type="button" class="btn btn-danger" ng-click="dis.editarNotaModal(false)"
+							ng-if="dis.editarNota">Cancelar</button>
+						<button type="button" class="btn btn-success" ng-click="dis.actualizarNota(dis.notaPerfil)"
+							ng-if="dis.editarNota">Actualizar</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 					</div>
 				</div>
 			</div>
-</div>			
-<!--//////////////////////////////////// //////////////////////////////////////////////////////////// -->
-<!-- Modal para cancelar credito -->
-<div id="cancelaCredito" class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-	    <form name="formCancelar" novalidate>
-	    	<div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="myModalLabel">Cancelar Crédito</h4>
-		    </div>
-				<div class="modal-body">	
-						<div class="well">	    
-					    <div class="row">
-					    	<div class="col-sm-12" valida> 					    
-									  <label for="comment">Motivo:</label>
-									  <textarea class="form-control" rows="3" ng-model="dis.motivo" required="" name="comment" capitalize></textarea>
-					    	</div>
-					    </div>
-						</div>
-	      </div>	
-	      <div class="modal-footer"s>
-		        <input type="submit" ng-click="dis.cancelarCredito(dis.motivo, formCancelar)" value="Aceptar" class="btn btn-success" valida-form formulario="formCancelar">
-		        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-		     </div>
-			</form>	 
-     </div>
-     
-  </div>
-</div>
-<!--		 //////////////////////////////////////////////////////////// -->
-<!-- /////////////////////////MODAL NOTA CLIENTE ////////////////////////// -->
-<div class="container">
-<!-- Modal -->
-	<div class="modal fade" id="modalCliente"	data-backdrop="static" role="dialog">
-		<div class="modal-dialog modal-lg">
-	<!-- Modal content-->
+		</div>
+	</div>
+	<!--//////////////////////////////////// //////////////////////////////////////////////////////////// -->
+	<!-- Modal para cancelar credito -->
+	<div id="cancelaCredito" class="modal fade bs-cancelacion-modal-lg" tabindex="-1" role="dialog"
+		aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Escribir Nota</h4>
-				</div>
-				<div class="modal-body">
+				<form name="formCancelar" novalidate>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+								aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">Cancelar Crédito</h4>
+					</div>
+					<div class="modal-body">
+						<div class="well">
+							<div class="row">
+								<div class="col-sm-12" valida>
+									<label for="comment">Motivo:</label>
+									<textarea class="form-control" rows="3" ng-model="dis.motivo" required=""
+										name="comment" capitalize></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer" s>
+						<input type="submit" ng-click="dis.cancelarCredito(dis.motivo, formCancelar)" value="Aceptar"
+							class="btn btn-success" valida-form formulario="formCancelar">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+	<!--		 //////////////////////////////////////////////////////////// -->
+	<!-- /////////////////////////MODAL NOTA CLIENTE ////////////////////////// -->
+	<div class="container">
+		<!-- Modal -->
+		<div class="modal fade" id="modalCliente" data-backdrop="static" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Escribir Nota</h4>
+					</div>
+					<div class="modal-body">
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="col-sm-12">
-								<label class="pull-left">Título de la nota</label>
-					        	<input  type="text" class="form-control" placeholder="Nombre" ng-model="dis.nota.titulo" >
-								<label class="pull-left">Tipo de nota</label>
-								 <select name="nota Cliente" ng-model="dis.nota.tipo" data-placeholder="Seleccione" class="form-control" ng-change="dis.mostrarCheckCuenta(dis.nota)" >
-											    <option click="dis.mostrarCheckCuenta(dis.nota)" >Cuenta</option>
-											    <option >Cliente</option>
-											</select>
+									<label class="pull-left">Título de la nota</label>
+									<input type="text" class="form-control" placeholder="Nombre"
+										ng-model="dis.nota.titulo">
+									<label class="pull-left">Tipo de nota</label>
+									<select name="nota Cliente" ng-model="dis.nota.tipo" data-placeholder="Seleccione"
+										class="form-control" ng-change="dis.mostrarCheckCuenta(dis.nota)">
+										<option click="dis.mostrarCheckCuenta(dis.nota)">Cuenta</option>
+										<option>Cliente</option>
+									</select>
 									<label class="pull-left">Escribir Nota:</label>
-										<textarea type="text" class="form-control"	ng-model="dis.nota.descripcion" >
+									<textarea type="text" class="form-control" ng-model="dis.nota.descripcion">
 									</div>
 									<label style="visibility: hidden;"  id="cuentaNota" class="checkbox-inline"><input  type="checkbox"   ng-click=" dis.cambioEstatusRespuesta()"  > Requiere respuesta</label>
 							</div>								 

@@ -535,6 +535,8 @@ objetoEditar : () => {
     objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
     objeto.profile.avales_ids = rc.avales;
 
+    objeto.profile.fechaPrimerVale = "";
+
     //console.log("A grabar", objeto);
     loading(true);
     Meteor.call('createUsuario', objeto, "Distribuidor", function (e, r) {

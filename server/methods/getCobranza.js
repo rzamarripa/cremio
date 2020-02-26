@@ -25,7 +25,6 @@ Meteor.methods({
 				planPago.orden = 1;
 
 
-
 			if (planPago.importeRegular != 0) {
 
 				var u = Meteor.users.findOne({ _id: planPago.cliente_id });
@@ -132,7 +131,7 @@ Meteor.methods({
 
 		_.each(planPagos, function (planPago) {
 
-			var classPago = "";
+			//var classPago = "";
 
 			var credito = Creditos.findOne(planPago.credito_id);
 			var distribuidor = Meteor.users.findOne({ _id: credito.cliente_id }, {
@@ -149,6 +148,13 @@ Meteor.methods({
 					"profile.telefonoOficina": 1
 				}
 			});
+
+			if (planPago.descripcion == "Cargo Moratorio") {
+				//classPago = "text-danger";
+				planPago.orden = 2;
+			}
+			else
+				planPago.orden = 1;
 
 			var colonia = Colonias.findOne({ _id: distribuidor.profile.colonia_id });
 			distribuidor.profile.colonia = colonia.nombre;
@@ -200,7 +206,6 @@ Meteor.methods({
 					arreglo[credito.cliente_id].classPago = "text-danger";
 				}
 
-
 				//Meterlo al arreglo y luego al arregloCortes
 				arreglo[credito.cliente_id].arreglo = {};
 
@@ -216,8 +221,8 @@ Meteor.methods({
 					var m = planPago.fechaLimite.getMonth();
 					if (m == 0) {
 						numeroCorte = 12 * 2 - 1;
-						fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear(), 11, 07);
-						fechaCorteFin = new Date(planPago.fechaLimite.getFullYear(), 11, 21);
+						var fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear() - 1, 11, 07);
+						var fechaCorteFin = new Date(planPago.fechaLimite.getFullYear() - 1, 11, 21);
 					}
 					else {
 						numeroCorte = planPago.fechaLimite.getMonth() * 2 - 1;
@@ -303,8 +308,8 @@ Meteor.methods({
 					var m = planPago.fechaLimite.getMonth();
 					if (m == 0) {
 						numeroCorte = 12 * 2 - 1;
-						fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear(), 11, 07);
-						fechaCorteFin = new Date(planPago.fechaLimite.getFullYear(), 11, 21);
+						fechaCorteInicio = new Date(planPago.fechaLimite.getFullYear() - 1, 11, 07);
+						fechaCorteFin = new Date(planPago.fechaLimite.getFullYear() - 1, 11, 21);
 					}
 					else {
 						numeroCorte = planPago.fechaLimite.getMonth() * 2 - 1;
