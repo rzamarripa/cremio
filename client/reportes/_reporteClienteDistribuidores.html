@@ -1,0 +1,228 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-6">
+    <h1 class="alge-title txt-color-blueDark">
+      <i class="fa fa-list fa-fw "></i>
+      Reporte de Clientes y Distribuidores Activos
+    </h1>
+  </div>
+</div>
+
+<!-- <div class="row">	
+	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-12">
+			<ul id="sparks" class="">
+				<li class="sparks-info">
+					<h5>Total Solicitado <span class="txt-color-black" style="text-align: right">{{re.totalSolicitadoCreditos + re.totalSolicitadoVales + re.totalSolicitadoCreditosD | currency}}</span></h5>
+				</li>	
+			  </li>
+			  <li class="sparks-info">
+					<h5>Total Cobrado <span class="txt-color-black" style="text-align: right">{{re.totalPagarCreditos + re.totalPagarVales + re.totalPagarCreditosD | currency}}</span></h5>
+				</li>
+			  <li class="sparks-info">
+			    	<h5>Num. Créditos <span class="txt-color-black" style="text-align: center;">{{re.numeroCreditos + re.numeroCreditosD}}</span></h5>
+			  </li>
+			  <li class="sparks-info">
+			    	<h5>Num. Vales <span class="txt-color-black" style="text-align: center;">{{re.numeroVales }}</span></h5>
+			  </li>
+			  <li class="sparks-info">
+			    	<h5>Total <span class="txt-color-black" style="text-align: center;">{{re.numeroVales + re.numeroCreditos + re.numeroCreditosD}}</span></h5>
+			  </li>
+	</div>
+</div> -->
+
+<!-- <div class="well"> -->
+  <div class="row">
+    <div class="col-sm-3">
+      <br>
+      <input type="button" class="btn btn-primary" ng-click="re.clientesDistribuidoresActivos()" value="Buscar" />
+      <!-- <input type="button" class="btn btn-primary"
+        ng-click="re.imprimirReporteCreditosLiquidados(re.creditosLiquidados)" value="Imprimir" /> -->
+    </div>
+  </div>
+  <br>
+
+  <!-- <div class="row">
+    <div class="col-sm-3">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-3">
+              <i class="fa fa-dollar fa-3x"></i>
+            </div>
+            <div class="col-xs-9 text-right">
+              <div class="huge">{{re.totalSolicitadoCreditos + re.totalSolicitadoCreditosD | currency}}</div>
+              <div>Solicitado Créditos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-3">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-3">
+              <i class="fa fa-dollar fa-3x"></i>
+            </div>
+            <div class="col-xs-9 text-right">
+              <div class="huge">{{re.totalPagarCreditos + re.totalPagarCreditosD | currency}}</div>
+              <div>Cobrado Créditos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> -->
+
+
+  <div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false"
+    data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false"
+    data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
+    <header role="heading">
+      <!--<h2><strong>Panel de Folios </strong></h2>-->
+
+      <ul id="widget-tab-1" class="nav nav-tabs pull-left">
+
+        <li class="active">
+          <a data-toggle="tab" href="#hr1" aria-expanded="false">
+            <!-- 							<i class="fa fa-lg fa-thumbs-o-up"></i>  -->
+            <span class="hidden-mobile hidden-tablet"> Clientes de Cre. P.
+          </a>
+        </li>
+
+        <li class="">
+          <a data-toggle="tab" href="#hr2" aria-expanded="false">
+            <!-- 							<i class="fa fa-lg fa-thumbs-o-up"></i>  -->
+            <span class="hidden-mobile hidden-tablet"> Distribuidores
+        </li>
+
+      </ul>
+
+      <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+    </header>
+
+    <!-- widget div-->
+    <div role="content">
+
+      <!-- widget edit box -->
+      <div class="jarviswidget-editbox">
+        <!-- This area used as dropdown edit box -->
+
+      </div>
+      <!-- end widget edit box -->
+
+      <!-- widget content -->
+      <div class="widget-body no-padding">
+
+        <!-- widget body text-->
+
+        <div class="tab-content padding-10">
+
+          <div class="tab-pane fade active in" id="hr1">
+            <div class="row">
+              <div class="col-sm-12">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th width="5%">
+                        <div class="text-center">No.</div>
+                      </th>
+                      <th width="10%">
+                        <div class="text-center">Cliente</div>
+                      </th>
+                      <th width="20%">
+                        <div class="text-center">Nombre</div>
+                      </th>
+                      <th width="10%">
+                        <div class="text-center"># Créditos</div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody style="font-size: small">
+                    <tr ng-repeat="objeto in re.arregloClientes">
+                      <td>
+                        <div class="text-center">{{$index + 1}}</div>
+                      </td>
+                      <td>
+                        <div class="text-center">{{objeto.numero}}</div>
+                      </td>
+                      <td>
+                        <div class="text-left">{{objeto.nombre}}</div>
+                      </td>
+                      <td>
+                        <div class="text-center">{{objeto.creditoPersonal}}</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade" id="hr2">
+            <div class="row">
+              <div class="col-sm-12">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th width="5%">
+                        <div class="text-center">No.</div>
+                      </th>
+                      <th width="10%">
+                        <div class="text-center">Cliente</div>
+                      </th>
+                      <th width="20%">
+                        <div class="text-center">Nombre</div>
+                      </th>
+                      <th width="10%">
+                        <div class="text-center"># Vales</div>
+                      </th>
+                      <th width="10%">
+                        <div class="text-center"># Créditos</div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody style="font-size: small">
+                    <tr ng-repeat="objeto in re.arregloDistribuidores">
+                      <td>
+                        <div class="text-center">{{$index + 1}}</div>
+                      </td>
+                      <td>
+                        <div class="text-center">{{objeto.numero}}</div>
+                      </td>
+                      <td>
+                        <div class="text-left">{{objeto.nombre}}</div>
+                      </td>
+                      <td>
+                        <div class="text-center">{{objeto.vales}}</div>
+                      </td>
+                      <td>
+                        <div class="text-center">{{objeto.creditoPersonalDistribuidor}}</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- end widget body text-->
+
+        <!-- widget footer -->
+        <div class="widget-footer text-right">
+
+        </div>
+        <!-- end widget footer -->
+
+      </div>
+      <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+
+  </div>
+
+<!-- </div> -->

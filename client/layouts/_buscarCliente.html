@@ -1,82 +1,99 @@
 <div class="row">
-		<div class="col-xs-2 pull-right">
-			<div class="input-group">
-				<span class="input-group-btn">
-					<select name="sucursal" class="form-control select2" placeholder="Seleccione" ng-model="ro.sucursal_id" required>
-						<option  value="{{objeto._id}}" ng-repeat="objeto in ro.sucursales">{{objeto.nombreSucursal}}</option>
-					</select>						
-				</span>
-			</div>
+	<div class="col-xs-2 pull-right">
+		<div class="input-group">
+			<span class="input-group-btn">
+				<select name="sucursal" class="form-control select2" placeholder="Seleccione" ng-model="ro.sucursal_id"
+					required>
+					<option value="{{objeto._id}}" ng-repeat="objeto in ro.sucursales">{{objeto.nombreSucursal}}</option>
+				</select>
+			</span>
 		</div>
-		
-		<div class="col-xs-3 pull-right">	
-			<div class="input-group">	
-				<a class="btn btn-default btn-sm" ng-show="!ro.porNumero" ng-click="ro.cambiarNombre()" style="height: 32px;" type="button">Número</a>
-				<a class="btn btn-default btn-sm" ng-show="ro.porNumero" ng-click="ro.cambiarNumero()" style="height: 32px;" type="button">Nombre</a>
-				<a class="btn btn-default btn-sm" ng-show="!ro.porCliente" ng-click="ro.cambiarDistribuidor()" style="height: 32px;" type="button">Cliente</a>
-				<a class="btn btn-default btn-sm" ng-show="ro.porCliente" ng-click="ro.cambiarCliente()" style="height: 32px;" type="button">Distribuidor</a> 		
-			</div>	
-		</div>	
-		
-		<div class="col-xs-5 pull-right">
-			<div class="input-group">
-				<input type="text" class="form-control" placeholder="Escribe el nombre" ng-show="ro.porNumero" ng-model="ro.buscar.nombre" capitalize>
-				<input type="text" class="form-control" placeholder="Escribe el número" ng-show="!ro.porNumero" ng-model="ro.buscar.numeroCliente " capitalize>
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="button" style="height: 32px;">
-						<i class="fa fa-search"></i>
-					</button>
-				</span>
-			</div>
+	</div>
+
+	<div class="col-xs-3 pull-right">
+		<div class="input-group">
+			<a class="btn btn-default btn-sm" ng-show="!ro.porNumero" ng-click="ro.cambiarNombre()" style="height: 32px;"
+				type="button">Número</a>
+			<a class="btn btn-default btn-sm" ng-show="ro.porNumero" ng-click="ro.cambiarNumero()" style="height: 32px;"
+				type="button">Nombre</a>
+			<a class="btn btn-default btn-sm" ng-show="!ro.porCliente" ng-click="ro.cambiarDistribuidor()"
+				style="height: 32px;" type="button">Cliente</a>
+			<a class="btn btn-default btn-sm" ng-show="ro.porCliente" ng-click="ro.cambiarCliente()" style="height: 32px;"
+				type="button">Distribuidor</a>
 		</div>
-		
-		<div class="col-sm-3" style="margin-top: 10px; margin-left: -70px; padding-left: -10px;">
-					<span> <i class="fa fa-money"></i> <b class="badge bounceIn animated">{{ro.valesAcreditados}}</b> </span>
-					<span> <i class="fa fa-ticket"></i> <b class="badge bounceIn animated">{{ro.vales}}</b> </span>
-					<span> <i class="fa fa-user"></i> <b class="badge bounceIn animated">{{ro.prospectos}}</b> </span>
+	</div>
+
+	<div class="col-xs-5 pull-right">
+		<div class="input-group">
+			<input type="text" class="form-control" placeholder="Escribe el nombre" ng-show="ro.porNumero"
+				ng-model="ro.buscar.nombre" capitalize>
+			<input type="text" class="form-control" placeholder="Escribe el número" ng-show="!ro.porNumero"
+				ng-model="ro.buscar.numeroCliente " capitalize>
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" style="height: 32px;">
+					<i class="fa fa-search"></i>
+				</button>
+			</span>
 		</div>
-			
-		<div class="ajax-dropdown" ng-show="ro.buscando" style="display: block; width: 100% !important;">
-			<div class="ajax-notifications custom-scroll">
-				
-				<div class="alert alert-transparent">
-					<div class="tab-pane fade active in" id="a2">
-		
-						<div class="alert alert-info fade in">
-		
-							<button class="close" data-dismiss="alert">
-								X
-							</button>
-		
-							<i class="fa-fw fa fa-info"></i>
-							<strong>{{ro.clientesRoot.length}} encontrados </strong>!
-		
-						</div>
-		
-						<div class="user well" title="{{cliente.profile.nombreCompleto}}" ng-repeat="cliente in ro.clientesRoot" style="width: 100%">
-							<div class="row">
-								<div class="col-sm-1">
-									<img class="online" src="{{ro.tieneFoto(cliente.profile.foto, cliente.profile.sexo)}}">
-								</div>
-								<div class="col-sm-12">
-									<a href="javascript:void(0);" ng-if="cliente.roles=='Cliente'" ui-sref="root.clienteDetalle({objeto_id : cliente._id})" ng-click="ro.buscando = false;ro.buscar.nombre='';ro.buscar.numeroCliente=''";> {{cliente.profile.nombreCompleto}} - {{cliente.profile.numeroCliente}} - {{cliente.roles[0]}}</a>
-									<a href="javascript:void(0);" ng-if="cliente.roles=='Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : cliente._id})" ng-click="ro.buscando = false;ro.buscar.nombre='';ro.buscar.numeroCliente=''"> {{cliente.profile.nombreCompleto}} - {{cliente.profile.numeroCliente}} - {{cliente.roles[0]}}</a>
-		<!--
+	</div>
+
+	<!-- <div class="col-sm-3" style="margin-top: 10px; margin-left: -70px; padding-left: -10px;">
+		<span> <i class="fa fa-money"></i> <b class="badge bounceIn animated">{{ro.valesAcreditados}}</b> </span>
+		<span> <i class="fa fa-ticket"></i> <b class="badge bounceIn animated">{{ro.vales}}</b> </span>
+		<span> <i class="fa fa-user"></i> <b class="badge bounceIn animated">{{ro.prospectos}}</b> </span>
+		<span> <i class="fa fa-file-text"></i> <b class="badge bounceIn animated"> {{ro.solicitudesC + ro.solicitudesD}}</b>
+		</span>
+	</div> -->
+
+	<div class="ajax-dropdown" ng-show="ro.buscando" style="display: block; width: 100% !important;">
+		<div class="ajax-notifications custom-scroll">
+
+			<div class="alert alert-transparent">
+				<div class="tab-pane fade active in" id="a2">
+
+					<div class="alert alert-info fade in">
+
+						<button class="close" data-dismiss="alert">
+							X
+						</button>
+
+						<i class="fa-fw fa fa-info"></i>
+						<strong>{{ro.clientesRoot.length}} encontrados </strong>!
+
+					</div>
+
+					<div class="user well" title="{{cliente.profile.nombreCompleto}}" ng-repeat="cliente in ro.clientesRoot"
+						style="width: 100%">
+						<div class="row">
+							<div class="col-sm-1">
+								<img class="online" src="{{ro.tieneFoto(cliente.profile.foto, cliente.profile.sexo)}}">
+							</div>
+							<div class="col-sm-12">
+								<a href="javascript:void(0);" ng-if="cliente.roles=='Cliente'"
+									ui-sref="root.clienteDetalle({objeto_id : cliente._id})"
+									ng-click="ro.buscando = false;ro.buscar.nombre='';ro.buscar.numeroCliente=''" ;>
+									{{cliente.profile.nombreCompleto}} - {{cliente.profile.numeroCliente}} - {{cliente.roles[0]}}</a>
+								<a href="javascript:void(0);" ng-if="cliente.roles=='Distribuidor'"
+									ui-sref="root.distribuidoresDetalle({objeto_id : cliente._id})"
+									ng-click="ro.buscando = false;ro.buscar.nombre='';ro.buscar.numeroCliente=''">
+									{{cliente.profile.nombreCompleto}} - {{cliente.profile.numeroCliente}} - {{cliente.roles[0]}}</a>
+								<!--
 									<div class="btn-group btn-xs btn-group-justified">
 										<a href="javascript:void(0);" class="btn btn-default" ng-repeat="credito in cliente.profile.creditos"  ui-sref="root.verPlanPagos({objeto_id : cliente._id, credito_id : credito._id})" ng-click="ro.buscando = false;">{{credito.capitalSolicitado | currency}}</a>
 									</div>
 		-->
-								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<span> Última actualización: {{ro.hoy | date:"dd-MM-yyyy HH:mm a"}}
-				<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="ro.buscando = false; ro.buscar.nombre = '';  ro.buscar.numeroCliente = ''">
-					<i class="fa fa-times"></i>
-				</button> 
-			</span>
 		</div>
-</div>		
-	
+		<span> Última actualización: {{ro.hoy | date:"dd-MM-yyyy HH:mm a"}}
+			<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..."
+				class="btn btn-xs btn-default pull-right"
+				ng-click="ro.buscando = false; ro.buscar.nombre = '';  ro.buscar.numeroCliente = ''">
+				<i class="fa fa-times"></i>
+			</button>
+		</span>
+	</div>
+</div>

@@ -257,9 +257,8 @@ function verCajaActivaCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 if (d.origen == "Cancelación de pago" && d.pago != undefined)
 					{							
 							//cancelados.push({id: d._id });
-							console.log(d);
 							var bus = ret.findIndex(obj => obj.pago.folioPago == d.pago.folioPago);
-							console.log("Enc:", bus);									
+					
 					}
 */
 
@@ -409,9 +408,9 @@ if (d.origen == "Cancelación de pago" && d.pago != undefined)
 
   this.detalle = function (_id) {
     /*
-        console.log("Que es esto:", _id);
-        console.log("Cajas:", rc.cajas);
-        console.log("Cuentas:", rc.cuentas);
+        //console.log("Que es esto:", _id);
+        //console.log("Cajas:", rc.cajas);
+        //console.log("Cuentas:", rc.cuentas);
     */
 
     rc.detalleOrigenDestino = _.findWhere(rc.cajas, { _id: _id }) || _.findWhere(rc.cuentas, { _id: _id });

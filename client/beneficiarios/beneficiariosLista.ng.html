@@ -90,6 +90,12 @@
 										<li><a href="#"
 												ng-click="obj.mostrarModalMoivos(objeto._id, objeto.nombreCompleto, 1)"><i
 													class="fa fa-table"></i> Ver Motivos</a></li>
+										<li><a href="#"
+												ng-click="obj.mostrarModalCambioDistribuidor(objeto._id, objeto.nombreCompleto, objeto.distribuidor)"><i
+													class="fa fa-refresh"></i> Cambio de Distribuidor</a></li>
+										<!-- <li><a href="#"
+												ng-click="obj.mostrarModalHistoricoCambiosDistribuidor(objeto._id, objeto.nombreCompleto)"><i
+													class="fa fa-search"></i> Histórico de Cambios </a></li> -->
 									</ul>
 								</div>
 							</div>
@@ -164,26 +170,29 @@
 				<div class="modal-header">
 					<h4 class="modal-title">Bloquear : {{obj.beneficiarioNombre}}</h4>
 				</div>
-				<div class="modal-footer">
+				<div class="modal-body">
 					<div class="row">
 						<div class="col-sm-12">
 							<label class="pull-left">Motivo del bloqueo:</label>
 							<textarea name="cancelar" type="text" rows="3" class="form-control" ng-model="obj.motivo"
 								required="" capitalize>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-              	<input type="submit" ng-click="obj.bloquearActivarBeneficiario(obj.motivo, formCancelar)" value="Aceptar" class="btn btn-success" valida-form formulario="formCancelar">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-            </div>
-          </form>	  
-        </div>
-    </div>
+							</textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="submit" ng-click="obj.bloquearActivarBeneficiario(obj.motivo, formCancelar)"
+						value="Aceptar" class="btn btn-success" valida-form formulario="formCancelar">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 </div>
 
-<div class="modal fade" id="modalBitacoraActivarDesactivar" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
-	aria-labelledby="myLargeModalLabel">
+<div class="modal fade" id="modalBitacoraActivarDesactivar" class="modal fade bs-example-modal-lg" tabindex="-1"
+	role="dialog" aria-labelledby="myLargeModalLabel">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -223,6 +232,80 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-info left-panel" data-dismiss="modal">Cerrar</button>
 			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="modalCambioDistribuidor" data-backdrop="static" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<form name="formCancelar" novalidate>
+				<div class="modal-header">
+					<h4 class="modal-title">Beneficiario : {{obj.beneficiarioNombre}}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<div ng-include="'client/beneficiarios/_buscarDistribuidor.html'"></div>
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-sm-2">
+							<label>Número</label>
+							<input type="text" class="form-control" placeholder="Nombre"
+								ng-model="obj.distribuidor.profile.numeroCliente" ng-disabled="true">
+						</div>
+						<div class="col-sm-10">
+							<label>Distribudor Actual</label>
+							<input type="text" class="form-control" placeholder="Nombre"
+								ng-model="obj.distribuidor.profile.nombreCompleto" ng-disabled="true">
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-sm-2" valida>
+							<label>Número</label>
+							<input name="numero" type="text" class="form-control" placeholder="Nombre"
+								ng-model="obj.distribuidorCambio.profile.numeroCliente" ng-disabled="true" required>
+						</div>
+						<div class="col-sm-10" valida>
+							<label>Distribudor a Cambiar</label>
+							<input name="nombreDis" type="text" class="form-control" placeholder="Nombre"
+								ng-model="obj.distribuidorCambio.profile.nombreCompleto" ng-disabled="true" required>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-sm-12">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Num</th>
+										<th>Distribuidor</th>
+										<th>Fecha</th>
+										<th>Usuario</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="objeto in obj.bitacoraDistribuidores">
+										<td>{{$index + 1}}</td>
+										<td>{{objeto.distribuidorNombre}}</td>
+										<td>{{objeto.fecha | date: "dd-MM-yyyy"}}</td>
+										<td>{{objeto.usuarioNombre}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="submit" ng-click="obj.cambiarDistribuidor(formCancelar)" value="Aceptar"
+						class="btn btn-success" valida-form formulario="formCancelar">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>

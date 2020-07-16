@@ -1,255 +1,307 @@
 <div class="row">
-		<form name="form" class="form-horizontal" role="form" novalidate>
-				    <div class="col-sm-12">
-        
-            		<h4>Información del Supervisor</h4>
-		            <div class="well">
-		                <div class="row">
-		                    <div class="col-sm-4" valida>
-		                        <label>Nombre (s) *</label>
-		                        <input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="sup.objeto.profile.nombre" required capitalize>
-		                    </div>
-		                    <div class="col-sm-4" valida>
-		                        <label>Apellido Paterno *</label>
-		                        <input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="sup.objeto.profile.apellidoPaterno" required capitalize>
-		                    </div>
-		                    <div class="col-sm-4">
-		                        <label>Apellido Materno</label>
-		                        <input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" ng-model="sup.objeto.profile.apellidoMaterno" capitalize>
-		                    </div>
-		                </div>
-		                <div class="row">
-		                    <div class="col-sm-3" valida>
-				                    <label>Usuario *</label>
-				                    <input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="sup.objeto.username" required="">
-				                </div>
-				                <div class="col-sm-3" valida>					    
-														<label>Contraseña *</label>
-														<input name="contrasena" type="password" class="form-control" placeholder="Contraseña" ng-model="sup.objeto.password" required="" ng-disabled="sup.cambiarContrasena">
-												</div>		    				    	    
-												<div class="col-sm-3" valida>					    
-													<label>Confirmar Contraseña *</label>
-													<input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="sup.objeto.confirmpassword" required="" ng-disabled="sup.cambiarContrasena">
-												</div>
-												<div class="col-sm-3">			
-													<br>		    
-													<button type="button" class="btn btn-primary" ng-click="sup.cambiarPassword()" ng-show="!sup.action">Cambiar Contraseña</button>
-												</div>
-		                </div>
-		                <div class="row">
-			                	<div class="col-sm-3" valida>					    										
-										    	<label>Contraseña Desbloqueo *</label>																	
-										    	<input name="passwordDesbloqueo" type="password" class="form-control" placeholder="Contraseña Desbloqueo" ng-model="sup.objeto.profile.passwordDesbloqueo" required>
-									    	</div>
-									    	
-												<div class="col-sm-3" valida>
-		                        <label>Sucursal *</label>
-		                        <select name="sucursal" class="form-control select2" placeholder="Seleccione" ng-model="sup.objeto.profile.sucursal_id" required>
-															<option  value="{{objeto._id}}" ng-repeat="objeto in sup.sucursales">{{objeto.nombreSucursal}}</option>
-														</select>
-		                    </div>
-									    	
-		                </div> 
-		            </div>
-            </div>
-            
-            <div class="col-sm-12">
-                <h4>Información de Contacto</h4>
-                <div class="well">
-                    <div class="row">
-                        <div class="col-sm-4" valida>
-                            <label>Teléfono *</label>
-                            <input name="telefono" type="text" class="form-control" placeholder="Teléfono" ng-model="sup.objeto.profile.telefono" required>
-                        </div>
-                        <div class="col-sm-4" valida>
-                            <label>Celular *</label>
-                            <input name="celular" type="text" class="form-control" placeholder="Celular" ng-model="sup.objeto.profile.celular" required>
-                        </div>
-                        <div class="col-sm-4">
-                            <label>Otro Teléfono</label>
-                            <input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono" ng-model="sup.objeto.profile.otroTelefono">
-                        </div>
+    <form name="form" class="form-horizontal" role="form" novalidate>
+        <div class="col-sm-12">
+
+            <h4>Información del Supervisor</h4>
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-4" valida>
+                        <label>Nombre (s) *</label>
+                        <input name="nombre" type="text" class="form-control" placeholder="Nombre"
+                            ng-model="sup.objeto.profile.nombre" required capitalize>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Correo</label>
-                            <input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="sup.objeto.profile.correo" capitalize>
-                        </div>
+                    <div class="col-sm-4" valida>
+                        <label>Apellido Paterno *</label>
+                        <input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno"
+                            ng-model="sup.objeto.profile.apellidoPaterno" required capitalize>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Apellido Materno</label>
+                        <input name="apellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno"
+                            ng-model="sup.objeto.profile.apellidoMaterno" capitalize>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3" valida>
+                        <label>Usuario *</label>
+                        <input name="usuario" type="text" class="form-control" placeholder="Usuario"
+                            ng-model="sup.objeto.username" required="">
+                    </div>
+                    <div class="col-sm-3" valida>
+                        <label>Contraseña *</label>
+                        <input name="contrasena" type="password" class="form-control" placeholder="Contraseña"
+                            ng-model="sup.objeto.password" required="" ng-disabled="sup.cambiarContrasena">
+                    </div>
+                    <div class="col-sm-3" valida>
+                        <label>Confirmar Contraseña *</label>
+                        <input name="confirmar" type="password" class="form-control" placeholder="Confirmar Contraseña"
+                            ng-model="sup.objeto.confirmpassword" required="" ng-disabled="sup.cambiarContrasena">
+                    </div>
+                    <div class="col-sm-3">
+                        <br>
+                        <button type="button" class="btn btn-primary" ng-click="sup.cambiarPassword()"
+                            ng-show="!sup.action">Cambiar Contraseña</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3" valida>
+                        <label>Contraseña Desbloqueo *</label>
+                        <input name="passwordDesbloqueo" type="password" class="form-control"
+                            placeholder="Contraseña Desbloqueo" ng-model="sup.objeto.profile.passwordDesbloqueo"
+                            required>
+                    </div>
+
+                    <div class="col-sm-3" valida>
+                        <label>Sucursal *</label>
+                        <select name="sucursal" class="form-control select2" placeholder="Seleccione"
+                            ng-model="sup.objeto.profile.sucursal_id" required>
+                            <option value="{{objeto._id}}" ng-repeat="objeto in sup.sucursales">
+                                {{objeto.nombreSucursal}}</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <h4>Información de Contacto</h4>
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-4" valida>
+                        <label>Teléfono *</label>
+                        <input name="telefono" type="text" class="form-control" placeholder="Teléfono"
+                            ng-model="sup.objeto.profile.telefono" required>
+                    </div>
+                    <div class="col-sm-4" valida>
+                        <label>Celular *</label>
+                        <input name="celular" type="text" class="form-control" placeholder="Celular"
+                            ng-model="sup.objeto.profile.celular" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Otro Teléfono</label>
+                        <input name="otroTelefono" type="text" class="form-control" placeholder="Otro Teléfono"
+                            ng-model="sup.objeto.profile.otroTelefono">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Correo</label>
+                        <input name="correo" type="text" class="form-control" placeholder="Correo"
+                            ng-model="sup.objeto.profile.correo" capitalize>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12">
-                <h4>Particulares</h4>
-                <div class="well">
-                    <div class="row">
-                        <div class="col-sm-4" valida>
-                            <label for="sexo">Sexo *</label>
-                            <select name="sexo" ng-model="sup.objeto.profile.sexo" data-placeholder="Seleccione" class="form-control" required>
-                                <option value=""></option>
-                                <option value="Masculino">Masculino</option>
-                                <option value="Femenino">Femenino</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <label for="estadocivil">Estado Civil *</label>
-                            <select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="sup.objeto.profile.estadoCivil_id" required>
-                                <option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in sup.estadosCiviles">
-                                    {{estadoCivil.nombre}}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <label>Fecha Nacimiento *</label>
-                            <input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha" ng-model="sup.objeto.profile.fechaNacimiento" required="">
-                        </div>
+        </div>
+        <div class="col-sm-12">
+            <h4>Particulares</h4>
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-4" valida>
+                        <label for="sexo">Sexo *</label>
+                        <select name="sexo" ng-model="sup.objeto.profile.sexo" data-placeholder="Seleccione"
+                            class="form-control" required>
+                            <option value=""></option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label for="nacionalidad">Nacionalidad</label>
-                            <select name="nacionalidad" class="form-control select2" placeholder="Seleccione" ng-model="sup.objeto.profile.nacionalidad_id" required>
-                                <option value="{{nacionalidad._id}}" ng-repeat="nacionalidad in sup.nacionalidades">
-                                    {{nacionalidad.nombre}}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <label for="ocupacion">Ocupación *</label>
-                            <select name="ocupacion" class="form-control select2" placeholder="Seleccione" ng-model="sup.objeto.profile.ocupacion_id" required>
-                                <option value="{{ocupacion._id}}" ng-repeat="ocupacion in sup.ocupaciones">
-                                    {{ocupacion.nombre}}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <label>CURP</label>
-                            <input name="curp" type="text" class="form-control" placeholder="CURP" ng-model="sup.objeto.profile.curp" capitalize>
-                        </div>
+                    <div class="col-sm-4">
+                        <label for="estadocivil">Estado Civil *</label>
+                        <select name="estadocivil" class="form-control select2" placeholder="Seleccione"
+                            ng-model="sup.objeto.profile.estadoCivil_id" required>
+                            <option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in sup.estadosCiviles">
+                                {{estadoCivil.nombre}}
+                            </option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Lugar de Nacimiento</label>
-                            <input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento" ng-model="sup.objeto.profile.lugarNacimiento">
-                        </div>
+                    <div class="col-sm-4">
+                        <label>Fecha Nacimiento *</label>
+                        <input name="fechaNacimiento" type="date" format="dd/MM/yyyy" class="form-control"
+                            placeholder="Fecha" ng-model="sup.objeto.profile.fechaNacimiento" required="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="nacionalidad">Nacionalidad</label>
+                        <select name="nacionalidad" class="form-control select2" placeholder="Seleccione"
+                            ng-model="sup.objeto.profile.nacionalidad_id" required>
+                            <option value="{{nacionalidad._id}}" ng-repeat="nacionalidad in sup.nacionalidades">
+                                {{nacionalidad.nombre}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="ocupacion">Ocupación *</label>
+                        <select name="ocupacion" class="form-control select2" placeholder="Seleccione"
+                            ng-model="sup.objeto.profile.ocupacion_id" required>
+                            <option value="{{ocupacion._id}}" ng-repeat="ocupacion in sup.ocupaciones">
+                                {{ocupacion.nombre}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>CURP</label>
+                        <input name="curp" type="text" class="form-control" placeholder="CURP"
+                            ng-model="sup.objeto.profile.curp" capitalize>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Lugar de Nacimiento</label>
+                        <input name="lugarNacimiento" type="text" class="form-control" placeholder="Lugar de Nacimiento"
+                            ng-model="sup.objeto.profile.lugarNacimiento">
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12">
-                <h4>Dirección</h4>
-                <div class="well">
-                    <div class="row">
-                        <div class="col-sm-4" valida>
-                            <label>Calle *</label>
-                            <input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="sup.objeto.profile.calle" required="" capitalize>
-                        </div>
-                        <div class="col-sm-4" valida>
-                            <label>Numero *</label>
-                            <input name="numero" type="text" class="form-control" placeholder="Número" ng-model="sup.objeto.profile.numero" required="" capitalize>
-                        </div>
-                        <div class="col-sm-4" valida>
-                            <label>CP *</label>
-                            <input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal" ng-model="sup.objeto.profile.codigoPostal" required="">
-                        </div>
+        </div>
+        <div class="col-sm-12">
+            <h4>Dirección</h4>
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-4" valida>
+                        <label>Calle *</label>
+                        <input name="calle" type="text" class="form-control" placeholder="Calle"
+                            ng-model="sup.objeto.profile.calle" required="" capitalize>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4" valida>
-                            <label>Pais *</label>
-                            <select name="dirPais" class="form-control select2" placeholder="Seleccione" ng-model="sup.objeto.profile.pais_id" required ng-change="sup.cambiarPaisObjeto()">
-                                <option value="{{pais._id}}" ng-repeat="pais in sup.paises">{{pais.nombre}}</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4" valida>
-                            <label for="seccion_id">Estado *</label>
-                            <select name="dirEstado" class="form-control select2" placeholder="Seleccione" ng-model="sup.objeto.profile.estado_id" required ng-change="sup.cambiarEstadoObjeto()">
-                                <option ng-repeat="estado in sup.estados" value="{{estado._id}}">{{estado.nombre}}</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4" valida>
-                            <label>Municipio *</label>
-                            <select name="dirMunicipio" class="form-control select2" placeholder="Seleccione" ng-model="sup.objeto.profile.municipio_id" required ng-change="sup.cambiarMunicipioObjeto()">
-                                <option value="{{municipio._id}}" ng-repeat="municipio in sup.municipios">{{municipio.nombre}}</option>
-                            </select>
-                        </div>
+                    <div class="col-sm-4" valida>
+                        <label>Numero *</label>
+                        <input name="numero" type="text" class="form-control" placeholder="Número"
+                            ng-model="sup.objeto.profile.numero" required="" capitalize>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4" valida>
-                            <label for="seccion_id">Ciudad *</label>
-                            <select name="dirCiudad" class="form-control select2" placeholder="Seleccione" ng-model="sup.objeto.profile.ciudad_id" required ng-change="sup.cambiarCiudadObjeto()">
-                                <option ng-repeat="ciudad in sup.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-													<label for="seccion_id">Buscar Colonia</label>
-													<div class="input-group"> 
-														<input name="colonia_id" type="text" class="form-control" ng-model="sup.buscar.coloniaNombre" capitalize>
-														<span class="input-group-btn">
-															<button class="btn btn-default" type="button" style="height: 34px;">
-																<i class="fa fa-search"></i>
-															</button> 
-														</span>
-													</div>
-													<div class="ajax-dropdown" ng-show="sup.buscandoColonia" style="display: block; width: 100% !important;">
-														<div class="ajax-notifications custom-scroll">
-															<div class="alert alert-transparent">
-																<div class="tab-pane fade active in" id="a2">
-																	<div class="user well" title="{{colonia.nombre}}" ng-repeat="colonia in sup.colonias" style="width: 100%">
-																		<div class="row">
-																			<div class="col-sm-4">
-																				<a href="javascript:void(0);"> {{colonia.nombre}}</a> 						
-																				<a href="javascript:void(0);" ng-click="sup.agregarColonia(colonia);sup.buscandoColonia = false"> Seleccionar</a>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-														<span> 
-															<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="sup.buscando = false; sup.buscar.nombre = ''">
-																<i class="fa fa-times"></i>
-															</button> 
-														</span>							
-													</div>
-												</div>
-												<div class="col-sm-4" valida>					    
-													<label>Colonia *</label>
-													<input name="colonia" type="text" class="form-control" placeholder="Colonia" ng-model="sup.colonia.nombre" disabled="true" required>
-												</div>
-                    </div>
-                </div>   
-            </div>    
-            
-            <div class="col-sm-12">
-            		<h4>Permisos</h4>
-		            <div class="well">
-		                <div class="row">
-		                    <div class="col-sm-3">
-													<label class="checkbox-inline">
-														  <input name="notaCredito" type="checkbox" class="checkbox style-0" ng-model = "sup.objeto.profile.notaCredito">
-														  <span> Crear Notas de Crédito</span>
-													</label>
-												</div>					
-												<div class="col-sm-3">
-													<label class="checkbox-inline">
-														  <input name="cancelarMovimientos" type="checkbox" class="checkbox style-0" ng-model = "sup.objeto.profile.cancelarMovimientos">
-														  <span> Cancelar movimientos</span>
-													</label>
-												</div>
-												<div class="col-sm-3">
-													<label class="checkbox-inline">
-														  <input name="cambiarSucursal" type="checkbox" class="checkbox style-0" ng-model = "sup.objeto.profile.cambiarSucursal">
-														  <span> Cambiar sucursal</span>
-													</label>
-												</div>
-		                </div>
-		            </div>
-            </div>
-            
-            <div class="col-sm-12">
-	            	<div class="well">
-                    <div class="row">
-                            <input type="submit" ng-click="sup.guardar(sup.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="sup.action" valida-form formulario="form">
-                            <input type="submit" ng-click="sup.actualizar(sup.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!sup.action" valida-form formulario="form">
+                    <div class="col-sm-4" valida>
+                        <label>CP *</label>
+                        <input name="cp" type="number" min="0" class="form-control" placeholder="Código Postal"
+                            ng-model="sup.objeto.profile.codigoPostal" required="">
                     </div>
                 </div>
-            </div>  
-    </form>            
+                <div class="row">
+                    <div class="col-sm-4" valida>
+                        <label>Pais *</label>
+                        <select name="dirPais" class="form-control select2" placeholder="Seleccione"
+                            ng-model="sup.objeto.profile.pais_id" required ng-change="sup.cambiarPaisObjeto()">
+                            <option value="{{pais._id}}" ng-repeat="pais in sup.paises">{{pais.nombre}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4" valida>
+                        <label for="seccion_id">Estado *</label>
+                        <select name="dirEstado" class="form-control select2" placeholder="Seleccione"
+                            ng-model="sup.objeto.profile.estado_id" required ng-change="sup.cambiarEstadoObjeto()">
+                            <option ng-repeat="estado in sup.estados" value="{{estado._id}}">{{estado.nombre}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4" valida>
+                        <label>Municipio *</label>
+                        <select name="dirMunicipio" class="form-control select2" placeholder="Seleccione"
+                            ng-model="sup.objeto.profile.municipio_id" required
+                            ng-change="sup.cambiarMunicipioObjeto()">
+                            <option value="{{municipio._id}}" ng-repeat="municipio in sup.municipios">
+                                {{municipio.nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4" valida>
+                        <label for="seccion_id">Ciudad *</label>
+                        <select name="dirCiudad" class="form-control select2" placeholder="Seleccione"
+                            ng-model="sup.objeto.profile.ciudad_id" required ng-change="sup.cambiarCiudadObjeto()">
+                            <option ng-repeat="ciudad in sup.ciudades" value="{{ciudad._id}}">{{ciudad.nombre}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="seccion_id">Buscar Colonia</label>
+                        <div class="input-group">
+                            <input name="colonia_id" type="text" class="form-control"
+                                ng-model="sup.buscar.coloniaNombre" capitalize>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" style="height: 34px;">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <div class="ajax-dropdown" ng-show="sup.buscandoColonia"
+                            style="display: block; width: 100% !important;">
+                            <div class="ajax-notifications custom-scroll">
+                                <div class="alert alert-transparent">
+                                    <div class="tab-pane fade active in" id="a2">
+                                        <div class="user well" title="{{colonia.nombre}}"
+                                            ng-repeat="colonia in sup.colonias" style="width: 100%">
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <a href="javascript:void(0);"> {{colonia.nombre}}</a>
+                                                    <a href="javascript:void(0);"
+                                                        ng-click="sup.agregarColonia(colonia);sup.buscandoColonia = false">
+                                                        Seleccionar</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span>
+                                <button type="button"
+                                    data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..."
+                                    class="btn btn-xs btn-default pull-right"
+                                    ng-click="sup.buscando = false; sup.buscar.nombre = ''">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" valida>
+                        <label>Colonia *</label>
+                        <input name="colonia" type="text" class="form-control" placeholder="Colonia"
+                            ng-model="sup.colonia.nombre" disabled="true" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <h4>Permisos</h4>
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label class="checkbox-inline">
+                            <input name="notaCredito" type="checkbox" class="checkbox style-0"
+                                ng-model="sup.objeto.profile.notaCredito">
+                            <span> Crear Notas de Crédito</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="checkbox-inline">
+                            <input name="cancelarMovimientos" type="checkbox" class="checkbox style-0"
+                                ng-model="sup.objeto.profile.cancelarMovimientos">
+                            <span> Cancelar movimientos</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="checkbox-inline">
+                            <input name="cambiarSucursal" type="checkbox" class="checkbox style-0"
+                                ng-model="sup.objeto.profile.cambiarSucursal">
+                            <span> Cambiar sucursal</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="checkbox-inline">
+                            <input name="cambiarSucursal" type="checkbox" class="checkbox style-0"
+                                ng-model="sup.objeto.profile.asignarSolicitudesSucursal">
+                            <span> Asignar solicitud de prospectos a sucursal </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <div class="well">
+                <div class="row">
+                    <input type="submit" ng-click="sup.guardar(sup.objeto,form)" value="Guardar" class="btn btn-primary"
+                        ng-show="sup.action" valida-form formulario="form">
+                    <input type="submit" ng-click="sup.actualizar(sup.objeto,form)" value="Actualizar"
+                        class="btn btn-primary" ng-show="!sup.action" valida-form formulario="form">
+                </div>
+            </div>
+        </div>
+    </form>
 </div>

@@ -103,6 +103,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	this.subscribe('notasCreditoCliente', () => {
 		return [{ cliente_id: $stateParams.objeto_id }];
 	});
+
 	this.subscribe('planPagos', () => {
 		return [{
 			cliente_id: $stateParams.objeto_id, credito_id: { $in: rc.getReactively("creditos_id") }
@@ -119,7 +120,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		return [{}]
 	});
 	this.subscribe('tiposCreditos', () => {
-		return [{}]
+		return [{}] 
 	});
 	this.subscribe('estadoCivil', () => {
 		return [{}]
@@ -216,7 +217,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return creditos;
 		},
 		notasCredito: () => {
-			var notas = NotasCredito.find({}, { sort: { createdAt: -1 } });
+			//var notas = NotasCredito.find({}, { sort: { createdAt: -1 } });
+			var notas = NotasCredito.find({});
 			return notas;
 		},
 		notasCreditoSaldo: () => {
@@ -334,8 +336,8 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 							if (pago.descripcion == "Cargo Moratorio") {
 								credito.tieneCargoMoratorio = true;
-								_.each(pago.pagos, function(p){
-									credito.sumaPagosCargoM += Number(parseFloat( p.totalPago).toFixed(2));
+								_.each(pago.pagos, function (p) {
+									credito.sumaPagosCargoM += Number(parseFloat(p.totalPago).toFixed(2));
 								});
 
 								if (pago.importeRegular == 0) {
@@ -477,7 +479,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 									formaPago = ti.nombre;
 							}
 
-							console.log(formaPago);
+							//console.log(formaPago);
 
 							if (planPago.descripcion == 'Recibo') {
 								rc.abonosRecibos += pago.totalPago;
@@ -921,7 +923,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		rc.openModal = true;
 	};
 	this.modalDoc = function (id) {
-		console.log(id);
+		//console.log(id);
 		loading(true);
 		Meteor.call('getDocumentoCliente', id, function (error, result) {
 			if (result) {
@@ -1001,8 +1003,9 @@ var html  = "<html><head>" +
 		rc.openModal = false
 
 	};
-	
+
 	this.generarFicha = function (objeto) {
+
 		Meteor.call('getPeople', objeto._id, objeto.profile.referenciasPersonales_ids.referenciaPersonal_id, function (error, result) {
 			if (result) {
 
@@ -1024,7 +1027,7 @@ var html  = "<html><head>" +
 			}
 		});
 	};
-	
+
 	this.diarioCobranza = function (objeto) {
 
 		//console.log(objeto,"objetillo")
@@ -1072,8 +1075,21 @@ if(estatus == 0){
 		}
 */
 	};
+
+	//Restructuración-----------------------------------------------------
+
 	this.mostrarReestructuracion = function (objeto) {
-		rc.creditoSeleccionado = objeto;
+
+		rc.creditoSeleccionado = {};
+
+		function bestCopyEver(src) {
+			return Object.assign({}, src);
+		}
+
+		rc.creditoSeleccionado = bestCopyEver(objeto);
+
+		//rc.creditoSeleccionado = objeto;
+	
 		_.each(rc.creditoSeleccionado.planPagos, function (planPago) {
 			planPago.editar = false;
 			//planPago.numeroPagos = rc.creditoSeleccionado.numeroPagos;
@@ -1084,16 +1100,19 @@ if(estatus == 0){
 		}
 		$("#modalReestructuracion").modal('show');
 	};
+
 	this.agregarPago = function () {
 		var fecha = moment(new Date());
 
+		rc.creditoSeleccionado.numeroPagos ++;
+		var numeroPagos = rc.creditoSeleccionado.numeroPagos;
 
 		var nuevoPago = {
 			semana: fecha.isoWeek(),
 			fechaLimite: new Date(new Date(fecha.toDate().getTime()).setHours(23, 59, 59)),
 			diaSemana: fecha.weekday(),
 			tipoPlan: rc.creditoSeleccionado.periodoPago,
-			numeroPago: rc.creditoSeleccionado.planPagos.length + 1,
+			numeroPago: numeroPagos,
 			tipoCredito: rc.credito.tipo, //si es vale o CP
 			importeRegular: 0,
 			iva: 0,
@@ -1121,14 +1140,15 @@ if(estatus == 0){
 			movimiento: "Recibo",
 			multa: 0,
 			abono: 0,
-			numeroPagos: rc.creditoSeleccionado.planPagos.length + 1
+			numeroPagos: numeroPagos
 		};
+
 		rc.creditoSeleccionado.planPagos.push(nuevoPago);
 
+
 	};
+	
 	this.guardarplanPagos = function () {
-
-
 
 		_.each(rc.creditoSeleccionado.planPagos, function (planPago) {
 
@@ -1146,7 +1166,7 @@ if(estatus == 0){
 					PlanPagos.insert(planPago);
 
 					rc.creditoSeleccionado.saldoActual += suma;
-					rc.creditoSeleccionado.numeroPagos = planPago.numeroPagos;
+
 					Creditos.update({ _id: rc.creditoSeleccionado._id },
 						{
 							$set: {
@@ -1166,13 +1186,12 @@ if(estatus == 0){
 				//Actualizar numero de pagos de Credito, asi como el saldo del credito??
 				var recibo = PlanPagos.findOne({ _id: planPago._id });
 
-				planPago.numeroPagos = rc.creditoSeleccionado.planPagos.length;
+				planPago.numeroPagos = rc.creditoSeleccionado.numeroPagos;
 
 				var valor = 0;
 				if (recibo.capital != planPago.capital || recibo.interes != planPago.interes || recibo.iva != planPago.iva || recibo.seguro != planPago.seguro) {
 					//console.log("Recibo:",recibo);
 					var suma = planPago.capital + planPago.iva + planPago.interes + planPago.seguro;
-
 
 					planPago.importeRegular = suma;
 					planPago.cargo = suma;
@@ -1233,7 +1252,6 @@ if(estatus == 0){
 
 				}
 
-
 				var tempId = planPago._id;
 				delete planPago._id;
 				planPago.credito = {};
@@ -1256,11 +1274,13 @@ if(estatus == 0){
 		rc.recibos = PlanPagos.find({ credito_id: credito_id, descripcion: "Recibo" }).fetch();
 
 	};
+
 	this.crearCargoMoratorio = function () {
 		rc.recibo._id = "";
 		rc.recibo.importe = 0.00;
 		$("#modalCargosMoratorios").modal('show');
 	};
+
 	this.guardarCargoMoratorio = function (objeto) {
 
 		if (rc.recibo._id == "") {
@@ -1333,9 +1353,11 @@ if(estatus == 0){
 		//console.log(pago);
 		pago.editar = true;
 	};
+
 	this.actualizar = function (pago) {
 		pago.editar = false;
 	};
+
 	this.sumarPago = function (pago) {
 		//console.log("entro a suman", pago);
 

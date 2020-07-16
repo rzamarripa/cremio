@@ -265,14 +265,7 @@ rc.planPagos = PlanPagos.find({}).fetch();
 			
 			
 			var valores = (rc.credito.adeudoInicial).toString().split('.');
-
-/*
-			console.log(valores);
-			console.log(valores[0]);
-			console.log(valores[1]);
-*/
-
-			
+	
 			rc.centavos = valores[1];
 			if (Number(rc.centavos) < 9)
 					rc.centavos =  rc.centavos + "0";

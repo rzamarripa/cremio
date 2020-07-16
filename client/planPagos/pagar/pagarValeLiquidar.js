@@ -478,9 +478,9 @@ function PagarValeLiquidarCtrl($scope, $filter, $meteor, $reactive, $state, $sta
 			return;
 		}
 
-		rc.pago.totalPago = 0;
-		rc.pago.bonificacion = 0;
-		rc.pago.cargosMoratorios = 0;
+		//rc.pago.totalPago = 0;
+		//rc.pago.bonificacion = 0;
+		//rc.pago.cargosMoratorios = 0;
 		rc.pago.seguro = 0;
 
 		var configuraciones = Configuraciones.findOne();
@@ -496,39 +496,44 @@ function PagarValeLiquidarCtrl($scope, $filter, $meteor, $reactive, $state, $sta
 
 			p.pagoSeleccionado = !objeto.pagoSeleccionado;
 
-			if (p.pagoSeleccionado) {
-				p.importepagado = Number(parseFloat(p.importeRegular).toFixed(2));
+			p.importepagado = Number(parseFloat(p.importeRegular).toFixed(2));
 
-				if (p.pagoInteres === undefined) p.pagoInteres = 0;
-				if (p.pagoCapital === undefined) p.pagoCapital = 0;
+			if (p.pagoInteres === undefined) p.pagoInteres = 0;
+			if (p.pagoCapital === undefined) p.pagoCapital = 0;
 
-				interes = Number(parseFloat(p.interes + p.pagoInteres).toFixed(2));
-				capital = Number(parseFloat(p.capital + p.pagoCapital).toFixed(2));
+			interes = Number(parseFloat(p.interes + p.pagoInteres).toFixed(2));
+			capital = Number(parseFloat(p.capital + p.pagoCapital).toFixed(2));
 
-				if (p.descripcion == "Cargo Moratorio")
-					rc.pago.cargosMoratorios += Number(parseFloat(p.importeRegular).toFixed(2));
+			if (p.descripcion == "Cargo Moratorio")
+				rc.pago.cargosMoratorios += Number(parseFloat(p.importeRegular).toFixed(2));
 
-				if (p.movimiento == "Recibo") {
-					if (!rc.banderaDescuento)
-						comision = Number(rc.descuento);
-					else
-						comision = calculaBonificacion(p.fechaLimite, configuraciones.arregloComisiones);
+			if (p.movimiento == "Recibo") {
+				if (!rc.banderaDescuento)
+					comision = Number(rc.descuento);
+				else
+					comision = calculaBonificacion(p.fechaLimite, configuraciones.arregloComisiones);
 
-					if (p.tipoCredito == "vale")
-						p.bonificacion = round(Number((capital + interes) * (comision / 100)).toFixed(3), 2);
-					else
-						p.bonificacion = 0;
-
-				}
+				if (p.tipoCredito == "vale")
+					p.bonificacion = round(Number((capital + interes) * (comision / 100)).toFixed(3), 2);
 				else
 					p.bonificacion = 0;
+
+			}
+			else
+				p.bonificacion = 0;
+
+			if (p.pagoSeleccionado) {
+
 
 				rc.pago.totalPago += p.importepagado;
 				rc.pago.bonificacion += Number(parseFloat(p.bonificacion).toFixed(2));
 			}
-			else {
-				p.bonificacion = 0;
-				p.importepagado = 0;
+			else {				
+
+				rc.pago.totalPago -= p.importepagado;
+				rc.pago.bonificacion -= Number(parseFloat(p.bonificacion).toFixed(2));
+				//p.bonificacion = 0;
+				//p.importepagado = 0;
 			}
 			objeto.bonificacion += round(Number(p.bonificacion).toFixed(3), 2);
 
@@ -555,6 +560,7 @@ function PagarValeLiquidarCtrl($scope, $filter, $meteor, $reactive, $state, $sta
 		rc.pago.totalPago = 0;
 		rc.pago.bonificacion = 0;
 		rc.pago.cargosMoratorios = 0;
+		rc.pago.seguro
 
 		if (!pago.pagoSeleccionado) {
 			pago.importepagado = 0;
@@ -1640,29 +1646,29 @@ if (pago.fechaLimite < rc.fechaLimite)
 
 
 
-		        /*
+				/*
 if (pago.descripcion == "Recibo")
-		        		rc.subtotal +=  pago.importeRegular;
-		        else if (pago.descripcion == "Cargo Moratorio")
-		        {
-		        		rc.cargosMoratorios +=  pago.importeRegular;
-		        		//console.log("Entro: CM", pago)
-		        }
-		        pago.folio = pago.credito.folio;
-		        
-		        //console.log(pago.folio);
-		        
-		        if (pago.pagoSeguro !=  undefined)
-							 pago.seguro = pago.seguro -  pago.pagoSeguro;
-						
-						if (pago.pagoIva !=  undefined)
-							 pago.iva = pago.iva -  pago.pagoIva;
-							 
-						if (pago.pagoInteres !=  undefined)
-							 pago.interes = pago.interes -  pago.pagoInteres;
-							 
-						if (pago.pagoCapital !=  undefined)
-							 pago.capital = pago.capital -  pago.pagoCapital;	
+						rc.subtotal +=  pago.importeRegular;
+				else if (pago.descripcion == "Cargo Moratorio")
+				{
+						rc.cargosMoratorios +=  pago.importeRegular;
+						//console.log("Entro: CM", pago)
+				}
+				pago.folio = pago.credito.folio;
+			  
+				//console.log(pago.folio);
+			  
+				if (pago.pagoSeguro !=  undefined)
+					 pago.seguro = pago.seguro -  pago.pagoSeguro;
+				
+				if (pago.pagoIva !=  undefined)
+					 pago.iva = pago.iva -  pago.pagoIva;
+					 
+				if (pago.pagoInteres !=  undefined)
+					 pago.interes = pago.interes -  pago.pagoInteres;
+					 
+				if (pago.pagoCapital !=  undefined)
+					 pago.capital = pago.capital -  pago.pagoCapital;	
 */
 
 

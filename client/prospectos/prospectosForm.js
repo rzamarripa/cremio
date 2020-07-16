@@ -44,6 +44,9 @@ function ProspectosFormCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		objeto.distribuidor_id = Meteor.userId();
 		objeto.sucursal_id = Meteor.user().profile.sucursal_id;
 
+		objeto.apellidoPaterno = objeto.apellidoPaterno == undefined ? "" : objeto.apellidoPaterno;
+		objeto.apellidoMaterno = objeto.apellidoMaterno == undefined ? "" : objeto.apellidoMaterno;
+
 		var nombre = objeto.nombre != undefined ? objeto.nombre.trim() + " " : "";
 		var apPaterno = objeto.apellidoPaterno != undefined ? objeto.apellidoPaterno.trim() + " " : "";
 		var apMaterno = objeto.apellidoMaterno != undefined ? objeto.apellidoMaterno.trim() : "";
@@ -58,17 +61,6 @@ function ProspectosFormCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		objeto.saldoActual = 0;  //Saldo solo Capital
 
 		objeto.fecha = new Date();
-
-		// Prospectos.insert(objeto);
-		// toastr.success('Guardado correctamente.');
-
-		// if (Meteor.user().roles == "Distribuidor")
-		// 	$state.go("root.prospectos");
-		// else
-		// 	$state.go("root.prospectosLista");
-
-		// this.objeto = {};
-		// this.nuevo = true;
 
 		//Validar que no exista el nombre del pospecto
 		Meteor.call('getValidaProspecto', objeto.nombreCompleto, function (e, r) {
@@ -99,6 +91,9 @@ function ProspectosFormCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 			return;
 		}
 
+		objeto.apellidoPaterno = objeto.apellidoPaterno == undefined ? "" : objeto.apellidoPaterno;
+		objeto.apellidoMaterno = objeto.apellidoMaterno == undefined ? "" : objeto.apellidoMaterno;
+
 		var nombre = objeto.nombre != undefined ? objeto.nombre + " " : "";
 		var apPaterno = objeto.apellidoPaterno != undefined ? objeto.apellidoPaterno + " " : "";
 		var apMaterno = objeto.apellidoMaterno != undefined ? objeto.apellidoMaterno : "";
@@ -124,5 +119,38 @@ function ProspectosFormCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 
 		this.nuevo = true;
 	};
+
+	this.validarProspecto = function (objeto) {
+
+		if (objeto.nombre == undefined || objeto.nombre == "" || objeto.apellidoPaterno == undefined || objeto.apellidoPaterno == "") {
+			toastr.warning('Proporcione como mínimo el nombre y primer apellido .');
+			return;
+		}
+
+		objeto.apellidoMaterno = objeto.apellidoMaterno == undefined ? "" : objeto.apellidoMaterno;
+
+		var nombre = objeto.nombre != undefined ? objeto.nombre.trim() + " " : "";
+		var apPaterno = objeto.apellidoPaterno != undefined ? objeto.apellidoPaterno.trim() + " " : "";
+		var apMaterno = objeto.apellidoMaterno != undefined ? objeto.apellidoMaterno.trim() : "";
+		objeto.nombreCompleto = nombre + apPaterno + apMaterno;
+
+		objeto.nombre = getCleanedString(objeto.nombre)
+		objeto.apellidoPaterno = getCleanedString(objeto.apellidoPaterno)
+		objeto.apellidoMaterno = getCleanedString(objeto.apellidoMaterno)
+		objeto.nombreCompleto = getCleanedString(objeto.nombreCompleto);
+
+		//Validar que no exista el nombre del pospecto
+		Meteor.call('getValidaProspecto', objeto.nombreCompleto, function (e, r) {
+			if (!r) {
+				toastr.success('Prospecto disponible.');
+			}
+			else if (r) {
+				customDialog('El Prospecto ya esta dado de alta', function () {
+				});
+				return;
+			}
+		});
+
+	}
 
 };

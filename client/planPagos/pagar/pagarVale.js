@@ -774,7 +774,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 					var selSe = rc.arregloPagosSeguro.find(x => x.numeroCorte === objeto.numeroCorte);
 					selSe.pagado = true;
 
-					console.log("SI:", selSe);
+					//console.log("SI:", selSe);
 					//rc.pago.seguro 	+= selSe.seguro;
 
 
@@ -1177,13 +1177,6 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 				pago.verCargo = !pago.verCargo;
 			}
 
-			/*
-  if (pago.pagoSeleccionado == true && pago.verCargo == false){
-					  pago.pagoSeleccionado = false;
-					  rc.pago.totalPago = rc.pago.totalPago - Number(parseFloat(pago.importepagado).toFixed(2));
-							  pago.importepagado	= 0;
-			}
-  */
 
 			if (pago.verCargo == true) {
 				if (pago.descripcion == "Recibo") {
@@ -1564,7 +1557,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 	}
 
 	this.setClickedRow = function (index) {  //function that sets the value of selectedRow to current index
-		console.log(index);
+		//console.log(index);
 		rc.selectedRow = index;
 	}
 
@@ -1578,7 +1571,7 @@ function PagarValeCtrl($scope, $filter, $meteor, $reactive, $state, $stateParams
 
 			var abonoPagado = Number(parseFloat(rc.pago.pagar / rc.numeroPagosSeleccionados).toFixed(2));
 
-			console.log("Abono:", abonoPagado);
+			//console.log("Abono:", abonoPagado);
 
 			var fecha = new Date();
 			var n = fecha.getDate();
@@ -1801,7 +1794,7 @@ if (pago.descripcion == "Recibo")
 		}
 		else //igual
 		{
-			console.log("Igual");
+			//console.log("Igual");
 
 			rc.pago.totalPago = 0;
 			rc.pago.bonificacion = 0;
@@ -1935,21 +1928,12 @@ if (pago.descripcion == "Recibo")
 				//console.log(rc.descuento);
 				//var dia = new Date();
 
-				/*
-				if (configuraciones != undefined)
-						_.each(configuraciones.arregloComisiones, function(com)
-						{
-								if (dia.getDate() == com.valor1 || dia.getDate() == com.valor2)
-										rc.descuento = com.porcentaje;
-						});
-*/
-
 				$scope.$apply();
 
 				$("#modalActivar").modal('hide');
 			}
 			else if (result == false) {
-				console.log("FAL:", result);
+				//console.log("FAL:", result);
 				toastr.warning("No concide con la clave de desbloqueo")
 			}
 		});

@@ -123,7 +123,7 @@ function PagoSistemaCtrl($scope, $filter, $meteor, $reactive, $state, $statePara
 		  	toastr.warning("No hay nada que cobrar");
 		  	return;
 	  }
-	  console.log(pago);
+	  //console.log(pago);
 	  
 	  //Validar que sea completo el crédito a pagar    
 	  var tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id);

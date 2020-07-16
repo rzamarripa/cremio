@@ -37,7 +37,7 @@ function TicketDistribuidorCtrl($scope, $meteor, $reactive, $state, $stateParams
 
 		rc.fecha = new Date($stateParams.anio, $stateParams.mes, $stateParams.dia);
 		//Mejorar 
-		
+
 		if ($stateParams.diaC == 15) {
 			rc.fechaC = new Date($stateParams.anioC, $stateParams.mesC - 1, $stateParams.diaC);
 			rc.fechaC.setHours(0, 0, 0, 0);
@@ -79,7 +79,7 @@ function TicketDistribuidorCtrl($scope, $meteor, $reactive, $state, $stateParams
 
 		//console.log("FI:", fechaInicial);
 		//console.log("FF:", fechaFinal);
-		
+
 		//console.log("FC:", rc.fechaC);
 		//console.log("CF:", rc.fechaCF);
 
@@ -88,8 +88,15 @@ function TicketDistribuidorCtrl($scope, $meteor, $reactive, $state, $stateParams
 			if (result) {
 				//console.log(result);
 				//console.log(rc.fechaC);
-				//Solo Pintar los del ultimo Corte
-				_.each(result, function (pp) {
+				//Solo Pintar los del ultimo Corte				
+
+				var arreglo = result.sort(function (a, b) {
+					if (a.beneficiario < b.beneficiario) { return -1; }
+					if (a.beneficiario > b.beneficiario) { return 1; }
+					return 0;
+				});
+
+				_.each(arreglo, function (pp) {
 					//console.log("limit3:", pp.fechaLimite);
 					if (pp.fechaLimite > rc.fechaC && pp.fechaLimite < rc.fechaCF)
 						rc.planPagos.push(pp);

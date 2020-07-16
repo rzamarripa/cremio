@@ -48,7 +48,7 @@ angular.module("creditoMio")
 				{
 					
 					var user = Meteor.users.findOne(Meteor.userId());
-					console.log(user.roles[0]);
+					//console.log(user.roles[0]);
 					toastr.success('Actualizado correctamente.');
 					rc.objeto = {}; 
 					if (user.roles[0] == 'Cajero')

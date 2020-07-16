@@ -8,13 +8,33 @@ function BeneficiariosListaCtrl($scope, $meteor, $reactive, $state, toastr) {
 	this.objeto = {};
 	this.buscar = {};
 	this.buscar.nombre = "";
+	this.buscar.distribuidor = "";
 	window.rc = rc;
+
+	this.buscando = false;
 
 	rc.valesBeneficiarios = [];
 	rc.limiteVale = 0;
 
 	this.subscribe('configuraciones', () => {
 		return [{}]
+	});
+
+	this.subscribe('buscarDistribuidor', () => {
+
+		if (this.getReactively("buscar.distribuidor").length > 4) {
+			rc.distribuidores = [];
+			rc.buscando = true;
+			return [{
+				options: { limit: 20 },
+				where: {
+					nombreCompleto: this.getReactively('buscar.distribuidor')
+				}
+			}];
+		}
+		else if (rc.getReactively("buscar.distribuidor").length == 0) {
+			this.buscando = false;
+		}
 	});
 
 	this.subscribe('buscarBeneficiarios', () => {
@@ -39,6 +59,16 @@ function BeneficiariosListaCtrl($scope, $meteor, $reactive, $state, toastr) {
 			if (arreglo != undefined && configuraciones != undefined)
 				rc.limiteVale = configuraciones.limiteVale;
 			return arreglo;
+		},
+		distribuidores: () => {
+			var cli = Meteor.users.find({
+				"profile.nombreCompleto": { '$regex': '.*' + this.getReactively('buscar.distribuidor') || '' + '.*', '$options': 'i' },
+				roles: { $in: ["Distribuidor"] }
+			}, { sort: { "profile.nombreCompleto": 1 } }).fetch();
+
+			if (cli != undefined) {
+				return cli;
+			}
 		},
 	});
 
@@ -98,7 +128,7 @@ function BeneficiariosListaCtrl($scope, $meteor, $reactive, $state, toastr) {
 				return;
 			}
 			else if (result) {
-				
+
 				rc.motivos = result;
 				loading(false);
 				$("#modalBitacoraActivarDesactivar").modal('show');
@@ -107,5 +137,58 @@ function BeneficiariosListaCtrl($scope, $meteor, $reactive, $state, toastr) {
 		});
 	};
 
+	this.mostrarModalCambioDistribuidor = function (id, nombre, distribuidor) {
+
+		//rc.valesBeneficiarios = [];
+		rc.beneficiario_id = id;
+		rc.beneficiarioNombre = nombre;
+		rc.distribuidor = distribuidor;
+		rc.distribuidorCambio = {};
+
+		this.cargarBitacoraDistribuidor();
+		$("#modalCambioDistribuidor").modal('show');
+
+	};
+
+	this.seleccionarDistribuidor = function (distribuidor) {
+		rc.distribuidorCambio = distribuidor;
+	}
+
+	this.cambiarDistribuidor = function (form) {
+		if (form.$invalid) {
+			toastr.error('No ha seleccioando ningun distribuidor');
+			return;
+		}
+
+		Meteor.call('setBitacoraCambioDistribuidor', rc.beneficiario_id, rc.distribuidorCambio, function (error, result) {
+			if (error) {
+				console.log('ERROR :', error);
+				loading(false);
+				return;
+			}
+			else if (result) {
+				toastr.success("Guardado Correctamente");
+				loading(false);
+				rc.cargarBitacoraDistribuidor();
+				//$("#modalCambioDistribuidor").modal('hide');
+			}
+		});
+	};
+
+	this.cargarBitacoraDistribuidor = function () {
+		loading(true);
+		Meteor.call('getBitacoraCambioDistribuidor', rc.beneficiario_id, function (error, result) {
+			if (error) {
+				console.log('ERROR :', error);
+				loading(false);
+				return;
+			}
+			else if (result) {
+				rc.bitacoraDistribuidores = result;
+				loading(false);
+				$scope.$apply();
+			}
+		});
+	}
 
 };

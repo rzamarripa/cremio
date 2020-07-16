@@ -357,63 +357,6 @@ function DistribuidoresFormCtrl($scope, $meteor, $reactive, $state, toastr, $sta
       });
       return imagen
     },
-    /*
-objetoEditar : () => {
-
-      var objeto = Meteor.users.findOne({_id : this.getReactively("objeto_id")});
-      rc.empresa = Empresas.findOne({_id : this.getReactively("empresa_id")});
-
-      if (objeto != undefined)
-      {
-	      	
-          this.referenciasPersonales = [];
-          if ($stateParams.objeto_id != undefined)
-          {
-	          
-              _.each(objeto.profile.referenciasPersonales_ids,function(referenciaPersonal){
-                    Meteor.call('getReferenciaPersonal', referenciaPersonal.referenciaPersonal_id, function(error, result){           
-                          if (result)
-                          {
-
-                              rc.referenciasPersonales.push({_id 							: referenciaPersonal.referenciaPersonal_id,
-                                                             nombre           : result.nombre,
-                                                             apellidoPaterno  : result.apellidoPaterno,
-                                                             apellidoMaterno  : result.apellidoMaterno,
-                                                             direccion        : result.direccion,
-                                                             telefono         : result.telefono,
-                                                             celular         	: result.celular,
-                                                             parentesco       : referenciaPersonal.parentesco,
-                                                             tiempoConocerlo	: referenciaPersonal.tiempoConocerlo,
-                                                             num              : referenciaPersonal.num,
-                                                             nombreCompleto   : result.nombreCompleto,
-                                                             cliente_id       : objeto._id,
-                                                             estatus          : referenciaPersonal.estatus
-                              });
-                              $scope.$apply();    
-                          }
-                    }); 
-              });     
-              
-              
-              //getdocumentos
-              Meteor.call('getDocumentosClientes', rc.objeto_id, function(error,result){
-					      if (result)
-					        {
-					          //ir por los documentos
-					          rc.documents = result;
-					          $scope.$apply();      
-					        }
-					    });
-          }
-
-          rc.objeto = objeto;
-          rc.objeto.confirmpassword = "sinpassword";	
-					rc.objeto.password 				= "sinpassword"; 
-					
-          //return objeto;
-      }  
-    },
-*/
     referenciasPersonalesHelper: () => {
       var rp = ReferenciasPersonales.find({
         nombreCompleto: { '$regex': '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options': 'i' }
@@ -504,7 +447,7 @@ objetoEditar : () => {
       toastr.error('Error al guardar los datos.');
       return;
     }
-    
+
     _.each(objeto, function (item) {
       delete item.$$hashKey;
     })
@@ -529,6 +472,7 @@ objetoEditar : () => {
     objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
     objeto.profile.fechaCreacion = new Date();
     objeto.profile.referenciasPersonales = angular.copy(this.referenciasPersonales);
+
     var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre + " " : "";
     var apPaterno = objeto.profile.apellidoPaterno != undefined ? objeto.profile.apellidoPaterno + " " : "";
     var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
@@ -575,24 +519,6 @@ objetoEditar : () => {
     var apMaterno = objeto.profile.apellidoMaterno != undefined ? objeto.profile.apellidoMaterno : "";
     objeto.profile.nombreCompleto = nombre + apPaterno + apMaterno;
 
-    /*
-var incrementoDecremento = Number(objeto.profile.limiteCredito - rc.oldLimiteCredito).toFixed(2);
-    
-    if (incrementoDecremento > 0)
-    {
-	    	objeto.profile.saldoCredito += Number(incrementoDecremento);
-    }
-    else
-    {
-	    	objeto.profile.saldoCredito += Number(incrementoDecremento);
-    }
-    
-    if (objeto.profile.saldoCredito < 0)
-    {
-	    	toastr.error('No se puede actualizar menor al deuda actual de su crédito.');
-				return;		    		
-    }
-*/
 
     delete objeto.profile.repeatPassword;
 
@@ -603,6 +529,10 @@ var incrementoDecremento = Number(objeto.profile.limiteCredito - rc.oldLimiteCre
     _.each(objeto.profile.avales_ids, function (a) {
       delete a.$$hashKey;
     });
+
+    _.each(this.referenciasPersonales, function (d) {
+      delete d.$$hashKey;
+    })
 
     _.each(objeto.profile.referenciasPersonales_ids, function (rp) {
       delete rp.$$hashKey;
@@ -783,15 +713,20 @@ var incrementoDecremento = Number(objeto.profile.limiteCredito - rc.oldLimiteCre
     delete this.referenciaPersonal["_id"];
   };
 
-  this.quitarReferencia = function (numero) {
+  this.quitarReferencia = function (ref) {
+    var numero = ref.num;
     var rp = this.referenciasPersonales;
-    customConfirm('¿Estás seguro de  quitar la referencia?', function () {
+    customConfirm('¿Estás seguro de  quitar la referencia ' + ref.nombreCompleto + '?', function () {
       pos = functiontofindIndexByKeyValue(rp, "num", numero);
       rp.splice(pos, 1);
       if (rp.length == 0) this.con = 0;
       //reorganiza el consecutivo     
       functiontoOrginiceNum(rp, "num");
       this.referenciasPersonales = rp;
+
+      pos = functiontofindIndexByKeyValue(rc.objeto.profile.referenciasPersonales_ids, "num", numero);
+      rc.objeto.profile.referenciasPersonales_ids.splice(pos, 1);
+      functiontoOrginiceNum(rc.objeto.profile.referenciasPersonales_ids, "num");
 
       //Eliminar del arreglo en la bd 
       Meteor.call('updateReferenciasPersonales', rc.objeto._id, rc.objeto.profile.numeroCliente, this.referenciasPersonales, function (error, result) {

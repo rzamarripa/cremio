@@ -424,11 +424,6 @@ Meteor.methods({
 	},
 	getCreditosLiquidados: function (fechaInicial, fechaFinal, sucursal_id) {
 
-		/*
-					console.log(fechaInicial);
-					console.log(fechaFinal);
-		*/
-
 		var CreditosLiquidados = Creditos.find({ sucursal_id: sucursal_id, fechaLiquidacion: { $gte: fechaInicial, $lte: fechaFinal }, estatus: 5 },
 			{ sort: { fechaLiquidacion: 1 } }).fetch();
 
@@ -469,6 +464,73 @@ Meteor.methods({
 
 	},
 
+	getClientesDistribuidoresActivos: function (sucursal_id) {
+		var resultado = {};
+		resultado.clientes = [];
+		resultado.distribuidor = [];
+
+		var clientes = {};
+		var distribuidores = {};
+
+		var creditos = Creditos.find({ sucursal_id: sucursal_id, "estatus": 4 }).map(function (c) {
+			c.sucursal = Sucursales.findOne(c.sucursal_id).nombreSucursal;
+			var cliente = Meteor.users.findOne({ _id: c.cliente_id }, { fields: { "username": 1, "profile.nombreCompleto": 1, roles: 1 } });
+			var tipo = cliente.roles[0];
+
+			if (tipo == "Cliente") {
+				if (clientes[c.cliente_id] == undefined) {
+					clientes[c.cliente_id] = {};
+					clientes[c.cliente_id].cliente_id = c.cliente_id;
+					clientes[c.cliente_id].numero = cliente.username;
+					clientes[c.cliente_id].nombre = cliente.profile.nombreCompleto;
+					clientes[c.cliente_id].tipo = tipo;
+					clientes[c.cliente_id].creditoPersonal = 1;
+				}
+				else {
+					clientes[c.cliente_id].cliente_id = c.cliente_id;
+					clientes[c.cliente_id].numero = cliente.username;
+					clientes[c.cliente_id].nombre = cliente.profile.nombreCompleto;
+					clientes[c.cliente_id].tipo = tipo;
+					clientes[c.cliente_id].creditoPersonal++;
+				}
+			}
+			else if (tipo == "Distribuidor") {
+
+				if (distribuidores[c.cliente_id] == undefined) {
+					distribuidores[c.cliente_id] = {};
+					distribuidores[c.cliente_id].cliente_id = c.cliente_id;
+					distribuidores[c.cliente_id].numero = cliente.username;
+					distribuidores[c.cliente_id].nombre = cliente.profile.nombreCompleto;
+					distribuidores[c.cliente_id].tipo = tipo;
+					distribuidores[c.cliente_id].vales = 0;
+					distribuidores[c.cliente_id].creditoPersonalDistribuidor = 0;
+					if (c.tipo == "vale")
+						distribuidores[c.cliente_id].vales++;
+					else if (c.tipo == "creditoPersonalDistribuidor")
+						distribuidores[c.cliente_id].creditoPersonalDistribuidor++;
+
+				}
+				else {
+					distribuidores[c.cliente_id].cliente_id = c.cliente_id;
+					distribuidores[c.cliente_id].numero = cliente.username;
+					distribuidores[c.cliente_id].nombre = cliente.profile.nombreCompleto;
+					distribuidores[c.cliente_id].tipo = tipo;
+					if (c.tipo == "vale")
+						distribuidores[c.cliente_id].vales++; 
+					else if (c.tipo == "creditoPersonalDistribuidor")
+						distribuidores[c.cliente_id].creditoPersonalDistribuidor++;
+				}
+
+			}
+
+			return c;
+		});
+		resultado.clientes = _.toArray(clientes);
+		resultado.distribuidores = _.toArray(distribuidores);
+
+		return resultado;
+	},
+
 	getCarteraVencida: function (sucursal_id) {
 
 		//Obtener los clientes y ver si tienen creditos con saldo
@@ -491,13 +553,11 @@ Meteor.methods({
 		totales.suma28Dias = 0;
 		totales.sumaMas28Dias = 0;
 
-
-
-		var clientes = Meteor.users.find({ "profile.sucursal_id": sucursal_id, roles: { $in: ["Cliente"] } }).fetch();
+		var clientes = Meteor.users.find({ "profile.sucursal_id": sucursal_id, roles: { $in: ["Cliente", "Distribuidor"] } }).fetch();
 
 		_.each(clientes, function (cliente) {
 
-			var creditos = Creditos.find({ cliente_id: cliente._id, saldoActual: { $gt: 0 }, estatus: 4 }).fetch();
+			var creditos = Creditos.find({ cliente_id: cliente._id, estatus: 4 }).fetch();
 			var total = 0;
 			var saldo = 0;
 
@@ -627,12 +687,6 @@ Meteor.methods({
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-
-
 				});
 
 				totales.sumaTotal += Number(parseFloat(total).toFixed(2));
@@ -698,6 +752,7 @@ Meteor.methods({
 				});
 
 			pago.cliente = cliente.profile.nombreCompleto;
+			pago.tipoCliente = cliente.roles[0];
 			pago.numero = cliente.profile.numeroCliente != undefined ? cliente.profile.numeroCliente : cliente.profile.numeroDistribuidor;
 
 			//**********************************************************************************************************************************************************
@@ -967,6 +1022,7 @@ Meteor.methods({
 
 
 	},
+
 	ReportesBanco: function (objeto, inicial, final, totalCapital,
 		totalInteres,
 		totalIva,
@@ -1057,12 +1113,12 @@ Meteor.methods({
 				item.movimiento = "V";
 			}
 
-	    	/*
+			/*
 suma += item.pagoCapital
-	      sumaInter += item.pagoInteres
-	      sumaIva += item.pagoIva
-	      sumaSeguro += item.pagoSeguro;
-	      totalcobranza += parseFloat(item.totalPago);
+			sumaInter += item.pagoInteres
+			sumaIva += item.pagoIva
+			sumaSeguro += item.pagoSeguro;
+			totalcobranza += parseFloat(item.totalPago);
 */
 
 			item.fechaPago = moment(item.fechaPago).format("DD-MM-YYYY");
@@ -1173,7 +1229,6 @@ parseFloat(suma).toFixed(2);
 		return res.wait();
 
 	},
-
 
 	ReportesSeguroDistribuidores: function (objeto, inicial, final, totalSeguroDistribuidor) {
 
@@ -1499,6 +1554,8 @@ parseFloat(suma).toFixed(2);
 
 
 	},
+
+
 	ReporteCreditos: function (objeto, inicial, final, totales) {
 
 		//totalSolicitadoVales, totalPagarVales, totalSolicitadoCreditos, totalPagarCreditos, numeroCreditos, numeroVales	
@@ -1654,6 +1711,7 @@ parseFloat(suma).toFixed(2);
 		return res.wait();
 
 	},
+
 	ReporteCreditosLiquidados: function (objeto, inicial, final, totales) {
 
 		var fs = require('fs');
@@ -1812,6 +1870,7 @@ parseFloat(suma).toFixed(2);
 		return res.wait();
 
 	},
+
 
 	report: function (params) {
 		var Docxtemplater = require('docxtemplater');

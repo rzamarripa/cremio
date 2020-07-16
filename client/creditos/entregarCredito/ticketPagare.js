@@ -281,12 +281,7 @@ Meteor.call('getUsuarioId', rc.credito.cliente_id ,function(err, res){
 			
 			var valores = (rc.credito.adeudoInicial).toString().split('.');
 			
-/*
-			console.log(valores);
-			console.log(valores[0]);
-			console.log(valores[1]);
-*/
-			
+
 			rc.centavos = valores[1];
 
 			if (rc.centavos == undefined)

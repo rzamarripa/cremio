@@ -1,74 +1,79 @@
 <!-- Tabla de Visitados Analistas -->
 <!-- <div class="well"> -->
-	<div class="row">
-		<div class="col-sm-3">
-			<div class="form-group">
-				<label for="fecha">Fecha:</label>
-				<input type="date" name="fecha" format="dd-MM-yyyy" class="form-control" ng-model="pver.fechaInicial" 
-				/>
-			</div>
+<div class="row">
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label for="fecha">Fecha:</label>
+			<input type="date" name="fecha" format="dd-MM-yyyy" class="form-control" ng-model="pver.fechaInicial" />
 		</div>
-	</div>		
+	</div>
+</div>
 <!-- </div> -->
 
 <div class="table-responsive">
 	<table class="table table-bordered">
-	<thead>
-		<tr>
-			<th class="text-center" width="5%">No.</th>
-			<th class="text-center" width="10%"><div class="text-center">No. Cliente</div></th>
-			<th ><div class="text-center">Nombre</div></th>
-			<th ><div class="text-center">Verificado</div></th>
-			<th class="text-center" width="10%"><div class="text-center">Fecha Verificación</div></th>
-			<th><div class="text-center">Tipo Verificación</div></th>
-			<th><div class="text-center">Tipo </div></th>
-			<th class="text-center" width="8%"><div class="text-center">Acción</div></th>
-		</tr>
-	</thead>
-	<tbody>
-    <tr ng-repeat="verificacion in pver.verificacionesHechas">
-	    <td class="text-center">{{$index + 1}}</td>
-	    <td>{{verificacion.numeroCliente}}</td>
-	    <td>{{verificacion.nombreCliente}}</td>
-	    <td>{{verificacion.entrevistado}}</td>
-	    <td class="text-center">{{verificacion.fechaVerificacion | date:"dd-MM-yyyy" }} </td>
-	    <td class="text-center">{{verificacion.rolVerificacion}}</td>
-	    <td class="text-center">{{verificacion.tipo}}</td>
-	    <td>
-		    	
-		    	<a href="#" ui-sref="root.verificacion({ id: verificacion.credito_id, 
-							    																  verificacion_id: verificacion._id, 
-								    																tipo: (verificacion.tipo == 'Crédito Personal'?'CP':'V'),
-									    															persona: (verificacion.tipoVerificacion == 'Aval' ? 2 : 1)})" 
-									    class="btn btn-xs btn-labeled btn-info"><i class="fa fa-pencil"></i></a>
-		    	<a href="#" ng-click="pver.imprimirVerificacion(verificacion)" class="btn btn-xs btn-labeled btn-info"><i class="fa fa-print"></i></a>
-		    	
-<!--
-		    	<div class="text-center">
-				    <div class="btn-group">
-						  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						    <span class="caret"></span>
-						    <span class="sr-only">Toggle Dropdown</span>
-						  </button>
-						  <ul class="dropdown-menu dropdown-menu-right text-left">
-							  <li>
-						    		<a ui-sref="root.verificacion({ id: verificacion.credito_id, 
-							    																  verificacion_id: verificacion._id, 
-								    																tipo: (verificacion.tipo == 'Crédito Personal'?'CP':'V'),
-									    															persona: (verificacion.tipoVerificacion == 'Aval' ? 2 : 1)})"><i class="fa fa-pencil"></i> Editar / Ver</a>
-						    </li>
-						    <li>
-						    		<a href="#" ng-click="pver.imprimirVerificacion(verificacion)"><i class="fa fa-print"></i> Imprimir</a>
-						    </li>
-						  </ul>
-						</div>
-			    </div>
--->
-	    </td>
-    </tr>
-	</tbody>
-</table>
-</div>	
+		<thead>
+			<tr>
+				<th class="text-center" width="5%">No.</th>
+				<th class="text-center" width="10%">
+					<div class="text-center">No. Cliente</div>
+				</th>
+				<th>
+					<div class="text-center">Nombre</div>
+				</th>
+				<th>
+					<div class="text-center">Verificado</div>
+				</th>
+				<th class="text-center" width="10%">
+					<div class="text-center">Fecha Verificación</div>
+				</th>
+				<th>
+					<div class="text-center">Tipo Verificación</div>
+				</th>
+				<th>
+					<div class="text-center">Tipo </div>
+				</th>
+				<th class="text-center" width="8%">
+					<div class="text-center">Acción</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="verificacion in pver.verificacionesHechas">
+				<td class="text-center">{{$index + 1}}</td>
+				<td>{{verificacion.numeroCliente}}</td>
+				<td>{{verificacion.nombreCliente}}</td>
+				<td>{{verificacion.entrevistado}}</td>
+				<td class="text-center">{{verificacion.fechaVerificacion | date:"dd-MM-yyyy" }} </td>
+				<td class="text-center">{{verificacion.rolVerificacion}}</td>
+				<td class="text-center">{{verificacion.tipo}}</td>
+				<td>
 
+					<a ng-if="verificacion.tipo == 'Crédito Personal'" href="#" ui-sref="root.verificacion({ id: verificacion.credito_id, 
+							    																  verificacion_id: verificacion._id, 
+								    																tipo: 'CP',
+									    															persona: (verificacion.tipoVerificacion == 'Aval' ? 2 : 1)})"
+						class="btn btn-xs btn-labeled btn-info"><i class="fa fa-pencil"></i></a>
+					<a ng-if="verificacion.tipo == 'Prospecto Crédito Personal'" href="#" ui-sref="root.verificacion({ id: verificacion.cliente_id, 
+																										verificacion_id: verificacion._id, 
+																										tipo: 'PCP',
+																										persona: (verificacion.tipoVerificacion == 'Aval' ? 2 : 1)})"
+						class="btn btn-xs btn-labeled btn-info"><i class="fa fa-pencil"></i></a>
+					<a ng-if="verificacion.tipo == 'Distribuidor'" href="#" ui-sref="root.verificacion({ id: verificacion.cliente_id, 
+																										verificacion_id: verificacion._id, 
+																										tipo: 'V',
+																										persona: (verificacion.tipoVerificacion == 'Aval' ? 2 : 1)})"
+						class="btn btn-xs btn-labeled btn-info"><i class="fa fa-pencil"></i></a>
+					<a ng-if="verificacion.tipo == 'Prospecto Distribuidor'" href="#" ui-sref="root.verificacion({ id: verificacion.cliente_id, 
+																										verificacion_id: verificacion._id, 
+																										tipo: 'PV',
+																										persona: (verificacion.tipoVerificacion == 'Aval' ? 2 : 1)})"
+						class="btn btn-xs btn-labeled btn-info"><i class="fa fa-pencil"></i></a>
+					<a href="#" ng-click="pver.imprimirVerificacion(verificacion)" class="btn btn-xs btn-labeled btn-info"><i
+							class="fa fa-print"></i></a>
 
-		
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -88,7 +88,7 @@ function PanelProspectosCtrl($scope, $meteor, $reactive, $state, toastr) {
 
 			//Validar que no exista el nombre del pospecto
 			Meteor.call('getEstaBeneficiario', objeto.nombreCompleto, function (e, r) {
-				console.log(r);
+				//console.log(r);
 				if (r.estatus) {
 					toastr.warning('Este prospecto ya esta dado de alta con el distribuidor: ' + r.distribuidor);
 				}

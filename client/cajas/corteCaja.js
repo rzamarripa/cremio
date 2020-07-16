@@ -64,7 +64,7 @@ angular.module("creditoMio")
 						return;
 			}
 			
-			console.log(objeto);
+			//console.log(objeto);
 /*
 			Meteor.call ("corteCaja",objeto.cuenta, $stateParams.cajero_id, $stateParams.caja_id,function(error,result){
 		

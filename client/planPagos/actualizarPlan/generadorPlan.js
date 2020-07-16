@@ -1163,15 +1163,26 @@ function ActualizarPlanCtrl($scope, $meteor, $reactive, $state, $stateParams, to
 		this.beneficiario = objeto;
 	};
 
-	$(document).ready(function () {
+	//$(document).ready(function () {
 
 		//Quita el mouse wheels 
-		document.getElementById('capitalSolicitadoCreditoNuevo').onwheel = function () { return false; }
-		document.getElementById('tasa').onwheel = function () { return false; }
-		document.getElementById('meses').onwheel = function () { return false; }
-		document.getElementById('hora').onwheel = function () { return false; }
+		//document.getElementById('capitalSolicitado').onwheel = function () { return false; }
+		// document.getElementById('tasa').onwheel = function () { return false; }
+		// document.getElementById('meses').onwheel = function () { return false; }
+		// document.getElementById('hora').onwheel = function () { return false; }
 
-	});
+	//});
+
+	// disable mousewheel on a input number field when in focus
+	// (to prevent Cromium browsers change the value when scrolling)
+	$('form').on('focus', 'input[type=number]', function (e) {
+		$(this).on('wheel.disableScroll', function (e) {
+			e.preventDefault()
+		})
+	})
+	$('form').on('blur', 'input[type=number]', function (e) {
+		$(this).off('wheel.disableScroll')
+	})
 
 	this.calculaNumeroPagos = function () {
 		rc.numeroPagos = rc.credito.duracionMeses * 2;

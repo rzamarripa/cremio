@@ -751,7 +751,7 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 	}
 
 	this.verPagos = function (pago) {
-		console.log(pago);
+		//console.log(pago);
 		rc.pagoPlanPago = pago.planPagos;
 		rc.pago = pago;
 		//console.log(pago);
@@ -1053,6 +1053,7 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 		$('#myModal').modal('hide');
 		toastr.success('Guardado correctamente.');
 	};
+
 	this.mostrarNotaCobranza = function (objeto) {
 		//console.log("Nota de Cobranza:",objeto)
 		rc.notaCobranza.cliente = objeto.cliente.profile.nombreCompleto;
@@ -1560,7 +1561,6 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 
 				var cortes = _.toArray(objeto.arreglo);
 
-				//var corte = cortes[cortes.length - 1];
 				var corte;
 
 				Number.prototype.format = function (n, x) {
@@ -1587,23 +1587,23 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 					fechaCorteFin = new Date(fecha.getFullYear(), mes, 21);
 				}
 
+
 				//var numeroCorte = corte.numeroCorte;
 				//console.log("Ini 2:", fechaCorteInicio.getTime());
+				var dia = 0;
 				_.each(cortes, function (c) {
 					//console.log("Ini 1:", c.fechaCorteInicio.getTime());
-					if (new Date(c.fechaCorteInicio).getTime() == new Date(fechaCorteInicio).getTime()) {
+					if (new Date(c.fechaCorteInicio).getTime() > dia) {
+						dia = new Date(c.fechaCorteInicio).getTime();
 						numeroCorte = c.numeroCorte;
 						corte = c;
 					}
 				});
 
-
-				/*
-								console.log(fechaCorteInicio);
-								console.log(fechaCorteFin);
-								console.log(numeroCorte);
-				
-				*/
+				// console.log(cortes);
+				// console.log(fechaCorteInicio);
+				// console.log(fechaCorteFin);
+				// console.log(numeroCorte);
 
 				objeto.cliente = result;
 
@@ -1655,9 +1655,14 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 				var arregloComisiones = configuracion.arregloComisiones;
 				var arregloBonificaciones = [0, 0, 0, 0, 0];
 
+				objeto.planPagos = objeto.planPagos.sort(function (a, b) {
+					if (a.beneficiario < b.beneficiario) { return -1; }
+					if (a.beneficiario > b.beneficiario) { return 1; }
+					return 0;
+				});
+
 				_.each(objeto.planPagos, function (pp) {
 					var pago = {};
-
 
 					if (pp.beneficiario != "CRÉDITO PERSONAL" && pp.movimiento != "Cargo Moratorio") {
 
@@ -1872,7 +1877,6 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 
 	this.imprimirRelacionCobro = function (objeto) {
 
-
 		var distribuidor_id = objeto.planPagos[0].cliente_id;
 
 		Meteor.call('getPeople', distribuidor_id, function (error, result) {
@@ -1969,6 +1973,7 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 
 				datos.sumaImporte = '$' + Number(sumaImporte).format(2);
 				datos.sumaCM = '$' + Number(sumaCM).format(2);
+				datos.sumaSeguro = '$' + Number(objeto.seguroDistribuidor).format(2);
 
 				loading(true);
 				Meteor.call('report', {

@@ -215,11 +215,6 @@ function TicketPagoCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr
 				};
 
 				var valores = (rc.pago.totalPago).toString().split('.');
-				/*
-							console.log(valores);
-							console.log(valores[0]);
-							console.log(valores[1]);
-				*/
 
 				rc.pago.centavos = valores[1];
 

@@ -100,10 +100,7 @@ function PromotorasDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stat
 	if ($stateParams.objeto_id == "" && Meteor.user().roles[0] == 'Promotora')
 	{
 			rc.distribuidor_id = Meteor.userId();	
-/*
-			console.log(Meteor.userId());
-			console.log(rc.distribuidor_id);
-*/
+
 	}
 	else if ($stateParams.objeto_id != "")
 	{
@@ -953,7 +950,7 @@ pagosSeguro : () => {
 		var clienteTemp = Meteor.users.findOne({_id : cliente._id});
 		this.cliente.password = clienteTemp.password;
 		this.cliente.repeatPassword = clienteTemp.password;
-		console.log(this.cliente.password)
+		//console.log(this.cliente.password)
 		//document.getElementById("contra").value = this.cliente.password;
 
 		if(form.$invalid){

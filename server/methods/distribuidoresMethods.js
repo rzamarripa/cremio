@@ -36,7 +36,7 @@ Meteor.methods({
 		return result;
 	},
 	getBitacoraLimiteCreditoDistribuidor: function (id) {
-		var arreglo = BitacoraLimitesCredito.find({ distribuidor_id: id }).fetch();
+		var arreglo = BitacoraLimitesCredito.find({ distribuidor_id: id }, { sort: { fecha: -1 } }).fetch();
 		_.each(arreglo, function (b) {
 			var usuario = Meteor.users.findOne(b.usuario_id);
 			b.usuario = usuario.profile.nombre;

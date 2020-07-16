@@ -62,7 +62,6 @@ angular.module("creditoMio")
 	this.nuevo = function()
 	{
 		this.action = !this.action;
-		console.log(this.action)
 		//this.nuevo = !this.nuevo;
 		this.objeto = {};	
 	

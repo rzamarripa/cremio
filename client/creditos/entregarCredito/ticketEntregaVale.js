@@ -274,64 +274,6 @@ function ticketEntregaValeCtrl($scope, $meteor, $reactive,  $state, $stateParams
 		          return Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
 		  };	
 			
-			/*
-
-			var valores = (rc.credito.capitalSolicitado).toString().split('.');
-
-			console.log(valores);
-			console.log(valores[0]);
-			console.log(valores[1]);
-
-			
-			rc.centavos = valores[1];
-			
-			rc.letra = NumeroALetras(valores[0]);
-*/
-			
-			//console.log(rc.pago.letra);
-			/*
-
-			Meteor.call('getCredito', rc.pago.credito_id ,function(err, res){
-				rc.credito = res;
-			});
-				
-			rc.subscribe('cajas',()=>{
-				return[{
-					_id : rc.pago.caja_id? rc.pago.caja_id:""
-				}]
-			},
-			{
-				onReady: function () {
-					rc.caja = Cajas.findOne(rc.pago.caja_id);
-					rc.caja = rc.caja? rc.caja:{};
-				}
-			});
-			
-*/
-			/*
-rc.subscribe('cajeroId',()=>{
-				return[{
-					id: rc.pago.usuarioCobro_id? rc.pago.usuarioCobro_id:""
-				}]
-			},
-			{
-				onReady:()=>{
-					rc.cajero = Meteor.users.findOne(rc.pago.usuarioCobro_id);
-					rc.cajero = rc.cajero? rc.cajero:{};
-				}
-			});
-			rc.subscribe('sucursales',()=>{
-				return[{
-					_id: rc.pago.sucursalPago_id? rc.pago.sucursalPago_id:""
-				}]
-			},
-			{
-				onReady:()=>{
-					rc.sucursal = Sucursales.findOne(rc.pago.sucursalPago_id);
-					rc.sucursal = rc.sucursal? rc.sucursal:{};
-				}
-			});
-*/
 		}
 	});
 

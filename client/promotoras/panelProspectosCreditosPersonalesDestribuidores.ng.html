@@ -1,0 +1,173 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+			Prospectos de Crédito Personal y Distribuidor por Autorizar o Rechazar
+		</h1>
+		<!--
+				<a ng-click="obj.mostrarModalValidaBeneficiario()" class="btn txt-color-white bg-color-blue btn-sm">
+					<i class="fa fa-plus"></i> Validar
+				</a>
+-->
+	</div>
+</div>
+
+<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false"
+  data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false"
+  data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
+  <header role="heading">
+    <!--<h2><strong>Panel de Folios </strong></h2>-->
+    <ul id="widget-tab-1" class="nav nav-tabs pull-left">
+
+      <li class="active">
+        <a data-toggle="tab" href="#hr1" aria-expanded="false"> <i class="fa fa-lg fa-circle-o"></i> <span
+            class="hidden-mobile hidden-tablet"> Prospectos Por Evaluar</span></a>
+      </li>
+
+      <li class="">
+        <a data-toggle="tab" href="#hr2" aria-expanded="false"> <i class="fa fa-lg fa-circle-o"></i> <span
+            class="hidden-mobile hidden-tablet"> Prospectos Evaluados</span></a>
+      </li>
+
+    </ul>
+
+    <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+  </header>
+
+  <!-- widget div-->
+  <div role="content">
+
+    <!-- widget edit box -->
+    <div class="jarviswidget-editbox">
+      <!-- This area used as dropdown edit box -->
+
+    </div>
+    <!-- end widget edit box -->
+
+    <!-- widget content -->
+    <div class="widget-body no-padding">
+
+      <!-- widget body text-->
+
+      <div class="tab-content padding-10">
+
+        <div class="tab-pane fade active in" id="hr1">
+          <div ng-include="'client/promotoras/_prospectosPorEvaluar.html'"></div>
+
+        </div>
+
+        <div class="tab-pane fade" id="hr2">
+          <div ng-include="'client/promotoras/_prospectosEvaluados.html'"></div>
+        </div>
+
+      </div>
+      <!-- end widget body text-->
+
+      <!-- widget footer -->
+      <div class="widget-footer text-right">
+        Panel de Verificadores
+      </div>
+      <!-- end widget footer -->
+
+    </div>
+    <!-- end widget content -->
+
+  </div>
+  <!-- end widget div -->
+
+</div>
+
+<!-- Modal Rechazo -->
+<div class="modal fade" id="modalRechazo" data-backdrop="static" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form name="formCancelar" novalidate>
+				<div class="modal-header">
+					<h4 class="modal-title">Rechazar Prospecto {{obj.objetoRechazar.profile.nombreCompleto}}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12" valida>
+							<label class="pull-left">Motivo del rechazo:</label>
+							<textarea name="cancelar" type="text" rows="3" class="form-control" ng-model="obj.motivo" required=""
+								capitalize></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="submit" ng-click="obj.rechazar(obj.motivo, formCancelar)" value="Aceptar" class="btn btn-success"
+						valida-form formulario="formCancelar">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Verificar -->
+<div class="modal fade" id="modalVerificar" data-backdrop="static" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form name="formVerificar" novalidate>
+				<div class="modal-header">
+					<h4 class="modal-title">Verificación de: {{obj.objetoVerificar.profile.nombreCompleto}}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-4" valida>
+							<label>Fecha Verificación *</label>
+							<input name="fechaVerificacion" type="date" format="dd/MM/yyyy" class="form-control" placeholder="Fecha"
+								ng-model="obj.objetoVerificar.profile.fechaVerificacion" required="">
+						</div>
+						<div class="col-sm-4" valida>
+							<label>Horario *</label>
+							<select name="horario" class="form-control" ng-model="obj.objetoVerificar.profile.turno" required="">
+								<option value="mañana">Mañana</option>
+								<option value="tarde">Tarde</option>
+							</select>
+						</div>
+						<div class="col-sm-4">
+							<label>Hora </label>
+							<input id="hora" name="hora" type="time" class="form-control" ng-model="obj.objetoVerificar.profile.hora">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="submit" ng-click="obj.programarVerificacion(obj.objetoVerificar, formVerificar)" value="Aceptar"
+						class="btn btn-success" valida-form formulario="formVerificar">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- ver valoracion -->
+<div class="container">
+	<!-- Modal -->
+	<div class="modal fade" id="modalValoracion" data-backdrop="static" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<form name="formCancelar" novalidate>
+					<div class="modal-header">
+						<h4 class="modal-title">Valoración</h4>
+					</div>
+					<div class="modal-footer">
+						<div class="row">
+							<div class="col-sm-12">
+								<p style="text-align: justify"> {{obj.valoracion}}</p>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</div>

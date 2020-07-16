@@ -1,0 +1,82 @@
+<div class="row">
+  <div class="col-lg-12">
+    <table class="table table-condensed table-bordered">
+      <thead>
+        <tr>
+          <th style='width: 5%' class="text-center">No.</th>
+          <th style='width: 15%' class="text-center">Promotora/Usuario</th>
+          <th style='width: 15%' class="text-center">Prospecto</th>
+          <th style='width: 10%' class="text-center">Tipo</th>
+          <th style='width: 10%' class="text-center">Fecha</th>
+          <th style='width: 10%' class="text-center">Verificación</th>
+          <th style='width: 10%' class="text-center">Resultado</th>
+          <th style='width: 10%' class="text-center">Valoración</th>
+          <th style='width: 5%' class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="objeto in obj.arreglo">
+          <td class="text-center">{{$index + 1}}</td>
+          <td class="text-center">{{objeto.profile.nombreUsuario}}</td>
+          <td class="text-left">{{objeto.profile.nombreCompleto}}</td>
+          <td class="text-left">{{objeto.profile.tipo}}</td>
+          <td class="text-center">{{objeto.profile.fechaCreacion | date:"dd-MM-yyyy"}}</td>
+          <td class="text-left">
+            <div class="text-center">
+              <span ng-if="objeto.profile.estatus == 2" class="label label-warning">
+                Programada
+              </span>
+              <span ng-if="objeto.profile.estatus ==3" class="label label-success">
+                Verificado
+              </span>
+              <span ng-if="objeto.profile.estatus == 1" class="label label-danger">
+                Sin Verificar
+              </span>
+            </div>
+          </td>
+          <td class="text-left">{{objeto.profile.verificacionEstatus}}</td>
+          <td><a href="#" ng-click="obj.verValoracion(objeto.profile.indicacion)"
+              ng-if="objeto.profile.estaVerificado">Valoración</a></td>
+          <td class="text-center">
+            <div class="text-center">
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right text-left">
+                  <li ng-if="objeto.profile.tipo == 'Cliente Crédito Personal'">
+                    <a href="#" ui-sref="root.prospectosCreditoPersonalEditarForm({objeto_id: objeto._id})"><i
+                        class="fa fa-pencil"></i> Editar</a>
+                  </li>
+                  <li ng-if="objeto.profile.tipo == 'Distribuidor'">
+                    <a href="#" ui-sref="root.prospectosDistribuidorFormEditar({objeto_id: objeto._id})"><i
+                        class="fa fa-pencil"></i> Editar</a>
+                  </li>
+                  <li ng-if="objeto.profile.estatus == 1 || objeto.profile.estatus == 2 "><a href="#"
+                      ng-click="obj.mostrarVerificacion(objeto)"><i class="fa fa-eye"></i> Programar
+                      Verificación</a>
+                  </li>
+                  <li ng-if="objeto.profile.estatus == 3"><a href="#" ng-click="obj.autorizar(objeto)"><i
+                        class="fa fa-check"></i> Autorizar</a>
+                  </li>
+                  <li ng-if="objeto.profile.estatus == 3"><a href="#" ng-click="obj.mostrarRechazo(objeto)"><i
+                        class="fa fa-times"></i>
+                      Rechazar</a>
+                  </li>
+
+                  <li ng-if="objeto.profile.verificacionEstatus == 'Verificación Cancelada' ">
+                    <a href="#" ng-click="obj.volverVerificar(objeto)"><i class="fa fa-mail-forward"></i> Volver a
+                      Verificar</a>
+                  </li>
+
+                </ul>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

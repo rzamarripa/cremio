@@ -26,7 +26,8 @@
             <td align="right">{{mov.pago | currency}}</td>
             <td align="center">{{mov.tipoIngreso}}</td>
             <td>
-	            <a ui-sref="anon.imprimirTicket({pago_id : mov._id})" target="_blank"><i class="fa fa-file-text-o"></i> Ticket</a>
+              <a ui-sref="anon.imprimirTicket({pago_id : mov._id})" target="_blank" ng-if ="mov.tipoCliente == 'Cliente'"><i class="fa fa-file-text-o"></i> Ticket</a>
+              <a ui-sref="anon.imprimirTicketVale({pago_id : mov._id})" target="_blank" ng-if ="mov.tipoCliente == 'Distribuidor'"><i class="fa fa-file-text-o"></i> Ticket</a>
 <!--
             	<div class="btn-group">
 							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

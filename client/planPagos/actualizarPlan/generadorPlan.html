@@ -1,420 +1,454 @@
-
 <div class="row" ng-show="ae.cliente.profile != undefined">
 	<div class="col-sm-12">
 		<div class="well">
 			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-10">
 				<h2 class="alge-title txt-color-blueDark" ng-if="ae.cliente.roles[0] == 'Cliente'">
 					<i class="fa fa-list fa-fw "></i>
-						Actualización del Crédito - <span>{{ae.cliente.profile.nombreCompleto}}</span> 
+					Actualización del Crédito - <span>{{ae.cliente.profile.nombreCompleto}}</span>
 				</h2>
 				<h2 class="alge-title txt-color-blueDark" ng-if="ae.cliente.roles[0] == 'Distribuidor' && ae.op != 1">
 					<i class="fa fa-list fa-fw "></i>
-						Actualización del Vale - <span>{{ae.cliente.profile.nombreCompleto}}</span>
+					Actualización del Vale - <span>{{ae.cliente.profile.nombreCompleto}}</span>
 				</h2>
-				
+
 				<h2 class="alge-title txt-color-blueDark" ng-if="ae.cliente.roles[0] == 'Distribuidor' && ae.op == 1">
 					<i class="fa fa-list fa-fw "></i>
-						Actualización de Crédito Dist. - <span>{{ae.cliente.profile.nombreCompleto}}</span>
+					Actualización de Crédito Dist. - <span>{{ae.cliente.profile.nombreCompleto}}</span>
 				</h2>
-				
+
 			</div>
-			<a ng-if="ae.cliente.roles == 'Cliente'"  ui-sref="root.clienteDetalle({objeto_id: ae.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
-			<a style="margin: 5px;" ng-if="ae.cliente.roles == 'Distribuidor'" ui-sref="root.distribuidoresDetalle({objeto_id : ae.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm pull-right" ><i class="fa fa-user" ></i> Ir a mi perfil</a>&nbsp;
+			<a ng-if="ae.cliente.roles == 'Cliente'" ui-sref="root.clienteDetalle({objeto_id: ae.cliente._id})"
+				class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>
+			<a style="margin: 5px;" ng-if="ae.cliente.roles == 'Distribuidor'"
+				ui-sref="root.distribuidoresDetalle({objeto_id : ae.cliente._id})"
+				class="btn txt-color-white bg-color-teal btn-sm pull-right"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
 			<div class="row">
-				
+
 				<div class="col-sm-12">
 					<form name="formNuevoCredito" class="form-horizontal" role="form" novalidate>
-				  	<div class="well">
-					  	
-					  	<!-- Cliente Credito Personal -->
-					    <div class="row">
-						    <div class="col-sm-4" valida ng-if="ae.cliente.roles == 'Cliente'">
-						    	<label>Tipo de crédito *</label>
-						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="ae.credito.tipoCredito_id" required="">
-							    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in ae.tiposCredito">{{tipoCredito.nombre}}</option>
-						    	</select>
-					    	</div>
-					    	<div class="col-sm-4" valida ng-if="ae.cliente.roles == 'Cliente'">
-							    <label>Tasa %*</label>
-						    	<input id="tasa" name="tasa" type="number" min="0" class="form-control" ng-model="ae.credito.tasa" required>
-						    </div>
-					    	<div class="col-sm-4" valida ng-if="ae.cliente.roles == 'Cliente'">
-						    	<label>Periodo de pago *</label>
-						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ae.credito.periodoPago" required="">
-							    	<option value="Semanal">Semanal</option>
-							    	<option value="Quincenal">Quincenal</option>
-							    	<option value="Mensual">Mensual</option>
-						    	</select>
-					    	</div>									    	
-					    </div>
-					    
-					    <!-- Distribuidor Credito Personal -->
-<!--
-					    <div class="row">
-						    <div class="col-sm-4" valida ng-if="currentUser.roles[0] != 'Distribuidor' && ae.op == 1">
-						    	<label>Tipo de crédito *</label>
-						    	<select name="tipoCreditoNuevo" class="form-control" ng-model="ae.credito.tipoCredito_id" required="">
-							    	<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in ae.tiposCredito">{{tipoCredito.nombre}}</option>
-						    	</select>
-					    	</div>
-					    	<div class="col-sm-4" valida  ng-if="currentUser.roles[0] != 'Distribuidor' && ae.op == 1">
-							    <label>Tasa %*</label>
-						    	<input id="tasa" name="tasa" min="0" type="number" class="form-control" ng-model="ae.credito.tasa" required>
-						    </div>
--->
-<!--
-					    	<div class="col-sm-4" valida ng-if="currentUser.roles[0] != 'Distribuidor' && ae.op == 1">
-						    	<label>Periodo de pago *</label>
-						    	<select name="periodoCreditoNuevo" class="form-control" ng-model="ae.credito.periodoPago" required="">
-							    	<option value="Semanal">Semanal</option>
-							    	<option value="Quincenal">Quincenal</option>
-							    	<option value="Mensual">Mensual</option>
-						    	</select>
-					    	</div>
+						<div class="well">
 
-					    </div>
--->
-					    <!-- Distribuidor Vale -->
-					    <div class="row" ng-if="ae.cliente.roles[0] == 'Distribuidor' && ae.op != 1">
-						    	<div class="col-sm-6">
-												<div ng-include=" 'client/planPagos/generadorPlan/_buscarBeneficiario.html' "></div>
-							    </div>
-							    <div class="col-sm-2" ng-if = "currentUser.roles[0] != 'Distribuidor' && ae.op != 1">					
-								    <a ng-click="ae.mostrarModalBeneficiario(1)" class="btn txt-color-white bg-color-teal btn-sm" >
-											<i class="fa fa-plus"></i> Beneficiario
-										</a>
-							    </div>
-							    <div class="col-sm-2" ng-if = "currentUser.roles[0] != 'Distribuidor' && ae.op != 1">	
-								    <a ng-click="ae.mostrarModalBeneficiario(2)" class="btn txt-color-white bg-color-teal btn-sm" ng-show = "ae.beneficiario.nombreCompleto != undefined" >
-											<i class="fa fa-pencil"></i> Editar
-										</a>
-							    </div>
-							    
-					    </div>
-					    
-					    <div class="row" ng-if="ae.cliente.roles[0] == 'Distribuidor' && ae.op != 1">					    	
-						    	<div class="col-sm-6">
-							    	<label>Nombre del Beneficiado</label>
-							    	<input name="beneficiado" type="text" class="form-control" ng-model="ae.beneficiario.nombreCompleto" disabled="true">					    	
-						    	</div>
-					    </div>  
-					    
-					    <div class="row">
-					    	<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Cliente'">
-						    	<label>Capital Solicitado *</label>
-						    	<input id="capitalSolicitado" name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" ng-model="ae.credito.capitalSolicitado" required="">
-					    	</div>
-					    	
-					    	<div class="col-sm-3" valida ng-if="currentUser.roles[0] != 'Distribuidor' && ae.op == 1">
-						    	<label>Capital Solicitado *</label>
-						    	<input id="capitalSolicitado" name="capitalSolicitadoCreditoNuevo" min="0" type="number" class="form-control" ng-model="ae.credito.capitalSolicitado" required="">
-					    	</div>
-					    	
-					    	<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Distribuidor' && ae.op != 1">
-						    	<label>Capital Solicitado *</label>
-						    	<select name="capitalSolicitadoCreditoNuevoV" class="form-control" ng-model="ae.credito.capitalSolicitado" placeholder="Capital Solicitado" required="">
-							    	<option value="1000">1000</option>
-							    	<option value="1500">1500</option>
-							    	<option value="2000">2000</option>
-							    	<option value="2500">2500</option>
-							    	<option value="3000">3000</option>
-							    	<option value="3500">3500</option>
-							    	<option value="4000">4000</option>
-							    	<option value="4500">4500</option>
-							    	<option value="5000">5000</option>
-							    	<option value="5500">5500</option>
-							    	<option value="6000">6000</option>
-						    	</select>
-					    	</div>
-					    	<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Cliente'">					    
-						    	<label>Duración (Meses) *</label>
-						    	<input id="meses" name="duracionMesesCreditoNuevo" min="1" max="48" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ae.credito.duracionMeses" required="">
-					    	</div>
-					    	
-					    	<div class="col-sm-3" valida ng-if="currentUser.roles[0] != 'Distribuidor' && ae.op == 1">					    
-						    	<label>Duración (Meses) *</label>
-						    	<input id="meses" name="duracionMesesCreditoNuevo" min="1" max="48" type="number" class="form-control" placeholder="Duración en Meses" ng-model="ae.credito.duracionMeses" required="">
-					    	</div>
-					    	
-					    	<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Distribuidor' && ae.op != 1">
-						    	<label>Duración (Meses) *</label>
-						    	<select name="duracionMesesCreditoNuevo" class="form-control" ng-model="ae.credito.duracionMeses" ng-change="ae.calculaNumeroPagos()" required="">
-							    	<option value="3">3</option>
-							    	<option value="4">4</option>
-							    	<option value="5">5</option>
-							    	<option value="6">6</option>
-							    	<option value="7">7</option>
-							    	<option value="8">8</option>
-						    	</select>
-					    	</div>
-								<div class="col-sm-2" ng-if="ae.cliente.roles == 'Distribuidor' && ae.op != 1">		    
-						    	<label>Número de Pagos</label>
-						    	<input style="text-align: center" type="number" min="0" class="form-control" ng-model="ae.numeroPagos" ng-disabled = "true">
-					    	</div>
-					    	<div class="col-sm-2">					    
-						    	<label>Con Seguro</label>
-						    	<input name="conSeguro" type="checkbox" min="0" class="form-control" ng-model="ae.credito.conSeguro" ng-disabled = "currentUser.roles[0] == 'Distribuidor'">
-					    	</div>	
-					    	<div class="col-sm-2" ng-if = "ae.credito.conSeguro" valida>
-							    <label>Importe seguro *</label>
-						    	<input name="seguro" type="number" min="0" class="form-control" placeholder="Seguro" ng-model="ae.credito.seguro" ng-disabled = "currentUser.roles[0] == 'Distribuidor'" required >
-						    </div>		
-					    </div>
-					    
-					    
-					    <div class="row" ng-if="ae.cliente.roles[0] == 'Cliente'">
-								<div class="col-sm-2">					    
-						    	<label>Requiere Verificación</label>
-						    	<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control" ng-model="ae.credito.requiereVerificacion">
-					    	</div>
-					    	<div class="col-sm-2" valida>
-						    	<label>Fecha Verificación</label>
-						    	<input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="ae.credito.fechaVerificacion" ng-disabled="!ae.credito.requiereVerificacion" />
-					    	</div>
+							<!-- Cliente Credito Personal -->
+							<div class="row">
+								<div class="col-sm-4" valida ng-if="ae.cliente.roles == 'Cliente'">
+									<label>Tipo de crédito *</label>
+									<select name="tipoCreditoNuevo" class="form-control" ng-model="ae.credito.tipoCredito_id" required="">
+										<option value="{{tipoCredito._id}}" ng-repeat="tipoCredito in ae.tiposCredito">
+											{{tipoCredito.nombre}}</option>
+									</select>
+								</div>
+								<div class="col-sm-4" valida ng-if="ae.cliente.roles == 'Cliente'">
+									<label>Tasa %*</label>
+									<input id="tasa" name="tasa" type="number" min="0" class="form-control" ng-model="ae.credito.tasa"
+										required>
+								</div>
+								<div class="col-sm-4" valida ng-if="ae.cliente.roles == 'Cliente'">
+									<label>Periodo de pago *</label>
+									<select name="periodoCreditoNuevo" class="form-control" ng-model="ae.credito.periodoPago" required="">
+										<option value="Semanal">Semanal</option>
+										<option value="Quincenal">Quincenal</option>
+										<option value="Mensual">Mensual</option>
+									</select>
+								</div>
+							</div>
+
+							<!-- Distribuidor Vale -->
+							<div class="row" ng-if="ae.cliente.roles[0] == 'Distribuidor' && ae.op != 1">
+								<div class="col-sm-6">
+									<div ng-include=" 'client/planPagos/generadorPlan/_buscarBeneficiario.html' "></div>
+								</div>
+								<div class="col-sm-2" ng-if="currentUser.roles[0] != 'Distribuidor' && ae.op != 1">
+									<a ng-click="ae.mostrarModalBeneficiario(1)" class="btn txt-color-white bg-color-teal btn-sm">
+										<i class="fa fa-plus"></i> Beneficiario
+									</a>
+								</div>
+								<div class="col-sm-2" ng-if="currentUser.roles[0] != 'Distribuidor' && ae.op != 1">
+									<a ng-click="ae.mostrarModalBeneficiario(2)" class="btn txt-color-white bg-color-teal btn-sm"
+										ng-show="ae.beneficiario.nombreCompleto != undefined">
+										<i class="fa fa-pencil"></i> Editar
+									</a>
+								</div>
+
+							</div>
+
+							<div class="row" ng-if="ae.cliente.roles[0] == 'Distribuidor' && ae.op != 1">
+								<div class="col-sm-6">
+									<label>Nombre del Beneficiado</label>
+									<input name="beneficiado" type="text" class="form-control" ng-model="ae.beneficiario.nombreCompleto"
+										disabled="true">
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Cliente'">
+									<label>Capital Solicitado *</label>
+									<input id="capitalSolicitado" name="capitalSolicitado" min="0" type="number" class="form-control"
+										ng-model="ae.credito.capitalSolicitado" required="">
+								</div>
+
+								<div class="col-sm-3" valida ng-if="currentUser.roles[0] != 'Distribuidor' && ae.op == 1">
+									<label>Capital Solicitado *</label>
+									<input id="capitalSolicitado" name="capitalSolicitado" min="0" type="number" class="form-control"
+										ng-model="ae.credito.capitalSolicitado" required="">
+								</div>
+
+								<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Distribuidor' && ae.op != 1">
+									<label>Capital Solicitado *</label>
+									<select name="capitalSolicitadoCreditoNuevoV" class="form-control"
+										ng-model="ae.credito.capitalSolicitado" placeholder="Capital Solicitado" required="">
+										<option value="1000">1000</option>
+										<option value="1500">1500</option>
+										<option value="2000">2000</option>
+										<option value="2500">2500</option>
+										<option value="3000">3000</option>
+										<option value="3500">3500</option>
+										<option value="4000">4000</option>
+										<option value="4500">4500</option>
+										<option value="5000">5000</option>
+										<option value="5500">5500</option>
+										<option value="6000">6000</option>
+									</select>
+								</div>
+								
+								<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Cliente'">
+									<label>Duración (Meses) *</label>
+									<input id="meses" name="meses" min="1" max="48" type="number" class="form-control"
+										placeholder="Duración en Meses" ng-model="ae.credito.duracionMeses" required="">
+								</div>
+
+								<div class="col-sm-3" valida ng-if="currentUser.roles[0] != 'Distribuidor' && ae.op == 1">
+									<label>Duración (Meses) *</label>
+									<input id="meses" name="meses" min="1" max="48" type="number" class="form-control"
+										placeholder="Duración en Meses" ng-model="ae.credito.duracionMeses" required="">
+								</div>
+
+								<div class="col-sm-3" valida ng-if="ae.cliente.roles == 'Distribuidor' && ae.op != 1">
+									<label>Duración (Meses) *</label>
+									<select name="duracionMesesCreditoNuevo" class="form-control" ng-model="ae.credito.duracionMeses"
+										ng-change="ae.calculaNumeroPagos()" required="">
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+									</select>
+								</div>
+								<div class="col-sm-2" ng-if="ae.cliente.roles == 'Distribuidor' && ae.op != 1">
+									<label>Número de Pagos</label>
+									<input style="text-align: center" type="number" min="0" class="form-control" ng-model="ae.numeroPagos"
+										ng-disabled="true">
+								</div>
+								<div class="col-sm-2">
+									<label>Con Seguro</label>
+									<input name="conSeguro" type="checkbox" min="0" class="form-control" ng-model="ae.credito.conSeguro"
+										ng-disabled="currentUser.roles[0] == 'Distribuidor'">
+								</div>
+								<div class="col-sm-2" ng-if="ae.credito.conSeguro" valida>
+									<label>Importe seguro *</label>
+									<input id="seguro" name="seguro" type="number" min="0" class="form-control" placeholder="Seguro"
+										ng-model="ae.credito.seguro" ng-disabled="currentUser.roles[0] == 'Distribuidor'" required>
+								</div>
+							</div>
+
+
+							<div class="row" ng-if="ae.cliente.roles[0] == 'Cliente'">
+								<div class="col-sm-2">
+									<label>Requiere Verificación</label>
+									<input name="requiereVerificacionCreditoNuevo" type="checkbox" class="form-control"
+										ng-model="ae.credito.requiereVerificacion">
+								</div>
 								<div class="col-sm-2" valida>
-						    	<label>Horario</label>
-						    	<select name="horario" class="form-control" ng-model="ae.credito.turno" ng-disabled="!ae.credito.requiereVerificacion">
-							    	<option value="mañana">Mañana</option>
-							    	<option value="tarde">Tarde</option>
-						    	</select>
-					    	</div>
-					    	<div class="col-sm-2">
-						    	<label>Hora </label>	
-						    	<input id="hora" name="hora" type="time" class="form-control" ng-model="ae.credito.hora" ng-disabled="!ae.credito.requiereVerificacion">	
-					    	</div>
+									<label>Fecha Verificación</label>
+									<input name="fechaVerificacion" date-time format="dd-MM-yyyy" class="form-control" view="date"
+										max-view="year" min-view="date" ng-model="ae.credito.fechaVerificacion"
+										ng-disabled="!ae.credito.requiereVerificacion" />
+								</div>
+								<div class="col-sm-2" valida>
+									<label>Horario</label>
+									<select name="horario" class="form-control" ng-model="ae.credito.turno"
+										ng-disabled="!ae.credito.requiereVerificacion">
+										<option value="mañana">Mañana</option>
+										<option value="tarde">Tarde</option>
+									</select>
+								</div>
+								<div class="col-sm-2">
+									<label>Hora </label>
+									<input id="hora" name="hora" type="time" class="form-control" ng-model="ae.credito.hora"
+										ng-disabled="!ae.credito.requiereVerificacion">
+								</div>
+							</div>
 						</div>
-						</div>
-						
+
 						<div role="content" ng-if="ae.cliente.roles[0] == 'Cliente'">
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-									</div>
-									<!-- end widget edit box -->
-				
-									<!-- widget content -->
-									<div class="widget-body">
+							<!-- widget edit box -->
+							<div class="jarviswidget-editbox">
+							</div>
+							<!-- end widget edit box -->
 
-										<hr class="simple">
-										<ul id="myTab1" class="nav nav-tabs bordered">
-											<li class="active">
-												<a href="#s1" data-toggle="tab" aria-expanded="true">Avales</a>
-											</li>
-											<li class="">
-												<a href="#s2" data-toggle="tab" aria-expanded="false">Garantias</a>
-											</li>
-										</ul>
-				
-										<div id="myTabContent1" class="tab-content padding-10">
-											<div class="tab-pane fade active in" id="s1">
-												<p>
-														<div class="row">
-															<div class="col-sm-6"> 
-																	<div ng-include=" 'client/planPagos/actualizarPlan/_buscarAval.html' "></div>
-															</div>
-															<div class="col-sm-3">
-																<section>
-																	<label class="checkbox">
-																		<input type="checkbox" name="requiereVerificacionAval" ng-model="ae.credito.requiereVerificacionAval" ng-disabled="!ae.credito.requiereVerificacion">
-																		Requiere Verificación Aval
-																	</label>
-																</section>
-															</div>
-														</div>
-												    <div class="row">
-												    	<div class="col-sm-4"> 					    
-													    	<label>Nombre</label>
-													    	<input name="nombreAval" type="text" class="form-control" placeholder="Nombre" ng-model="ae.aval.nombre" disabled="true">
-												    	</div>
-												    	<div class="col-sm-4"> 					    
-													    	<label>Apellido Paterno</label>
-													    	<input name="apellidoPaternoAval" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ae.aval.apellidoPaterno" disabled="true">
-												    	</div>
-												    	<div class="col-sm-4"> 					    
-													    	<label>Apellido Materno</label>
-													    	<input name="apellidoMaternoAval" type="text" class="form-control" placeholder="Apellido Materno" ng-model="ae.aval.apellidoMaterno" disabled="true">
-												    	</div>
-												    </div>
-												    <div class="row">	
-													    <div class="col-sm-4">					    
-													    	<label>Calle</label>
-													    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ae.aval.calle" capitalize>
-												    	</div>
-												    	<div class="col-sm-2">					    
-													    	<label>Número</label>
-													    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ae.aval.numero" capitalize>
-												    	</div>
-												    	<div class="col-sm-2">					    
-													    	<label>Código Postal</label>
-													    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ae.aval.codigoPostal" >
-												    	</div>
-													    
-													    <div class="col-sm-4"> 					    
-														    <label for="estadocivil">Estado Civil *</label>					
-																<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="ae.aval.estadoCivil_id" >
-																	<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in ae.estadosCiviles">
-																		{{estadoCivil.nombre}}
-																	</option>
-																</select>
-												    	</div>
-												    </div>
-												    <div class="row">		
-													    <div class="col-sm-3"> 				
-														    <label>Ocupación</label>
-									              <select ng-options="ocupacion._id as ocupacion.nombre for ocupacion in ae.ocupaciones" 
-									             					ng-model="ae.aval.ocupacion_id" class="js-example-basic-single js-states form-control" 
-										             				placeholder="Seleccione" style="width: 200px;" >
-										            </select>	    
-												    	</div>
-												    	<div class="col-sm-3">					    
-													    	<label>Empresa</label>
-													    	<input name="empresa" type="text" class="form-control" placeholder="Empresa" ng-model="ae.aval.empresa" disabled="true">
-												    	</div>
-												    	<div class="col-sm-3">					    
-													    	<label>Puesto</label>
-													    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ae.aval.puesto" capitalize>
-												    	</div>					    	
-												    	<div class="col-sm-3">					    
-													    	<label>Tiempo Laborando</label>
-													    	<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando" ng-model="ae.aval.tiempoLaborando" capitalize>
-												    	</div>
-												    </div>
-												    <div class="row">	
-													    <div class="col-sm-4">					    
-													    	<label>Calle</label>
-													    	<input name="calle" type="text" class="form-control" placeholder="Calle" ng-model="ae.aval.calleEmpresa" capitalize>
-												    	</div>
-												    	<div class="col-sm-2">					    
-													    	<label>Número</label>
-													    	<input name="numero" type="text" class="form-control" placeholder="Número" ng-model="ae.aval.numeroEmpresa" capitalize>
-												    	</div>
-												    	<div class="col-sm-2">					    
-													    	<label>Código Postal</label>
-													    	<input name="codigoPostal" min="0" type="number" class="form-control" placeholder="Código Postal" ng-model="ae.aval.codigoPostalEmpresa" >
-												    	</div>
-												    	<div class="col-sm-2">					    
-													    	<label>Parentesco</label>
-													    	<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="ae.aval.parentesco" capitalize>
-												    	</div>
-												    	<div class="col-sm-2">					    
-													    	<label>T. Conocerlo</label>
-													    	<input name="tiempoConocerlo" type="text" class="form-control" placeholder="Tiempo en Conocerlo" ng-model="ae.aval.tiempoConocerlo" capitalize>
-												    	</div>
-												    </div>
-												    <div class="row">		
-												    	<div class="col-sm-3">
-														   	<input type="button" ng-click="ae.insertarAval()" value="Agregar" ng-show="ae.actionAval" class="btn btn-primary"> 	
-														   	<input type="button" ng-click="ae.borrarReferencia()" value="Quitar Aval" ng-show="ae.aval._id" class="btn btn-warning">
-														   	<input type="button" ng-click="ae.actualizarAval(ae.aval)" value="Actualizar" ng-show="!ae.actionAval" class="btn btn-primary">
-														   	<input type="button" ng-click="ae.cancelarAval()" value="Cancelar" ng-show="!ae.actionAval" class="btn btn-danger">	   				
-															</div>
-												    </div>
-												    <br/>
-												    <div class="row">
-															<div class="col-sm-12">
-																<table class="table table-bordered">
-																	<thead>
-																		<tr>
-																			<th width="5%">Número</th>
-																			<th width="15%">Nombre</th>
-																			<th width="10%">Parentesco</th>
-																			<th width="10%">Tiempo Conocerlo</th>
-																			<th width="10%">Acciones</th>
-																		</tr>
-																	</thead>
-																	<tbody>
-																		<tr ng-repeat="aval in ae.avales">
-																			<td>{{aval.num}}</td>
-																			<td>{{aval.nombreCompleto}}</td>
-																			<td>{{aval.parentesco}}</td>
-																			<td>{{aval.tiempoConocerlo}}</td>
-																			<td>
-																					<a href="#" class="btn btn-primary" ng-click="ae.verAval(aval)"><i class="fa fa-eye"></i></a>
-																					<a href="#" class="btn btn-warning" ng-click="ae.editarAval(aval)"><i class="fa fa-pencil"></i></a>
-																					<a href="#" class="btn btn-danger" ng-click="ae.quitarAval(aval.num, aval)"><i class="fa fa-trash"></i></a>
-																			</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</div>
-														
-												</p>
+							<!-- widget content -->
+							<div class="widget-body">
+
+								<hr class="simple">
+								<ul id="myTab1" class="nav nav-tabs bordered">
+									<li class="active">
+										<a href="#s1" data-toggle="tab" aria-expanded="true">Avales</a>
+									</li>
+									<li class="">
+										<a href="#s2" data-toggle="tab" aria-expanded="false">Garantias</a>
+									</li>
+								</ul>
+
+								<div id="myTabContent1" class="tab-content padding-10">
+									<div class="tab-pane fade active in" id="s1">
+										<p>
+											<div class="row">
+												<div class="col-sm-6">
+													<div ng-include=" 'client/planPagos/actualizarPlan/_buscarAval.html' "></div>
+												</div>
+												<div class="col-sm-3">
+													<section>
+														<label class="checkbox">
+															<input type="checkbox" name="requiereVerificacionAval"
+																ng-model="ae.credito.requiereVerificacionAval"
+																ng-disabled="!ae.credito.requiereVerificacion">
+															Requiere Verificación Aval
+														</label>
+													</section>
+												</div>
 											</div>
-											<div class="tab-pane fade" id="s2">
-												<p>
-														<div class="well" ng-if="ae.cliente.roles == 'Cliente'">	    
-															<div class="row">
-																<div class="col-sm-4" valida>
-															    	<label>Tipo de garantía</label>
-															    	<select name="horario" class="form-control" ng-model="ae.credito.tipoGarantia">
-																    	<option value="general">General o inmobiliaria</option>
-																    	<option value="mobiliaria">Mobiliaria</option>
-															    	</select>
-														    </div>
-														    <div class="col-sm-4" ng-if = "ae.credito.tipoGarantia != undefined">
-															    	<br> 
-															    	<a href="#" class="btn btn-primary" ng-click="ae.mostrarRespaldos(ae.credito.tipoGarantia)"><i class="fa fa-copy"></i> Copiar Respaldos</a>
-														    </div> 
-															</div>
-															
-															<div  ng-if="ae.credito.tipoGarantia == 'mobiliaria'">
-																<br>
-																<h4>Comisiones</h4>
-																<div class="row">
-																	<div class="col-sm-3">
-																		<label>Almacenaje</label>
-															    	<input name="almacenaje" type="number" class="form-control" placeholder="Almacenaje" ng-model="ae.garantia.almacenaje">
-																	</div>
-																	<div class="col-sm-3">
-																		<label>Comercialización</label>
-															    	<input name="comercializacion" type="number" class="form-control" placeholder="Comercialización" ng-model="ae.garantia.comercializacion">
-																	</div>
-																	<div class="col-sm-3">
-																		<label>Desempeño Extemporaneo</label>
-															    	<input name="desempenioExtemporaneo" type="number" class="form-control" placeholder="Desempeño Extemporaneo" ng-model="ae.garantia.desempenioExtemporaneo">
-																	</div>
-																	<div class="col-sm-3">
-																		<label>Reposición de Contrato</label>
-															    	<input name="reposicionContrato" type="number" class="form-control" placeholder="Reposición de Contrato" ng-model="ae.garantia.reposicionContrato">
-																	</div>
-																</div>
-														    <div class="row">
-														    	<div class="col-sm-6"> 					    
-															    	<label>Descripción Generica</label>
-															    	<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN" ng-model="ae.garantia.descripcion" capitalize>
-														    	</div>
-														    	<div class="col-sm-6"> 					    
-															    	<label>Características	</label>
-															    	<input name="caracteristicas" type="text" class="form-control" placeholder="Caracteristicas" ng-model="ae.garantia.caracteristicas" capitalize>
-														    	</div>
-														    </div>
-														    <div class="row">	
-															    <div class="col-sm-2"> 					    
-															    	<label>Avalúo</label>
-															    	<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO" ng-model="ae.garantia.avaluoMobiliaria" ng-change="ae.calcularPorcentajeMobiliaria()">
-														    	</div>
-														    	 <div class="col-sm-4">					    
-															    	<label>Porcentaje del prestamo sobre el avalúo</label>
-															    	<input name="porcentajePrestamo" type="number" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ae.garantia.porcentajePrestamoMobiliria" disabled="true">
-														    	</div>
-														    </div>
-														    <div class="row">		<br/>
-														    	<div class="col-sm-3">
-																   	<input type="button" ng-click="ae.insertarGarantia(ae.credito.tipoGarantia)" value="Agregar" ng-show="ae.actionGarantia" class="btn btn-primary"> 	
-																   	<input type="button" ng-click="ae.actualizarGarantia(ae.credito.tipoGarantia, ae.garantia)" value="Actualizar" ng-show="!ae.actionGarantia" class="btn btn-primary">
-																   	<input type="button" ng-click="ae.cancelarGarantia(ae.credito.tipoGarantia)" value="Cancelar" ng-show="!ae.actionGarantia" class="btn btn-danger">	   				
-																	</div>
-														    </div>
-														    <br/>
-														    <div class="row">
-																	<div class="col-sm-12">
-																		<table class="table table-bordered">
-																			<thead>
+											<div class="row">
+												<div class="col-sm-4">
+													<label>Nombre</label>
+													<input name="nombreAval" type="text" class="form-control" placeholder="Nombre"
+														ng-model="ae.aval.nombre" disabled="true">
+												</div>
+												<div class="col-sm-4">
+													<label>Apellido Paterno</label>
+													<input name="apellidoPaternoAval" type="text" class="form-control"
+														placeholder="Apellido Paterno" ng-model="ae.aval.apellidoPaterno" disabled="true">
+												</div>
+												<div class="col-sm-4">
+													<label>Apellido Materno</label>
+													<input name="apellidoMaternoAval" type="text" class="form-control"
+														placeholder="Apellido Materno" ng-model="ae.aval.apellidoMaterno" disabled="true">
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-4">
+													<label>Calle</label>
+													<input name="calle" type="text" class="form-control" placeholder="Calle"
+														ng-model="ae.aval.calle" capitalize>
+												</div>
+												<div class="col-sm-2">
+													<label>Número</label>
+													<input name="numero" type="text" class="form-control" placeholder="Número"
+														ng-model="ae.aval.numero" capitalize>
+												</div>
+												<div class="col-sm-2">
+													<label>Código Postal</label>
+													<input name="codigoPostal" min="0" type="number" class="form-control"
+														placeholder="Código Postal" ng-model="ae.aval.codigoPostal">
+												</div>
 
-																				<tr>
-																					<th width="5%">Número</th>
-																					<th width="15%">Descripción genérica</th>
-																				<!-- 	<th width="15%">Características</th>
+												<div class="col-sm-4">
+													<label for="estadocivil">Estado Civil *</label>
+													<select name="estadocivil" class="form-control select2" placeholder="Seleccione"
+														ng-model="ae.aval.estadoCivil_id">
+														<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in ae.estadosCiviles">
+															{{estadoCivil.nombre}}
+														</option>
+													</select>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-3">
+													<label>Ocupación</label>
+													<select ng-options="ocupacion._id as ocupacion.nombre for ocupacion in ae.ocupaciones"
+														ng-model="ae.aval.ocupacion_id" class="js-example-basic-single js-states form-control"
+														placeholder="Seleccione" style="width: 200px;">
+													</select>
+												</div>
+												<div class="col-sm-3">
+													<label>Empresa</label>
+													<input name="empresa" type="text" class="form-control" placeholder="Empresa"
+														ng-model="ae.aval.empresa" disabled="true">
+												</div>
+												<div class="col-sm-3">
+													<label>Puesto</label>
+													<input name="puesto" type="text" class="form-control" placeholder="Puesto"
+														ng-model="ae.aval.puesto" capitalize>
+												</div>
+												<div class="col-sm-3">
+													<label>Tiempo Laborando</label>
+													<input name="tiempoLaborando" type="text" class="form-control" placeholder="Tiempo Laborando"
+														ng-model="ae.aval.tiempoLaborando" capitalize>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-4">
+													<label>Calle</label>
+													<input name="calle" type="text" class="form-control" placeholder="Calle"
+														ng-model="ae.aval.calleEmpresa" capitalize>
+												</div>
+												<div class="col-sm-2">
+													<label>Número</label>
+													<input name="numero" type="text" class="form-control" placeholder="Número"
+														ng-model="ae.aval.numeroEmpresa" capitalize>
+												</div>
+												<div class="col-sm-2">
+													<label>Código Postal</label>
+													<input name="codigoPostal" min="0" type="number" class="form-control"
+														placeholder="Código Postal" ng-model="ae.aval.codigoPostalEmpresa">
+												</div>
+												<div class="col-sm-2">
+													<label>Parentesco</label>
+													<input name="parentesco" type="text" class="form-control" placeholder="Parentesco"
+														ng-model="ae.aval.parentesco" capitalize>
+												</div>
+												<div class="col-sm-2">
+													<label>T. Conocerlo</label>
+													<input name="tiempoConocerlo" type="text" class="form-control"
+														placeholder="Tiempo en Conocerlo" ng-model="ae.aval.tiempoConocerlo" capitalize>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-3">
+													<input type="button" ng-click="ae.insertarAval()" value="Agregar" ng-show="ae.actionAval"
+														class="btn btn-primary">
+													<input type="button" ng-click="ae.borrarReferencia()" value="Quitar Aval"
+														ng-show="ae.aval._id" class="btn btn-warning">
+													<input type="button" ng-click="ae.actualizarAval(ae.aval)" value="Actualizar"
+														ng-show="!ae.actionAval" class="btn btn-primary">
+													<input type="button" ng-click="ae.cancelarAval()" value="Cancelar" ng-show="!ae.actionAval"
+														class="btn btn-danger">
+												</div>
+											</div>
+											<br />
+											<div class="row">
+												<div class="col-sm-12">
+													<table class="table table-bordered">
+														<thead>
+															<tr>
+																<th width="5%">Número</th>
+																<th width="15%">Nombre</th>
+																<th width="10%">Parentesco</th>
+																<th width="10%">Tiempo Conocerlo</th>
+																<th width="10%">Acciones</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="aval in ae.avales">
+																<td>{{aval.num}}</td>
+																<td>{{aval.nombreCompleto}}</td>
+																<td>{{aval.parentesco}}</td>
+																<td>{{aval.tiempoConocerlo}}</td>
+																<td>
+																	<a href="#" class="btn btn-primary" ng-click="ae.verAval(aval)"><i
+																			class="fa fa-eye"></i></a>
+																	<a href="#" class="btn btn-warning" ng-click="ae.editarAval(aval)"><i
+																			class="fa fa-pencil"></i></a>
+																	<a href="#" class="btn btn-danger" ng-click="ae.quitarAval(aval.num, aval)"><i
+																			class="fa fa-trash"></i></a>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+
+										</p>
+									</div>
+									<div class="tab-pane fade" id="s2">
+										<p>
+											<div class="well" ng-if="ae.cliente.roles == 'Cliente'">
+												<div class="row">
+													<div class="col-sm-4" valida>
+														<label>Tipo de garantía</label>
+														<select name="horario" class="form-control" ng-model="ae.credito.tipoGarantia">
+															<option value="general">General o inmobiliaria</option>
+															<option value="mobiliaria">Mobiliaria</option>
+														</select>
+													</div>
+													<div class="col-sm-4" ng-if="ae.credito.tipoGarantia != undefined">
+														<br>
+														<a href="#" class="btn btn-primary"
+															ng-click="ae.mostrarRespaldos(ae.credito.tipoGarantia)"><i class="fa fa-copy"></i> Copiar
+															Respaldos</a>
+													</div>
+												</div>
+
+												<div ng-if="ae.credito.tipoGarantia == 'mobiliaria'">
+													<br>
+													<h4>Comisiones</h4>
+													<div class="row">
+														<div class="col-sm-3">
+															<label>Almacenaje</label>
+															<input name="almacenaje" type="number" class="form-control" placeholder="Almacenaje"
+																ng-model="ae.garantia.almacenaje">
+														</div>
+														<div class="col-sm-3">
+															<label>Comercialización</label>
+															<input name="comercializacion" type="number" class="form-control"
+																placeholder="Comercialización" ng-model="ae.garantia.comercializacion">
+														</div>
+														<div class="col-sm-3">
+															<label>Desempeño Extemporaneo</label>
+															<input name="desempenioExtemporaneo" type="number" class="form-control"
+																placeholder="Desempeño Extemporaneo" ng-model="ae.garantia.desempenioExtemporaneo">
+														</div>
+														<div class="col-sm-3">
+															<label>Reposición de Contrato</label>
+															<input name="reposicionContrato" type="number" class="form-control"
+																placeholder="Reposición de Contrato" ng-model="ae.garantia.reposicionContrato">
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-sm-6">
+															<label>Descripción Generica</label>
+															<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN"
+																ng-model="ae.garantia.descripcion" capitalize>
+														</div>
+														<div class="col-sm-6">
+															<label>Características </label>
+															<input name="caracteristicas" type="text" class="form-control"
+																placeholder="Caracteristicas" ng-model="ae.garantia.caracteristicas" capitalize>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-sm-2">
+															<label>Avalúo</label>
+															<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO"
+																ng-model="ae.garantia.avaluoMobiliaria" ng-change="ae.calcularPorcentajeMobiliaria()">
+														</div>
+														<div class="col-sm-4">
+															<label>Porcentaje del prestamo sobre el avalúo</label>
+															<input name="porcentajePrestamo" type="number" class="form-control"
+																placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO"
+																ng-model="ae.garantia.porcentajePrestamoMobiliria" disabled="true">
+														</div>
+													</div>
+													<div class="row"> <br />
+														<div class="col-sm-3">
+															<input type="button" ng-click="ae.insertarGarantia(ae.credito.tipoGarantia)"
+																value="Agregar" ng-show="ae.actionGarantia" class="btn btn-primary">
+															<input type="button"
+																ng-click="ae.actualizarGarantia(ae.credito.tipoGarantia, ae.garantia)"
+																value="Actualizar" ng-show="!ae.actionGarantia" class="btn btn-primary">
+															<input type="button" ng-click="ae.cancelarGarantia(ae.credito.tipoGarantia)"
+																value="Cancelar" ng-show="!ae.actionGarantia" class="btn btn-danger">
+														</div>
+													</div>
+													<br />
+													<div class="row">
+														<div class="col-sm-12">
+															<table class="table table-bordered">
+																<thead>
+
+																	<tr>
+																		<th width="5%">Número</th>
+																		<th width="15%">Descripción genérica</th>
+																		<!-- 	<th width="15%">Características</th>
 																					<th width="15%">Avalúo</th>
 																					<th width="15%">Préstamo</th>
 																					<th width="15%">Préstamo sobre avalúo</th>
@@ -422,14 +456,14 @@
 																					<th width="15%">Porcentaje del préstamo sobre el avalúo</th>
 																					<th width="15%">Fecha de inicio de comercialización</th>
 																					<th width="15%">Fecha limite de finiquito</th> -->
-																					<th width="5%">Acción</th>
-																				</tr>
-																			</thead>
-																			<tbody>
-																				<tr ng-repeat="garantia in ae.garantias">
-																					<td>{{garantia.num}}</td>
-																					<td>{{garantia.descripcion}}</td>
-																				<!-- 	<td>{{garantia.caracteristicas}}</td>
+																		<th width="5%">Acción</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr ng-repeat="garantia in ae.garantias">
+																		<td>{{garantia.num}}</td>
+																		<td>{{garantia.descripcion}}</td>
+																		<!-- 	<td>{{garantia.caracteristicas}}</td>
 																					<td>{{garantia.avaluo}}</td>
 																					<td>{{garantia.prestamo}}</td>
 																					<td>{{garantia.prestamoPorcentaje}}</td>
@@ -437,41 +471,55 @@
 																					<td>{{garantia.porcentaje}}</td>
 																					<td>{{garantia.fechaComercializacion | date:"dd-MM-yyyy"}}</td>
 																					<td>{{garantia.fechaFiniquito | date:"dd-MM-yyyy"}}</td> -->
-																					<td>
-																					<a href="#" class="btn btn-primary" ng-click="ae.verGarantia(ae.credito.tipoGarantia, garantia)"><i class="fa fa-eye"></i></a>
-																							<a href="#" class="btn btn-warning" ng-click="ae.editarGarantia(ae.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
-																							<a href="#" class="btn btn-danger" ng-click="ae.quitarGarantia(ae.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
-																					</td>
-																				</tr>
-																			</tbody>
-																		</table>
-																	</div>
-																</div>
-															</div>
-															
-															<div  ng-if="ae.credito.tipoGarantia == 'general'">
-																<div class="row">
-														    	<div class="col-sm-4"> 					    
-															    	<label>Sup. de terreno y construcción</label>
-															    	<input name="terreno" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ae.garantia.terrenoYconstruccion" capitalize >
-														    	</div>
-														    	<div class="col-sm-2"> 					    
-															    	<label>Ubicación </label>
-															    	<input name="ubicacion" type="text" class="form-control" placeholder="Ubicación" ng-model="ae.garantia.ubicacion" capitalize>
-														    	</div>
-														    	<div class="col-sm-2"> 					    
-															    	<label>Avalúo </label>
-															    	<input name="avaluo" type="number" class="form-control" placeholder="Avalúo" ng-model="ae.garantia.avaluoGeneral" ng-change="ae.calcularPorcentajeGeneral()">
-														    	</div>
-																	<div class="col-sm-4">					    
-															    	<label>% del préstamo sobre el avalúo</label>
-															    	<input name="porcentaje" type="number" class="form-control" placeholder="Porcentaje del préstamo sobre el avalúo" ng-model="ae.garantia.porcentajePrestamoGeneral" disabled="true">
-														    	</div>
-																</div>	
-																<div class="row">
-														    	<div class="col-sm-6"> 					    
-															    	<label>Medidas, colindancias, clave catastral</label>
-															    	<textarea name="medidas" rows="3" class="form-control" placeholder="Medidas, colindancias, clave castral"  ng-model="ae.garantia.medidasColindancias" >
+																		<td>
+																			<a href="#" class="btn btn-primary"
+																				ng-click="ae.verGarantia(ae.credito.tipoGarantia, garantia)"><i
+																					class="fa fa-eye"></i></a>
+																			<a href="#" class="btn btn-warning"
+																				ng-click="ae.editarGarantia(ae.credito.tipoGarantia, garantia)"><i
+																					class="fa fa-pencil"></i></a>
+																			<a href="#" class="btn btn-danger"
+																				ng-click="ae.quitarGarantia(ae.credito.tipoGarantia, garantia.num)"><i
+																					class="fa fa-trash"></i></a>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+
+												<div ng-if="ae.credito.tipoGarantia == 'general'">
+													<div class="row">
+														<div class="col-sm-4">
+															<label>Sup. de terreno y construcción</label>
+															<input name="terreno" type="text" class="form-control"
+																placeholder="Sup. de terreno y construcción "
+																ng-model="ae.garantia.terrenoYconstruccion" capitalize>
+														</div>
+														<div class="col-sm-2">
+															<label>Ubicación </label>
+															<input name="ubicacion" type="text" class="form-control" placeholder="Ubicación"
+																ng-model="ae.garantia.ubicacion" capitalize>
+														</div>
+														<div class="col-sm-2">
+															<label>Avalúo </label>
+															<input name="avaluo" type="number" class="form-control" placeholder="Avalúo"
+																ng-model="ae.garantia.avaluoGeneral" ng-change="ae.calcularPorcentajeGeneral()">
+														</div>
+														<div class="col-sm-4">
+															<label>% del préstamo sobre el avalúo</label>
+															<input name="porcentaje" type="number" class="form-control"
+																placeholder="Porcentaje del préstamo sobre el avalúo"
+																ng-model="ae.garantia.porcentajePrestamoGeneral" disabled="true">
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-sm-6">
+															<label>Medidas, colindancias, clave catastral</label>
+															<textarea name="medidas" rows="3" class="form-control"
+																placeholder="Medidas, colindancias, clave castral"
+																ng-model="ae.garantia.medidasColindancias">
 														    	</div>
 														    	<div class="col-sm-6"> 					    
 															    	<label>Comisión y gastos, por escrituración e inscripción de registro público</label>

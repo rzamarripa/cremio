@@ -20,7 +20,7 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 				else {
 					if (Meteor.user().username != "admin" && Meteor.user().roles != "Gerente") {
 						//Preguntar si es Distribuidor
-						if (Meteor.user().roles == "Distribuidor") {
+						if (Meteor.user().roles == "Distribuidor" || Meteor.user().roles == "Promotora") {
 						 	//$state.go("root.distribuidoresDetalle",{objeto_id : Meteor.userId()});
 							$state.go('root.home');
 						}

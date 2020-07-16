@@ -93,7 +93,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 			else
 				objeto.estatus = true;
 			
-			Secciones.update({_id:id}, {$set : {estatus : objeto.estatus}});	
+				Sucursales.update({_id:id}, {$set : {estatus : objeto.estatus}});	
 	};
 		
 }

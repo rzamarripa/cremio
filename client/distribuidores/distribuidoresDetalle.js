@@ -1,4 +1,4 @@
-import { normalizeUnits } from "moment";
+//import { normalizeUnits } from "moment";
 
 angular
 	.module('creditoMio')
@@ -364,26 +364,6 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			var arregloSeguro = {};
 			rc.seguro = 0;
 
-			// verificarDiaInhabil = function (fecha) {
-			// 	var diaFecha = fecha.isoWeekday();
-			// 	var diaInhabiles = DiasInhabiles.find({ tipo: "DIA", estatus: true }).fetch();
-			// 	var ban = false;
-			// 	_.each(diaInhabiles, function (dia) {
-			// 		if (Number(dia.dia) === diaFecha) {
-			// 			ban = true;
-			// 			return ban;
-			// 		}
-			// 	})
-			// 	var fechaBuscar = new Date(fecha);
-
-			// 	var fechaInhabil = DiasInhabiles.findOne({ tipo: "FECHA", fecha: fechaBuscar, estatus: true });
-			// 	if (fechaInhabil != undefined) {
-			// 		ban = true;
-			// 		return ban;
-			// 	}
-			// 	return ban;
-			// };
-
 			if (n >= 22) {
 				fechaLimite = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 1, 0, 0, 0, 0);
 			}
@@ -406,7 +386,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			fechaLimite.setHours(23, 59, 59, 999);
 
 			var planPagos = PlanPagos.find({ fechaLimite: { $lte: fechaLimite }, importeRegular: { $gt: 0 } }, { sort: { fechaLimite: 1 } }).fetch();
-
+			//console.log("PP", planPagos);
 			if (planPagos != undefined) {
 				rc.importe = 0;
 				rc.cargosMoratorios = 0;
@@ -417,39 +397,46 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 				_.each(planPagos, function (pp) {
 					var credito = Creditos.findOne(pp.credito_id);
-
-					if (credito != undefined && credito.beneficiario_id != undefined) {
+					
+					if (credito != undefined) {
 						Meteor.call('getBeneficiario', credito.beneficiario_id, function (error, result) {
 							if (result) {
 								pp.beneficiario = result;
+								//console.log(pp.beneficiario)
 								$scope.$apply();
 							}
 						});
+
+						if (credito.tipo == "vale") {
+							var comision = 0;
+							pp.bonificacion = 0;
+							comision = calculaBonificacion(pp.fechaLimite, configuraciones.arregloComisiones);
+							pp.bonificacion = parseFloat(((pp.capital + pp.interes) * (comision / 100))).toFixed(2);
+							rc.bonificacion += Number(parseFloat(pp.bonificacion).toFixed(2));
+						}
+						else if (credito.tipo == "creditoPersonalDistribuidor") {
+
+							pp.bonificacion = 0;
+							pp.beneficiario = {};
+							pp.beneficiario.nombreCompleto = "CRÉDITO PERSONAL";
+							//console.log(pp.beneficiario)
+						}
+						
+						pp.numeroPagos = credito.numeroPagos;
+
 					}
+
 					if (pp.descripcion == "Cargo Moratorio")
 						pp.orden = 2;
 					else
 						pp.orden = 1;
-
-					if (credito.tipo == "vale") {
-						var comision = 0;
-						pp.bonificacion = 0;
-						comision = calculaBonificacion(pp.fechaLimite, configuraciones.arregloComisiones);
-						pp.bonificacion = parseFloat(((pp.capital + pp.interes) * (comision / 100))).toFixed(2);
-						rc.bonificacion += Number(parseFloat(pp.bonificacion).toFixed(2));
-					}
-					else if (credito.tipo == "creditoPersonalDistribuidor") {
-						pp.bonificacion = 0;
-						pp.beneficiario = {};
-						pp.beneficiario.nombreCompleto = "CRÉDITO PERSONAL";
-					}
 
 					if (pp.descripcion == 'Recibo')
 						rc.importe += Number(parseFloat(pp.importeRegular).toFixed(2));
 					else if (pp.descripcion == 'Cargo Moratorio')
 						rc.cargosMoratorios += Number(parseFloat(pp.importeRegular).toFixed(2));
 
-					pp.numeroPagos = credito.numeroPagos;
+
 
 					//Meterlo al arreglo y luego al arregloCortes
 					var numeroCorte = 0;
@@ -701,7 +688,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 			return arreglo;
 		},
 		historialCreditos: () => {
-			var cre = Creditos.find({ estatus: { $in: [4, 5] } }, { sort: { fechaEntrega: -1 } }).fetch();
+			var cre = Creditos.find({ estatus: { $in: [4, 5] } }, { sort: { fechaEntrega: 1 } }).fetch();
 
 			if (cre != undefined) {
 
@@ -834,28 +821,25 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 				//Ordena el arreglo
 				rc.creditoCortes.sort(function (a, b) {
-					if (a.numeroCorte < b.numeroCorte) {
+					if (a.fechaCorteInicio.getTime() < b.fechaCorteInicio.getTime()) {
 						return 1;
 					}
-					if (a.numeroCorte > b.numeroCorte) {
+					if (a.fechaCorteInicio.getTime() > b.fechaCorteInicio.getTime()) {
 						return -1;
 					}
-					// a must be equal to b
 					return 0;
 				});
 
 				//Ordena el arreglo
 				rc.creditoPCortes.sort(function (a, b) {
-					if (a.numeroCorte < b.numeroCorte) {
+					if (a.fechaCorteInicio.getTime() < b.fechaCorteInicio.getTime()) {
 						return 1;
 					}
-					if (a.numeroCorte > b.numeroCorte) {
+					if (a.fechaCorteInicio.getTime() > b.fechaCorteInicio.getTime()) {
 						return -1;
 					}
-					// a must be equal to b
 					return 0;
 				});
-
 
 				return cre;
 			}
@@ -1439,6 +1423,8 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 
 	};
 
+	//Restructuración-----------------------------------------------------
+
 	this.mostrarReestructuracion = function (objeto) {
 		rc.creditoSeleccionado = objeto;
 		_.each(rc.creditoSeleccionado.planPagos, function (planPago) {
@@ -1453,15 +1439,17 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 	};
 
 	this.agregarPago = function () {
+
 		var fecha = moment(new Date());
 
+		var numeroPagos = rc.creditoSeleccionado.numeroPagos;
 
 		var nuevoPago = {
 			semana: fecha.isoWeek(),
 			fechaLimite: new Date(new Date(fecha.toDate().getTime()).setHours(23, 59, 59)),
 			diaSemana: fecha.weekday(),
 			tipoPlan: rc.creditoSeleccionado.periodoPago,
-			numeroPago: rc.creditoSeleccionado.planPagos.length + 1,
+			numeroPago: numeroPagos + 1,
 			importeRegular: 0,
 			iva: 0,
 			interes: 0,
@@ -1488,7 +1476,7 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 			movimiento: "Recibo",
 			multa: 0,
 			abono: 0,
-			numeroPagos: rc.creditoSeleccionado.planPagos.length + 1
+			numeroPagos: numeroPagos + 1
 		};
 		rc.creditoSeleccionado.planPagos.push(nuevoPago);
 
@@ -1497,7 +1485,6 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 	this.guardarplanPagos = function () {
 
 		_.each(rc.creditoSeleccionado.planPagos, function (planPago) {
-
 
 			if (planPago._id == undefined) {
 
@@ -1590,7 +1577,6 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 						})
 
 				}
-
 
 				var tempId = planPago._id;
 				delete planPago._id;
@@ -1893,15 +1879,22 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 
 	this.autorizarVale = function () {
 
-		//Validar si hay saldo o no ha rebasado su limite de credito el distribuidor (30000)
-		//console.log(rc.vale_id);
+		var credito = Creditos.findOne(rc.vale_id);
 
-		customConfirm('¿Estás seguro de Autorizar el vale?', function () {
-			Creditos.update({ _id: rc.vale_id }, { $set: { estatus: 2 } });
-			toastr.success("Se autorizó el vale.");
+		Meteor.call('getBeneficiario', credito.beneficiario_id, function (error, result) {
+			if (result) {
+				var ben = result;
+				if (ben.saldoActualVales > 0) {
+					toastr.warning("El beneficiario " + rc.buscar.nombreBeneficiado + " tiene una deuda pendiente, no es posible autorizarle el Vale");
+				}
+				else {
+					customConfirm('¿Estás seguro de Autorizar el vale?', function () {
+						Creditos.update({ _id: rc.vale_id }, { $set: { estatus: 2 } });
+						toastr.success("Se autorizó el vale.");
+					});
+				}
+			}
 		});
-
-		//Revisar si el beneficiario tiene saldo o no ha rebasado su limite de credito (6000)
 
 	}
 
@@ -2611,12 +2604,6 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 
 		var dias = fecha1.diff(fecha2, 'days');
 
-		/*
-console.log("Fecha Hoy:", new Date(fecha1));
-		console.log("Fecha pago",fechaLimite);
-		console.log("dif: ", dias);
-*/
-
 		//comision = comisionMayor;
 
 		//console.log("Comision ini:", comision);
@@ -2632,10 +2619,10 @@ console.log("Fecha Hoy:", new Date(fecha1));
 		else if (dias <= 6) {
 
 			var fechaPago = new Date(fecha1);
-			//					console.log("fechaPago:", fechaPago);
+			//console.log("fechaPago:", fechaPago);
 			var nfp = fechaPago.getDate();
 			var mesfp = fechaPago.getMonth();
-			//					console.log(nfp);
+			//console.log(nfp);
 
 			comision = 0;
 
@@ -2858,6 +2845,14 @@ console.log("Fecha Hoy:", new Date(fecha1));
 
 			}
 		});
+	};
+
+	this.editarNotaModal = function (valor) {
+		rc.editarNota = valor;
+	};
+	this.actualizarNota = function (objeto) {
+		Notas.update({ _id: objeto._id }, { $set: { descripcion: objeto.descripcion, fecha: new Date() } })
+		rc.editarNota = false;
 	};
 
 	function round(value, decimals) {

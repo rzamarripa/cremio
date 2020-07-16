@@ -5,8 +5,6 @@ Meteor.publish("buscarPersonas",function(options){
 				let selector = {
 			  	"nombreCompleto": { '$regex' : '.*' + options.where.nombreCompleto || '' + '.*', '$options' : 'i' }
 				}
-				console.log(selector);
-				console.log(options);
 				return Personas.find(selector, options.options);	
 			}
 });

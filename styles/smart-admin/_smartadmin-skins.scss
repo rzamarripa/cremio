@@ -1257,7 +1257,8 @@ body.smart-style-4 {
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
 }
 .smart-style-4 #header > :first-child {
-  background: #71a06a;
+  //background: #131413;
+  background: linear-gradient(to right, #0068b2 93%, #00223a 100%);
 }
 .smart-style-4 .login-info > span {
   border-bottom-color: #000000;

@@ -32,18 +32,6 @@ Meteor.methods({
 		var tasaInteres = 0;
 		var semanaQuincena = 0;
 
-		/*
-var configuracion = Configuraciones.findOne();
-	
-		_.each(configuracion.arregloTasa, function(elemento){
-				
-				if (credito.duracionMeses == elemento.mes){
-						credito.tasa = elemento.tasa;												
-				}	
-				
-		});
-*/
-
 		if (credito.periodoPago == "Semanal") {
 			totalPagos = credito.duracionMeses * 4;
 			numeroPagosCompuesto = 4;
@@ -58,19 +46,8 @@ var configuracion = Configuraciones.findOne();
 			var fechaMes = new Date(moment(credito.fechaPrimerAbono));
 			var diaMes = fechaMes.getDate();
 
-			//console.log(diaMes);
 			if (diaMes == 1) {
 				semanaQuincena = 1;
-
-				/*
-var mes  = new Date(mfecha).getMonth();
-				var anio = new Date(mfecha).getFullYear();
-				var d = new Date(anio, mes, 0).getDate();
-
-				mfecha = moment(mfecha).add(-1, 'M');
-				mfecha = mfecha.date(d);	
-*/
-
 			}
 			else if (diaMes == 16) {
 				semanaQuincena = 2;
@@ -78,7 +55,7 @@ var mes  = new Date(mfecha).getMonth();
 			else if (diaMes >= 2 && diaMes <= 16) {
 				if (credito.tipo == "creditoP")
 					mfecha = mfecha.date(16);
-				else
+				else 
 					mfecha = mfecha.date(15);
 
 				semanaQuincena = 2;
@@ -92,18 +69,7 @@ var mes  = new Date(mfecha).getMonth();
 
 					mfecha = moment(mfecha).add(1, 'M');
 					mfecha = mfecha.date(1);
-
-					/*
-var mes  = new Date(mfecha).getMonth();
-				   var anio = new Date(mfecha).getFullYear();
-				   var d = new Date(anio, mes, 0).getDate();
-	
-				   mfecha = moment(mfecha).add(-1, 'M');
-				   mfecha = mfecha.date(d);	
-*/
-
 				}
-
 				semanaQuincena = 1;
 			}
 			//console.log(mfecha);
@@ -208,7 +174,6 @@ var mes  = new Date(mfecha).getMonth();
 			//var sumaImportes = 0;
 			for (var i = 0; i < totalPagos; i++) {
 				//console.log(importeParcial);
-				//sumaImportes += importeParcial;
 				var pago = {
 					semana: fechaLimite.isoWeek(),
 					fechaLimite: new Date(new Date(fechaLimite.toDate().getTime()).setHours(13, 0, 0, 0)),
@@ -253,9 +218,8 @@ var mes  = new Date(mfecha).getMonth();
 					if (semanaQuincena == 1) {
 						if (credito.tipo == "creditoP")
 							mfecha = mfecha.date(16);
-						else {
+						else
 							mfecha = mfecha.date(15);
-						}
 
 						semanaQuincena = 2;
 					}
@@ -267,16 +231,6 @@ var mes  = new Date(mfecha).getMonth();
 						else {
 							mfecha = moment(mfecha).add(1, 'M');
 							mfecha = mfecha.date(1);
-
-							/*
-var mes  = new Date(mfecha).getMonth();
-							var anio = new Date(mfecha).getFullYear();
-							var d = new Date(anio, mes, 0).getDate();
-		  	
-							mfecha = moment(mfecha).add(-1, 'M');
-							mfecha = mfecha.date(d);
-*/
-
 						}
 
 						semanaQuincena = 1;
@@ -447,16 +401,6 @@ var mes  = new Date(mfecha).getMonth();
 				var array = pago;
 				pago.total = val;
 
-				/*
-contador ++;
-				if (contador == totalPagos && credito.tasa == 0)
-				{
-						var dif = Number(parseFloat(credito.capitalSolicitado - pago.sumatoria).toFixed(2));
-						pago.sumatoria += dif;
-						pago.importeRegular += dif;
-				}
-*/
-
 			});
 
 			var val = plan[plan.length - 1].sumatoria;
@@ -571,7 +515,6 @@ contador ++;
 				}
 			]
 		}).fetch();
-
 
 		_.each(pagos, function (pago) {
 			try {
@@ -734,6 +677,8 @@ contador ++;
 		ahora = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
 
 		//Revisar cuales son las fechas a Consultar
+		if (ahora > new Date("2020/04/21"))
+			return;
 
 		var pagos = PlanPagos.find({
 			$and: [
@@ -1179,6 +1124,7 @@ contador ++;
 		Meteor.call("generarMultas");
 		return true;
 	},
+
 	generaMultasValesManual: function () {
 		Meteor.call("generarMultasVales");
 		return true;
@@ -1189,6 +1135,7 @@ contador ++;
 		//Meteor.call("actualizarMultasVales");
 		return true;
 	},
+
 	actualizarMultasValesManual: function () {
 		Meteor.call("actualizarMultasVales");
 		return true;
@@ -1815,11 +1762,11 @@ contador ++;
 					abono = round(Number(parseFloat(abono).toFixed(3)), 2);
 
 					//Decrementar el pago en el Saldo Actual Pago total
+					var credito = Creditos.findOne(p.credito_id);
 					if (p.descripcion == "Recibo") {
-						var credito = Creditos.findOne(p.credito_id);
+
 						credito.saldoActual -= round(Number(parseFloat(p.importeRegular).toFixed(3)), 2);
 						Creditos.update({ _id: credito._id }, { $set: { saldoActual: credito.saldoActual } })
-
 
 						if (credito.tipo == "vale") {
 							//Actualizar saldo Beneficiario--------
@@ -1836,7 +1783,7 @@ contador ++;
 					}
 					else //Cargo Moratorio
 					{
-						var credito = Creditos.findOne(p.credito_id);
+						//var credito = Creditos.findOne(p.credito_id);
 						credito.saldoMultas -= round(Number(parseFloat(p.importeRegular).toFixed(3)), 2);
 
 						credito.saldoMultas = round(Number(parseFloat(credito.saldoMultas).toFixed(3)), 2);
@@ -1850,7 +1797,8 @@ contador ++;
 
 					//console.log("Pago Total completo:", p.capital);
 					//console.log("Residuos pcapital:", residuos.pagoCapital);
-					sumaCapital += Number(parseFloat(residuos.pagoCapital).toFixed(2));
+					if (credito.tipo == "vale")
+						sumaCapital += Number(parseFloat(residuos.pagoCapital).toFixed(2));
 
 				}
 				else {
@@ -2045,8 +1993,8 @@ contador ++;
 
 		//Actualizar el Credito SaldoActual--------------------------------------------------
 		idCreditos = _.uniq(idCreditos);
-		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus del credito
 
+		//Revisar que se hayan pagado todos lo pagos para cambiar el estatus del credito
 		_.each(idCreditos, function (c) {
 			var pp = PlanPagos.find({ credito_id: c }).fetch();
 

@@ -67,7 +67,6 @@ Meteor.methods({
 		else if (rol == "Promotora") {
 			sucursal = Sucursales.findOne(usuario.profile.sucursal_id);
 
-
 			var numero;// = usuario.profile.numeroDistribuidor;
 
 			numero = sucursal.folioPromotora + 1;
@@ -282,97 +281,7 @@ Meteor.methods({
 				});
 			}
 
-			/*
-if (referenciaPersonal.buscarPersona_id)
-				{
-						//console.log(referenciaPersonal.buscarPersona_id);
-						var p = Personas.findOne({_id:referenciaPersonal.buscarPersona_id});
-						
-						//console.log("P:",p)	
-						
-						p.nombre = referenciaPersonal.nombre;
-						p.apellidoPaterno = referenciaPersonal.apellidoPaterno;
-						p.apellidoMaterno = referenciaPersonal.apellidoMaterno;
-													
-						_.each(p.relaciones, function(relacion){
-								if (relacion.cliente_id == user._id){
-
-										relacion.cliente_id 		 = user._id;
-										relacion.cliente 				 = user.profile.nombreCompleto;
-										relacion.nombre					 = referenciaPersonal.nombre;
-										relacion.apellidoPaterno = referenciaPersonal.apellidoPaterno;
-										relacion.apellidoMaterno = referenciaPersonal.apellidoMaterno;
-										relacion.parentezco			 = referenciaPersonal.parentezco;
-										relacion.direccion			 = referenciaPersonal.direccion;
-										relacion.telefono				 = referenciaPersonal.telefono;
-										relacion.tiempo					 = referenciaPersonal.tiempo;
-										relacion.num						 = referenciaPersonal.num;
-										relacion.tipoPersona		 = "Referencia"; 
-										relacion.estatus				 = 0;
-								}
-						});
-						
-						//console.log("Actualizar cliente_id:",p);
-						
-						Personas.update({_id: referenciaPersonal.buscarPersona_id},{$set:p});
-				}
-				else if (referenciaPersonal.persona_id)
-				{
-						
-						var p = Personas.findOne({_id:referenciaPersonal.persona_id});
-						
-
-						p.relaciones.push({cliente_id	 		 : user._id, 
-															 cliente		 		 : user.profile.nombreCompleto,
-															 nombre					 : referenciaPersonal.nombre,
-															 apellidoPaterno : referenciaPersonal.apellidoPaterno,
-															 apellidoMaterno : referenciaPersonal.apellidoMaterno,
-															 parentezco	 		 : referenciaPersonal.parentezco,
-															 direccion	 		 : referenciaPersonal.direccion,
-															 telefono	   		 : referenciaPersonal.telefono,
-															 tiempo			 		 : referenciaPersonal.tiempo,
-															 num				 		 : referenciaPersonal.num,
-															 tipoPersona 		 : "Referencia", 
-															 estatus				 : 0});
-															 
-						//console.log("Actualizar persona_id:",p);
-						
-						Personas.update({_id: referenciaPersonal.persona_id},{$set:p});
-						usuario.profile.referenciasPersonales_ids.push(referenciaPersonal.persona_id);
-				}
-				else //(referenciaPersonal.persona_id != undefined && referenciaPersonal.cliente_id != undefined)
-				{
-
-						var relacion = {nombre					: referenciaPersonal.nombre,
-													  apellidoPaterno : referenciaPersonal.apellidoPaterno,
-													  apellidoMaterno : referenciaPersonal.apellidoMaterno,
-													  nombreCompleto  : referenciaPersonal.nombre + " " + referenciaPersonal.apellidoPaterno + " " + referenciaPersonal.apellidoMaterno
-													  };		
-						
-						relacion.relaciones = [];
-						relacion.relaciones.push({cliente_id			: user._id, 
-																			cliente					: usuario.profile.nombreCompleto, 
-																			nombre					: referenciaPersonal.nombre,
-																			apellidoPaterno : referenciaPersonal.apellidoPaterno,
-																			apellidoMaterno : referenciaPersonal.apellidoMaterno,
-																			parentezco			: referenciaPersonal.parentezco,
-																			direccion				:	referenciaPersonal.direccion,
-																			telefono				: referenciaPersonal.telefono,
-																			tiempo					: referenciaPersonal.tiempo,
-																			num							: referenciaPersonal.num,
-																			tipoPersona			: "Referencia", 
-																			estatus					: 0});
-						
-						//console.log("Actualizar sin nada:",relacion);
-																								
-						var result = Personas.insert(relacion);
-						usuario.profile.referenciasPersonales_ids.push(result);
-
-						}
-*/
-
 		});
-
 
 		Meteor.users.update({ _id: user._id }, {
 			$set: {
@@ -385,24 +294,27 @@ if (referenciaPersonal.buscarPersona_id)
 		if (cambiarPassword == false)
 			Accounts.setPassword(user._id, usuario.password, { logout: false });
 
-
 		return true;
 
 	},
 	updateReferenciasPersonales: function (usuario_id, numeroCliente, referenciasPersonales_ids) {
 
+
 		var referenciasPersonales = [];
+
+		//Buscar la referencia Personal para quitarsela al cliente:
 
 		_.each(referenciasPersonales_ids, function (referenciaPersonal) {
 
-			referenciaPersonal.estatus = "G";
+			//referenciaPersonal.estatus = "G";
 			referenciasPersonales.push({
 				num: referenciaPersonal.num,
 				numeroCliente: numeroCliente,
 				referenciaPersonal_id: referenciaPersonal._id,
 				nombreCompleto: referenciaPersonal.nombreCompleto,
 				parentesco: referenciaPersonal.parentesco,
-				tiempoConocerlo: referenciaPersonal.tiempoConocerlo
+				tiempoConocerlo: referenciaPersonal.tiempoConocerlo,
+				estatus: "G"
 			});
 
 		});
@@ -571,7 +483,7 @@ if (referenciaPersonal.buscarPersona_id)
 
 		return referenciasPersonales;
 	},
-	getPersonas: function (nombre) {	//Se hizo para la validacion de Clientes, Avales y Referencias Personales, Distribuidores
+	getPersonas: function (nombre) {	//Se hizo para la validacion de Clientes, Avales y Referencias Personales, Distribuidores, conyuge
 		var personas = {};
 		personas.clientes = [];
 		personas.distribuidores = [];
@@ -579,7 +491,10 @@ if (referenciaPersonal.buscarPersona_id)
 		personas.referenciasPersonales = [];
 		personas.beneficiarios = [];
 		personas.prospectosVales = [];
-
+		personas.conyugeClienteCreditoP = [];
+		personas.conyugeClienteDistribuidor = [];
+		personas.prospectosCreditoPersonal = [];
+		personas.prospectosDistribuidor = [];
 
 		personas.clientes = Meteor.users.find({ "profile.nombreCompleto": { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' }, roles: ["Cliente"] },
 			{ fields: { "profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, roles: 1 } },
@@ -610,6 +525,22 @@ if (referenciaPersonal.buscarPersona_id)
 				{ fields: { "profile.nombreCompleto": 1, } });
 			p.distribuidor = distribuidor;
 		});
+
+		personas.conyugeClienteCreditoP = Meteor.users.find({ "profile.nombreConyuge": { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' }, roles: ["Cliente"] },
+			{ fields: { "profile.nombreCompleto": 1, "profile.nombreConyuge": 1, "profile.sexo": 1, "profile.foto": 1 } },
+			{ sort: { "profile.nombreConyuge": 1 } }).fetch();
+
+		personas.conyugeClienteDistribuidor = Meteor.users.find({ "profile.nombreConyuge": { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' }, roles: ["Distribuidor"] },
+			{ fields: { "profile.nombreCompleto": 1, "profile.nombreConyuge": 1, "profile.sexo": 1, "profile.foto": 1 } },
+			{ sort: { "profile.nombreConyuge": 1 } }).fetch();
+
+		personas.prospectosCreditoPersonal = ProspectosCreditoPersonal.find({ "profile.nombreCompleto": { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' } },
+			{ fields: { "profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, roles: 1 } },
+			{ sort: { "profile.nombreCompleto": 1 } }, { "profile.nombreCompleto": 1, "profile.referenciasPersonales_ids": 1 }).fetch();
+
+		personas.prospectosDistribuidor = ProspectosDistribuidor.find({ "profile.nombreCompleto": { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' } },
+			{ fields: { "profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, roles: 1 } },
+			{ sort: { "profile.nombreCompleto": 1 } }, { "profile.nombreCompleto": 1, "profile.referenciasPersonales_ids": 1 }).fetch();
 
 		return personas;
 	},
@@ -810,12 +741,13 @@ if (referenciaPersonal.buscarPersona_id)
 		return doc.imagen;
 	},
 	updateSucursal: function (usuario_id, sucursal_id) {
+
 		Meteor.users.update({ _id: usuario_id }, {
 			$set: {
 				"profile.sucursal_id": sucursal_id
 			}
 		});
-
+		return true;
 	},
 	getPeople: function (idReferencia) {
 

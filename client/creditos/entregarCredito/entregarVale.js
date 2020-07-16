@@ -427,13 +427,6 @@ this.fechaPago = function(diaSeleccionado, periodoPago)
 
 		$("#generar").prop("disabled", true);
 
-		/*
-if (rc.folioVale == undefined || rc.folioVale == "")
-		{
-				toastr.warning("Debe proporcionar un numero de Folio");
-				return;
-		}
-*/
 
 		var credito = {
 
@@ -569,7 +562,7 @@ if (rc.folioVale == undefined || rc.folioVale == "")
 				toastr.error('Error al calcular el nuevo plan de pagos.');
 			}
 			else {
-				console.log("Plan Pagos:", result);
+				//console.log("Plan Pagos:", result);
 
 				_.each(result, function (pago) {
 
@@ -791,7 +784,7 @@ if (rc.folioVale == undefined || rc.folioVale == "")
 				$("#modalActivarFecha").modal('hide');
 			}
 			else if (result == false) {
-				console.log("FAL:", result);
+				//console.log("FAL:", result);
 				toastr.warning("No concide con la clave de desbloqueo")
 			}
 		});

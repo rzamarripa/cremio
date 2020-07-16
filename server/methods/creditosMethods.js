@@ -121,10 +121,6 @@ Meteor.methods({
 	},
 	actualizarCredito: function (credito, idCredito) {
 
-
-		//var cliente = Meteor.users.findOne(credito.cliente_id).profile.nombreCompleto;
-		//console.log(cliente);
-
 		if (credito.tipo == 'creditoP') {
 			if (credito.estatus == 1)
 				if (credito.requiereVerificacion == true)
@@ -271,10 +267,10 @@ Meteor.methods({
 					suma += Number(parseFloat(monto.saldo).toFixed(2));
 			});
 			if (cliente.saldoCredito < suma)
-				throw new Meteor.Error(500, 'Error', 'El Distribuidor no tiene Saldo');	
+				throw new Meteor.Error(500, 'Error', 'El Distribuidor no tiene Saldo');
 		}
 
-		
+
 
 		credito.entrega = { movimientosCaja: [], movimientosCuentas: [] };
 
@@ -336,9 +332,9 @@ Meteor.methods({
 		if (credito.tipo == "vale") {
 
 			//Revisar si es el primer vale para actualizar el perfil
-			var vales = Creditos.find({cliente_id: cliente._id, estatus: 4}).fetch();
+			var vales = Creditos.find({ cliente_id: cliente._id, estatus: 4 }).fetch();
 			var fecha = "";
-			if (vales.length == 1){
+			if (vales.length == 1) {
 				fecha = new Date();
 				Meteor.users.update({ _id: cliente._id }, { $set: { "profile.fechaPrimerVale": fecha } });
 			}
@@ -432,7 +428,7 @@ Meteor.methods({
 		var credito = Creditos.findOne(credito_id);
 		var arregloCredito = _.without(credito.avales_ids, _.findWhere(credito.avales_ids, { aval_id: aval_id }));
 
-		console.log(arregloCredito);
+		//console.log(arregloCredito);
 		Creditos.update({ _id: credito_id }, { $set: { avales_ids: arregloCredito } });
 
 		return true;

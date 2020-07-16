@@ -205,15 +205,15 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	  }
 	  rc.planPagos = [];
 		var dia = 1;
-		console.log("original",this.credito.fechaInicial)
+		//console.log("original",this.credito.fechaInicial)
 		var mfecha = moment(this.credito.fechaInicial);
-		console.log("moment", mfecha);
+		//console.log("moment", mfecha);
 		//mfecha = mfecha.day(dia);
-		console.log("day", mfecha);
+	//	console.log("day", mfecha);
 		var inicio = mfecha.toDate();
-		console.log("inicio", inicio);
+	//console.log("inicio", inicio);
 		
-		console.log("1 month", mfecha);
+		//console.log("1 month", mfecha);
 		var plan = [];
 		for (var i = 0; i < this.credito.totalPagos; i++) {
 			var importeParcial = this.credito.importeRegular / this.credito.totalPagos;
@@ -260,7 +260,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 	{ 
 
 
-		console.log(pago);
+		//console.log(pago);
  		pago.pagoSeleccionado = !pago.pagoSeleccionado;
 		pago.estatus = 0;	
 		rc.pago.totalPago = 0;
@@ -276,8 +276,8 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 
 	this.guardarPago = function(pago,credito)
 	{
-		console.log(credito,"el credito") 
-		console.log(credito[0]._id,"el id que quiere 1")
+		//console.log(credito,"el credito") 
+		//console.log(credito[0]._id,"el id que quiere 1")
 		
 
 		var seleccionadosId=[];
@@ -319,7 +319,7 @@ function VerPlanPagosCtrl($scope, $meteor, $reactive,  $state, $stateParams, toa
 		// });
 
 	  // console.log(rc.creditos,"el credito") 
-	  console.log(pago,"el pago") 
+	  //console.log(pago,"el pago") 
 		
        
 	};

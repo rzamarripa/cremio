@@ -1,0 +1,32 @@
+<div class="input-group"> 
+	<input type="text" class="form-control" ng-model="obj.buscar.nombre" capitalize>
+	<span class="input-group-btn">
+		<button class="btn btn-default" type="button" style="height: 34px;">
+			<i class="fa fa-search"></i>
+		</button> 
+	</span>
+</div>
+<div class="ajax-dropdown" ng-show="obj.buscando" style="display: block; width: 100% !important;">
+	<div class="ajax-notifications custom-scroll">
+		
+		<div class="alert alert-transparent">
+			<div class="tab-pane fade active in" id="a2">
+				
+				<div class="user well" title="{{persona._id}}" ng-repeat="persona in obj.avalesHelper" style="width: 100%">
+					<div class="row">
+						<div class="col-sm-12">
+							<a href="javascript:void(0);" ng-click="obj.AgregarAval(persona); obj.buscando = false"> {{persona.profile.nombreCompleto}}</a> 
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<span> 
+		<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cerrar..." class="btn btn-xs btn-default pull-right" ng-click="obj.buscando = false; obj.buscar.nombre = ''">
+			<i class="fa fa-times"></i>
+		</button> 
+	</span>
+	
+</div>

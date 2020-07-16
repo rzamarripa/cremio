@@ -32,7 +32,7 @@ angular.module("creditoMio")
 		        toastr.error('Error al guardar los datos.');
 		        return;
 		  }
-			console.log(objeto);
+			//console.log(objeto);
 			objeto.estatus = true;
 			objeto.usuarioInserto = Meteor.userId();
 			Ocupaciones.insert(objeto);

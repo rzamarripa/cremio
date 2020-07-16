@@ -1,0 +1,113 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+    <h1 class="alge-title txt-color-blueDark">
+      <i class="fa fa-list fa-fw "></i>
+      Solicitudes de Clientes y Distribuidores
+    </h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6">
+    <a href="#" ui-sref="root.solicitudCreditoPersonalForm({})" class="btn btn-default btn-primary">
+      <i class="fa fa-plus"></i> Nuevo Crédito Personal
+    </a>
+    <a href="#" ui-sref="root.solicitudDistribuidorForm({})" class="btn btn-default btn-primary">
+      <i class="fa fa-plus"></i> Nuevo Distribuidor
+    </a>
+  </div>
+</div>
+<br>
+
+<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false"
+  data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false"
+  data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
+  <header role="heading">
+    <!--<h2><strong>Panel de Folios </strong></h2>-->
+    <ul id="widget-tab-1" class="nav nav-tabs pull-left">
+
+      <li class="active">
+        <a data-toggle="tab" href="#hr1" aria-expanded="false"> <i class="fa fa-lg fa-circle-o"></i> <span
+            class="hidden-mobile hidden-tablet"> Solicitudes Asignadas</span></a>
+      </li>
+
+      <li class="">
+        <a data-toggle="tab" href="#hr2" aria-expanded="false"> <i class="fa fa-lg fa-circle-o"></i> <span
+            class="hidden-mobile hidden-tablet"> Solicitudes Elaboradas</span></a>
+      </li>
+
+    </ul>
+
+    <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+  </header>
+
+  <!-- widget div-->
+  <div role="content">
+
+    <!-- widget edit box -->
+    <div class="jarviswidget-editbox">
+      <!-- This area used as dropdown edit box -->
+
+    </div>
+    <!-- end widget edit box -->
+
+    <!-- widget content -->
+    <div class="widget-body no-padding">
+
+      <!-- widget body text-->
+
+      <div class="tab-content padding-10">
+
+        <div class="tab-pane fade active in" id="hr1">
+          <div ng-include="'client/solicitudesClientesDistribuidores/_solicitudesAsignadas.html'"></div>
+
+        </div>
+
+        <div class="tab-pane fade" id="hr2">
+          <div ng-include="'client/solicitudesClientesDistribuidores/_solicitudesElaboradas.html'"></div>
+        </div>
+
+      </div>
+      <!-- end widget body text-->
+
+      <!-- widget footer -->
+      <div class="widget-footer text-right">
+        Panel de Verificadores
+      </div>
+      <!-- end widget footer -->
+
+    </div>
+    <!-- end widget content -->
+
+  </div>
+  <!-- end widget div -->
+
+</div>
+
+
+<!-- Modal Asignar Sucursal -->
+<div class="modal fade" id="modalAsignarSucursal" data-backdrop="static" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <form name="form" novalidate>
+        <div class="modal-header">
+          <h4 class="modal-title">Asigna Sucursal - {{obj.objeto.profile.nombreCompleto}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-6" valida>
+              <label>Sucursal *</label>
+              <select name="sucursal_id" class="form-control" ng-model="obj.asignaSucursal_id" required>
+                <option ng-repeat="obj in obj.sucursales" value="{{obj._id}}">{{obj.nombreSucursal}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="submit" ng-click="obj.asignarSucursal(form)" value="Aceptar" class="btn btn-success"
+              valida-form formulario="form">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>

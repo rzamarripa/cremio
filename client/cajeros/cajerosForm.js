@@ -97,7 +97,7 @@ angular.module("creditoMio")
 			rc.objeto.confirmpassword = "sinpassword";	
 			rc.objeto.password 				= "sinpassword";
 			rc.sucursalOrigen_id = rc.objeto.profile.sucursal_id;
-			console.log("Sucursal origen", rc.sucursalOrigen_id);
+			//console.log("Sucursal origen", rc.sucursalOrigen_id);
 			$scope.$apply()
 		}});
 	}

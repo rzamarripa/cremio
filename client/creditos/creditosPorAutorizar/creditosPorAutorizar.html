@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
         <h1 class="alge-title txt-color-blueDark">
-			<i class="fa fa-list fa-fw "></i>
-			Clientes o Distribuidores Por Autorizar
-		</h1>
+            <i class="fa fa-list fa-fw "></i>
+            Clientes o Distribuidores Por Autorizar
+        </h1>
     </div>
 </div>
 <br>
@@ -29,68 +29,88 @@
                 <tr ng-repeat="credito in cpa.creditosPorAutorizar">
                     <td class="text-center">{{$index + 1}}</td>
                     <td class="text-center">{{credito.cliente.profile.numeroCliente}}</td>
-                    <td><a href="javascript:void(0);" ng-if = "credito.tipo == 'Distribuidor'"
-	                    			ui-sref="root.distribuidoresDetalle({objeto_id : credito._id})">{{credito.cliente.profile.nombreCompleto}}</a>
-		                    <a href="javascript:void(0);" ng-if = "credito.tipo == 'Crédito Personal'"
-	                    			ui-sref="root.clienteDetalle({objeto_id : credito._id})">{{credito.cliente.profile.nombreCompleto}}</a>																			
-	                    	<a href="javascript:void(0);" ng-if = "credito.tipo == 'Crédito Personal Dist.'"
-	                    			ui-sref="root.distribuidoresDetalle({objeto_id : credito._id})">{{credito.cliente.profile.nombreCompleto}}</a>
-		                </td>
+                    <td><a href="javascript:void(0);" ng-if="credito.tipo == 'Distribuidor'"
+                            ui-sref="root.distribuidoresDetalle({objeto_id : credito._id})">{{credito.cliente.profile.nombreCompleto}}</a>
+                        <a href="javascript:void(0);" ng-if="credito.tipo == 'Crédito Personal'"
+                            ui-sref="root.clienteDetalle({objeto_id : credito._id})">{{credito.cliente.profile.nombreCompleto}}</a>
+                        <a href="javascript:void(0);" ng-if="credito.tipo == 'Crédito Personal Dist.'"
+                            ui-sref="root.distribuidoresDetalle({objeto_id : credito._id})">{{credito.cliente.profile.nombreCompleto}}</a>
+                    </td>
                     <td class="text-center">{{credito.capitalSolicitado | currency}}</td>
                     <td class="text-center">{{credito.fechaSolicito | date:"dd-MM-yyyy"}}</td>
                     <td>{{credito.avales_ids[0].nombre}} {{credito.avales_ids[0].apellidoPaterno}}</td>
                     <td class="text-left" style="padding: 0px">
-	                    	<ul style="padding-left: 15px">
-    												<li ng-repeat="v in credito.verificaciones">
-	    												<!--Viejo -->
-            									<a ng-if = "v.tipoVerificacion == 'solicitante o aval' && v.verificacionPersona == 1" 
-        												 href="javascript:void(0);" 
-          											 ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Solicitante -  {{v.verifico}} 
-            									</a>
-            									<a ng-if = "v.tipoVerificacion == 'solicitante o aval' && v.verificacionPersona == 2" 
-        												 href="javascript:void(0);" 
-          											 ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Aval -{{v.verifico}} 
-            									</a>
-            									<a ng-if = "v.tipoVerificacion == 'vecino' && v.verificacionPersona == 1" 
-        												 href="javascript:void(0);" 
-          											 ui-sref="root.verificacionVecino({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Vecino Solicitante -{{v.verifico}}
-            									</a>
-            									<a ng-if = "v.tipoVerificacion == 'vecino' && v.verificacionPersona == 2" 
-        												 href="javascript:void(0);" 
-          											 ui-sref="root.verificacionVecino({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Vecino Aval -{{v.verifico}}
-            									</a>
-            									<!--Nuevo -->
-            									<a ng-if = "v.tipoVerificacion == 'Cliente' && v.verificacionPersona == 1" 
-        												 href="javascript:void(0);" 
-          											 ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Solicitante - {{v.verifico}}
-            									</a>
-            									
-            									<a ng-if = "v.tipoVerificacion == 'Distribuidor' && v.verificacionPersona == 1" 
-        												 href="javascript:void(0);" 
-          											 ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Solicitante - {{v.verifico}}
-            									</a>
-            									
-            									<a ng-if = "v.tipoVerificacion == 'Aval' && v.verificacionPersona == 2" 
-        												 href="javascript:void(0);" 
-          											 ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Aval -{{v.verifico}}
-            									</a>
+                        <ul style="padding-left: 15px">
+                            <li ng-repeat="v in credito.verificaciones">
+                                <!--Viejo -->
+                                <a ng-if="v.tipoVerificacion == 'solicitante o aval' && v.verificacionPersona == 1"
+                                    href="javascript:void(0);"
+                                    ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Solicitante
+                                    - {{v.verifico}}
+                                </a>
+                                <a ng-if="v.tipoVerificacion == 'solicitante o aval' && v.verificacionPersona == 2"
+                                    href="javascript:void(0);"
+                                    ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Aval
+                                    -{{v.verifico}}
+                                </a>
+                                <a ng-if="v.tipoVerificacion == 'vecino' && v.verificacionPersona == 1"
+                                    href="javascript:void(0);"
+                                    ui-sref="root.verificacionVecino({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Vecino
+                                    Solicitante -{{v.verifico}}
+                                </a>
+                                <a ng-if="v.tipoVerificacion == 'vecino' && v.verificacionPersona == 2"
+                                    href="javascript:void(0);"
+                                    ui-sref="root.verificacionVecino({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Vecino
+                                    Aval -{{v.verifico}}
+                                </a>
+                                <!--Nuevo -->
+                                <a ng-if="v.tipoVerificacion == 'Cliente' && v.verificacionPersona == 1"
+                                    href="javascript:void(0);"
+                                    ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Solicitante
+                                    - {{v.verifico}}
+                                </a>
 
-    												</li>
-  												</ul>		
-			              </td>
+                                <a ng-if="v.tipoVerificacion == 'Distribuidor' && v.verificacionPersona == 1"
+                                    href="javascript:void(0);"
+                                    ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Solicitante
+                                    - {{v.verifico}}
+                                </a>
+
+                                <a ng-if="v.tipoVerificacion == 'Aval' && v.verificacionPersona == 2"
+                                    href="javascript:void(0);"
+                                    ui-sref="root.verificacion({id: v.credito_id, verificacion_id: v._id, tipo: (v.tipo == 'Crédito Personal'?'CP':'V'), persona: -1})">Aval
+                                    -{{v.verifico}}
+                                </a>
+
+                            </li>
+                        </ul>
+                    </td>
                     <td class="text-center">{{credito.verificacionEstatus}}</td>
                     <td class="text-center">
-	                    		<a href="#" ng-click ="cpa.verValoracion(credito.indicacion)"  ng-if="credito.tipo != 'Crédito Personal Dist.'">Valoración</a>
-	                  </td>
+                        <a href="#" ng-click="cpa.verValoracion(credito.indicacion)"
+                            ng-if="credito.tipo != 'Crédito Personal Dist.'">Valoración</a>
+                    </td>
                     <td class="text-center">{{credito.tipo}}</td>
                     <td class="text-center">
-                      <button ng-if="credito.tipo == 'Crédito Personal'" ng-click="cpa.autorizar(credito.credito_id, credito.tipo, credito.cliente.profile.nombreCompleto)" class="btn btn-labeled btn-info"><i class="fa fa-check"></i></button>
-                      <button ng-if="credito.tipo == 'Distribuidor'" ng-click="cpa.autorizar(credito._id, credito.tipo, credito.cliente.profile.nombreCompleto)" class="btn btn-xs btn-primary">Autorizar</button>
-                      <button ng-if="credito.tipo == 'Crédito Personal Dist.'" ng-click="cpa.autorizar(credito.credito_id, credito.tipo, credito.cliente.profile.nombreCompleto)" class="btn btn-xs btn-primary">Autorizar</button>
+                        <button ng-if="credito.tipo == 'Crédito Personal'"
+                            ng-click="cpa.autorizar(credito.credito_id, credito.tipo, credito.cliente.profile.nombreCompleto)"
+                            class="btn btn-labeled btn-info"><i class="fa fa-check"></i></button>
+                        <button ng-if="credito.tipo == 'Distribuidor'"
+                            ng-click="cpa.autorizar(credito._id, credito.tipo, credito.cliente.profile.nombreCompleto)"
+                            class="btn btn-xs btn-primary">Autorizar</button>
+                        <button ng-if="credito.tipo == 'Crédito Personal Dist.'"
+                            ng-click="cpa.autorizar(credito.credito_id, credito.tipo, credito.cliente.profile.nombreCompleto)"
+                            class="btn btn-xs btn-primary">Autorizar</button>
 
-                      <button ng-if="credito.tipo == 'Crédito Personal'" ng-click="cpa.mostrarRechazoCredito(credito.credito_id, credito.tipo)" class="btn btn-labeled btn-danger"><i class="fa fa-times"></i></button>
-                      <button ng-if="credito.tipo == 'Distribuidor'" ng-click="cpa.mostrarRechazoCredito(credito._id, credito.tipo)" class="btn btn-xs btn-warning">Rechazar</button>
-                      <button ng-if="credito.tipo == 'Crédito Personal Dist.'" ng-click="cpa.mostrarRechazoCredito(credito.credito_id, credito.tipo)" class="btn btn-xs btn-warning">Rechazar</button>
+                        <button ng-if="credito.tipo == 'Crédito Personal'"
+                            ng-click="cpa.mostrarRechazoCredito(credito.credito_id, credito.tipo)"
+                            class="btn btn-labeled btn-danger"><i class="fa fa-times"></i></button>
+                        <button ng-if="credito.tipo == 'Distribuidor'"
+                            ng-click="cpa.mostrarRechazoCredito(credito._id, credito.tipo)"
+                            class="btn btn-xs btn-warning">Rechazar</button>
+                        <button ng-if="credito.tipo == 'Crédito Personal Dist.'"
+                            ng-click="cpa.mostrarRechazoCredito(credito.credito_id, credito.tipo)"
+                            class="btn btn-xs btn-warning">Rechazar</button>
                     </td>
                 </tr>
             </tbody>
@@ -105,15 +125,16 @@
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-	            <form name="formCancelar" novalidate>
-                <div class="modal-header">
-                    <h4 class="modal-title">Autorización de Créditos</h4>
-                </div>
-                <div class="modal-footer">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label class="pull-left">Motivo del rechazo:</label>
-                            <textarea name="cancelar" type="text" rows="3" class="form-control" ng-model="cpa.motivo" required="" capitalize>
+                <form name="formCancelar" novalidate>
+                    <div class="modal-header">
+                        <h4 class="modal-title">Autorización de Créditos</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="pull-left">Motivo del rechazo:</label>
+                                <textarea name="cancelar" type="text" rows="3" class="form-control"
+                                    ng-model="cpa.motivo" required="" capitalize>
                         </div>
                     </div>
                 </div>

@@ -48,6 +48,30 @@ function validacionCARPCtrl($scope, $meteor, $reactive, $state, toastr) {
 						prospecto.nombre = prospecto.nombreCompleto;
 						rc.personas.push(prospecto);
 					});
+					_.each(result.conyugeClienteCreditoP, function (item) {
+						item.tipoPersona = "Cónyuge Cliente Personal";
+						item.nombre = item.profile.nombreConyuge;
+						item.conyuge = item.profile.nombreCompleto;
+						rc.personas.push(item);
+					});
+					_.each(result.conyugeClienteDistribuidor, function (item) {
+						item.tipoPersona = "Cónyuge Distribuidor";
+						item.nombre = item.profile.nombreConyuge;
+						item.conyuge = item.profile.nombreCompleto;
+						rc.personas.push(item);
+					});
+					_.each(result.prospectosCreditoPersonal, function (item) {
+						item.tipoPersona = "Prospecto Crédito Personal";
+						item.nombre = item.profile.nombreCompleto;
+						rc.personas.push(item);
+					});
+					_.each(result.prospectosDistribuidor, function (item) {
+						item.tipoPersona = "Prospecto Distribuidor";
+						item.nombre = item.profile.nombreCompleto;
+						rc.personas.push(item);
+					});
+
+
 
 					$scope.$apply();
 				}

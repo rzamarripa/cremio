@@ -256,6 +256,7 @@ Meteor.methods({
 					arreglo[credito.cliente_id].arreglo[numeroCorte].fechaPago = planPago.fechaLimite;
 					arreglo[credito.cliente_id].arreglo[numeroCorte].importe = 0;
 					arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios = 0;
+					arreglo[credito.cliente_id].arreglo[numeroCorte].seguroDistribuidor = arreglo[credito.cliente_id].seguro;
 
 					if (planPago.descripcion == 'Recibo')
 						arreglo[credito.cliente_id].arreglo[numeroCorte].importe = planPago.importeRegular;
@@ -292,7 +293,6 @@ Meteor.methods({
 					arreglo[credito.cliente_id].cargosMoratorios += round(Number(planPago.importeRegular).toFixed(3), 2);
 					arreglo[credito.cliente_id].classPago = "text-danger";
 				}
-
 
 				arreglo[credito.cliente_id].bonificacion += round(Number(planPago.bonificacion).toFixed(3), 2);
 
@@ -341,6 +341,7 @@ Meteor.methods({
 					arreglo[credito.cliente_id].arreglo[numeroCorte].fechaPago = planPago.fechaLimite;
 					arreglo[credito.cliente_id].arreglo[numeroCorte].importe = 0;
 					arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios = 0;
+					arreglo[credito.cliente_id].arreglo[numeroCorte].seguroDistribuidor = arreglo[credito.cliente_id].seguro;
 
 					if (planPago.descripcion == 'Recibo')
 						arreglo[credito.cliente_id].arreglo[numeroCorte].importe = round(Number(planPago.importeRegular).toFixed(3), 2);
@@ -358,6 +359,7 @@ Meteor.methods({
 						arreglo[credito.cliente_id].arreglo[numeroCorte].importe += round(Number(planPago.importeRegular).toFixed(3), 2);
 					else
 						arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios += round(Number(planPago.importeRegular).toFixed(3), 2);
+
 
 					arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion += round(Number(planPago.bonificacion).toFixed(3), 2);
 					arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos.push(planPago);

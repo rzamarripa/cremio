@@ -1,915 +1,1038 @@
 <h3>Verificación {{ver.tipoVerificacion}} - {{ver.tipoClienteDistribuidor}}</h3>
 <form name="form" class="form-horizontal" role="form" novalidate>
 
-		<div class="well">
-			<div class="col-sm-12 col-md-12 col-lg-12">
-						<div class="col-sm-3 pull-right">
-								<img style="max-width:200px;" src="{{ver.objeto.cliente.foto}}" >
-						</div>
-						
-						<div class="col-sm-9">
-							<div class="row">
-									<label><strong>Nombre: </strong></label>
-									<span>{{ver.objeto.cliente.nombreCompleto}}</span>
-							</div>	
-							<div class="row">
-									<label><strong>Domicilio: </strong></label>
-									<span>{{ver.objeto.cliente.calle}} #{{ver.objeto.cliente.numero}}, CP: {{ver.objeto.cliente.codigoPostal}}, Col. {{ver.objeto.cliente.colonia}} {{ver.objeto.cliente.ciudad}} 				</span>
-							</div>
-							<div class="row">
-									<label><strong>Señas Particulares: </strong></label>
-									<span>{{ver.objeto.cliente.senasParticulares}}</span>
-							</div>	
-						</div>
-			</div>	
-					
-			<div class="row">
-					<div class="col-sm-2" valida>
-							<label>Entrevistado</label>
-				    	<select name="entrevistado" ng-model="ver.objeto.entrevistado" data-placeholder="Seleccione" class="form-control" required >
-								<option value="TITULAR">Titular</option>
-								<option value="OTRO">Otro</option>
-							</select>												
-					</div>	
-					<div class="col-sm-3" valida ng-if = "ver.objeto.entrevistado == 'OTRO'"> 
-			    	<label>Parentesco</label>
-			    	<input name="parentesco" type="text" class="form-control" placeholder="Parentesco" ng-model="ver.objeto.parentesco" required="" capitalize>
-		    	</div>
-		    	<div class="col-sm-7" valida ng-if = "ver.objeto.entrevistado == 'OTRO'">					    
-			    	<label>Nombre del Entrevistado </label>
-			    	<input name="nombreOtro" type="text" class="form-control" placeholder="Nombre" ng-model="ver.objeto.nombreOtro" required="" capitalize>
-				  </div>
+	<div class="well">
+		<div class="col-sm-12 col-md-12 col-lg-12">
+			<div class="col-sm-3 pull-right">
+				<img style="max-width:200px;" src="{{ver.objeto.cliente.foto}}">
 			</div>
-			<div class="row">
-					<div class="col-sm-3" valida>
-			    	<label># Habitantes</label>
-			    	<input name="numeroHabitantes" type="number" min="0" class="form-control" ng-model="ver.objeto.numeroHabitantes" required="">
-			    </div>
-			    <div class="col-sm-4" valida> 
-			    	<label># Dependientes Económicos</label>
-			    	<input name="numeroDependientes" type="number" min="0" class="form-control" ng-model="ver.objeto.numeroDependientes" required="">
-			    </div>						
-			</div>				
+
+			<div class="col-sm-9">
+				<div class="row">
+					<label><strong>Nombre: </strong></label>
+					<span>{{ver.objeto.cliente.nombreCompleto}}</span>
+				</div>
+				<div class="row">
+					<label><strong>Domicilio: </strong></label>
+					<span>{{ver.objeto.cliente.calle}} #{{ver.objeto.cliente.numero}}, CP: {{ver.objeto.cliente.codigoPostal}},
+						Col. {{ver.objeto.cliente.colonia}} {{ver.objeto.cliente.ciudad}} </span>
+				</div>
+				<div class="row">
+					<label><strong>Señas Particulares: </strong></label>
+					<span>{{ver.objeto.cliente.senasParticulares}}</span>
+				</div>
+			</div>
 		</div>
 
+		<div class="row">
+			<div class="col-sm-2" valida>
+				<label>Entrevistado</label>
+				<select name="entrevistado" ng-model="ver.objeto.entrevistado" data-placeholder="Seleccione"
+					class="form-control" required>
+					<option value="TITULAR">Titular</option>
+					<option value="OTRO">Otro</option>
+				</select>
+			</div>
+			<div class="col-sm-3" valida ng-if="ver.objeto.entrevistado == 'OTRO'">
+				<label>Parentesco</label>
+				<input name="parentesco" type="text" class="form-control" placeholder="Parentesco"
+					ng-model="ver.objeto.parentesco" required="" capitalize>
+			</div>
+			<div class="col-sm-7" valida ng-if="ver.objeto.entrevistado == 'OTRO'">
+				<label>Nombre del Entrevistado </label>
+				<input name="nombreOtro" type="text" class="form-control" placeholder="Nombre" ng-model="ver.objeto.nombreOtro"
+					required="" capitalize>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-3" valida>
+				<label># Habitantes</label>
+				<input name="numeroHabitantes" type="number" min="0" class="form-control" ng-model="ver.objeto.numeroHabitantes"
+					required="">
+			</div>
+			<div class="col-sm-4" valida>
+				<label># Dependientes Económicos</label>
+				<input name="numeroDependientes" type="number" min="0" class="form-control"
+					ng-model="ver.objeto.numeroDependientes" required="">
+			</div>
+		</div>
+	</div>
 
-		<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
-				<header role="heading">
-				<!--<h2><strong>Panel de Folios </strong></h2>-->
-				<ul id="widget-tab-1" class="nav nav-tabs pull-left">
-		
-					<li class="active">
-						<a data-toggle="tab" href="#hr1" aria-expanded="false"> 
-							<i class="fa fa-lg fa-male"></i> <span class="hidden-mobile hidden-tablet"> Interesado</span>
-						</a>
-					</li>
-					
-					<li class="">
-						<a data-toggle="tab" href="#hr2" aria-expanded="false"> 
-							<i class="fa fa-lg fa-female"></i> <span class="hidden-mobile hidden-tablet"> Vecino </span>
-						</a>
-					</li>
-		
-					<li class="" ng-if = "ver.objeto.tipo == 'creditoP'">
-						<a data-toggle="tab" href="#hr3" aria-expanded="false"> 
-							<i class="fa fa-lg fa-desktop"></i> <span class="hidden-mobile hidden-tablet"> Respaldos </span>
-						</a>
-					</li>
-		
-				</ul>	
-				
-			<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-		
-			<!-- widget div-->
-			<div role="content">
-				
-				<!-- widget edit box -->
-				<div class="jarviswidget-editbox">
-					<!-- This area used as dropdown edit box -->
-					
-				</div>
-				<!-- end widget edit box -->
-				
-				<!-- widget content -->
-				<div class="widget-body no-padding">
-		
-					<!-- widget body text-->
-					
-					<div class="tab-content padding-10">
-						
-						<!-- Interesado -->
-						<div class="tab-pane fade active in" id="hr1">
-								<div class="row">
-										<div class="col-sm-2" valida>
-												<label>¿Trabaja?</label>
-									    	<select name="creditoOtroTipo" ng-model="ver.objeto.trabaja" data-placeholder="Seleccione" class="form-control" required >
-													<option value="SI">Si</option>
-													<option value="NO">No</option>
-												</select>												
-										</div>	
-										<div class="col-sm-3" ng-if = "ver.objeto.trabaja == 'SI'" valida> 					    
-								    	<label>Antigüedad</label>
-								    	<input name="antiguedad" type="text" class="form-control" placeholder="Antigüedad" ng-model="ver.objeto.antiguedad" required="" capitalize>
-							    	</div>
-							    	<div class="col-sm-7" ng-if = "ver.objeto.trabaja == 'SI'">					    
-								    	<label>¿Dónde trabaja?</label>
-								    	<input name="dondeTrabaja" type="text" class="form-control" placeholder="Donde Trabaja" ng-model="ver.objeto.dondeTrabaja" capitalize>
-									  </div>
-								</div> 
-								<br>
-								<div class="row" ng-if = "ver.objeto.trabaja == 'SI'">
-										<div class="col-sm-8">					    
-								    	<label>Puesto </label>
-								    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ver.objeto.puesto" capitalize>
-									  </div>
-									  <div class="col-sm-4" valida> 					    
-								    	<label>Ingreso Mensual</label>
-								    	<input name="ingresoMensual" type="text" class="form-control" placeholder="Ingreso Mensual" ng-model="ver.objeto.ingresoMensual" required="" capitalize>
-							    	</div>
-								</div>	
-								<br>
-								<div class="row">
-										<div class="col-sm-6" valida>					    
-								    	<label>¿Ha tenido o tiene créditos vigentes en algún banco , financiera o prestamista? *</label>
-								    	<select name="tieneOtrosCreditos" ng-model="ver.objeto.tieneOtrosCreditos" data-placeholder="Seleccione" class="form-control" required>
-													<option value="SI">Si</option>
-													<option value="NO">No</option>
-											</select>
-									  </div>
-									  <div class="col-sm-2" valida ng-if = "ver.objeto.tieneOtrosCreditos == 'SI'">					    
-								    	<label>Deuda actual</label>
-								    	<input name="deudaActual" type="text" class="form-control" placeholder="Deuda Actual"  ng-model="ver.objeto.deudaActual" required="" capitalize>
-							    	</div>
-							    	<div class="col-sm-2" valida ng-if = "ver.objeto.tieneOtrosCreditos == 'SI'">					    
-								    	<label>Periodicidad pagos</label>
-								    	<select name="periodicidadPagos" ng-model="ver.objeto.periodicidadPagos" data-placeholder="Seleccione" class="form-control" required>
-													<option value="SEMANAL">Semanal</option>
-													<option value="QUINCENAL">Quincenal</option>
-													<option value="MENSUAL">Mensual</option>
-												</select>
-							    	</div>
-							    	<div class="col-sm-2" valida ng-if = "ver.objeto.tieneOtrosCreditos == 'SI'">					    
-								    	<label>Total pagos</label>
-								    	<input name="totalPagos" type="text" class="form-control" placeholder="Total Pagos"  ng-model="ver.objeto.totalPagos" required="" capitalize>
-							    	</div>
-								</div>	
-								<br>
-								<div class="row">
-										<div class="col-sm-4" valida>					    
-								    	<label>¿Sabe que cantidad esta solicitando? *</label>
-								    	<select name="sabeCantidadSolicitar" ng-model="ver.objeto.sabeCantidadSolicitar" data-placeholder="Seleccione" class="form-control" required>
-													<option value="SI">Si</option>
-													<option value="NO">No</option>
-											</select>
-									  </div>
-									  <div class="col-sm-4" valida ng-if = "ver.objeto.sabeCantidadSolicitar == 'SI'">					    
-								    	<label>Cantidad *</label>
-								    	<input name="cantidad" type="text" class="form-control" placeholder="Cantidad" ng-model="ver.objeto.cantidadSolicitar" required="" capitalize>
-									  </div>
-								</div>
-								<br>
-								<div class="row">
-										<div class="col-sm-2" valida>					    
-								    	<label>Estado Civil *</label>
-								    	<select name="estadoCivil" ng-model="ver.objeto.estadoCivil" data-placeholder="Seleccione" class="form-control" required>
-													<option value="SOLTERO(A)">Soltero(a)</option>
-													<option value="CASADO(A)">Casado(a)</option>
-											</select>
-									  </div>
-									  <div class="col-sm-4" valida ng-if = "ver.objeto.estadoCivil == 'CASADO(A)'">
-								    	<label>Nombre cónyuge *</label>
-								    	<input name="nombreConyuge" type="text" class="form-control" placeholder="Cantidad" ng-model="ver.objeto.nombreConyuge" required="" capitalize>
-									  </div>
-									  <div class="col-sm-2" valida ng-if = "ver.objeto.estadoCivil == 'CASADO(A)'">
-								    	<label>Tel. cónyuge *</label>
-								    	<input name="telefonoConyuge" type="text" class="form-control" placeholder="Cantidad" ng-model="ver.objeto.telefonoConyuge" required="" capitalize>
-									  </div>
-									  <div class="col-sm-2" valida ng-if = "ver.objeto.estadoCivil == 'CASADO(A)'">					    
-								    	<label>Trabaja cónyuge *</label>
-								    	<select name="trabajaConyuge" ng-model="ver.objeto.trabajaConyuge" data-placeholder="Seleccione" class="form-control" required>
-													<option value="SI">Si</option>
-													<option value="NO">No</option>
-											</select>
-									  </div>
-									  <div class="col-sm-2" valida ng-if = "ver.objeto.trabajaConyuge == 'SI'">
-								    	<label>Ingresos mensuales *</label>
-								    	<input name="ingresosMensuales" type="text" class="form-control" placeholder="Cantidad" ng-model="ver.objeto.ingresoMensualConguye" required="" capitalize>
-									  </div>
-								</div>
-								<br ng-if = "ver.objeto.trabajaConyuge == 'SI'">
-								<div class="row" ng-if = "ver.objeto.trabajaConyuge == 'SI'">
-							    	<div class="col-sm-4" valida>					    
-								    	<label>¿Dónde trabaja *</label>
-								    	<input name="dondeTrabaja" type="text" class="form-control" placeholder="Donde Trabaja" ng-model="ver.objeto.dondeTrabajaConguye" required="" capitalize>
-									  </div>
-							    	<div class="col-sm-3" valida>	    
-								    	<label>Puesto *</label>
-								    	<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ver.objeto.puestoConguye" required="" capitalize>
-									  </div>
-									  <div class="col-sm-2" valida> 					    
-								    	<label>Antigüedad *</label>
-								    	<input name="antiguedad" type="text" class="form-control" placeholder="Antigüedad" ng-model="ver.objeto.antiguedadConguye" required="" capitalize>
-							    	</div>
-							    	<div class="col-sm-3" valida> 					    
-								    	<label>Tel trabajo *</label>
-								    	<input name="telefonoTrabajoConyuge" type="text" class="form-control" placeholder="Teléfono Trabajo" ng-model="ver.objeto.telefonoTrabajoConyuge" required="" capitalize>
-							    	</div>
-								</div>
-								<br ng-if = "ver.tipoClienteDistribuidor == 'Aval'">
-								<div class="row" ng-if = "ver.tipoClienteDistribuidor	== 'Aval'">
-							    	<div class="col-sm-9" valida>					    
-								    	<label>¿Está usted consiente y de acuerdo en hacerse cargo de la cuenta en el momento en el que nosotros le requiramos?</label>
-								    	<select name="cargoCuenta" ng-model="ver.objeto.cargoCuenta" data-placeholder="Seleccione" class="form-control" required>
-												<option value="SI">Si</option>
-												<option value="NO">No</option>
-											</select>
-									  </div>
-								</div>
-								<br>
-								<div class="row">
-									<div class="table-responsive">
-										<div class="col-sm-12">
-											<table class="table table-bordered" style="width: 100%">
-												<thead>
-													<tr>
-														<th style="width: 25%;text-align: center">Servicios</th>	
-														<th style="width: 25%;text-align: center">Casa</th>	
-														<th colspan="2" style="width: 50%;text-align: center">Menaje de casa</th>	
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.serviciosTelefono">
-																  <span>Teléfono</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.casaHabitaciones">
-																  <span>Habitaciones</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeEstufa">
-																  <span>Estufa</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeTV">
-																  <span>TV</span>
-															</label>
-														</td>
-													</tr>
-													<tr>	
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.serviciosCablevision">
-																  <span>Cablevisión</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.casaNiveles">
-																  <span>Niveles</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeRefrigerador">
-																  <span>Refrigerador</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajePCLaptop">
-																  <span>PC/Laptop</span>
-															</label>
-														</td>
-													</tr>
-													<tr>	
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.serviciosInternet">
-																  <span>Internet</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.casaCochera">
-																  <span>Cochera</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeSala">
-																  <span>Sala</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeDVD">
-																  <span>DVD</span>
-															</label>
-														</td>
-													</tr>
-													<tr>	
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.serviciosSkyDish">
-																  <span>Sky / Dish</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.casaVehiculos">
-																  <span>Vehículos</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeAireAcondicionado">
-																  <span>Aire Aconndicionado</span>
-															</label>
-														</td>
-														<td style="width: 25%">
-															<label class="checkbox-inline">
-																  <input type="checkbox" class="checkbox style-0" ng-model = "ver.objeto.mennajeStereo">
-																  <span>Stereo</span>
-															</label>
-														</td>
-													</tr>	
-													</tr>	
-												</tbody>		
-											</table>		
-										</div>	
-									</div>	
-								</div>	
-								<h3>Tipo de vivienda</h3>
-								<div class="row">
-										<div class="col-sm-2">
-											<label class="radio-inline">
-												<input type="radio" name="transporte" ng-model = "ver.objeto.tipoVivienda" value="Bajo">
-												Bajo
-											</label>
-										</div>
-										<div class="col-sm-2">
-											<label class="radio-inline">
-												<input type="radio" name="transporte" ng-model = "ver.objeto.tipoVivienda" value="Medio">
-												Medio
-											</label>
-										</div>
-										<div class="col-sm-2">
-											<label class="radio-inline">
-												<input type="radio" name="transporte" ng-model = "ver.objeto.tipoVivienda" value="Residencial">
-												Residencial
-											</label>
-										</div>
-										<div class="col-sm-2">
-											<label class="radio-inline">
-												<input type="radio" name="transporte" ng-model = "ver.objeto.tipoVivienda" value="InteresSocial">
-												Interes Social
-											</label>
-										</div>
-										<div class="col-sm-2">
-											<label class="radio-inline">
-												<input type="radio" name="transporte" ng-model = "ver.objeto.tipoVivienda" value="MedioAlto">
-												Medio Alto
-											</label>
-										</div>
-								</div>
-								<h3>Situación de la vivienda</h3>
-								<div class="row">
-										<div class="col-sm-2">
-											<label class="radio-inline" style="margin-top: 15px;">
-												<input type="radio" name="situacionVivienda" ng-model = "ver.objeto.situacionVivienda" value="Propia">
-												Propia
-											</label>
-										</div>
-										<div class="col-sm-2">	    
-								    	<label>Valor</label>
-								    	<input name="valorPropia" type="number" min="0" class="form-control" ng-model="ver.objeto.valorPropia" ng-disabled = "ver.objeto.situacionVivienda != 'Propia'">
-									  </div>
-									  <div class="col-sm-8">	    
-								    	<label>A nombre de</label>
-								    	<input name="aNombreDePropia" type="text" class="form-control" placeholder="A nombre de" ng-model="ver.objeto.aNombreDePropia" ng-disabled = "ver.objeto.situacionVivienda != 'Propia'" capitalize>
-									  </div>
-								</div>
-								<div class="row">
-										<div class="col-sm-2">
-											<label class="radio-inline" style="margin-top: 15px;">
-												<input type="radio" name="situacionVivienda" ng-model = "ver.objeto.situacionVivienda" value="Renta">
-												Renta
-											</label>
-										</div>
-										<div class="col-sm-2">	    
-								    	<label>Pago</label>
-								    	<input name="pagoRenta" type="number" min="0" class="form-control" ng-model="ver.objeto.pagoRenta" ng-disabled = "ver.objeto.situacionVivienda != 'Renta'">
-									  </div>
-								</div>	
-								<div class="row">
-										<div class="col-sm-2">
-											<label class="radio-inline" style="margin-top: 15px;">
-												<input type="radio" name="situacionVivienda" ng-model = "ver.objeto.situacionVivienda" value="Pagandola">
-												Pagandola
-											</label>
-										</div>
-										<div class="col-sm-2">	    
-								    	<label>Valor</label>
-								    	<input name="valorPagandola" type="number" min="0" class="form-control" ng-model="ver.objeto.valorPagandola" ng-disabled = "ver.objeto.situacionVivienda != 'Pagandola'">
-									  </div>
-									  <div class="col-sm-8">	    
-								    	<label>Medio</label>
-								    	<input name="medioPagandola" type="text" class="form-control" placeholder="Medio" ng-model="ver.objeto.medioPagandola" ng-disabled = "ver.objeto.situacionVivienda != 'Pagandola'" capitalize>
-									  </div>
-								</div>
-								<div class="row">
-										<div class="col-sm-2">
-											<label class="radio-inline" style="margin-top: 15px;">
-												<input type="radio" name="situacionVivienda" ng-model = "ver.objeto.situacionVivienda" value="Otra">
-												Otra
-											</label>
-										</div>
-										<div class="col-sm-2">	    
-								    	<label>Especifique</label>
-								    	<input name="otraEspecifique" type="text" class="form-control" placeholder="Especifique" ng-model="ver.objeto.otraEspecifique" ng-disabled = "ver.objeto.situacionVivienda != 'Otra'">
-									  </div>
-								</div>
+
+	<div class="jarviswidget jarviswidget-sortable" id="wid-id-11" data-widget-colorbutton="false"
+		data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false"
+		data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget">
+		<header role="heading">
+			<!--<h2><strong>Panel de Folios </strong></h2>-->
+			<ul id="widget-tab-1" class="nav nav-tabs pull-left">
+
+				<li class="active">
+					<a data-toggle="tab" href="#hr1" aria-expanded="false">
+						<i class="fa fa-lg fa-male"></i> <span class="hidden-mobile hidden-tablet"> Interesado</span>
+					</a>
+				</li>
+
+				<li class="">
+					<a data-toggle="tab" href="#hr2" aria-expanded="false">
+						<i class="fa fa-lg fa-female"></i> <span class="hidden-mobile hidden-tablet"> Vecino </span>
+					</a>
+				</li>
+
+				<li class="" ng-if="ver.objeto.tipo == 'creditoP' || ver.objeto.tipo == 'Prospecto Crédito Personal'">
+					<a data-toggle="tab" href="#hr3" aria-expanded="false">
+						<i class="fa fa-lg fa-desktop"></i> <span class="hidden-mobile hidden-tablet"> Respaldos </span>
+					</a>
+				</li>
+
+			</ul>
+
+			<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+		</header>
+
+		<!-- widget div-->
+		<div role="content">
+
+			<!-- widget edit box -->
+			<div class="jarviswidget-editbox">
+				<!-- This area used as dropdown edit box -->
+
+			</div>
+			<!-- end widget edit box -->
+
+			<!-- widget content -->
+			<div class="widget-body no-padding">
+
+				<!-- widget body text-->
+
+				<div class="tab-content padding-10">
+
+					<!-- Interesado -->
+					<div class="tab-pane fade active in" id="hr1">
+						<div class="row">
+							<div class="col-sm-2" valida>
+								<label>¿Trabaja?</label>
+								<select name="creditoOtroTipo" ng-model="ver.objeto.trabaja" data-placeholder="Seleccione"
+									class="form-control" required>
+									<option value="SI">Si</option>
+									<option value="NO">No</option>
+								</select>
+							</div>
+							<div class="col-sm-3" ng-if="ver.objeto.trabaja == 'SI'" valida>
+								<label>Antigüedad</label>
+								<input name="antiguedad" type="text" class="form-control" placeholder="Antigüedad"
+									ng-model="ver.objeto.antiguedad" required="" capitalize>
+							</div>
+							<div class="col-sm-7" ng-if="ver.objeto.trabaja == 'SI'">
+								<label>¿Dónde trabaja?</label>
+								<input name="dondeTrabaja" type="text" class="form-control" placeholder="Donde Trabaja"
+									ng-model="ver.objeto.dondeTrabaja" capitalize>
+							</div>
 						</div>
-		
-						<!-- Vecino -->				
-						<div class="tab-pane fade" id="hr2">
-								<div class="row">
-										<div class="col-sm-6">
-								    	<label>Nombre </label>
-								    	<input name="nombreVecino" type="text" class="form-control" placeholder="Nombre" ng-model="ver.objeto.nombreVecino" capitalize>
-										</div>	
-										<div class="col-sm-2">
-								    	<label>No. Casa </label>
-								    	<input name="numeroCasaVecino" type="text" class="form-control" placeholder="No. Casa" ng-model="ver.objeto.numeroCasaVecino" capitalize>
-										</div>
-										<div class="col-sm-3">
-												<label>¿La casa del vecino es?</label>
-									    	<select name="casaDelVecino" ng-model="ver.objeto.casaDelVecino" data-placeholder="Seleccione" class="form-control">
-													<option value="PROPIA">Propia</option>
-													<option value="RENTADA">Rentada</option>
-												</select>												
-										</div>
-								</div>
-								<br>
-								<div class="row">
-										<div class="col-sm-3">
-												<label>¿Sabe si trabaja?</label>
-									    	<select name="sabeSiTrabaja" ng-model="ver.objeto.sabeSiTrabaja" data-placeholder="Seleccione" class="form-control">
-													<option value="SI">Si</option>
-													<option value="NO">No</option>
-												</select>												
-										</div>										
-										<div class="col-sm-6" ng-if = "ver.objeto.sabeSiTrabaja == 'SI'">
-								    	<label>Donde </label>
-								    	<input name="dondeTrabajaVecino" type="text" class="form-control" placeholder="Nombre" ng-model="ver.objeto.dondeTrabajaVecino" capitalize>
-										</div>
-								</div>
-								<br>
-								<div class="row">
-										<div class="col-sm-3">
-												<label>¿Sabe si es casado?</label>
-									    	<select name="sabeSiEsCasado" ng-model="ver.objeto.sabeSiEsCasado" data-placeholder="Seleccione" class="form-control">
-													<option value="SI">Si</option>
-													<option value="NO">No</option>
-												</select>												
-										</div>										
-								</div>
-								<br ng-if = "ver.objeto.sabeSiEsCasado == 'SI'">
-								<div class="row" ng-if = "ver.objeto.sabeSiEsCasado == 'SI'">
-										<div class="col-sm-3">
-												<label>¿El esposo(a) trabaja?</label>
-									    	<select name="sabeSiTrabaja" ng-model="ver.objeto.elEsposoTrabaja" data-placeholder="Seleccione" class="form-control">
-													<option value="SI">Si</option>
-													<option value="NO">No</option>
-												</select>												
-										</div>										
-										<div class="col-sm-6" ng-if = "ver.objeto.elEsposoTrabaja == 'SI'">
-								    	<label>Donde </label>
-								    	<input name="dondeTrabajaEsposoVecino" type="text" class="form-control" placeholder="Donde trabaja" ng-model="ver.objeto.dondeTrabajaEsposoVecino" capitalize>
-										</div>
-								</div>
-								<br>
-								<div class="row">
-										<div class="col-sm-3">
-												<label>¿Sabe si es visitado por cobradores?</label>
-									    	<select name="sabeSiEsVisitadoPorCobradores" ng-model="ver.objeto.sabeSiEsVisitadoPorCobradores" data-placeholder="Seleccione" class="form-control">
-													<option value="SI">Si</option>
-													<option value="NO">No</option>
-												</select>												
-										</div>										
-								</div>
-								<br>
-								<div class="row">
-										<div class="col-sm-12">
-												<label>¿Cómo es como vecino?</label>
-								    	<input name="esComoVecino" type="text" class="form-control" placeholder="Es como vecino" ng-model="ver.objeto.esComoVecino" capitalize>
-										</div>
-								</div>
-								<br>
-								<div class="row">
-										<div class="col-sm-12">
-												<label>¿Usted considera que es responsable?</label>
-								    	<input name="esResponsable" type="text" class="form-control" placeholder="Es responsable" ng-model="ver.objeto.esResponsable" capitalize>
-										</div>
-								</div>
+						<br>
+						<div class="row" ng-if="ver.objeto.trabaja == 'SI'">
+							<div class="col-sm-8">
+								<label>Puesto </label>
+								<input name="puesto" type="text" class="form-control" placeholder="Puesto" ng-model="ver.objeto.puesto"
+									capitalize>
+							</div>
+							<div class="col-sm-4" valida>
+								<label>Ingreso Mensual</label>
+								<input name="ingresoMensual" type="text" class="form-control" placeholder="Ingreso Mensual"
+									ng-model="ver.objeto.ingresoMensual" required="" capitalize>
+							</div>
 						</div>
-						
-						<!-- Respaldos-->	
-						<div class="tab-pane fade" id="hr3" ng-if = "ver.objeto.tipo == 'creditoP'">
-								<h4 ng-if = "ver.objeto.tipo == 'creditoP'">Garantias</h4>
-								<div class="well" ng-if = "ver.objeto.tipo == 'creditoP'">	    
-											<div class="row">
-												<div class="col-sm-4" valida>
-											    	<label>Tipo de garantía</label>
-											    	<select name="horario" class="form-control" ng-model="ver.objeto.tipoGarantia">
-												    	<option value="general">General o inmobiliaria</option>
-												    	<option value="mobiliaria">Mobiliaria</option>
-											    	</select>
-										    </div>
-											</div>
-																		
-											<div  ng-if="ver.objeto.tipoGarantia == 'mobiliaria'">
-				
-													<br>
-													<h4>Comisiones</h4>
-													<div class="row">
-														<div class="col-sm-3" >
-															<label>Almacenaje</label>
-												    	<input name="almacenaje" type="number" class="form-control" placeholder="Almacenaje" ng-model="ver.garantia.almacenaje" >
-														</div>
-														<div class="col-sm-3" >
-															<label>Comercialización</label>
-												    	<input name="comercializacion" type="number" class="form-control" placeholder="Comercialización" ng-model="ver.garantia.comercializacion" >
-														</div>
-														<div class="col-sm-3" >
-															<label>Desempeño Extemporaneo</label>
-												    	<input name="desempenioExtemporaneo" type="number" class="form-control" placeholder="Desempeño Extemporaneo" ng-model="ver.garantia.desempenioExtemporaneo" >
-														</div>
-														<div class="col-sm-3" >
-															<label>Reposición de Contrato</label>
-												    	<input name="reposicionContrato" type="number" class="form-control" placeholder="Reposición de Contrato" ng-model="ver.garantia.reposicionContrato" >
-														</div>
-													</div>
-											    <div class="row">
-											    	<div class="col-sm-6" > 					    
-												    	<label>Descripción Genérica</label>
-												    	<input name="descripcion" type="text" class="form-control" placeholder="Descripción" ng-model="ver.garantia.descripcion" capitalize >
-											    	</div>
-											    	<div class="col-sm-6" > 					    
-												    	<label>Características	</label>
-												    	<input name="caracteristicas" type="text" class="form-control" placeholder="Características" ng-model="ver.garantia.caracteristicas" capitalize >
-											    	</div>
-											    </div>
-											    <div class="row">	
-												    <div class="col-sm-2"> 					    
-												    	<label>Avalúo</label>
-												    	<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO" ng-model="ver.garantia.avaluoMobiliaria" ng-change="ver.calcularPorcentajeMobiliaria()" >
-											    	</div>
-											    	 <div class="col-sm-4">					    
-												    	<label>Porcentaje del préstamo sobre el avalúo</label>
-												    	<input name="porcentajePrestamo" type="number" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ver.garantia.porcentajePrestamoMobiliria" disabled="true">
-											    	</div>
-											    </div>
-											    <div class="row">		<br/>
-											    	<div class="col-sm-3">
-													   	<input type="button" ng-click="ver.insertarGarantia(ver.objeto.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
-													   	<input type="button" ng-click="ver.actualizarGarantia(ver.objeto.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
-													   	<input type="button" ng-click="ver.cancelarGarantia(ver.objeto.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
-														</div>
-											    </div>
-											    <br/>
-											    <div class="row">
-														<div class="col-sm-12">
-															<table class="table table-bordered">
-																<thead>
-					
-																	<tr>
-																		<th width="5%">Número</th>
-																		<th width="15%">Descripción genérica</th>
-																		<th width="15%">Características</th>
-																		<th width="10%">Avalúo</th>
-																		<th width="8%">% Avalúo</th>
-																		<th width="8%">Almacenaje</th>
-																		<th width="8%">Comercialización</th>
-																		<th width="10%">D. Extemp.</th>
-																		<th width="10%">R. Cont.</th>
-																		<th width="8%">Acción</th>
-																	</tr>
-																</thead>
-																<tbody>
-																	<tr ng-repeat="garantia in ver.garantias">
-																		<td>{{garantia.num}}</td>
-																		<td>{{garantia.descripcion}}</td>
-																		<td>{{garantia.caracteristicas}}</td>
-																		<td style="text-align: right">{{garantia.avaluoMobiliaria | currency}}</td>
-																		<td style="text-align: center">{{garantia.porcentajePrestamoMobiliria}}</td>
-																		<td style="text-align: right">{{garantia.almacenaje | currency}}</td>
-																		<td style="text-align: right">{{garantia.comercializacion | currency}}</td>
-																		<td style="text-align: right">{{garantia.desempenioExtemporaneo | currency}}</td>
-																		<td style="text-align: right">{{garantia.reposicionContrato | currency}}</td>
-																		<td>
-																			<a href="#" class="btn btn-xs btn-warning" ng-click="ver.editarGarantia(ver.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
-																			<a href="#" class="btn btn-xs btn-danger" ng-click="ver.quitarGarantia(ver.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
-																		</td>
-																	</tr>
-																</tbody>
-															</table>
-														</div>
-													</div>
-											</div>
-																			
-											<div  ng-if="ver.objeto.tipoGarantia == 'general'">
-												<div class="row">
-										    	<div class="col-sm-4"> 					    
-											    	<label>Sup. de terreno y construcción</label>
-											    	<input name="terreno" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ver.garantia.terrenoYconstruccion" capitalize >
-										    	</div>
-										    	<div class="col-sm-2"> 					    
-											    	<label>Ubicación </label>
-											    	<input name="ubicacion" type="text" class="form-control" placeholder="Ubicación" ng-model="ver.garantia.ubicacion" capitalize>
-										    	</div>
-										    	<div class="col-sm-2"> 					    
-											    	<label>Avalúo </label>
-											    	<input name="avaluo" type="number" class="form-control" placeholder="Avalúo" ng-model="ver.garantia.avaluoGeneral" ng-change="ver.calcularPorcentajeGeneral()">
-										    	</div>
-													<div class="col-sm-4">					    
-											    	<label>% del préstamo sobre el avalúo</label>
-											    	<input name="porcentaje" type="number" class="form-control" placeholder="Porcentaje del préstamo sobre el avalúo" ng-model="ver.garantia.porcentajePrestamoGeneral" disabled="true">
-										    	</div>
-												</div>	
-												<div class="row">
-										    	<div class="col-sm-6"> 					    
-											    	<label>Medidas, colindancias, clave castral</label>
-											    	<textarea name="medidas" rows="3" class="form-control" placeholder="Medidas, colindancias, clave castral"  ng-model="ver.garantia.medidasColindancias" >
-										    	</div>
-										    	<div class="col-sm-6"> 					    
-											    	<label>Comisión y gastos, por escrituración e inscripción de registro público</label>
-											    	<input name="comision" type="number" class="form-control" placeholder="Comisión y gastos" ng-model="ver.garantia.comisionGastos">
-										    	</div>							
-											</div>
-												<div class="row">		
-										    	<div class="col-sm-3">
-												   	<input type="button" ng-click="ver.insertarGarantia(ver.objeto.tipoGarantia)" value="Agregar" ng-show="ver.actionGarantia" class="btn btn-primary"> 	
-												   	<input type="button" ng-click="ver.actualizarGarantia(ver.objeto.tipoGarantia, ver.garantia)" value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
-												   	<input type="button" ng-click="ver.cancelarGarantia(ver.objeto.tipoGarantia)" value="Cancelar" ng-show="!ver.actionGarantia" class="btn btn-danger">	   				
-													</div>
-										    </div>
-											<div class="row"><br/>
-												<div class="col-sm-12">
-													<table class="table table-bordered">
-														<thead>
-															<tr>
-																<th width="5%">Número</th>
-																<th width="15%">Sup. de terreno y construcción</th>
-																<th width="10%">Avalúo</th>
-																<!-- <th width="15%">Medidas, colindancias, clave astral</th>
+						<br>
+						<div class="row">
+							<div class="col-sm-6" valida>
+								<label>¿Ha tenido o tiene créditos vigentes en algún banco , financiera o prestamista? *</label>
+								<select name="tieneOtrosCreditos" ng-model="ver.objeto.tieneOtrosCreditos" data-placeholder="Seleccione"
+									class="form-control" required>
+									<option value="SI">Si</option>
+									<option value="NO">No</option>
+								</select>
+							</div>
+							<div class="col-sm-2" valida ng-if="ver.objeto.tieneOtrosCreditos == 'SI'">
+								<label>Deuda actual</label>
+								<input name="deudaActual" type="text" class="form-control" placeholder="Deuda Actual"
+									ng-model="ver.objeto.deudaActual" required="" capitalize>
+							</div>
+							<div class="col-sm-2" valida ng-if="ver.objeto.tieneOtrosCreditos == 'SI'">
+								<label>Periodicidad pagos</label>
+								<select name="periodicidadPagos" ng-model="ver.objeto.periodicidadPagos" data-placeholder="Seleccione"
+									class="form-control" required>
+									<option value="SEMANAL">Semanal</option>
+									<option value="QUINCENAL">Quincenal</option>
+									<option value="MENSUAL">Mensual</option>
+								</select>
+							</div>
+							<div class="col-sm-2" valida ng-if="ver.objeto.tieneOtrosCreditos == 'SI'">
+								<label>Total pagos</label>
+								<input name="totalPagos" type="text" class="form-control" placeholder="Total Pagos"
+									ng-model="ver.objeto.totalPagos" required="" capitalize>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-sm-4" valida>
+								<label>¿Sabe que cantidad esta solicitando? *</label>
+								<select name="sabeCantidadSolicitar" ng-model="ver.objeto.sabeCantidadSolicitar"
+									data-placeholder="Seleccione" class="form-control" required>
+									<option value="SI">Si</option>
+									<option value="NO">No</option>
+								</select>
+							</div>
+							<div class="col-sm-4" valida ng-if="ver.objeto.sabeCantidadSolicitar == 'SI'">
+								<label>Cantidad *</label>
+								<input name="cantidad" type="text" class="form-control" placeholder="Cantidad"
+									ng-model="ver.objeto.cantidadSolicitar" required="" capitalize>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-sm-2" valida>
+								<label>Estado Civil *</label>
+								<select name="estadoCivil" ng-model="ver.objeto.estadoCivil" data-placeholder="Seleccione"
+									class="form-control" required>
+									<option value="SOLTERO(A)">Soltero(a)</option>
+									<option value="CASADO(A)">Casado(a)</option>
+								</select>
+							</div>
+							<div class="col-sm-4" valida ng-if="ver.objeto.estadoCivil == 'CASADO(A)'">
+								<label>Nombre cónyuge *</label>
+								<input name="nombreConyuge" type="text" class="form-control" placeholder="Cantidad"
+									ng-model="ver.objeto.nombreConyuge" required="" capitalize>
+							</div>
+							<div class="col-sm-2" valida ng-if="ver.objeto.estadoCivil == 'CASADO(A)'">
+								<label>Tel. cónyuge *</label>
+								<input name="telefonoConyuge" type="text" class="form-control" placeholder="Cantidad"
+									ng-model="ver.objeto.telefonoConyuge" required="" capitalize>
+							</div>
+							<div class="col-sm-2" valida ng-if="ver.objeto.estadoCivil == 'CASADO(A)'">
+								<label>Trabaja cónyuge *</label>
+								<select name="trabajaConyuge" ng-model="ver.objeto.trabajaConyuge" data-placeholder="Seleccione"
+									class="form-control" required>
+									<option value="SI">Si</option>
+									<option value="NO">No</option>
+								</select>
+							</div>
+							<div class="col-sm-2" valida ng-if="ver.objeto.trabajaConyuge == 'SI'">
+								<label>Ingresos mensuales *</label>
+								<input name="ingresosMensuales" type="text" class="form-control" placeholder="Cantidad"
+									ng-model="ver.objeto.ingresoMensualConguye" required="" capitalize>
+							</div>
+						</div>
+						<br ng-if="ver.objeto.trabajaConyuge == 'SI'">
+						<div class="row" ng-if="ver.objeto.trabajaConyuge == 'SI'">
+							<div class="col-sm-4" valida>
+								<label>¿Dónde trabaja *</label>
+								<input name="dondeTrabaja" type="text" class="form-control" placeholder="Donde Trabaja"
+									ng-model="ver.objeto.dondeTrabajaConguye" required="" capitalize>
+							</div>
+							<div class="col-sm-3" valida>
+								<label>Puesto *</label>
+								<input name="puesto" type="text" class="form-control" placeholder="Puesto"
+									ng-model="ver.objeto.puestoConguye" required="" capitalize>
+							</div>
+							<div class="col-sm-2" valida>
+								<label>Antigüedad *</label>
+								<input name="antiguedad" type="text" class="form-control" placeholder="Antigüedad"
+									ng-model="ver.objeto.antiguedadConguye" required="" capitalize>
+							</div>
+							<div class="col-sm-3" valida>
+								<label>Tel trabajo *</label>
+								<input name="telefonoTrabajoConyuge" type="text" class="form-control" placeholder="Teléfono Trabajo"
+									ng-model="ver.objeto.telefonoTrabajoConyuge" required="" capitalize>
+							</div>
+						</div>
+						<br ng-if="ver.tipoClienteDistribuidor == 'Aval'">
+						<div class="row" ng-if="ver.tipoClienteDistribuidor	== 'Aval'">
+							<div class="col-sm-9" valida>
+								<label>¿Está usted consiente y de acuerdo en hacerse cargo de la cuenta en el momento en el que nosotros
+									le requiramos?</label>
+								<select name="cargoCuenta" ng-model="ver.objeto.cargoCuenta" data-placeholder="Seleccione"
+									class="form-control" required>
+									<option value="SI">Si</option>
+									<option value="NO">No</option>
+								</select>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="table-responsive">
+								<div class="col-sm-12">
+									<table class="table table-bordered" style="width: 100%">
+										<thead>
+											<tr>
+												<th style="width: 25%;text-align: center">Servicios</th>
+												<th style="width: 25%;text-align: center">Casa</th>
+												<th colspan="2" style="width: 50%;text-align: center">Menaje de casa</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.serviciosTelefono">
+														<span>Teléfono</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.casaHabitaciones">
+														<span>Habitaciones</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.mennajeEstufa">
+														<span>Estufa</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.mennajeTV">
+														<span>TV</span>
+													</label>
+												</td>
+											</tr>
+											<tr>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.serviciosCablevision">
+														<span>Cablevisión</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.casaNiveles">
+														<span>Niveles</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.mennajeRefrigerador">
+														<span>Refrigerador</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.mennajePCLaptop">
+														<span>PC/Laptop</span>
+													</label>
+												</td>
+											</tr>
+											<tr>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.serviciosInternet">
+														<span>Internet</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.casaCochera">
+														<span>Cochera</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.mennajeSala">
+														<span>Sala</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.mennajeDVD">
+														<span>DVD</span>
+													</label>
+												</td>
+											</tr>
+											<tr>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.serviciosSkyDish">
+														<span>Sky / Dish</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.casaVehiculos">
+														<span>Vehículos</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0"
+															ng-model="ver.objeto.mennajeAireAcondicionado">
+														<span>Aire Aconndicionado</span>
+													</label>
+												</td>
+												<td style="width: 25%">
+													<label class="checkbox-inline">
+														<input type="checkbox" class="checkbox style-0" ng-model="ver.objeto.mennajeStereo">
+														<span>Stereo</span>
+													</label>
+												</td>
+											</tr>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<h3>Tipo de vivienda</h3>
+						<div class="row">
+							<div class="col-sm-2">
+								<label class="radio-inline">
+									<input type="radio" name="transporte" ng-model="ver.objeto.tipoVivienda" value="Bajo">
+									Bajo
+								</label>
+							</div>
+							<div class="col-sm-2">
+								<label class="radio-inline">
+									<input type="radio" name="transporte" ng-model="ver.objeto.tipoVivienda" value="Medio">
+									Medio
+								</label>
+							</div>
+							<div class="col-sm-2">
+								<label class="radio-inline">
+									<input type="radio" name="transporte" ng-model="ver.objeto.tipoVivienda" value="Residencial">
+									Residencial
+								</label>
+							</div>
+							<div class="col-sm-2">
+								<label class="radio-inline">
+									<input type="radio" name="transporte" ng-model="ver.objeto.tipoVivienda" value="InteresSocial">
+									Interes Social
+								</label>
+							</div>
+							<div class="col-sm-2">
+								<label class="radio-inline">
+									<input type="radio" name="transporte" ng-model="ver.objeto.tipoVivienda" value="MedioAlto">
+									Medio Alto
+								</label>
+							</div>
+						</div>
+						<h3>Situación de la vivienda</h3>
+						<div class="row">
+							<div class="col-sm-2">
+								<label class="radio-inline" style="margin-top: 15px;">
+									<input type="radio" name="situacionVivienda" ng-model="ver.objeto.situacionVivienda" value="Propia">
+									Propia
+								</label>
+							</div>
+							<div class="col-sm-2">
+								<label>Valor</label>
+								<input name="valorPropia" type="number" min="0" class="form-control" ng-model="ver.objeto.valorPropia"
+									ng-disabled="ver.objeto.situacionVivienda != 'Propia'">
+							</div>
+							<div class="col-sm-8">
+								<label>A nombre de</label>
+								<input name="aNombreDePropia" type="text" class="form-control" placeholder="A nombre de"
+									ng-model="ver.objeto.aNombreDePropia" ng-disabled="ver.objeto.situacionVivienda != 'Propia'"
+									capitalize>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-2">
+								<label class="radio-inline" style="margin-top: 15px;">
+									<input type="radio" name="situacionVivienda" ng-model="ver.objeto.situacionVivienda" value="Renta">
+									Renta
+								</label>
+							</div>
+							<div class="col-sm-2">
+								<label>Pago</label>
+								<input name="pagoRenta" type="number" min="0" class="form-control" ng-model="ver.objeto.pagoRenta"
+									ng-disabled="ver.objeto.situacionVivienda != 'Renta'">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-2">
+								<label class="radio-inline" style="margin-top: 15px;">
+									<input type="radio" name="situacionVivienda" ng-model="ver.objeto.situacionVivienda"
+										value="Pagandola">
+									Pagandola
+								</label>
+							</div>
+							<div class="col-sm-2">
+								<label>Valor</label>
+								<input name="valorPagandola" type="number" min="0" class="form-control"
+									ng-model="ver.objeto.valorPagandola" ng-disabled="ver.objeto.situacionVivienda != 'Pagandola'">
+							</div>
+							<div class="col-sm-8">
+								<label>Medio</label>
+								<input name="medioPagandola" type="text" class="form-control" placeholder="Medio"
+									ng-model="ver.objeto.medioPagandola" ng-disabled="ver.objeto.situacionVivienda != 'Pagandola'"
+									capitalize>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-2">
+								<label class="radio-inline" style="margin-top: 15px;">
+									<input type="radio" name="situacionVivienda" ng-model="ver.objeto.situacionVivienda" value="Otra">
+									Otra
+								</label>
+							</div>
+							<div class="col-sm-2">
+								<label>Especifique</label>
+								<input name="otraEspecifique" type="text" class="form-control" placeholder="Especifique"
+									ng-model="ver.objeto.otraEspecifique" ng-disabled="ver.objeto.situacionVivienda != 'Otra'">
+							</div>
+						</div>
+					</div>
+
+					<!-- Vecino -->
+					<div class="tab-pane fade" id="hr2">
+						<div class="row">
+							<div class="col-sm-6">
+								<label>Nombre </label>
+								<input name="nombreVecino" type="text" class="form-control" placeholder="Nombre"
+									ng-model="ver.objeto.nombreVecino" capitalize>
+							</div>
+							<div class="col-sm-2">
+								<label>No. Casa </label>
+								<input name="numeroCasaVecino" type="text" class="form-control" placeholder="No. Casa"
+									ng-model="ver.objeto.numeroCasaVecino" capitalize>
+							</div>
+							<div class="col-sm-3">
+								<label>¿La casa del vecino es?</label>
+								<select name="casaDelVecino" ng-model="ver.objeto.casaDelVecino" data-placeholder="Seleccione"
+									class="form-control">
+									<option value="PROPIA">Propia</option>
+									<option value="RENTADA">Rentada</option>
+								</select>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-sm-3">
+								<label>¿Sabe si trabaja?</label>
+								<select name="sabeSiTrabaja" ng-model="ver.objeto.sabeSiTrabaja" data-placeholder="Seleccione"
+									class="form-control">
+									<option value="SI">Si</option>
+									<option value="NO">No</option>
+								</select>
+							</div>
+							<div class="col-sm-6" ng-if="ver.objeto.sabeSiTrabaja == 'SI'">
+								<label>Donde </label>
+								<input name="dondeTrabajaVecino" type="text" class="form-control" placeholder="Nombre"
+									ng-model="ver.objeto.dondeTrabajaVecino" capitalize>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-sm-3">
+								<label>¿Sabe si es casado?</label>
+								<select name="sabeSiEsCasado" ng-model="ver.objeto.sabeSiEsCasado" data-placeholder="Seleccione"
+									class="form-control">
+									<option value="SI">Si</option>
+									<option value="NO">No</option>
+								</select>
+							</div>
+						</div>
+						<br ng-if="ver.objeto.sabeSiEsCasado == 'SI'">
+						<div class="row" ng-if="ver.objeto.sabeSiEsCasado == 'SI'">
+							<div class="col-sm-3">
+								<label>¿El esposo(a) trabaja?</label>
+								<select name="sabeSiTrabaja" ng-model="ver.objeto.elEsposoTrabaja" data-placeholder="Seleccione"
+									class="form-control">
+									<option value="SI">Si</option>
+									<option value="NO">No</option>
+								</select>
+							</div>
+							<div class="col-sm-6" ng-if="ver.objeto.elEsposoTrabaja == 'SI'">
+								<label>Donde </label>
+								<input name="dondeTrabajaEsposoVecino" type="text" class="form-control" placeholder="Donde trabaja"
+									ng-model="ver.objeto.dondeTrabajaEsposoVecino" capitalize>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-sm-3">
+								<label>¿Sabe si es visitado por cobradores?</label>
+								<select name="sabeSiEsVisitadoPorCobradores" ng-model="ver.objeto.sabeSiEsVisitadoPorCobradores"
+									data-placeholder="Seleccione" class="form-control">
+									<option value="SI">Si</option>
+									<option value="NO">No</option>
+								</select>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-sm-12">
+								<label>¿Cómo es como vecino?</label>
+								<input name="esComoVecino" type="text" class="form-control" placeholder="Es como vecino"
+									ng-model="ver.objeto.esComoVecino" capitalize>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-sm-12">
+								<label>¿Usted considera que es responsable?</label>
+								<input name="esResponsable" type="text" class="form-control" placeholder="Es responsable"
+									ng-model="ver.objeto.esResponsable" capitalize>
+							</div>
+						</div>
+					</div>
+
+					<!-- Respaldos-->
+					<div class="tab-pane fade" id="hr3"
+						ng-if="ver.objeto.tipo == 'creditoP' || ver.objeto.tipo == 'Prospecto Crédito Personal'">
+						<h4 ng-if="ver.objeto.tipo == 'creditoP' || ver.objeto.tipo == 'Prospecto Crédito Personal'">Garantias</h4>
+						<div class="well" ng-if="ver.objeto.tipo == 'creditoP' || ver.objeto.tipo == 'Prospecto Crédito Personal'">
+							<div class="row">
+								<div class="col-sm-4" valida>
+									<label>Tipo de garantía</label>
+									<select name="horario" class="form-control" ng-model="ver.objeto.tipoGarantia">
+										<option value="general">General o inmobiliaria</option>
+										<option value="mobiliaria">Mobiliaria</option>
+									</select>
+								</div>
+							</div>
+
+							<div ng-if="ver.objeto.tipoGarantia == 'mobiliaria'">
+								<br>
+								<h4>Comisiones</h4>
+								<div class="row">
+									<div class="col-sm-3">
+										<label>Almacenaje</label>
+										<input name="almacenaje" type="number" class="form-control" placeholder="Almacenaje"
+											ng-model="ver.garantia.almacenaje">
+									</div>
+									<div class="col-sm-3">
+										<label>Comercialización</label>
+										<input name="comercializacion" type="number" class="form-control" placeholder="Comercialización"
+											ng-model="ver.garantia.comercializacion">
+									</div>
+									<div class="col-sm-3">
+										<label>Desempeño Extemporaneo</label>
+										<input name="desempenioExtemporaneo" type="number" class="form-control"
+											placeholder="Desempeño Extemporaneo" ng-model="ver.garantia.desempenioExtemporaneo">
+									</div>
+									<div class="col-sm-3">
+										<label>Reposición de Contrato</label>
+										<input name="reposicionContrato" type="number" class="form-control"
+											placeholder="Reposición de Contrato" ng-model="ver.garantia.reposicionContrato">
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<label>Descripción Genérica</label>
+										<input name="descripcion" type="text" class="form-control" placeholder="Descripción"
+											ng-model="ver.garantia.descripcion" capitalize>
+									</div>
+									<div class="col-sm-6">
+										<label>Características </label>
+										<input name="caracteristicas" type="text" class="form-control" placeholder="Características"
+											ng-model="ver.garantia.caracteristicas" capitalize>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-2">
+										<label>Avalúo</label>
+										<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO"
+											ng-model="ver.garantia.avaluoMobiliaria" ng-change="ver.calcularPorcentajeMobiliaria()">
+									</div>
+									<div class="col-sm-4">
+										<label>Porcentaje del préstamo sobre el avalúo</label>
+										<input name="porcentajePrestamo" type="number" class="form-control"
+											placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO"
+											ng-model="ver.garantia.porcentajePrestamoMobiliria" disabled="true">
+									</div>
+								</div>
+								<div class="row"> <br />
+									<div class="col-sm-3">
+										<input type="button" ng-click="ver.insertarGarantia(ver.objeto.tipoGarantia)" value="Agregar"
+											ng-show="ver.actionGarantia" class="btn btn-primary">
+										<input type="button" ng-click="ver.actualizarGarantia(ver.objeto.tipoGarantia, ver.garantia)"
+											value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
+										<input type="button" ng-click="ver.cancelarGarantia(ver.objeto.tipoGarantia)" value="Cancelar"
+											ng-show="!ver.actionGarantia" class="btn btn-danger">
+									</div>
+								</div>
+								<br />
+								<div class="row">
+									<div class="col-sm-12">
+										<table class="table table-bordered">
+											<thead>
+
+												<tr>
+													<th width="5%">Número</th>
+													<th width="15%">Descripción genérica</th>
+													<th width="15%">Características</th>
+													<th width="10%">Avalúo</th>
+													<th width="8%">% Avalúo</th>
+													<th width="8%">Almacenaje</th>
+													<th width="8%">Comercialización</th>
+													<th width="10%">D. Extemp.</th>
+													<th width="10%">R. Cont.</th>
+													<th width="8%">Acción</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="garantia in ver.garantias">
+													<td>{{garantia.num}}</td>
+													<td>{{garantia.descripcion}}</td>
+													<td>{{garantia.caracteristicas}}</td>
+													<td style="text-align: right">{{garantia.avaluoMobiliaria | currency}}</td>
+													<td style="text-align: center">{{garantia.porcentajePrestamoMobiliria}}</td>
+													<td style="text-align: right">{{garantia.almacenaje | currency}}</td>
+													<td style="text-align: right">{{garantia.comercializacion | currency}}</td>
+													<td style="text-align: right">{{garantia.desempenioExtemporaneo | currency}}</td>
+													<td style="text-align: right">{{garantia.reposicionContrato | currency}}</td>
+													<td>
+														<a href="#" class="btn btn-xs btn-warning"
+															ng-if="ver.objeto.tipo == 'Prospecto Crédito Personal'"
+															ng-click="ver.editarGarantia(ver.objeto.tipoGarantia, garantia)"><i
+																class="fa fa-pencil"></i></a>
+														<a href="#" class="btn btn-xs btn-warning" ng-if="ver.objeto.tipo == 'creditoP'"
+															ng-click="ver.editarGarantia(ver.credito.tipoGarantia, garantia)"><i
+																class="fa fa-pencil"></i></a>
+														<a href="#" class="btn btn-xs btn-danger"
+															ng-if="ver.objeto.tipo == 'Prospecto Crédito Personal'"
+															ng-click="ver.quitarGarantia(ver.objeto.tipoGarantia, garantia.num)"><i
+																class="fa fa-trash"></i></a>
+														<a href="#" class="btn btn-xs btn-danger" ng-if="ver.objeto.tipo == 'creditoP'"
+															ng-click="ver.quitarGarantia(ver.credito.tipoGarantia, garantia.num)"><i
+																class="fa fa-trash"></i></a>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+
+							<div ng-if="ver.objeto.tipoGarantia == 'general'">
+								<div class="row">
+									<div class="col-sm-4">
+										<label>Sup. de terreno y construcción</label>
+										<input name="terreno" type="text" class="form-control" placeholder="Sup. de terreno y construcción "
+											ng-model="ver.garantia.terrenoYconstruccion" capitalize>
+									</div>
+									<div class="col-sm-2">
+										<label>Ubicación </label>
+										<input name="ubicacion" type="text" class="form-control" placeholder="Ubicación"
+											ng-model="ver.garantia.ubicacion" capitalize>
+									</div>
+									<div class="col-sm-2">
+										<label>Avalúo </label>
+										<input name="avaluo" type="number" class="form-control" placeholder="Avalúo"
+											ng-model="ver.garantia.avaluoGeneral" ng-change="ver.calcularPorcentajeGeneral()">
+									</div>
+									<div class="col-sm-4">
+										<label>% del préstamo sobre el avalúo</label>
+										<input name="porcentaje" type="number" class="form-control"
+											placeholder="Porcentaje del préstamo sobre el avalúo"
+											ng-model="ver.garantia.porcentajePrestamoGeneral" disabled="true">
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<label>Medidas, colindancias, clave castral</label>
+										<textarea name="medidas" rows="3" class="form-control"
+											placeholder="Medidas, colindancias, clave castral"
+											ng-model="ver.garantia.medidasColindancias"></textarea>
+									</div>
+									<div class="col-sm-6">
+										<label>Comisión y gastos, por escrituración e inscripción de registro público</label>
+										<input name="comision" type="number" class="form-control" placeholder="Comisión y gastos"
+											ng-model="ver.garantia.comisionGastos">
+									</div>
+
+								</div>
+								<div class="row">
+									<div class="col-sm-3">
+										<input type="button" ng-click="ver.insertarGarantia(ver.objeto.tipoGarantia)" value="Agregar"
+											ng-show="ver.actionGarantia" class="btn btn-primary">
+										<input type="button" ng-click="ver.actualizarGarantia(ver.objeto.tipoGarantia, ver.garantia)"
+											value="Actualizar" ng-show="!ver.actionGarantia" class="btn btn-primary">
+										<input type="button" ng-click="ver.cancelarGarantia(ver.objeto.tipoGarantia)" value="Cancelar"
+											ng-show="!ver.actionGarantia" class="btn btn-danger">
+									</div>
+								</div>
+								<div class="row"><br />
+									<div class="col-sm-12">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th width="5%">Número</th>
+													<th width="15%">Sup. de terreno y construcción</th>
+													<th width="10%">Avalúo</th>
+													<!-- <th width="15%">Medidas, colindancias, clave astral</th>
 																<th width="15%">Préstamo sobre avalúo</th>
 																<th width="15%">Comisión y gastos</th>
 																<th width="15%">Por escrituración e inscripción de registro público</th> -->
-																<th width="5%">Acción</th>
-															</tr>
-														</thead>
-														<tbody>
-															<tr ng-repeat="garantia in ver.garantiasGeneral">
-																<td>{{garantia.num}}</td>
-																<td>{{garantia.terrenoYconstruccion}}</td>
-																<td>{{garantia.avaluoGeneral}}</td>
-															<!-- 	<td>{{garantia.medidasColindancias}}</td>
+													<th width="5%">Acción</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="garantia in ver.garantiasGeneral">
+													<td>{{garantia.num}}</td>
+													<td>{{garantia.terrenoYconstruccion}}</td>
+													<td>{{garantia.avaluoGeneral}}</td>
+													<!-- 	<td>{{garantia.medidasColindancias}}</td>
 																<td>{{garantia.prestamo}}</td>
 																<td>{{garantia.prestamoSobreAvaluo}}</td>
 																<td>{{garantia.montoAvaluo}}</td>
 																<td>{{garantia.porcentajePrestamo}}</td>
 																<td>{{garantia.comisionGastos}}</td>
 																<td>{{garantia.escrituracion}}</td> -->
-																<td>
-																	<a href="#" class="btn btn-primary" ng-click="ver.verGarantia(ver.credito.tipoGarantia, garantia)"><i class="fa fa-eye"></i></a>
-																			<a href="#" class="btn btn-warning" ng-click="ver.editarGarantia(ver.credito.tipoGarantia, garantia)"><i class="fa fa-pencil"></i></a>
-																			<a href="#" class="btn btn-danger" ng-click="ver.quitarGarantia(ver.credito.tipoGarantia, garantia.num)"><i class="fa fa-trash"></i></a>
-																	</td>
-															</tr>
-														</tbody>
-													</table>
-												</div>
-											</div>
-												
-												
-											</div>		 
-										
+													<td>
+														<a href="#" class="btn btn-primary"
+															ng-click="ver.verGarantia(ver.credito.tipoGarantia, garantia)"><i
+																class="fa fa-eye"></i></a>
+														<a href="#" class="btn btn-warning"
+															ng-click="ver.editarGarantia(ver.credito.tipoGarantia, garantia)"><i
+																class="fa fa-pencil"></i></a>
+														<a href="#" class="btn btn-danger"
+															ng-click="ver.quitarGarantia(ver.credito.tipoGarantia, garantia.num)"><i
+																class="fa fa-trash"></i></a>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
 								</div>
+
+
+							</div>
 						</div>
-						
 					</div>
-					<!-- end widget body text-->
-					
-					<!-- widget footer -->
-<!--
+
+				</div>
+				<!-- end widget body text-->
+
+				<!-- widget footer -->
+				<!--
 					<div class="widget-footer text-right">
 						Verificación
 					</div>
 -->
-					<!-- end widget footer -->
-					
-				</div>
-				<!-- end widget content -->
-				
+				<!-- end widget footer -->
+
 			</div>
-			<!-- end widget div -->
-			
+			<!-- end widget content -->
+
 		</div>
-		<div class="well">
-				<div class="row">
-			    	<div class="col-sm-4" valida> 					    
-				    	<label>Número de INE</label>
-				    	<input name="ine" type="text" class="form-control" placeholder="INE" ng-model="ver.objeto.INE" required="" capitalize>
-			    	</div>
-		    </div>
+		<!-- end widget div -->
+
+	</div>
+	<div class="well">
+		<div class="row">
+			<div class="col-sm-4" valida>
+				<label>Número de INE</label>
+				<input name="ine" type="text" class="form-control" placeholder="INE" ng-model="ver.objeto.INE" required=""
+					capitalize>
+			</div>
 		</div>
-		<div class="well">
-				<div class="row">
-					<div class="table-responsive">
-			    	<div class="col-sm-12">
-								<table class="table table-bordered" style="width: 100%">
-									<thead>
-										<tr>
-											<th style="width: 15%;text-align: center">EVALUACIÓN DEL PROSPECTO</th>
-											<th style="width: 15%;text-align: center">¿QUÉ TANTO LO RECOMIENDA?</th>	
-											<th style="width: 10%;text-align: center">
-													<label class="radio-inline">
-														<input type="radio" name="evaluacionPropecto" ng-model = "ver.objeto.evaluacionProspecto" value="ALTAMENTE">
-														ALTAMENTE
-													</label>
-											</th>
-											<th style="width: 10%;text-align: center">
-													<label class="radio-inline">
-														<input type="radio" name="evaluacionPropecto" ng-model = "ver.objeto.evaluacionProspecto" value="CONCOSIDERACIONES">
-														CON COSIDERACIONES
-													</label>
-											</th>
-											<th style="width: 10%;text-align: center">
-													<label class="radio-inline">
-														<input type="radio" name="evaluacionPropecto" ng-model = "ver.objeto.evaluacionProspecto" value="NOLORECOMIENDO">
-														NO LO RECOMIENDO
-													</label>
-											</th>
-										</tr>
-									</thead>
-								</table>		
-							</div>
-					</div>	
-		    </div>
-		    <div class="row">
-			   		<div class="col-sm-12">
-				   		<label>FORTALEZAS / DEBILIDADES / COMENTARIOS</label>
-					    <input name="comentarios" type="text" class="form-control" placeholder="COMENTARIOS" ng-model="ver.objeto.comentarios" capitalize>
-			   		</div>
-		    </div>  
-		</div>	
-		<div class="well" ng-show="ver.firmar">
-			<div class="row">
+	</div>
+	<div class="well">
+		<div class="row">
+			<div class="table-responsive">
 				<div class="col-sm-12">
-					<canvas id="canvas" width="550px" height="400px" style="border: 1px solid  #000; box-shadow: 2px 2px 10px #333;">
-						Get a better browser, bro.
-					</canvas>
+					<table class="table table-bordered" style="width: 100%">
+						<thead>
+							<tr>
+								<th style="width: 15%;text-align: center">EVALUACIÓN DEL PROSPECTO</th>
+								<th style="width: 15%;text-align: center">¿QUÉ TANTO LO RECOMIENDA?</th>
+								<th style="width: 10%;text-align: center">
+									<label class="radio-inline">
+										<input type="radio" name="evaluacionPropecto" ng-model="ver.objeto.evaluacionProspecto"
+											value="ALTAMENTE">
+										ALTAMENTE
+									</label>
+								</th>
+								<th style="width: 10%;text-align: center">
+									<label class="radio-inline">
+										<input type="radio" name="evaluacionPropecto" ng-model="ver.objeto.evaluacionProspecto"
+											value="CONCOSIDERACIONES">
+										CON COSIDERACIONES
+									</label>
+								</th>
+								<th style="width: 10%;text-align: center">
+									<label class="radio-inline">
+										<input type="radio" name="evaluacionPropecto" ng-model="ver.objeto.evaluacionProspecto"
+											value="NOLORECOMIENDO">
+										NO LO RECOMIENDO
+									</label>
+								</th>
+							</tr>
+						</thead>
+					</table>
 				</div>
 			</div>
 		</div>
-		
-		
-		<div class="well" ng-show="!ver.firmar">
-			<div class="row">
-				<div class="col-sm-3">
-						<img width="550px" height="400px" src="{{ver.objeto.firma}}" style="border: 1px solid  #000; box-shadow: 2px 2px 10px #333;">
-				</div>
-			</div>				
-		</div>	
-		
-		
-		<div class="well">
-		    <div class="row">
-					<div class="col-sm-12">
-						<input type="submit" ng-click="ver.guardar(ver.objeto,form)" value="Guardar" class="btn btn-primary" ng-show="ver.action" valida-form formulario="form">
-						<input type="submit" ng-click="ver.actualizar(ver.objeto,form)" value="Actualizar" class="btn btn-primary" ng-show="!ver.action && currentUser.roles[0] != 'Cajero'" valida-form formulario="form">
-						<input type="button" ng-click="ver.clearCanvas()" value="Limpiar" class="btn btn-warning pull-right" ng-show="ver.firmar">
-						
-						<input type="button" ng-click="ver.activaFirma()" value="Activa Firma" class="btn btn-success pull-right" ng-show="!ver.firmar && currentUser.roles[0] != 'Cajero'">
-					</div>
-				</div>
-		</div>	
+		<div class="row">
+			<div class="col-sm-12">
+				<label>FORTALEZAS / DEBILIDADES / COMENTARIOS</label>
+				<input name="comentarios" type="text" class="form-control" placeholder="COMENTARIOS"
+					ng-model="ver.objeto.comentarios" capitalize>
+			</div>
+		</div>
+	</div>
+	<div class="well" ng-show="ver.firmar">
+		<div class="row">
+			<div class="col-sm-12">
+				<canvas id="canvas" width="550px" height="400px"
+					style="border: 1px solid  #000; box-shadow: 2px 2px 10px #333;">
+					Get a better browser, bro.
+				</canvas>
+			</div>
+		</div>
+	</div>
+
+	<div class="well" ng-show="!ver.firmar">
+		<div class="row">
+			<div class="col-sm-3">
+				<img width="550px" height="400px" src="{{ver.objeto.firma}}"
+					style="border: 1px solid  #000; box-shadow: 2px 2px 10px #333;">
+			</div>
+		</div>
+	</div>
+
+	<div class="well">
+		<div class="row">
+			<div class="col-sm-12">
+				<input type="submit" ng-click="ver.guardar(ver.objeto,form)" value="Guardar" class="btn btn-primary"
+					ng-show="ver.action" valida-form formulario="form">
+				<input type="submit" ng-click="ver.actualizar(ver.objeto,form)" value="Actualizar" class="btn btn-primary"
+					ng-show="!ver.action && currentUser.roles[0] != 'Cajero'" valida-form formulario="form">
+				<input type="button" ng-click="ver.clearCanvas()" value="Limpiar" class="btn btn-warning pull-right"
+					ng-show="ver.firmar">
+
+				<input type="button" ng-click="ver.activaFirma()" value="Activa Firma" class="btn btn-success pull-right"
+					ng-show="!ver.firmar && currentUser.roles[0] != 'Cajero'">
+			</div>
+		</div>
+	</div>
 
 </form>
 
 
-		
 
 
-<div id="modalGarantia" class="modal fade bs-modalGarantia-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-	    	<div class="modal-header">
-		    </div>
-				<div class="widget-body">
-								<div class="row" ng-show="ver.general">
-								<div class="col-sm-12"> 
-							    	<div class="col-sm-4"> 					    
-								    	<label>Sup. de terreno y construcción</label>
-								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Sup. de terreno y construcción " ng-model="ver.garantia.terrenoYconstruccion">
-							    	</div>
-							    	<div class="col-sm-4"> 					    
-								    	<label>Medidas, colindancias, clave astral</label>
-								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Medidas, colindancias, clave astral"  ng-model="ver.garantia.medidasColindancias">
-							    	</div>
-							    	<div class="col-sm-4"> 					    
-								    	<label>Avalúo </label>
-								    	<input name="valorEstimado" type="number" class="form-control" placeholder="Avalúo" ng-model="ver.garantia.avaluo">
-							    	</div>
-							    	<div class="col-sm-4"> 					    
-								    	<label>Préstamo </label>
-								    	<input name="valorEstimado" type="number" class="form-control" placeholder="Préstamo" ng-model="ver.garantia.prestamo">
-							    	</div>
-							    	<div class="col-sm-4"> 					    
-								    	<label>Préstamo sobre avalúo</label>
-								    	<input name="valorEstimado" type="number" class="form-control" placeholder="Préstamo sobre avalúo" ng-model="ver.garantia.prestamoSobreAvaluo">
-							    	</div>
-							    		<div class="col-sm-4"> 					    
-								    	<label>Monto de avalúo</label>
-								    	<input name="valorEstimado" type="number" class="form-control" placeholder="Monto de avalúo" ng-model="ver.garantia.montoAvaluo">
-							    	</div>
-							    		<div class="col-sm-4"> 					    
-								    	<label>% Porcentaje del préstamo sobre el avaluo</label>
-								    	<input name="valorEstimado" type="number" class="form-control" placeholder="% Porcentaje del préstamo  sobre avalúo" ng-model="ver.garantia.porcentajePrestamo">
-								    
-							    	</div>
-							    	<div class="col-sm-4"> 					    
-								    	<label>Comisión y gastos</label>
-								    	<input name="valorEstimado" type="number" class="form-control" placeholder="Comisión y gastos" ng-model="ver.garantia.comisionGastos">
-							    	</div>
-							    	<div class="col-sm-4"> 					    
-								    	<label>	Por escrituración e inscripción de registro público</label>
-								    	<input name="valorEstimado" type="text" class="form-control" placeholder="Por escrituroación e inscripción de registro público" ng-model="ver.garantia.escrituracion">
-							    	</div>
 
-								</div>
-								</div>
-								<div class="row" ng-show="ver.mob">
-								<div class="col-sm-12">
-									<div class="row">
-						    	<div class="col-sm-4"> 					    
-							    	<label>Descripción Generica</label>
-							    	<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN" ng-model="ver.garantia.descripcion">
-						    	</div>
-						    	<div class="col-sm-4"> 					    
-							    	<label>Características	</label>
-							    	<input name="caracteristicas" type="text" class="form-control" placeholder="Caracteristicas" ng-model="ver.garantia.caracteristicas">
-						    	</div>
-						    	<div class="col-sm-4"> 					    
-							    	<label>Avalúo</label>
-							    	<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO" ng-model="ver.garantia.avaluo">
-						    	</div>
-						    </div>
-						    <div class="row">	
-						    <div class="col-sm-4">					    
-							    	<label>Préstamo </label>
-							    	<input name="serie" type="number" class="form-control" placeholder="PRÉSTAMO" ng-model="ver.garantia.prestamo">
-						    	</div>
-							    <div class="col-sm-4">					    
-							    	<label>Préstamo sobre avalúo</label>
-							    	<input name="serie" type="number" class="form-control" placeholder="PRÉSTAMO SOBRE AVALÚO" ng-model="ver.garantia.prestamoPorcentaje">
-						    	</div>
-						    	 <div class="col-sm-4">					    
-							    	<label>Monto de avalúo</label>
-							    	<input name="serie" type="number" class="form-control" placeholder="MOTO DE AVALÚO" ng-model="ver.garantia.monto">
-						    	</div>
-						    	 <div class="col-sm-4">					    
-							    	<label>Porcentaje del prestamo sobre el avalúo</label>
-							    	<input name="serie" type="number" class="form-control" placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ver.garantia.porcentaje">
-						    	</div>
-						    	<div class="col-sm-4">					    
-							    	<label>Fecha de inico de comercialización</label>
-							    	<input name="serie" class="form-control" placeholder="FECHA DE INICIO DE COMERCIALIZACIÓN" ng-model="ver.garantia.fechaComercializacion" date-time format="dd-MM-yyyy" view="date" max-view="year" min-view="date">
-						    	</div>
-						    	
-						    	<div class="col-sm-4">					    
-							    	<label>Fecha limite de finquito</label>
-							    	<input name="serie"  class="form-control" placeholder="FECHA LIMITE DE FINIQUITO" ng-model="ver.garantia.fechaFiniquito" date-time format="dd-MM-yyyy" view="date" max-view="year" min-view="date">
-						    	</div>
-								</div>
-								</div>
-	      </div>	
-	      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" ng-click="ver.cancelarGarantia(ver.credito.tipoGarantia)" data-dismiss="modal">Cerrar</button>
-		     </div>
-     </div>
-     
-  </div>
-</div>
+<div id="modalGarantia" class="modal fade bs-modalGarantia-modal-lg" tabindex="-1" role="dialog"
+	aria-labelledby="myLargeModalLabel">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+			</div>
+			<div class="widget-body">
+				<div class="row" ng-show="ver.general">
+					<div class="col-sm-12">
+						<div class="col-sm-4">
+							<label>Sup. de terreno y construcción</label>
+							<input name="valorEstimado" type="text" class="form-control" placeholder="Sup. de terreno y construcción "
+								ng-model="ver.garantia.terrenoYconstruccion">
+						</div>
+						<div class="col-sm-4">
+							<label>Medidas, colindancias, clave astral</label>
+							<input name="valorEstimado" type="text" class="form-control"
+								placeholder="Medidas, colindancias, clave astral" ng-model="ver.garantia.medidasColindancias">
+						</div>
+						<div class="col-sm-4">
+							<label>Avalúo </label>
+							<input name="valorEstimado" type="number" class="form-control" placeholder="Avalúo"
+								ng-model="ver.garantia.avaluo">
+						</div>
+						<div class="col-sm-4">
+							<label>Préstamo </label>
+							<input name="valorEstimado" type="number" class="form-control" placeholder="Préstamo"
+								ng-model="ver.garantia.prestamo">
+						</div>
+						<div class="col-sm-4">
+							<label>Préstamo sobre avalúo</label>
+							<input name="valorEstimado" type="number" class="form-control" placeholder="Préstamo sobre avalúo"
+								ng-model="ver.garantia.prestamoSobreAvaluo">
+						</div>
+						<div class="col-sm-4">
+							<label>Monto de avalúo</label>
+							<input name="valorEstimado" type="number" class="form-control" placeholder="Monto de avalúo"
+								ng-model="ver.garantia.montoAvaluo">
+						</div>
+						<div class="col-sm-4">
+							<label>% Porcentaje del préstamo sobre el avaluo</label>
+							<input name="valorEstimado" type="number" class="form-control"
+								placeholder="% Porcentaje del préstamo  sobre avalúo" ng-model="ver.garantia.porcentajePrestamo">
 
+						</div>
+						<div class="col-sm-4">
+							<label>Comisión y gastos</label>
+							<input name="valorEstimado" type="number" class="form-control" placeholder="Comisión y gastos"
+								ng-model="ver.garantia.comisionGastos">
+						</div>
+						<div class="col-sm-4">
+							<label> Por escrituración e inscripción de registro público</label>
+							<input name="valorEstimado" type="text" class="form-control"
+								placeholder="Por escrituroación e inscripción de registro público"
+								ng-model="ver.garantia.escrituracion">
+						</div>
 
+					</div>
+				</div>
+				<div class="row" ng-show="ver.mob">
+					<div class="col-sm-12">
+						<div class="row">
+							<div class="col-sm-4">
+								<label>Descripción Generica</label>
+								<input name="descripcion" type="text" class="form-control" placeholder="DESCRIPCIÓN"
+									ng-model="ver.garantia.descripcion">
+							</div>
+							<div class="col-sm-4">
+								<label>Características </label>
+								<input name="caracteristicas" type="text" class="form-control" placeholder="Caracteristicas"
+									ng-model="ver.garantia.caracteristicas">
+							</div>
+							<div class="col-sm-4">
+								<label>Avalúo</label>
+								<input name="avaluo" type="number" class="form-control" placeholder="AVALÚO"
+									ng-model="ver.garantia.avaluo">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<label>Préstamo </label>
+								<input name="serie" type="number" class="form-control" placeholder="PRÉSTAMO"
+									ng-model="ver.garantia.prestamo">
+							</div>
+							<div class="col-sm-4">
+								<label>Préstamo sobre avalúo</label>
+								<input name="serie" type="number" class="form-control" placeholder="PRÉSTAMO SOBRE AVALÚO"
+									ng-model="ver.garantia.prestamoPorcentaje">
+							</div>
+							<div class="col-sm-4">
+								<label>Monto de avalúo</label>
+								<input name="serie" type="number" class="form-control" placeholder="MOTO DE AVALÚO"
+									ng-model="ver.garantia.monto">
+							</div>
+							<div class="col-sm-4">
+								<label>Porcentaje del prestamo sobre el avalúo</label>
+								<input name="serie" type="number" class="form-control"
+									placeholder="PORCENTAJE DEL PRESTAMO SOBRE AVALÚO" ng-model="ver.garantia.porcentaje">
+							</div>
+							<div class="col-sm-4">
+								<label>Fecha de inico de comercialización</label>
+								<input name="serie" class="form-control" placeholder="FECHA DE INICIO DE COMERCIALIZACIÓN"
+									ng-model="ver.garantia.fechaComercializacion" date-time format="dd-MM-yyyy" view="date"
+									max-view="year" min-view="date">
+							</div>
+
+							<div class="col-sm-4">
+								<label>Fecha limite de finquito</label>
+								<input name="serie" class="form-control" placeholder="FECHA LIMITE DE FINIQUITO"
+									ng-model="ver.garantia.fechaFiniquito" date-time format="dd-MM-yyyy" view="date" max-view="year"
+									min-view="date">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" ng-click="ver.cancelarGarantia(ver.credito.tipoGarantia)"
+						data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+
+		</div>
+	</div>

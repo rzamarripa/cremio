@@ -1270,6 +1270,7 @@
 											</div>
 										</p>
 									</div>
+									<!-- Historial -->
 									<div class="tab-pane fade" id="historialCrediticio" ng-show="dis.masInfoCredito"
 										ng-if="currentUser.roles[0] != 'Distribuidor'">
 										<p>
@@ -1445,7 +1446,7 @@
 																						ng-repeat-start="objeto in dis.creditoCortes">
 																						<td class="text-center"
 																							ng-click="dis.selCorteCredito(objeto,$index + 1)">
-																							{{objeto.numeroCorte}}</td>
+																							{{objeto.numeroCorte}} </td>
 																						<td class="text-center"
 																							ng-click="dis.selCorteCredito(objeto,$index + 1)">
 																							{{objeto.fechaCorteInicio | date:"dd-MM-yyyy"}}
@@ -2154,7 +2155,7 @@
 				<!-- 							<p>{{dis.notaCuenta1.descripcion}} </p>  -->
 				<p ng-if="!dis.editarNota">{{dis.notaCuenta1.descripcion}}</p>
 				<textarea type="text" rows="4" class="form-control" ng-model="dis.notaCuenta1.descripcion"
-					ng-if="dis.editarNota"></textarea>
+					ng-if="dis.editarNota" capitalize></textarea>
 				<p>Por: <strong>{{dis.notaCuenta1.nombreCompleto}}</strong></p>
 				<p>Fecha: <strong>{{dis.notaCuenta1.fecha | date:'dd-MM-yyyy'}}, {{dis.notaCuenta1.hora}}</strong></p>
 			</div>

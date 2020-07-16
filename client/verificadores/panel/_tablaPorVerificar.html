@@ -25,8 +25,7 @@
 	    <td class="text-center">{{credito.fechaSolicito | date: "dd/MM/yyyy"}} </td>
 	    <td class="text-center">{{credito.fechaVerificacion | date: "dd/MM/yyyy"}} </td>
 	    <td class="text-center">{{credito.turno}} {{credito.hora | date:'H:mm'}}</td>
-	    <td>
-		    	
+	    <td>	
 		    	<a class="btn btn-xs btn-primary" ui-sref="root.verificacion({id : credito._id, verificacion_id: '-1', tipo: 'CP', persona:1})"><i class="fa fa-user"></i></a>
 					<a class="btn btn-xs btn-primary" 
 						 ng-if = "credito.requiereVerificacionAval" ui-sref="root.verificacion({id : credito._id, verificacion_id: '-1', tipo: 'CP', persona:2})"><i class="fa fa-group"></i>

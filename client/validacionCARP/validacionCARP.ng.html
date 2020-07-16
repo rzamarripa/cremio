@@ -47,6 +47,7 @@
 							<small>{{referenciaPersonal.nombreCompleto}} - {{referenciaPersonal.parentesco}} -
 								{{referenciaPersonal.tiempoConocerlo}}</small></li>
 					</td>
+
 					<td style="width: 50px;" ng-if="persona.tipoPersona == 'Distribuidor'">
 						<label>Referencias Personales:</label>
 						<li ng-repeat="referenciaPersonal in persona.profile.referenciasPersonales_ids">
@@ -72,6 +73,28 @@
 					<td style="width: 50px;" ng-if="persona.tipoPersona == 'Prospecto Vale'">
 						<label>Distribuidor:</label>
 						<li><small>{{persona.distribuidor.profile.nombreCompleto}} </small>
+						</li>
+					</td>
+					<td style="width: 50px;" ng-if="persona.tipoPersona == 'Cónyuge Cliente Personal'">
+						<label>Cónyuge:</label>
+						<li><small>{{persona.conyuge}} </small>
+						</li>
+					</td>
+					<td style="width: 50px;" ng-if="persona.tipoPersona == 'Cónyuge Distribuidor'">
+						<label>Cónyuge:</label>
+						<li><small>{{persona.conyuge}} </small>
+						</li>
+					</td>
+
+					<td style="width: 50px;" ng-if="persona.tipoPersona == 'Prospecto Crédito Personal'">
+						<label>Estatus:</label>
+						<li><small></small>
+						</li>
+					</td>
+
+					<td style="width: 50px;" ng-if="persona.tipoPersona == 'Prospecto Distribuidor'">
+						<label>Estatus:</label>
+						<li><small></small>
 						</li>
 					</td>
 

@@ -54,6 +54,8 @@ function GenerarNotaCredito($scope, $meteor, $reactive, $state, toastr, $statePa
 						toastr.error('Error al guardar los datos.');
 						return;
 			}
+			//console.log(objeto);
+			//console.log($stateParams.objeto_id);
 
 			Meteor.call ("crearNotaDeCredito",$stateParams.objeto_id,objeto,function(error,result){
 		

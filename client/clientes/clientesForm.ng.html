@@ -141,7 +141,6 @@
 					</div>
 					<div class="col-sm-4">
 						<label for="estadocivil">Estado Civil *</label>
-						<!-- 	<select  name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-model="cli.objeto.profile.estadoCivil_id" > -->
 						<select name="estadocivil" class="form-control select2" placeholder="Seleccione" ng-change="cli.seleccionarEstadoCivil(cli.objeto.profile.estadoCivil_id)" ng-model="cli.objeto.profile.estadoCivil_id" >
 							<option value="{{estadoCivil._id}}" ng-repeat="estadoCivil in cli.estadosCiviles">
 								{{estadoCivil.nombre}}
@@ -472,8 +471,8 @@
 								<td>{{p.parentesco}}</td>
 								<td>{{p.tiempoConocerlo}}</td>
 								<td>
-									<a href="#" ng-click="cli.quitarReferencia(p.num)"><i class="fa fa-trash"></i></a>
-									<a href="#" ng-click="cli.editarReferencia(p)"><i class="fa fa-pencil"></i></a>
+									<a href="#" class="btn btn-xs btn-primary"  ng-click="cli.quitarReferencia(p)"><i class="fa fa-trash"></i></a>
+									<a href="#" class="btn btn-xs btn-primary"  ng-click="cli.editarReferencia(p)"><i class="fa fa-pencil"></i></a>
 								</td>
 							</tr>
 						</tbody>
@@ -575,7 +574,7 @@
 		</form>
 	</div>
 </div>
-<!-- Modal -->
+<!-- Modal Empresa -->
 <div id="modalEmp" class="modal fade bs-empresa-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
 	<div class="modal-dialog modal-lg" role="document">
 	<div class="modal-content">

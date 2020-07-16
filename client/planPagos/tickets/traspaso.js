@@ -303,11 +303,11 @@ function TicketTraspasoCtrl($scope, $meteor, $reactive,  $state, $stateParams, t
 			var valores = (rc.traspaso.importe).toString().split('.');
 						
 			rc.traspaso.centavos = valores[1];
-			console.log(rc.traspaso.centavos)
+			//console.log(rc.traspaso.centavos)
 			if (rc.traspaso.centavos == undefined)
 					rc.traspaso.centavos = "00";
 			
-			console.log(rc.traspaso.centavos)
+			//console.log(rc.traspaso.centavos)
 			rc.traspaso.letra = NumeroALetras(valores[0]);
 		
 		
