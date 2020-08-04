@@ -1,0 +1,52 @@
+<div class="well-sm">
+
+  <div class="row">
+    <div class="col-sm-4">
+      <ul class="list-unstyled">
+        <li>
+          <address>
+            <strong>Información de contacto</strong><br>
+            <strong>Teléfono:</strong> {{obj.objeto.profile.telefono}}<br>
+            <strong>Celular:</strong> {{obj.objeto.profile.celular}}<br>
+            <strong>Otro Teléfono:</strong> {{obj.objeto.profile.otroTelefono}}<br>
+            <strong>Correo:</strong> {{obj.objeto.profile.correo}}
+          </address>
+        </li>
+      </ul>
+    </div>
+    <div class="col-sm-4">
+      <ul class="list-unstyled">
+        <li>
+          <address>
+            <strong>Particulares</strong><br>
+            <strong>Sexo:</strong> {{obj.objeto.profile.sexo}}<br>
+            <strong>Estado Civil:</strong> {{obj.objeto.profile.estadoCivil}}<br>
+            <strong>Fecha Nacimiento:</strong> {{obj.objeto.profile.fechaNacimiento | date: "dd-MM-yyyy"}}<br>
+            <strong>Nacionalidad:</strong> {{obj.objeto.profile.nacionalidad}}<br>
+            <strong>Ocupación:</strong> {{obj.objeto.profile.ocupacion}}<br>
+            <strong>Curp:</strong> {{obj.objeto.profile.curp}}<br>
+            <strong>Lugar de Nacimiento:</strong> {{obj.objeto.profile.lugarNacimiento}}<br>
+          </address>
+        </li>
+      </ul>
+    </div>
+    <div class="col-sm-4">
+      <ul class="list-unstyled">
+        <li>
+          <address>
+            <strong>Dirección</strong><br>
+            <strong>Calle:</strong> {{obj.objeto.profile.calle}}<br>
+            <strong>Número:</strong> {{obj.objeto.profile.numero}}<br>
+            <strong>Código Postal:</strong> {{obj.objeto.profile.codigoPostal}}<br>
+            <strong>País:</strong> {{obj.objeto.profile.pais}}<br>
+            <strong>Estado:</strong> {{obj.objeto.profile.estado}}<br>
+            <strong>Municipio:</strong> {{obj.objeto.profile.municipio}}<br>
+            <strong>Ciudad:</strong> {{obj.objeto.profile.ciudad}}<br>
+            <strong>Colonia:</strong> {{obj.objeto.profile.colonia}}<br>
+          </address>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <br />
+</div>

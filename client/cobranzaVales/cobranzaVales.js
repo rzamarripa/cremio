@@ -573,29 +573,30 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 								var fechaCorteFin = new Date(c.fechaEntrega.getFullYear(), mes + 1, 06);
 							}
 							//console.log("nCorte:", numeroCorte);
+							var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
 
-							if (arregloVales[numeroCorte] == undefined) {
-								arregloVales[numeroCorte] = {};
-								arregloVales[numeroCorte].numeroCorte = numeroCorte;
-								arregloVales[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-								arregloVales[numeroCorte].fechaCorteFin = fechaCorteFin;
-								arregloVales[numeroCorte].capitalSolicitado = c.capitalSolicitado;
-								arregloVales[numeroCorte].adeudoInicial = c.adeudoInicial;
-								arregloVales[numeroCorte].saldoActual = c.saldoActual;
-								arregloVales[numeroCorte].cargosMoratorios = c.saldoMultas;
+							if (arregloVales[subindice] == undefined) {
+								arregloVales[subindice] = {};
+								arregloVales[subindice].numeroCorte = numeroCorte;
+								arregloVales[subindice].fechaCorteInicio = fechaCorteInicio;
+								arregloVales[subindice].fechaCorteFin = fechaCorteFin;
+								arregloVales[subindice].capitalSolicitado = c.capitalSolicitado;
+								arregloVales[subindice].adeudoInicial = c.adeudoInicial;
+								arregloVales[subindice].saldoActual = c.saldoActual;
+								arregloVales[subindice].cargosMoratorios = c.saldoMultas;
 
-								arregloVales[numeroCorte].creditosHistorial = [];
-								arregloVales[numeroCorte].creditosHistorial.push(c);
+								arregloVales[subindice].creditosHistorial = [];
+								arregloVales[subindice].creditosHistorial.push(c);
 
 							}
 							else {
 
-								arregloVales[numeroCorte].capitalSolicitado += Number(parseFloat(c.capitalSolicitado).toFixed(2));
-								arregloVales[numeroCorte].adeudoInicial += Number(parseFloat(c.adeudoInicial).toFixed(2));
-								arregloVales[numeroCorte].saldoActual += Number(parseFloat(c.saldoActual).toFixed(2));
-								arregloVales[numeroCorte].cargosMoratorios += Number(parseFloat(c.saldoMultas).toFixed(2));
+								arregloVales[subindice].capitalSolicitado += Number(parseFloat(c.capitalSolicitado).toFixed(2));
+								arregloVales[subindice].adeudoInicial += Number(parseFloat(c.adeudoInicial).toFixed(2));
+								arregloVales[subindice].saldoActual += Number(parseFloat(c.saldoActual).toFixed(2));
+								arregloVales[subindice].cargosMoratorios += Number(parseFloat(c.saldoMultas).toFixed(2));
 
-								arregloVales[numeroCorte].creditosHistorial.push(c);
+								arregloVales[subindice].creditosHistorial.push(c);
 							}
 						}
 						else {
@@ -627,99 +628,32 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 								var fechaCorteFin = new Date(c.fechaEntrega.getFullYear(), mes + 1, 06);
 							}
 
-							if (arregloCreditos[numeroCorte] == undefined) {
-								arregloCreditos[numeroCorte] = {};
-								arregloCreditos[numeroCorte].numeroCorte = numeroCorte;
-								arregloCreditos[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-								arregloCreditos[numeroCorte].fechaCorteFin = fechaCorteFin;
-								arregloCreditos[numeroCorte].capitalSolicitado = c.capitalSolicitado;
-								arregloCreditos[numeroCorte].adeudoInicial = c.adeudoInicial;
-								arregloCreditos[numeroCorte].saldoActual = c.saldoActual;
-								arregloCreditos[numeroCorte].cargosMoratorios = c.saldoMultas;
+							var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
 
-								arregloCreditos[numeroCorte].creditosHistorial = [];
-								arregloCreditos[numeroCorte].creditosHistorial.push(c);
+							if (arregloCreditos[subindice] == undefined) {
+								arregloCreditos[subindice] = {};
+								arregloCreditos[subindice].numeroCorte = numeroCorte;
+								arregloCreditos[subindice].fechaCorteInicio = fechaCorteInicio;
+								arregloCreditos[subindice].fechaCorteFin = fechaCorteFin;
+								arregloCreditos[subindice].capitalSolicitado = c.capitalSolicitado;
+								arregloCreditos[subindice].adeudoInicial = c.adeudoInicial;
+								arregloCreditos[subindice].saldoActual = c.saldoActual;
+								arregloCreditos[subindice].cargosMoratorios = c.saldoMultas;
+
+								arregloCreditos[subindice].creditosHistorial = [];
+								arregloCreditos[subindice].creditosHistorial.push(c);
 
 							}
 							else {
 
-								arregloCreditos[numeroCorte].capitalSolicitado += Number(parseFloat(c.capitalSolicitado).toFixed(2));
-								arregloCreditos[numeroCorte].adeudoInicial += Number(parseFloat(c.adeudoInicial).toFixed(2));
-								arregloCreditos[numeroCorte].saldoActual += Number(parseFloat(c.saldoActual).toFixed(2));
-								arregloCreditos[numeroCorte].cargosMoratorios += Number(parseFloat(c.saldoMultas).toFixed(2));
+								arregloCreditos[subindice].capitalSolicitado += Number(parseFloat(c.capitalSolicitado).toFixed(2));
+								arregloCreditos[subindice].adeudoInicial += Number(parseFloat(c.adeudoInicial).toFixed(2));
+								arregloCreditos[subindice].saldoActual += Number(parseFloat(c.saldoActual).toFixed(2));
+								arregloCreditos[subindice].cargosMoratorios += Number(parseFloat(c.saldoMultas).toFixed(2));
 
-								arregloCreditos[numeroCorte].creditosHistorial.push(c);
+								arregloCreditos[subindice].creditosHistorial.push(c);
 							}
 						}
-
-						/*
-
-						Meteor.call('getBeneficiario', c.beneficiario_id, function(error, result) {           
-						  if (result)
-						  {
-									c.beneficiario = result;
-									$scope.$apply();
-									}
-						});
-						
-						//console.log(c.fechaEntrega);
-						var mes = c.fechaEntrega != undefined ? c.fechaEntrega.getMonth(): 0;
-						//Meterlo al arregloCortes
-						var numeroCorte = 0;
-						if (c.fechaEntrega.getDate() >= 7 && c.fechaEntrega.getDate() <= 21) 
-						{	
-								numeroCorte = (mes + 1) * 2 - 1;									
-								var fechaCorteInicio = new Date(c.fechaEntrega.getFullYear(), mes - 1, 07)
-								var fechaCorteFin		 = new Date(c.fechaEntrega.getFullYear(), mes, 21);	
-								
-						}	 
-						else if (c.fechaEntrega.getDate() > 0 && c.fechaEntrega.getDate() < 7)	
-						{
-								if (mes == 0)
-										numeroCorte = 0;
-								else
-										numeroCorte = (mes + 1) * 2 - 2;
-								var fechaCorteInicio = new Date(c.fechaEntrega.getFullYear(), mes - 1, 22);	
-								var fechaCorteFin 	 = new Date(c.fechaEntrega.getFullYear(), mes, 06);
-						}
-						else if (c.fechaEntrega.getDate() > 21)
-						{
-								if (mes == 11)
-										numeroCorte = 0;
-								else
-										numeroCorte = (mes + 1) * 2 - 1 + 1;
-								var fechaCorteInicio = new Date(c.fechaEntrega.getFullYear(), mes, 22);	
-								var fechaCorteFin 	 = new Date(c.fechaEntrega.getFullYear(), mes + 1, 06);
-						}
-						
-						
-						if (arregloCreditos[numeroCorte] == undefined )
-						{
-								arregloCreditos[numeroCorte] = {};
-								arregloCreditos[numeroCorte].numeroCorte 				= numeroCorte;	
-								arregloCreditos[numeroCorte].beneficiario 			= c.beneficiario;	
-								arregloCreditos[numeroCorte].fechaCorteInicio 	= fechaCorteInicio;
-								arregloCreditos[numeroCorte].fechaCorteFin 			= fechaCorteFin;
-								arregloCreditos[numeroCorte].capitalSolicitado 	=	c.capitalSolicitado;
-								arregloCreditos[numeroCorte].adeudoInicial 			=	c.adeudoInicial;
-								arregloCreditos[numeroCorte].saldoActual 				=	c.saldoActual;
-								arregloCreditos[numeroCorte].cargosMoratorios 	=	c.saldoMultas;
-	
-								arregloCreditos[numeroCorte].creditosHistorial 	= [];
-								arregloCreditos[numeroCorte].creditosHistorial.push(c);
-	
-						}
-						else
-						{
-	
-								arregloCreditos[numeroCorte].capitalSolicitado 	+=	Number(parseFloat(c.capitalSolicitado).toFixed(2));
-								arregloCreditos[numeroCorte].adeudoInicial 			+=	Number(parseFloat(c.adeudoInicial).toFixed(2));
-								arregloCreditos[numeroCorte].saldoActual 				+=	Number(parseFloat(c.saldoActual).toFixed(2));
-								arregloCreditos[numeroCorte].cargosMoratorios 	+=	Number(parseFloat(c.saldoMultas).toFixed(2));
-	
-								arregloCreditos[numeroCorte].creditosHistorial.push(c);
-						}
-*/
 
 					});
 
@@ -780,34 +714,36 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 				}
 			}
 
-			if (arreglo[numeroCorte] == undefined) {
-				arreglo[numeroCorte] = {};
-				arreglo[numeroCorte].numeroCorte = numeroCorte;
-				arreglo[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-				arreglo[numeroCorte].fechaCorteFin = fechaCorteFin;
-				arreglo[numeroCorte].fechaPago = pp.fechaLimite;
-				arreglo[numeroCorte].importe = 0;
-				arreglo[numeroCorte].cargosMoratorios = 0;
+			var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
+
+			if (arreglo[subindice] == undefined) {
+				arreglo[subindice] = {};
+				arreglo[subindice].numeroCorte = numeroCorte;
+				arreglo[subindice].fechaCorteInicio = fechaCorteInicio;
+				arreglo[subindice].fechaCorteFin = fechaCorteFin;
+				arreglo[subindice].fechaPago = pp.fechaLimite;
+				arreglo[subindice].importe = 0;
+				arreglo[subindice].cargosMoratorios = 0;
 
 				if (pp.descripcion == 'Recibo')
-					arreglo[numeroCorte].importe = pp.totalPago;
+					arreglo[subindice].importe = pp.totalPago;
 				else
-					arreglo[numeroCorte].cargosMoratorios = pp.totalPago;
+					arreglo[subindice].cargosMoratorios = pp.totalPago;
 
-				arreglo[numeroCorte].bonificacion = Number(pp.bonificacion);
+				arreglo[subindice].bonificacion = Number(pp.bonificacion);
 
-				//arreglo[numeroCorte].fechaCorte = fechaCorte;
-				arreglo[numeroCorte].planPagos = [];
-				arreglo[numeroCorte].planPagos.push(pp);
+				//arreglo[subindice].fechaCorte = fechaCorte;
+				arreglo[subindice].planPagos = [];
+				arreglo[subindice].planPagos.push(pp);
 			}
 			else {
 				if (pp.descripcion == 'Recibo')
-					arreglo[numeroCorte].importe += pp.totalPago;
+					arreglo[subindice].importe += pp.totalPago;
 				else
-					arreglo[numeroCorte].cargosMoratorios += pp.totalPago;
+					arreglo[subindice].cargosMoratorios += pp.totalPago;
 
-				arreglo[numeroCorte].bonificacion += Number(pp.bonificacion);
-				arreglo[numeroCorte].planPagos.push(pp);
+				arreglo[subindice].bonificacion += Number(pp.bonificacion);
+				arreglo[subindice].planPagos.push(pp);
 			}
 
 		});

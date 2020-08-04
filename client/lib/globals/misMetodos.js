@@ -33,5 +33,35 @@ window.verificarDiaInhabil = function (fecha) {
 	return ban;
 }
 
+window.formatDate = function(date) {
+	date = new Date(date);
+
+		var monthNames = [
+			"Enero", "Febrero", "Marzo",
+			"Abril", "Mayo", "Junio", "Julio",
+			"Agosto", "Septiembre", "Octubre",
+			"Noviembre", "Diciembre"
+		];
+		var day = date.getDate();
+		var monthIndex = date.getMonth();
+		var year = date.getFullYear();
+
+		return day + ' ' + 'de ' + monthNames[monthIndex] + ' de'  + ' ' + year;
+};
+
+//Funcion que regresa el arreglo para un paginador
+window.arregloPaginador = function (tam, total) {
+	var incremento = 0;
+	var arregloMostrar = [];
+	for (let index = 1; index <= total; index++) {
+		if (index > 5 && arregloMostrar.filter(x => x.numero == "...").length == 0)
+			arregloMostrar.push({ numero: "...", avance: -1 });
+		else if (arregloMostrar.filter(x => x.numero == "...").length == 0)
+			arregloMostrar.push({ numero: index, avance: incremento, estaActivo: false });
+		incremento += tam;
+	}
+	return arregloMostrar;
+}
+
 
 

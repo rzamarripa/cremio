@@ -153,8 +153,9 @@ function SolicitudDistribuidorFormCtrl($scope, $meteor, $reactive, $state, toast
     if (Meteor.user().roles[0] != 'Promotora')
       objeto.profile.origen = "Sistema";
     else
-      objeto.profile.origen = "Promotora";
+      objeto.profile.origen = "Promotora"
 
+    objeto.profile.usuario_id = Meteor.userId();
     objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
 
     var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre.trim() + " " : "";
@@ -179,7 +180,7 @@ function SolicitudDistribuidorFormCtrl($scope, $meteor, $reactive, $state, toast
         if (Meteor.user().roles[0] != 'Promotora')
           $state.go('root.panelSolicitudesCD');
         else
-          $state.go('root.prospectosDistribuidor');
+          $state.go('root.misSolicitudes');
       }
     });
 

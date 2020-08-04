@@ -13,6 +13,15 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
   rc.asignaSucursal_id = "";
 
 
+  this.subscribe('sucursales', () => {
+		return [{}]
+	},
+		{
+			onReady: function () {
+				rc.sucursales = Sucursales.find({ estatus: true }).fetch();
+			}
+		});
+
   this.subscribe('buscarSolicitudCreditoPersonal', () => {
     if (this.getReactively("tipoSolicitud") == "creditoPersonal" && this.getReactively("buscar.nombre").length > 4) {
       return [{
@@ -37,11 +46,11 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
     }
   });
 
-  this.subscribe('solicitudesClientes', () => {
+  this.subscribe('solicitudesClientesComposite', () => {
     return [{ "profile.sucursal_id": Meteor.user().profile.sucursal_id, "profile.estatus": 2 }];
   })
 
-  this.subscribe('solicitudesDistribuidores', () => {
+  this.subscribe('solicitudesDistribuidoresComposite', () => {
     return [{ "profile.sucursal_id": Meteor.user().profile.sucursal_id, "profile.estatus": 2 }];
   })
 
@@ -50,16 +59,31 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
 
     arreglo: () => {
       var arreglo = [];
-      var clientes = SolicitudesClientes.find({ "profile.sucursal_id": Meteor.user().profile.sucursal_id, "profile.estatus": 2 }, { sort: { "profile.fechaSolicito": -1 } }).fetch();
-      _.each(clientes, function (c) {
+      var clientes = SolicitudesClientes.find({ "profile.sucursal_id": Meteor.user().profile.sucursal_id, "profile.estatus": 2 }, { sort: { "profile.fechaSolicito": -1 } }).map(function (c) {
         c.profile.tipo = "Cliente Crédito Personal";
+        if (c.profile.usuario_id != undefined) {
+          var u = Meteor.users.findOne(c.profile.usuario_id);
+          if (u)
+            c.profile.usuario = u.profile.nombreCompleto
+        }
+        else
+          c.profile.usuario = ""
         arreglo.push(c);
-      })
-      var distribuidores = SolicitudesDistribuidores.find({ "profile.sucursal_id": Meteor.user().profile.sucursal_id, "profile.estatus": 2 }, { sort: { "profile.fechaSolicito": -1 } }).fetch();
-      _.each(distribuidores, function (c) {
+        return c;
+      });
+      var distribuidores = SolicitudesDistribuidores.find({ "profile.sucursal_id": Meteor.user().profile.sucursal_id, "profile.estatus": 2 }, { sort: { "profile.fechaSolicito": -1 } }).map(function (c) {
         c.profile.tipo = "Distribuidor";
+        if (c.profile.usuario_id != undefined) {
+          var u = Meteor.users.findOne(c.profile.usuario_id);
+          if (u)
+            c.profile.usuario = u.profile.nombreCompleto
+        }
+        else
+          c.profile.usuario = ""
         arreglo.push(c);
-      })
+        return c;
+      });
+
       return arreglo;
     },
     arregloElaboradas: () => {
@@ -67,7 +91,7 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
       if (rc.tipoSolicitud == "creditoPersonal") {
         var cli = SolicitudesClientes.find({
           "profile.nombreCompleto": { '$regex': '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options': 'i' },
-          "profile.estatus": 3
+          "profile.estatus": { $in: [3, 4, 5, 6, 7] }
         }, { sort: { "profile.nombreCompleto": 1 } }).fetch();
         _.each(cli, function (c) {
           Meteor.call('getUsuario', c.profile.usuarioCreacion, function (error, result) {
@@ -82,7 +106,7 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
       if (rc.tipoSolicitud == "distribuidor") {
         var cli = SolicitudesDistribuidores.find({
           "profile.nombreCompleto": { '$regex': '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options': 'i' },
-          "profile.estatus": 3
+          "profile.estatus": { $in: [3, 4, 5, 6, 7] }
         }, { sort: { "profile.nombreCompleto": 1 } }).fetch();
         _.each(cli, function (c) {
           Meteor.call('getUsuario', c.profile.usuarioCreacion, function (error, result) {
@@ -274,6 +298,11 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
     prospecto.profile.origen = objeto.profile.origen;
     prospecto.profile.referenciasPersonales_ids = [];
 
+    if (objeto.profile.origen == "Promotora") {
+      prospecto.profile.promotora_id = objeto.profile.usuario_id;
+      prospecto.profile.sePagoComision = false;
+    }
+
     if (objeto.profile.tipoVivienda == "rentada") {
       prospecto.profile.renta = true;
       prospecto.profile.rentaMes = objeto.profile.valorCosto;
@@ -293,6 +322,7 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
       //Ojo Revisar y Correjir
       prospecto.profile.requiereVerificacionAval = false;
     }
+
 
     customConfirm('¿Estás seguro de crear al prospecto ' + objeto.profile.nombreCompleto + '?', function () {
       loading(true);

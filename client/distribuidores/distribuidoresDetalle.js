@@ -103,13 +103,11 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 	rc.distribuidor_id = "";
 
-	if ($stateParams.objeto_id == "" && Meteor.user().roles[0] == 'Distribuidor') {
+	if ($stateParams.objeto_id == "" && Roles.userIsInRole(Meteor.userId(), ["Distribuidor"])) {
 		rc.distribuidor_id = Meteor.userId();
-		//console.log(Meteor.userId());
 	}
 	else if ($stateParams.objeto_id != "") {
 		rc.distribuidor_id = $stateParams.objeto_id;
-		//console.log("Dis:", rc.distribuidor_id);
 	}
 
 	this.subscribe('cajas', () => {
@@ -156,7 +154,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 		}];
 	});
 
-	if (Meteor.user() != undefined && Meteor.user().roles != undefined && Meteor.user().roles[0] != 'Distribuidor') {
+	if (!Roles.userIsInRole(Meteor.userId(), ["Distribuidor"])) {
 		this.subscribe('notas', () => {
 			//return [{cliente_id: this.getReactively("cliente_id")}]
 			return [{
@@ -397,7 +395,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 				_.each(planPagos, function (pp) {
 					var credito = Creditos.findOne(pp.credito_id);
-					
+
 					if (credito != undefined) {
 						Meteor.call('getBeneficiario', credito.beneficiario_id, function (error, result) {
 							if (result) {
@@ -421,7 +419,7 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 							pp.beneficiario.nombreCompleto = "CRÉDITO PERSONAL";
 							//console.log(pp.beneficiario)
 						}
-						
+
 						pp.numeroPagos = credito.numeroPagos;
 
 					}
@@ -435,8 +433,6 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 						rc.importe += Number(parseFloat(pp.importeRegular).toFixed(2));
 					else if (pp.descripcion == 'Cargo Moratorio')
 						rc.cargosMoratorios += Number(parseFloat(pp.importeRegular).toFixed(2));
-
-
 
 					//Meterlo al arreglo y luego al arregloCortes
 					var numeroCorte = 0;
@@ -465,12 +461,14 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 
 					}
 
-					if (arreglo[numeroCorte] == undefined) {
-						arreglo[numeroCorte] = {};
-						arreglo[numeroCorte].numeroCorte = numeroCorte;
-						arreglo[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-						arreglo[numeroCorte].fechaCorteFin = fechaCorteFin;
-						arreglo[numeroCorte].seguro = 0;
+					var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
+
+					if (arreglo[subindice] == undefined) {
+						arreglo[subindice] = {};
+						arreglo[subindice].numeroCorte = numeroCorte;
+						arreglo[subindice].fechaCorteInicio = fechaCorteInicio;
+						arreglo[subindice].fechaCorteFin = fechaCorteFin;
+						arreglo[subindice].seguro = 0;
 
 						if (pp.fechaLimite != undefined)
 							Meteor.call("getPagoSeguro", $stateParams.objeto_id, pp.fechaLimite.getFullYear(), numeroCorte, function (error, result) {
@@ -479,41 +477,41 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 									return
 								}
 								if (result) {
-									arreglo[numeroCorte].seguro = result;
+									arreglo[subindice].seguro = result;
 									$scope.$apply();
 								}
 							});
 
-						arreglo[numeroCorte].fechaPago = pp.fechaLimite;
+						arreglo[subindice].fechaPago = pp.fechaLimite;
 
-						arreglo[numeroCorte].importe = 0;
-						arreglo[numeroCorte].cargosMoratorios = 0;
+						arreglo[subindice].importe = 0;
+						arreglo[subindice].cargosMoratorios = 0;
 
 						if (pp.descripcion == 'Recibo')
-							arreglo[numeroCorte].importe = pp.importeRegular;
+							arreglo[subindice].importe = pp.importeRegular;
 						else
-							arreglo[numeroCorte].cargosMoratorios = pp.importeRegular;
+							arreglo[subindice].cargosMoratorios = pp.importeRegular;
 
-						arreglo[numeroCorte].bonificacion = Number(pp.bonificacion);
-						arreglo[numeroCorte].planPagos = [];
-						arreglo[numeroCorte].planPagos.push(pp);
+						arreglo[subindice].bonificacion = Number(pp.bonificacion);
+						arreglo[subindice].planPagos = [];
+						arreglo[subindice].planPagos.push(pp);
 					}
 					else {
 						if (pp.descripcion == 'Recibo')
-							arreglo[numeroCorte].importe += pp.importeRegular;
+							arreglo[subindice].importe += pp.importeRegular;
 						else
-							arreglo[numeroCorte].cargosMoratorios += pp.importeRegular;
+							arreglo[subindice].cargosMoratorios += pp.importeRegular;
 
-						arreglo[numeroCorte].bonificacion += Number(pp.bonificacion);
-						arreglo[numeroCorte].planPagos.push(pp);
+						arreglo[subindice].bonificacion += Number(pp.bonificacion);
+						arreglo[subindice].planPagos.push(pp);
 					}
 
 					//Arreglo Seguro Pagos Seguro
-					if (arregloSeguro[numeroCorte] == undefined) {
-						arregloSeguro[numeroCorte] = {};
-						arregloSeguro[numeroCorte].numeroCorte = numeroCorte;
-						arregloSeguro[numeroCorte].anio = pp.fechaLimite.getFullYear();
-						arregloSeguro[numeroCorte].fecha = pp.fechaLimite;
+					if (arregloSeguro[subindice] == undefined) {
+						arregloSeguro[subindice] = {};
+						arregloSeguro[subindice].numeroCorte = numeroCorte;
+						arregloSeguro[subindice].anio = pp.fechaLimite.getFullYear();
+						arregloSeguro[subindice].fecha = pp.fechaLimite;
 					}
 
 				});
@@ -735,29 +733,30 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 							var fechaCorteFin = new Date(c.fechaEntrega.getFullYear(), mes + 1, 06);
 						}
 						//console.log("nCorte:", numeroCorte);
+						var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
 
-						if (arregloVales[numeroCorte] == undefined) {
-							arregloVales[numeroCorte] = {};
-							arregloVales[numeroCorte].numeroCorte = numeroCorte;
-							arregloVales[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-							arregloVales[numeroCorte].fechaCorteFin = fechaCorteFin;
-							arregloVales[numeroCorte].capitalSolicitado = c.capitalSolicitado;
-							arregloVales[numeroCorte].adeudoInicial = c.adeudoInicial;
-							arregloVales[numeroCorte].saldoActual = c.saldoActual;
-							arregloVales[numeroCorte].cargosMoratorios = c.saldoMultas;
+						if (arregloVales[subindice] == undefined) {
+							arregloVales[subindice] = {};
+							arregloVales[subindice].numeroCorte = numeroCorte;
+							arregloVales[subindice].fechaCorteInicio = fechaCorteInicio;
+							arregloVales[subindice].fechaCorteFin = fechaCorteFin;
+							arregloVales[subindice].capitalSolicitado = c.capitalSolicitado;
+							arregloVales[subindice].adeudoInicial = c.adeudoInicial;
+							arregloVales[subindice].saldoActual = c.saldoActual;
+							arregloVales[subindice].cargosMoratorios = c.saldoMultas;
 
-							arregloVales[numeroCorte].creditosHistorial = [];
-							arregloVales[numeroCorte].creditosHistorial.push(c);
+							arregloVales[subindice].creditosHistorial = [];
+							arregloVales[subindice].creditosHistorial.push(c);
 
 						}
 						else {
 
-							arregloVales[numeroCorte].capitalSolicitado += Number(parseFloat(c.capitalSolicitado).toFixed(2));
-							arregloVales[numeroCorte].adeudoInicial += Number(parseFloat(c.adeudoInicial).toFixed(2));
-							arregloVales[numeroCorte].saldoActual += Number(parseFloat(c.saldoActual).toFixed(2));
-							arregloVales[numeroCorte].cargosMoratorios += Number(parseFloat(c.saldoMultas).toFixed(2));
+							arregloVales[subindice].capitalSolicitado += Number(parseFloat(c.capitalSolicitado).toFixed(2));
+							arregloVales[subindice].adeudoInicial += Number(parseFloat(c.adeudoInicial).toFixed(2));
+							arregloVales[subindice].saldoActual += Number(parseFloat(c.saldoActual).toFixed(2));
+							arregloVales[subindice].cargosMoratorios += Number(parseFloat(c.saldoMultas).toFixed(2));
 
-							arregloVales[numeroCorte].creditosHistorial.push(c);
+							arregloVales[subindice].creditosHistorial.push(c);
 						}
 					}
 					else {
@@ -789,28 +788,30 @@ function DistribuidoresDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $
 							var fechaCorteFin = new Date(c.fechaEntrega.getFullYear(), mes + 1, 06);
 						}
 
-						if (arregloCreditos[numeroCorte] == undefined) {
-							arregloCreditos[numeroCorte] = {};
-							arregloCreditos[numeroCorte].numeroCorte = numeroCorte;
-							arregloCreditos[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-							arregloCreditos[numeroCorte].fechaCorteFin = fechaCorteFin;
-							arregloCreditos[numeroCorte].capitalSolicitado = c.capitalSolicitado;
-							arregloCreditos[numeroCorte].adeudoInicial = c.adeudoInicial;
-							arregloCreditos[numeroCorte].saldoActual = c.saldoActual;
-							arregloCreditos[numeroCorte].cargosMoratorios = c.saldoMultas;
+						var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
 
-							arregloCreditos[numeroCorte].creditosHistorial = [];
-							arregloCreditos[numeroCorte].creditosHistorial.push(c);
+						if (arregloCreditos[subindice] == undefined) {
+							arregloCreditos[subindice] = {};
+							arregloCreditos[subindice].numeroCorte = numeroCorte;
+							arregloCreditos[subindice].fechaCorteInicio = fechaCorteInicio;
+							arregloCreditos[subindice].fechaCorteFin = fechaCorteFin;
+							arregloCreditos[subindice].capitalSolicitado = c.capitalSolicitado;
+							arregloCreditos[subindice].adeudoInicial = c.adeudoInicial;
+							arregloCreditos[subindice].saldoActual = c.saldoActual;
+							arregloCreditos[subindice].cargosMoratorios = c.saldoMultas;
+
+							arregloCreditos[subindice].creditosHistorial = [];
+							arregloCreditos[subindice].creditosHistorial.push(c);
 
 						}
 						else {
 
-							arregloCreditos[numeroCorte].capitalSolicitado += Number(parseFloat(c.capitalSolicitado).toFixed(2));
-							arregloCreditos[numeroCorte].adeudoInicial += Number(parseFloat(c.adeudoInicial).toFixed(2));
-							arregloCreditos[numeroCorte].saldoActual += Number(parseFloat(c.saldoActual).toFixed(2));
-							arregloCreditos[numeroCorte].cargosMoratorios += Number(parseFloat(c.saldoMultas).toFixed(2));
+							arregloCreditos[subindice].capitalSolicitado += Number(parseFloat(c.capitalSolicitado).toFixed(2));
+							arregloCreditos[subindice].adeudoInicial += Number(parseFloat(c.adeudoInicial).toFixed(2));
+							arregloCreditos[subindice].saldoActual += Number(parseFloat(c.saldoActual).toFixed(2));
+							arregloCreditos[subindice].cargosMoratorios += Number(parseFloat(c.saldoMultas).toFixed(2));
 
-							arregloCreditos[numeroCorte].creditosHistorial.push(c);
+							arregloCreditos[subindice].creditosHistorial.push(c);
 						}
 					}
 
@@ -1241,34 +1242,37 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 				}
 			}
 
-			if (arreglo[numeroCorte] == undefined) {
-				arreglo[numeroCorte] = {};
-				arreglo[numeroCorte].numeroCorte = numeroCorte;
-				arreglo[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-				arreglo[numeroCorte].fechaCorteFin = fechaCorteFin;
-				arreglo[numeroCorte].fechaPago = pp.fechaLimite;
-				arreglo[numeroCorte].importe = 0;
-				arreglo[numeroCorte].cargosMoratorios = 0;
+			var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
+
+
+			if (arreglo[subindice] == undefined) {
+				arreglo[subindice] = {};
+				arreglo[subindice].numeroCorte = numeroCorte;
+				arreglo[subindice].fechaCorteInicio = fechaCorteInicio;
+				arreglo[subindice].fechaCorteFin = fechaCorteFin;
+				arreglo[subindice].fechaPago = pp.fechaLimite;
+				arreglo[subindice].importe = 0;
+				arreglo[subindice].cargosMoratorios = 0;
 
 				if (pp.descripcion == 'Recibo')
-					arreglo[numeroCorte].importe = pp.totalPago;
+					arreglo[subindice].importe = pp.totalPago;
 				else
-					arreglo[numeroCorte].cargosMoratorios = pp.totalPago;
+					arreglo[subindice].cargosMoratorios = pp.totalPago;
 
-				arreglo[numeroCorte].bonificacion = Number(pp.bonificacion);
+				arreglo[subindice].bonificacion = Number(pp.bonificacion);
 
-				//arreglo[numeroCorte].fechaCorte = fechaCorte;
-				arreglo[numeroCorte].planPagos = [];
-				arreglo[numeroCorte].planPagos.push(pp);
+				//arreglo[subindice].fechaCorte = fechaCorte;
+				arreglo[subindice].planPagos = [];
+				arreglo[subindice].planPagos.push(pp);
 			}
 			else {
 				if (pp.descripcion == 'Recibo')
-					arreglo[numeroCorte].importe += pp.totalPago;
+					arreglo[subindice].importe += pp.totalPago;
 				else
-					arreglo[numeroCorte].cargosMoratorios += pp.totalPago;
+					arreglo[subindice].cargosMoratorios += pp.totalPago;
 
-				arreglo[numeroCorte].bonificacion += Number(pp.bonificacion);
-				arreglo[numeroCorte].planPagos.push(pp);
+				arreglo[subindice].bonificacion += Number(pp.bonificacion);
+				arreglo[subindice].planPagos.push(pp);
 			}
 
 		});
@@ -1808,7 +1812,7 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 
 		var user = Meteor.users.findOne(rc.distribuidor_id);
 
-		if (Meteor.user().roles[0] == "Distribuidor" && rc.cargosMoratorios > 0) {
+		if (Roles.userIsInRole(Meteor.userId(), ["Distribuidor"]) && rc.cargosMoratorios > 0) {
 			toastr.warning("Su cuenta muestra un atraso, hasta el momento que se ponga al corriente puede seguir disfrutando de su linea de crédito");
 			return;
 		}
@@ -2293,16 +2297,18 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 				}
 			}
 
-			if (arreglo[numeroCorte] == undefined) {
-				arreglo[numeroCorte] = {};
+			var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
 
-				arreglo[numeroCorte].numeroCorte = numeroCorte;
-				arreglo[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-				arreglo[numeroCorte].fechaCorteFin = fechaCorteFin;
-				arreglo[numeroCorte].fechaPago = pp.fechaLimite;
-				arreglo[numeroCorte].importe = 0;
-				arreglo[numeroCorte].cargosMoratorios = 0;
-				arreglo[numeroCorte].seguro = 0;
+			if (arreglo[subindice] == undefined) {
+				arreglo[subindice] = {};
+
+				arreglo[subindice].numeroCorte = numeroCorte;
+				arreglo[subindice].fechaCorteInicio = fechaCorteInicio;
+				arreglo[subindice].fechaCorteFin = fechaCorteFin;
+				arreglo[subindice].fechaPago = pp.fechaLimite;
+				arreglo[subindice].importe = 0;
+				arreglo[subindice].cargosMoratorios = 0;
+				arreglo[subindice].seguro = 0;
 
 				if (pp.fechaLimite != undefined)
 					Meteor.call("getPagoSeguro", $stateParams.objeto_id, pp.fechaLimite.getFullYear(), numeroCorte, function (error, result) {
@@ -2311,30 +2317,30 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 							return
 						}
 						if (result) {
-							arreglo[numeroCorte].seguro = result;
+							arreglo[subindice].seguro = result;
 							$scope.$apply();
 						}
 					});
 
 				if (pp.descripcion == 'Recibo')
-					arreglo[numeroCorte].importe = pp.importeRegular;
+					arreglo[subindice].importe = pp.importeRegular;
 				else
-					arreglo[numeroCorte].cargosMoratorios = pp.importeRegular;
+					arreglo[subindice].cargosMoratorios = pp.importeRegular;
 
-				arreglo[numeroCorte].bonificacion = Number(pp.bonificacion);
+				arreglo[subindice].bonificacion = Number(pp.bonificacion);
 
-				//arreglo[numeroCorte].fechaCorte = fechaCorte;
-				arreglo[numeroCorte].planPagos = [];
-				arreglo[numeroCorte].planPagos.push(pp);
+				//arreglo[subindice].fechaCorte = fechaCorte;
+				arreglo[subindice].planPagos = [];
+				arreglo[subindice].planPagos.push(pp);
 			}
 			else {
 				if (pp.descripcion == 'Recibo')
-					arreglo[numeroCorte].importe += pp.importeRegular;
+					arreglo[subindice].importe += pp.importeRegular;
 				else
-					arreglo[numeroCorte].cargosMoratorios += pp.importeRegular;
+					arreglo[subindice].cargosMoratorios += pp.importeRegular;
 
-				arreglo[numeroCorte].bonificacion += Number(pp.bonificacion);
-				arreglo[numeroCorte].planPagos.push(pp);
+				arreglo[subindice].bonificacion += Number(pp.bonificacion);
+				arreglo[subindice].planPagos.push(pp);
 			}
 
 		});
@@ -2631,30 +2637,7 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 					comision = c.porcentaje;
 			});
 
-			/*
-			switch(nfp)
-			{
-				case 1: comision = 15; break;
-				case 2: comision = 15; break;
-				case 3: comision = 15; break;
-				case 4: comision = 14; break;
-				case 5: comision = 13; break;
-				case 6: comision = 9; break;
-				case 7: comision = 7; break;
-				case 16: comision = 15; break;
-				case 17: comision = 15; break;
-				case 18: comision = 15; break;
-				case 19: comision = 14; break;
-				case 20: comision = 13; break;
-				case 21: comision = 9; break;
-				case 22: comision = 7; break;
-				default: comision = 0;
-			}	
-*/
-
 		}
-
-		//console.log("Comision:", comision);
 
 		return comision;
 
@@ -2824,6 +2807,8 @@ var user = Meteor.users.findOne(rc.distribuidor_id);
 				datos.saldoAnterior = '$' + Number(datos.saldoAnterior).format(2);
 				datos.pagoVigente = '$' + Number(datos.pagoVigente).format(2);
 				datos.saldoActual = '$' + Number(datos.saldoActual).format(2);
+
+				datos.fecha = formatDate(new Date());
 
 				//Imprimir estado de cuenta
 				loading(true);

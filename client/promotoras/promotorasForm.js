@@ -25,9 +25,9 @@ angular.module("creditoMio")
 	rc.colonia = {};
 	this.buscandoColonia = false;
   
-	this.subscribe('sucursales',()=>{
-		return [{}]
-	});	
+	// this.subscribe('sucursales',()=>{
+	// 	return [{}]
+	// });	
 		
 	this.subscribe('estadoCivil',()=>{
 		return [{estatus: true}]

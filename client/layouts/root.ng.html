@@ -141,7 +141,7 @@
 	</div> -->
 	<div ng-include=" 'client/layouts/left-nav.ng.html' "></div>
 	<hr>
-	<img src="img/logoCremio.png" alt="SmartAdmin" style="margin-left: 15px; width: 150px;height: 60px;" />
+	<img ng-if = "currentUser.roles[0] != 'Distribuidor'" src="img/logoCremio.png" alt="SmartAdmin" style="margin-left: 15px; width: 150px;height: 60px;" />
 	<hr>
 	<img src="img/LogoBigVale.jpg" alt="SmartAdmin" style="margin-left: 25px; width: 120px;height: 55px;" />
 </aside>

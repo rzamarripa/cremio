@@ -55,7 +55,7 @@ Meteor.methods({
 			else if (diaMes >= 2 && diaMes <= 16) {
 				if (credito.tipo == "creditoP")
 					mfecha = mfecha.date(16);
-				else 
+				else
 					mfecha = mfecha.date(15);
 
 				semanaQuincena = 2;
@@ -1589,7 +1589,6 @@ Meteor.methods({
 		var sucursal = Sucursales.findOne({ _id: Meteor.user().profile.sucursal_id });
 		sucursal.folioPago = sucursal.folioPago ? sucursal.folioPago + 1 : 1;
 		var folioPago = sucursal.folioPago;
-
 		Sucursales.update({ _id: sucursal._id }, { $set: { folioPago: sucursal.folioPago } })
 
 		var ffecha = moment(new Date());
@@ -2071,6 +2070,61 @@ Meteor.methods({
 
 	},
 
+	pagoComisionPromotora: function (creditos, pago) {
+
+		var pago_id = "";
+		var cajaid = Meteor.user().profile.caja_id;
+		var user = Meteor.user();
+		var caja = Cajas.findOne(cajaid);
+
+		//Ir por un folio de pago
+		var sucursal = Sucursales.findOne({ _id: user.profile.sucursal_id });
+		sucursal.folioPago = sucursal.folioPago ? sucursal.folioPago + 1 : 1;
+		var folioPago = sucursal.folioPago;
+		Sucursales.update({ _id: sucursal._id }, { $set: { folioPago: sucursal.folioPago } })
+
+		//Guardar los pagos en pagos Salidas
+		pago.folioPago = folioPago;
+		pago.fechaPago = new Date();
+		pago.usuarioCobro_id = user._id;
+		pago.sucursalPago_id = user.profile.sucursal_id;
+		pago.caja_id = caja._id;
+		pago.creditos = creditos;
+
+		pago_id = Pagos.insert(pago);
+
+		//actualizar los creditos como ya pagados
+		_.each(creditos, function (c) {
+			Creditos.update({ _id: c.id }, { $set: { estaPagadoComision: true } });
+		});
+
+		//Insertar en movimientos caja
+		var movimiento = {
+			tipoMovimiento: "Pago Comisión Promotora",
+			origen: "Pago a Promotora",
+			origen_id: pago_id,
+			monto: -pago.totalPago,
+			cuenta_id: pago.tipoIngreso_id,
+			caja_id: caja._id,
+			sucursal_id: user.profile.sucursal_id,
+			createdAt: new Date(),
+			createdBy: user._id,
+			updated: false,
+			estatus: 1
+		}
+		var movimientoid = MovimientosCajas.insert(movimiento);
+
+		//decerementar el tipo de ungreso en la caja
+		delete pago._id;
+		pago.movimientoCaja_id = movimientoid;
+		Pagos.update({ _id: pago_id }, { $set: pago })
+		caja.cuenta[movimiento.cuenta_id].saldo = caja.cuenta[movimiento.cuenta_id].saldo - (movimiento.monto * -1);
+		//caja.cuenta[movimiento.cuenta_id].saldo = caja.cuenta[movimiento.cuenta_id].saldo ? caja.cuenta[movimiento.cuenta_id].saldo - movimiento.monto : movimiento.monto;
+		Cajas.update({ _id: caja._id }, { $set: { cuenta: caja.cuenta } });
+		return pago_id;
+
+	},
+
 	pagoOtroSistema: function (pagos, abono, totalPago, tipoIngresoId, pusuario_id, subtotal, cargosMoratorios, total, fechaDeposito) {
 
 
@@ -2222,9 +2276,11 @@ Meteor.methods({
 					}
 				}
 
-				if (arreglo[numeroCorte] == undefined) {
-					arreglo[numeroCorte] = {};
-					arreglo[numeroCorte].numeroCorte = numeroCorte;// + " - " + pp.fechaLimite.getFullYear();	
+				var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
+
+				if (arreglo[subindice] == undefined) {
+					arreglo[subindice] = {};
+					arreglo[subindice].numeroCorte = numeroCorte;// + " - " + pp.fechaLimite.getFullYear();	
 				}
 
 				pago.cortes = _.toArray(arreglo);

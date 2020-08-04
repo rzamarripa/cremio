@@ -39,8 +39,20 @@
           <td class="text-left">{{objeto.profile.origen}}</td>
           <td class="text-center">
             <div class="text-center">
-              <span class="label label-success">
-                Es prospecto
+              <span ng-if="objeto.profile.estatus == 3" class="label label-warning">
+                En prospecto
+              </span>
+              <span ng-if="objeto.profile.estatus == 4" class="label label-default">
+                Ya existe
+              </span>
+              <span ng-if="objeto.profile.estatus == 5" class="label label-success">
+                Aceptado
+              </span>
+              <span ng-if="objeto.profile.estatus == 6" class="label label-danger">
+                Rechazado
+              </span>
+              <span ng-if="objeto.profile.estatus == 7" class="label label-primary">
+                Trámite Trunco
               </span>
           </td>
           <td class="text-center">{{objeto.profile.fechaCreacion | date:"dd-MM-yyyy"}}</td>

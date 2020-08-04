@@ -15,6 +15,7 @@ function RootCtrl($scope, $meteor, $reactive, $state, toastr) {
 
 	//this.clientesRoot = [];
 	this.clientes_ids = [];
+	rc.sucursales = [];
 
 	this.hoy = new Date();
 
@@ -32,20 +33,23 @@ function RootCtrl($scope, $meteor, $reactive, $state, toastr) {
 	rc.asignarSolC = 0;
 	rc.asignarSolD = 0;
 
-	
-	//this.caja = {};
-	//this.nombreCliente = "";
+
 	var user = Meteor.users.findOne();
 
 	if (user != undefined && user.username != "admin") {
-		//console.log("Usuario: G ", user);
 
 		this.subscribe('sucursales', () => {
 			return [{}]
-		});
+		},
+			{
+				onReady: function () {
+					rc.sucursales = Sucursales.find({ estatus: true }).fetch();
+					rc.sucursal_id = Sucursales.findOne(Meteor.user().profile.sucursal_id)._id;
+				}
+			});
 
 		this.subscribe('creditos', () => {
-			if (user.username != "admin" && user.roles[0] != "Distribuidor")
+			if (user.username != "admin" && !Roles.userIsInRole(user._id, ["Distribuidor"]))
 				return [{
 					sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
 					tipo: "vale",
@@ -54,7 +58,7 @@ function RootCtrl($scope, $meteor, $reactive, $state, toastr) {
 		});
 
 		this.subscribe('prospectos', () => {
-			if (user.username != "admin" && user.roles[0] != "Distribuidor")
+			if (user.username != "admin" && !Roles.userIsInRole(user._id, ["Distribuidor"]))
 				return [{
 					sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
 					estatus: 1
@@ -199,7 +203,6 @@ function RootCtrl($scope, $meteor, $reactive, $state, toastr) {
 			},
 			sucursales: () => {
 				if (user.username != "admin") {
-
 					return Sucursales.find({ estatus: true });
 				}
 			},
@@ -255,6 +258,16 @@ function RootCtrl($scope, $meteor, $reactive, $state, toastr) {
 		if (!Meteor.user()) {
 			$state.go('anon.login');
 		}
+		if (rc.sucursal_id == "")
+			this.subscribe('sucursales', () => {
+				return [{}]
+			},
+				{
+					onReady: function () {
+						rc.sucursales = Sucursales.find({ estatus: true }).fetch();
+						rc.sucursal_id = Sucursales.findOne(Meteor.user().profile.sucursal_id)._id;
+					}
+				});
 	});
 
 	this.descargarFormato = function (op) {

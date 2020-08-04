@@ -9,11 +9,6 @@ function panelVerificadorCtrl($scope, $meteor, $reactive, $state, $stateParams, 
 	rc.fechaInicial = new Date();
 	rc.fechaInicial.setHours(0, 0, 0, 0);
 
-	/*
-	  rc.fechaFinal = new Date(rc.getReactively("fechaInicial"));
-	  rc.fechaFinal.setHours(23,0,0,0);	
-	*/
-
 	rc.creditoSeleccionado = "";
 	rc.distribuidorSeleccionado = "";
 
@@ -25,6 +20,16 @@ function panelVerificadorCtrl($scope, $meteor, $reactive, $state, $stateParams, 
 	rc.conSolicitanteAval = 0;
 	rc.creditos = [];
 	rc.prospectosCreditoPersonal = [];
+
+
+	this.subscribe('sucursales', () => {
+		return [{}]
+	},
+		{
+			onReady: function () {
+				rc.sucursales = Sucursales.find({ estatus: true }).fetch();
+			}
+		});
 
 
 	this.subscribe('creditos', () => {
@@ -181,7 +186,9 @@ function panelVerificadorCtrl($scope, $meteor, $reactive, $state, $stateParams, 
 				for (d of dis) {
 					d.verificacionesHechas = 0;
 					d.verificacionesHechas = Verificaciones.find({ cliente_id: d._id }).count();
-					d.profile.sucursal = Sucursales.findOne(d.profile.sucursal_id).nombreSucursal;
+					var suc = Sucursales.findOne(d.profile.sucursal_id)
+					if (suc != undefined)
+						d.profile.sucursal = suc.nombreSucursal;
 					arreglo.push(d);
 				};
 			}
@@ -191,7 +198,9 @@ function panelVerificadorCtrl($scope, $meteor, $reactive, $state, $stateParams, 
 				for (cp of creditosPersonales) {
 					cp.verificacionesHechas = 0;
 					cp.verificacionesHechas = Verificaciones.find({ cliente_id: cp._id }).count();
-					cp.profile.sucursal = Sucursales.findOne(cp.profile.sucursal_id).nombreSucursal;
+					var suc = Sucursales.findOne(cp.profile.sucursal_id)
+					if (suc != undefined)
+						cp.profile.sucursal = suc.nombreSucursal;
 					arreglo.push(cp);
 				};
 			}

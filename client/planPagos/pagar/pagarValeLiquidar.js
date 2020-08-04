@@ -347,6 +347,8 @@ function PagarValeLiquidarCtrl($scope, $filter, $meteor, $reactive, $state, $sta
 						}
 					}
 
+					var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
+
 					pago.numeroCorte = numeroCorte;
 
 					if (arreglo[pago.beneficiario.nombreCompleto] == undefined) {
@@ -383,14 +385,14 @@ function PagarValeLiquidarCtrl($scope, $filter, $meteor, $reactive, $state, $sta
 					}
 
 					//Arreglo Seguro Pagos Seguro
-					if (arregloSeguro[numeroCorte] == undefined) {
-						arregloSeguro[numeroCorte] = {};
-						arregloSeguro[numeroCorte].numeroCorte = numeroCorte;
-						arregloSeguro[numeroCorte].anio = pago.fechaLimite.getFullYear();
-						arregloSeguro[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-						arregloSeguro[numeroCorte].fechaCorteFin = fechaCorteFin;
-						arregloSeguro[numeroCorte].seguro = 0;
-						arregloSeguro[numeroCorte].pagado = true;
+					if (arregloSeguro[subindice] == undefined) {
+						arregloSeguro[subindice] = {};
+						arregloSeguro[subindice].numeroCorte = numeroCorte;
+						arregloSeguro[subindice].anio = pago.fechaLimite.getFullYear();
+						arregloSeguro[subindice].fechaCorteInicio = fechaCorteInicio;
+						arregloSeguro[subindice].fechaCorteFin = fechaCorteFin;
+						arregloSeguro[subindice].seguro = 0;
+						arregloSeguro[subindice].pagado = true;
 
 						Meteor.call("getPagoSeguro", rc.distribuidor_id, pago.fechaLimite.getFullYear(), numeroCorte, function (error, result) {
 							if (error) {
@@ -399,7 +401,7 @@ function PagarValeLiquidarCtrl($scope, $filter, $meteor, $reactive, $state, $sta
 							}
 							if (result) {
 								//console.log(result);
-								arregloSeguro[numeroCorte].seguro = result;
+								arregloSeguro[subindice].seguro = result;
 								//rc.pago.aPagar = Number(parseFloat(rc.pago.totalPago - rc.pago.bonificacion + rc.pago.cargosMoratorios + rc.pago.seguro).toFixed(2));
 								$scope.$apply();
 							}
@@ -1277,45 +1279,47 @@ function PagarValeLiquidarCtrl($scope, $filter, $meteor, $reactive, $state, $sta
 				}
 			}
 
-			if (arreglo[numeroCorte] == undefined) {
-				arreglo[numeroCorte] = {};
-				arreglo[numeroCorte].numeroCorte = numeroCorte;
-				arreglo[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-				arreglo[numeroCorte].fechaCorteFin = fechaCorteFin;
-				arreglo[numeroCorte].fechaPago = pago.fechaLimite;
-				arreglo[numeroCorte].importe = 0;
-				arreglo[numeroCorte].cargosMoratorios = 0;
+			var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
+
+			if (arreglo[subindice] == undefined) {
+				arreglo[subindice] = {};
+				arreglo[subindice].numeroCorte = numeroCorte;
+				arreglo[subindice].fechaCorteInicio = fechaCorteInicio;
+				arreglo[subindice].fechaCorteFin = fechaCorteFin;
+				arreglo[subindice].fechaPago = pago.fechaLimite;
+				arreglo[subindice].importe = 0;
+				arreglo[subindice].cargosMoratorios = 0;
 
 				if (pago.descripcion == 'Recibo')
-					arreglo[numeroCorte].importe = pago.importeRegular;
+					arreglo[subindice].importe = pago.importeRegular;
 				else
-					arreglo[numeroCorte].cargosMoratorios = pago.importeRegular;
+					arreglo[subindice].cargosMoratorios = pago.importeRegular;
 
-				arreglo[numeroCorte].bonificacion = Number(pago.bonificacion);
+				arreglo[subindice].bonificacion = Number(pago.bonificacion);
 
-				arreglo[numeroCorte].planPagos = [];
-				arreglo[numeroCorte].planPagos.push(pago);
+				arreglo[subindice].planPagos = [];
+				arreglo[subindice].planPagos.push(pago);
 			}
 			else {
 				if (pago.descripcion == 'Recibo')
-					arreglo[numeroCorte].importe += pago.importeRegular;
+					arreglo[subindice].importe += pago.importeRegular;
 				else
-					arreglo[numeroCorte].cargosMoratorios += pago.importeRegular;
+					arreglo[subindice].cargosMoratorios += pago.importeRegular;
 
-				arreglo[numeroCorte].bonificacion += Number(pago.bonificacion);
+				arreglo[subindice].bonificacion += Number(pago.bonificacion);
 
-				arreglo[numeroCorte].planPagos.push(pago);
+				arreglo[subindice].planPagos.push(pago);
 			}
 
 			//Arreglo Seguro Pagos Seguro
-			if (arregloSeguro[numeroCorte] == undefined) {
-				arregloSeguro[numeroCorte] = {};
-				arregloSeguro[numeroCorte].numeroCorte = numeroCorte;
-				arregloSeguro[numeroCorte].anio = pago.fechaLimite.getFullYear();
-				arregloSeguro[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-				arregloSeguro[numeroCorte].fechaCorteFin = fechaCorteFin;
-				arregloSeguro[numeroCorte].seguro = 0;
-				arregloSeguro[numeroCorte].pagado = true;
+			if (arregloSeguro[subindice] == undefined) {
+				arregloSeguro[subindice] = {};
+				arregloSeguro[subindice].numeroCorte = numeroCorte;
+				arregloSeguro[subindice].anio = pago.fechaLimite.getFullYear();
+				arregloSeguro[subindice].fechaCorteInicio = fechaCorteInicio;
+				arregloSeguro[subindice].fechaCorteFin = fechaCorteFin;
+				arregloSeguro[subindice].seguro = 0;
+				arregloSeguro[subindice].pagado = true;
 
 				Meteor.call("getPagoSeguro", rc.distribuidor_id, pago.fechaLimite.getFullYear(), numeroCorte, function (error, result) {
 					if (error) {
@@ -1323,7 +1327,7 @@ function PagarValeLiquidarCtrl($scope, $filter, $meteor, $reactive, $state, $sta
 						return
 					}
 					if (result) {
-						arregloSeguro[numeroCorte].seguro = result;
+						arregloSeguro[subindice].seguro = result;
 						$scope.$apply();
 					}
 				});

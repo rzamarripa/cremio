@@ -1,0 +1,67 @@
+
+<div class="container">
+	<div class="widget-body no-padding">
+		<div class="padding-10">
+			<div class="row text-center">
+				<div class="col-sm-4 col-sm-offset-4">
+<!-- 					<span id="logo"> <img src="img/LogoBigVale.jpg" alt="SmartAdmin" style="margin-top: -13px;margin-left:-50px;width: 250px;height: 110px;"> </span> -->
+					<!-- <div>
+						<img src="img/LogoBigVale.jpg" style="margin-top: -13px;margin-left:-50px;width: 250px;height: 110px;" alt="recibo icon">
+					</div> -->
+					<address>
+						RUBIDIA MARTINEZ ALCARAZ<br>
+						{{obj.sucursal.direccion}}<br>
+						{{obj.sucursal.colonia}}<br>
+						MAAR-661007-BF5<br>
+						{{obj.sucursal.telefono1}}
+					</address>
+					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;font-size: larger">
+					<div class="row" style="font-size: smaller">
+						<div class="col-sm-12">
+							<p style="text-align: justify; padding-right: 10px">REALIZAMOS A  <strong>{{obj.cliente.profile.nombreCompleto}}</strong> (PROMOTOR(A)) No. {{obj.cliente.profile.numeroCliente}}) CON DOMICILIO EN: CALLE {{obj.cliente.profile.calle}} NO. {{obj.cliente.profile.numero}} {{obj.cliente.profile.colonia.nombre}}. {{obj.cliente.profile.municipio.nombre}}, {{obj.cliente.profile.estado.nombre}}.
+							</p>
+						</div>
+					</div>	
+					<div class="row" style="font-size: smaller">
+						<div class="col-sm-12">
+							<p style="text-align: justify; padding-right: 10px"> LA CANTIDAD DE:<strong> {{obj.pago.totalPago | currency}}</strong>, SON: {{obj.pago.letra}} PESOS {{obj.pago.centavos}}/100 M.N. POR CONCEPTO DE COMISIÓN.</p>
+						</div>	
+					</div>
+
+					<table style="font-size: smaller;width: 100%;">
+						<tr>
+							<td style="text-align: left; width: 70%"><strong>IMPORTE: </strong></td>
+							<td style="text-align: right; width: 30%; padding-right: 15px">{{obj.pago.total | currency}}</td>
+						</tr>
+					</table>
+
+					<div class="row">
+						<div class="col-sm-12">
+							ATENDIO:<br>
+						{{obj.cajero.profile.nombre}}	
+						</div>
+					</div>	
+					<hr style="display: block;margin-top: 0.5em;margin-bottom: 0.5em;margin-left: auto;margin-right: auto;border-style: inset;border-width: 1px;font-size: larger">
+					<strong style="font-size: smaller"><center>FIRMA DEL CAJERO Y SELLO DE LA CAJA</center></strong>
+					<div class="row" style="font-size: small">
+						<div  class="col-sm-12 pull-left">VENTANILLA: {{obj.caja.nombre}}</div>
+<!-- 						<div class="col-sm-6 pull-right">TURNO: 0000</div> -->
+					</div>
+					<div class="row" style="font-size: small">
+						<div class="col-sm-6 pull-left">Fecha: {{ obj.pago.fechaPago | date:'dd-MM-yyyy'}}</div>
+						<div class="col-sm-6 pull-right">Hora: {{ obj.pago.fechaPago | date:'H:mm:ss'}}</div>
+						
+					</div>
+					<br>
+						<div style="font-size: larger"><a class="btn btn-primary" id="printpagebutton" ng-click="obj.borrarBotonImprimir()">Imprimir</a></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style type="text/css" media="print">
+	@page{
+   margin: 0;
+	}
+</style>

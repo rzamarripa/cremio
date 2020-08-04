@@ -10,6 +10,14 @@ angular.module("creditoMio")
 	this.objetoRechazar = "";
 	this.motivo = "";
 
+	this.subscribe('sucursales', () => {
+		return [{}]
+	},
+		{
+			onReady: function () {
+				rc.sucursales = Sucursales.find({ estatus: true }).fetch();
+			}
+		});
 	
   this.subscribe('creditos', () => {
 		return [{sucursal_id: Meteor.user().profile.sucursal_id ,tipo: 'vale', estatus : 2 }];

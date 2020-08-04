@@ -101,7 +101,7 @@ function SolicitudCreditoPersonalFormCtrl($scope, $meteor, $reactive, $state, to
       var objeto = SolicitudesClientes.findOne({ _id: $stateParams.id });
 
       if (objeto != undefined) {
-        
+
         rc.colonia.nombre = objeto.profile.colonia;
         return objeto;
       }
@@ -149,7 +149,13 @@ function SolicitudCreditoPersonalFormCtrl($scope, $meteor, $reactive, $state, to
 
     objeto.profile.fechaCreacion = new Date();
     objeto.profile.estatus = 2; //1.- Sin Asignar , 2.- Asignado a una sucursal, 3.- Ya es prospecto, 
-    objeto.profile.origen = "Sistema";
+
+    if (Meteor.user().roles[0] != 'Promotora')
+      objeto.profile.origen = "Sistema";
+    else
+      objeto.profile.origen = "Promotora";
+
+    objeto.profile.usuario_id = Meteor.userId();
     objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
 
     var nombre = objeto.profile.nombre != undefined ? objeto.profile.nombre.trim() + " " : "";
@@ -171,7 +177,12 @@ function SolicitudCreditoPersonalFormCtrl($scope, $meteor, $reactive, $state, to
     Meteor.call('guardarSolicitudCreditoPersonal', objeto, function (e, r) {
       if (r) {
         toastr.success('Guardado correctamente.');
-        $state.go('root.panelSolicitudesCD');
+
+        if (Meteor.user().roles[0] != 'Promotora')
+          $state.go('root.panelSolicitudesCD');
+        else
+          $state.go('root.misSolicitudes');
+
       }
     });
 

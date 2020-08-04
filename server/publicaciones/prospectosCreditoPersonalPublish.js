@@ -28,6 +28,13 @@ Meteor.publishComposite('prospectosCreditoPersonalComposite', function (params, 
 					_id: prospecto.profile.usuarioCreacion_id
 				});
 			}
+		},
+		{
+			find(prospecto) {
+				return Meteor.users.find({
+					_id: prospecto.profile.promotora_id
+				});
+			}
 		}]
 	}
 });

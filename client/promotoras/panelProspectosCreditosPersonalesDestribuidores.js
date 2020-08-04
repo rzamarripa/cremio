@@ -15,6 +15,15 @@ function PanelProspectosCreditosPersonalesDestribuidoresCtrl($scope, $meteor, $r
 
 	rc.tipoSolicitud = "creditoPersonal";
 
+	this.subscribe('sucursales', () => {
+		return [{}]
+	},
+		{
+			onReady: function () {
+				rc.sucursales = Sucursales.find({ estatus: true }).fetch();
+			}
+		});
+
 	this.subscribe('buscarProspectoCreditoPersonal', () => {
 		if (this.getReactively("tipoSolicitud") == "creditoPersonal" && this.getReactively("buscar.nombre").length > 4) {
 			return [{
@@ -59,25 +68,29 @@ function PanelProspectosCreditosPersonalesDestribuidoresCtrl($scope, $meteor, $r
 			var prospectos = [];
 
 			var prospectosCreditoPersonal = ProspectosCreditoPersonal.find({ "profile.estatusProspecto": 1 }).map(function (p) {
-				if (p.profile.origen != 'Internet') {
-					Meteor.call('getUsuario', p.profile.usuarioCreacion, function (error, result) {
-						if (result) {
-							p.profile.nombreUsuario = result.nombre;
-							prospectos.push(p);
-							$scope.$apply()
-						}
-					});
-				}
-				else {
-					p.profile.nombreUsuario = "Internet";
-					prospectos.push(p);
-					if (!$scope.$$phase) {
-						$scope.$apply()
+				
+				if (p.profile.origen == 'Promotora') {
+					
+					if (p.profile.promotora_id != undefined) {
+						var u = Meteor.users.findOne(p.profile.promotora_id);
+						if (u)
+							p.profile.nombreUsuario = u.profile.numeroCliente + " - " + u.profile.nombreCompleto
 					}
 				}
+				if (p.profile.origen == 'Sistema') {
+					if (p.profile.usuarioCreacion != undefined) {
+						var u = Meteor.users.findOne(p.profile.usuarioCreacion);
+						if (u)
+							p.profile.nombreUsuario = u.profile.nombreCompleto
+					}
+				}
+				else if (p.profile.origen == 'Internet') {
+					p.profile.nombreUsuario = "Internet";
+				}
+				prospectos.push(p);
+				return p;
 
 			});
-
 
 			var prospectosDistribuidor = ProspectosDistribuidor.find({ "profile.estatusProspecto": 1 }).map(function (p) {
 				if (p.profile.origen != 'Internet') {
@@ -123,7 +136,7 @@ function PanelProspectosCreditosPersonalesDestribuidoresCtrl($scope, $meteor, $r
 				var cli = ProspectosDistribuidor.find({
 					"profile.nombreCompleto": { '$regex': '.*' + this.getReactively('buscar.nombre') || '' + '.*', '$options': 'i' },
 					"profile.estatusProspecto": { $ne: 1 }
-				}, { sort: { "profile.nombreCompleto": 1 } }).map(function(d){
+				}, { sort: { "profile.nombreCompleto": 1 } }).map(function (d) {
 					d.profile.tipo = "Distribuidor";
 					Meteor.call('getUsuario', d.profile.usuarioCreacion, function (error, result) {
 						if (result) {
@@ -133,7 +146,7 @@ function PanelProspectosCreditosPersonalesDestribuidoresCtrl($scope, $meteor, $r
 					});
 					return d;
 				});
-				
+
 				// _.each(cli, function (c) {
 				// 	Meteor.call('getUsuario', c.profile.usuarioCreacion, function (error, result) {
 				// 		if (result) {
@@ -171,10 +184,8 @@ function PanelProspectosCreditosPersonalesDestribuidoresCtrl($scope, $meteor, $r
 						loading(false);
 						toastr.success("Se autorizó correctamente.")
 
-						var idTemp = objeto._id;
-						delete objeto._id;
-
-						ProspectosCreditoPersonal.update({ _id: idTemp }, { $set: { usuarioAutorizo: Meteor.userId(), "profile.estatusProspecto": 2 } });
+						ProspectosCreditoPersonal.update({ _id: objeto._id }, { $set: { usuarioAutorizo: Meteor.userId(), "profile.estatusProspecto": 2 } });
+						SolicitudesClientes.update({ _id: objeto.profile.solicitudCreditoPersonal_id }, { $set: { "profile.estatus": 5 } });
 						$state.go('root.clienteDetalle', { 'objeto_id': r });
 
 					}
@@ -187,10 +198,8 @@ function PanelProspectosCreditosPersonalesDestribuidoresCtrl($scope, $meteor, $r
 						loading(false);
 						toastr.success("Se autorizó correctamente.")
 
-						var idTemp = objeto._id;
-						delete objeto._id;
-
-						ProspectosDistribuidor.update({ _id: idTemp }, { $set: { usuarioAutorizo: Meteor.userId(), "profile.estatusProspecto": 2 } });
+						ProspectosDistribuidor.update({ _id: objeto._id }, { $set: { usuarioAutorizo: Meteor.userId(), "profile.estatusProspecto": 2 } });
+						SolicitudesDistribuidores.update({ _id: objeto.profile.solicitudDistribuidor_id }, { $set: { "profile.estatus": 5 } });
 						$state.go('root.distribuidoresDetalle', { 'objeto_id': r });
 
 					}
@@ -220,11 +229,13 @@ function PanelProspectosCreditosPersonalesDestribuidoresCtrl($scope, $meteor, $r
 			var idTemp = objeto._id;
 			delete objeto._id;
 			ProspectosCreditoPersonal.update({ _id: idTemp }, { $set: { usuarioRechazo: Meteor.userId(), "profile.estatusProspecto": 3, "profile.motivo": motivo } });
+			SolicitudesClientes.update({ _id: objeto.profile.solicitudCreditoPersonal_id }, { $set: { "profile.estatus": 6 } });
 		}
 		else {
 			var idTemp = objeto._id;
 			delete objeto._id;
 			ProspectosDistribuidor.update({ _id: idTemp }, { $set: { usuarioRechazo: Meteor.userId(), "profile.estatusProspecto": 3, "profile.motivo": motivo } });
+			SolicitudesDistribuidores.update({ _id: objeto.profile.solicitudDistribuidor_id }, { $set: { "profile.estatus": 6 } });
 		}
 
 		toastr.error("Prospecto rechazado.")

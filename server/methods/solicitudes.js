@@ -47,7 +47,8 @@ Meteor.methods({
     if (tipo == "Distribuidor") {
       var busca = ProspectosDistribuidor.find({ "profile.nombreCompleto": objeto.profile.nombreCompleto });
       if (busca.lenght > 0) {
-        SolicitudesDistribuidores.update({ _id: objeto_id }, { $set: { "profile.estatus": 4 } });
+        SolicitudesDistribuidores.update({ _id: objeto_id }, { $set: { "profile.estatus": 4 } }); 
+        //1.- Sin Sucursal, 2.- Asignado .- 3.- En Prospecto, 4.- Ya xiste, 5.- Aceptado, 6.- Rechazado, 7.- Trunco
         return 1;
       }
       objeto.profile.estatusProspecto = 1; //1.- No es Cliente, 2.- es Cliente.- 3.- No Aprobado
@@ -61,6 +62,7 @@ Meteor.methods({
       var busca = ProspectosCreditoPersonal.find({ "profile.nombreCompleto": objeto.profile.nombreCompleto });
       if (busca.lenght > 0) {
         SolicitudesClientes.update({ _id: objeto_id }, { $set: { "profile.estatus": 4 } });
+        //1.- Sin Sucursal, 2.- Asignado .- 3.- En Prospecto, 4.- Ya xiste, 5.- Aceptado, 6.- Rechazado, 7.- Trunco
         return 1;
       }
       objeto.profile.estatusProspecto = 1;

@@ -231,7 +231,9 @@ Meteor.methods({
 					}
 				}
 
-				if (arreglo[credito.cliente_id].arreglo[numeroCorte] == undefined) {
+				var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
+
+				if (arreglo[credito.cliente_id].arreglo[subindice] == undefined) {
 
 					//Revisar si ya pago el seguro----------------------
 
@@ -244,39 +246,39 @@ Meteor.methods({
 						seguro = configuraciones.seguro;
 
 					//---------------------------------------------------
-					arreglo[credito.cliente_id].arreglo[numeroCorte] = {};
+					arreglo[credito.cliente_id].arreglo[subindice] = {};
 
-					arreglo[credito.cliente_id].arreglo[numeroCorte].seguro = seguro;
+					arreglo[credito.cliente_id].arreglo[subindice].seguro = seguro;
 
 					arreglo[credito.cliente_id].seguro += seguro;
 
-					arreglo[credito.cliente_id].arreglo[numeroCorte].numeroCorte = numeroCorte;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].fechaCorteFin = fechaCorteFin;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].fechaPago = planPago.fechaLimite;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].importe = 0;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios = 0;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].seguroDistribuidor = arreglo[credito.cliente_id].seguro;
+					arreglo[credito.cliente_id].arreglo[subindice].numeroCorte = numeroCorte;
+					arreglo[credito.cliente_id].arreglo[subindice].fechaCorteInicio = fechaCorteInicio;
+					arreglo[credito.cliente_id].arreglo[subindice].fechaCorteFin = fechaCorteFin;
+					arreglo[credito.cliente_id].arreglo[subindice].fechaPago = planPago.fechaLimite;
+					arreglo[credito.cliente_id].arreglo[subindice].importe = 0;
+					arreglo[credito.cliente_id].arreglo[subindice].cargosMoratorios = 0;
+					arreglo[credito.cliente_id].arreglo[subindice].seguroDistribuidor = arreglo[credito.cliente_id].seguro;
 
 					if (planPago.descripcion == 'Recibo')
-						arreglo[credito.cliente_id].arreglo[numeroCorte].importe = planPago.importeRegular;
+						arreglo[credito.cliente_id].arreglo[subindice].importe = planPago.importeRegular;
 					else
-						arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios = planPago.importeRegular;
+						arreglo[credito.cliente_id].arreglo[subindice].cargosMoratorios = planPago.importeRegular;
 
-					arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion = Number(planPago.bonificacion);
+					arreglo[credito.cliente_id].arreglo[subindice].bonificacion = Number(planPago.bonificacion);
 
-					//arreglo[numeroCorte].fechaCorte = fechaCorte;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos = [];
-					arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos.push(planPago);
+					//arreglo[subindice].fechaCorte = fechaCorte;
+					arreglo[credito.cliente_id].arreglo[subindice].planPagos = [];
+					arreglo[credito.cliente_id].arreglo[subindice].planPagos.push(planPago);
 				}
 				else {
 					if (planPago.descripcion == 'Recibo')
-						arreglo[credito.cliente_id].arreglo[numeroCorte].importe += round(Number(planPago.importeRegular).toFixed(3), 2);
+						arreglo[credito.cliente_id].arreglo[subindice].importe += round(Number(planPago.importeRegular).toFixed(3), 2);
 					else
-						arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios += round(Number(planPago.importeRegular).toFixed(3), 2);
+						arreglo[credito.cliente_id].arreglo[subindice].cargosMoratorios += round(Number(planPago.importeRegular).toFixed(3), 2);
 
-					arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion += round(Number(planPago.bonificacion).toFixed(3), 2);
-					arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos.push(planPago);
+					arreglo[credito.cliente_id].arreglo[subindice].bonificacion += round(Number(planPago.bonificacion).toFixed(3), 2);
+					arreglo[credito.cliente_id].arreglo[subindice].planPagos.push(planPago);
 				}
 
 				//---------------------------------------------------
@@ -319,7 +321,9 @@ Meteor.methods({
 
 				}
 
-				if (arreglo[credito.cliente_id].arreglo[numeroCorte] == undefined) {
+				var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
+
+				if (arreglo[credito.cliente_id].arreglo[subindice] == undefined) {
 
 					var seguro = 0;
 					var pagosSeguro = PagosSeguro.find({ distribuidor_id: credito.cliente_id, corte: numeroCorte, estatus: 1 });
@@ -330,39 +334,39 @@ Meteor.methods({
 						seguro = configuraciones.seguro;
 
 
-					arreglo[credito.cliente_id].arreglo[numeroCorte] = {};
+					arreglo[credito.cliente_id].arreglo[subindice] = {};
 
-					arreglo[credito.cliente_id].arreglo[numeroCorte].seguro = seguro;
+					arreglo[credito.cliente_id].arreglo[subindice].seguro = seguro;
 					arreglo[credito.cliente_id].seguro += seguro;
 
-					arreglo[credito.cliente_id].arreglo[numeroCorte].numeroCorte = numeroCorte;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].fechaCorteFin = fechaCorteFin;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].fechaPago = planPago.fechaLimite;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].importe = 0;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios = 0;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].seguroDistribuidor = arreglo[credito.cliente_id].seguro;
+					arreglo[credito.cliente_id].arreglo[subindice].numeroCorte = numeroCorte;
+					arreglo[credito.cliente_id].arreglo[subindice].fechaCorteInicio = fechaCorteInicio;
+					arreglo[credito.cliente_id].arreglo[subindice].fechaCorteFin = fechaCorteFin;
+					arreglo[credito.cliente_id].arreglo[subindice].fechaPago = planPago.fechaLimite;
+					arreglo[credito.cliente_id].arreglo[subindice].importe = 0;
+					arreglo[credito.cliente_id].arreglo[subindice].cargosMoratorios = 0;
+					arreglo[credito.cliente_id].arreglo[subindice].seguroDistribuidor = arreglo[credito.cliente_id].seguro;
 
 					if (planPago.descripcion == 'Recibo')
-						arreglo[credito.cliente_id].arreglo[numeroCorte].importe = round(Number(planPago.importeRegular).toFixed(3), 2);
+						arreglo[credito.cliente_id].arreglo[subindice].importe = round(Number(planPago.importeRegular).toFixed(3), 2);
 					else
-						arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios = round(Number(planPago.importeRegular).toFixed(3), 2);
+						arreglo[credito.cliente_id].arreglo[subindice].cargosMoratorios = round(Number(planPago.importeRegular).toFixed(3), 2);
 
-					arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion = round(Number(planPago.bonificacion).toFixed(3), 2);
+					arreglo[credito.cliente_id].arreglo[subindice].bonificacion = round(Number(planPago.bonificacion).toFixed(3), 2);
 
-					//arreglo[numeroCorte].fechaCorte = fechaCorte;
-					arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos = [];
-					arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos.push(planPago);
+					//arreglo[subindice].fechaCorte = fechaCorte;
+					arreglo[credito.cliente_id].arreglo[subindice].planPagos = [];
+					arreglo[credito.cliente_id].arreglo[subindice].planPagos.push(planPago);
 				}
 				else {
 					if (planPago.descripcion == 'Recibo')
-						arreglo[credito.cliente_id].arreglo[numeroCorte].importe += round(Number(planPago.importeRegular).toFixed(3), 2);
+						arreglo[credito.cliente_id].arreglo[subindice].importe += round(Number(planPago.importeRegular).toFixed(3), 2);
 					else
-						arreglo[credito.cliente_id].arreglo[numeroCorte].cargosMoratorios += round(Number(planPago.importeRegular).toFixed(3), 2);
+						arreglo[credito.cliente_id].arreglo[subindice].cargosMoratorios += round(Number(planPago.importeRegular).toFixed(3), 2);
 
 
-					arreglo[credito.cliente_id].arreglo[numeroCorte].bonificacion += round(Number(planPago.bonificacion).toFixed(3), 2);
-					arreglo[credito.cliente_id].arreglo[numeroCorte].planPagos.push(planPago);
+					arreglo[credito.cliente_id].arreglo[subindice].bonificacion += round(Number(planPago.bonificacion).toFixed(3), 2);
+					arreglo[credito.cliente_id].arreglo[subindice].planPagos.push(planPago);
 				}
 
 				//---------------------------------------------------				 			

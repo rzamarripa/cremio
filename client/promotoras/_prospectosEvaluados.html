@@ -60,14 +60,14 @@
           </td>
           <td class="text-left">
             <div class="text-center">
+              <span ng-if="objeto.profile.estatus == 1" class="label label-danger">
+                Sin Verificar
+              </span>
               <span ng-if="objeto.profile.estatus == 2" class="label label-warning">
                 Programada
               </span>
               <span ng-if="objeto.profile.estatus ==3" class="label label-success">
                 Verificado
-              </span>
-              <span ng-if="objeto.profile.estatus == 1" class="label label-danger">
-                Sin Verificar
               </span>
             </div>
           </td>

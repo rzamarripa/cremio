@@ -1,30 +1,44 @@
 <table class="table table-striped table-bordered table-condensed font-xs">
-		<thead class="thead">
-			<tr>
-				<th class="text-center" width="3%">No.</th>
-				<th class="text-center" width="10%">No. Cliente</th>
-				<th class="text-center" width="20%">Cliente</th>
-				<th class="text-center" width="10%">Tipo de Nota de Crédito</th>
-				<th class="text-center" width="15%">Causa</th>
-				<th class="text-center" width="5%">Creada</th>
-				<th class="text-center" width="5%">Fecha</th>
-				<th class="text-center" width="5%">Importe</th>
-				<th class="text-center" width="5%">Saldo</th>
-				<th class="text-center" width="10%">Usuario</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="(index,nota) in pnc.notasCreditoCaducadas">
-				<td>{{index+1}}</td>
-				<td>{{nota.numeroCliente}}</td>
-				<td>{{nota.nombreCliente}}</td>
-				<td>{{nota.aplica}}</td>
-				<td>{{nota.causa}}</td>
-				<td style="text-align: center">{{nota.createdAt | date:'dd/MM/yyyy'}}</td>
-				<td style="text-align: center">{{nota.vigencia | date:'dd/MM/yyyy'}}</td>
-				<td style="text-align: right">{{nota.importe | currency}}</td>
-				<td style="text-align: right">{{nota.saldo | currency}}</td>
-				<td>{{nota.usuario}}</td>
-			</tr>
-		</tbody>
-</table>		
+	<thead class="thead">
+		<tr>
+			<th class="text-center" width="3%">No.</th>
+			<th class="text-center" width="10%">No. Cliente</th>
+			<th class="text-center" width="20%">Cliente</th>
+			<th class="text-center" width="10%">Tipo de Nota de Crédito</th>
+			<th class="text-center" width="15%">Causa</th>
+			<th class="text-center" width="5%">Creada</th>
+			<th class="text-center" width="5%">Fecha</th>
+			<th class="text-center" width="5%">Importe</th>
+			<th class="text-center" width="5%">Saldo</th>
+			<th class="text-center" width="10%">Usuario</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="(index,nota) in pnc.notasCreditoCaducadas">
+			<td>{{($index + 1 ) + pnc.numeroPagina}}</td>
+			<td>{{nota.numeroCliente}}</td>
+			<td>{{nota.nombreCliente}}</td>
+			<td>{{nota.aplica}}</td>
+			<td>{{nota.causa}}</td>
+			<td style="text-align: center">{{nota.createdAt | date:'dd/MM/yyyy'}}</td>
+			<td style="text-align: center">{{nota.vigencia | date:'dd/MM/yyyy'}}</td>
+			<td style="text-align: right">{{nota.importe | currency}}</td>
+			<td style="text-align: right">{{nota.saldo | currency}}</td>
+			<td>{{nota.usuario}}</td>
+		</tr>
+	</tbody>
+</table>
+<div class="text-center">
+	<ul id="paginador" class="pagination pagination-lg">
+		<li>
+			<a href="#" ng-click="pnc.izq(pnc.arregloPaginadorCaducadas)"><i class="fa fa-arrow-left"></i></a>
+		</li>
+		<li ng-repeat="item in pnc.arregloPaginadorCaducadas" ng-class="item.estaActivo? 'page-item active' : 'page-item'">
+			<a href="#" ng-click="pnc.activarPorNumero(item, pnc.arregloPaginadorCaducadas)">{{item.numero}}</a>
+		</li>
+		<li>
+			<a href="#" ng-click="pnc.der(pnc.notasCreditoAplicadas,pnc.arregloPaginadorCaducadas)"><i
+					class="fa fa-arrow-right"></i></a>
+		</li>
+	</ul>
+</div>

@@ -1,0 +1,78 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+			Prospectos de Crédito Personal y Distribuidor
+		</h1>
+	</div>
+</div>
+
+
+<div class="row">
+  <div class="col-lg-12">
+    <table class="table table-condensed table-bordered">
+      <thead>
+        <tr>
+          <th style='width: 5%' class="text-center">No.</th>
+          <th style='width: 15%' class="text-center">Prospecto</th>
+          <th style='width: 10%' class="text-center">Tipo</th>
+          <th style='width: 10%' class="text-center">Fecha</th>
+          <th style='width: 10%' class="text-center">Resultado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="objeto in obj.arreglo">
+          <td class="text-center">{{$index + 1}}</td>
+          <td class="text-left">{{objeto.profile.nombreCompleto}}</td>
+          <td class="text-left">{{objeto.profile.tipo}}</td>
+          <td class="text-center">{{objeto.profile.fechaCreacion | date:"dd-MM-yyyy"}}</td>
+          <td class="text-left">
+            <div class="text-center">
+              <span ng-if="objeto.profile.estatusProspecto == 1" class="label label-info">
+                En Sucursal
+              </span>
+              <span ng-if="objeto.profile.estatusProspecto == 4" class="label label-warning">
+                Trunco
+              </span>
+              <span ng-if="objeto.profile.estatusProspecto == 2" class="label label-success">
+                Autorizado
+              </span>
+              <span ng-if="objeto.profile.estatusProspecto == 3" class="label label-danger">
+                Rechazado
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ver valoracion -->
+<div class="container">
+	<!-- Modal -->
+	<div class="modal fade" id="modalValoracion" data-backdrop="static" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<form name="formCancelar" novalidate>
+					<div class="modal-header">
+						<h4 class="modal-title">Valoración</h4>
+					</div>
+					<div class="modal-footer">
+						<div class="row">
+							<div class="col-sm-12">
+								<p style="text-align: justify"> {{obj.valoracion}}</p>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</div>

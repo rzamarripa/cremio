@@ -1,253 +1,293 @@
 <div class="well">
 	<h3>Cajero: <span>{{vca.getCajero(vca.caja)}}</span></h3>
-	
+
 	<a style="margin-left: 5px;" class="btn btn-success btn-mini pull-right" ng-click="vca.nuevoTraspasoModal()">
-	  <span class="fa fa-plus">Nuevo Traspaso</span>
+		<span class="fa fa-plus">Nuevo Traspaso</span>
 	</a>
 	<div>
-	  <!-- Nav tabs -->
-	  <ul class="nav nav-tabs" role="tablist">
-	    <li role="presentation" class="active"><a href="#resumen" aria-controls="resumen" role="tab" data-toggle="tab">Resumen</a></li>
-	    <li role="presentation"><a href="#operaciones" aria-controls="operaciones" role="tab" data-toggle="tab">Operaciones</a></li>
-	    <li role="presentation"><a href="#traspasos" aria-controls="traspasos" role="tab" data-toggle="tab">Traspasos</a></li>
-	    <li role="presentation"><a href="#cuentas" aria-controls="cuentas" role="tab" data-toggle="tab">Cuentas</a></li>
-	  </ul>
-	  <!-- Tab panes -->
-	  <div class="tab-content">
-	    <div role="tabpanel" class="tab-pane active" id="resumen">
-<!-- 		    	<div class="well"> -->
-			      <div class="row">
-			        <div class="col-sm-6">
-						    Folio: <span>{{vca.caja.folioCaja}}</span>
-					    </div>
-					    <br>
-					    <div class="col-sm-6">
-						    Fecha Inicio: <span>{{vca.caja.ultimaApertura | date:"dd-MM-yyyy" }}</span>
-					    </div>
-			      </div>
-			      <div class="row">  
-				      <div class="col-sm-2">
-					      <a class="btn btn-primary btn-mini" ui-sref="anon.imprimirResumen({caja_id: vca.caja._id, fechaApertura: vca.caja.ultimaApertura})" target="_blank">
-								  <span class="fa fa-file-text-o"> Resumen</span>
-								</a>				    
-				      </div>
-				      <div class="col-sm-2" ng-if="currentUser.roles[0] == 'Gerente'">
-					      <a class="btn btn-danger btn-mini" ng-click="vca.corte(vca.caja)">
-								  <span class="fa fa-inbox"> Corte Ventanilla</span>
-								</a>				    
-				      </div>
-			      </div>
-<!-- 		    	</div>   -->
-	    </div>
-	    <div role="tabpanel" class="tab-pane" id="operaciones">
-	      <div class="row">
-	        <div class="col-sm-12">
-						<div class="table-responsive">		        
-		          <table class="table table-condensed table-bordered">
-		            <thead>
-		              <tr>
-		                <th style="text-align: center;" width="3%">Folio</th>
-		                <th style="text-align: center;" width="7%">Fecha</th>
-		                <th style="text-align: center;" width="5%">Hora</th>
-		                <th style="text-align: center;" width="8%"># C-D</th>
-		                <th style="text-align: center;" width="15%">Nombre</th>
-		                <th style="text-align: center;" width="8%">Mov.</th>
-		                <th style="text-align: center;" width="5%">Capital</th>
-		                <th style="text-align: center;" width="5%">C. M.</th>
-		                <th style="text-align: center;" width="5%">Int.</th>
-		                <th style="text-align: center;" width="4%">Seguro</th>
-		                <th style="text-align: center;" width="4%">Iva</th>
-		                <th style="text-align: center;" width="7%">S. Dist.</th>
-		                <th style="text-align: center;" width="4%">Bon.</th>
-		                <th style="text-align: center;" width="5%">Monto</th>
-		                <th style="text-align: center;" width="5%">F. Pago</th>
-		                <th style="text-align: center;" width="1%"></th>
-		              </tr>
-		            </thead>
-		            <tbody style="font-size: x-small">
-		              <tr ng-repeat="mov in vca.movimientosCaja" class={{mov.clase}}>
-		                <td align="center">{{mov.pago != undefined ? mov.pago.folioPago : mov.credito.folio }}</td>
-		                <td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
-		                <td>{{mov.createdAt | date:'H:mm:ss'}}</td>
-		                <td>{{mov.numeroCliente}}</td>
-		                <td>{{mov.nombreCliente}}</td>
-		                <td>{{mov.origen}}</td>
-		                <td align="right">{{mov.capital | currency}}</td>
-		                <td align="right">{{mov.multas | currency}}</td>
-		                <td align="right">{{mov.intereses | currency}}</td>
-		                <td align="right">{{mov.seguro | currency}}</td>
-		                <td align="right">{{mov.iva | currency}}</td>
-		                <td align="right">{{mov.seguroDis | currency}}</td>
-		                <td align="right">{{mov.bonificacion | currency}}</td>
-		                <td align="right">{{mov.monto | currency}}</td>
-		                <td align="center">{{mov.tipoIngreso.nombre}}</td>
-		                <td>
-		                	<div class="btn-group">
-											  <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											    <span class="caret"></span>
-											    <span class="sr-only">Toggle Dropdown</span>
-											  </button>
-		                    <ul class="dropdown-menu dropdown-menu-right text-left">
-											    <li ng-if="mov.origen == 'Pago de Cliente'">
-											    		<a ui-sref="anon.imprimirTicket({pago_id:mov.pago._id})" target="_blank"><i class="fa fa-file-text-o"></i> Ticket</a>
-											    </li>
-											    <li ng-if="mov.origen == 'Pago de Distribuidor'">
-											    		<a ui-sref="anon.imprimirTicketVale({pago_id:mov.pago._id})" target="_blank"><i class="fa fa-file-text-o"></i> Ticket</a>
-											    </li>
-											    <li ng-if="currentUser.roles[0] == 'Gerente' || currentUser.roles[0] == 'Supervisor' && (mov.origen == 'Pago de Cliente' || mov.origen == 'Pago de Distribuidor' || mov.origen == 'Entrega de Credito' || mov.origen == 'Entrega de Vale' || mov.origen == 'Pago de Sistema')">
-											    		<a href="#" ng-click="mov.origen =='Pago de Cliente' || mov.origen == 'Pago de Distribuidor' || mov.origen == 'Pago de Sistema' ?vca.cancelarPago(mov.pago,1):vca.cancelarPago(mov,2)" ng-if = "currentUser.roles[0] == 'Gerente' || currentUser.profile.cancelarMovimientos == true"><i class="fa fa-trash"></i> Cancelar</a>
-											    </li>
-											    
-											  </ul>
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active"><a href="#resumen" aria-controls="resumen" role="tab"
+					data-toggle="tab">Resumen</a></li>
+			<li role="presentation"><a href="#operaciones" aria-controls="operaciones" role="tab"
+					data-toggle="tab">Operaciones</a></li>
+			<li role="presentation"><a href="#traspasos" aria-controls="traspasos" role="tab" data-toggle="tab">Traspasos</a>
+			</li>
+			<li role="presentation"><a href="#cuentas" aria-controls="cuentas" role="tab" data-toggle="tab">Cuentas</a></li>
+		</ul>
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active" id="resumen">
+				<!-- 		    	<div class="well"> -->
+				<div class="row">
+					<div class="col-sm-6">
+						Folio: <span>{{vca.caja.folioCaja}}</span>
+					</div>
+					<br>
+					<div class="col-sm-6">
+						Fecha Inicio: <span>{{vca.caja.ultimaApertura | date:"dd-MM-yyyy" }}</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2">
+						<a class="btn btn-primary btn-mini"
+							ui-sref="anon.imprimirResumen({caja_id: vca.caja._id, fechaApertura: vca.caja.ultimaApertura})"
+							target="_blank">
+							<span class="fa fa-file-text-o"> Resumen</span>
+						</a>
+					</div>
+					<div class="col-sm-2" ng-if="currentUser.roles[0] == 'Gerente'">
+						<a class="btn btn-danger btn-mini" ng-click="vca.corte(vca.caja)">
+							<span class="fa fa-inbox"> Corte Ventanilla</span>
+						</a>
+					</div>
+				</div>
+				<!-- 		    	</div>   -->
+			</div>
+			<div role="tabpanel" class="tab-pane" id="operaciones">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="table-responsive">
+							<table class="table table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th style="text-align: center;" width="3%">Folio</th>
+										<th style="text-align: center;" width="7%">Fecha</th>
+										<th style="text-align: center;" width="5%">Hora</th>
+										<th style="text-align: center;" width="8%"># C-D</th>
+										<th style="text-align: center;" width="15%">Nombre</th>
+										<th style="text-align: center;" width="8%">Mov.</th>
+										<th style="text-align: center;" width="5%">Capital</th>
+										<th style="text-align: center;" width="5%">C. M.</th>
+										<th style="text-align: center;" width="5%">Int.</th>
+										<th style="text-align: center;" width="4%">Seguro</th>
+										<th style="text-align: center;" width="4%">Iva</th>
+										<th style="text-align: center;" width="7%">S. Dist.</th>
+										<th style="text-align: center;" width="4%">Bon.</th>
+										<th style="text-align: center;" width="5%">Monto</th>
+										<th style="text-align: center;" width="5%">F. Pago</th>
+										<th style="text-align: center;" width="1%"></th>
+									</tr>
+								</thead>
+								<tbody style="font-size: x-small">
+									<tr ng-repeat="mov in vca.movimientosCaja" class={{mov.clase}}>
+										<td align="center">{{mov.pago != undefined ? mov.pago.folioPago : mov.credito.folio }}</td>
+										<td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
+										<td>{{mov.createdAt | date:'H:mm:ss'}}</td>
+										<td>{{mov.numeroCliente}}</td>
+										<td>{{mov.nombreCliente}}</td>
+										<td>{{mov.origen}}</td>
+										<td align="right">{{mov.capital | currency}}</td>
+										<td align="right">{{mov.multas | currency}}</td>
+										<td align="right">{{mov.intereses | currency}}</td>
+										<td align="right">{{mov.seguro | currency}}</td>
+										<td align="right">{{mov.iva | currency}}</td>
+										<td align="right">{{mov.seguroDis | currency}}</td>
+										<td align="right">{{mov.bonificacion | currency}}</td>
+										<td align="right">{{mov.monto | currency}}</td>
+										<td align="center">{{mov.tipoIngreso.nombre}}</td>
+										<td>
+											<div class="btn-group">
+												<button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown"
+													aria-haspopup="true" aria-expanded="false">
+													<span class="caret"></span>
+													<span class="sr-only">Toggle Dropdown</span>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-right text-left">
+													<li ng-if="mov.origen == 'Pago de Cliente'">
+														<a ui-sref="anon.imprimirTicket({pago_id:mov.pago._id})" target="_blank"><i
+																class="fa fa-file-text-o"></i> Ticket</a>
+													</li>
+													<li ng-if="mov.origen == 'Pago de Distribuidor'">
+														<a ui-sref="anon.imprimirTicketVale({pago_id:mov.pago._id})" target="_blank"><i
+																class="fa fa-file-text-o"></i> Ticket</a>
+													</li>
+													<li ng-if="mov.origen == 'Pago a Promotora'">
+														<a ui-sref="anon.ticketComisionPromotora({pago_id:mov.pago._id})" target="_blank"><i
+																class="fa fa-file-text-o"></i> Ticket</a>
+													</li>
+													<li
+														ng-if="(mov.origen == 'Pago de Cliente' || mov.origen == 'Pago de Distribuidor' || mov.origen == 'Pago de Sistema')">
+														<a href="#" ng-click="vca.cancelarPago(mov.pago,1)"
+															ng-if="currentUser.roles[0] == 'Gerente' || currentUser.profile.cancelarMovimientos == true"><i
+																class="fa fa-trash"></i> Cancelar</a>
+													</li>
+													<li ng-if="(mov.origen == 'Entrega de Credito' || mov.origen == 'Entrega de Vale')">
+														<a href="#" ng-click="vca.cancelarPago(mov,2)"
+															ng-if="currentUser.roles[0] == 'Gerente' || currentUser.profile.cancelarMovimientos == true"><i
+																class="fa fa-trash"></i> Cancelar</a>
+													</li>
+													<li ng-if="mov.origen == 'Pago a Promotora'">
+														<a href="#" ng-click="vca.cancelarPago(mov,3)"
+															ng-if="currentUser.roles[0] == 'Gerente' || currentUser.profile.cancelarMovimientos == true"><i
+																class="fa fa-trash"></i> Cancelar</a>
+													</li>
+
+												</ul>
 											</div>
-		                </td>
-		              </tr>
-		            </tbody>
-		          </table>
-						</div>  
-	        </div>
-	      </div>
-	    </div>
-	    <div role="tabpanel" class="tab-pane" id="traspasos">
-<!-- 		    <div class="well"> -->
-	      	<div class="row">
-		        <div class="col-sm-12">
-		          <table class="table table-bordered table-condensed table-stripped table-hover">
-		           <thead>
-		             <tr>
-		               <th align="center">Fecha</th>
-		               <th align="center">Origen</th>
-		               <th align="center">Destino</th>
-		               <th align="center">Monto</th>
-		               <th width="5%">Acción</th>
-		             </tr>
-		           </thead>
-		           <tbody>
-		            <tr ng-repeat="t in vca.traspasos">
-		              <td>{{t.createdAt | date:"dd-MM-yyyy"}}</td>
-		              <td>{{t.origen.nombre}}</td>
-		              <td>{{t.destino.nombre}}</td>
-		              <td align="right">{{t.importe | currency}}</td>
-		              <td>
-		              	<div class="btn-group">
-										  <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										    <span class="caret"></span>
-										    <span class="sr-only">Toggle Dropdown</span>
-										  </button>
-		                  <ul class="dropdown-menu dropdown-menu-right text-left">
-										    <li><a ui-sref="anon.imprimirTicketTraspaso({pago_id : t._id})" target="_blank"><i class="fa fa-file-text-o"></i> Ticket</a></li>
-										    <!-- <li><a ng-click="mov.origen=='Pago de Cliente'?vca.cancelarPago(mov.pago,1):vca.cancelarPago(mov,2)"><i class="fa fa-trash"></i> Cancelar</a></li> -->
-										  </ul>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="traspasos">
+				<!-- 		    <div class="well"> -->
+				<div class="row">
+					<div class="col-sm-12">
+						<table class="table table-bordered table-condensed table-stripped table-hover">
+							<thead>
+								<tr>
+									<th align="center">Fecha</th>
+									<th align="center">Origen</th>
+									<th align="center">Destino</th>
+									<th align="center">Monto</th>
+									<th width="5%">Acción</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="t in vca.traspasos">
+									<td>{{t.createdAt | date:"dd-MM-yyyy"}}</td>
+									<td>{{t.origen.nombre}}</td>
+									<td>{{t.destino.nombre}}</td>
+									<td align="right">{{t.importe | currency}}</td>
+									<td>
+										<div class="btn-group">
+											<button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown"
+												aria-haspopup="true" aria-expanded="false">
+												<span class="caret"></span>
+												<span class="sr-only">Toggle Dropdown</span>
+											</button>
+											<ul class="dropdown-menu dropdown-menu-right text-left">
+												<li><a ui-sref="anon.imprimirTicketTraspaso({pago_id : t._id})" target="_blank"><i
+															class="fa fa-file-text-o"></i> Ticket</a></li>
+												<!-- <li><a ng-click="mov.origen=='Pago de Cliente'?vca.cancelarPago(mov.pago,1):vca.cancelarPago(mov,2)"><i class="fa fa-trash"></i> Cancelar</a></li> -->
+											</ul>
 										</div>
-		              </td>
-		            </tr>
-		           </tbody>
-		          </table>
-		        </div>
-<!-- 	      </div> -->
-		    	</div>	
-	    </div>
-	    <div role="tabpanel" class="tab-pane" id="cuentas">
-<!-- 		    <div class="well"> -->
-	      <div class="row">
-	        <div class="col-sm-12">
-	          <table class="table table-bordered table-condensed table-stripped table-hover">
-	           <thead>
-	             <tr>
-	               <th style="text-align: center">Cuenta</th>
-	               <th style="text-align: center">Tipo de Ingreso</th>
-	<!--                <th align="center">Saldo Inicial</th> -->
-	               <th style="text-align: center">Saldo Actual</th>
-	             </tr>
-	           </thead>
-	           <tbody>
-	             <tr ng-repeat="c in vca.caja.cuenta">
-	               <td>{{c.cuenta.nombre}}</td>
-	               <td>{{c.tipoIngreso.nombre}}</td>
-	<!--                <td>{{c.saldoInicial | currency}}</td> -->
-	               <td align="right">{{c.saldo | currency}}</td>
-	             </tr>
-	           </tbody>
-	          </table>
-	        </div>
-<!-- 	      </div> -->
-		    </div>	
-	    </div>
-	  </div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- 	      </div> -->
+				</div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="cuentas">
+				<!-- 		    <div class="well"> -->
+				<div class="row">
+					<div class="col-sm-12">
+						<table class="table table-bordered table-condensed table-stripped table-hover">
+							<thead>
+								<tr>
+									<th style="text-align: center">Cuenta</th>
+									<th style="text-align: center">Tipo de Ingreso</th>
+									<!--                <th align="center">Saldo Inicial</th> -->
+									<th style="text-align: center">Saldo Actual</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="c in vca.caja.cuenta">
+									<td>{{c.cuenta.nombre}}</td>
+									<td>{{c.tipoIngreso.nombre}}</td>
+									<!--                <td>{{c.saldoInicial | currency}}</td> -->
+									<td align="right">{{c.saldo | currency}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- 	      </div> -->
+				</div>
+			</div>
+		</div>
 	</div>
-	
+
 </div>
 <!-- Modal Transpaso	 -->
-<div id="nuevoTraspaso" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-md" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Nuevo Traspaso</h4>
-      </div>
-      <div class="modal-body">
-            <form style="margin-left: 7px;margin-right: 7px;" name="nuevoTraspasoForm" class="form-horizontal" role="form" novalidate>
-            <div class="row">
-              <div class="col-sm-6" valida>
-                <label>Tipo</label>
-                <select ng-model="vca.nuevoTraspaso.tipo" name="tipo" class="form-control" required>
-                  <option value="desde_cuenta" ng-if="currentUser.roles[0] == 'Gerente'">Desde Cuenta (Traspaso)</option>
-                  <option value="a_cuenta" ng-if="currentUser.roles[0] == 'Gerente'">A Cuenta (Retiro)</option>
-                  <option value="a_ventanilla">A Ventanilla (Traspaso)</option>
-                  <option value="desde_ventanilla">Desde Ventanilla (Retiro)</option>
-                </select>
-              </div>
-              <div class="col-sm-6" valida>
-                <label>{{vca.nuevoTraspaso.tipo == 'a_ventanilla' || vca.nuevoTraspaso.tipo == 'desde_ventanilla' ? 'Ventanilla' : 'Cuenta'}}</label>
-                <select ng-change="vca.detalle(vca.nuevoTraspaso.origen_destino)" ng-model="vca.nuevoTraspaso.origen_destino" name="origen_destino" class="form-control" required>
-                  <option ng-if="vca.caja._id != caja._id && (vca.nuevoTraspaso.tipo == 'a_ventanilla' || vca.nuevoTraspaso.tipo == 'desde_ventanilla')" ng-repeat="caja in vca.cajas" value="{{caja._id}}">{{caja.nombre}}</option>
-                  <option ng-if="vca.nuevoTraspaso.tipo == 'a_cuenta' || vca.nuevoTraspaso.tipo == 'desde_cuenta'" ng-repeat="cuenta in vca.cuentas" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
-                </select>
-                <span class="text-warning" ng-if="vca.cajas.length == 1 && (vca.nuevoTraspaso.tipo == 'a_ventanilla' || vca.nuevoTraspaso.tipo == 'desde_ventanilla')">No hay otras ventanillas abiertas</span>
-              </div>
-            </div>
-            <div class="row" ng-if="vca.detalleOrigenDestino && !vca.detalleOrigenDestino.tipoIngreso_id">
-              <div class="col-sm-12" valida>
-                <label>Cuenta</label>
-                <select ng-model="vca.nuevoTraspaso.tipoIngreso_id" name="tipoIngreso_id" class="form-control" required>
-                  <option ng-repeat="cuenta in vca.detalleOrigenDestino.cuenta" value="{{cuenta.tipoIngreso._id}}">{{cuenta.tipoIngreso.nombre}}</option>
-                </select>
-              </div>
-            </div>
-            <br>
-              <table ng-if="vca.detalleOrigenDestino" class="table table-bordered table-stripped table-hover">
-                <thead>
-                  <tr>
-                    <th align="center">Cuenta</th>
-                    <th align="center">Tipo de Ingreso</th>
-                    <th align="center">Saldo Actual</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-if="vca.detalleOrigenDestino.tipoIngreso_id">
-                    <td>{{vca.detalleOrigenDestino.nombre}}</td>
-                    <td>{{vca.detalleOrigenDestino.tipoIngreso.nombre}}</td>
-                    <td>{{vca.detalleOrigenDestino.saldo | currency}}</td>
-                  </tr>
-                  <tr ng-if="!vca.detalleOrigenDestino.tipoIngreso_id" ng-repeat="c in vca.detalleOrigenDestino.cuenta">
-                    <td>{{c.cuenta.nombre}}</td>
-                    <td>{{c.tipoIngreso.nombre}}</td>
-                    <td>{{c.saldo | currency}}</td>
-                  </tr>
-                </tbody>
-              </table>
-              <div>
-                <label>Importe</label>
-                <div class="input-group" valida>
-                  <div class="input-group-addon">$</div>
-                    <input class="form-control" type="number" name="importe" ng-model="vca.nuevoTraspaso.importe" min="0" required>
-                  <div class="input-group-addon">.00</div>
-                </div>
-              </div>
-              <br>
-              <button valida-form formulario="nuevoTraspasoForm" ng-click="vca.nuevoTraspasoGuardar(vca.nuevoTraspaso, nuevoTraspasoForm)" type="button" class="btn btn-primary btn-block">Guardar</button>
-            </form>
-      </div>
-    </div>
-  </div>
+<div id="nuevoTraspaso" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+	aria-labelledby="myLargeModalLabel">
+	<div class="modal-dialog modal-md" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Nuevo Traspaso</h4>
+			</div>
+			<div class="modal-body">
+				<form style="margin-left: 7px;margin-right: 7px;" name="nuevoTraspasoForm" class="form-horizontal" role="form"
+					novalidate>
+					<div class="row">
+						<div class="col-sm-6" valida>
+							<label>Tipo</label>
+							<select ng-model="vca.nuevoTraspaso.tipo" name="tipo" class="form-control" required>
+								<option value="desde_cuenta" ng-if="currentUser.roles[0] == 'Gerente'">Desde Cuenta (Traspaso)</option>
+								<option value="a_cuenta" ng-if="currentUser.roles[0] == 'Gerente'">A Cuenta (Retiro)</option>
+								<option value="a_ventanilla">A Ventanilla (Traspaso)</option>
+								<option value="desde_ventanilla">Desde Ventanilla (Retiro)</option>
+							</select>
+						</div>
+						<div class="col-sm-6" valida>
+							<label>{{vca.nuevoTraspaso.tipo == 'a_ventanilla' || vca.nuevoTraspaso.tipo == 'desde_ventanilla' ? 'Ventanilla' : 'Cuenta'}}</label>
+							<select ng-change="vca.detalle(vca.nuevoTraspaso.origen_destino)"
+								ng-model="vca.nuevoTraspaso.origen_destino" name="origen_destino" class="form-control" required>
+								<option
+									ng-if="vca.caja._id != caja._id && (vca.nuevoTraspaso.tipo == 'a_ventanilla' || vca.nuevoTraspaso.tipo == 'desde_ventanilla')"
+									ng-repeat="caja in vca.cajas" value="{{caja._id}}">{{caja.nombre}}</option>
+								<option ng-if="vca.nuevoTraspaso.tipo == 'a_cuenta' || vca.nuevoTraspaso.tipo == 'desde_cuenta'"
+									ng-repeat="cuenta in vca.cuentas" value="{{cuenta._id}}">{{cuenta.nombre}}</option>
+							</select>
+							<span class="text-warning"
+								ng-if="vca.cajas.length == 1 && (vca.nuevoTraspaso.tipo == 'a_ventanilla' || vca.nuevoTraspaso.tipo == 'desde_ventanilla')">No
+								hay otras ventanillas abiertas</span>
+						</div>
+					</div>
+					<div class="row" ng-if="vca.detalleOrigenDestino && !vca.detalleOrigenDestino.tipoIngreso_id">
+						<div class="col-sm-12" valida>
+							<label>Cuenta</label>
+							<select ng-model="vca.nuevoTraspaso.tipoIngreso_id" name="tipoIngreso_id" class="form-control" required>
+								<option ng-repeat="cuenta in vca.detalleOrigenDestino.cuenta" value="{{cuenta.tipoIngreso._id}}">
+									{{cuenta.tipoIngreso.nombre}}</option>
+							</select>
+						</div>
+					</div>
+					<br>
+					<table ng-if="vca.detalleOrigenDestino" class="table table-bordered table-stripped table-hover">
+						<thead>
+							<tr>
+								<th align="center">Cuenta</th>
+								<th align="center">Tipo de Ingreso</th>
+								<th align="center">Saldo Actual</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-if="vca.detalleOrigenDestino.tipoIngreso_id">
+								<td>{{vca.detalleOrigenDestino.nombre}}</td>
+								<td>{{vca.detalleOrigenDestino.tipoIngreso.nombre}}</td>
+								<td>{{vca.detalleOrigenDestino.saldo | currency}}</td>
+							</tr>
+							<tr ng-if="!vca.detalleOrigenDestino.tipoIngreso_id" ng-repeat="c in vca.detalleOrigenDestino.cuenta">
+								<td>{{c.cuenta.nombre}}</td>
+								<td>{{c.tipoIngreso.nombre}}</td>
+								<td>{{c.saldo | currency}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<div>
+						<label>Importe</label>
+						<div class="input-group" valida>
+							<div class="input-group-addon">$</div>
+							<input class="form-control" type="number" name="importe" ng-model="vca.nuevoTraspaso.importe" min="0"
+								required>
+							<div class="input-group-addon">.00</div>
+						</div>
+					</div>
+					<br>
+					<button valida-form formulario="nuevoTraspasoForm"
+						ng-click="vca.nuevoTraspasoGuardar(vca.nuevoTraspaso, nuevoTraspasoForm)" type="button"
+						class="btn btn-primary btn-block">Guardar</button>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>

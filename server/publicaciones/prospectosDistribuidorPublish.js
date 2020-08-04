@@ -26,13 +26,12 @@ Meteor.publishComposite('prospectosDistribuidorComposite', function (params, opt
 		children: [{
 			find(prospecto) {
 				return Meteor.users.find({
-					_id: prospecto.profile.usuarioCreacion_id
+					_id: prospecto.profile.usuarioCreacion
 				});
 			}
 		}]
 	}
 });
-
 
 Meteor.publish("prospectosDistribuidorListado", function (options) {
 	if (options != undefined) {

@@ -649,12 +649,15 @@ Meteor.methods({
 			}
 		});
 
+		if (user != undefined) {
+			var colonia = Colonias.findOne(user.profile.colonia_id);
+			var ciudad = Ciudades.findOne(user.profile.ciudad_id);
 
-		var colonia = Colonias.findOne(user.profile.colonia_id);
-		var ciudad = Ciudades.findOne(user.profile.ciudad_id);
+			user.profile.colonia = colonia != undefined ? colonia.nombre : "";
+			user.profile.ciudad = ciudad.nombre;
+		}
 
-		user.profile.colonia = colonia != undefined ? colonia.nombre : "";
-		user.profile.ciudad = ciudad.nombre;
+
 
 		return user;
 	},

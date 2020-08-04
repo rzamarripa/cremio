@@ -117,20 +117,6 @@ Meteor.publish("buscarRootClientesDistribuidoresNumero", function (options) {
 });
 
 
-/*
-Meteor.publish("buscarRootAvales",function(options){
-	if (options != undefined)
-			if(options.where.nombreCompleto.length > 0){
-				let selector = {
-			  	"profile.nombreCompleto": { '$regex' : '.*' + options.where.nombreCompleto || '' + '.*', '$options' : 'i' },
-			  	roles : ["Aval"]
-				}
-				return Meteor.users.find(selector, options.options);	
-			}
-});
-*/
-
-
 Meteor.publish("distribuidores", function (options) {
 	return Meteor.users.find(options, {
 		fields: {
@@ -177,3 +163,68 @@ Meteor.publish("clientes", function (options) {
 	return Meteor.users.find(options);
 });
 
+
+Meteor.publishComposite('promotorComposite', function (params) {
+	return {
+		find() {
+			return Meteor.users.find(params);
+		},
+		children: [{
+
+			find(promotor) {
+				return Paises.find({
+					_id: promotor.profile.pais_id
+				});
+			}
+		},
+		{
+			find(promotor) {
+				return Estados.find({
+					_id: promotor.profile.estado_id
+				});
+			}
+		},
+		{
+			find(promotor) {
+				return Municipios.find({
+					_id: promotor.profile.municipio_id
+				});
+			}
+		},
+		{
+			find(promotor) {
+				return Ciudades.find({
+					_id: promotor.profile.ciudad_id
+				});
+			}
+		},
+		{
+			find(promotor) {
+				return Colonias.find({
+					_id: promotor.profile.colonia_id
+				});
+			}
+		},
+		{
+			find(promotor) {
+				return Nacionalidades.find({
+					_id: promotor.profile.nacionalidad_id
+				});
+			}
+		},
+		{
+			find(promotor) {
+				return EstadoCivil.find({
+					_id: promotor.profile.estadoCivil_id
+				});
+			}
+		},
+		{
+			find(promotor) {
+				return Ocupaciones.find({
+					_id: promotor.profile.ocupacion_id
+				});
+			}
+		}]
+	}
+});

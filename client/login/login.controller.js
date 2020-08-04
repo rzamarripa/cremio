@@ -18,11 +18,13 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 					$state.go('anon.logout');
 				}
 				else {
-					if (Meteor.user().username != "admin" && Meteor.user().roles != "Gerente") {
+					if (Meteor.user().username != "admin" && !Roles.userIsInRole(Meteor.userId(), ["Gerente"]) ) {
 						//Preguntar si es Distribuidor
-						if (Meteor.user().roles == "Distribuidor" || Meteor.user().roles == "Promotora") {
-						 	//$state.go("root.distribuidoresDetalle",{objeto_id : Meteor.userId()});
-							$state.go('root.home');
+						if (Meteor.user().roles == "Distribuidor") {
+							$state.go("root.distribuidoresDetalle",{objeto_id : Meteor.userId()});
+						}
+						else if (Roles.userIsInRole(Meteor.userId(), ["Promotora"])) {
+							$state.go("root.miPerfilPromotora", { objeto_id: Meteor.userId() });
 						}
 						else {
 							//Revisar que no sea domingo
@@ -55,6 +57,10 @@ angular.module('creditoMio').controller('LoginCtrl', ['$injector', function ($in
 							//$state.go('root.home'); 
 
 						}
+					}
+					else if (Meteor.user().username == "admin"){
+						toastr.success("Bienvenido al Sistema");
+						$state.go('root.configuraciones');
 					}
 					else {
 						toastr.success("Bienvenido al Sistema");

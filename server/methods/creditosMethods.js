@@ -258,9 +258,10 @@ Meteor.methods({
 			throw new Meteor.Error(500, 'Error 500: Conflicto', 'Usuario Sin Caja Asignada');
 
 		//Validar que el cliente tenga saldo en el crédito si es Vale
+		var cliente = Meteor.users.findOne(credito.cliente_id);
 		if (credito.tipo == "vale") {
 			//console.log("Es vale");
-			var cliente = Meteor.users.findOne(credito.cliente_id);
+			//var cliente = Meteor.users.findOne(credito.cliente_id);
 			var suma = 0;
 			_.each(montos.caja, (monto, index) => {
 				if (Number(monto.saldo) > 0)
@@ -269,8 +270,6 @@ Meteor.methods({
 			if (cliente.saldoCredito < suma)
 				throw new Meteor.Error(500, 'Error', 'El Distribuidor no tiene Saldo');
 		}
-
-
 
 		credito.entrega = { movimientosCaja: [], movimientosCuentas: [] };
 
@@ -313,10 +312,18 @@ Meteor.methods({
 		caja.updatedBy = user._id;
 		Cajas.update({ _id: cajaid }, { $set: caja });
 
-		//credito.entregado = true;
 		credito.estatus = 4;
 		credito.usuario_id = user._id;
 		//credito.sucursal_id = Meteor.user().profile.sucursal_id;
+
+		//Preguntar si es promotora para guardar la comision por pagar----
+		if (cliente.profile.promotora_id != undefined && cliente.profile.sePagoComision == false) {
+			credito.promotora_id = cliente.profile.promotora_id;
+			credito.estaPagadoComision = false;
+			ComisionesPromotoras.insert(credito);
+			//Actualizar al cliente de que ya no se le pagara comisión por ese cliente
+			Meteor.users.update({ _id: cliente._id }, { $set: { "profile.sePagoComision": true } });
+		}
 
 		delete credito._id;
 		Creditos.update({ _id: creditoid }, { $set: credito });
@@ -326,7 +333,6 @@ Meteor.methods({
 		_.each(planPagos, function (pp) {
 			PlanPagos.update({ _id: pp._id }, { $set: { estatus: 0 } });
 		});
-
 
 		//Actualizar el saldo al Distribuidor Y Beneficiario--------------
 		if (credito.tipo == "vale") {
@@ -361,9 +367,10 @@ Meteor.methods({
 
 			Beneficiarios.update({ _id: credito.beneficiario_id }, { $set: { saldoActual: saldoBeneficiario, saldoActualVales: saldoBeneficiarioVale } });
 		}
-
-
 		//-------------------------------------------------
+
+
+
 
 		return "200";
 	},
@@ -495,14 +502,21 @@ Meteor.methods({
 		var creditos = Creditos.find({ "cliente_id": id, estatus: { $in: [4, 5] } }, { sort: { fechaEntrega: 1 } }).fetch();
 
 		/*
-  _.each(creditos, function(c){
-		    
+	_.each(creditos, function(c){
+			  
 			var beneficiario 	= Beneficiarios.findOne(c.beneficiario_id);
 			c.beneficiario 		= beneficiario.nombreCompleto
-		    
+			  
 		})
-  */
+	*/
 
 		return creditos;
 	},
+	setCancelarCreditosComisionPromotora: function (creditos) {
+		_.each(creditos, function (c) {
+			Creditos.update({ _id: c.id }, { $set: { estaPagadoComision: false } });
+		})
+		return true;
+	},
+
 })

@@ -111,6 +111,11 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			templateUrl: 'client/cobranzaVales/ticketDistribuidor.ng.html',
 			controller: 'TicketDistribuidorCtrl as tktD'
 		})
+		.state('anon.ticketComisionPromotora', {
+			url: '/client/promotoras/ticketComisionPromotora/:pago_id',
+			templateUrl: 'client/promotoras/ticketComisionPromotora.html',
+			controller: 'TicketComisionPromotoraCtrl as obj'
+		})
 
 	/***************************
 	 * Login Users Routes
@@ -356,9 +361,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						//console.log(user);
-						//console.log("dos:",user.roles);
-						if (user != undefined && user.roles != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -374,7 +377,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -390,7 +393,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -426,7 +429,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -441,15 +444,13 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			controller: 'ClientesDetalleCtrl as cd',
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
-					setTimeout(() => {
-						return $meteor.requireValidUser(function (user) {
-							if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor") {
-								return true;
-							} else {
-								return 'UNAUTHORIZED';
-							}
-						});
-					}, 200);
+					return $meteor.requireValidUser(function (user) {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor"])) {
+							return true;
+						} else {
+							return 'UNAUTHORIZED';
+						}
+					});
 				}]
 			}
 		})
@@ -461,7 +462,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					setTimeout(() => {
 						return $meteor.requireValidUser(function (user) {
-							if (user != undefined && user.roles != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor" || user.roles[0] == "Distribuidor") {
+							if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor", "Distribuidor"])) {
 								return true;
 							} else {
 								return 'UNAUTHORIZED';
@@ -488,8 +489,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						//console.log(user.roles);
-						if (user != undefined && user.roles != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor" || user.roles[0] == "Distribuidor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor", "Distribuidor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -505,7 +505,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor" || user.roles[0] == "Distribuidor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor", "Distribuidor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -522,7 +522,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -538,7 +538,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user.roles[0] == "Gerente" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -555,7 +555,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -571,7 +571,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -588,7 +588,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					setTimeout(() => {
 						return $meteor.requireValidUser(function (user) {
-							if (user.roles[0] == "Cajero") {
+							if (Roles.userIsInRole(user._id, ["Cajero"])) {
 								return true;
 							} else {
 								return 'UNAUTHORIZED';
@@ -605,7 +605,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -687,7 +687,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -703,7 +703,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -719,7 +719,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -735,7 +735,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente") {
+						if (Roles.userIsInRole(user._id, ["Gerente"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -752,7 +752,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -768,7 +768,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -784,7 +784,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -800,7 +800,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -816,7 +816,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -832,7 +832,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -848,7 +848,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -864,7 +864,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Supervisor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -1297,7 +1297,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor" || user.roles[0] == "Distribuidor") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor", "Distribuidor"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -1394,7 +1394,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles != undefined && user.roles[0] == "Gerente" || user.roles[0] == "Cajero" || user.roles[0] == "Verificador" || user.roles[0] == "Supervisor" || user.roles[0] == "Promotora") {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Cajero", "Verificador", "Supervisor", "Promotora"])) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';
@@ -1443,6 +1443,38 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
+		.state('root.misSolicitudes', {
+			url: '/misSolicitudes',
+			templateUrl: 'client/promotoras/misSolicitudes.html',
+			controller: 'MisSolicitudesCtrl as obj',
+			resolve: {
+				"currentUser": ["$meteor", function ($meteor) {
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.misProspectos', {
+			url: '/misProspectos',
+			templateUrl: 'client/promotoras/misProspectos.html',
+			controller: 'MisProspectosCtrl as obj',
+			resolve: {
+				"currentUser": ["$meteor", function ($meteor) {
+					return $meteor.requireUser();
+				}]
+			}
+		})
+		.state('root.pagarPromotora', {
+			url: '/misProspectos/:objeto_id',
+			templateUrl: 'client/planPagos/pagar/pagarPromotora.html',
+			controller: 'PagarPromotoraCtrl as obj',
+			resolve: {
+				"currentUser": ["$meteor", function ($meteor) {
+					return $meteor.requireUser();
+				}]
+			}
+		})
+
+
 		////////////////Solicitudes Clientes Distribuidores/////////////////////////////////////////////////////////////////////
 		.state('root.panelAsignaSucursalSolicitudesCD', {
 			url: '/panelAsignaSucursalSolicitudesCD',
@@ -1451,7 +1483,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			resolve: {
 				"currentUser": ["$meteor", "toastr", function ($meteor, toastr) {
 					return $meteor.requireValidUser(function (user) {
-						if (user != undefined && user.roles[0] == "Gerente" || user.profile.asignarSolicitudesSucursal == true) {
+						if (Roles.userIsInRole(user._id, ["Gerente", "Supervisor"]) || user.profile.asignarSolicitudesSucursal == true) {
 							return true;
 						} else {
 							return 'UNAUTHORIZED';

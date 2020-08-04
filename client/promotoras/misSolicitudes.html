@@ -1,3 +1,23 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+    <h1 class="alge-title txt-color-blueDark">
+      <i class="fa fa-list fa-fw "></i>
+      Solicitudes de Clientes y Distribuidores
+    </h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6">
+    <a href="#" ui-sref="root.solicitudCreditoPersonalForm({})" class="btn btn-default btn-primary">
+      <i class="fa fa-plus"></i> Nuevo Crédito Personal
+    </a>
+    <a href="#" ui-sref="root.solicitudDistribuidorForm({})" class="btn btn-default btn-primary">
+      <i class="fa fa-plus"></i> Nuevo Distribuidor
+    </a>
+  </div>
+</div>
+<br>
+
 <div class="well">
   <div class="row">
     <div class="col-lg-12">
@@ -18,13 +38,25 @@
             <td class="text-center">{{$index + 1}}</td>
             <td class="text-left">{{objeto.profile.nombreCompleto}}</td>
             <td class="text-left">{{objeto.profile.tipo}}</td>
-            <td class="text-left">{{objeto.profile.origen}}
-              <br ng-if="objeto.profile.usario != ''">
-              <small ng-if="objeto.profile.usario != ''">{{objeto.profile.usuario}}</small>
-            </td>
+            <td class="text-left">{{objeto.profile.origen}}</td>
             <td class="text-center">
-              <span class="label label-success">
-                Asignado
+              <span ng-if="objeto.profile.estatus == 2" class="label label-info">
+                Enviado
+              </span>
+              <span ng-if="objeto.profile.estatus == 3" class="label label-warning">
+                Evaluando
+              </span>
+              <span ng-if="objeto.profile.estatus == 4" class="label label-default">
+                Ya Existe Solicitante
+              </span>
+              <span ng-if="objeto.profile.estatus == 5" class="label label-success">
+                Aceptado
+              </span>
+              <span ng-if="objeto.profile.estatus == 6" class="label label-danger">
+                Rechazado
+              </span>
+              <span ng-if="objeto.profile.estatus == 7" class="label label-primary">
+                Trámite Trunco
               </span>
             </td>
             <td class="text-center">{{objeto.profile.fechaCreacion | date:"dd-MM-yyyy"}}</td>
@@ -37,28 +69,15 @@
                     <span class="sr-only">Toggle Dropdown</span>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-right text-left">
-                    <li><a href="#" ng-click="obj.imprimir(objeto)"><i class="fa fa-print"></i> Imprimir</a></li>
+
                     <li ng-if="objeto.profile.tipo == 'Cliente Crédito Personal'">
                       <a href="#" ui-sref="root.solicitudCreditoPersonalEditarForm({id: objeto._id})">
                         <i class="fa fa-pencil"></i> Editar</a>
-                    </li>
-                    <li ng-if="objeto.profile.tipo == 'Cliente Crédito Personal'">
-                      <a href="#" ng-click="obj.crearProspecto(objeto)">
-                        <i class="fa fa-user"></i> Crear Prospecto</a>
                     </li>
                     <li ng-if="objeto.profile.tipo == 'Distribuidor'">
                       <a href="#" ui-sref="root.solicitudDistribuidorEditarForm({id: objeto._id})">
                         <i class="fa fa-pencil"></i> Editar</a>
                     </li>
-                    <li ng-if="objeto.profile.tipo == 'Distribuidor'">
-                      <a href="#" ng-click="obj.crearProspecto(objeto)">
-                        <i class="fa fa-user"></i> Crear Prospecto</a>
-                    </li>
-
-                    <li
-                      ng-if="currentUser.roles[0] == 'Gerente' || currentUser.profile.asignarSolicitudesSucursal == true">
-                      <a href="#" ng-click="obj.mostrarAsignarSucursal(objeto)"><i class="fa fa-refresh"></i> Cambiar
-                        Sucursal</a></li>
                   </ul>
                 </div>
               </div>

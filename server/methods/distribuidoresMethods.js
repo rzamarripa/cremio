@@ -184,41 +184,43 @@ Meteor.methods({
 
 			}
 
-			if (arreglo[numeroCorte] == undefined) {
-				arreglo[numeroCorte] = {};
-				arreglo[numeroCorte].numeroCorte = numeroCorte;
-				arreglo[numeroCorte].fechaCorteInicio = fechaCorteInicio;
-				arreglo[numeroCorte].fechaCorteFin = fechaCorteFin;
-				arreglo[numeroCorte].seguro = 0;
+			var subindice = numeroCorte + "-" + fechaCorteInicio.getFullYear();
+
+			if (arreglo[subindice] == undefined) {
+				arreglo[subindice] = {};
+				arreglo[subindice].numeroCorte = numeroCorte;
+				arreglo[subindice].fechaCorteInicio = fechaCorteInicio;
+				arreglo[subindice].fechaCorteFin = fechaCorteFin;
+				arreglo[subindice].seguro = 0;
 
 				var pagosSeguro = PagosSeguro.find({ distribuidor_id: distribuidor_id, anio: pp.fechaLimite.getFullYear(), numeroCorte: numeroCorte, estatus: 1 }).fetch();
 
 				if (pagosSeguro.length == 0) {
-					arreglo[numeroCorte].seguro = seguro;
+					arreglo[subindice].seguro = seguro;
 				}
 
-				arreglo[numeroCorte].fechaPago = pp.fechaLimite;
+				arreglo[subindice].fechaPago = pp.fechaLimite;
 
-				arreglo[numeroCorte].importe = 0;
-				arreglo[numeroCorte].cargosMoratorios = 0;
+				arreglo[subindice].importe = 0;
+				arreglo[subindice].cargosMoratorios = 0;
 
 				if (pp.descripcion == 'Recibo')
-					arreglo[numeroCorte].importe = pp.importeRegular;
+					arreglo[subindice].importe = pp.importeRegular;
 				else
-					arreglo[numeroCorte].cargosMoratorios = pp.importeRegular;
+					arreglo[subindice].cargosMoratorios = pp.importeRegular;
 
-				arreglo[numeroCorte].bonificacion = Number(pp.bonificacion);
-				arreglo[numeroCorte].planPagos = [];
-				arreglo[numeroCorte].planPagos.push(pp);
+				arreglo[subindice].bonificacion = Number(pp.bonificacion);
+				arreglo[subindice].planPagos = [];
+				arreglo[subindice].planPagos.push(pp);
 			}
 			else {
 				if (pp.descripcion == 'Recibo')
-					arreglo[numeroCorte].importe += pp.importeRegular;
+					arreglo[subindice].importe += pp.importeRegular;
 				else
-					arreglo[numeroCorte].cargosMoratorios += pp.importeRegular;
+					arreglo[subindice].cargosMoratorios += pp.importeRegular;
 
-				arreglo[numeroCorte].bonificacion += Number(pp.bonificacion);
-				arreglo[numeroCorte].planPagos.push(pp);
+				arreglo[subindice].bonificacion += Number(pp.bonificacion);
+				arreglo[subindice].planPagos.push(pp);
 			}
 
 		});

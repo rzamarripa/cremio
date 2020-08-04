@@ -7,6 +7,17 @@ function PanelAsignaSucursalSolicitudesCD($scope, $meteor, $reactive, $state, to
 
   rc.asignaSucursal_id = "";
 
+
+	this.subscribe('sucursales', () => {
+		return [{}]
+	},
+		{
+			onReady: function () {
+				rc.sucursales = Sucursales.find({ estatus: true }).fetch();
+			}
+		});
+
+
   this.subscribe('solicitudesClientes', () => {
     return [{ "profile.estatus": 1 }];
   })
