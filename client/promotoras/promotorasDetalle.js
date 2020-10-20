@@ -9,7 +9,7 @@ function PromotorasDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stat
 	window.rc = rc;
 
 	rc.numeroPagina = 0;
-	rc.avance = 50;
+	rc.avance = 30;
 	rc.arregloComisiones = [];
 	rc.arregloHistorial = [];
 
@@ -80,10 +80,26 @@ function PromotorasDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stat
 		}];
 	});
 
+	this.subscribe('pagosHistoricoPromotora', () => {
+
+		return [{
+			options: {
+				skip: rc.getReactively("numeroPagina"),
+				limit: rc.avance
+			},
+			where: {
+				cliente_id: rc.promotora_id
+			}
+		}];
+		//return [{cliente_id : $stateParams.objeto_id}];
+	});
+
 	this.helpers({
 		comisiones: () => {
+
+			rc.totalComisiones = 0;
 			var arreglo = {};
-			var comisiones = Creditos.find({ promotora_id: rc.promotora_id }, { sort: { fechaEntrega: 1 } }).map(function (c) {
+			Creditos.find({ promotora_id: rc.promotora_id }, { sort: { fechaEntrega: 1 } }).map(function (c) {
 
 				//obtener los datos del crédito
 				c.cliente = Meteor.users.findOne(c.cliente_id).profile.nombreCompleto;
@@ -105,17 +121,18 @@ function PromotorasDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stat
 				}
 
 				if (c.tipo == "creditoP") {
-          c.tipoCredito = "Crédito Personal";
-          c.comision = rc.comisionCreditoPersonal
-        }
-        else if (c.tipo == "vale") {
-          c.tipoCredito = "Vale";
-          c.comision = rc.comisionDistribuidor
-        }
-        else {
-          c.tipoCredito = "Crédito Personal Distribuidor";
-          c.comision = rc.comisionCreditoPersonal;
-        }
+					c.tipoCredito = "Crédito Personal";
+					c.comision = rc.comisionCreditoPersonal
+				}
+				else if (c.tipo == "vale") {
+					c.tipoCredito = "Vale";
+					c.comision = rc.comisionDistribuidor
+				}
+				else {
+					c.tipoCredito = "Crédito Personal Distribuidor";
+					c.comision = rc.comisionCreditoPersonal;
+				}
+				rc.totalComisiones += c.comision;
 
 				subindice = numeroQuincena + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
 				if (arreglo[subindice] == undefined) {
@@ -132,6 +149,7 @@ function PromotorasDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stat
 					else if (c.tipo == "vale")
 						arreglo[subindice].comisiones = rc.comisionDistribuidor;
 
+
 				}
 				else {
 					arreglo[subindice].creditos.push(c);
@@ -142,12 +160,26 @@ function PromotorasDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stat
 						arreglo[subindice].comisiones += rc.comisionCreditoPersonal;
 					else if (c.tipo == "vale")
 						arreglo[subindice].comisiones += rc.comisionDistribuidor;
+
 				}
-				rc.totalComisiones += arreglo[subindice].comisiones;
 
 				return c;
 			});
+
 			rc.arregloComisiones = _.toArray(arreglo);
+		},
+		pagos: () => {
+			return Pagos.find({ usuario_id: rc.promotora_id }).map(function (p) {
+
+				
+				p.estatus = MovimientosCajas.find({origen_id: p._id, tipoMovimiento: "Cancelación"}).count() > 0 ? "Cancelado" : "Aplicado";
+				//p.movimientoCaja = MovimientosCajas.findOne({origen_id: p._id, tipoMovimiento: "Cancelación"});
+
+				p.usuario = Meteor.users.findOne(p.usuarioCobro_id).profile.nombre;
+				p.sucursal = Sucursales.findOne(p.sucursalPago_id).nombreSucursal;
+
+				return p;
+			});
 		},
 	});
 
@@ -234,10 +266,11 @@ function PromotorasDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stat
 
 	///Solo esta se especifica para cagar el arreglo de la tabla
 	rc.cargarArregloPaginador = function () {
-		Meteor.call('getTotalesRegistrosCreditosPromotoras', rc.avance, function (error, result) {
+		Meteor.call('getTotalesRegistrosCreditosPromotoras', rc.avance, rc.promotora_id, function (error, result) {
 			if (result) {
-				rc.arregloComisiones = arregloPaginador(rc.avance, result);
-				rc.inicializaElementoActivoPaginador(rc.arregloPaginadorAplicadas);
+				//rc.arregloComisiones = arregloPaginador(rc.avance, result);
+				rc.arregloHistorial = arregloPaginador(rc.avance, result.Pagos);
+				rc.inicializaElementoActivoPaginador(rc.arregloHistorial);
 				$scope.$apply();
 			}
 		});

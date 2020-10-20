@@ -676,9 +676,12 @@ Meteor.methods({
 		var ahora = new Date();
 		ahora = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
 
+
 		//Revisar cuales son las fechas a Consultar
-		if (ahora > new Date("2020/04/21"))
-			return;
+		//if (ahora > new Date("2020/04/21") && ahora <= new Date("2020/08/7"))
+		//	return;
+
+		//fechaPago: { $gte: fechaInicial, $lte: new Date("2020/08/7") }
 
 		var pagos = PlanPagos.find({
 			$and: [
@@ -695,19 +698,20 @@ Meteor.methods({
 							descripcion: "Recibo",
 							tipoCredito: "vale",
 							importeRegular: { $gte: 0 },
-							fechaLimite: { $lt: ahora }
+							fechaLimite: { $gte: new Date("2020/10/1"), $lt: ahora }
 						},
 						{
 							multada: 0,
 							descripcion: "Recibo",
 							tipoCredito: "creditoPersonalDistribuidor",
 							importeRegular: { $gte: 0 },
-							fechaLimite: { $lt: ahora }
+							fechaLimite: { $gte: new Date("2020/10/1"), $lt: ahora }
 						}
 					]
 				}
 			]
 		}).fetch();
+
 
 		_.each(pagos, function (pago) {
 			try {
@@ -2236,6 +2240,32 @@ Meteor.methods({
 
 	getPago: function (pago_id) {
 		return Pagos.findOne(pago_id);
+	},
+
+	getPagobyCredito: function (credito_id) {
+
+		var arreglo = [];
+		_.each(Pagos.find({ credito_id: credito_id }).fetch(), function (pago) {
+
+			_.each(pago.planPagos, function (pp) {
+				var objeto = {};
+				if (pp.descripcion == "Cargo Moratorio") {
+					objeto.folioPago = pago.folioPago;
+					objeto.numeroPago = pp.numeroPago;
+					objeto.numeroPagos = pp.numeroPagos;
+					objeto.total = pp.totalPago;
+					objeto.tipoIngreso = TiposIngreso.findOne(pago.tipoIngreso_id).nombre;
+					objeto.usuario = Meteor.users.findOne(pago.usuarioCobro_id).profile.nombre;
+					objeto.fechaCobro = pago.fechaPago;
+					arreglo.push(objeto);
+				}
+			});
+
+		});
+
+
+
+		return arreglo;
 	},
 
 	getPagosByCliente: function (cliente_id) {

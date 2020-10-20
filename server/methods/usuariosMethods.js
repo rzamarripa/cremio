@@ -497,28 +497,57 @@ Meteor.methods({
 		personas.prospectosDistribuidor = [];
 
 		personas.clientes = Meteor.users.find({ "profile.nombreCompleto": { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' }, roles: ["Cliente"] },
-			{ fields: { "profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, roles: 1 } },
-			{ sort: { "profile.nombreCompleto": 1 } }, { "profile.nombreCompleto": 1, "profile.referenciasPersonales_ids": 1 }).fetch();
+			{
+				fields: {
+					"profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, "profile.sexo": 1, "profile.sucursal_id": 1,
+					roles: 1
+				}
+			},
+			{ sort: { "profile.nombreCompleto": 1 } }, { "profile.nombreCompleto": 1, "profile.referenciasPersonales_ids": 1 }).map(function (p) {
+				p.profile.sucursal = Sucursales.findOne(p.profile.sucursal_id).nombreSucursal;
+				return p;
+			});
 
 		personas.distribuidores = Meteor.users.find({ "profile.nombreCompleto": { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' }, roles: ["Distribuidor"] },
-			{ fields: { "profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, roles: 1 } },
-			{ sort: { "profile.nombreCompleto": 1 } }, { "profile.nombreCompleto": 1, "profile.referenciasPersonales_ids": 1 }).fetch();
+			{
+				fields: {
+					"profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, "profile.sucursal_id": 1,
+					roles: 1
+				}
+			},
+			{ sort: { "profile.nombreCompleto": 1 } }, { "profile.nombreCompleto": 1, "profile.referenciasPersonales_ids": 1 }).map(function (p) {
+				p.profile.sucursal = Sucursales.findOne(p.profile.sucursal_id).nombreSucursal;
+				return p;
+			});
 
 		personas.avales = Avales.find({ "profile.nombreCompleto": { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' } },
-			{ fields: { "profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.creditos": 1 } },
-			{ sort: { "profile.nombreCompleto": 1 } }).fetch();
+			{ fields: { "profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.creditos": 1, "profile.sucursal_id": 1 } },
+			{ sort: { "profile.nombreCompleto": 1 } }).map(function (p) {
+				p.profile.sucursal = Sucursales.findOne(p.profile.sucursal_id).nombreSucursal;
+				return p;
+			});
 
 		personas.referenciasPersonales = ReferenciasPersonales.find({ nombreCompleto: { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' } },
 			{ fields: { nombreCompleto: 1, clientes: 1 } },
 			{ sort: { nombreCompleto: 1 } }).fetch();
 
 		personas.beneficiarios = Beneficiarios.find({ nombreCompleto: { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' } },
-			{ fields: { nombreCompleto: 1, distribuidor: 1 } },
-			{ sort: { nombreCompleto: 1 } }).fetch();
+			{ fields: { nombreCompleto: 1, sucursal_id: 1, distribuidor: 1 } },
+			{ sort: { nombreCompleto: 1 } }).map(function (p) {
+				if (p.sucursal_id != undefined) {
+					p.sucursal = Sucursales.findOne(p.sucursal_id).nombreSucursal;
+				}
+				return p;
+			});
 
 		personas.prospectosVales = Prospectos.find({ nombreCompleto: { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' } },
-			{ fields: { nombreCompleto: 1, distribuidor_id: 1 } },
-			{ sort: { nombreCompleto: 1 } }).fetch();
+			{ fields: { nombreCompleto: 1, sucursal_id: 1, distribuidor_id: 1 } },
+			{ sort: { nombreCompleto: 1 } }).map(function (p) {
+				if (p.sucursal_id != undefined) {
+					p.sucursal = Sucursales.findOne(p.sucursal_id).nombreSucursal;
+				}
+				return p;
+			});
 
 		_.each(personas.prospectosVales, function (p) {
 			var distribuidor = Meteor.users.findOne({ _id: p.distribuidor_id },
@@ -535,12 +564,47 @@ Meteor.methods({
 			{ sort: { "profile.nombreConyuge": 1 } }).fetch();
 
 		personas.prospectosCreditoPersonal = ProspectosCreditoPersonal.find({ "profile.nombreCompleto": { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' } },
-			{ fields: { "profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, roles: 1 } },
-			{ sort: { "profile.nombreCompleto": 1 } }, { "profile.nombreCompleto": 1, "profile.referenciasPersonales_ids": 1 }).fetch();
+			{
+				fields: {
+					"profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, "profile.sucursal_id": 1, "profile.estatusProspecto": 1,
+					roles: 1
+				}
+			},
+			{ sort: { "profile.nombreCompleto": 1 } }, { "profile.nombreCompleto": 1, "profile.referenciasPersonales_ids": 1 }).map(function (p) {
+				p.profile.sucursal = Sucursales.findOne(p.profile.sucursal_id).nombreSucursal;
+				
+				if (p.profile.estatusProspecto == 1)
+					p.profile.estatus = "En Prospecto"
+				else if (p.profile.estatusProspecto == 2)
+					p.profile.estatus = "Autorizado"
+				else if (p.profile.estatusProspecto == 3)
+					p.profile.estatus = "Rechazado"
+				else if (p.profile.estatusProspecto == 4)
+					p.profile.estatus = "Trámite trunco"
+
+				return p;
+			});
 
 		personas.prospectosDistribuidor = ProspectosDistribuidor.find({ "profile.nombreCompleto": { '$regex': '.*' + nombre || '' + '.*', '$options': 'i' } },
-			{ fields: { "profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, roles: 1 } },
-			{ sort: { "profile.nombreCompleto": 1 } }, { "profile.nombreCompleto": 1, "profile.referenciasPersonales_ids": 1 }).fetch();
+			{
+				fields: {
+					"profile.nombreCompleto": 1, "profile.sexo": 1, "profile.foto": 1, "profile.referenciasPersonales_ids": 1, "profile.sucursal_id": 1, "profile.estatusProspecto": 1,
+					roles: 1
+				}
+			},
+			{ sort: { "profile.nombreCompleto": 1 } }, { "profile.nombreCompleto": 1, "profile.referenciasPersonales_ids": 1 }).map(function (p) {
+				p.profile.sucursal = Sucursales.findOne(p.profile.sucursal_id).nombreSucursal;
+				if (p.profile.estatusProspecto == 1)
+					p.profile.estatus = "En Prospecto"
+				else if (p.profile.estatusProspecto == 2)
+					p.profile.estatus = "Autorizado"
+				else if (p.profile.estatusProspecto == 3)
+					p.profile.estatus = "Rechazado"
+				else if (p.profile.estatusProspecto == 4)
+					p.profile.estatus = "Trámite trunco"
+
+				return p;
+			});
 
 		return personas;
 	},

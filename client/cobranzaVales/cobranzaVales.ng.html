@@ -125,7 +125,7 @@
 			<tbody>
 				<tr style='cursor: pointer;  padding-bottom: 1em;'
 					ng-repeat-start="objeto in cobv.cobranza | orderBy: cobv.funcionOrdenar() | filter: cobv.buscar"
-					ng-class="objeto.classPago">
+					ng-class="objeto.totalCortes > 1 ? 'text-danger': ''">
 					<td style="margin: 0px; border: 0px; padding: 0px">
 						<input type="checkbox" class="form-control" ng-model="objeto.imprimir"
 							ng-click="cobv.sumarSeleccionados(objeto)" ng-change="cobv.Selecionar(objeto)"
@@ -220,7 +220,7 @@
 											<div ng-include="'client/cobranzaVales/_historialCrediticio.html'"></div>
 										</div>
 										<div class="tab-pane fade" id="hr3">
-											<div ng-include="'client/cobranzaVales/_informacionCredito.html'"></div>
+											<div ng-include="'client/cobranzaVales/_datosVales.html'"></div>
 										</div>
 										<div class="tab-pane fade" id="hr4">
 											<div ng-include="'client/cobranzaVales/_historialCobranza.html'"></div>

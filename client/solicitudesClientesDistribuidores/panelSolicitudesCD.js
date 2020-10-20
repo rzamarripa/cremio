@@ -14,13 +14,13 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
 
 
   this.subscribe('sucursales', () => {
-		return [{}]
-	},
-		{
-			onReady: function () {
-				rc.sucursales = Sucursales.find({ estatus: true }).fetch();
-			}
-		});
+    return [{}]
+  },
+    {
+      onReady: function () {
+        rc.sucursales = Sucursales.find({ estatus: true }).fetch();
+      }
+    });
 
   this.subscribe('buscarSolicitudCreditoPersonal', () => {
     if (this.getReactively("tipoSolicitud") == "creditoPersonal" && this.getReactively("buscar.nombre").length > 4) {
@@ -166,7 +166,8 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
     o.mesN = new Date(o.fechaNacimiento).getMonth() + 1;
     o.anioN = new Date(o.fechaNacimiento).getFullYear();
 
-
+    if (objeto.profile.referenciado != undefined)
+      o.referenciado = objeto.profile.referenciado.profile.nombreCompleto;
 
 
     if (o.tipoVivienda == "propia")
@@ -202,7 +203,7 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
     loading(true);
     Meteor.call('report', {
       templateNombre: plantilla,
-      reportNombre: 'solicitud',
+      reportNombre: 'Solicitud ' + " - " + o.nombreCompleto,
       type: 'docx',
       datos: o,
     }, function (err, file) {
@@ -298,6 +299,18 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
     prospecto.profile.origen = objeto.profile.origen;
     prospecto.profile.referenciasPersonales_ids = [];
 
+    prospecto.profile.fechaVerificacion = objeto.profile.fechaVerificacion;
+    prospecto.profile.turno = objeto.profile.turno;
+    prospecto.profile.hora = objeto.profile.hora;
+    prospecto.profile.estatus = 1;
+    prospecto.profile.estatusProspecto = 1;
+    prospecto.profile.estaVerificado = false;
+
+    if (objeto.profile.fechaVerificacion != undefined && objeto.profile.turno != undefined && objeto.profile.hora != undefined) {
+      prospecto.profile.estatus = 2;
+    }
+    //console.log(prospecto.profile.estatus);
+
     if (objeto.profile.origen == "Promotora") {
       prospecto.profile.promotora_id = objeto.profile.usuario_id;
       prospecto.profile.sePagoComision = false;
@@ -312,8 +325,8 @@ function PanelSolicitudesCD($scope, $meteor, $reactive, $state, toastr) {
     if (prospecto.profile.tipo == "Distribuidor") {
       prospecto.profile.avales_ids = [];
       prospecto.profile.solicitudDistribuidor_id = objeto._id;
-      prospecto.profile.saldoCredito = 25000;
-      prospecto.profile.limiteCredito = 25000;
+      prospecto.profile.saldoCredito = 150000;
+      prospecto.profile.limiteCredito = 150000;
     }
     else if (prospecto.profile.tipo == "Cliente Crédito Personal") {
       prospecto.profile.limiteCredito = objeto.profile.montoSolicitado;

@@ -115,7 +115,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			url: '/client/promotoras/ticketComisionPromotora/:pago_id',
 			templateUrl: 'client/promotoras/ticketComisionPromotora.html',
 			controller: 'TicketComisionPromotoraCtrl as obj'
-		})
+		});
 
 	/***************************
 	 * Login Users Routes
@@ -1464,7 +1464,7 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 			}
 		})
 		.state('root.pagarPromotora', {
-			url: '/misProspectos/:objeto_id',
+			url: '/pagarPromotora/:objeto_id',
 			templateUrl: 'client/planPagos/pagar/pagarPromotora.html',
 			controller: 'PagarPromotoraCtrl as obj',
 			resolve: {
@@ -1473,8 +1473,6 @@ angular.module('creditoMio').config(['$injector', function ($injector) {
 				}]
 			}
 		})
-
-
 		////////////////Solicitudes Clientes Distribuidores/////////////////////////////////////////////////////////////////////
 		.state('root.panelAsignaSucursalSolicitudesCD', {
 			url: '/panelAsignaSucursalSolicitudesCD',

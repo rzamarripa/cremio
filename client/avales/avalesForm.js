@@ -37,9 +37,12 @@ function AvalesFormCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
   this.buscar.nombre = "";
   this.buscar.coloniaNombre = "";
   this.buscar.coloniaNombreEmpresa = "";
+  this.buscar.empresaNombre = "";
   this.buscando = false;
   this.buscandoColonia = false;
   this.buscandoColoniaEmpresa = false;
+  this.buscandoEmpresa = false;
+
   var fotillo = ""
   //this.pic = {};
   this.imagenes = []
@@ -48,9 +51,12 @@ function AvalesFormCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
   this.estadoCivil = "";
 
   this.estadoCivilSeleccionado = {};
+  this.empresaSeleccionada = "";
 
   rc.colonia = {};
   rc.coloniaEmpresa = {};
+  rc.empresa = {};
+
 
   this.subscribe('buscarReferenciasPersonales', () => {
     if (this.getReactively("buscar.nombre").length > 3) {
@@ -100,12 +106,26 @@ function AvalesFormCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
     return [{ _id: $stateParams.objeto_id }]
   });
 
-  this.subscribe('referenciasPersonales', () => {
-    return [{ _id: this.getReactively('referenciaPersonal._id') }]
-  });
+  // this.subscribe('referenciasPersonales', () => {
+  //   return [{ _id: this.getReactively('referenciaPersonal._id') }]
+  // });
 
-  this.subscribe('empresas', () => {
-    return [{ estatus: true }]
+  // this.subscribe('empresas', () => {
+  //   return [{ estatus: true }]
+  // });
+
+  this.subscribe('buscarEmpresas', () => {
+    if (this.getReactively("buscar.empresaNombre").length > 3) {
+      this.buscandoEmpresa = true;
+      return [{
+        options: { limit: 10 },
+        where: {
+          nombre: this.getReactively('buscar.empresaNombre')
+        }
+      }];
+    }
+    else if (this.getReactively("buscar.empresaNombre").length == 0)
+      this.buscandoEmpresa = false;
   });
 
   this.subscribe('estadoCivil', () => {
@@ -245,7 +265,6 @@ function AvalesFormCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
     },
     objetoEditar: () => {
 
-      //console.log($stateParams.objeto_id);	    
       if ($stateParams.objeto_id != undefined) {
 
         loading(true);
@@ -284,13 +303,21 @@ function AvalesFormCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
           }
 
           rc.objeto = objeto;
-          //console.log(this.getReactively("objeto_id"));
           //getdocumentos
           Meteor.call('getDocumentosClientes', this.getReactively("objeto_id"), function (error, result) {
             if (result) {
               //console.log(result);
               //ir por los documentos
               rc.documents = result;
+              $scope.$apply();
+            }
+          });
+
+          //getEmpresa
+          Meteor.call('getEmpresa', rc.objeto.profile.empresa_id, function (error, result) {
+            if (result) {
+              //ir por los documentos
+              rc.empresa = result;
               $scope.$apply();
             }
           });
@@ -380,8 +407,7 @@ function AvalesFormCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
     rc.coloniaEmpresa = {};
   };
 
-
-  this.guardar = function (objeto, form) {
+  this.guardar = async function (objeto, form) {
 
     if (form.$invalid) {
       toastr.error('Error al guardar los datos.');
@@ -400,20 +426,7 @@ function AvalesFormCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 
     }
 
-    //console.log(objeto);
-
     objeto.profile.estatus = true;
-    //rc.documentos
-
-    /*
-_.each(objeto.profile.documentos, function(d){	    
-       delete d.$$hashKey;
-     })
-*/
-
-    //objeto.profile.documentos = rc.documents
-
-    //objeto.profile.foto = rc.pic;
 
     objeto.profile.usuarioInserto = Meteor.userId();
     objeto.profile.sucursal_id = Meteor.user().profile.sucursal_id;
@@ -432,7 +445,8 @@ _.each(objeto.profile.documentos, function(d){
     //Guardar las referencias Personales---------------------------------------------------------------------
     objeto.profile.referenciasPersonales_ids = [];
 
-    _.each(objeto.profile.referenciasPersonales, function (referenciaPersonal) {
+    for (referenciaPersonal of objeto.profile.referenciasPersonales) {
+      //_.each(objeto.profile.referenciasPersonales, function (referenciaPersonal) {
       if (referenciaPersonal.estatus == "N")
         referenciaPersonal.estatus = "G";
 
@@ -446,7 +460,11 @@ _.each(objeto.profile.documentos, function(d){
       });
 
       //Agregar un arrar de la info del cliente en el AVAl
-      var RP = ReferenciasPersonales.findOne(referenciaPersonal._id);
+      //var RP = ReferenciasPersonales.findOne(referenciaPersonal._id);
+      var RP = await Meteor.callSync('getReferenciaPersonal', referenciaPersonal._id);
+
+      //hacer un Meteor MEthod para encontrarlo
+
       RP.clientes.push({
         cliente_id: id,
         nombreCompleto: objeto.profile.nombreCompleto,
@@ -460,7 +478,7 @@ _.each(objeto.profile.documentos, function(d){
       delete RP._id;
       ReferenciasPersonales.update({ _id: idTemp }, { $set: RP })
 
-    });
+    };
 
     delete objeto.profile.referenciasPersonales;
 
@@ -481,7 +499,7 @@ _.each(objeto.profile.documentos, function(d){
   };
 
   //////////
-  this.actualizarForm = function (objeto, form) {
+  this.actualizarForm = async function (objeto, form) {
     if (form.$invalid) {
       toastr.error('Error al actualizar los datos.');
       return;
@@ -497,38 +515,12 @@ _.each(objeto.profile.documentos, function(d){
 
     }
 
-
-
-    /*
-if (rc.documents.length){
-	    _.each(objeto.profile.documentos, function(d){	    
-		    delete d.$$hashKey;
-	    })
-	    
-      objeto.profile.documentos = rc.documents;
-      objeto.profile.foto = rc.objeto.profile.foto;
-    }
-    else{
-      objeto.profile.documentos = objeto.profile.documentos;
-      objeto.profile.foto = rc.objeto.profile.foto;
-    }
-
-    if (rc.pic != ""){
-      objeto.profile.foto = rc.pic;
-    }
-    else{
-      objeto.profile.foto = rc.objeto.profile.foto;
-    }
-*/
-
     if (objeto.profile.referenciasPersonales_ids == undefined)
       objeto.profile.referenciasPersonales_ids = [];
 
-    //console.log(this.referenciasPersonales);
-
-    //return;
     //Actualizar las referencias Personales---------------------------------------------------------------------
-    _.each(this.referenciasPersonales, function (referenciaPersonal) {
+
+    for (referenciaPersonal of this.referenciasPersonales) {
 
       if (referenciaPersonal.estatus == "N") {
         referenciaPersonal.estatus = "G";
@@ -544,8 +536,10 @@ if (rc.documents.length){
 
 
         rc.referenciaPersonal._id = referenciaPersonal._id;
-        var RP = ReferenciasPersonales.findOne(referenciaPersonal._id);
+
+        var RP = await Meteor.callSync('getReferenciaPersonal', referenciaPersonal._id);
         //console.log(RP);
+
         RP.clientes.push({
           cliente_id: objeto._id,
           nombreCompleto: objeto.profile.nombreCompleto,
@@ -562,15 +556,18 @@ if (rc.documents.length){
 
       }
       else if (referenciaPersonal.estatus == "A") {
-        //Buscar referenciasPersonales_ids y actualizarlo						
-        _.each(objeto.profile.referenciasPersonales_ids, function (referenciaPersonal_ids) {
+        //Buscar referenciasPersonales_ids y actualizarlo
+        for (referenciaPersonal_ids of objeto.profile.referenciasPersonales_ids) {
+          //_.each(objeto.profile.referenciasPersonales_ids, function (referenciaPersonal_ids) {
           if (referenciaPersonal_ids.num == referenciaPersonal.num) {
 
             referenciaPersonal_ids.parentesco = referenciaPersonal.parentesco;
             referenciaPersonal_ids.tiempoConocerlo = referenciaPersonal.tiempoConocerlo;
             referenciaPersonal_ids.estatus = "G";
 
-            var RP = ReferenciasPersonales.findOne(referenciaPersonal_ids.referenciaPersonal_id);
+            //var RP = ReferenciasPersonales.findOne(referenciaPersonal_ids.referenciaPersonal_id);
+            var RP = await Meteor.callSync('getReferenciaPersonal', referenciaPersonal_ids.referenciaPersonal_id);
+
             _.each(RP.clientes, function (cliente) {
               if (cliente.cliente_id == objeto._id) {
                 cliente.parentesco = referenciaPersonal.parentesco;
@@ -581,9 +578,9 @@ if (rc.documents.length){
             delete RP._id;
             ReferenciasPersonales.update({ _id: idTemp }, { $set: RP });
           }
-        });
+        };
       }
-    });
+    };
     //---------------------------------------------------------------------------------------------------------------------	
 
     delete objeto.profile.repeatPassword;
@@ -594,10 +591,8 @@ if (rc.documents.length){
     Avales.update({ _id: idTemp }, { $set: objeto });
 
     toastr.success('Actualizado correctamente.');
-    //$('.collapse').collapse('hide');
+
     this.nuevo = true;
-    form.$setPristine();
-    form.$setUntouched();
     $state.go('root.avalesLista');
 
   };
@@ -809,9 +804,7 @@ if (rc.documents.length){
     $("#modalreferenciaPersonal").modal('hide');
   };
 
-
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
   this.borrarDoc = function (id) {
     customConfirm('¿Estás seguro Eliminar el documento?', function () {
@@ -1085,6 +1078,12 @@ fotoArea.innerHTML = "";
     rc.coloniaEmpresa = colonia;
     rc.empresa.colonia_id = colonia._id;
     rc.buscar.coloniaNombreEmpresa = "";
+  };
+
+  this.agregarEmpresa = function (empresa) {
+    rc.empresa = empresa;
+    rc.objeto.profile.empresa_id = empresa._id;
+    rc.buscar.empresaNombre = "";
   };
 
   this.getEmpresa = function (empresa_id) {

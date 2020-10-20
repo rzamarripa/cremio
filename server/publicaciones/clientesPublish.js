@@ -91,10 +91,10 @@ Meteor.publish("buscarRootClientesDistribuidores", function (options) {
 			}, options.options);
 		}
 });
+
 Meteor.publish("buscarRootClientesDistribuidoresNumero", function (options) {
 	if (options != undefined) {
 		if (options.where.numeroCliente.length > 0) {
-			//console.log("entro",options)
 
 			let selector = {
 				$or: [{ "profile.numeroCliente": options.where.numeroCliente }, { "profile.numeroCliente": options.where.numeroCliente }]
@@ -116,7 +116,6 @@ Meteor.publish("buscarRootClientesDistribuidoresNumero", function (options) {
 
 });
 
-
 Meteor.publish("distribuidores", function (options) {
 	return Meteor.users.find(options, {
 		fields: {
@@ -134,7 +133,6 @@ Meteor.publish("distribuidores", function (options) {
 		}
 	});
 });
-
 
 Meteor.publish("clienteImportar", function (options) {
 	return Meteor.users.find(options, {
@@ -227,4 +225,22 @@ Meteor.publishComposite('promotorComposite', function (params) {
 			}
 		}]
 	}
+});
+
+Meteor.publish("buscarClientesDistribuidores", function (options) {
+	if (options != undefined)
+		if (options.where.nombreCompleto.length > 0) {
+			let selector = {
+				"profile.nombreCompleto": { '$regex': '.*' + options.where.nombreCompleto || '' + '.*', '$options': 'i' },
+				roles: { $in: ["Distribuidor", "Cliente"] }
+			}
+
+			return Meteor.users.find(selector, {
+				fields: {
+					roles: 1,
+					"profile.nombreCompleto": 1,
+					"profile.numeroCliente": 1
+				}
+			}, options.options);
+		}
 });

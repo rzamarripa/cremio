@@ -109,6 +109,7 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 	this.subscribe("nacionalidades", () => {
 		return [{}]
 	});
+
 	this.subscribe("ocupaciones", () => {
 		return [{}]
 	});
@@ -124,7 +125,6 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 	this.subscribe('creditos', () => {
 		return [{ cliente_id: rc.getReactively("cliente_id") }];
 	});
-
 
 	this.helpers({
 		tiposCredito: () => {
@@ -164,29 +164,6 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 
 			var fecha = rc.getReactively("fechaInicial");
 			if (fecha != undefined) {
-
-				/*
-				//Revisar dia inhabil para buscar la próximo Fecha
-				// verificarDiaInhabil = function (fecha) {
-				// 	var diaFecha = fecha.isoWeekday();
-				// 	var diaInhabiles = DiasInhabiles.find({ tipo: "DIA", estatus: true }).fetch();
-				// 	var ban = false;
-				// 	_.each(diaInhabiles, function (dia) {
-				// 		if (Number(dia.dia) === diaFecha) {
-				// 			ban = true;
-				// 			return ban;
-				// 		}
-				// 	})
-				// 	var fechaBuscar = new Date(fecha);
-
-				// 	var fechaInhabil = DiasInhabiles.findOne({ tipo: "FECHA", fecha: fechaBuscar, estatus: true });
-				// 	if (fechaInhabil != undefined) {
-				// 		ban = true;
-				// 		return ban;
-				// 	}
-				// 	return ban;
-				// };
-				*/
 
 				var n = fecha.getDate();
 				var fechaLimite = "";
@@ -228,9 +205,12 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 						rc.totalCargosMoratorios = 0;
 
 						_.each(rc.cobranza, function (c) {
+							c.imprimir = false;
 							rc.totalVales += c.importe;
 							rc.totalCreditosPersonales += c.importeCreditoP;
 							rc.totalCargosMoratorios += c.cargosMoratorios;
+							var array = _.toArray(c.arreglo);
+							c.totalCortes = array.length;
 						});
 						$scope.$apply();
 						loading(false);
@@ -264,147 +244,6 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 		FF = endDate.toDate();
 		FF.setHours(23, 59, 59, 999);
 	}
-
-
-	// this.AsignaFecha = function (op) {
-
-	// 	this.selected_numero = 0;
-	// 	this.ban = false;
-
-	// 	if (op == 0) //Vencimiento Hoy
-	// 	{
-	// 		FI = new Date();
-	// 		FI.setHours(0, 0, 0, 0);
-	// 		FF = new Date(FI.getTime() - (1 * 24 * 3600 * 1000));
-	// 		FF.setHours(23, 59, 59, 999);
-	// 		rc.verRecibos = false;
-
-	// 	}
-	// 	else if (op == 1) //Día
-	// 	{
-	// 		var fecha = rc.getReactively("fechaInicial");
-	// 		var n = fecha.getDate();
-	// 		var fechaLimite = "";
-
-	// 		if (n >= 22) {
-	// 			fechaLimite = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 1, 0, 0, 0, 0);
-	// 		}
-	// 		else if (n < 7) {
-	// 			fechaLimite = new Date(fecha.getFullYear(), fecha.getMonth(), 1, 0, 0, 0, 0);
-	// 		}
-	// 		else if (n >= 7 && n < 22) {
-	// 			fechaLimite = new Date(fecha.getFullYear(), fecha.getMonth(), 16, 0, 0, 0, 0);
-	// 		}
-
-	// 		var validaFecha = true;
-	// 		var fechaValidar = moment(fechaLimite);
-	// 		while (validaFecha) {
-	// 			validaFecha = verificarDiaInhabil(fechaValidar);
-	// 			if (validaFecha == true)
-	// 				fechaValidar = fechaValidar.add(1, 'days');
-	// 		}
-
-	// 		fechaLimite = new Date(fechaValidar);
-	// 		fechaLimite.setHours(0, 0, 0, 0);
-
-	// 		this.fechaFinal = new Date(fechaLimite.getTime());
-	// 		this.fechaFinal.setHours(23, 59, 59, 999);
-
-	// 		FI = fechaLimite;
-	// 		FF = this.fechaFinal;
-	// 		rc.verRecibos = true;
-
-	// 		if (n < 15) {
-	// 			fechaLimite = new Date(fecha.getFullYear(), fecha.getMonth(), 30, 0, 0, 0, 0);
-	// 		}
-	// 		else //if (n >= 5 && n < 20)		
-	// 		{
-	// 			fechaLimite = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 15, 0, 0, 0, 0);
-	// 		}
-
-
-
-	// 		fechaLimite.setHours(0, 0, 0, 0);
-
-	// 		this.fechaFinal = new Date(fechaLimite.getTime());
-	// 		this.fechaFinal.setHours(23, 59, 59, 999);
-	// 		FI = fechaLimite;
-	// 		FF = this.fechaFinal;
-
-
-	// 	}
-	// 	else if (op == 2) //Semana
-	// 	{
-
-	// 		FI = new Date();
-	// 		FI.setHours(0, 0, 0, 0);
-	// 		FF = new Date(FI.getTime());
-	// 		FF.setHours(23, 59, 59, 999);
-
-	// 		var semana = moment().isoWeek();
-	// 		var anio = FI.getFullYear();
-	// 		this.calcularSemana(semana, anio);
-	// 		rc.verRecibos = false;
-	// 		//console.log("FI:", FI);
-	// 		//console.log("FF:", FF);
-
-	// 	}
-	// 	else if (op == 3) //Mes
-	// 	{
-
-	// 		FI = new Date();
-	// 		FI.setHours(0, 0, 0, 0);
-	// 		var anio = FI.getFullYear();
-	// 		var mes = FI.getMonth();
-	// 		//console.log(mes);
-	// 		this.calcularMes(mes, anio);
-	// 		rc.verRecibos = false;
-	// 		//console.log("FI:", FI);
-	// 		//console.log("FF:", FF);
-
-	// 	}
-	// 	else if (op == 4) //Siguiente Mes
-	// 	{
-	// 		FI = new Date();
-	// 		var anio = FI.getFullYear();
-	// 		var mes = FI.getMonth();
-	// 		if (mes == 11) {
-	// 			mes = 0;
-	// 			anio = anio + 1;
-	// 		}
-	// 		else
-	// 			mes = mes + 1;
-
-	// 		this.calcularMes(mes, anio);
-	// 		rc.verRecibos = false;
-	// 		//console.log("FI:", FI);
-	// 		//console.log("FF:", FF);
-	// 	}
-
-	// 	loading(true);
-	// 	Meteor.call('getCobranzaVales', FI, FF, op, Meteor.user().profile.sucursal_id, function (error, result) {
-	// 		if (result) {
-
-	// 			rc.cobranza = result;
-	// 			rc.totalVales = 0;
-	// 			rc.totalCreditosPersonales = 0;
-	// 			rc.totalCargosMoratorios = 0;
-
-	// 			_.each(rc.cobranza, function (c) {
-	// 				rc.totalVales += c.importe;
-	// 				rc.totalCreditosPersonales += c.importeCreditoP;
-	// 				rc.totalCargosMoratorios += c.cargosMoratorios;
-	// 			});
-
-	// 			$scope.$apply();
-	// 			loading(false);
-	// 		}
-	// 	});
-
-
-	// }
-
-	//----------------------------------------
 
 	this.selCredito = function (objeto, num) {
 
@@ -1258,105 +1097,6 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 
 
 	};
-
-	/*
-  this.imprimirRecibos= function(objeto) 
-	{
-	  var toPrint = [];
-	  	
-		   //console.log(objeto);
-	  	
-		if (objeto.length == 0)
-	  {
-			  toastr.warning("No hay nada para imprimir");
-			  return;
-	  }
-	  
-	  var ban = false;
-	  _.each(objeto, function(print){
-		  	
-			  if (print.imprimir)
-			  { 
-				   ban = true;
-					  }	 
-	  });
-   
-	  if (ban == false)
-	  {
-		   toastr.warning("Seleccione alguno para imprimir");
-			  return;
-		  
-	  }
-	  
-	  	
-	  _.each(objeto,function(item, key){
-		if (item.imprimir) {
-		    
-			  
-		  item.cliente.profile.colonia 		= Colonias.findOne(item.cliente.profile.colonia_id)
-		  item.colonia 								 		= item.cliente.profile.colonia == undefined ? "" : item.cliente.profile.colonia.nombre;
-		  item.calle 									 		= item.cliente.profile.calle == undefined ? "" : item.cliente.profile.calle;
-		  item.cliente.profile.estado  		= Estados.findOne(item.cliente.profile.estado_id)
-		  item.estado 								 		= item.cliente.profile.estado.nombre == undefined ? "" : item.cliente.profile.estado.nombre;
-		  item.cliente.profile.municipio 	= Municipios.findOne(item.cliente.profile.municipio_id)
-		  item.municipio 									= item.cliente.profile.municipio  == undefined ? "" : item.cliente.profile.municipio.nombre;
-		  item.nombreCompleto 					  = item.cliente.profile.nombreCompleto; 
-		  item.numeroCliente 						  = item.cliente.profile.folio;
-		  item.planPagoNumero 						= item.numeroPago;
-		  item.no 												= item.cliente.profile.numero
-		  item.nombreCompleto 						= item.cliente.profile.nombreCompleto
-		  item.telefono 									= item.cliente.profile.telefono
-		  item.celular 										= item.cliente.profile.celular
-		  item.telefonoOficina 						= item.cliente.profile.telefonoOficina
-		  item.cantidadPagos 							= item.credito.numeroPagos
-		  item.telefono 									= item.cliente.profile.particular
-		  item.celular  									= item.cliente.profile.celular
-		  item.telefonoOficina 						= item.cliente.profile.telefonoOficina
-		  item.folioCredito 							= item.credito.folio
-		  item.saldo 											= item.credito.saldoActual
-  
-		    
-			if (objeto[key+1]  == undefined) {
-			  item.proximoPago = "No hay proximo pago"
-			}else{
-		    
-		   }
-  
-		  
-		  var saldoActual = 0;
-		  if (saldoActual == 0) {
-			saldoActual = item.saldo
-		  }else{
-			saldoActual = saldoActual - item.cargo
-		  }
-		   item.saldoAnterior = parseFloat(saldoActual.toFixed(2))
-		   item.saldoActual = parseFloat((saldoActual - item.cargo).toFixed(2));
-		  toPrint.push(item);
-		}
-	  });
-		 
-	  //console.log("reciboooooo:",objeto);
-  
-		  loading(true);
-	  Meteor.call('getRecibos', toPrint, 'pdf',function(error, response) {     
-		 if(error)
-		 {
-		  console.log('ERROR :', error);
-		  loading(false);
-		  return;
-		 }
-		 else
-			 {
-						//console.log(response);
-						  downloadFile(response);
-						  loading(false);
-			   }
-	  
-	  });
-	  rc.recibo = [];
-	  
-	};
-  */
 
 	this.cerrarModal = function () {
 		rc.mostrarModal = false
@@ -2294,17 +2034,12 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 	this.imprimirRecibosVales = function () {
 		//Imprimir Recibos de Vales
 
-		Number.prototype.format = function (n, x) {
-			var re = '(\\d)(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
-			return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$1,');
-		};
-
 		var datos = {};
 		datos.items = [];
 
 		_.each(rc.cobranza, function (c) {
 
-			if (c.cargosMoratorios > 0) {
+			if (c.imprimir) {
 
 				_.each(c.arreglo, function (corte) {
 					var objeto = {};
@@ -2324,10 +2059,6 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 					objeto.numeroCorte = corte.numeroCorte;
 					objeto.fechaCorteInicio = corte.fechaCorteInicio;
 					objeto.fechaCorteFin = corte.fechaCorteFin;
-
-					//objeto.importe						= corte.importe;
-					//objeto.seguro							= corte.seguro;
-					//console.log(corte);
 
 					datos.items.push(objeto);
 
@@ -2350,8 +2081,6 @@ function CobranzaValesCtrl($scope, $meteor, $reactive, $state, toastr) {
 				loading(false);
 			}
 		});
-
-		//console.log(datos);
 
 	};
 

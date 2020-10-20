@@ -27,7 +27,6 @@
             <th style='width: 5%' class="text-center">No.</th>
             <th style='width: 20%' class="text-center">Nombre</th>
             <th style='width: 20%' class="text-center">Tipo Solicitud</th>
-            <th style='width: 10%' class="text-center">Origen</th>
             <th style='width: 10%' class="text-center">Estatus Solicitud</th>
             <th style='width: 10%' class="text-center">Fecha Solicitud</th>
             <th style='width: 5%' class="text-center">Acciones</th>
@@ -37,8 +36,7 @@
           <tr ng-repeat="objeto in obj.arreglo">
             <td class="text-center">{{$index + 1}}</td>
             <td class="text-left">{{objeto.profile.nombreCompleto}}</td>
-            <td class="text-left">{{objeto.profile.tipo}}</td>
-            <td class="text-left">{{objeto.profile.origen}}</td>
+            <td class="text-center">{{objeto.profile.tipo}}</td>
             <td class="text-center">
               <span ng-if="objeto.profile.estatus == 2" class="label label-info">
                 Enviado

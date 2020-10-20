@@ -29,7 +29,8 @@
 				<tr>
 					<th style="width: 10px;">Foto</th>
 					<th style="width: 10px;">Tipo</th>
-					<th style="width: 30px;">Nombre</th>
+					<th style="width: 15px;">Nombre</th>
+					<th style="width: 15px;">Sucursal</th>
 					<th style="width: 50px;">Datos</th>
 				</tr>
 			</thead>
@@ -41,6 +42,7 @@
 					</th>
 					<td style="width: 10px;">{{persona.tipoPersona}}</td>
 					<td style="width: 30px;">{{persona.nombre}}</td>
+					<td style="width: 30px;">{{persona.sucursal}}</td>
 					<td style="width: 50px;" ng-if="persona.tipoPersona == 'Cliente'">
 						<label>Referencias Personales:</label>
 						<li ng-repeat="referenciaPersonal in persona.profile.referenciasPersonales_ids">
@@ -88,13 +90,13 @@
 
 					<td style="width: 50px;" ng-if="persona.tipoPersona == 'Prospecto Crédito Personal'">
 						<label>Estatus:</label>
-						<li><small></small>
+						<li><small>{{persona.estatus}}</small>
 						</li>
 					</td>
 
 					<td style="width: 50px;" ng-if="persona.tipoPersona == 'Prospecto Distribuidor'">
 						<label>Estatus:</label>
-						<li><small></small>
+						<li><small>{{persona.estatus}}</small>
 						</li>
 					</td>
 
@@ -105,68 +107,3 @@
 		</table>
 	</div>
 </div>
-
-<!-- 
-<div class="col-lg-3" ng-repeat="persona in valcarp.personas">
-	<div class="contact-box center-version">
-		<a href="javascript:void(0);" style="text-decoration: none;">
-			<img alt="image" class="img-circle"
-				ng-src="{{valcarp.tieneFoto(persona.profile.sexo, persona.profile.foto)}}">
-			<p class="lead font-xs text-center">
-				<strong ng-if="persona.profile != undefined">{{persona.profile.nombreCompleto}}</strong>
-				<strong ng-if="persona.profile == undefined">{{persona.nombreCompleto}}</strong>
-			</p>
-			<address class="font-sm">
-				<strong ng-if="persona.tipoPersona == 'cliente'">Cliente</strong>
-				<strong ng-if="persona.tipoPersona == 'distribuidor'">Distribuidor</strong>
-				<strong ng-if="persona.tipoPersona == 'aval'">Aval</strong>
-				<strong ng-if="persona.tipoPersona == 'referenciaPersonal'">Referencia Personal</strong>
-				<strong ng-if="persona.tipoPersona == 'beneficiario'">Beneficiario</strong>
-			</address>
-			
-			<div ng-if="persona.roles[0] == 'Cliente'">
-				<ul style="padding: 0">
-					<label>Referencias Personales:</label>
-					<li ng-repeat="referenciaPersonal in persona.profile.referenciasPersonales_ids">
-						<small>{{referenciaPersonal.nombreCompleto}} - {{referenciaPersonal.parentesco}} -
-							{{referenciaPersonal.tiempoConocerlo}}</small></li>
-				</ul>
-			</div>
-			
-			<div ng-if="persona.roles[0] == 'Distribuidor'">
-				<ul style="padding: 0">
-					<label>Referencias Personales:</label>
-					<li ng-repeat="referenciaPersonal in persona.profile.referenciasPersonales_ids">
-						<small>{{referenciaPersonal.nombreCompleto}} - {{referenciaPersonal.parentesco}} -
-							{{referenciaPersonal.tiempoConocerlo}}</small></li>
-				</ul>
-			</div>
-			
-			<div ng-if="persona.profile.creditos != undefined">
-				<ul style="padding: 0">
-					<label>Cliente o Distribuidor:</label>
-					<li ng-repeat="aval in persona.profile.creditos"><small>{{aval.nombreCompleto}} -
-							{{aval.parentesco}} - {{aval.tiempoConocerlo}} - {{aval.tipo}}</small></li>
-				</ul>
-			</div>
-			
-			<div ng-if="persona.profile == undefined">
-				<ul style="padding: 0">
-					<label>Clientes o Avales:</label>
-					<li ng-repeat="cliente in persona.clientes"><small>{{cliente.nombreCompleto}} -
-							{{cliente.parentesco}} - {{cliente.tiempoConocerlo}} - {{cliente.tipo}} </small>
-					</li>
-				</ul>
-			</div>
-			
-			<div ng-if="persona.nombreCompleto != undefined">
-				<ul style="padding: 0">
-					<label>Beneficiario:</label>
-				</ul>
-			</div>
-		</a>
-		<div class="contact-box-footer">
-
-		</div>
-	</div>
-</div> -->

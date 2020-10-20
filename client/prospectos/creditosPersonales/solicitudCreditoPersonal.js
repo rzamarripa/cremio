@@ -24,10 +24,16 @@ function SolicitudCreditoPersonalFormCtrl($scope, $meteor, $reactive, $state, to
   rc.buscandoColonia = false;
   rc.buscandoColoniaEmpresa = false;
 
+
+  rc.buscar.nombre = "";
+  rc.buscar.numeroCliente = "";
+  rc.buscando = false;
+
   rc.empresa = {};
   rc.colonia = {};
   rc.colonia.nombre = "";
 
+  rc.tipoBusqueda = "nombre"
 
   //Subscripciones
   this.subscribe('estadoCivil', () => {
@@ -84,6 +90,27 @@ function SolicitudCreditoPersonalFormCtrl($scope, $meteor, $reactive, $state, to
       this.buscandoColonia = false;
   });
 
+  this.subscribe('buscarClientesDistribuidores', () => {
+
+    if (rc.getReactively("buscar.nombre").length > 4) {
+
+      //var rol = rc.porCliente == true ? 'Distribuidor' : 'Cliente';
+
+      rc.clientesRoot = [];
+      rc.buscando = true;
+      return [{
+        options: { limit: 20 },
+        where: {
+          nombreCompleto: rc.getReactively('buscar.nombre')
+          //rol: ["Distribuidor", "Cliente"]
+        }
+      }];
+    }
+    else if (rc.getReactively("buscar.nombre").length == 0) {
+      this.buscando = false;
+    }
+
+  });
 
   //-------------------------------------
 
@@ -101,7 +128,7 @@ function SolicitudCreditoPersonalFormCtrl($scope, $meteor, $reactive, $state, to
       var objeto = SolicitudesClientes.findOne({ _id: $stateParams.id });
 
       if (objeto != undefined) {
-
+        this.estadoCivilSeleccionado = EstadoCivil.findOne(objeto.profile.estadoCivil_id);
         rc.colonia.nombre = objeto.profile.colonia;
         return objeto;
       }
@@ -137,6 +164,18 @@ function SolicitudCreditoPersonalFormCtrl($scope, $meteor, $reactive, $state, to
         ciudad_id: this.getReactively("objeto.profile.ciudad_id"),
         nombre: { '$regex': '.*' + this.getReactively('buscar.coloniaNombre') || '' + '.*', '$options': 'i' }
       });
+    },
+    arreglo: () => {
+
+      if (rc.getReactively('buscar.nombre').length > 4) {
+        var clientes = Meteor.users.find({
+          "profile.nombreCompleto": { '$regex': '.*' + rc.getReactively('buscar.nombre') || '' + '.*', '$options': 'i' },
+          roles: { $in: ["Cliente", "Distribuidor"] }
+        }, { sort: { "profile.nombreCompleto": 1 } }).fetch();
+      }
+
+      return clientes;
+
     },
   })
 
@@ -206,7 +245,10 @@ function SolicitudCreditoPersonalFormCtrl($scope, $meteor, $reactive, $state, to
     Meteor.call('actualizarSolicitudCreditoPersonal', objeto, function (e, r) {
       if (r) {
         toastr.success('Actualizado correctamente.');
-        $state.go('root.panelSolicitudesCD');
+        if (Meteor.user().roles[0] != 'Promotora')
+          $state.go('root.panelSolicitudesCD');
+        else
+          $state.go('root.misSolicitudes');
       }
     });
 
@@ -250,4 +292,15 @@ function SolicitudCreditoPersonalFormCtrl($scope, $meteor, $reactive, $state, to
     rc.buscar.coloniaNombre = "";
   };
 
+  this.seleccionarReferenciado = function (objeto) {
+    //console.log(objeto);
+    //console.log(rc.objeto);
+    if (rc.objeto == undefined) {
+      rc.objeto = {};
+      rc.objeto.profile = {};
+    }
+    delete objeto.$$hashKey
+    rc.objeto.profile.referenciado = objeto;
+
+  }
 }

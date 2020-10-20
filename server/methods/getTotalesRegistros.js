@@ -11,4 +11,14 @@ Meteor.methods({
     return resultado;
   },
 
+
+  getTotalesRegistrosCreditosPromotoras: function (tam, promotora_id) {
+
+    var resultado = {};
+    //resultado.Pagos = Math.trunc(Pagos.find({ usuario_id: promotora_id }).count() / tam);
+    resultado.Pagos = Math.trunc(Pagos.find({ usuario_id: promotora_id }).count() / tam);
+
+    return resultado;
+  },
+
 })

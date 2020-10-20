@@ -26,7 +26,7 @@
               <span ng-if="objeto.profile.estatus == 2" class="label label-warning">
                 Programada
               </span>
-              <span ng-if="objeto.profile.estatus ==3" class="label label-success">
+              <span ng-if="objeto.profile.estatus == 3" class="label label-success">
                 Verificado
               </span>
               <span ng-if="objeto.profile.estatus == 1" class="label label-danger">
@@ -65,10 +65,12 @@
                         class="fa fa-times"></i>
                       Rechazar</a>
                   </li>
-
                   <li ng-if="objeto.profile.verificacionEstatus == 'Verificación Cancelada' ">
                     <a href="#" ng-click="obj.volverVerificar(objeto)"><i class="fa fa-mail-forward"></i> Volver a
                       Verificar</a>
+                  </li>
+                  <hr>
+                  <li><a href="#" ng-click="obj.tramiteTrunco(objeto)"><i class="fa fa-arrow-circle-down"></i> Trámite trunco</a>
                   </li>
 
                 </ul>

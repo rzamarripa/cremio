@@ -1,36 +1,36 @@
 angular.module("creditoMio")
-.controller("TraspasoCajaCuentaCtrl", TraspasoCajaCuentaCtrl);
- function TraspasoCajaCuentaCtrl($scope, $meteor, $reactive, $state, toastr){
- 	
- 	let rc = $reactive(this).attach($scope);
-	
-	this.action = false;
-	this.nuevo = true;	 
-	this.objeto = {}; 
-	this.buscar = {};
-	
+	.controller("TraspasoCajaCuentaCtrl", TraspasoCajaCuentaCtrl);
+function TraspasoCajaCuentaCtrl($scope, $meteor, $reactive, $state, toastr) {
 
-	this.subscribe('cajas',()=>{
-		return [{sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""}]
+	let rc = $reactive(this).attach($scope);
+
+	this.action = false;
+	this.nuevo = true;
+	this.objeto = {};
+	this.buscar = {};
+
+
+	this.subscribe('cajas', () => {
+		return [{ sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "" }]
 	});
 
-	this.subscribe('tiposIngreso',()=>{
+	this.subscribe('tiposIngreso', () => {
 		return [{
-			estatus : true
+			estatus: true
 		}]
 	});
 
-	this.subscribe('traspasos',()=>{
-		return[{
-			estatus : 1,
-			tipo : "CajaCuenta",
+	this.subscribe('traspasos', () => {
+		return [{
+			estatus: 1,
+			tipo: "CajaCuenta",
 			sucursal_id: Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
 		}];
 	});
 
-	this.subscribe('cuentas',()=>{
+	this.subscribe('cuentas', () => {
 		return [{
-			estatus : 1
+			estatus: 1
 		}]
 	});
 
@@ -38,20 +38,18 @@ angular.module("creditoMio")
 
 
 	this.helpers({
-		cajas : () => {
+		cajas: () => {
 			return Cajas.find();
 		},
-		cuentas : () => {
+		cuentas: () => {
 			return Cuentas.find();
 		},
-		
-		
-	
-		traspasos : () => {
-			var traspasos = Traspasos.find({},{order: {createdAt: -1}}).fetch();
-			_.each(traspasos,function(traspaso){
+
+		traspasos: () => {
+			var traspasos = Traspasos.find({}, { order: { createdAt: -1 } }).fetch();
+			_.each(traspasos, function (traspaso) {
 				var cajaOrigen = Cajas.findOne(traspaso.origen_id);
-				var cajaDestino =  Cuentas.findOne(traspaso.destino_id);
+				var cajaDestino = Cuentas.findOne(traspaso.destino_id);
 
 				traspaso.origen = cajaOrigen;
 				traspaso.destino = cajaDestino;
@@ -62,42 +60,40 @@ angular.module("creditoMio")
 
 	});
 
-	
-	this.nuevo = function()
-	{
+
+	this.nuevo = function () {
 		this.action = !this.action;
 		//this.nuevo = !this.nuevo;
-		this.objeto = {};	
-	
+		this.objeto = {};
+
 	};
 
-	this.guardar = function(objeto,form)
-	{
-			if(form.$invalid){
-						toastr.error('Error al guardar los datos.');
-						return;
-			}
-			objeto.estatus = true;
+	this.guardar = function (objeto, form) {
+		if (form.$invalid) {
+			toastr.error('Error al guardar los datos.');
+			return;
+		}
+		objeto.estatus = true;
 
-			//objeto.usuarioResponsable = "";
-			var cuenta = Cuentas.findOne(objeto.destino_id);
-			Meteor.call ("traspasoCajaCuenta",objeto.origen_id,objeto.destino_id,objeto.importe,cuenta.tipoIngreso_id,function(error,result){
-		
-				if(error){
-					console.log(error);
-					toastr.error('Error al guardar los datos.');
-					return
-				}
-				toastr.success('Guardado correctamente.');
-				rc.objeto = {}; 
-				$('.collapse').collapse('hide');
-				rc.nuevo = true;
-				form.$setPristine();
-				form.$setUntouched();
-				//$state.go('root.cajerosLista');
-			});
-			
-		
+		//objeto.usuarioResponsable = "";
+		var cuenta = Cuentas.findOne(objeto.destino_id);
+		Meteor.call("traspasoCajaCuenta", objeto.origen_id, objeto.destino_id, objeto.importe, cuenta.tipoIngreso_id, function (error, result) {
+
+			if (error) {
+				console.log(error);
+				toastr.error('Error al guardar los datos.');
+				return
+			}
+			toastr.success('Guardado correctamente.');
+			rc.objeto = {};
+			$('.collapse').collapse('hide');
+			rc.nuevo = true;
+			form.$setPristine();
+			form.$setUntouched();
+			//$state.go('root.cajerosLista');
+		});
+
+
 	};
 
 

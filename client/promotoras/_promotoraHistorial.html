@@ -5,7 +5,7 @@
   <header role="heading">
     <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i>
     </span>
-    <h2>Información Promotora</h2>
+    <h2>Historial Pagos</h2>
   </header>
   <div class="no-padding" role="content">
 
@@ -13,9 +13,56 @@
       <!-- content -->
       <div id="myTabContent" class="tab-content">
         <div class="well-sm">
+          <div class="col-sm-12">
 
-          <div class="row">
-         
+            <div class="row">
+              <table class="table table-striped table-bordered table-condensed">
+                <thead class="thead">
+                  <tr>
+                    <th class="text-center" width="3%">No.</th>
+                    <th class="text-center" width="10%">Folio</th>
+                    <th class="text-center" width="20%">Fecha Cobro</th>
+                    <th class="text-center" width="10%">Total </th>
+                    <th class="text-center" width="15%">Usuario</th>
+                    <th class="text-center" width="10%">Estatus</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="(index,nota) in obj.pagos">
+                    <td style="text-align: center;">{{($index + 1 ) + obj.numeroPagina}}</td>
+                    <td style="text-align: center;">{{nota.folioPago}}</td>
+                    <td style="text-align: center">{{nota.fechaPago | date:'dd/MM/yyyy'}}</td>
+                    <td style="text-align: right;">{{nota.totalPago | currency}}</td>
+                    <td style="text-align: center;">{{nota.usuario}}</td>
+                    
+                    
+                    <td style="text-align: center;">
+                      <span ng-if="nota.estatus == 'Aplicado'" class="label label-success">
+                        Aplicado
+                      </span>
+                      <span ng-if="nota.estatus == 'Cancelado'" class="label label-danger">
+                        Cancelado
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="text-center">
+                <ul id="paginador" class="pagination pagination-lg">
+                  <li>
+                    <a href="#" ng-click="obj.izq(obj.arregloHistorial)"><i class="fa fa-arrow-left"></i></a>
+                  </li>
+                  <li ng-repeat="item in obj.arregloHistorial"
+                    ng-class="item.estaActivo? 'page-item active' : 'page-item'">
+                    <a href="#" ng-click="obj.activarPorNumero(item, obj.arregloHistorial)">{{item.numero}}</a>
+                  </li>
+                  <li>
+                    <a href="#" ng-click="obj.der(obj.notasCreditoAplicadas,obj.arregloHistorial)"><i
+                        class="fa fa-arrow-right"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
 
           </div>
           <br />

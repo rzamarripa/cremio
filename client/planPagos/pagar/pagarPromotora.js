@@ -146,6 +146,7 @@ function PagarPromotoraCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
           c.comision = rc.comisionCreditoPersonal;
         }
 
+        rc.totalComisiones += c.comision;
 
         subindice = numeroQuincena + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
         if (arreglo[subindice] == undefined) {
@@ -175,7 +176,7 @@ function PagarPromotoraCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
           else if (c.tipo == "vale")
             arreglo[subindice].comisiones += rc.comisionDistribuidor;
         }
-        rc.totalComisiones += arreglo[subindice].comisiones;
+        //rc.totalComisiones += arreglo[subindice].comisiones;
 
         return c;
       });
@@ -219,6 +220,12 @@ function PagarPromotoraCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
       return;
     }
 
+    //Valida que tenga dinero de donde va a pagar
+    if (pago.tipoIngreso_id == undefined) {
+      toastr.warning("Seleccione una forma de pago");
+      return;
+    }
+
     var cuenta = rc.caja.cuenta[pago.tipoIngreso_id];
     if (rc.totalComisiones > cuenta.saldo) {
       toastr.warning("No tienes suficientes fondos en esta forma de pago para efectuar el pago de la comisión.");
@@ -226,8 +233,8 @@ function PagarPromotoraCtrl($scope, $filter, $meteor, $reactive, $state, $stateP
     }
 
     //Valida que tenga dinero de donde va a pagar
-    if (pago.tipoIngreso_id == undefined) {
-      toastr.warning("Seleccione una forma de pago");
+    if (rc.totalComisiones == 0) {
+      toastr.warning("No hay nada que pagar");
       return;
     }
 

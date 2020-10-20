@@ -26,6 +26,10 @@ function SolicitudDistribuidorFormCtrl($scope, $meteor, $reactive, $state, toast
   rc.buscandoColonia = false;
   rc.buscandoColoniaEmpresa = false;
 
+  rc.buscar.nombre = "";
+  rc.buscar.numeroCliente = "";
+  rc.buscando = false;
+
   rc.empresa = {};
   rc.colonia = {};
   rc.colonia.nombre = "";
@@ -85,6 +89,27 @@ function SolicitudDistribuidorFormCtrl($scope, $meteor, $reactive, $state, toast
       this.buscandoColonia = false;
   });
 
+  this.subscribe('buscarClientesDistribuidores', () => {
+
+    if (rc.getReactively("buscar.nombre").length > 4) {
+
+      //var rol = rc.porCliente == true ? 'Distribuidor' : 'Cliente';
+
+      rc.clientesRoot = [];
+      rc.buscando = true;
+      return [{
+        options: { limit: 20 },
+        where: {
+          nombreCompleto: rc.getReactively('buscar.nombre')
+          //rol: ["Distribuidor", "Cliente"]
+        }
+      }];
+    }
+    else if (rc.getReactively("buscar.nombre").length == 0) {
+      this.buscando = false;
+    }
+
+  });
 
   //-------------------------------------
 
@@ -101,7 +126,7 @@ function SolicitudDistribuidorFormCtrl($scope, $meteor, $reactive, $state, toast
     objeto: () => {
       var objeto = SolicitudesDistribuidores.findOne({ _id: $stateParams.id });
       if (objeto != undefined) {
-
+        this.estadoCivilSeleccionado = EstadoCivil.findOne(objeto.profile.estadoCivil_id);
         rc.colonia.nombre = objeto.profile.colonia;
         return objeto;
       }
@@ -137,6 +162,18 @@ function SolicitudDistribuidorFormCtrl($scope, $meteor, $reactive, $state, toast
         ciudad_id: this.getReactively("objeto.profile.ciudad_id"),
         nombre: { '$regex': '.*' + this.getReactively('buscar.coloniaNombre') || '' + '.*', '$options': 'i' }
       });
+    },
+    arreglo: () => {
+
+      if (rc.getReactively('buscar.nombre').length > 4) {
+        var clientes = Meteor.users.find({
+          "profile.nombreCompleto": { '$regex': '.*' + rc.getReactively('buscar.nombre') || '' + '.*', '$options': 'i' },
+          roles: { $in: ["Cliente", "Distribuidor"] }
+        }, { sort: { "profile.nombreCompleto": 1 } }).fetch();
+      }
+
+      return clientes;
+
     },
   })
 
@@ -207,15 +244,11 @@ function SolicitudDistribuidorFormCtrl($scope, $meteor, $reactive, $state, toast
         if (Meteor.user().roles[0] != 'Promotora')
           $state.go('root.panelSolicitudesCD');
         else
-          $state.go('root.prospectosDistribuidor');
+          $state.go('root.misSolicitudes');
       }
     });
 
   };
-
-  // this.regresar = function () {
-  // 	$state.go('anon.home');
-  // }
 
   this.calcularTotales = function () {
 
@@ -249,5 +282,17 @@ function SolicitudDistribuidorFormCtrl($scope, $meteor, $reactive, $state, toast
     rc.objeto.profile.colonia_id = colonia._id;
     rc.buscar.coloniaNombre = "";
   };
+
+  this.seleccionarReferenciado = function (objeto) {
+    //console.log(objeto);
+    //console.log(rc.objeto);
+    if (rc.objeto == undefined) {
+      rc.objeto = {};
+      rc.objeto.profile = {};
+    }
+    delete objeto.$$hashKey
+    rc.objeto.profile.referenciado = objeto;
+
+  }
 
 }

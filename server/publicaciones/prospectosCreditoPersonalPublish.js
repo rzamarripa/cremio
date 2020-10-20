@@ -45,8 +45,9 @@ Meteor.publish("buscarProspectoCreditoPersonal", function (options) {
 		if (options.where.nombreCompleto.length > 0) {
 			let selector = {
 				"profile.nombreCompleto": { '$regex': '.*' + options.where.nombreCompleto || '' + '.*', '$options': 'i' },
-				"profile.sucursal_id": options.where.sucursal_id,
-				"profile.estatus": 3
+				"profile.sucursal_id": options.where.sucursal_id
+				// ,
+				// "profile.estatus": { $in: [3, 4] }
 			}
 
 			return ProspectosCreditoPersonal.find(selector, {

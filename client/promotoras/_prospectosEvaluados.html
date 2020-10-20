@@ -47,14 +47,14 @@
           <td class="text-center">{{objeto.profile.fechaCreacion | date:"dd-MM-yyyy"}}</td>
           <td class="text-left">
             <div class="text-center">
-              <span ng-if="objeto.profile.estatusProspecto == 4" class="label label-warning">
-                Trunco
-              </span>
               <span ng-if="objeto.profile.estatusProspecto == 2" class="label label-success">
                 Autorizado
               </span>
               <span ng-if="objeto.profile.estatusProspecto == 3" class="label label-danger">
                 Rechazado
+              </span>
+              <span ng-if="objeto.profile.estatusProspecto == 4" class="label label-warning">
+                Trámite trunco
               </span>
             </div>
           </td>
@@ -66,7 +66,7 @@
               <span ng-if="objeto.profile.estatus == 2" class="label label-warning">
                 Programada
               </span>
-              <span ng-if="objeto.profile.estatus ==3" class="label label-success">
+              <span ng-if="objeto.profile.estatus == 3" class="label label-success">
                 Verificado
               </span>
             </div>
@@ -102,7 +102,12 @@
                     <a href="#" ng-click="obj.imprimirProspectoDistribuidor(objeto)""><i
                         class=" fa fa-print"></i> Imprimir</a>
                   </li>
-
+                  <li>
+                    <a href="#" ng-click="obj.activarTramite(objeto)" ng-if="objeto.profile.estatusProspecto == 4">
+                      <i class="fa fa-arrow-circle-up"></i>
+                      Activar trámite
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>

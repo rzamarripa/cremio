@@ -69,31 +69,31 @@ function CobranzaCtrl($scope, $meteor, $reactive, $state, toastr) {
 
   //Quitar
 
-  this.subscribe("nacionalidades", () => {
-    return [{}]
-  });
-  this.subscribe("ocupaciones", () => {
-    return [{}]
-  });
+  // this.subscribe("nacionalidades", () => {
+  //   return [{}]
+  // });
+  // this.subscribe("ocupaciones", () => {
+  //   return [{}]
+  // });
 
-  this.subscribe("paises", () => {
-    return [{}]
-  });
-  this.subscribe("estados", () => {
-    return [{}]
-  });
-  this.subscribe("municipios", () => {
-    return [{}]
-  });
-  this.subscribe("ciudades", () => {
-    return [{}]
-  });
-  this.subscribe("colonias", () => {
-    return [{}]
-  });
-  this.subscribe("empresas", () => {
-    return [{}]
-  });
+  // this.subscribe("paises", () => {
+  //   return [{}]
+  // });
+  // this.subscribe("estados", () => {
+  //   return [{}]
+  // });
+  // this.subscribe("municipios", () => {
+  //   return [{}]
+  // });
+  // this.subscribe("ciudades", () => {
+  //   return [{}]
+  // });
+  // this.subscribe("colonias", () => {
+  //   return [{}]
+  // });
+  // this.subscribe("empresas", () => {
+  //   return [{}]
+  // });
 
   this.subscribe('tiposIngreso', () => {
     return [{}]
@@ -149,7 +149,6 @@ function CobranzaCtrl($scope, $meteor, $reactive, $state, toastr) {
 
       return Creditos.find().fetch();
     },
-
     planPagos: () => {
       var planes = PlanPagos.find({ multada: 1 });
       var obj = planes.length
@@ -924,10 +923,9 @@ function CobranzaCtrl($scope, $meteor, $reactive, $state, toastr) {
 
   };
 
-  this.imprimirRecibos = function (objeto) {
+  this.imprimirRecibos = async function (objeto) {
     var toPrint = [];
 
-    //console.log(objeto);
 
     if (objeto.length == 0) {
       toastr.warning("No hay nada para imprimir");
@@ -949,17 +947,33 @@ function CobranzaCtrl($scope, $meteor, $reactive, $state, toastr) {
     }
 
 
-    _.each(objeto, function (item, key) {
+    //_.each(objeto, function (item, key) {
+    //console.log(key)
+    for (item of objeto) {
       if (item.imprimir) {
 
 
-        item.cliente.profile.colonia = Colonias.findOne(item.cliente.profile.colonia_id)
-        item.colonia = item.cliente.profile.colonia == undefined ? "" : item.cliente.profile.colonia.nombre;
+
+        var result = await Meteor.callSync('getPeople', item.cliente._id);
+        // Meteor.call('getPeople', item.cliente._id, function (error, result) {
+        //   if (result) {
+        // colonia = result.profile.coloniaCliente.nombre
+        item.colonia = result.profile.coloniaCliente == undefined ? "" : result.profile.coloniaCliente.nombre;
+        item.estado = result.profile.estadoCliente == undefined ? "" : result.profile.estadoCliente.nombre;
+        item.municipio = result.profile.municipioCliente == undefined ? "" : result.profile.municipioCliente.nombre;
+        //     $scope.$apply();
+        //   }
+        // });
+        //console.log(result);
+
+
+        // item.cliente.profile.colonia = Colonias.findOne(item.cliente.profile.colonia_id)
+        // item.colonia = item.cliente.profile.colonia == undefined ? "" : item.cliente.profile.colonia.nombre;
         item.calle = item.cliente.profile.calle == undefined ? "" : item.cliente.profile.calle;
-        item.cliente.profile.estado = Estados.findOne(item.cliente.profile.estado_id)
-        item.estado = item.cliente.profile.estado.nombre == undefined ? "" : item.cliente.profile.estado.nombre;
-        item.cliente.profile.municipio = Municipios.findOne(item.cliente.profile.municipio_id)
-        item.municipio = item.cliente.profile.municipio == undefined ? "" : item.cliente.profile.municipio.nombre;
+        // item.cliente.profile.estado = Estados.findOne(item.cliente.profile.estado_id)
+        // item.estado = item.cliente.profile.estado.nombre == undefined ? "" : item.cliente.profile.estado.nombre;
+        // item.cliente.profile.municipio = Municipios.findOne(item.cliente.profile.municipio_id)
+        // item.municipio = item.cliente.profile.municipio == undefined ? "" : item.cliente.profile.municipio.nombre;
         item.nombreCompleto = item.cliente.profile.nombreCompleto;
         item.numeroCliente = item.cliente.profile.folio;
         item.planPagoNumero = item.numeroPago;
@@ -975,13 +989,11 @@ function CobranzaCtrl($scope, $meteor, $reactive, $state, toastr) {
         item.folioCredito = item.credito.folio
         item.saldo = item.credito.saldoActual
 
+        // if (objeto[key + 1] == undefined) {
+        //   item.proximoPago = "No hay proximo pago"
+        // } else {
 
-        if (objeto[key + 1] == undefined) {
-          item.proximoPago = "No hay proximo pago"
-        } else {
-
-        }
-
+        // }
 
         var saldoActual = 0;
         if (saldoActual == 0) {
@@ -993,9 +1005,8 @@ function CobranzaCtrl($scope, $meteor, $reactive, $state, toastr) {
         item.saldoActual = parseFloat((saldoActual - item.cargo).toFixed(2));
         toPrint.push(item);
       }
-    });
-
-    //console.log("reciboooooo:",objeto);
+    }
+    //});
 
     loading(true);
     Meteor.call('getRecibos', toPrint, 'pdf', function (error, response) {
@@ -1016,14 +1027,11 @@ function CobranzaCtrl($scope, $meteor, $reactive, $state, toastr) {
   };
 
   this.verPagos = function (credito) {
-
-    //console.log(credito,"el credito ")
     rc.credito = credito;
     rc.credito_id = credito._id;
     $("#modalpagos").modal();
     credito.pagos = Pagos.find({ credito_id: rc.getReactively("credito_id") }).fetch()
     rc.mostrarModal = true
-
   };
 
   this.cerrarModal = function () {

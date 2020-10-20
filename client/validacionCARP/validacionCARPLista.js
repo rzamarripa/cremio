@@ -21,11 +21,13 @@ function validacionCARPCtrl($scope, $meteor, $reactive, $state, toastr) {
 					_.each(result.clientes, function (cliente) {
 						cliente.tipoPersona = "Cliente";
 						cliente.nombre = cliente.profile.nombreCompleto;
+						cliente.sucursal = cliente.profile.sucursal;
 						rc.personas.push(cliente);
 					});
 					_.each(result.distribuidores, function (distribuidor) {
 						distribuidor.tipoPersona = "Distribuidor";
 						distribuidor.nombre = distribuidor.profile.nombreCompleto;
+						distribuidor.sucursal = distribuidor.profile.sucursal;
 						rc.personas.push(distribuidor);
 					});
 					_.each(result.avales, function (aval) {
@@ -41,6 +43,7 @@ function validacionCARPCtrl($scope, $meteor, $reactive, $state, toastr) {
 					_.each(result.beneficiarios, function (beneficiario) {
 						beneficiario.tipoPersona = "Beneficiario";
 						beneficiario.nombre = beneficiario.nombreCompleto;
+						beneficiario.sucursal = beneficiario.sucursal;
 						rc.personas.push(beneficiario);
 					});
 					_.each(result.prospectosVales, function (prospecto) {
@@ -63,15 +66,17 @@ function validacionCARPCtrl($scope, $meteor, $reactive, $state, toastr) {
 					_.each(result.prospectosCreditoPersonal, function (item) {
 						item.tipoPersona = "Prospecto Crédito Personal";
 						item.nombre = item.profile.nombreCompleto;
+						item.sucursal = item.profile.sucursal;
+						item.estatus = item.profile.estatus;
 						rc.personas.push(item);
 					});
 					_.each(result.prospectosDistribuidor, function (item) {
 						item.tipoPersona = "Prospecto Distribuidor";
 						item.nombre = item.profile.nombreCompleto;
+						item.sucursal = item.profile.sucursal;
+						item.estatus = item.profile.estatus;
 						rc.personas.push(item);
 					});
-
-
 
 					$scope.$apply();
 				}

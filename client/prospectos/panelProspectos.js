@@ -18,12 +18,12 @@ function PanelProspectosCtrl($scope, $meteor, $reactive, $state, toastr) {
 		}];
 	});
 
-	this.subscribe('prospectosDistribuidor', () => {
-		return [{
-			"profile.sucursal_id": Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
-			"profile.estatusProspecto": 1
-		}];
-	});
+	// this.subscribe('prospectosDistribuidor', () => {
+	// 	return [{
+	// 		"profile.sucursal_id": Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "",
+	// 		"profile.estatusProspecto": 1
+	// 	}];
+	// });
 
 
 	this.helpers({
@@ -42,16 +42,16 @@ function PanelProspectosCtrl($scope, $meteor, $reactive, $state, toastr) {
 				});
 			});
 
-			var prospectosDistribuidor = ProspectosDistribuidor.find({}).fetch();
-			_.each(prospectosDistribuidor, function (p) {
-				Meteor.call("getUsuarioId", p.profile.promotora_id, function (e, r) {
-					if (r) {
-						p.distribuidor = r;
-						prospectos.push(p);
-						$scope.$apply();
-					}
-				});
-			});
+			// var prospectosDistribuidor = ProspectosDistribuidor.find({}).fetch();
+			// _.each(prospectosDistribuidor, function (p) {
+			// 	Meteor.call("getUsuarioId", p.profile.promotora_id, function (e, r) {
+			// 		if (r) {
+			// 			p.distribuidor = r;
+			// 			prospectos.push(p);
+			// 			$scope.$apply();
+			// 		}
+			// 	});
+			// });
 
 			return prospectos;
 		},

@@ -30,6 +30,7 @@ Meteor.methods({
 		aval.profile.sucursal = aval.profile.sucursalesAval.nombre
 		return aval;
 	},
+	
 	findSomeShit: function (collection, find, findOne) {
 		return findOne ? eval(collection).findOne(find) : eval(collection).find(find);
 	},
@@ -882,9 +883,9 @@ Meteor.methods({
 		_.each(objeto.referenciasPersonales_ids, function (rp) {
 
 			var referencia = {};
-
+			console.log(rp);
 			var ref = ReferenciasPersonales.findOne(rp.referenciaPersonal_id);
-
+			console.log(ref)
 			referencia.nombreCompleto = ref.nombreCompleto;
 			referencia.direccion = ref.direccion;
 			referencia.telefono = ref.telefono;

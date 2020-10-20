@@ -95,5 +95,9 @@ Meteor.methods({
 		ProspectosDistribuidor.update({ _id: id }, { $set: { "profile.estaVerificado": true, "profile.indicacion": "Verificación Cancelada", "profile.estatus": 3, "profile.verificacionEstatus": "Verificación Cancelada" } });
 		return true;
 	},
+	eliminarVerificaciones: function (cliente_id) {
+		Verificaciones.remove({ cliente_id: cliente_id });
+		return true;
+	}
 
 });

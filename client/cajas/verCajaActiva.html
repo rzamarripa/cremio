@@ -71,21 +71,22 @@
 								</thead>
 								<tbody style="font-size: x-small">
 									<tr ng-repeat="mov in vca.movimientosCaja" class={{mov.clase}}>
-										<td align="center">{{mov.pago != undefined ? mov.pago.folioPago : mov.credito.folio }}</td>
+										<td style="text-align: center">
+											{{mov.pago != undefined ? mov.pago.folioPago : mov.credito.folio }}</td>
 										<td>{{mov.createdAt | date:"dd-MM-yyyy"}}</td>
 										<td>{{mov.createdAt | date:'H:mm:ss'}}</td>
 										<td>{{mov.numeroCliente}}</td>
 										<td>{{mov.nombreCliente}}</td>
 										<td>{{mov.origen}}</td>
-										<td align="right">{{mov.capital | currency}}</td>
-										<td align="right">{{mov.multas | currency}}</td>
-										<td align="right">{{mov.intereses | currency}}</td>
-										<td align="right">{{mov.seguro | currency}}</td>
-										<td align="right">{{mov.iva | currency}}</td>
-										<td align="right">{{mov.seguroDis | currency}}</td>
-										<td align="right">{{mov.bonificacion | currency}}</td>
-										<td align="right">{{mov.monto | currency}}</td>
-										<td align="center">{{mov.tipoIngreso.nombre}}</td>
+										<td style="text-align: right">{{mov.capital | currency}}</td>
+										<td style="text-align: right">{{mov.multas | currency}}</td>
+										<td style="text-align: right">{{mov.intereses | currency}}</td>
+										<td style="text-align: right">{{mov.seguro | currency}}</td>
+										<td style="text-align: right">{{mov.iva | currency}}</td>
+										<td style="text-align: right">{{mov.seguroDis | currency}}</td>
+										<td style="text-align: right">{{mov.bonificacion | currency}}</td>
+										<td style="text-align: right">{{mov.monto | currency}}</td>
+										<td style="text-align: center">{{mov.tipoIngreso.nombre}}</td>
 										<td>
 											<div class="btn-group">
 												<button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown"

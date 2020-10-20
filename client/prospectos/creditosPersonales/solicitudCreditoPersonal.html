@@ -5,10 +5,50 @@
 </div>
 
 <div class="well">
-
   <div class="row">
     <div class="col-sm-12">
       <form name="form" class="form-horizontal" role="form" nsolicitudClientesote>
+
+        <h4>Referenciado</h4>
+        <div class="well">
+          <div class="row">
+            <div class="col-sm-4">
+              <br>
+              <input class="form-control" type="text" placeholder="Buscar..." ng-model="obj.buscar.nombre" capitalize>
+            </div>
+            <div class="ajax-dropdown" ng-show="obj.buscando"
+              style="margin-top: 30px;display: block; width: 40% !important;">
+              <div class="ajax-notifications custom-scroll">
+
+                <div class="alert alert-transparent">
+                  <div class="tab-pane fade active in" id="a2">
+
+                    <div class="user well" title="{{cliente.profile.nombreCompleto}}" ng-repeat="cliente in obj.arreglo"
+                      style="width: 100%">
+                      <div class="row">
+                        <div class="col-sm-1">
+                          <img class="online" src="{{obj.tieneFoto(cliente.profile.foto, cliente.profile.sexo)}}">
+                        </div>
+                        <div class="col-sm-12">
+                          <a href="javascript:void(0);"
+                            ng-click="obj.buscando = false;obj.seleccionarReferenciado(cliente)" ;>
+                            {{cliente.profile.nombreCompleto}} - {{cliente.profile.numeroCliente}} -
+                            {{cliente.roles[0]}}</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <label>Nombre del referenciado</label>
+              <input name="nombre" type="text" class="form-control" placeholder="Nombre"
+                ng-model="obj.objeto.profile.referenciado.profile.nombreCompleto" ng-disabled="true">
+            </div>
+          </div>
+        </div>
+
         <h4>Datos Generales del Solicitante</h4>
         <div class="well">
           <div class="row">
@@ -157,7 +197,8 @@
                         <div class="row">
                           <div class="col-sm-4">
                             <a href="javascript:void(0);"
-                              ng-click="obj.agregarColonia(colonia);obj.buscandoColonia = false"> {{colonia.nombre}}</a>
+                              ng-click="obj.agregarColonia(colonia);obj.buscandoColonia = false">
+                              {{colonia.nombre}}</a>
                           </div>
                         </div>
                       </div>
@@ -377,9 +418,10 @@
               <input name="puesto" type="text" class="form-control" placeholder="Puesto"
                 ng-model="obj.objeto.profile.puesto" capitalize required>
             </div>
-            <div class="col-sm-2" valida>					    
+            <div class="col-sm-2" valida>
               <label>Departamento *</label>
-              <input name="departamento" type="text" class="form-control" placeholder="Departamento" ng-model="obj.objeto.profile.departamento"  capitalize required>
+              <input name="departamento" type="text" class="form-control" placeholder="Departamento"
+                ng-model="obj.objeto.profile.departamento" capitalize required>
             </div>
             <div class="col-sm-3">
               <label>Jefe Inmediato</label>
@@ -469,9 +511,10 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-sm-12" >					    
+              <div class="col-sm-12">
                 <label>Nombre, puesto y teléfono jefe inmediato </label>
-                <input name="datosjefeInmediato" type="text" class="form-control" placeholder="Datos Jefe Inmediato" ng-model="obj.objeto.profile.datosjefeInmediato"  capitalize>
+                <input name="datosjefeInmediato" type="text" class="form-control" placeholder="Datos Jefe Inmediato"
+                  ng-model="obj.objeto.profile.datosjefeInmediato" capitalize>
               </div>
             </div>
           </div>
@@ -1205,6 +1248,27 @@
           </div>
         </div>
 
+        <h4>Verificación</h4>
+        <div class="well">
+          <div class="row">
+            <div class="col-sm-2">
+              <label>Fecha Verificación</label>
+              <input name="fechaVerificacion" type="date" format="dd/MM/yyyy" class="form-control"
+                ng-model="obj.objeto.profile.fechaVerificacion" />
+            </div>
+            <div class="col-sm-2">
+              <label>Horario</label>
+              <select name="horario" class="form-control" ng-model="obj.objeto.profile.turno">
+                <option value="mañana">Mañana</option>
+                <option value="tarde">Tarde</option>
+              </select>
+            </div>
+            <div class="col-sm-2">
+              <label>Hora </label>
+              <input id="hora" name="hora" type="time" class="form-control" ng-model="obj.objeto.profile.hora">
+            </div>
+          </div>
+        </div>
         <br>
         <div class="row">
           <div class="col-sm-1">
@@ -1221,6 +1285,4 @@
       </form>
     </div>
   </div>
-
-
 </div>

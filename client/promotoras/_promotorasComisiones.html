@@ -58,6 +58,8 @@
                       Fecha de Entrega</th>
                     <th class="text-center" width="10%">
                       Capital Solicitado</th>
+                    <th class="text-center" width="10%">
+                      Comisión</th>
                     <th class="text-center" width="15%">
                       Tipo Crédito</th>
                     <th class="text-center" width="10%">
@@ -80,16 +82,19 @@
                     <td style="text-align: right;">
                       {{credito.capitalSolicitado | currency}}
                     </td>
-                    <td>
+                    <td style="text-align: right;">
+                      {{credito.comision | currency}}
+                    </td>
+                    <td style="text-align: center;">
                       {{credito.tipoCredito}}
                     </td>
-                    <td>
+                    <td style="text-align: center;">
                       {{credito.sucursal}}
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                       {{credito.usuario}}
                     </td>
-                    
+
                   </tr>
                 </tbody>
               </table>

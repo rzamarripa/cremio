@@ -47,13 +47,13 @@ Meteor.methods({
     if (tipo == "Distribuidor") {
       var busca = ProspectosDistribuidor.find({ "profile.nombreCompleto": objeto.profile.nombreCompleto });
       if (busca.lenght > 0) {
-        SolicitudesDistribuidores.update({ _id: objeto_id }, { $set: { "profile.estatus": 4 } }); 
+        SolicitudesDistribuidores.update({ _id: objeto_id }, { $set: { "profile.estatus": 4 } });
         //1.- Sin Sucursal, 2.- Asignado .- 3.- En Prospecto, 4.- Ya xiste, 5.- Aceptado, 6.- Rechazado, 7.- Trunco
         return 1;
       }
-      objeto.profile.estatusProspecto = 1; //1.- No es Cliente, 2.- es Cliente.- 3.- No Aprobado
-      objeto.profile.estaVerificado = false; //false.- NO, true.- Si
-      objeto.profile.estatus = 1; //1.- Sin Verificar, 2.- Por Verificar.- 3.- Verificado
+      //objeto.profile.estatusProspecto = 1; //1.- No es Cliente, 2.- es Cliente.- 3.- No Aprobado
+      //objeto.profile.estaVerificado = false; //false.- NO, true.- Si
+      //objeto.profile.estatus = 1; //1.- Sin Verificar, 2.- Por Verificar.- 3.- Verificado
       var id = ProspectosDistribuidor.insert(objeto);
       SolicitudesDistribuidores.update({ _id: objeto_id }, { $set: { "profile.estatus": 3 } });
       return id;
@@ -65,9 +65,10 @@ Meteor.methods({
         //1.- Sin Sucursal, 2.- Asignado .- 3.- En Prospecto, 4.- Ya xiste, 5.- Aceptado, 6.- Rechazado, 7.- Trunco
         return 1;
       }
-      objeto.profile.estatusProspecto = 1;
-      objeto.profile.estaVerificado = false;
-      objeto.profile.estatus = 1; //1.- Sin Verificar, 2.- Por Verificar.- 3.- Verificado
+
+      //objeto.profile.estatusProspecto = 1;
+      //objeto.profile.estaVerificado = false;
+      //objeto.profile.estatus = 1; //1.- Sin Verificar, 2.- Por Verificar.- 3.- Verificado
       var id = ProspectosCreditoPersonal.insert(objeto);
       SolicitudesClientes.update({ _id: objeto_id }, { $set: { "profile.estatus": 3 } });
       return id;

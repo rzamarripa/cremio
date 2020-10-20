@@ -120,7 +120,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		return [{}]
 	});
 	this.subscribe('tiposCreditos', () => {
-		return [{}] 
+		return [{}]
 	});
 	this.subscribe('estadoCivil', () => {
 		return [{}]
@@ -921,6 +921,7 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		credito.pagos = Pagos.find({ credito_id: rc.getReactively("credito_id") }).fetch()
 		rc.pagos = credito.pagos
 		rc.openModal = true;
+
 	};
 	this.modalDoc = function (id) {
 		//console.log(id);
@@ -991,12 +992,12 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 
 		/*
 var html  = "<html><head>" +
-        "</head>" +
-        "<body  style ='-webkit-print-color-adjust:exact;'>"+
-        "<img src=\"" + img + "\" onload=\"javascript:window.print();\"/>" +
-        "</body>";
-    var win = window.open("about:blank","_blank");
-    win.document.write(html);
+				"</head>" +
+				"<body  style ='-webkit-print-color-adjust:exact;'>"+
+				"<img src=\"" + img + "\" onload=\"javascript:window.print();\"/>" +
+				"</body>";
+		var win = window.open("about:blank","_blank");
+		win.document.write(html);
 */
 	};
 	this.cerrarModal = function () {
@@ -1089,7 +1090,7 @@ if(estatus == 0){
 		rc.creditoSeleccionado = bestCopyEver(objeto);
 
 		//rc.creditoSeleccionado = objeto;
-	
+
 		_.each(rc.creditoSeleccionado.planPagos, function (planPago) {
 			planPago.editar = false;
 			//planPago.numeroPagos = rc.creditoSeleccionado.numeroPagos;
@@ -1104,7 +1105,7 @@ if(estatus == 0){
 	this.agregarPago = function () {
 		var fecha = moment(new Date());
 
-		rc.creditoSeleccionado.numeroPagos ++;
+		rc.creditoSeleccionado.numeroPagos++;
 		var numeroPagos = rc.creditoSeleccionado.numeroPagos;
 
 		var nuevoPago = {
@@ -1147,7 +1148,7 @@ if(estatus == 0){
 
 
 	};
-	
+
 	this.guardarplanPagos = function () {
 
 		_.each(rc.creditoSeleccionado.planPagos, function (planPago) {
@@ -1713,6 +1714,17 @@ if(estatus == 0){
 		customConfirm('¿Estás seguro de cancelar la nota de crédito ?', function () {
 			NotasCredito.update({ _id: id }, { $set: { estatus: 4 } })
 		});
+	};
+
+	this.mostrarPagosCargosMoratorios = async function (credito) {
+		console.log(credito);
+		$("#modalPagosCargosMoratorios").modal();
+
+		rc.pagosCargosMoratorios = await Meteor.callSync('getPagobyCredito', credito._id);
+		$scope.$apply();
+		console.log(rc.pagosCargosMoratorios);
+
+
 	};
 
 }
